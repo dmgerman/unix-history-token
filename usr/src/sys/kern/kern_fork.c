@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_fork.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_fork.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -753,6 +753,8 @@ operator|(
 name|SPAGV
 operator||
 name|SCTTY
+operator||
+name|SHPUX
 operator|)
 operator|)
 expr_stmt|;
@@ -1025,6 +1027,10 @@ name|p_dsize
 operator|=
 name|rpp
 operator|->
+name|p_mmsize
+operator|=
+name|rpp
+operator|->
 name|p_ssize
 operator|=
 literal|0
@@ -1037,7 +1043,7 @@ name|clrnd
 argument_list|(
 name|ctopt
 argument_list|(
-name|UPAGES
+name|HIGHPAGES
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1076,6 +1082,14 @@ operator|=
 name|rip
 operator|->
 name|p_dsize
+expr_stmt|;
+name|rpp
+operator|->
+name|p_mmsize
+operator|=
+name|rip
+operator|->
+name|p_mmsize
 expr_stmt|;
 name|rpp
 operator|->
