@@ -64,7 +64,7 @@ name|NETADD
 parameter_list|(
 name|c
 parameter_list|)
-value|{ *netoring.send = c; ring_added(&netoring, 1); }
+value|{ *netoring.add = c; ring_added(&netoring, 1); }
 end_define
 
 begin_define
@@ -102,7 +102,7 @@ name|TTYADD
 parameter_list|(
 name|c
 parameter_list|)
-value|if (!(SYNCHing||flushout)) { \ 				*ttyoring.send = c; \ 				ring_added(&ttyoring, 1); \ 			}
+value|if (!(SYNCHing||flushout)) { \ 				*ttyoring.add = c; \ 				ring_added(&ttyoring, 1); \ 			}
 end_define
 
 begin_define
