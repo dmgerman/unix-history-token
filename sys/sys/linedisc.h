@@ -612,7 +612,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 parameter_list|(
 name|bp
 parameter_list|,

@@ -449,7 +449,7 @@ name|b_iocmd
 operator|=
 name|BIO_READ
 expr_stmt|;
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,
@@ -971,7 +971,7 @@ name|b_iocmd
 operator|=
 name|BIO_READ
 expr_stmt|;
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,
@@ -1172,7 +1172,7 @@ name|b_iocmd
 operator|=
 name|BIO_WRITE
 expr_stmt|;
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,
