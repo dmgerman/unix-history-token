@@ -753,16 +753,6 @@ literal|"2.23"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|char
-name|VersionDate
-index|[]
-init|=
-literal|"$Date: 1999/08/23 23:12:14 $"
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -4844,7 +4834,7 @@ literal|"PPP Version %s - %s\n"
 argument_list|,
 name|Version
 argument_list|,
-name|VersionDate
+name|__DATE__
 argument_list|)
 expr_stmt|;
 return|return
