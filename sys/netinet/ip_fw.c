@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.76 1998/02/06 12:13:51 eivind Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.77 1998/02/09 06:10:10 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -2433,8 +2433,27 @@ name|offset
 operator|!=
 literal|0
 condition|)
-comment|/* Flags, ports aren't valid */
+block|{
+comment|/* 				 * TCP flags and ports aren't available in this 				 * packet -- if this rule specified either one, 				 * we consider the rule a non-match. 				 */
+if|if
+condition|(
+name|f
+operator|->
+name|fw_nports
+operator|!=
+literal|0
+operator|||
+name|f
+operator|->
+name|fw_tcpf
+operator|!=
+name|f
+operator|->
+name|fw_tcpnf
+condition|)
+continue|continue;
 break|break;
+block|}
 name|PULLUP_TO
 argument_list|(
 name|hlen
@@ -2517,8 +2536,19 @@ name|offset
 operator|!=
 literal|0
 condition|)
-comment|/* Ports aren't valid */
+block|{
+comment|/* 				 * Port specification is unavailable -- if this 				 * rule specifies a port, we consider the rule 				 * a non-match. 				 */
+if|if
+condition|(
+name|f
+operator|->
+name|fw_nports
+operator|!=
+literal|0
+condition|)
+continue|continue;
 break|break;
+block|}
 name|PULLUP_TO
 argument_list|(
 name|hlen
@@ -4542,6 +4572,86 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|(
+name|frwl
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_FRAG
+operator|)
+operator|&&
+operator|(
+name|frwl
+operator|->
+name|fw_prot
+operator|==
+name|IPPROTO_UDP
+operator|||
+name|frwl
+operator|->
+name|fw_prot
+operator|==
+name|IPPROTO_TCP
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|frwl
+operator|->
+name|fw_nports
+condition|)
+block|{
+name|dprintf
+argument_list|(
+operator|(
+literal|"%s cannot mix 'frag' and ports\n"
+operator|,
+name|err_prefix
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|frwl
+operator|->
+name|fw_prot
+operator|==
+name|IPPROTO_TCP
+operator|&&
+name|frwl
+operator|->
+name|fw_tcpf
+operator|!=
+name|frwl
+operator|->
+name|fw_tcpnf
+condition|)
+block|{
+name|dprintf
+argument_list|(
+operator|(
+literal|"%s cannot mix 'frag' and TCP flags\n"
+operator|,
+name|err_prefix
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 block|}
 comment|/* Check command specific stuff */
 switch|switch

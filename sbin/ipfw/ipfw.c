@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.52 1998/01/08 00:27:31 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.53 1998/01/08 03:03:50 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -2716,7 +2716,7 @@ literal|"    proto: {ip|tcp|udp|icmp|<number>}\n"
 literal|"    src: from [not] {any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
 literal|"    dst: to [not] {any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
 literal|"  extras:\n"
-literal|"    fragment\n"
+literal|"    fragment     (may not be used with ports or tcpflags)\n"
 literal|"    in\n"
 literal|"    out\n"
 literal|"    {xmit|recv|via} {iface|ip|any}\n"
@@ -6625,6 +6625,47 @@ argument_list|(
 literal|"can't check xmit interface of incoming packets"
 argument_list|)
 expr_stmt|;
+comment|/* frag may not be used in conjunction with ports or TCP flags */
+if|if
+condition|(
+name|rule
+operator|.
+name|fw_flg
+operator|&
+name|IP_FW_F_FRAG
+condition|)
+block|{
+if|if
+condition|(
+name|rule
+operator|.
+name|fw_tcpf
+operator|||
+name|rule
+operator|.
+name|fw_tcpnf
+condition|)
+name|show_usage
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"can't mix 'frag' and tcpflags"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rule
+operator|.
+name|fw_nports
+condition|)
+name|show_usage
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"can't mix 'frag' and port specifications"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
