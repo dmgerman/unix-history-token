@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1985, 1989  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -15,6 +19,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -25,11 +30,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.11 1998/03/19 19:30:55 halley Exp $"
+literal|"$Id: getinfo.c,v 8.15 1999/10/13 16:39:16 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,15 +129,6 @@ include|#
 directive|include
 file|"res.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_res_resultcodes
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -238,9 +235,9 @@ decl_stmt|;
 name|u_char
 name|qb2
 index|[
-name|PACKETSZ
+literal|64
 operator|*
-literal|2
+literal|1024
 index|]
 decl_stmt|;
 block|}
@@ -401,9 +398,6 @@ decl_stmt|,
 name|j
 decl_stmt|;
 name|int
-name|len
-decl_stmt|;
-name|int
 name|dlen
 decl_stmt|;
 name|int
@@ -411,6 +405,9 @@ name|status
 decl_stmt|;
 name|int
 name|numServers
+decl_stmt|;
+name|size_t
+name|s
 decl_stmt|;
 name|Boolean
 name|haveAnswer
@@ -461,7 +458,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -902,7 +899,7 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-name|n
+name|s
 operator|=
 name|strlen
 argument_list|(
@@ -920,18 +917,18 @@ index|[
 name|numAliases
 index|]
 operator|=
-name|n
+name|s
 expr_stmt|;
 name|numAliases
 operator|++
 expr_stmt|;
 name|bp
 operator|+=
-name|n
+name|s
 expr_stmt|;
 name|buflen
 operator|-=
-name|n
+name|s
 expr_stmt|;
 continue|continue;
 block|}
@@ -982,7 +979,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|len
+name|s
 operator|=
 name|strlen
 argument_list|(
@@ -1003,7 +1000,7 @@ name|Calloc
 argument_list|(
 literal|1
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1014,7 +1011,7 @@ name|name
 argument_list|,
 name|bp
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 name|haveAnswer
@@ -1110,7 +1107,7 @@ name|AF_INET
 else|:
 name|AF_UNSPEC
 expr_stmt|;
-name|len
+name|s
 operator|=
 name|strlen
 argument_list|(
@@ -1131,7 +1128,7 @@ name|Calloc
 argument_list|(
 literal|1
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1142,7 +1139,7 @@ name|name
 argument_list|,
 name|bp
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -1180,7 +1177,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1664,7 +1661,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|len
+name|s
 operator|=
 name|strlen
 argument_list|(
@@ -1683,7 +1680,7 @@ name|Calloc
 argument_list|(
 literal|1
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* domain name */
@@ -1693,7 +1690,7 @@ name|dnamePtr
 argument_list|,
 name|bp
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -1807,7 +1804,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|len
+name|s
 operator|=
 name|strlen
 argument_list|(
@@ -1826,7 +1823,7 @@ name|Calloc
 argument_list|(
 literal|1
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* server host name */
@@ -1836,7 +1833,7 @@ name|namePtr
 argument_list|,
 name|bp
 argument_list|,
-name|len
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Store the information keyed by the server host name. 		 */
@@ -2614,7 +2611,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* ******************************************************************************* * *  GetHostInfo -- * *	Retrieves host name, address and alias information *	for a domain. * *	Algorithm from res_search(). * *  Results: *	ERROR		- res_mkquery failed. *	+ return values from GetAnswer() * ******************************************************************************* */
+comment|/* ******************************************************************************* * *  GetHostInfo -- * *	Retrieves host name, address and alias information *	for a domain. * *	Algorithm from res_nsearch(). * *  Results: *	ERROR		- res_nmkquery failed. *	+ return values from GetAnswer() * ******************************************************************************* */
 end_comment
 
 begin_function
@@ -2687,6 +2684,12 @@ name|Boolean
 name|tried_as_is
 init|=
 name|FALSE
+decl_stmt|;
+name|char
+name|tmp
+index|[
+name|NS_MAXDNAME
+index|]
 decl_stmt|;
 comment|/* Catch explicit addresses */
 if|if
@@ -2866,9 +2869,17 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|hostalias
+name|res_hostalias
 argument_list|(
+operator|&
+name|res
+argument_list|,
 name|name
+argument_list|,
+name|tmp
+argument_list|,
+sizeof|sizeof
+name|tmp
 argument_list|)
 operator|)
 condition|)
@@ -2913,7 +2924,7 @@ operator|>=
 operator|(
 name|int
 operator|)
-name|_res
+name|res
 operator|.
 name|ndots
 condition|)
@@ -2973,7 +2984,7 @@ name|n
 operator|==
 literal|0
 operator|&&
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -2991,7 +3002,7 @@ name|cp
 operator|!=
 literal|'.'
 operator|&&
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3002,7 +3013,7 @@ for|for
 control|(
 name|domain
 operator|=
-name|_res
+name|res
 operator|.
 name|dnsrch
 init|;
@@ -3069,7 +3080,7 @@ name|NO_INFO
 operator|)
 operator|||
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3310,8 +3321,11 @@ expr_stmt|;
 block|}
 name|n
 operator|=
-name|res_mkquery
+name|res_nmkquery
 argument_list|(
+operator|&
+name|res
+argument_list|,
 name|QUERY
 argument_list|,
 name|longname
@@ -3345,7 +3359,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3354,7 +3368,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Res_mkquery failed\n"
+literal|"Res_nmkquery failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3405,7 +3419,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen
@@ -3454,7 +3468,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* ******************************************************************************* * *  GetHostInfoByAddr -- * *	Performs a PTR lookup in in-addr.arpa to find the host name *	that corresponds to the given address. * *  Results: *	ERROR		- res_mkquery failed. *	+ return values from GetAnswer() * ******************************************************************************* */
+comment|/* ******************************************************************************* * *  GetHostInfoByAddr -- * *	Performs a PTR lookup in in-addr.arpa to find the host name *	that corresponds to the given address. * *  Results: *	ERROR		- res_nmkquery failed. *	+ return values from GetAnswer() * ******************************************************************************* */
 end_comment
 
 begin_function
@@ -3567,8 +3581,11 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|res_mkquery
+name|res_nmkquery
 argument_list|(
+operator|&
+name|res
+argument_list|,
 name|QUERY
 argument_list|,
 name|qbuf
@@ -3600,7 +3617,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3609,7 +3626,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"res_mkquery() failed\n"
+literal|"res_nmkquery() failed\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1985, 1989  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -18,7 +26,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1985,1989 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985,1989 Regents of the University of California.\n\  All rights reserved.\n\  @(#) Portions Copyright (c) 1996-1999 Internet Software Consortium.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +47,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -49,11 +58,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 8.7 1997/04/25 00:27:18 vixie Exp $"
+literal|"$Id: main.c,v 8.13 1999/10/13 16:39:19 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,14 +228,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  Import the state information from the resolver library.  */
+comment|/*  * Declare a resolver context.  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|__res_state
-name|_res
+name|res
 decl_stmt|;
 end_decl_stmt
 
@@ -348,6 +357,41 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Forward declarations.  */
+end_comment
+
+begin_function_decl
+name|void
+name|LocalServer
+parameter_list|(
+name|HostInfo
+modifier|*
+name|defaultPtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|res_re_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|res_dnsrch
+parameter_list|(
+name|char
+modifier|*
+name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_escape
 end_escape
 
@@ -394,8 +438,11 @@ decl_stmt|;
 comment|/*      *  Initialize the resolver library routines.      */
 if|if
 condition|(
-name|res_init
-argument_list|()
+name|res_ninit
+argument_list|(
+operator|&
+name|res
+argument_list|)
 operator|==
 operator|-
 literal|1
@@ -548,13 +595,13 @@ name|addr
 argument_list|)
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|nscount
 operator|=
 literal|1
 expr_stmt|;
-name|_res
+name|res
 operator|.
 name|nsaddr
 operator|.
@@ -635,7 +682,7 @@ block|{
 name|memcpy
 argument_list|(
 operator|&
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -657,7 +704,7 @@ name|h_length
 argument_list|)
 expr_stmt|;
 block|}
-name|_res
+name|res
 operator|.
 name|nscount
 operator|=
@@ -668,7 +715,7 @@ block|}
 block|}
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|nscount
 operator|==
@@ -693,7 +740,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|_res
+name|res
 operator|.
 name|nscount
 condition|;
@@ -703,7 +750,7 @@ control|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -732,7 +779,7 @@ name|GetHostInfoByAddr
 argument_list|(
 operator|&
 operator|(
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -744,7 +791,7 @@ operator|)
 argument_list|,
 operator|&
 operator|(
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -772,7 +819,7 @@ literal|"*** Can't find server name for address %s: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -793,7 +840,7 @@ else|else
 block|{
 name|defaultAddr
 operator|=
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -811,7 +858,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|_res
+name|res
 operator|.
 name|nscount
 condition|)
@@ -845,7 +892,7 @@ name|DEBUG
 ifdef|#
 directive|ifdef
 name|DEBUG2
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -853,13 +900,13 @@ name|RES_DEBUG2
 expr_stmt|;
 endif|#
 directive|endif
-name|_res
+name|res
 operator|.
 name|options
 operator||=
 name|RES_DEBUG
 expr_stmt|;
-name|_res
+name|res
 operator|.
 name|retry
 operator|=
@@ -961,21 +1008,16 @@ end_function
 begin_escape
 end_escape
 
-begin_macro
+begin_function
+name|void
 name|LocalServer
-argument_list|(
-argument|defaultPtr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|defaultPtr
+parameter_list|)
 name|HostInfo
 modifier|*
 name|defaultPtr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|hostName
@@ -1057,7 +1099,7 @@ name|hostName
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1265,6 +1307,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|j
+decl_stmt|;
 comment|/*      *  Parse the command line. It maybe of the form "server name",      *  "lserver name" or just "name".      */
 if|if
 condition|(
@@ -1273,55 +1318,147 @@ condition|)
 block|{
 name|i
 operator|=
-name|sscanf
+name|matchString
+argument_list|(
+literal|" lserver "
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|pickString
 argument_list|(
 name|string
+operator|+
+name|i
 argument_list|,
-literal|" lserver %s"
+name|newServer
 argument_list|,
+sizeof|sizeof
 name|newServer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* value was too big for newServer variable */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"SetDefaultServer: invalid name: %s\n"
+argument_list|,
+name|string
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
+block|}
 block|}
 else|else
 block|{
 name|i
 operator|=
-name|sscanf
+name|matchString
+argument_list|(
+literal|" server "
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|pickString
 argument_list|(
 name|string
+operator|+
+name|i
 argument_list|,
-literal|" server %s"
+name|newServer
 argument_list|,
+sizeof|sizeof
 name|newServer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* value was too big for newServer variable */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"SetDefaultServer: invalid name: %s\n"
+argument_list|,
+name|string
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
+block|}
 block|}
 if|if
 condition|(
 name|i
-operator|!=
-literal|1
+operator|==
+literal|0
 condition|)
 block|{
 name|i
 operator|=
-name|sscanf
+name|pickString
 argument_list|(
 name|string
 argument_list|,
-literal|" %s"
+name|newServer
 argument_list|,
+sizeof|sizeof
 name|newServer
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|i
-operator|!=
-literal|1
+operator|==
+literal|0
 condition|)
 block|{
+comment|/* value was too big for newServer variable */
 name|fprintf
 argument_list|(
 name|stderr
@@ -1919,22 +2056,50 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/*      *  Invalidate the current host information to prevent Finger       *  from using bogus info.      */
 name|curHostValid
 operator|=
 name|FALSE
 expr_stmt|;
 comment|/*      *	 Parse the command string into the host and      *	 optional output file name.      *      */
-name|sscanf
+name|i
+operator|=
+name|pickString
 argument_list|(
 name|string
 argument_list|,
-literal|" %s"
+name|host
 argument_list|,
+sizeof|sizeof
 name|host
 argument_list|)
 expr_stmt|;
-comment|/* removes white space */
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* string was too long for host variable */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** invalid name: %s\n"
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1954,6 +2119,9 @@ name|OpenFile
 argument_list|(
 name|string
 argument_list|,
+name|file
+argument_list|,
+sizeof|sizeof
 name|file
 argument_list|)
 expr_stmt|;
@@ -2080,21 +2248,90 @@ specifier|static
 name|HostInfo
 name|serverInfo
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|int
+name|j
+decl_stmt|;
 name|curHostValid
 operator|=
 name|FALSE
 expr_stmt|;
-name|sscanf
+name|i
+operator|=
+name|pickString
 argument_list|(
 name|string
 argument_list|,
-literal|" %s %s"
-argument_list|,
 name|host
 argument_list|,
+sizeof|sizeof
+name|host
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* value was too big for host variable */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** invalid name: %s\n"
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
+name|j
+operator|=
+name|pickString
+argument_list|(
+name|string
+operator|+
+name|i
+argument_list|,
+name|server
+argument_list|,
+sizeof|sizeof
 name|server
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* value was too big for server variable */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** invalid server name: %s\n"
+argument_list|,
+name|string
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2114,6 +2351,9 @@ name|OpenFile
 argument_list|(
 name|string
 argument_list|,
+name|file
+argument_list|,
+sizeof|sizeof
 name|file
 argument_list|)
 expr_stmt|;
@@ -2300,6 +2540,9 @@ decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 while|while
 condition|(
 name|isspace
@@ -2415,7 +2658,7 @@ literal|0
 condition|)
 block|{
 comment|/* d2 (more debug) */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -2441,7 +2684,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -2470,7 +2713,7 @@ literal|0
 condition|)
 block|{
 comment|/* defname */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -2492,7 +2735,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -2532,18 +2775,46 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sscanf
+name|i
+operator|=
+name|pickString
 argument_list|(
 operator|++
 name|ptr
 argument_list|,
-literal|"%s"
+name|res
+operator|.
+name|defdname
 argument_list|,
-name|_res
+sizeof|sizeof
+name|res
 operator|.
 name|defdname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* name too long or nothing there */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"** invalid 'domain' value: %s\n"
+argument_list|,
+name|ptr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 name|res_re_init
 argument_list|()
 expr_stmt|;
@@ -2565,7 +2836,7 @@ literal|0
 condition|)
 block|{
 comment|/* debug */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -2587,7 +2858,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -2615,7 +2886,7 @@ literal|0
 condition|)
 block|{
 comment|/* ignore */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -2637,7 +2908,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -2709,7 +2980,7 @@ literal|0
 condition|)
 block|{
 comment|/* primary */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -2731,7 +3002,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -2785,16 +3056,42 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sscanf
+name|i
+operator|=
+name|pickString
 argument_list|(
 operator|++
 name|ptr
 argument_list|,
-literal|"%s"
+name|type
 argument_list|,
+sizeof|sizeof
 name|type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* value too big or nothing there */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** invalid type value: %s\n"
+argument_list|,
+name|ptr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 name|queryType
 operator|=
 name|StringToType
@@ -2840,16 +3137,42 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sscanf
+name|i
+operator|=
+name|pickString
 argument_list|(
 operator|++
 name|ptr
 argument_list|,
-literal|"%s"
+name|type
 argument_list|,
+sizeof|sizeof
 name|type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* value too big or nothing there */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** invalid class : %s\n"
+argument_list|,
+name|ptr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 name|queryClass
 operator|=
 name|StringToClass
@@ -2879,7 +3202,7 @@ literal|0
 condition|)
 block|{
 comment|/* recurse */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -2901,7 +3224,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -2959,7 +3282,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|retry
 operator|=
@@ -3000,16 +3323,42 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sscanf
+name|i
+operator|=
+name|pickString
 argument_list|(
 operator|++
 name|ptr
 argument_list|,
-literal|"%s"
+name|rootServerName
 argument_list|,
+sizeof|sizeof
 name|rootServerName
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* value too big or nothing there */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** invalid root server name : %s\n"
+argument_list|,
+name|ptr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 block|}
 block|}
 elseif|else
@@ -3028,7 +3377,7 @@ literal|0
 condition|)
 block|{
 comment|/* search list */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -3050,7 +3399,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -3148,7 +3497,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|retrans
 operator|=
@@ -3173,7 +3522,7 @@ literal|0
 condition|)
 block|{
 comment|/* vc */
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -3195,7 +3544,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|options
 operator|&=
@@ -3233,12 +3582,12 @@ begin_comment
 comment|/*  * Fake a reinitialization when the domain is changed.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|res_re_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -3255,7 +3604,7 @@ decl_stmt|;
 comment|/* find components of local domain that might be searched */
 name|pp
 operator|=
-name|_res
+name|res
 operator|.
 name|dnsrch
 expr_stmt|;
@@ -3263,7 +3612,7 @@ operator|*
 name|pp
 operator|++
 operator|=
-name|_res
+name|res
 operator|.
 name|defdname
 expr_stmt|;
@@ -3271,7 +3620,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|_res
+name|res
 operator|.
 name|defdname
 operator|,
@@ -3297,7 +3646,7 @@ operator|++
 expr_stmt|;
 name|cp
 operator|=
-name|_res
+name|res
 operator|.
 name|defdname
 expr_stmt|;
@@ -3310,7 +3659,7 @@ name|LOCALDOMAINPARTS
 operator|&&
 name|pp
 operator|<
-name|_res
+name|res
 operator|.
 name|dnsrch
 operator|+
@@ -3342,14 +3691,14 @@ name|pp
 operator|=
 literal|0
 expr_stmt|;
-name|_res
+name|res
 operator|.
 name|options
 operator||=
 name|RES_INIT
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -3358,21 +3707,15 @@ name|SRCHLIST_SEP
 value|'/'
 end_define
 
-begin_expr_stmt
+begin_function
+name|void
 name|res_dnsrch
-argument_list|(
-name|cp
-argument_list|)
-specifier|register
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -3386,7 +3729,7 @@ name|void
 operator|)
 name|strncpy
 argument_list|(
-name|_res
+name|res
 operator|.
 name|defdname
 argument_list|,
@@ -3394,13 +3737,29 @@ name|cp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|_res
+name|res
 operator|.
 name|defdname
 argument_list|)
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|res
+operator|.
+name|defdname
+index|[
+sizeof|sizeof
+argument_list|(
+name|res
+operator|.
+name|defdname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -3409,7 +3768,7 @@ name|cp
 operator|=
 name|strchr
 argument_list|(
-name|_res
+name|res
 operator|.
 name|defdname
 argument_list|,
@@ -3427,13 +3786,13 @@ expr_stmt|;
 comment|/*      * Set search list to be blank-separated strings      * on rest of line.      */
 name|cp
 operator|=
-name|_res
+name|res
 operator|.
 name|defdname
 expr_stmt|;
 name|pp
 operator|=
-name|_res
+name|res
 operator|.
 name|dnsrch
 expr_stmt|;
@@ -3454,7 +3813,7 @@ name|cp
 operator|&&
 name|pp
 operator|<
-name|_res
+name|res
 operator|.
 name|dnsrch
 operator|+
@@ -3532,7 +3891,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3587,7 +3946,7 @@ argument_list|(
 literal|"  %sdebug  \t"
 argument_list|,
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3604,7 +3963,7 @@ argument_list|(
 literal|"  %sdefname\t"
 argument_list|,
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3621,7 +3980,7 @@ argument_list|(
 literal|"  %ssearch\t"
 argument_list|,
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3638,7 +3997,7 @@ argument_list|(
 literal|"  %srecurse\n"
 argument_list|,
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3655,7 +4014,7 @@ argument_list|(
 literal|"  %sd2\t\t"
 argument_list|,
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3672,7 +4031,7 @@ argument_list|(
 literal|"  %svc\t\t"
 argument_list|,
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3689,7 +4048,7 @@ argument_list|(
 literal|"  %signoretc\t"
 argument_list|,
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3732,7 +4091,7 @@ name|printf
 argument_list|(
 literal|"  timeout=%d\t"
 argument_list|,
-name|_res
+name|res
 operator|.
 name|retrans
 argument_list|)
@@ -3741,7 +4100,7 @@ name|printf
 argument_list|(
 literal|"  retry=%d\n"
 argument_list|,
-name|_res
+name|res
 operator|.
 name|retry
 argument_list|)
@@ -3757,14 +4116,14 @@ name|printf
 argument_list|(
 literal|"  domain=%s\n"
 argument_list|,
-name|_res
+name|res
 operator|.
 name|defdname
 argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|_res
+name|res
 operator|.
 name|dnsrch
 expr_stmt|;
@@ -3882,6 +4241,7 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
