@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.3	%G%	*/
+comment|/*	rk.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -1506,8 +1506,9 @@ operator|<=
 literal|10
 condition|)
 block|{
-name|ubafree
+name|ubarelse
 argument_list|(
+operator|&
 name|rk_info
 argument_list|)
 expr_stmt|;
@@ -1545,8 +1546,9 @@ name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-name|ubafree
+name|ubarelse
 argument_list|(
+operator|&
 name|rk_info
 argument_list|)
 expr_stmt|;

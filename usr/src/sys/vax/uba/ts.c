@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.4	%G%	*/
+comment|/*	ts.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -136,8 +136,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|ts_iouba
+name|int
+name|ts_ubinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -1344,7 +1344,7 @@ name|b_active
 operator|=
 name|SIO
 expr_stmt|;
-name|ts_iouba
+name|ts_ubinfo
 operator|=
 name|ubasetup
 argument_list|(
@@ -1362,7 +1362,7 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|ts_iouba
+name|ts_ubinfo
 expr_stmt|;
 name|ts
 operator|.
@@ -1374,7 +1374,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|ts_iouba
+name|ts_ubinfo
 operator|>>
 literal|16
 argument_list|)
@@ -1882,24 +1882,11 @@ case|:
 name|ts_blkno
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ts_iouba
-condition|)
-name|ubafree
+name|ubarelse
 argument_list|(
-name|ts_iouba
+operator|&
+name|ts_ubinfo
 argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"uba alloc botch\n"
-argument_list|)
-expr_stmt|;
-name|ts_iouba
-operator|=
-literal|0
 expr_stmt|;
 case|case
 name|SCOM

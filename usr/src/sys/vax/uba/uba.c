@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.3	%G%	*/
+comment|/*	uba.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -643,16 +643,21 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Old ubafree(info) is now ubarelse(&info) to avoid races.  */
+end_comment
+
 begin_macro
 name|ubafree
 argument_list|(
-argument|mr
+argument|amr
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|mr
+modifier|*
+name|amr
 decl_stmt|;
 end_decl_stmt
 
@@ -668,11 +673,33 @@ name|npf
 decl_stmt|,
 name|a
 decl_stmt|;
+name|int
+name|mr
+decl_stmt|;
 name|a
 operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
+name|mr
+operator|=
+operator|*
+name|amr
+expr_stmt|;
+if|if
+condition|(
+name|mr
+operator|==
+literal|0
+condition|)
+block|{
+name|splx
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bdp
 operator|=
 operator|(

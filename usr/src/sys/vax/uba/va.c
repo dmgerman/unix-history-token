@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.4	%G%	*/
+comment|/*	va.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -601,8 +601,9 @@ argument_list|()
 expr_stmt|;
 name|brkout
 label|:
-name|UBAFREECLR
+name|ubarelse
 argument_list|(
+operator|&
 name|va_ubinfo
 argument_list|)
 expr_stmt|;
@@ -1262,8 +1263,9 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-name|UBAFREECLR
+name|ubarelse
 argument_list|(
+operator|&
 name|va_ubinfo
 argument_list|)
 expr_stmt|;
