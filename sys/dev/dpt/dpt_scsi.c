@@ -12,7 +12,7 @@ comment|/*  * IMPORTANT:  *	There are two critical section "levels" available in
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.4.2.1 1998/03/06 23:44:13 julian Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.4.2.2 1998/03/23 07:57:27 jkh Exp $"
 end_empty
 
 begin_define
@@ -182,31 +182,6 @@ directive|define
 name|INLINE
 value|__inline
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DPT_USE_DPT_SWI
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|splcam
-value|splbio
-end_define
-
-begin_define
-define|#
-directive|define
-name|splsoftcam
-value|splbio
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Function Prototypes */
@@ -542,12 +517,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DPT_USE_DPT_SWI
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|void
@@ -558,11 +527,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1077,12 +1041,6 @@ begin_comment
 comment|/* You need at least one reference */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DPT_USE_DPT_SWI
-end_ifndef
-
 begin_macro
 name|SYSINIT
 argument_list|(
@@ -1117,11 +1075,6 @@ name|dpt_sintr
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* These functions allows us to do memory mapped I/O, if hardware supported. */
@@ -1393,21 +1346,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|DPT_USE_DPT_SWI
-name|scheddptisr
-argument_list|(
-argument|DPTISR_DPT
-argument_list|)
-else|#
-directive|else
 name|setsoftcambio
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DPT_USE_DPT_SWI */
 block|}
 end_function
 
