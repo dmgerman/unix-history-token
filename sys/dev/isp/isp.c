@@ -3336,7 +3336,7 @@ name|isp_state
 operator|=
 name|ISP_RESETSTATE
 expr_stmt|;
-comment|/* 	 * Okay- now that we have new firmware running, we now (re)set our 	 * notion of how many luns we support. This is somewhat tricky because 	 * if we haven't loaded firmware, we sometimes do not have an easy way 	 * of knowing how many luns we support. 	 * 	 * Expanded lun firmware gives you 32 luns for SCSI cards and 	 * 16384 luns for Fibre Channel cards. 	 * 	 * It turns out that even for QLogic 2100s with ROM 1.10 and above 	 * we do get a firmware attributes word returned in mailbox register 6. 	 * 	 * Because the lun is in a different position in the Request Queue 	 * Entry structure for Fibre Channel with expanded lun firmware, we 	 * can only support one lun (lun zero) when we don't know what kind 	 * of firmware we're running. 	 * 	 * Note that we only do this once (the first time thru isp_reset) 	 * because we may be called again after firmware has been loaded once 	 * and released. 	 */
+comment|/* 	 * Okay- now that we have new firmware running, we now (re)set our 	 * notion of how many luns we support. This is somewhat tricky because 	 * if we haven't loaded firmware, we sometimes do not have an easy way 	 * of knowing how many luns we support. 	 * 	 * Expanded lun firmware gives you 32 luns for SCSI cards and 	 * 16384 luns for Fibre Channel cards. 	 * 	 * It turns out that even for QLogic 2100s with ROM 1.10 and above 	 * we do get a firmware attributes word returned in mailbox register 6. 	 * 	 * Because the lun is in a different position in the Request Queue 	 * Entry structure for Fibre Channel with expanded lun firmware, we 	 * can only support one lun (lun zero) when we don't know what kind 	 * of firmware we're running. 	 */
 if|if
 condition|(
 name|IS_SCSI
@@ -15374,7 +15374,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|qep
@@ -15550,7 +15549,6 @@ name|optr
 argument_list|,
 operator|(
 name|void
-operator|*
 operator|*
 operator|)
 operator|&
@@ -20269,6 +20267,20 @@ argument_list|,
 literal|"FATAL CONNECTION ERROR"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_FW_CRASH_DUMP
+name|isp_async
+argument_list|(
+name|isp
+argument_list|,
+name|ISPASYNC_FW_CRASH
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|isp_async
 argument_list|(
 name|isp
@@ -20292,6 +20304,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -25296,7 +25310,7 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"DRIVER HEARTBEAT"
 block|,
 name|NULL
 block|,
