@@ -1806,6 +1806,14 @@ operator|->
 name|sr_cred
 operator|->
 name|scr_td
+operator|!=
+name|NULL
+operator|&&
+name|rqp
+operator|->
+name|sr_cred
+operator|->
+name|scr_td
 operator|->
 name|td_proc
 operator|==
