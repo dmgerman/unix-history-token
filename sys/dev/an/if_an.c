@@ -12500,6 +12500,7 @@ comment|/*  * Transfer 32k of firmware data from user buffer to our buffer and s
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|flashbuffer
 index|[
