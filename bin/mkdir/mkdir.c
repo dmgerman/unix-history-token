@@ -592,6 +592,9 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|last
+operator|&&
 name|p
 index|[
 literal|1
