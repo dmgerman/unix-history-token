@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	5.8 (Berkeley) %G%"
+literal|"@(#)rec_get.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -625,6 +625,19 @@ name|t
 operator|->
 name|bt_dbuf
 expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|==
+name|EOF
+operator|&&
+name|data
+operator|.
+name|size
+operator|==
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|__rec_iput
