@@ -937,9 +937,9 @@ condition|(
 name|ch
 condition|)
 block|{
-name|when
+case|case
 literal|'h'
-operator|:
+case|:
 name|x
 operator|--
 expr_stmt|;
