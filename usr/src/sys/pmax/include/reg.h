@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: reg.h 1.1 90/07/09$  *  *	@(#)reg.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: reg.h 1.1 90/07/09$  *  *	@(#)reg.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -687,6 +687,25 @@ literal|69
 index|]
 decl_stmt|;
 comment|/* numbered as above */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Register set accessible via /proc/$pid/fpreg  */
+end_comment
+
+begin_struct
+struct|struct
+name|fpreg
+block|{
+name|int
+name|r_fpregs
+index|[
+literal|33
+index|]
+decl_stmt|;
+comment|/* not implemented */
 block|}
 struct|;
 end_struct
