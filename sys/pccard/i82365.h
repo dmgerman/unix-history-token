@@ -769,12 +769,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_INTR_ENA
-value|0x10
+name|PCIC_CARDRESET
+value|0x40
 end_define
 
 begin_comment
-comment|/* PCI CSC Interrupt enable */
+comment|/* Card reset 0 = Reset, 1 = Normal */
 end_comment
 
 begin_define
@@ -805,12 +805,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIC_CARDRESET
-value|0x40
+name|PCIC_INTR_ENA
+value|0x10
 end_define
 
 begin_comment
-comment|/* Card reset 0 = Reset, 1 = Normal */
+comment|/* PCI CSC Interrupt enable */
 end_comment
 
 begin_comment
