@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.29	83/02/10	*/
+comment|/*	param.h	4.30	83/02/21	*/
 end_comment
 
 begin_comment
@@ -520,7 +520,7 @@ begin_define
 define|#
 directive|define
 name|BLKDEV_IOSIZE
-value|4096
+value|2048
 end_define
 
 begin_define
