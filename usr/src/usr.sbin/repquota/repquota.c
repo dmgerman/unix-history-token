@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)repquota.c	5.1 (Berkeley) %G%"
+literal|"@(#)repquota.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,17 +210,6 @@ modifier|*
 name|qfname
 init|=
 literal|"quotas"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|quotafile
-index|[
-name|MAXPATHLEN
-operator|+
-literal|1
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -518,6 +507,10 @@ name|fs
 operator|->
 name|fs_spec
 argument_list|,
+name|fs
+operator|->
+name|fs_file
+argument_list|,
 name|quotafile
 argument_list|)
 expr_stmt|;
@@ -577,6 +570,8 @@ name|repquota
 argument_list|(
 argument|fsdev
 argument_list|,
+argument|fsfile
+argument_list|,
 argument|qffile
 argument_list|)
 end_macro
@@ -585,6 +580,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fsdev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fsfile
 decl_stmt|;
 end_decl_stmt
 
@@ -636,9 +638,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"*** Quota report for %s\n"
+literal|"*** Quota report for %s (%s)\n"
 argument_list|,
 name|fsdev
+argument_list|,
+name|fsfile
 argument_list|)
 expr_stmt|;
 name|qf
@@ -687,6 +691,11 @@ block|{
 name|perror
 argument_list|(
 name|qffile
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|qf
 argument_list|)
 expr_stmt|;
 return|return
@@ -768,8 +777,30 @@ name|qf
 argument_list|)
 condition|)
 break|break;
+name|fup
+operator|=
+name|lookup
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
+name|fup
+operator|==
+literal|0
+operator|||
+name|fup
+operator|->
+name|fu_name
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+operator|)
+operator|&&
 name|dqbuf
 operator|.
 name|dqb_curinodes
@@ -783,13 +814,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|fup
-operator|=
-name|lookup
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fup
@@ -850,6 +874,21 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+name|fup
+operator|==
+literal|0
+operator|||
+name|fup
+operator|->
+name|fu_name
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+operator|)
+operator|&&
 name|fup
 operator|->
 name|fu_dqblk
@@ -1014,6 +1053,11 @@ operator|=
 name|zerodqblk
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|qf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1191,6 +1235,12 @@ modifier|*
 modifier|*
 name|fhp
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|calloc
+parameter_list|()
+function_decl|;
 name|fup
 operator|=
 name|lookup
