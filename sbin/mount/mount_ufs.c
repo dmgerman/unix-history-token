@@ -476,7 +476,11 @@ break|break;
 default|default:
 name|warn
 argument_list|(
-name|NULL
+literal|"%s"
+argument_list|,
+name|args
+operator|.
+name|fspec
 argument_list|)
 expr_stmt|;
 break|break;
