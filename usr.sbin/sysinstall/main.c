@@ -401,9 +401,9 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"A signal %d was caught - I'm saving what I can and shutting\n"
-literal|"If you can reproduce the problem, please turn Debug on in\n"
-literal|"the Options menu for the extra information it provides in\n"
-literal|"debugging problems like this."
+literal|"down.  If you can reproduce the problem, please turn Debug on\n"
+literal|"in the Options menu for the extra information it provides\n"
+literal|"in debugging problems like this."
 argument_list|,
 name|status
 argument_list|)
