@@ -1000,16 +1000,13 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-name|curlen
-operator|=
-name|strlen
-argument_list|(
-name|realloc_holder
-argument_list|)
-expr_stmt|;
+comment|/* 						 * If this string is not zero 						 * length, append a space for 						 * seperation before the next 						 * argument. 						 */
 if|if
 condition|(
-name|curlen
+operator|*
+name|inpline
+operator|!=
+literal|'\0'
 condition|)
 name|strcat
 argument_list|(
@@ -1022,6 +1019,7 @@ block|}
 name|curlen
 operator|++
 expr_stmt|;
+comment|/* 					 * Allocate enough to hold what we will 					 * be holding in a secont, and to append 					 * a space next time through, if we have 					 * to. 					 */
 name|inpline
 operator|=
 name|realloc
@@ -1074,7 +1072,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 			 * If max'd out on args or buffer, or reached EOF, 			 * run the command.  If xflag and max'd out on buffer 			 * but not on args, object. 			 */
+comment|/* 			 * If max'd out on args or buffer, or reached EOF, 			 * run the command.  If xflag and max'd out on buffer 			 * but not on args, object.  Having reached the limit 			 * of input lines, as specified by -L is the same as 			 * maxing out on arguments. 			 */
 if|if
 condition|(
 name|xp
@@ -1164,6 +1162,20 @@ decl_stmt|;
 name|int
 name|iter
 decl_stmt|;
+comment|/* 					 * Set up some locals, the number of 					 * times we may replace replstr with a 					 * line of input, a modifiable pointer 					 * to the head of the original argument 					 * list, and the number of iterations to 					 * perform -- the number of arguments. 					 */
+name|repls
+operator|=
+name|Rflag
+expr_stmt|;
+name|avj
+operator|=
+name|av
+expr_stmt|;
+name|iter
+operator|=
+name|argc
+expr_stmt|;
+comment|/* 					 * Allocate memory to hold the argument 					 * list. 					 */
 name|tmp
 operator|=
 name|malloc
@@ -1195,44 +1207,35 @@ name|tmp2
 operator|=
 name|tmp
 expr_stmt|;
-name|repls
+comment|/* 					 * Just save the first argument, as it 					 * is the utility name, and we cannot 					 * be trusted to do strnsubst() to it. 					 */
+operator|*
+name|tmp
+operator|++
 operator|=
-name|Rflag
-expr_stmt|;
-for|for
-control|(
-name|avj
-operator|=
-name|av
-operator|,
-name|iter
-operator|=
-name|argc
-init|;
-name|iter
-condition|;
+name|strdup
+argument_list|(
+operator|*
 name|avj
 operator|++
-operator|,
-name|iter
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Now for every argument to utility, 					 * if we have not used up the number of 					 * replacements we are allowed to do, and 					 * if the argument contains at least one 					 * occurance of replstr, call strnsubst(), 					 * or else just save the string. 					 * Iterations over elements of avj and tmp 					 * are done where appropriate. 					 */
+while|while
+condition|(
 operator|--
-control|)
+name|iter
+condition|)
 block|{
 operator|*
 name|tmp
 operator|=
 operator|*
 name|avj
+operator|++
 expr_stmt|;
 if|if
 condition|(
-name|avj
-operator|!=
-name|av
-operator|&&
 name|repls
-operator|>
-literal|0
 operator|&&
 name|strstr
 argument_list|(
@@ -1248,6 +1251,7 @@ block|{
 name|strnsubst
 argument_list|(
 name|tmp
+operator|++
 argument_list|,
 name|replstr
 argument_list|,
@@ -1265,19 +1269,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|(
 operator|*
 name|tmp
 operator|=
 name|strdup
 argument_list|(
 operator|*
-name|avj
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
 name|tmp
+argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1288,11 +1291,12 @@ argument_list|,
 literal|"strdup"
 argument_list|)
 expr_stmt|;
-block|}
 name|tmp
 operator|++
 expr_stmt|;
 block|}
+block|}
+comment|/* 					 * NULL terminate the list of arguments, 					 * for run(). 					 */
 operator|*
 name|tmp
 operator|=
@@ -1306,6 +1310,7 @@ argument_list|(
 name|tmp2
 argument_list|)
 expr_stmt|;
+comment|/* 					 * From the tail to the head, free along 					 * the way. 					 */
 for|for
 control|(
 init|;
@@ -1322,11 +1327,13 @@ operator|*
 name|tmp
 argument_list|)
 expr_stmt|;
+comment|/* 					 * Free the list. 					 */
 name|free
 argument_list|(
 name|tmp2
 argument_list|)
 expr_stmt|;
+comment|/* 					 * Free the input line buffer, and create 					 * a new dummy. 					 */
 name|free
 argument_list|(
 name|inpline
@@ -1342,6 +1349,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 					 * Mark the tail of the argument list with 					 * a NULL, and run() with it. 					 */
 operator|*
 name|xp
 operator|=
