@@ -5930,6 +5930,9 @@ literal|255
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 name|cfg
 operator|->
 name|intline
@@ -5951,6 +5954,9 @@ operator|->
 name|intpin
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __i386__ */
 if|if
 condition|(
 name|cfg
