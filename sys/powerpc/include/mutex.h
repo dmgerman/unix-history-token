@@ -142,7 +142,7 @@ name|ASS_SIEN
 parameter_list|(
 name|mpp
 parameter_list|)
-value|MPASS2((mpp)->saveintr != ALPHA_PSL_IPL_HIGH, STR_SIEN)
+value|MPASS2((mpp)->mtx_saveintr \ 			       != ALPHA_PSL_IPL_HIGH, STR_SIEN)
 end_define
 
 begin_comment
