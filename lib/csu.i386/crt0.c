@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: crt0.c,v 1.6 1993/11/09 04:26:11 paul Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: crt0.c,v 1.12 1994/01/29 01:58:44 jtc Exp $  */
 end_comment
 
 begin_if
@@ -171,8 +171,17 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|struct
-name|link_dynamic
+name|_dynamic
 name|_DYNAMIC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ld_entry
+modifier|*
+name|ld_entry
 decl_stmt|;
 end_decl_stmt
 
@@ -200,24 +209,6 @@ name|_strncmp
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
-
-begin_expr_stmt
-specifier|static
-name|__call
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -512,254 +503,6 @@ define|\
 value|write(2, str, sizeof(str)), \ 	_exit(1);
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
-
-begin_asm
-asm|asm ("	.global start");
-end_asm
-
-begin_asm
-asm|asm ("	.text");
-end_asm
-
-begin_asm
-asm|asm ("	start:");
-end_asm
-
-begin_comment
-comment|/* Set up `argc', `argv', and `envp' into local registers (from GNU Emacs). */
-end_comment
-
-begin_asm
-asm|asm ("	mov	0, %fp");
-end_asm
-
-begin_asm
-asm|asm ("	ld	[%sp + 64], %l0");
-end_asm
-
-begin_comment
-comment|/* argc */
-end_comment
-
-begin_asm
-asm|asm ("	add	%sp, 68, %l1");
-end_asm
-
-begin_comment
-comment|/* argv */
-end_comment
-
-begin_asm
-asm|asm ("	sll	%l0, 2,	%l2");
-end_asm
-
-begin_comment
-comment|/**/
-end_comment
-
-begin_asm
-asm|asm ("	add	%l2, 4,	%l2");
-end_asm
-
-begin_comment
-comment|/* envp = argv + (argc<< 2) + 4 */
-end_comment
-
-begin_asm
-asm|asm ("	add	%l1, %l2, %l2");
-end_asm
-
-begin_comment
-comment|/**/
-end_comment
-
-begin_asm
-asm|asm ("	sethi	%hi(_environ), %l3");
-end_asm
-
-begin_asm
-asm|asm ("	st	%l2, [%l3+%lo(_environ)]");
-end_asm
-
-begin_comment
-comment|/* *environ = l2 */
-end_comment
-
-begin_comment
-comment|/* Finish diddling with stack. */
-end_comment
-
-begin_asm
-asm|asm ("	andn	%sp, 7,	%sp");
-end_asm
-
-begin_asm
-asm|asm ("	sub	%sp, 24, %sp");
-end_asm
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DYNAMIC
-end_ifdef
-
-begin_comment
-comment|/* Resolve symbols in dynamic libraries */
-end_comment
-
-begin_asm
-asm|asm ("	call	___do_dynamic_link");
-end_asm
-
-begin_asm
-asm|asm ("	nop");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* From here, all symbols should have been resolved, so we can use libc */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MCRT0
-end_ifdef
-
-begin_asm
-asm|asm ("	call	___do_mcrt");
-end_asm
-
-begin_asm
-asm|asm ("	nop");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Stay Sun compatible (currently (SunOS 4.1.2) does nothing on sun4) */
-end_comment
-
-begin_asm
-asm|asm ("	call	start_float");
-end_asm
-
-begin_asm
-asm|asm ("	nop");
-end_asm
-
-begin_comment
-comment|/* Move `argc', `argv', and `envp' from locals to parameters for `main'.  */
-end_comment
-
-begin_asm
-asm|asm ("	mov	%l0,%o0");
-end_asm
-
-begin_asm
-asm|asm ("	mov	%l1,%o1");
-end_asm
-
-begin_asm
-asm|asm ("__callmain:");
-end_asm
-
-begin_comment
-comment|/* Defined for the benefit of debuggers */
-end_comment
-
-begin_asm
-asm|asm ("	call	_main");
-end_asm
-
-begin_asm
-asm|asm ("	mov	%l2,%o2");
-end_asm
-
-begin_asm
-asm|asm ("	call	_exit");
-end_asm
-
-begin_asm
-asm|asm ("	nop");
-end_asm
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MCRT0
-end_ifdef
-
-begin_function
-specifier|static
-name|void
-name|__do_mcrt
-parameter_list|()
-block|{
-specifier|extern
-name|unsigned
-name|char
-name|eprol
-decl_stmt|,
-name|etext
-decl_stmt|;
-specifier|extern
-name|void
-name|_mcleanup
-parameter_list|()
-function_decl|;
-name|on_exit
-argument_list|(
-name|_mcleanup
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|monstartup
-argument_list|(
-operator|&
-name|eprol
-argument_list|,
-operator|&
-name|etext
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* sparc */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|i386
-end_ifdef
-
 begin_macro
 name|start
 argument_list|()
@@ -894,6 +637,42 @@ name|environ
 operator|=
 name|targv
 expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+condition|)
+if|if
+condition|(
+operator|(
+name|__progname
+operator|=
+name|_strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|__progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+operator|++
+name|__progname
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DYNAMIC
@@ -952,48 +731,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|MCRT0
-if|#
-directive|if
-literal|0
-block|errno = 0;
-endif|#
-directive|endif
-if|if
-condition|(
-name|argv
-index|[
-literal|0
-index|]
-condition|)
-if|if
-condition|(
-operator|(
-name|__progname
-operator|=
-name|_strrchr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|__progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-else|else
-operator|++
-name|__progname
-expr_stmt|;
 asm|asm ("__callmain:");
 comment|/* Defined for the benefit of debuggers */
 name|exit
@@ -1012,15 +749,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* i386 */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1049,7 +777,7 @@ decl_stmt|;
 name|int
 name|dupzfd
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|entry
@@ -1135,23 +863,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|N_GETMAGIC_NET
+name|N_GETMAGIC
 argument_list|(
 name|hdr
 argument_list|)
 operator|!=
 name|ZMAGIC
-operator|)
 operator|&&
-operator|(
 name|N_GETMAGIC
 argument_list|(
 name|hdr
 argument_list|)
 operator|!=
 name|QMAGIC
-operator|)
 condition|)
 block|{
 name|_FATAL
@@ -1160,44 +884,6 @@ literal|"Bad magic: ld.so\n"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|sun
-comment|/* Get bucket of zeroes */
-name|crt
-operator|.
-name|crt_dzfd
-operator|=
-name|open
-argument_list|(
-literal|"/dev/zero"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|crt
-operator|.
-name|crt_dzfd
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|_FATAL
-argument_list|(
-literal|"No /dev/zero\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|BSD
 comment|/* We use MAP_ANON */
 name|crt
 operator|.
@@ -1206,43 +892,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUPZFD
-argument_list|)
-if|if
-condition|(
-operator|(
-name|dupzfd
-operator|=
-name|dup
-argument_list|(
-name|crt
-operator|.
-name|crt_dzfd
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|_FATAL
-argument_list|(
-literal|"Cannot dup /dev/zero\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* Map in ld.so */
 name|crt
 operator|.
@@ -1435,39 +1084,16 @@ name|caddr_t
 operator|)
 name|_callmain
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sparc
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|SUN_COMPAT
-argument_list|)
-comment|/* Call Sun's ld.so entry point: version 1, offset crt */
-name|__call
-argument_list|(
-name|CRT_VERSION_SUN
-argument_list|,
-operator|&
-name|crt
-argument_list|,
 name|crt
 operator|.
-name|crt_ba
-operator|+
-sizeof|sizeof
-name|hdr
-argument_list|)
+name|crt_prog
+operator|=
+name|__progname
 expr_stmt|;
-else|#
-directive|else
 name|entry
 operator|=
 operator|(
-name|void
+name|int
 argument_list|(
 operator|*
 argument_list|)
@@ -1482,129 +1108,219 @@ sizeof|sizeof
 name|hdr
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SUN_COMPAT
-call|(
-modifier|*
-name|entry
-call|)
-argument_list|(
-name|CRT_VERSION_SUN
-argument_list|,
-operator|&
-name|crt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-call|(
-modifier|*
-name|entry
-call|)
-argument_list|(
-name|CRT_VERSION_BSD
-argument_list|,
-operator|&
-name|crt
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUPZFD
-argument_list|)
 if|if
 condition|(
-name|dup2
+call|(
+modifier|*
+name|entry
+call|)
 argument_list|(
-name|dupzfd
+name|CRT_VERSION_BSD_3
 argument_list|,
+operator|&
 name|crt
-operator|.
-name|crt_dzfd
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|_FATAL
 argument_list|(
-literal|"Cannot dup2 /dev/zero\n"
+literal|"ld.so failed\n"
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|dupzfd
-argument_list|)
+name|ld_entry
+operator|=
+name|_DYNAMIC
+operator|.
+name|d_entry
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
+begin_comment
+comment|/*  * DL stubs  */
+end_comment
 
-begin_expr_stmt
-specifier|static
-name|__call
-argument_list|()
+begin_function
+name|void
+modifier|*
+name|dlopen
+parameter_list|(
+name|name
+parameter_list|,
+name|mode
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
 block|{
-comment|/* 	 * adjust the C generated pointer to the crt struct to the 	 * likings of ld.so, which is an offset relative to its %fp 	 */
-if|#
-directive|if
-literal|0
-block|asm("___call:"); 	asm("call	%o2"); 	asm("sub	%o1, %sp, %o1");
-comment|/* adjust parameter */
-else|#
-directive|else
-else|Hmmm...
-name|asm
+if|if
+condition|(
+name|ld_entry
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+call|(
+name|ld_entry
+operator|->
+name|dlopen
+call|)
 argument_list|(
-literal|"mov	%i0, %o0"
+name|name
+argument_list|,
+name|mode
 argument_list|)
-block|;
-name|asm
-argument_list|(
-literal|"mov	%i1, %o1"
-argument_list|)
-block|;
-name|asm
-argument_list|(
-literal|"call	%i2"
-argument_list|)
-block|;
-name|asm
-argument_list|(
-literal|"sub	%o1, %sp, %o1"
-argument_list|)
-block|;
-comment|/*NOTREACHED, control is transferred directly to our caller */
-endif|#
-directive|endif
+return|;
 block|}
-endif|#
-directive|endif
+end_function
+
+begin_function
+name|int
+name|dlclose
+parameter_list|(
+name|fd
+parameter_list|)
+name|void
+modifier|*
+name|fd
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|ld_entry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+call|(
+name|ld_entry
+operator|->
+name|dlclose
+call|)
+argument_list|(
+name|fd
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|dlsym
+parameter_list|(
+name|fd
+parameter_list|,
+name|name
+parameter_list|)
+name|void
+modifier|*
+name|fd
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|ld_entry
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+call|(
+name|ld_entry
+operator|->
+name|dlsym
+call|)
+argument_list|(
+name|fd
+argument_list|,
+name|name
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|dlctl
+parameter_list|(
+name|fd
+parameter_list|,
+name|cmd
+parameter_list|,
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|fd
+decl_stmt|,
+decl|*
+name|arg
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|ld_entry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+call|(
+name|ld_entry
+operator|->
+name|dlctl
+call|)
+argument_list|(
+name|fd
+argument_list|,
+name|cmd
+argument_list|,
+name|arg
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Support routines  */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|_strncmp
@@ -1615,15 +1331,15 @@ name|s2
 argument_list|,
 name|n
 argument_list|)
-specifier|register
+decl|register
 name|char
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 specifier|register
@@ -1816,75 +1532,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
-
-begin_comment
-comment|/* System call entry */
-end_comment
-
-begin_asm
-asm|asm("___syscall:");
-end_asm
-
-begin_asm
-asm|asm("clr	%g1");
-end_asm
-
-begin_asm
-asm|asm("ta		%g0");
-end_asm
-
-begin_asm
-asm|asm("bgeu	Lsyscallx");
-end_asm
-
-begin_comment
-comment|/* good result ? */
-end_comment
-
-begin_asm
-asm|asm("nop");
-end_asm
-
-begin_asm
-asm|asm("mov	-0x1, %o0");
-end_asm
-
-begin_comment
-comment|/* Note: no `errno' */
-end_comment
-
-begin_asm
-asm|asm("Lsyscallx:");
-end_asm
-
-begin_asm
-asm|asm("jmp	%o7 + 0x8");
-end_asm
-
-begin_asm
-asm|asm("nop");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* sparc */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|i386
-end_ifdef
-
 begin_asm
 asm|asm("	___syscall:");
 end_asm
@@ -1936,15 +1583,6 @@ end_asm
 begin_asm
 asm|asm("		ret");
 end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* i386 */
-end_comment
 
 begin_endif
 endif|#
