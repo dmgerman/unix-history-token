@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.26 (Berkeley) %G%"
+literal|"@(#)map.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2676,8 +2676,6 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|HASFLOCK
@@ -2756,6 +2754,8 @@ name|map_mflags
 operator||=
 name|MF_LOCKED
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
@@ -3103,8 +3103,6 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|HASFLOCK
@@ -3183,6 +3181,8 @@ name|map_mflags
 operator||=
 name|MF_LOCKED
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
