@@ -159,8 +159,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|THREAD_LIST_UNLOCK
-expr_stmt|;
 comment|/* Check if the thread was not found or has been detached: */
 if|if
 condition|(
@@ -197,6 +195,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
 name|DEAD_LIST_UNLOCK
 expr_stmt|;
 name|ret
@@ -225,6 +225,8 @@ name|pthread
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
 expr_stmt|;
 name|DEAD_LIST_UNLOCK
 expr_stmt|;
@@ -267,14 +269,6 @@ name|thread
 operator|=
 name|pthread
 expr_stmt|;
-name|_SPINUNLOCK
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|curthread
@@ -299,6 +293,16 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
 name|DEAD_LIST_UNLOCK
 expr_stmt|;
 name|_thread_suspend
@@ -307,9 +311,6 @@ name|curthread
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-comment|/* XXX - For correctness reasons. */
-name|DEAD_LIST_LOCK
 expr_stmt|;
 name|_thread_critical_enter
 argument_list|(
@@ -353,9 +354,6 @@ name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
-expr_stmt|;
-comment|/* 		 * XXX - Must unlock here, instead of doing it earlier, 		 *	 because it could lead to a deadlock. If the thread 		 *	 we are joining is waiting on this lock we would 		 *	 deadlock if we released this lock before unlocking the 		 *	 joined thread. 		 */
-name|DEAD_LIST_UNLOCK
 expr_stmt|;
 block|}
 else|else
@@ -409,6 +407,8 @@ name|PANIC
 argument_list|(
 literal|"Cannot signal gc cond"
 argument_list|)
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
 expr_stmt|;
 name|DEAD_LIST_UNLOCK
 expr_stmt|;
