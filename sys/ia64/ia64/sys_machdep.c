@@ -145,8 +145,6 @@ decl_stmt|;
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 switch|switch
 condition|(

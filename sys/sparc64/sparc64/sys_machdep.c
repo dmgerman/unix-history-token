@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -123,9 +135,11 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -171,6 +185,12 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error

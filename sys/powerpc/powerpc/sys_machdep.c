@@ -58,7 +58,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|EOPNOTSUPP
+name|EINVAL
 operator|)
 return|;
 block|}
