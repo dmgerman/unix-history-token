@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mkheaders.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mkheaders.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +48,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -42,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -87,12 +106,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|options
-argument_list|()
-end_macro
+begin_decl_stmt
+name|void
+name|read_options
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_decl_stmt
+name|void
+name|do_option
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|options
+parameter_list|()
 block|{
 name|struct
 name|opt_list
@@ -101,11 +143,6 @@ name|ol
 decl_stmt|;
 comment|/* fake the cpu types as options */
 comment|/* Please forgive me for this hack.. :-) */
-name|struct
-name|opt
-modifier|*
-name|op
-decl_stmt|;
 name|struct
 name|cputype
 modifier|*
@@ -213,27 +250,22 @@ name|o_name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Generate an<options>.h file  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|do_option
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -370,18 +402,15 @@ name|outf
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* was the option in the config file? */
 if|if
 condition|(
@@ -769,18 +798,15 @@ name|outf
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|op
@@ -855,7 +881,7 @@ name|outf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Find the filename to store the option spec into.  */
@@ -968,12 +994,10 @@ begin_comment
 comment|/*  * read the options and options.<machine> files  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|read_options
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|FILE
 modifier|*
@@ -1390,7 +1414,7 @@ goto|goto
 name|next
 goto|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
