@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dnd.c	4.2 (Berkeley) %G%"
+literal|"@(#)dnd.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,7 +152,14 @@ block|,
 literal|'0'
 block|}
 block|,
-comment|/*{"/dev/cua1",'4','1'},*/
+block|{
+literal|"/dev/cua1"
+block|,
+literal|'4'
+block|,
+literal|'1'
+block|}
+block|,
 block|{
 literal|0
 block|}
