@@ -1008,6 +1008,12 @@ literal|"Disconnected from keyboard.\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|api_finish
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;

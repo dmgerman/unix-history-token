@@ -1415,6 +1415,49 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/*  * The "we are done" routine.  This gets called last.  */
+end_comment
+
+begin_macro
+name|api_finish
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+if|if
+condition|(
+name|api_close_api
+argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* defined(unix) */
+block|}
+end_block
+
+begin_comment
 comment|/*  * The initialization routine.  Be sure to call this first.  */
 end_comment
 
