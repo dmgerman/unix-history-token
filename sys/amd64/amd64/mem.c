@@ -608,6 +608,11 @@ name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
+name|v
+operator|&=
+operator|~
+name|PAGE_MASK
+expr_stmt|;
 name|pmap_kenter
 argument_list|(
 operator|(
