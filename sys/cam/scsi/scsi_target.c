@@ -2761,7 +2761,7 @@ break|break;
 block|}
 name|priority
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|&
 name|user_ccb
@@ -2789,7 +2789,7 @@ break|break;
 block|}
 name|func_code
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|&
 name|user_ccb
@@ -3432,7 +3432,7 @@ name|k_ccbh
 operator|->
 name|retry_count
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|&
 name|u_ccbh
@@ -3452,7 +3452,7 @@ name|k_ccbh
 operator|->
 name|flags
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|&
 name|u_ccbh
@@ -3464,7 +3464,7 @@ name|k_ccbh
 operator|->
 name|timeout
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|&
 name|u_ccbh
