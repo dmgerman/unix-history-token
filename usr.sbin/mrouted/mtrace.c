@@ -5899,6 +5899,21 @@ condition|(
 name|TRUE
 condition|)
 block|{
+if|if
+condition|(
+name|igmp_socket
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|0
+argument_list|,
+literal|"descriptor too big"
+argument_list|)
+expr_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
