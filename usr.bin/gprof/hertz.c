@@ -61,12 +61,12 @@ name|HZ_WRONG
 value|0
 end_define
 
-begin_macro
+begin_function
+name|int
 name|hertz
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|itimerval
@@ -151,7 +151,7 @@ name|tv_usec
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
