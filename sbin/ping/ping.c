@@ -3693,15 +3693,11 @@ operator|+
 name|nrepeats
 operator|)
 operator|)
-operator|/
-literal|1000.0
 else|:
 name|tsum
 operator|)
 argument_list|,
 name|tmax
-operator|/
-literal|1000.0
 argument_list|)
 expr_stmt|;
 block|}
