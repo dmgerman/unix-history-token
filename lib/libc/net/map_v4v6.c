@@ -242,7 +242,7 @@ name|hp
 parameter_list|,
 name|bpp
 parameter_list|,
-name|lenp
+name|epp
 parameter_list|)
 name|struct
 name|hostent
@@ -254,9 +254,10 @@ modifier|*
 modifier|*
 name|bpp
 decl_stmt|;
-name|int
+name|char
 modifier|*
-name|lenp
+modifier|*
+name|epp
 decl_stmt|;
 block|{
 name|char
@@ -330,7 +331,10 @@ decl_stmt|;
 if|if
 condition|(
 operator|*
-name|lenp
+name|epp
+operator|-
+operator|*
+name|bpp
 operator|<
 operator|(
 name|i
@@ -352,11 +356,6 @@ name|bpp
 operator|+=
 name|i
 expr_stmt|;
-operator|*
-name|lenp
-operator|-=
-name|i
-expr_stmt|;
 name|_map_v4v6_address
 argument_list|(
 operator|*
@@ -375,11 +374,6 @@ expr_stmt|;
 operator|*
 name|bpp
 operator|+=
-name|IN6ADDRSZ
-expr_stmt|;
-operator|*
-name|lenp
-operator|-=
 name|IN6ADDRSZ
 expr_stmt|;
 block|}

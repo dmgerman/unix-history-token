@@ -282,8 +282,6 @@ name|type
 decl_stmt|,
 name|class
 decl_stmt|,
-name|buflen
-decl_stmt|,
 name|ancount
 decl_stmt|,
 name|qdcount
@@ -322,6 +320,9 @@ name|pauxt
 decl_stmt|,
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|,
 modifier|*
 modifier|*
@@ -407,13 +408,6 @@ comment|/* #/entries in the question section */
 name|bp
 operator|=
 name|netbuf
-expr_stmt|;
-name|buflen
-operator|=
-sizeof|sizeof
-argument_list|(
-name|netbuf
-argument_list|)
 expr_stmt|;
 name|cp
 operator|=
@@ -513,7 +507,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -626,7 +622,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if

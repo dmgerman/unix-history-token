@@ -551,6 +551,9 @@ modifier|*
 name|bp
 decl_stmt|,
 modifier|*
+name|ep
+decl_stmt|,
+modifier|*
 modifier|*
 name|ap
 decl_stmt|,
@@ -562,8 +565,6 @@ name|int
 name|type
 decl_stmt|,
 name|class
-decl_stmt|,
-name|buflen
 decl_stmt|,
 name|ancount
 decl_stmt|,
@@ -685,8 +686,10 @@ name|bp
 operator|=
 name|hostbuf
 expr_stmt|;
-name|buflen
+name|ep
 operator|=
+name|hostbuf
+operator|+
 sizeof|sizeof
 name|hostbuf
 expr_stmt|;
@@ -732,7 +735,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -819,10 +824,6 @@ name|bp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
 comment|/* The qname can be abbreviated, but h_name is now absolute. */
 name|qname
 operator|=
@@ -903,7 +904,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1156,10 +1159,6 @@ name|bp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
 comment|/* Get canonical name. */
 name|n
 operator|=
@@ -1175,7 +1174,9 @@ if|if
 condition|(
 name|n
 operator|>
-name|buflen
+name|ep
+operator|-
+name|bp
 operator|||
 name|n
 operator|>=
@@ -1202,10 +1203,6 @@ name|bp
 expr_stmt|;
 name|bp
 operator|+=
-name|n
-expr_stmt|;
-name|buflen
-operator|-=
 name|n
 expr_stmt|;
 continue|continue;
@@ -1293,7 +1290,9 @@ if|if
 condition|(
 name|n
 operator|>
-name|buflen
+name|ep
+operator|-
+name|bp
 operator|||
 name|n
 operator|>=
@@ -1318,10 +1317,6 @@ name|bp
 expr_stmt|;
 name|bp
 operator|+=
-name|n
-expr_stmt|;
-name|buflen
-operator|-=
 name|n
 expr_stmt|;
 continue|continue;
@@ -1426,7 +1421,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1543,10 +1540,6 @@ name|bp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
 block|}
 break|break;
 else|#
@@ -1592,10 +1585,6 @@ name|bp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
 name|_map_v4v6_hostent
 argument_list|(
 operator|&
@@ -1605,7 +1594,7 @@ operator|&
 name|bp
 argument_list|,
 operator|&
-name|buflen
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -1707,10 +1696,6 @@ name|bp
 operator|+=
 name|nn
 expr_stmt|;
-name|buflen
-operator|-=
-name|nn
-expr_stmt|;
 block|}
 name|buflen
 operator|-=
@@ -1756,12 +1741,7 @@ name|bp
 operator|+
 name|n
 operator|>=
-operator|&
-name|hostbuf
-index|[
-sizeof|sizeof
-name|hostbuf
-index|]
+name|ep
 condition|)
 block|{
 name|dprintf
@@ -1823,10 +1803,6 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|+=
-name|n
-expr_stmt|;
-name|buflen
-operator|-=
 name|n
 expr_stmt|;
 name|cp
@@ -1947,7 +1923,9 @@ if|if
 condition|(
 name|n
 operator|>
-name|buflen
+name|ep
+operator|-
+name|bp
 operator|||
 name|n
 operator|>=
@@ -1973,10 +1951,6 @@ name|bp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1995,7 +1969,7 @@ operator|&
 name|bp
 argument_list|,
 operator|&
-name|buflen
+name|ep
 argument_list|)
 expr_stmt|;
 name|h_errno
@@ -2150,6 +2124,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 name|int
 name|n
@@ -2383,12 +2360,12 @@ name|hostbuf
 operator|+
 name|MAXDNAME
 expr_stmt|;
-name|len
+name|ep
 operator|=
+name|hostbuf
+operator|+
 sizeof|sizeof
 name|hostbuf
-operator|-
-name|MAXDNAME
 expr_stmt|;
 name|host
 operator|.
@@ -2450,7 +2427,7 @@ operator|&
 name|bp
 argument_list|,
 operator|&
-name|len
+name|ep
 argument_list|)
 expr_stmt|;
 name|h_errno
