@@ -3334,6 +3334,9 @@ name|tr1
 operator|=
 name|n
 expr_stmt|;
+name|tr1
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|msf
@@ -3456,9 +3459,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|tr1
-operator|--
-expr_stmt|;
 name|f1
 operator|+=
 name|tf
