@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.28 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,11 +1351,6 @@ expr_stmt|;
 name|nsock
 operator|--
 expr_stmt|;
-name|sigsetmask
-argument_list|(
-literal|0L
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1372,7 +1367,6 @@ name|RETRYTIME
 argument_list|)
 expr_stmt|;
 block|}
-continue|continue;
 block|}
 block|}
 name|pid
@@ -1435,6 +1429,15 @@ name|se_wait
 operator|=
 name|pid
 expr_stmt|;
+if|if
+condition|(
+name|sep
+operator|->
+name|se_fd
+operator|>=
+literal|0
+condition|)
+block|{
 name|FD_CLR
 argument_list|(
 name|sep
@@ -1448,6 +1451,7 @@ expr_stmt|;
 name|nsock
 operator|--
 expr_stmt|;
+block|}
 block|}
 name|sigsetmask
 argument_list|(
