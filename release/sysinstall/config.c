@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.63 1998/03/23 09:18:30 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.64 1998/07/23 19:21:37 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2745,7 +2745,7 @@ argument_list|)
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"You have configured and been running the mouse daemon.\n"
+literal|"You have configured and are now running the mouse daemon.\n"
 literal|"Choose \"/dev/sysmouse\" as the mouse port and \"SysMouse\" or\n"
 literal|"\"MouseSystems\" as the mouse protocol in the X configuration\n"
 literal|"utility."
@@ -2928,6 +2928,10 @@ name|fp
 condition|)
 return|return;
 comment|/* Add an entry for localhost */
+if|if
+condition|(
+name|dp
+condition|)
 name|fprintf
 argument_list|(
 name|fp
@@ -2935,10 +2939,14 @@ argument_list|,
 literal|"127.0.0.1\t\tlocalhost.%s localhost\n"
 argument_list|,
 name|dp
-condition|?
-name|dp
-else|:
-literal|"my.domain"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"127.0.0.1\t\tlocalhost\n"
 argument_list|)
 expr_stmt|;
 comment|/* Now the host entries, if applicable */
@@ -3548,96 +3556,6 @@ name|DITEM_RESTORE
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETCON_EXTENTIONS
-end_ifdef
-
-begin_comment
-comment|/* Load novell client/server package */
-end_comment
-
-begin_function
-name|int
-name|configNovell
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|int
-name|ret
-init|=
-name|DITEM_SUCCESS
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|RunningAsInit
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"This package can only be installed in multi-user mode."
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
-return|;
-block|}
-if|if
-condition|(
-name|variable_get
-argument_list|(
-name|VAR_NOVELL
-argument_list|)
-condition|)
-name|variable_unset
-argument_list|(
-name|VAR_NOVELL
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|ret
-operator|=
-name|package_add
-argument_list|(
-name|PACKAGE_NETCON
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|ret
-argument_list|)
-operator|==
-name|DITEM_SUCCESS
-condition|)
-name|variable_set2
-argument_list|(
-name|VAR_NOVELL
-argument_list|,
-literal|"YES"
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|ret
-operator||
-name|DITEM_RESTORE
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Load pcnfsd package */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.70 1998/08/31 17:48:39 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.71 1998/09/29 05:13:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1383,66 +1383,35 @@ argument_list|(
 literal|"Please insert a writable fixit floppy and press return"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mount
-argument_list|(
-name|MOUNT_UFS
-argument_list|,
+name|mediaDevice
+operator|->
+name|private
+operator|=
 literal|"/mnt2"
-argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|args
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-break|break;
-name|msgConfirm
-argument_list|(
-literal|"An attempt to mount the fixit floppy failed, maybe the filesystem\n"
-literal|"is unclean.  Trying a forcible mount as a last resort..."
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mount
+operator|!
+name|mediaDevice
+operator|->
+name|init
 argument_list|(
-name|MOUNT_UFS
-argument_list|,
-literal|"/mnt2"
-argument_list|,
-name|MNT_FORCE
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|args
+name|mediaDevice
 argument_list|)
-operator|!=
-operator|-
-literal|1
 condition|)
-break|break;
+block|{
 if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Unable to mount the fixit floppy - do you want to try again?"
+literal|"The attempt to mount the fixit floppy failed, bad floppy\n"
+literal|"or unclean filesystem.  Do you want to try again?"
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 name|DITEM_FAILURE
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -1465,12 +1434,16 @@ expr_stmt|;
 name|fixit_common
 argument_list|()
 expr_stmt|;
-name|unmount
+name|mediaDevice
+operator|->
+name|shutdown
 argument_list|(
-literal|"/mnt2"
-argument_list|,
-name|MNT_FORCE
+name|mediaDevice
 argument_list|)
+expr_stmt|;
+name|mediaDevice
+operator|=
+name|NULL
 expr_stmt|;
 name|msgConfirm
 argument_list|(
@@ -2932,27 +2905,6 @@ literal|"/kernel.GENERIC"
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SAVE_USERCONFIG
-comment|/* Snapshot any boot -c changes back to the GENERIC kernel */
-if|if
-condition|(
-operator|!
-name|variable_cmp
-argument_list|(
-name|VAR_RELNAME
-argument_list|,
-name|RELEASE_NAME
-argument_list|)
-condition|)
-name|save_userconfig_to_kernel
-argument_list|(
-literal|"/kernel.GENERIC"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|vsystem
@@ -2970,6 +2922,27 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SAVE_USERCONFIG
+comment|/* Snapshot any boot -c changes back to the new kernel */
+if|if
+condition|(
+operator|!
+name|variable_cmp
+argument_list|(
+name|VAR_RELNAME
+argument_list|,
+name|RELEASE_NAME
+argument_list|)
+condition|)
+name|save_userconfig_to_kernel
+argument_list|(
+literal|"/kernel"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -3164,13 +3137,13 @@ block|}
 block|}
 block|}
 block|}
-comment|/* XXX Do all the last ugly work-arounds here which we'll try and excise someday right?? XXX */
+comment|/* Do all the last ugly work-arounds here */
 name|msgNotify
 argument_list|(
 literal|"Fixing permissions.."
 argument_list|)
 expr_stmt|;
-comment|/* BOGON #1:  XFree86 extracting /usr/X11R6 with root-only perms */
+comment|/* BOGON #1:  XFree86 requires various specialized fixups */
 if|if
 condition|(
 name|directory_exists
@@ -3187,6 +3160,19 @@ expr_stmt|;
 name|vsystem
 argument_list|(
 literal|"find /usr/X11R6 -type d | xargs chmod a+x"
+argument_list|)
+expr_stmt|;
+comment|/* Also do bogus minimal package registration so ports don't whine */
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/usr/X11R6/lib/X11/pkgreg.tar.gz"
+argument_list|)
+condition|)
+name|vsystem
+argument_list|(
+literal|"tar xpzf /usr/X11R6/lib/X11/pkgreg.tar.gz -C /&& rm /usr/X11R6/lib/X11/pkgreg.tar.gz"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3946,7 +3932,7 @@ operator|||
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"You are upgradding - are you SURE you want to newfs /dev/%s?"
+literal|"You are upgrading - are you SURE you want to newfs /dev/%s?"
 argument_list|,
 name|c2
 operator|->

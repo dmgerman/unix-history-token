@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.38.2.16 1998/07/23 19:33:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.38.2.17 1998/07/24 04:57:31 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MENU
-value|8
+value|12
 end_define
 
 begin_define
@@ -126,10 +126,7 @@ literal|"To mark a package, move to it and press SPACE.  If the package is\n"
 literal|"already marked, it will be unmarked or deleted (if installed).\n"
 literal|"To search for a package by name, press ESC.  To select a category,\n"
 literal|"press RETURN.  NOTE:  The All category selection creates a very large\n"
-literal|"submenu.  If you select it, please be patient while it comes up.\n\n"
-literal|"If a package you're looking for is not listed here and you are\n"
-literal|"installing from CD, please check the other CD(s) after installation\n"
-literal|"since the sheer number of packages means they no longer all fit on one.\n"
+literal|"submenu.  If you select it, please be patient while it comes up."
 block|,
 literal|"Package Targets"
 block|,
@@ -196,6 +193,10 @@ block|,
 literal|"development"
 block|,
 literal|"Software development utilities and libraries."
+block|,
+literal|"deskutils"
+block|,
+literal|"Various Desktop utilities."
 block|,
 literal|"documentation"
 block|,
@@ -392,6 +393,26 @@ block|,
 literal|"x11"
 block|,
 literal|"X Window System based utilities."
+block|,
+literal|"x11-clocks"
+block|,
+literal|"X Window System based clocks."
+block|,
+literal|"x11-fm"
+block|,
+literal|"X Window System based file managers."
+block|,
+literal|"x11-fonts"
+block|,
+literal|"X Window System fonts."
+block|,
+literal|"x11-toolkits"
+block|,
+literal|"X Window System based development toolkits."
+block|,
+literal|"x11-wm"
+block|,
+literal|"X Window System Window Managers."
 block|,
 name|NULL
 block|,
@@ -3164,7 +3185,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|package_exists
+argument_list|(
+name|cp
+argument_list|)
+condition|)
 block|{
 if|if
 condition|(
