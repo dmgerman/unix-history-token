@@ -1941,6 +1941,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PORTB_EXTTRAN
+parameter_list|(
+name|b
+parameter_list|)
+value|((b)& 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PORTB_DISC
 parameter_list|(
 name|b
@@ -1956,6 +1966,16 @@ parameter_list|(
 name|b
 parameter_list|)
 value|((b)& 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PORTB_FSYNC
+parameter_list|(
+name|b
+parameter_list|)
+value|((b)& 0x10)
 end_define
 
 begin_define

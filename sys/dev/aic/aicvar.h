@@ -245,6 +245,12 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|int
+name|min_period
+decl_stmt|;
+name|int
+name|max_period
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -296,6 +302,13 @@ define|#
 directive|define
 name|AIC_BUSFREE_OK
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIC_FAST_ENABLE
+value|0x80
 end_define
 
 begin_define
@@ -373,6 +386,20 @@ define|#
 directive|define
 name|AIC_SYNC_PERIOD
 value|(200 / 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIC_FAST_SYNC_PERIOD
+value|(100 / 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIC_MIN_SYNC_PERIOD
+value|112
 end_define
 
 begin_define

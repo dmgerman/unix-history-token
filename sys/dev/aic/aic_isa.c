@@ -250,11 +250,20 @@ name|sc
 operator|->
 name|sc_port
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"I/O port allocation failed\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|isa_get_irq
@@ -301,6 +310,13 @@ operator|->
 name|sc_irq
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"IRQ allocation failed\n"
+argument_list|)
+expr_stmt|;
 name|aic_isa_release_resources
 argument_list|(
 name|dev
@@ -359,6 +375,13 @@ operator|->
 name|sc_drq
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"DRQ allocation failed\n"
+argument_list|)
+expr_stmt|;
 name|aic_isa_release_resources
 argument_list|(
 name|dev
