@@ -499,10 +499,9 @@ name|__alpha__
 argument_list|)
 operator|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|_FIXED_STDIO
+name|_OLD_STDIO
 argument_list|)
 define|#
 directive|define
