@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.19 (Berkeley) %G%"
+literal|"@(#)init.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,7 +694,7 @@ name|collect_child
 name|__P
 argument_list|(
 operator|(
-name|int
+name|pid_t
 operator|)
 argument_list|)
 decl_stmt|;
