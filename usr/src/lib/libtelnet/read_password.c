@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)read_password.c	8.1 (Berkeley) %G%"
+literal|"@(#)read_password.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,20 @@ end_comment
 begin_comment
 comment|/*  * $Source: /mit/kerberos/src/lib/des/RCS/read_password.c,v $  * $Author: jon $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|RSA_ENCPWD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB4_ENCPWD
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -468,6 +482,15 @@ return|;
 comment|/* return nonzero if not okay */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(RSA_ENCPWD) || defined(KRB4_ENCPWD) */
+end_comment
 
 end_unit
 
