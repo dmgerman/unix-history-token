@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.5 (Berkeley) %G%"
+literal|"@(#)od.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3944,19 +3944,21 @@ name|str_label
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|st_put
 argument_list|(
-name|c
+argument|cc
 argument_list|,
-name|d
+argument|d
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
-name|c
-expr_stmt|;
-end_expr_stmt
+modifier|*
+name|cc
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -3968,9 +3970,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|c
+decl_stmt|;
 if|if
 condition|(
-name|c
+name|cc
 operator|==
 literal|0
 condition|)
@@ -3982,8 +3988,21 @@ argument_list|,
 name|YES
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
-elseif|else
+name|c
+operator|=
+operator|(
+operator|*
+name|cc
+operator|&
+literal|0377
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|str_mode
@@ -3995,13 +4014,11 @@ if|if
 condition|(
 name|isascii
 argument_list|(
-operator|*
 name|c
 argument_list|)
 condition|)
 name|put_sbuf
 argument_list|(
-operator|*
 name|c
 argument_list|,
 name|d
@@ -4016,10 +4033,9 @@ name|CNULL
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|c
 operator|==
-name|CNULL
+name|NULL
 condition|)
 name|pr_sbuf
 argument_list|(
@@ -4039,7 +4055,6 @@ if|if
 condition|(
 name|isascii
 argument_list|(
-operator|*
 name|c
 argument_list|)
 condition|)
@@ -4053,7 +4068,7 @@ operator|=
 name|addr
 operator|+
 operator|(
-name|c
+name|cc
 operator|-
 name|dbuf
 operator|)
@@ -4072,7 +4087,7 @@ condition|)
 name|str_label
 operator|+=
 operator|(
-name|c
+name|cc
 operator|-
 name|dbuf
 operator|)
@@ -4084,7 +4099,6 @@ name|str_buf
 expr_stmt|;
 name|put_sbuf
 argument_list|(
-operator|*
 name|c
 argument_list|,
 name|d
@@ -4109,7 +4123,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
