@@ -930,6 +930,12 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
 name|pfs_vncache_mutex
 argument_list|)
 expr_stmt|;
@@ -1003,6 +1009,12 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|pfs_vncache_mutex
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
