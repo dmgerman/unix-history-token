@@ -90,27 +90,6 @@ name|pmap_pagedaemon_waken
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_function_decl
-name|void
-name|pmap_page_is_free
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|pmap_change_wiring

@@ -2009,14 +2009,6 @@ name|pv_list_count
 operator|=
 literal|0
 expr_stmt|;
-name|m
-operator|->
-name|md
-operator|.
-name|pv_flags
-operator|=
-literal|0
-expr_stmt|;
 block|}
 comment|/* 	 * init the pv free list 	 */
 name|initial_pvs
@@ -10423,29 +10415,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  *	pmap_page_is_free:  *  *	Called when a page is freed to allow pmap to clean up  *	any extra state associated with the page.  In this case  *	clear modified/referenced bits.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_page_is_free
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|m
-operator|->
-name|md
-operator|.
-name|pv_flags
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
