@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.30 (Berkeley) %G%"
+literal|"@(#)telnetd.c	4.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -506,8 +512,6 @@ name|i
 decl_stmt|,
 name|p
 decl_stmt|,
-name|cc
-decl_stmt|,
 name|t
 decl_stmt|;
 name|struct
@@ -519,6 +523,38 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|char
+modifier|*
+name|pqrs
+decl_stmt|;
+name|t
+operator|=
+name|strlen
+argument_list|(
+literal|"/dev/ptyp"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pqrs
+operator|=
+literal|"pqrs"
+init|;
+operator|*
+name|pqrs
+condition|;
+name|pqrs
+operator|++
+control|)
+block|{
+name|cp
+index|[
+name|t
+index|]
+operator|=
+operator|*
+name|pqrs
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -535,10 +571,7 @@ control|)
 block|{
 name|cp
 index|[
-name|strlen
-argument_list|(
-literal|"/dev/ptyp"
-argument_list|)
+name|t
 index|]
 operator|=
 literal|"0123456789abcdef"
@@ -552,7 +585,7 @@ name|open
 argument_list|(
 name|cp
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -564,6 +597,7 @@ condition|)
 goto|goto
 name|gotpty
 goto|;
+block|}
 block|}
 name|fatal
 argument_list|(
@@ -598,7 +632,7 @@ name|open
 argument_list|(
 literal|"/dev/tty"
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -629,7 +663,7 @@ name|open
 argument_list|(
 name|cp
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -878,7 +912,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"telnetd: %s.\n"
+literal|"telnetd: %s.\r\n"
 argument_list|,
 name|msg
 argument_list|)
@@ -957,7 +991,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %s\r\n"
 argument_list|,
 name|msg
 argument_list|,
@@ -1112,6 +1146,10 @@ condition|(
 name|nfrontp
 operator|-
 name|nbackp
+operator|||
+name|pcc
+operator|>
+literal|0
 condition|)
 name|obits
 operator||=
@@ -1135,6 +1173,10 @@ condition|(
 name|pfrontp
 operator|-
 name|pbackp
+operator|||
+name|ncc
+operator|>
+literal|0
 condition|)
 name|obits
 operator||=
@@ -1668,11 +1710,16 @@ comment|/* 			 * Are You There? 			 */
 case|case
 name|AYT
 case|:
-operator|*
-name|pfrontp
-operator|++
-operator|=
-name|BELL
+name|strcpy
+argument_list|(
+name|nfrontp
+argument_list|,
+literal|"\r\n[Yes]\r\n"
+argument_list|)
+expr_stmt|;
+name|nfrontp
+operator|+=
+literal|9
 expr_stmt|;
 break|break;
 comment|/* 			 * Erase Character and 			 * Erase Line 			 */
@@ -2588,7 +2635,7 @@ name|open
 argument_list|(
 name|utmp
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2659,7 +2706,7 @@ argument_list|(
 name|wtmp
 argument_list|)
 argument_list|,
-literal|1
+name|L_INCR
 argument_list|)
 expr_stmt|;
 name|SCPYN
@@ -2726,7 +2773,9 @@ name|open
 argument_list|(
 name|wtmpf
 argument_list|,
-literal|1
+name|O_WRONLY
+operator||
+name|O_APPEND
 argument_list|)
 expr_stmt|;
 if|if
@@ -2771,18 +2820,6 @@ operator|&
 name|wtmp
 operator|.
 name|ut_time
-argument_list|)
-expr_stmt|;
-name|lseek
-argument_list|(
-name|f
-argument_list|,
-operator|(
-name|long
-operator|)
-literal|0
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 name|write
