@@ -1731,6 +1731,32 @@ begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_typedef
+typedef|typedef
+name|short
+name|pid_t
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
