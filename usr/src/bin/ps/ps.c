@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	8.2 (Berkeley) %G%"
+literal|"@(#)ps.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,24 +484,15 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|kinfo_proc
 modifier|*
 name|kp
 decl_stmt|;
-specifier|register
 name|struct
 name|varent
 modifier|*
 name|vent
-decl_stmt|;
-name|int
-name|nentries
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|winsize
@@ -510,6 +501,12 @@ decl_stmt|;
 name|dev_t
 name|ttydev
 decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
+name|uid_t
+name|uid
+decl_stmt|;
 name|int
 name|all
 decl_stmt|,
@@ -517,15 +514,16 @@ name|ch
 decl_stmt|,
 name|flag
 decl_stmt|,
+name|i
+decl_stmt|,
 name|fmt
 decl_stmt|,
 name|lineno
 decl_stmt|,
-name|pid
-decl_stmt|,
+name|nentries
+decl_stmt|;
+name|int
 name|prtheader
-decl_stmt|,
-name|uid
 decl_stmt|,
 name|wflag
 decl_stmt|,
@@ -655,8 +653,14 @@ literal|0
 expr_stmt|;
 name|pid
 operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|uid
 operator|=
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -873,7 +877,7 @@ literal|'p'
 case|:
 name|pid
 operator|=
-name|atoi
+name|atol
 argument_list|(
 name|optarg
 argument_list|)
@@ -1278,6 +1282,9 @@ if|if
 condition|(
 name|uid
 operator|!=
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -1605,18 +1612,15 @@ name|void
 name|scanvars
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|varent
 modifier|*
 name|vent
 decl_stmt|;
-specifier|register
 name|VAR
 modifier|*
 name|v
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1749,7 +1753,6 @@ name|int
 name|maxlen
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1807,27 +1810,22 @@ modifier|*
 name|ki
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|pstats
+name|pstats
+decl_stmt|;
 name|struct
 name|usave
 modifier|*
 name|usp
-init|=
+decl_stmt|;
+name|usp
+operator|=
 operator|&
 name|ki
 operator|->
 name|ki_u
-decl_stmt|;
-name|struct
-name|pstats
-name|pstats
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|fmt_argv
-parameter_list|()
-function_decl|;
+expr_stmt|;
 if|if
 condition|(
 name|kvm_read
@@ -2349,7 +2347,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ps [-aChjlmrSTuvwx] [-O|o fmt] [-p pid] [-t tty]\n\t  [-M core] [-N system] [-W swap]\n       ps [-L]\n"
+literal|"usage:\t%s\n\t   %s\n\t%s\n"
+argument_list|,
+literal|"ps [-aChjlmrSTuvwx] [-O|o fmt] [-p pid] [-t tty]"
+argument_list|,
+literal|"[-M core] [-N system] [-W swap]"
+argument_list|,
+literal|"ps [-L]"
 argument_list|)
 expr_stmt|;
 name|exit

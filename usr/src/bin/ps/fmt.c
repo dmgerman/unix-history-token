@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	8.1 (Berkeley) %G%"
+literal|"@(#)fmt.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,14 +119,12 @@ name|shquote
 parameter_list|(
 name|argv
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -250,7 +248,6 @@ modifier|*
 name|arg0
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -291,13 +288,11 @@ name|cmd
 parameter_list|,
 name|maxlen
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cmd
@@ -306,11 +301,9 @@ name|int
 name|maxlen
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|ap

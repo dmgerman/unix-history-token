@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -26,6 +26,39 @@ struct_decl|struct
 name|varent
 struct_decl|;
 end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|fixpt_t
+name|ccpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|eval
+decl_stmt|,
+name|fscale
+decl_stmt|,
+name|mempages
+decl_stmt|,
+name|nlistread
+decl_stmt|,
+name|rawcpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sumrusage
+decl_stmt|,
+name|termwidth
+decl_stmt|,
+name|totwidth
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
