@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1150,43 +1150,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Make a filesystem operational.  * Nothing to do at the moment.  */
-end_comment
-
-begin_macro
-name|nfs_start
-argument_list|(
-argument|mp
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|flags
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * unmount system call  */
 end_comment
 
@@ -1256,6 +1219,24 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Clear out the buffer cache 	 */
+name|bflush
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|binval
+argument_list|(
+name|mp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 comment|/* 	 * Goes something like this.. 	 * - Call nfs_nflush() to clear out the nfsnode table 	 * - Flush out lookup cache 	 * - Close the socket 	 * - Free up the data structures 	 */
 if|if
 condition|(
@@ -1523,8 +1504,15 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|syncprt
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Since writes are synchronous, I think this is a no-op  * Maybe write cache on nfs version 3 will require something ??  */
+comment|/*  * Flush out the buffer cache  */
 end_comment
 
 begin_macro
@@ -1552,6 +1540,19 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|syncprt
+condition|)
+name|bufstats
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
+name|bflush
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1655,6 +1656,43 @@ block|{
 return|return
 operator|(
 name|EINVAL
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Vfs start routine, a no-op.  */
+end_comment
+
+begin_macro
+name|nfs_start
+argument_list|(
+argument|mp
+argument_list|,
+argument|flags
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

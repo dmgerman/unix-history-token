@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_node.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_node.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -201,6 +201,20 @@ name|nfreet
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
 begin_comment
 comment|/*  * Initialize hash links for nfsnodes  * and build nfsnode free list.  */
 end_comment
@@ -308,6 +322,15 @@ name|qaddr_t
 operator|)
 name|np
 expr_stmt|;
+name|NFSTOV
+argument_list|(
+name|np
+argument_list|)
+operator|->
+name|v_type
+operator|=
+name|VNON
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -347,6 +370,15 @@ operator|(
 name|qaddr_t
 operator|)
 name|np
+expr_stmt|;
+name|NFSTOV
+argument_list|(
+name|np
+argument_list|)
+operator|->
+name|v_type
+operator|=
+name|VNON
 expr_stmt|;
 operator|*
 name|nfreet
@@ -529,6 +561,7 @@ name|np
 operator|->
 name|n_forw
 control|)
+block|{
 if|if
 condition|(
 name|mntp
@@ -676,6 +709,7 @@ literal|0
 operator|)
 return|;
 block|}
+block|}
 if|if
 condition|(
 operator|(
@@ -752,11 +786,61 @@ name|n_freeb
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Now to take nfsnode off the hash chain it was on 	 * (initially, or after an nflush, it is on a "hash chain" 	 * consisting entirely of itself, and pointed to by no-one, 	 * but that doesn't matter), and put it on the chain for 	 * its new file handle 	 */
+comment|/* 	 * Now to take nfsnode off the hash chain it was on 	 * (initially, or after an nflush, it is on a "hash chain" 	 * consisting entirely of itself, and pointed to by no-one, 	 * but that doesn't matter) 	 */
 name|remque
 argument_list|(
 name|np
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Flush out any associated bio buffers that might be lying about 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VREG
+operator|&&
+operator|(
+name|np
+operator|->
+name|n_flag
+operator|&
+name|NMODIFIED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|np
+operator|->
+name|n_flag
+operator||=
+name|NLOCKED
+expr_stmt|;
+name|nfs_blkflush
+argument_list|(
+name|vp
+argument_list|,
+operator|(
+name|daddr_t
+operator|)
+literal|0
+argument_list|,
+name|np
+operator|->
+name|n_size
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Insert the nfsnode in the hash queue for its new file handle 	 */
+name|np
+operator|->
+name|n_flag
+operator|=
+name|NLOCKED
 expr_stmt|;
 name|insque
 argument_list|(
@@ -783,8 +867,8 @@ argument_list|,
 name|NFSX_FH
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|notyet
 name|cache_purge
 argument_list|(
@@ -793,12 +877,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|np
-operator|->
-name|n_flag
-operator|=
-name|NLOCKED
-expr_stmt|;
 name|np
 operator|->
 name|n_attrstamp
@@ -822,6 +900,18 @@ name|n_id
 operator|=
 operator|++
 name|nextnfsnodeid
+expr_stmt|;
+name|np
+operator|->
+name|n_size
+operator|=
+literal|0
+expr_stmt|;
+name|np
+operator|->
+name|n_mtime
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Initialize the associated vnode 	 */
 name|vinit
@@ -1063,26 +1153,39 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|np
-operator|->
-name|n_flag
-operator||=
-name|NLOCKED
-expr_stmt|;
-if|if
-condition|(
-name|np
-operator|->
-name|n_sillyrename
-condition|)
-block|{
-comment|/* 			 * Remove the silly file that was rename'd earlier 			 */
 name|sp
 operator|=
 name|np
 operator|->
 name|n_sillyrename
 expr_stmt|;
+name|np
+operator|->
+name|n_sillyrename
+operator|=
+operator|(
+expr|struct
+name|sillyrename
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+name|nfs_lock
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"in silltren inact\n"
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Remove the silly file that was rename'd earlier 			 */
 name|ndp
 operator|=
 operator|&
@@ -1109,6 +1212,11 @@ name|dnp
 argument_list|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"got the dir\n"
+argument_list|)
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_dvp
@@ -1118,21 +1226,7 @@ argument_list|(
 name|dnp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|s_flag
-operator|==
-name|REMOVE
-condition|)
 name|nfs_removeit
-argument_list|(
-name|ndp
-argument_list|)
-expr_stmt|;
-else|else
-name|nfs_rmdirit
 argument_list|(
 name|ndp
 argument_list|)
@@ -1162,17 +1256,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|np
-operator|->
-name|n_sillyrename
-operator|=
-operator|(
-expr|struct
-name|sillyrename
-operator|*
-operator|)
-literal|0
-expr_stmt|;
 block|}
 name|nfs_unlock
 argument_list|(
@@ -1185,6 +1268,9 @@ name|n_flag
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* 		 * Scan the request list for any requests left hanging about 		 */
 name|s
 operator|=
@@ -1291,6 +1377,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Put the nfsnode on the end of the free list. 		 */
 if|if
 condition|(
