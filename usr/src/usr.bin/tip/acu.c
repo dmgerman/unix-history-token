@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	5.2 (Berkeley) %G%"
+literal|"@(#)acu.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -506,20 +506,31 @@ name|phnum
 operator|=
 name|cp
 init|;
-name|any
-argument_list|(
 operator|*
 name|cp
-argument_list|,
-literal|"0123456789-*="
-argument_list|)
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|','
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|'\n'
 condition|;
 name|cp
 operator|++
 control|)
 empty_stmt|;
+if|if
+condition|(
 operator|*
 name|cp
+condition|)
+operator|*
+name|cp
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
