@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -41,7 +47,34 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|newfd_opened
+decl_stmt|;
+comment|/* Check if the file descriptor is out of range: */
+if|if
+condition|(
+name|newfd
+operator|<
+literal|0
+operator|||
+name|newfd
+operator|>=
+name|_thread_dtablesize
+condition|)
+block|{
+comment|/* Return a bad file descriptor error: */
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 comment|/* Lock the file descriptor: */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -63,6 +96,20 @@ block|{
 comment|/* Lock the file descriptor: */
 if|if
 condition|(
+operator|!
+operator|(
+name|newfd_opened
+operator|=
+operator|(
+name|_thread_fd_table
+index|[
+name|newfd
+index|]
+operator|!=
+name|NULL
+operator|)
+operator|)
+operator|||
 operator|(
 name|ret
 operator|=
@@ -140,6 +187,10 @@ name|flags
 expr_stmt|;
 block|}
 comment|/* Unlock the file descriptor: */
+if|if
+condition|(
+name|newfd_opened
+condition|)
 name|_FD_UNLOCK
 argument_list|(
 name|newfd
