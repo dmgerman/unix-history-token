@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -875,6 +875,13 @@ name|numvnodes
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|vattr
+name|va_null
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Initialize the vnode structures and initialize each file system type.  */
 end_comment
@@ -897,6 +904,12 @@ name|nchinit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize each file system type. 	 */
+name|vattr_null
+argument_list|(
+operator|&
+name|va_null
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|vfsp
