@@ -698,23 +698,6 @@ name|u_int
 name|li_quirks
 decl_stmt|;
 comment|/* given target quirk */
-comment|/* 	 * lun synch and wide data  	 */
-struct|struct
-name|synch
-block|{
-name|u_int8_t
-name|offset
-decl_stmt|;
-name|u_int8_t
-name|period
-decl_stmt|;
-block|}
-name|li_maxsynch
-struct|;
-comment|/* synch data */
-name|u_int
-name|li_width
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -938,9 +921,22 @@ name|u_int
 name|ti_msgoutlen
 decl_stmt|;
 comment|/* msgout strlen */
-comment|/* 	 * lun info size.  	 */
-name|int
-name|ti_lunsize
+comment|/* 	 * synch and wide data  	 */
+struct|struct
+name|synch
+block|{
+name|u_int8_t
+name|offset
+decl_stmt|;
+name|u_int8_t
+name|period
+decl_stmt|;
+block|}
+name|ti_maxsynch
+struct|;
+comment|/* synch data */
+name|u_int
+name|ti_width
 decl_stmt|;
 block|}
 struct|;
@@ -996,8 +992,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SC_LOW_LUN_INIT_T
-value|(int (*) __P((sc_low_t, struct targ_info *, struct lun_info *)))
+name|SC_LOW_TARG_INIT_T
+value|(int (*) __P((sc_low_t, struct targ_info *)))
 end_define
 
 begin_define
@@ -1072,7 +1068,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*scsi_low_lun_init
+argument|*scsi_low_targ_init
 argument_list|)
 name|__P
 argument_list|(
@@ -1081,10 +1077,6 @@ name|sc_low_t
 operator|,
 expr|struct
 name|targ_info
-operator|*
-operator|,
-expr|struct
-name|lun_info
 operator|*
 operator|)
 argument_list|)

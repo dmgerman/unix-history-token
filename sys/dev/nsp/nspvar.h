@@ -57,6 +57,9 @@ modifier|*
 name|sc_ih
 decl_stmt|;
 name|int
+name|sc_wc
+decl_stmt|;
+name|int
 name|sc_seltout
 decl_stmt|;
 comment|/* selection timeout counter */
@@ -163,24 +166,24 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*****************************************************************  * Lun information   *****************************************************************/
+comment|/*****************************************************************  * Target information   *****************************************************************/
 end_comment
 
 begin_struct
 struct|struct
-name|nsp_lun_info
+name|nsp_targ_info
 block|{
 name|struct
-name|lun_info
-name|nli_li
+name|targ_info
+name|nti_ti
 decl_stmt|;
-comment|/* generic lun info */
+comment|/* generic target info */
 name|u_int8_t
-name|nli_reg_syncr
+name|nti_reg_syncr
 decl_stmt|;
 comment|/* sync registers per devices */
 name|u_int8_t
-name|nli_reg_ackwidth
+name|nti_reg_ackwidth
 decl_stmt|;
 comment|/* ackwidth per devices */
 block|}
