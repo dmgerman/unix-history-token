@@ -1932,11 +1932,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s\n       %s\n"
+literal|"%s\n%s\n"
 argument_list|,
-literal|"umount [-fv] [-t fstypelist] special | node"
+literal|"usage: umount [-fv] special | node"
 argument_list|,
-literal|"umount -a[fv] [-h host] [-t fstypelist]"
+literal|"       umount -a | -A [-fv] [-h host] [-t type]"
 argument_list|)
 expr_stmt|;
 name|exit
