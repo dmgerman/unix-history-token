@@ -1743,7 +1743,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdf:ghI:lLiM:mN:np:rstuWw:"
+literal|"Aabdf:gI:iLlM:mN:np:rstuWw:"
 argument_list|)
 operator|)
 operator|!=
@@ -3604,7 +3604,7 @@ literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-AaLlnW] [-f address_family] [-M core] [-N system]"
 argument_list|,
-literal|"       netstat [-abdghilmnrs] [-f address_family] [-M core] [-N system]"
+literal|"       netstat [-abdgilmnrs] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat [-bdn] [-I interface] [-M core] [-N system] [-w wait]"
 argument_list|,
