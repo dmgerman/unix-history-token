@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.6	%H%	*/
+comment|/*	kern_synch.c	3.7	%H%	*/
 end_comment
 
 begin_include
@@ -238,18 +238,22 @@ name|rp
 operator|->
 name|p_link
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 goto|goto
 name|psig
 goto|;
 block|}
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|runin
@@ -289,10 +293,12 @@ goto|;
 block|}
 else|else
 block|{
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;

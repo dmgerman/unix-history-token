@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	3.1	%H%	*/
+comment|/*	tty_subr.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -1575,15 +1575,19 @@ literal|1
 operator|)
 return|;
 block|}
-name|VOID
+operator|(
+name|void
+operator|)
 name|putc
-parameter_list|(
+argument_list|(
 name|c
-parameter_list|,
+argument_list|,
 name|p
-parameter_list|)
-function_decl|;
-name|VOID
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|c
@@ -1592,7 +1596,7 @@ literal|8
 argument_list|,
 name|p
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

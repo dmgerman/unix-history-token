@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.4	%H%	*/
+comment|/*	kern_clock.c	3.5	%H%	*/
 end_comment
 
 begin_include
@@ -525,12 +525,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VOID
+operator|(
+name|void
+operator|)
 name|setpri
-parameter_list|(
+argument_list|(
 name|pp
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pp
@@ -594,10 +596,12 @@ expr_stmt|;
 operator|++
 name|time
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl1
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|runrun
 operator|++
 expr_stmt|;
@@ -820,12 +824,14 @@ name|p_cpu
 operator|=
 name|a
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|setpri
-parameter_list|(
+argument_list|(
 name|pp
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|spl6
@@ -1002,12 +1008,14 @@ name|NZERO
 operator|+
 literal|4
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|setpri
-parameter_list|(
+argument_list|(
 name|pp
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 name|pp
 operator|->
 name|p_pri

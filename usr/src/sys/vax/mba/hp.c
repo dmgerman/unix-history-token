@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.2	%H%	*/
+comment|/*	hp.c	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -862,10 +862,12 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl5
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|disksort
 argument_list|(
 name|dp
@@ -899,10 +901,12 @@ name|hpstart
 argument_list|()
 expr_stmt|;
 block|}
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 

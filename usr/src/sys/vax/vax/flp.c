@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.c	3.1	%H%	*/
+comment|/*	flp.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -238,10 +238,12 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl4
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|fltab
@@ -267,10 +269,12 @@ name|fl_state
 operator||=
 name|FL_BUSY
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|bp
 operator|=
 name|fltab
@@ -370,10 +374,12 @@ name|b_flags
 operator|=
 name|rw
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl4
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|flstart
 argument_list|()
 expr_stmt|;
@@ -399,10 +405,12 @@ argument_list|,
 name|PRIBIO
 argument_list|)
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|bp

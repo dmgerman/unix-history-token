@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.2	%H%	*/
+comment|/*	kern_proc.c	3.3	%H%	*/
 end_comment
 
 begin_include
@@ -738,7 +738,9 @@ index|]
 operator|=
 name|ap
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|suword
 argument_list|(
 operator|(
@@ -750,7 +752,7 @@ name|na
 operator|-
 name|ne
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|nc
 operator|=
 literal|0
@@ -772,7 +774,9 @@ operator|==
 name|ne
 condition|)
 block|{
-name|VOID
+operator|(
+name|void
+operator|)
 name|suword
 argument_list|(
 operator|(
@@ -782,7 +786,7 @@ name|ap
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|ap
 operator|+=
 name|NBPW
@@ -796,7 +800,9 @@ operator|<
 literal|0
 condition|)
 break|break;
-name|VOID
+operator|(
+name|void
+operator|)
 name|suword
 argument_list|(
 operator|(
@@ -806,7 +812,7 @@ name|ap
 argument_list|,
 name|ucp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -878,7 +884,9 @@ operator|.
 name|b_addr
 expr_stmt|;
 block|}
-name|VOID
+operator|(
+name|void
+operator|)
 name|subyte
 argument_list|(
 operator|(
@@ -895,7 +903,7 @@ name|cp
 operator|++
 operator|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|nc
 operator|++
 expr_stmt|;
@@ -908,7 +916,9 @@ literal|0377
 condition|)
 do|;
 block|}
-name|VOID
+operator|(
+name|void
+operator|)
 name|suword
 argument_list|(
 operator|(
@@ -918,8 +928,10 @@ name|ap
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
-name|VOID
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|suword
 argument_list|(
 operator|(
@@ -929,7 +941,7 @@ name|ucp
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|setregs
 argument_list|()
 expr_stmt|;
@@ -3077,7 +3089,9 @@ operator|!
 name|isvfork
 condition|)
 block|{
-name|VOID
+operator|(
+name|void
+operator|)
 name|vsexpand
 argument_list|(
 literal|0
@@ -3089,8 +3103,10 @@ name|u_cdmap
 argument_list|,
 literal|1
 argument_list|)
-decl_stmt|;
-name|VOID
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|vsexpand
 argument_list|(
 literal|0
@@ -3102,7 +3118,7 @@ name|u_csmap
 argument_list|,
 literal|1
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 goto|goto
 name|out

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	3.3	%H%	*/
+comment|/*	init_main.c	3.4	%H%	*/
 end_comment
 
 begin_include
@@ -439,7 +439,9 @@ argument_list|,
 name|P0BR
 argument_list|)
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|copyout
 argument_list|(
 operator|(
@@ -457,7 +459,7 @@ name|unsigned
 operator|)
 name|szicode
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* 		 * Return goes to loc. 0 of user init 		 * code just copied out. 		 */
 return|return;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	3.1	%H%	*/
+comment|/*	va.c	3.2	%H%	*/
 end_comment
 
 begin_ifdef
@@ -456,10 +456,12 @@ specifier|register
 name|int
 name|e
 decl_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl4
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|vainfo
@@ -485,10 +487,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Grab it. */
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|va_ubinfo
 operator|=
 name|ubasetup
@@ -507,10 +511,12 @@ name|va_ubinfo
 operator|&
 literal|0x3ffff
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl4
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -600,10 +606,12 @@ name|DONE
 argument_list|)
 expr_stmt|;
 block|}
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|brkout
 label|:
 name|ubafree
@@ -847,16 +855,18 @@ block|{
 case|case
 name|VGETSTATE
 case|:
-name|VOID
+operator|(
+name|void
+operator|)
 name|suword
-parameter_list|(
+argument_list|(
 name|addr
-parameter_list|,
+argument_list|,
 name|vainfo
 operator|.
 name|va_state
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 return|return;
 case|case
 name|VSETSTATE
@@ -916,16 +926,20 @@ end_macro
 
 begin_block
 block|{
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl4
-parameter_list|()
-function_decl|;
-name|VOID
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|vaerror
-parameter_list|(
+argument_list|(
 name|DONE
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/* Wait for va to be ready. */
 switch|switch
 condition|(
@@ -1018,10 +1032,12 @@ name|u_error
 operator|=
 name|EIO
 expr_stmt|;
-name|VOID
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 

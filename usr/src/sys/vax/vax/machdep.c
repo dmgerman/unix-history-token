@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.3	%H%	*/
+comment|/*	machdep.c	3.4	%H%	*/
 end_comment
 
 begin_include
@@ -495,7 +495,9 @@ operator|.
 name|u_ssize
 argument_list|)
 condition|)
-name|VOID
+operator|(
+name|void
+operator|)
 name|grow
 argument_list|(
 operator|(
@@ -503,7 +505,7 @@ name|unsigned
 operator|)
 name|usp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 empty_stmt|;
 comment|/* Avoid asm() label botch */
 asm|asm("probew $3,$20,(r11)");
@@ -568,7 +570,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|VOID
+operator|(
+name|void
+operator|)
 name|grow
 argument_list|(
 call|(
@@ -580,7 +584,7 @@ operator|-
 literal|5
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|suword
