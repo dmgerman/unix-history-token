@@ -2123,9 +2123,9 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"control setsockopt: %m"
+literal|"control setsockopt (SO_REUSEADDR): %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2166,9 +2166,9 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"control setsockopt(IPV6_V6ONLY): %m"
+literal|"control setsockopt (IPV6_V6ONLY): %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2723,7 +2723,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"setsockopt (IP_TOS): %m"
+literal|"control setsockopt (IP_TOS): %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2755,7 +2755,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"control setsockopt TCP_NODELAY: %m"
+literal|"control setsockopt (TCP_NODELAY): %m"
 argument_list|)
 expr_stmt|;
 name|data_source
@@ -2824,9 +2824,9 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"setsockopt: %m"
+literal|"control setsockopt (SO_OOBINLINE): %m"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8267,9 +8267,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"data setsockopt (SO_REUSEADDR): %m"
+argument_list|)
+expr_stmt|;
 comment|/* anchor socket to avoid multi-homing problems */
 name|data_source
 operator|=
@@ -8395,7 +8399,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"setsockopt (IP_TOS): %m"
+literal|"data setsockopt (IP_TOS): %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8436,7 +8440,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"setsockopt (TCP_NOPUSH): %m"
+literal|"data setsockopt (TCP_NOPUSH): %m"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8475,7 +8479,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"setsockopt (SO_SNDBUF): %m"
+literal|"data setsockopt (SO_SNDBUF): %m"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8814,9 +8818,8 @@ name|tos
 operator|=
 name|IPTOS_THROUGHPUT
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|s
@@ -8836,6 +8839,15 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"pdata setsockopt (IP_TOS): %m"
 argument_list|)
 expr_stmt|;
 block|}
