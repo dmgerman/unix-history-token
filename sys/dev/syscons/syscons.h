@@ -128,6 +128,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|SC_CURSOR_CHAR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SC_CURSOR_CHAR
+value|(0x07)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SC_MOUSE_CHAR
 end_ifndef
 
@@ -136,6 +154,40 @@ define|#
 directive|define
 name|SC_MOUSE_CHAR
 value|(0xd0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SC_MOUSE_CHAR
+operator|<=
+name|SC_CURSOR_CHAR
+operator|&&
+name|SC_CURSOR_CHAR
+operator|<
+operator|(
+name|SC_MOUSE_CHAR
+operator|+
+literal|4
+operator|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SC_CURSOR_CHAR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SC_CURSOR_CHAR
+value|(SC_MOUSE_CHAR + 4)
 end_define
 
 begin_endif
@@ -274,12 +326,20 @@ name|UNKNOWN_MODE
 value|0x00010
 end_define
 
+begin_comment
+comment|/* unknown video mode */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SWITCH_WAIT_REL
 value|0x00080
 end_define
+
+begin_comment
+comment|/* waiting for vty release */
+end_comment
 
 begin_define
 define|#
@@ -288,12 +348,20 @@ name|SWITCH_WAIT_ACQ
 value|0x00100
 end_define
 
+begin_comment
+comment|/* waiting for vty ack */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BUFFER_SAVED
 value|0x00200
 end_define
+
+begin_comment
+comment|/* vty buffer is saved */
+end_comment
 
 begin_define
 define|#
@@ -302,12 +370,20 @@ name|CURSOR_ENABLED
 value|0x00400
 end_define
 
+begin_comment
+comment|/* text cursor is enabled */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MOUSE_MOVED
 value|0x01000
 end_define
+
+begin_comment
+comment|/* mouse cursor has moved */
+end_comment
 
 begin_define
 define|#
@@ -316,12 +392,20 @@ name|MOUSE_CUTTING
 value|0x02000
 end_define
 
+begin_comment
+comment|/* mouse cursor is cutting text */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MOUSE_VISIBLE
 value|0x04000
 end_define
+
+begin_comment
+comment|/* mouse cursor is showing */
+end_comment
 
 begin_define
 define|#
@@ -330,12 +414,20 @@ name|GRAPHICS_MODE
 value|0x08000
 end_define
 
+begin_comment
+comment|/* vty is in a graphics mode */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PIXEL_MODE
 value|0x10000
 end_define
+
+begin_comment
+comment|/* vty is in a raster text mode */
+end_comment
 
 begin_define
 define|#
@@ -344,6 +436,10 @@ name|SAVER_RUNNING
 value|0x20000
 end_define
 
+begin_comment
+comment|/* screen saver is running */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -351,12 +447,31 @@ name|VR_CURSOR_BLINK
 value|0x40000
 end_define
 
+begin_comment
+comment|/* blinking text cursor */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VR_CURSOR_ON
 value|0x80000
 end_define
+
+begin_comment
+comment|/* text cursor is on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_HIDDEN
+value|0x100000
+end_define
+
+begin_comment
+comment|/* mouse cursor is temporarily hidden */
+end_comment
 
 begin_comment
 comment|/* misc defines */
@@ -715,6 +830,9 @@ decl_stmt|;
 endif|#
 directive|endif
 name|u_char
+name|cursor_char
+decl_stmt|;
+name|u_char
 name|mouse_char
 decl_stmt|;
 block|}
@@ -859,6 +977,14 @@ name|short
 name|mouse_ypos
 decl_stmt|;
 comment|/* mouse y coordinate */
+name|short
+name|mouse_oldxpos
+decl_stmt|;
+comment|/* mouse previous x coordinate */
+name|short
+name|mouse_oldypos
+decl_stmt|;
+comment|/* mouse previous y coordinate */
 name|short
 name|mouse_buttons
 decl_stmt|;
@@ -2448,6 +2574,24 @@ end_else
 begin_define
 define|#
 directive|define
+name|sc_draw_mouse_image
+parameter_list|(
+name|scp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sc_remove_mouse_image
+parameter_list|(
+name|scp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|sc_inside_cutmark
 parameter_list|(
 name|scp
@@ -2461,6 +2605,24 @@ begin_define
 define|#
 directive|define
 name|sc_remove_cutmarking
+parameter_list|(
+name|scp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sc_remove_all_cutmarkings
+parameter_list|(
+name|scp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sc_remove_all_mouse
 parameter_list|(
 name|scp
 parameter_list|)
