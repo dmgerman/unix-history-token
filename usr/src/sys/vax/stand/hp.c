@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	6.2	83/09/23	*/
+comment|/*	hp.c	6.3	83/09/23	*/
 end_comment
 
 begin_comment
@@ -1016,40 +1016,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|io
-operator|->
-name|i_errcnt
-operator|>=
-literal|16
-condition|)
-block|{
-name|hpaddr
-operator|->
-name|hpcs1
-operator|=
-name|HP_RTC
-operator||
-name|HP_GO
-expr_stmt|;
-while|while
-condition|(
-name|hpaddr
-operator|->
-name|hpds
-operator|&
-name|HPDS_PIP
-condition|)
-empty_stmt|;
-block|}
-return|return
-operator|(
-name|bytecnt
-operator|)
-return|;
-block|}
+goto|goto
+name|done
+goto|;
 comment|/* 	 * Error handling.  Calculate location of error. 	 */
 name|bytesleft
 operator|=
@@ -1484,12 +1453,14 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|bytecnt
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* 	 * Attempt to forward bad sectors on 	 * anything but an ML11.  If drive 	 * supports skip sector handling, try to 	 * use it first; otherwise try the 	 * bad sector table. 	 */
 if|if
@@ -1924,6 +1895,8 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|done
+label|:
 if|if
 condition|(
 name|io
