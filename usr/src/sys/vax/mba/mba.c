@@ -1,7 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.2	%G%	*/
+comment|/*	mba.c	4.3	%G%	*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
 
 begin_include
 include|#
@@ -663,6 +671,11 @@ operator|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
