@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.6 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,7 +186,13 @@ name|lowpc
 expr_stmt|;
 name|monsize
 operator|=
+operator|(
 name|s_textsize
+operator|+
+literal|1
+operator|)
+operator|/
+literal|2
 operator|+
 sizeof|sizeof
 argument_list|(
