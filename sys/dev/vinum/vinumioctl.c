@@ -3089,10 +3089,12 @@ name|plex
 operator|->
 name|name
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 condition|)
-block|{
 comment|/* this subdisk is named after the plex */
+block|{
 name|bcopy
 argument_list|(
 name|sd
@@ -3115,6 +3117,8 @@ name|sd
 operator|->
 name|name
 argument_list|)
+operator|+
+literal|1
 argument_list|,
 name|MAXSDNAME
 operator|-
@@ -3402,10 +3406,12 @@ name|vol
 operator|->
 name|name
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 condition|)
-block|{
 comment|/* this plex is named after the volume */
+block|{
 comment|/* First, check if the subdisks are the same */
 if|if
 condition|(
@@ -3468,10 +3474,12 @@ name|plex
 operator|->
 name|name
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 condition|)
-block|{
 comment|/* subdisk is named after the plex */
+block|{
 name|bcopy
 argument_list|(
 name|sd
@@ -3494,6 +3502,8 @@ name|sd
 operator|->
 name|name
 argument_list|)
+operator|+
+literal|1
 argument_list|,
 name|MAXSDNAME
 operator|-
@@ -3548,6 +3558,8 @@ name|plex
 operator|->
 name|name
 argument_list|)
+operator|+
+literal|1
 argument_list|,
 name|MAXPLEXNAME
 operator|-
