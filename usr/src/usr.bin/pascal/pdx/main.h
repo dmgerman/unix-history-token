@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)main.h 1.3 %G%"; */
+comment|/* static char sccsid[] = "@(#)main.h 1.4 %G%"; */
 end_comment
 
 begin_comment
@@ -32,6 +32,16 @@ parameter_list|(
 name|c
 parameter_list|)
 value|opt[(c)-'a']
+end_define
+
+begin_define
+define|#
+directive|define
+name|isterm
+parameter_list|(
+name|file
+parameter_list|)
+value|(option('i') || isatty(fileno(file)))
 end_define
 
 begin_function_decl
