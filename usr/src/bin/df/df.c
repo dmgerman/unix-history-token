@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	8.1 (Berkeley) %G%"
+literal|"@(#)df.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,19 +152,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MT_AMDNFS
-value|(1)
-end_define
-
-begin_comment
-comment|/* XXX automounted NFS FSes return type 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MT_LOCAL
-value|(MT(MOUNT_UFS)|MT(MOUNT_MFS)|MT(MOUNT_LFS))
+define|\
+value|(MT(MOUNT_UFS)|MT(MOUNT_MFS)|MT(MOUNT_LFS)|MT(MOUNT_MSDOS)|MT(MOUNT_ISOFS))
 end_define
 
 begin_define
@@ -211,8 +201,6 @@ name|MT
 argument_list|(
 name|MOUNT_NFS
 argument_list|)
-operator||
-name|MT_AMDNFS
 block|,
 literal|"mfs"
 block|,
@@ -228,11 +216,11 @@ argument_list|(
 name|MOUNT_LFS
 argument_list|)
 block|,
-literal|"pc"
+literal|"msdos"
 block|,
 name|MT
 argument_list|(
-name|MOUNT_PC
+name|MOUNT_MSDOS
 argument_list|)
 block|,
 literal|"fdesc"
@@ -263,6 +251,34 @@ argument_list|(
 name|MOUNT_KERNFS
 argument_list|)
 block|,
+literal|"procfs"
+block|,
+name|MT
+argument_list|(
+name|MOUNT_PROCFS
+argument_list|)
+block|,
+literal|"afs"
+block|,
+name|MT
+argument_list|(
+name|MOUNT_AFS
+argument_list|)
+block|,
+literal|"isofs"
+block|,
+name|MT
+argument_list|(
+name|MOUNT_ISOFS
+argument_list|)
+block|,
+literal|"cdfs"
+block|,
+name|MT
+argument_list|(
+name|MOUNT_ISOFS
+argument_list|)
+block|,
 literal|"misc"
 block|,
 name|MT
@@ -282,17 +298,12 @@ argument_list|)
 operator||
 name|MT
 argument_list|(
-name|MOUNT_NULL
-argument_list|)
-operator||
-name|MT
-argument_list|(
-name|MOUNT_UMAP
-argument_list|)
-operator||
-name|MT
-argument_list|(
 name|MOUNT_KERNFS
+argument_list|)
+operator||
+name|MT
+argument_list|(
+name|MOUNT_PROCFS
 argument_list|)
 block|,
 operator|(
