@@ -134,7 +134,7 @@ file|"mntopts.h"
 end_include
 
 begin_comment
-comment|/*  * XXX - no way to specify "foo=<bar>"-type options; that's what we'd  * want for "-u", "-g", "-m", "-L", and "-W".  */
+comment|/*  * XXX - no way to specify "foo=<bar>"-type options; that's what we'd  * want for "-u", "-g", "-m", "-M", "-L", and "-W".  */
 end_comment
 
 begin_decl_stmt
@@ -1189,7 +1189,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: mount_msdos [-o options] [-u user] [-g group] [-m mask]"
+literal|"usage: mount_msdos [-o options] [-u user] [-g group] [-m mask] [-M mask]"
 argument_list|,
 literal|"                   [-s] [-l] [-9] [-L locale] [-W table] bdev dir"
 argument_list|)
