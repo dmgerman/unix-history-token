@@ -154,7 +154,7 @@ literal|"or %0, %0, %2\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
-literal|"bne- 1\n\t"
+literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* drain to memory */
@@ -204,7 +204,7 @@ literal|"andc %0, %0, %2\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
-literal|"bne- 1\n\t"
+literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* drain to memory */
@@ -254,7 +254,7 @@ literal|"add %0, %0, %2\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
-literal|"bne- 1\n\t"
+literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* Old McDonald had a farm */
@@ -304,7 +304,7 @@ literal|"sub %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
-literal|"bne- 1\n\t"
+literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* drain to memory */
@@ -355,7 +355,7 @@ literal|"li %1, 0\n\t"
 comment|/* load new value */
 literal|"stwcx. %1, 0, %2\n\t"
 comment|/* attempt to store */
-literal|"bne- 1\n\t"
+literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* drain to memory */
