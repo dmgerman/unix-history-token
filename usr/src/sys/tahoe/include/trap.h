@@ -4,7 +4,7 @@ comment|/*	trap.h	1.3	87/07/11	*/
 end_comment
 
 begin_comment
-comment|/*	first 3 constants known in system C files - don't change */
+comment|/*  * Trap type values  * also known in trap.c for name strings  */
 end_comment
 
 begin_define
@@ -38,10 +38,6 @@ end_define
 
 begin_comment
 comment|/* reserved operand */
-end_comment
-
-begin_comment
-comment|/*	those constants shouldn't change 	*/
 end_comment
 
 begin_define
@@ -185,6 +181,97 @@ end_define
 
 begin_comment
 comment|/* kernel debugger trap */
+end_comment
+
+begin_comment
+comment|/* definitions for<sys/signal.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_RESAD_FAULT
+value|T_RESADFLT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILL_PRIVIN_FAULT
+value|T_PRIVINFLT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILL_RESOP_FAULT
+value|T_RESOPFLT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILL_ALIGN_FAULT
+value|T_ALIGNFLT
+end_define
+
+begin_comment
+comment|/* codes for SIGFPE/ARITHTRAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_INTOVF_TRAP
+value|0x1
+end_define
+
+begin_comment
+comment|/* integer overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_INTDIV_TRAP
+value|0x2
+end_define
+
+begin_comment
+comment|/* integer divide by zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTDIV_TRAP
+value|0x3
+end_define
+
+begin_comment
+comment|/* floating/decimal divide by zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTOVF_TRAP
+value|0x4
+end_define
+
+begin_comment
+comment|/* floating overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTUND_TRAP
+value|0x5
+end_define
+
+begin_comment
+comment|/* floating underflow */
 end_comment
 
 end_unit
