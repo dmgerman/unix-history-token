@@ -780,11 +780,11 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|"processor       : %d\n"
-literal|"vendor_id       : %.20s\n"
-literal|"cpu family      : %d\n"
-literal|"model           : %d\n"
-literal|"stepping        : %d\n"
+literal|"processor\t: %d\n"
+literal|"vendor_id\t: %.20s\n"
+literal|"cpu family\t: %d\n"
+literal|"model\t\t: %d\n"
+literal|"stepping\t: %d\n"
 argument_list|,
 literal|0
 argument_list|,
@@ -805,7 +805,7 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|"flags           :"
+literal|"flags\t\t:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -912,7 +912,28 @@ name|sprintf
 argument_list|(
 name|ps
 argument_list|,
-literal|"cpu MHz         : %d.%02d\n"
+literal|"cpu MHz\t\t: %d.%02d\n"
+literal|"bogomips\t: %d.%02d\n"
+argument_list|,
+operator|(
+name|tsc_freq
+operator|+
+literal|4999
+operator|)
+operator|/
+literal|1000000
+argument_list|,
+operator|(
+operator|(
+name|tsc_freq
+operator|+
+literal|4999
+operator|)
+operator|/
+literal|10000
+operator|)
+operator|%
+literal|100
 argument_list|,
 operator|(
 name|tsc_freq
