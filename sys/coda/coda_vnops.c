@@ -8786,7 +8786,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
+name|register_t
 modifier|*
 name|retval
 decl_stmt|;
