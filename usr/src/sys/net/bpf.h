@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: bpf.h,v 1.19 91/01/30 18:20:21 mccanne Exp $ (LBL)  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.h) distributed with 4.3BSD Unix.  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: bpf.h,v 1.20 91/04/24 22:06:24 mccanne Locked $ (LBL)  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.h) distributed with 4.3BSD Unix.  */
 end_comment
 
 begin_comment
@@ -461,49 +461,349 @@ comment|/* FDDI */
 end_comment
 
 begin_comment
-comment|/*  * The opcodes are defined as an enumeration.  However, they are stored  * explicitly in the code array as 'u_short'.  */
+comment|/*  * The instruction encondings.  */
 end_comment
 
-begin_enum
-enum|enum
-name|bpf_code
-block|{
-define|#
-directive|define
-name|OPDEF
-parameter_list|(
-name|opcode
-parameter_list|,
-name|opstr
-parameter_list|)
-value|opcode ,
-include|#
-directive|include
-file|<net/bpfcodes.h>
-undef|#
-directive|undef
-name|OPDEF
-comment|/* this idea is borrowed from gcc */
-name|LAST_AND_UNUSED_ENUM
-block|}
-enum|;
-end_enum
+begin_comment
+comment|/* classes<2:0> */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|BPF_NCODES
-value|((unsigned)LAST_AND_UNUSED_ENUM)
+name|BPF_CLASS
+parameter_list|(
+name|code
+parameter_list|)
+value|((code)& 0x07)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BPF_VALIDCODE
+name|BPF_LD
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_LDX
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_ST
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_STX
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_ALU
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JMP
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_RET
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MISC
+value|0x07
+end_define
+
+begin_comment
+comment|/* ld/ldx fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_SIZE
 parameter_list|(
 name|code
 parameter_list|)
-value|((unsigned)(code)< BPF_NCODES)
+value|((code)& 0x18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_W
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_H
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_B
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MODE
+parameter_list|(
+name|code
+parameter_list|)
+value|((code)& 0xe0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_IMM
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_ABS
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_IND
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MEM
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_LEN
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MSH
+value|0xa0
+end_define
+
+begin_comment
+comment|/* alu/jmp fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_OP
+parameter_list|(
+name|code
+parameter_list|)
+value|((code)& 0xf0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_ADD
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_SUB
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MUL
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_DIV
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_OR
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_AND
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_LSH
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_RSH
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_NEG
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JA
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JEQ
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JGT
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JGE
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JSET
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_SRC
+parameter_list|(
+name|code
+parameter_list|)
+value|((code)& 0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_K
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_X
+value|0x08
+end_define
+
+begin_comment
+comment|/* ret - BPF_K and BPF_X also apply */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_RVAL
+parameter_list|(
+name|code
+parameter_list|)
+value|((code)& 0x18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_A
+value|0x10
+end_define
+
+begin_comment
+comment|/* misc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_MISCOP
+parameter_list|(
+name|code
+parameter_list|)
+value|((code)& 0xf8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_TAX
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_TXA
+value|0x80
 end_define
 
 begin_comment
@@ -531,7 +831,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Macros for array initializers.  */
+comment|/*  * Macros for insn array initializers.  */
 end_comment
 
 begin_define
@@ -543,7 +843,7 @@ name|code
 parameter_list|,
 name|k
 parameter_list|)
-value|{ (u_short)code, 0, 0, k }
+value|{ (u_short)(code), 0, 0, k }
 end_define
 
 begin_define
@@ -559,7 +859,7 @@ name|jt
 parameter_list|,
 name|jf
 parameter_list|)
-value|{ (u_short)code, jt, jf, k }
+value|{ (u_short)(code), jt, jf, k }
 end_define
 
 begin_ifdef
@@ -606,31 +906,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * These two macros are sensitive to the order in which the  * opcodes appear in bpfcodes.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BPF_ISJUMP
-parameter_list|(
-name|code
-parameter_list|)
-value|((unsigned)(code)<= (unsigned)EQOp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_ISLEAF
-parameter_list|(
-name|code
-parameter_list|)
-value|((unsigned)(code)>= (unsigned)RetOp)
-end_define
-
-begin_comment
-comment|/*  * Number of scratch memory words.  */
+comment|/*  * Number of scratch memory words (for BPF_LD|BPF_MEM and BPF_ST).  */
 end_comment
 
 begin_define
