@@ -1637,6 +1637,14 @@ name|if_start
 operator|=
 name|pdq_ifstart
 expr_stmt|;
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|IFQ_MAXLEN
+expr_stmt|;
 warning|#
 directive|warning
 literal|"Implement fddi_resolvemulti!"
