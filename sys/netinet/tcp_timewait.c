@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.1 (Berkeley) 6/10/93  * $Id: tcp_subr.c,v 1.11 1995/05/30 08:09:58 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.1 (Berkeley) 6/10/93  * $Id: tcp_subr.c,v 1.12 1995/06/19 16:45:33 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1429,27 +1429,14 @@ name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-comment|/* 	 * If we sent enough data to get some meaningful characteristics, 	 * save them in the routing entry.  'Enough' is arbitrarily 	 * defined as the sendpipesize (default 4K) * 16.  This would 	 * give us 16 rtt samples assuming we only get one sample per 	 * window (the usual case on a long haul net).  16 samples is 	 * enough for the srtt filter to converge to within 5% of the correct 	 * value; fewer samples and we could save a very bogus rtt. 	 * 	 * Don't update the default route's characteristics and don't 	 * update anything that the user "locked". 	 */
+comment|/* 	 * If we got enough samples through the srtt filter, 	 * save the rtt and rttvar in the routing entry. 	 * 'Enough' is arbitrarily defined as the 16 samples. 	 * 16 samples is enough for the srtt filter to converge 	 * to within 5% of the correct value; fewer samples and 	 * we could save a very bogus rtt. 	 * 	 * Don't update the default route's characteristics and don't 	 * update anything that the user "locked". 	 */
 if|if
 condition|(
-name|SEQ_LT
-argument_list|(
 name|tp
 operator|->
-name|iss
-operator|+
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
-operator|*
+name|t_rttupdated
+operator|>=
 literal|16
-argument_list|,
-name|tp
-operator|->
-name|snd_max
-argument_list|)
 operator|&&
 operator|(
 name|rt
