@@ -7354,6 +7354,15 @@ argument_list|,
 name|np_oob
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We must initialize the packet flags correctly in order 	 * for the NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO() and 	 * NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO() to work correctly. 	 */
+name|pkt
+operator|->
+name|np_private
+operator|.
+name|npp_ndispktflags
+operator|=
+name|NDIS_PACKET_ALLOCATED_BY_NDIS
+expr_stmt|;
 operator|*
 name|packet
 operator|=

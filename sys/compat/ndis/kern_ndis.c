@@ -2389,6 +2389,12 @@ argument_list|,
 name|np_oob
 argument_list|)
 expr_stmt|;
+name|priv
+operator|->
+name|npp_ndispktflags
+operator|=
+name|NDIS_PACKET_ALLOCATED_BY_NDIS
+expr_stmt|;
 for|for
 control|(
 name|m
