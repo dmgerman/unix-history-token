@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.58 1997/06/15 02:19:40 wollman Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.59 1997/06/19 00:25:03 wollman Exp $  */
 end_comment
 
 begin_include
@@ -274,6 +274,20 @@ name|minor
 parameter_list|)
 value|((major)*100 + (minor))
 end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|apm_timeout_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|apm_timeout_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2120,6 +2134,9 @@ name|active
 operator|==
 literal|1
 condition|)
+comment|/* Run slightly more oftan than 1 Hz */
+name|apm_timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|apm_timeout
@@ -2131,7 +2148,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* More than 1 Hz */
 block|}
 end_function
 
@@ -2229,6 +2245,8 @@ argument_list|(
 name|apm_timeout
 argument_list|,
 name|NULL
+argument_list|,
+name|apm_timeout_ch
 argument_list|)
 expr_stmt|;
 name|sc
