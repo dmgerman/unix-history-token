@@ -3385,6 +3385,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TC_DEVICEID_TORNADO_10_100BT_NVIDIA
+value|0x9201
+end_define
+
+begin_define
+define|#
+directive|define
 name|TC_DEVICEID_HURRICANE_10_100BT_SERV
 value|0x9800
 end_define

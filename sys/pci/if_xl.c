@@ -331,6 +331,14 @@ block|,
 block|{
 name|TC_VENDORID
 block|,
+name|TC_DEVICEID_TORNADO_10_100BT_NVIDIA
+block|,
+literal|"3Com 3c905C-TX on nVidia nForce2 chipset"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
 name|TC_DEVICEID_HURRICANE_10_100BT_SERV
 block|,
 literal|"3Com 3c980 Fast Etherlink XL"
