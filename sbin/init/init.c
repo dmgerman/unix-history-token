@@ -1332,9 +1332,7 @@ literal|"devfs"
 argument_list|,
 literal|"/dev"
 argument_list|,
-name|MNT_NOEXEC
-operator||
-name|MNT_RDONLY
+literal|0
 argument_list|,
 literal|0
 argument_list|)
