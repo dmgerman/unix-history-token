@@ -354,6 +354,11 @@ init|=
 literal|32
 block|,
 comment|/* host name field in label */
+name|VINUM_BSIZE_BEST
+init|=
+literal|4096
+block|,
+comment|/* best sector size */
 block|}
 enum|;
 end_enum
