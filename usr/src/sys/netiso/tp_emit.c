@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_emit.c,v 5.5 88/11/18 17:27:20 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_emit.c,v $  *	@(#)tp_emit.c	7.3 (Berkeley) %G% *  *  * This file contains tp_emit() and tp_error_emit(), which  * form TPDUs and hand them to ip.  * They take data in the form of mbuf chain, allocate mbufs as  * necessary for headers, and set the fields as appropriate from  * information found in the tpcb and net-level pcb.  *  * The worst thing about this code is adding the variable-length  * options on a machine that requires alignment for any memory access  * that isn't of size 1.  See the macro ADDOPTION() below.  *  * We don't do any concatenation. (There's a kludge to test the  * basic mechanism of separation under the 'w' tpdebug option, that's all.)  */
+comment|/*   * ARGO TP  *  * $Header: tp_emit.c,v 5.5 88/11/18 17:27:20 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_emit.c,v $  *	@(#)tp_emit.c	7.4 (Berkeley) %G% *  *  * This file contains tp_emit() and tp_error_emit(), which  * form TPDUs and hand them to ip.  * They take data in the form of mbuf chain, allocate mbufs as  * necessary for headers, and set the fields as appropriate from  * information found in the tpcb and net-level pcb.  *  * The worst thing about this code is adding the variable-length  * options on a machine that requires alignment for any memory access  * that isn't of size 1.  See the macro ADDOPTION() below.  *  * We don't do any concatenation. (There's a kludge to test the  * basic mechanism of separation under the 'w' tpdebug option, that's all.)  */
 end_comment
 
 begin_ifndef
@@ -529,6 +529,45 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* must be zero */
+if|if
+condition|(
+operator|!
+name|tpcb
+operator|->
+name|tp_cebit_off
+condition|)
+block|{
+name|tpcb
+operator|->
+name|tp_win_recv
+operator|=
+name|tp_start_win
+operator|<<
+literal|8
+expr_stmt|;
+name|LOCAL_CREDIT
+argument_list|(
+name|tpcb
+argument_list|)
+expr_stmt|;
+name|CONG_INIT_SAMPLE
+argument_list|(
+name|tpcb
+argument_list|)
+expr_stmt|;
+name|tpcb
+operator|->
+name|tp_ackrcvd
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|LOCAL_CREDIT
+argument_list|(
+name|tpcb
+argument_list|)
+expr_stmt|;
 case|case
 name|CC_TPDU_type
 case|:
@@ -557,6 +596,13 @@ operator|>
 name|TP_CLASS_1
 condition|)
 block|{
+comment|/* ifdef CE_BIT, we did this in tp_input when the CR came in */
+if|if
+condition|(
+name|tpcb
+operator|->
+name|tp_cebit_off
+condition|)
 name|LOCAL_CREDIT
 argument_list|(
 name|tpcb

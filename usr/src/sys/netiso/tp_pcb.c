@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.4 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
+comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.5 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
 end_comment
 
 begin_ifndef
@@ -1147,6 +1147,10 @@ name|isop_prev
 operator|=
 operator|&
 name|tp_isopcb
+expr_stmt|;
+name|tp_start_win
+operator|=
+literal|2
 expr_stmt|;
 name|tp_timerinit
 argument_list|()

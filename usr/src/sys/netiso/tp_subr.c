@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *	@(#)tp_subr.c	7.4 (Berkeley) %G%  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
+comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *	@(#)tp_subr.c	7.5 (Berkeley) %G%  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
 end_comment
 
 begin_ifndef
@@ -346,6 +346,13 @@ name|sb_cc
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|CONG_ACK
+argument_list|(
+name|tpcb
+argument_list|,
+name|seq
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -724,23 +731,15 @@ literal|0xffff
 else|:
 literal|0xf
 decl_stmt|;
-if|if
-condition|(
-operator|++
+name|CONG_ACK
+argument_list|(
 name|tpcb
-operator|->
-name|tp_cong_win
-operator|>
-name|maxcdt
-condition|)
-name|tpcb
-operator|->
-name|tp_cong_win
-operator|=
-name|maxcdt
+argument_list|,
+name|seq
+argument_list|)
 expr_stmt|;
 block|}
-comment|/* Compute smoothed round trip time. 		 * Only measure rtt for tp_snduna if tp_snduna was among  		 * the last TP_RTT_NUM seq numbers sent. 		 */
+comment|/* Compute smoothed round trip time. 		 * Only measure rtt for tp_snduna if tp_snduna was among  		 * the last TP_RTT_NUM seq numbers sent, and if the data 		 * were not retransmitted. 		 */
 if|if
 condition|(
 name|SEQ_GEQ
@@ -760,6 +759,24 @@ operator|->
 name|tp_sndhiwat
 operator|-
 name|TP_RTT_NUM
+argument_list|)
+argument_list|)
+operator|&&
+name|SEQ_GT
+argument_list|(
+name|tpcb
+argument_list|,
+name|seq
+argument_list|,
+name|SEQ_ADD
+argument_list|(
+name|tpcb
+argument_list|,
+name|tpcb
+operator|->
+name|tp_retrans_hiwat
+argument_list|,
+literal|1
 argument_list|)
 argument_list|)
 condition|)
@@ -1083,6 +1100,15 @@ name|tp_snduna
 operator|=
 name|seq
 expr_stmt|;
+name|tpcb
+operator|->
+name|tp_retrans
+operator|=
+name|tpcb
+operator|->
+name|tp_Nretrans
+expr_stmt|;
+comment|/* CE_BIT */
 name|bang
 operator|++
 expr_stmt|;
