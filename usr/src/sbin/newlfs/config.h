@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -218,6 +218,41 @@ define|#
 directive|define
 name|DFL_LFSBLOCK_MASK
 value|0xFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFL_LFSFRAG
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFL_LFS_FFMASK
+value|DFL_LFSBLOCK_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFL_LFS_FFSHIFT
+value|DFL_LFSBLOCK_SHIFT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFL_LFS_FBMASK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFL_LFS_FBSHIFT
+value|0
 end_define
 
 end_unit
