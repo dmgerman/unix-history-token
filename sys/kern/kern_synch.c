@@ -2174,18 +2174,6 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Call the switchin function while still holding the scheduler lock 	 * (used by the idlezero code and the general page-zeroing code) 	 */
-if|if
-condition|(
-name|td
-operator|->
-name|td_switchin
-condition|)
-name|td
-operator|->
-name|td_switchin
-argument_list|()
-expr_stmt|;
 comment|/*  	 * If the last thread was exiting, finish cleaning it up. 	 */
 if|if
 condition|(

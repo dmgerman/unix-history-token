@@ -117,10 +117,20 @@ name|int
 name|pcb_psl
 decl_stmt|;
 comment|/* process status long */
+name|void
+function_decl|(
+modifier|*
+name|pcb_switchout
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Special switchout function. */
 name|u_long
 name|__pcb_spare
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* adjust to avoid core dump size changes */
