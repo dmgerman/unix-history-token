@@ -1967,18 +1967,15 @@ name|CPU_XSCALE_IXP425
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|get_cachetype_cp15
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Additional cache information local to this file.  Log2 of some of the    above numbers.  */
@@ -2727,18 +2724,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|get_cachetype_table
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -5211,25 +5205,22 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_int
 name|parse_cpu_options
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|cpu_option
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
