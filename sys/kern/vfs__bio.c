@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/kern/vfs__bio.c,v 1.3 1993/07/18 17:15:09 davidg Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/vfs__bio.c,v 1.4 1993/07/27 10:52:49 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1591,6 +1591,12 @@ expr_stmt|;
 name|bp
 operator|->
 name|b_error
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_resid
 operator|=
 literal|0
 expr_stmt|;
