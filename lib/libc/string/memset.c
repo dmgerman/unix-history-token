@@ -63,12 +63,6 @@ directive|include
 file|<limits.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -88,6 +82,12 @@ ifdef|#
 directive|ifdef
 name|BZERO
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
 
 begin_define
 define|#
@@ -110,23 +110,22 @@ name|WIDEVAL
 value|0
 end_define
 
-begin_function
+begin_decl_stmt
 name|void
 name|bzero
-parameter_list|(
-name|dst0
-parameter_list|,
-name|length
-parameter_list|)
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|dst0
-decl_stmt|;
+argument_list|,
 name|size_t
 name|length
-decl_stmt|;
+argument_list|)
 else|#
 directive|else
+include|#
+directive|include
+file|<string.h>
 define|#
 directive|define
 name|RETURN
@@ -139,24 +138,20 @@ define|#
 directive|define
 name|WIDEVAL
 value|c
-function|void * memset
-parameter_list|(
-name|dst0
-parameter_list|,
-name|c0
-parameter_list|,
-name|length
-parameter_list|)
 name|void
 modifier|*
+name|memset
+argument_list|(
+name|void
+operator|*
 name|dst0
-decl_stmt|;
+argument_list|,
 name|int
 name|c0
-decl_stmt|;
+argument_list|,
 name|size_t
 name|length
-decl_stmt|;
+argument_list|)
 endif|#
 directive|endif
 block|{
@@ -386,7 +381,7 @@ do|;
 name|RETURN
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 
