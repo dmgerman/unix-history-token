@@ -1236,6 +1236,14 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_function_decl
+specifier|extern
+name|void
+name|cx_devsw_install
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|cxprobe
@@ -1554,6 +1562,15 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|JREMOD
+name|cx_devsw_install
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*JREMOD*/
 return|return
 operator|(
 literal|1
