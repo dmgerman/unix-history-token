@@ -3336,6 +3336,12 @@ operator|)
 operator|&
 name|sa
 expr_stmt|;
+name|sin6
+operator|->
+name|sin6_scope_id
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|getnameinfo
