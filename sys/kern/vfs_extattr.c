@@ -13304,9 +13304,9 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LOOKUP_SHARED
+ifndef|#
+directive|ifndef
+name|LOOKUP_EXCLUSIVE
 name|NDINIT
 argument_list|(
 operator|&
