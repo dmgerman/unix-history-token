@@ -4764,7 +4764,10 @@ name|func
 operator|->
 name|intr_handler_cookie
 operator|=
+operator|*
 name|cookiep
+operator|=
+name|func
 expr_stmt|;
 name|pccard_ccr_write
 argument_list|(
