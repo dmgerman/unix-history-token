@@ -375,28 +375,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFLUSHWANT
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Want wakeup from a flush in prog. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFLUSHINPROG
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Avoid multiple calls to vinvalbuf() */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NMODIFIED
 value|0x0004
 end_define

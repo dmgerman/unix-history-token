@@ -1438,13 +1438,7 @@ name|np
 operator|->
 name|n_flag
 operator|&=
-operator|(
 name|NMODIFIED
-operator||
-name|NFLUSHINPROG
-operator||
-name|NFLUSHWANT
-operator|)
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
