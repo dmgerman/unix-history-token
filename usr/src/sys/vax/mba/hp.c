@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.6	%G%	*/
+comment|/*	hp.c	3.7	%G%	*/
 end_comment
 
 begin_comment
@@ -169,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|NHP
-value|1
+value|2
 end_define
 
 begin_define
