@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub.c	5.3 (Berkeley) %G%"
+literal|"@(#)sub.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,11 +212,11 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 operator|=
@@ -225,15 +225,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -246,7 +246,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -912,7 +912,7 @@ name|bcg2
 label|:
 name|current
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|l_s_flag
 operator|=
@@ -1510,7 +1510,7 @@ condition|)
 block|{
 name|current
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -1549,7 +1549,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|start
+name|Start
 operator|=
 name|End
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)z.c	5.4 (Berkeley) %G%"
+literal|"@(#)z.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|start
+name|Start
 operator|=
 name|current
 operator|->
@@ -276,13 +276,13 @@ return|return;
 block|}
 block|}
 else|else
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -309,7 +309,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -317,7 +317,7 @@ literal|0
 expr_stmt|;
 name|current
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|l_cnt
 operator|=

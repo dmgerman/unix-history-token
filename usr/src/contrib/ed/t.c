@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t.c	5.3 (Berkeley) %G%"
+literal|"@(#)t.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,11 +257,11 @@ condition|)
 return|return;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 operator|=
@@ -270,15 +270,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -298,7 +298,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -320,7 +320,7 @@ for|for
 control|(
 name|l_ptr
 operator|=
-name|start
+name|Start
 init|;
 name|l_ptr
 operator|!=

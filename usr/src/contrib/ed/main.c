@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ name|nn_max
 decl_stmt|,
 name|nn_max_flag
 decl_stmt|,
-name|start_default
+name|Start_default
 decl_stmt|,
 name|End_default
 decl_stmt|,
@@ -280,7 +280,7 @@ modifier|*
 name|bottom
 decl_stmt|,
 modifier|*
-name|start
+name|Start
 decl_stmt|,
 modifier|*
 name|End
@@ -567,7 +567,7 @@ name|line_length
 operator|=
 literal|78
 expr_stmt|;
-name|start
+name|Start
 operator|=
 name|End
 operator|=
@@ -641,7 +641,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -1056,13 +1056,13 @@ literal|0
 expr_stmt|;
 name|l_tempp
 operator|=
-name|start
+name|Start
 operator|=
 name|End
 operator|=
 name|NULL
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -1585,12 +1585,12 @@ name|End_default
 operator|==
 literal|1
 operator|&&
-name|start_default
+name|Start_default
 operator|==
 literal|1
 condition|)
 block|{
-name|start
+name|Start
 operator|=
 name|current
 expr_stmt|;
@@ -1598,7 +1598,7 @@ name|End
 operator|=
 name|bottom
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -1607,13 +1607,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|start
+name|Start
 operator|=
 name|current
 operator|=
 name|End
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 literal|0
 expr_stmt|;
@@ -1637,12 +1637,12 @@ name|End_default
 operator|==
 literal|1
 operator|&&
-name|start_default
+name|Start_default
 operator|==
 literal|1
 condition|)
 block|{
-name|start
+name|Start
 operator|=
 name|top
 expr_stmt|;
@@ -1650,7 +1650,7 @@ name|End
 operator|=
 name|bottom
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -1659,11 +1659,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 literal|0
 expr_stmt|;
@@ -1702,7 +1702,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-name|start
+name|Start
 operator|=
 name|top
 expr_stmt|;
@@ -1710,7 +1710,7 @@ name|End
 operator|=
 name|bottom
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -1789,7 +1789,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|==
 literal|0
 operator|&&
@@ -1846,7 +1846,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|==
 literal|0
 condition|)
@@ -1855,7 +1855,7 @@ name|errnum
 operator|=
 name|address_check
 argument_list|(
-name|start
+name|Start
 argument_list|,
 name|End
 argument_list|)
@@ -1902,7 +1902,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|start
+name|Start
 operator|=
 name|End
 operator|=

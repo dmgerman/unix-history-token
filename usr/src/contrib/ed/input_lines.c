@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input_lines.c	5.6 (Berkeley) %G%"
+literal|"@(#)input_lines.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,16 +160,16 @@ if|if
 condition|(
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|current
 expr_stmt|;
 else|else
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -178,16 +178,16 @@ expr_stmt|;
 name|sigspecial
 operator|++
 expr_stmt|;
-comment|/* start == NULL means line 0 which is legal for this function only. */
+comment|/* Start == NULL means line 0 which is legal for this function only. */
 name|nn_max_end
 operator|=
 name|l_temp_line
 operator|=
-name|start
+name|Start
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -213,7 +213,7 @@ name|u_add_stk
 argument_list|(
 operator|&
 operator|(
-name|start
+name|Start
 operator|->
 name|below
 operator|)
@@ -221,7 +221,7 @@ argument_list|)
 expr_stmt|;
 name|l_temp1
 operator|=
-name|start
+name|Start
 operator|->
 name|below
 expr_stmt|;

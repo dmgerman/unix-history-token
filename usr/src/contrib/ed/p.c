@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p.c	5.3 (Berkeley) %G%"
+literal|"@(#)p.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,11 +119,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 operator|=
@@ -132,13 +132,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -146,7 +146,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -187,12 +187,12 @@ name|l_ln
 operator|=
 name|line_number
 argument_list|(
-name|start
+name|Start
 argument_list|)
 expr_stmt|;
 name|current
 operator|=
-name|start
+name|Start
 expr_stmt|;
 for|for
 control|(

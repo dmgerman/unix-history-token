@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)l.c	5.4 (Berkeley) %G%"
+literal|"@(#)l.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,11 +117,11 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 operator|=
@@ -130,15 +130,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -158,7 +158,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -177,7 +177,7 @@ comment|/* For "command-suffix pairs". */
 return|return;
 name|current
 operator|=
-name|start
+name|Start
 expr_stmt|;
 for|for
 control|(

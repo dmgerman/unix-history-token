@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)equal.c	5.3 (Berkeley) %G%"
+literal|"@(#)equal.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,16 +106,16 @@ if|if
 condition|(
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|bottom
 expr_stmt|;
 else|else
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -140,7 +140,7 @@ literal|"%d\n"
 argument_list|,
 name|line_number
 argument_list|(
-name|start
+name|Start
 argument_list|)
 argument_list|)
 expr_stmt|;

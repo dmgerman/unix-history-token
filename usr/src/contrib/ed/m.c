@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)m.c	5.3 (Berkeley) %G%"
+literal|"@(#)m.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,11 +235,11 @@ condition|)
 return|return;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 operator|=
@@ -248,15 +248,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -276,7 +276,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -293,7 +293,7 @@ operator|(
 operator|(
 name|l_dest
 operator|==
-name|start
+name|Start
 operator|)
 operator|||
 operator|(
@@ -301,7 +301,7 @@ name|address_check
 argument_list|(
 name|l_dest
 argument_list|,
-name|start
+name|Start
 argument_list|)
 operator|==
 operator|-
@@ -366,7 +366,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|start
+name|Start
 operator|==
 name|l_dest
 operator|)
@@ -381,7 +381,7 @@ return|return;
 if|if
 condition|(
 operator|(
-name|start
+name|Start
 operator|==
 name|top
 operator|)
@@ -396,7 +396,7 @@ return|return;
 if|if
 condition|(
 operator|(
-name|start
+name|Start
 operator|==
 name|top
 operator|)
@@ -426,7 +426,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|top
 condition|)
@@ -466,7 +466,7 @@ condition|)
 block|{
 name|bottom
 operator|=
-name|start
+name|Start
 operator|->
 name|above
 expr_stmt|;
@@ -474,7 +474,7 @@ name|u_add_stk
 argument_list|(
 operator|&
 operator|(
-name|start
+name|Start
 operator|->
 name|above
 operator|->
@@ -495,7 +495,7 @@ name|u_add_stk
 argument_list|(
 operator|&
 operator|(
-name|start
+name|Start
 operator|->
 name|above
 operator|->
@@ -503,7 +503,7 @@ name|below
 operator|)
 argument_list|)
 expr_stmt|;
-name|start
+name|Start
 operator|->
 name|above
 operator|->
@@ -531,7 +531,7 @@ name|below
 operator|->
 name|above
 operator|=
-name|start
+name|Start
 operator|->
 name|above
 expr_stmt|;
@@ -547,13 +547,13 @@ name|u_add_stk
 argument_list|(
 operator|&
 operator|(
-name|start
+name|Start
 operator|->
 name|above
 operator|)
 argument_list|)
 expr_stmt|;
-name|start
+name|Start
 operator|->
 name|above
 operator|=
@@ -593,7 +593,7 @@ name|End
 expr_stmt|;
 name|top
 operator|=
-name|start
+name|Start
 expr_stmt|;
 block|}
 elseif|else
@@ -624,13 +624,13 @@ name|u_add_stk
 argument_list|(
 operator|&
 operator|(
-name|start
+name|Start
 operator|->
 name|above
 operator|)
 argument_list|)
 expr_stmt|;
-name|start
+name|Start
 operator|->
 name|above
 operator|=
@@ -650,7 +650,7 @@ name|l_dest
 operator|->
 name|below
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|bottom
 operator|=
@@ -663,13 +663,13 @@ name|u_add_stk
 argument_list|(
 operator|&
 operator|(
-name|start
+name|Start
 operator|->
 name|above
 operator|)
 argument_list|)
 expr_stmt|;
-name|start
+name|Start
 operator|->
 name|above
 operator|=
@@ -727,7 +727,7 @@ name|l_dest
 operator|->
 name|below
 operator|=
-name|start
+name|Start
 expr_stmt|;
 block|}
 if|if
@@ -738,11 +738,11 @@ name|l_dest
 operator|->
 name|below
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|current
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|sigspecial
 operator|--

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.3 (Berkeley) %G%"
+literal|"@(#)w.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,12 +140,12 @@ name|temp
 decl_stmt|;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
 block|{
-name|start
+name|Start
 operator|=
 name|top
 expr_stmt|;
@@ -157,15 +157,15 @@ block|}
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -185,7 +185,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -413,7 +413,7 @@ name|edwrite
 argument_list|(
 name|fp
 argument_list|,
-name|start
+name|Start
 argument_list|,
 name|End
 argument_list|)

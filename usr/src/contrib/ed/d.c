@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)d.c	5.3 (Berkeley) %G%"
+literal|"@(#)d.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This removes lines in the buffer from user access. The specified  * lines are not really deleted yet(!) as they might be called back  * by an undo. So the pointers from start, End, and neighbours are placed  * in a stack for deletion later when no undo can be performed on these lines.  * The lines in the buffer are freed then as well.  */
+comment|/*  * This removes lines in the buffer from user access. The specified  * lines are not really deleted yet(!) as they might be called back  * by an undo. So the pointers from Start, End, and neighbours are placed  * in a stack for deletion later when no undo can be performed on these lines.  * The lines in the buffer are freed then as well.  */
 end_comment
 
 begin_function
@@ -140,11 +140,11 @@ name|l_temp2
 decl_stmt|;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 operator|=
@@ -153,15 +153,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
-name|start
+name|Start
 operator|=
 name|End
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -181,7 +181,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -235,7 +235,7 @@ comment|/* for undo */
 if|if
 condition|(
 operator|(
-name|start
+name|Start
 operator|==
 name|NULL
 operator|)
@@ -257,7 +257,7 @@ return|return;
 block|}
 name|d_add
 argument_list|(
-name|start
+name|Start
 argument_list|,
 name|End
 argument_list|)
@@ -269,7 +269,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|top
 condition|)
@@ -311,7 +311,7 @@ else|else
 block|{
 name|l_temp1
 operator|=
-name|start
+name|Start
 operator|->
 name|above
 expr_stmt|;
@@ -345,7 +345,7 @@ condition|)
 block|{
 name|bottom
 operator|=
-name|start
+name|Start
 operator|->
 name|above
 expr_stmt|;
@@ -378,7 +378,7 @@ operator|->
 name|above
 operator|)
 operator|=
-name|start
+name|Start
 operator|->
 name|above
 expr_stmt|;
@@ -390,7 +390,7 @@ block|}
 comment|/* To keep track of the marks. */
 name|ku_chk
 argument_list|(
-name|start
+name|Start
 argument_list|,
 name|End
 argument_list|,

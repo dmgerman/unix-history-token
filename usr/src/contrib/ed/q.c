@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)q.c	5.3 (Berkeley) %G%"
+literal|"@(#)q.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,7 +255,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Do cleanup; should it be even bothered?? */
-name|start
+name|Start
 operator|=
 name|top
 expr_stmt|;
@@ -263,7 +263,7 @@ name|End
 operator|=
 name|bottom
 expr_stmt|;
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=

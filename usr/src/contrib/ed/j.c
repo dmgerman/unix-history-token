@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)j.c	5.3 (Berkeley) %G%"
+literal|"@(#)j.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,12 +132,12 @@ name|l_temp1
 decl_stmt|;
 if|if
 condition|(
-name|start_default
+name|Start_default
 operator|&&
 name|End_default
 condition|)
 block|{
-name|start
+name|Start
 operator|=
 name|current
 expr_stmt|;
@@ -148,7 +148,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -172,7 +172,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|start
+name|Start
 operator|->
 name|below
 operator|)
@@ -181,7 +181,7 @@ name|NULL
 condition|)
 name|End
 operator|=
-name|start
+name|Start
 operator|->
 name|below
 expr_stmt|;
@@ -191,7 +191,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|start_default
+name|Start_default
 condition|)
 block|{
 if|if
@@ -233,11 +233,11 @@ name|BSD
 comment|/* 				 * For BSD a 'j' with one address sets 				 * "current" to that line 				 */
 if|if
 condition|(
-name|start
+name|Start
 condition|)
 name|current
 operator|=
-name|start
+name|Start
 expr_stmt|;
 endif|#
 directive|endif
@@ -251,7 +251,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|NULL
 condition|)
@@ -271,7 +271,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|start_default
+name|Start_default
 operator|=
 name|End_default
 operator|=
@@ -306,7 +306,7 @@ for|for
 control|(
 name|l_ptr
 operator|=
-name|start
+name|Start
 init|;
 name|l_ptr
 operator|!=
@@ -437,7 +437,7 @@ literal|'\0'
 expr_stmt|;
 name|l_ptr
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|sigspecial
 operator|++
@@ -551,7 +551,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|start
+name|Start
 operator|==
 name|top
 condition|)
@@ -577,7 +577,7 @@ operator|->
 name|above
 operator|)
 operator|=
-name|start
+name|Start
 operator|->
 name|above
 expr_stmt|;
@@ -610,20 +610,20 @@ operator|->
 name|below
 operator|)
 operator|=
-name|start
+name|Start
 expr_stmt|;
 name|u_add_stk
 argument_list|(
 operator|&
 operator|(
-name|start
+name|Start
 operator|->
 name|above
 operator|)
 argument_list|)
 expr_stmt|;
 operator|(
-name|start
+name|Start
 operator|->
 name|above
 operator|)
