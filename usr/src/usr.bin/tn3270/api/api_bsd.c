@@ -1,4 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -914,6 +923,9 @@ name|sd
 operator|.
 name|location
 operator|=
+operator|(
+name|long
+operator|)
 name|htonl
 argument_list|(
 name|parms
@@ -1221,6 +1233,15 @@ return|;
 comment|/* Happiness! */
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unix */
+end_comment
 
 end_unit
 
