@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.26.2.3 1995/10/14 19:11:02 jkh Exp $"
+literal|"$Id: perform.c,v 1.26.2.4 1995/10/15 14:08:34 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,6 +236,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|int
+name|inPlace
+decl_stmt|;
 name|code
 operator|=
 literal|0
@@ -254,9 +257,9 @@ argument_list|,
 name|FirstPen
 argument_list|)
 expr_stmt|;
-name|where_to
+name|inPlace
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 comment|/* Are we coming in for a second pass, everything already extracted? */
 if|if
@@ -265,26 +268,20 @@ operator|!
 name|pkg
 condition|)
 block|{
-name|char
-name|tmp_dir
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
 name|fgets
 argument_list|(
-name|tmp_dir
+name|playpen
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
-name|tmp_dir
+name|playpen
 index|[
 name|strlen
 argument_list|(
-name|tmp_dir
+name|playpen
 argument_list|)
 operator|-
 literal|1
@@ -297,7 +294,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|tmp_dir
+name|playpen
 argument_list|)
 operator|==
 name|FAIL
@@ -307,7 +304,7 @@ name|whinge
 argument_list|(
 literal|"pkg_add in SLAVE mode can't chdir to %s."
 argument_list|,
-name|tmp_dir
+name|playpen
 argument_list|)
 expr_stmt|;
 return|return
@@ -321,6 +318,10 @@ name|Plist
 argument_list|,
 name|stdin
 argument_list|)
+expr_stmt|;
+name|where_to
+operator|=
+name|playpen
 expr_stmt|;
 block|}
 comment|/* Nope - do it now */
@@ -692,6 +693,9 @@ name|p
 operator|->
 name|name
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|whinge
@@ -718,6 +722,10 @@ operator|=
 name|p
 operator|->
 name|name
+expr_stmt|;
+name|inPlace
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -778,9 +786,7 @@ block|}
 comment|/* If this is a direct extract and we didn't want it, stop now */
 if|if
 condition|(
-name|where_to
-operator|!=
-name|playpen
+name|inPlace
 operator|&&
 name|Fake
 condition|)
@@ -1098,9 +1104,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Verbose
-operator|&&
 name|cp
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
 condition|)
 name|printf
 argument_list|(
@@ -1109,6 +1118,39 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"pkg_add %s"
+argument_list|,
+name|cp
+argument_list|)
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Autoload of dependency `%s' failed%s"
+argument_list|,
+name|cp
+argument_list|,
+name|Force
+condition|?
+literal|" (proceeding anyway)"
+else|:
+literal|"!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Force
+condition|)
+operator|++
+name|code
+expr_stmt|;
+block|}
+block|}
 block|}
 elseif|else
 if|if
@@ -1150,6 +1192,13 @@ condition|(
 operator|!
 name|Fake
 operator|&&
+operator|(
+operator|!
+name|fexists
+argument_list|(
+literal|"+CONTENTS"
+argument_list|)
+operator|||
 name|vsystem
 argument_list|(
 literal|"(pwd; cat +CONTENTS) | pkg_add %s-S"
@@ -1160,6 +1209,7 @@ condition|?
 literal|"-v "
 else|:
 literal|""
+operator|)
 condition|)
 block|{
 name|whinge
@@ -1405,9 +1455,8 @@ block|}
 comment|/* Now finally extract the entire show if we're not going direct */
 if|if
 condition|(
-name|where_to
-operator|==
-name|playpen
+operator|!
+name|inPlace
 operator|&&
 operator|!
 name|Fake

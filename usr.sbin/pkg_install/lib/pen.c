@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.13.4.4 1995/10/15 04:39:56 jkh Exp $"
+literal|"$Id: pen.c,v 1.13.4.5 1995/10/15 14:08:42 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -571,6 +571,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Previous
+index|[
+literal|0
+index|]
+operator|&&
 name|chdir
 argument_list|(
 name|Previous
@@ -618,12 +623,24 @@ name|Previous
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|save
+condition|)
 name|strcpy
 argument_list|(
 name|Previous
 argument_list|,
 name|save
 argument_list|)
+expr_stmt|;
+else|else
+name|Previous
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|signal
 argument_list|(
