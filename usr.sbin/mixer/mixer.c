@@ -503,6 +503,18 @@ index|]
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|argc
+operator|!=
+literal|3
+condition|)
+block|{
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 for|for
 control|(
 name|dev
