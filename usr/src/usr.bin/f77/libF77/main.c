@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.4	%G%"
+literal|"@(#)main.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,7 +347,7 @@ block|}
 block|,
 comment|/* SIGEMT  */
 block|{
-literal|"Floating Point Exception"
+literal|"Arithmetic Exception"
 block|,
 literal|1
 block|}
@@ -413,16 +413,113 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UCBVAX
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|action
+name|act_fpe
+index|[]
+init|=
+block|{
+block|{
+literal|"Integer overflow"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Integer divide by 0"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Floating point overflow"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Floating divide by zero"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Floating point underflow"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Decimal overflow"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Subscript range"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Floating point overflow"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Floating divide by zero"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Floating point underflow"
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|sigdie
 argument_list|(
 argument|s
+argument_list|,
+argument|t
+argument_list|,
+argument|pc
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|t
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|pc
 decl_stmt|;
 end_decl_stmt
 
@@ -457,6 +554,68 @@ name|act
 operator|->
 name|mesg
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|UCBVAX
+name|fprintf
+argument_list|(
+name|units
+index|[
+name|STDERR
+index|]
+operator|.
+name|ufd
+argument_list|,
+literal|"%s"
+argument_list|,
+name|act
+operator|->
+name|mesg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|SIGFPE
+condition|)
+name|fprintf
+argument_list|(
+name|units
+index|[
+name|STDERR
+index|]
+operator|.
+name|ufd
+argument_list|,
+literal|": %s\n"
+argument_list|,
+name|act_fpe
+index|[
+name|t
+operator|-
+literal|1
+index|]
+operator|.
+name|mesg
+argument_list|)
+expr_stmt|;
+else|else
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|units
+index|[
+name|STDERR
+index|]
+operator|.
+name|ufd
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|units
@@ -473,6 +632,9 @@ operator|->
 name|mesg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|_cleanup
 argument_list|()
 expr_stmt|;
@@ -484,6 +646,18 @@ name|core
 condition|)
 block|{
 comment|/* now get a core */
+ifdef|#
+directive|ifdef
+name|VAX
+name|signal
+argument_list|(
+name|SIGILL
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|signal
 argument_list|(
 name|SIGIOT
@@ -491,6 +665,8 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|abort
 argument_list|()
 expr_stmt|;
