@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: reg.h 1.1 90/07/09$  *  *	@(#)reg.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: reg.h 1.1 90/07/09$  *  *	@(#)reg.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -200,6 +200,31 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Register set accessible via /proc/$pid/reg  */
+end_comment
+
+begin_struct
+struct|struct
+name|reg
+block|{
+name|int
+name|r_regs
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* numbered as above */
+name|int
+name|r_pc
+decl_stmt|;
+name|int
+name|r_sr
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
