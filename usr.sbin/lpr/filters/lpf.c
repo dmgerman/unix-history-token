@@ -40,7 +40,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpf.c	8.1 (Berkeley) 6/6/93"
+literal|"From: @(#)lpf.c	8.1 (Berkeley) 6/6/93"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|id
+index|[]
+init|=
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,10 +270,11 @@ decl_stmt|,
 name|maxrep
 decl_stmt|;
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|limit
+decl_stmt|;
+name|int
+name|ch
 decl_stmt|;
 while|while
 condition|(
