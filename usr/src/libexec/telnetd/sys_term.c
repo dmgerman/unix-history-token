@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.14 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4464,12 +4464,28 @@ directive|endif
 comment|/* defined(USE_TERMIO)&& !defined(CRAY)&& (BSD<= 43) */
 name|tty_rspeed
 argument_list|(
+operator|(
 name|def_rspeed
+operator|>
+literal|0
+operator|)
+condition|?
+name|def_rspeed
+else|:
+literal|9600
 argument_list|)
 expr_stmt|;
 name|tty_tspeed
 argument_list|(
+operator|(
 name|def_tspeed
+operator|>
+literal|0
+operator|)
+condition|?
+name|def_tspeed
+else|:
+literal|9600
 argument_list|)
 expr_stmt|;
 ifdef|#
