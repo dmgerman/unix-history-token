@@ -172,6 +172,22 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|btext
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|etext
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|fork_trampoline
