@@ -176,7 +176,7 @@ define|#
 directive|define
 name|ENDOPTS
 define|\
-value|break;		\ 		default:		\ 		    usage();		\ 		}			\ 	}				\ O_end:					\     *--argv = O_name;			\     }
+value|break;		\ 		default:		\ 		    usage();		\ 		}			\ 	}				\     *--argv = O_name;			\     }
 end_define
 
 end_unit

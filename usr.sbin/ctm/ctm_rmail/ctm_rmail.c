@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -172,6 +178,7 @@ comment|/*  * If given a '-p' flag, read encoded delta pieces from stdin or file
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -242,7 +249,12 @@ condition|(
 name|delta_dir
 operator|==
 name|NULL
-operator|||
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|piece_dir
 operator|==
 name|NULL
@@ -768,6 +780,8 @@ name|ifp
 decl_stmt|,
 modifier|*
 name|ofp
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|decoding
@@ -795,6 +809,8 @@ decl_stmt|;
 name|unsigned
 name|short
 name|cksum
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|out_buf
@@ -888,6 +904,10 @@ operator|!
 name|decoding
 condition|)
 block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|sscanf
@@ -906,14 +926,10 @@ name|npieces
 argument_list|,
 name|junk
 argument_list|)
-operator|==
+operator|!=
 literal|3
 condition|)
-block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
+continue|continue;
 while|while
 condition|(
 operator|(
@@ -980,7 +996,6 @@ expr_stmt|;
 name|decoding
 operator|++
 expr_stmt|;
-block|}
 continue|continue;
 block|}
 comment|/* 	 * We are decoding.  Stop if we see the end flag. 	 */

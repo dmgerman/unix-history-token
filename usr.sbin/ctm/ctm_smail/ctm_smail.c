@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -194,6 +200,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
