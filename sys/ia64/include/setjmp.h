@@ -335,16 +335,16 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
-begin_comment
-comment|/*  * We only have 16 bytes left for future use, but it's a nice round,  * but above all large number. Size is in bytes.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|_JMPBUFSZ
-value|0x200
+name|_JBLEN
+value|0x20
 end_define
+
+begin_comment
+comment|/* Size in long doubles */
+end_comment
 
 begin_comment
 comment|/*  * XXX this check is wrong, since LOCORE is in the application namespace and  * applications shouldn't be able to affect the implementation.  One workaround  * would be to only check LOCORE if _KERNEL is defined, but unfortunately  * LOCORE is used outside of the kernel.  The best solution would be to rename  * LOCORE to _LOCORE, so that it can be used in userland to safely affect the  * implementation.  */
@@ -374,17 +374,14 @@ begin_struct
 struct|struct
 name|_sigjmp_buf
 block|{
-name|char
-name|_Buffer
+name|long
+name|double
+name|buf
 index|[
-name|_JMPBUFSZ
+name|_JBLEN
 index|]
 decl_stmt|;
 block|}
-name|__aligned
-argument_list|(
-literal|16
-argument_list|)
 struct|;
 end_struct
 
@@ -408,17 +405,14 @@ begin_struct
 struct|struct
 name|_jmp_buf
 block|{
-name|char
-name|_Buffer
+name|long
+name|double
+name|buf
 index|[
-name|_JMPBUFSZ
+name|_JBLEN
 index|]
 decl_stmt|;
 block|}
-name|__aligned
-argument_list|(
-literal|16
-argument_list|)
 struct|;
 end_struct
 
@@ -432,6 +426,42 @@ literal|1
 index|]
 typedef|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|_jmp_buf
+argument_list|)
+operator|==
+literal|512
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
