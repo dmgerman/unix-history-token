@@ -64,16 +64,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* no _SC_PAGESIZE */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_PARAM_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -98,10 +88,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* no EXEC_PAGESIZE */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -162,45 +148,13 @@ parameter_list|()
 value|NBPC
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* no NBPC */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAGESIZE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|getpagesize
-parameter_list|()
-value|PAGESIZE
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* PAGESIZE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no NBPC */
+comment|/* NBPC */
 end_comment
 
 begin_endif
@@ -221,36 +175,6 @@ begin_comment
 comment|/* no EXEC_PAGESIZE */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* no HAVE_SYS_PARAM_H */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|getpagesize
-parameter_list|()
-value|8192
-end_define
-
-begin_comment
-comment|/* punt totally */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no HAVE_SYS_PARAM_H */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -266,7 +190,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* no HAVE_GETPAGESIZE */
+comment|/* not HAVE_GETPAGESIZE */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.h - object stack macros    Copyright (C) 1988,89,90,91,92,93,94,96,97, 98 Free Software Foundation, Inc.     the C library, however.  The master source lives in /gd/gnu/lib.  NOTE: The canonical source of this file is maintained with the GNU C Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* obstack.c - subroutines used implicitly by object stack macros    Copyright (C) 1988-1994,96,97,98,99 Free Software Foundation, Inc.     This file is part of the GNU C Library.  Its master source is NOT part of    the C library, however.  The master source lives in /gd/gnu/lib.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifdef
@@ -215,7 +215,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The functions allocating more room by calling `obstack_chunk_alloc'    jump to the handler pointed to by `obstack_alloc_failed_handler'.    This variable by default points to the internal function    `print_and_abort'.  */
+comment|/* The functions allocating more room by calling `obstack_chunk_alloc'    jump to the handler pointed to by `obstack_alloc_failed_handler'.    This can be set to a user defined function which should either    abort gracefully or use longjump - but shouldn't return.  This    variable by default points to the internal function    `print_and_abort'.  */
 end_comment
 
 begin_if
@@ -427,7 +427,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Initialize an obstack H for use.  Specify chunk size SIZE (0 means default).    Objects start on multiples of ALIGNMENT (0 means use default).    CHUNKFUN is the function to use to allocate chunks,    and FREEFUN the function to free them.     Return nonzero if successful, zero if out of memory.    To recover from an out of memory error,    free up some memory, then call this again.  */
+comment|/* Initialize an obstack H for use.  Specify chunk size SIZE (0 means default).    Objects start on multiples of ALIGNMENT (0 means use default).    CHUNKFUN is the function to use to allocate chunks,    and FREEFUN the function to free them.     Return nonzero if successful, calls obstack_alloc_failed_handler if    allocation fails.  */
 end_comment
 
 begin_decl_stmt
@@ -2013,6 +2013,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+name|_LIBC
+operator|&&
+name|defined
+name|USE_IN_LIBIO
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libio/iolibio.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|fputs
+parameter_list|(
+name|s
+parameter_list|,
+name|f
+parameter_list|)
+value|_IO_fputs (s, f)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -2023,8 +2056,15 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"memory exhausted\n"
+literal|"memory exhausted"
 argument_list|)
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
 argument_list|,
 name|stderr
 argument_list|)

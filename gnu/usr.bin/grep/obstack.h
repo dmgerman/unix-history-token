@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.h - object stack macros    Copyright (C) 1988,89,90,91,92,93,94,96,97, 98 Free Software Foundation, Inc.     the C library, however.  The master source lives in /gd/gnu/lib.  NOTE: The canonical source of this file is maintained with the GNU C Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* obstack.h - object stack macros    Copyright (C) 1988,89,90,91,92,93,94,96,97,98,99 Free Software Foundation, Inc.     This file is part of the GNU C Library.  Its master source is NOT part of    the C library, however.  The master source lives in /gd/gnu/lib.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -61,56 +61,22 @@ parameter_list|)
 value|((P) + (char *) 0)
 endif|#
 directive|endif
-comment|/* We need the type of the resulting object.  In ANSI C it is ptrdiff_t    but in traditional C it is usually long.  If we are in ANSI C and    don't already have ptrdiff_t get it.  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-name|__STDC__
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|offsetof
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|IN_GCC
-argument_list|)
-comment|/* On Next machine, the system's stddef.h screws up if included    after we have defined just ptrdiff_t, so include all of stddef.h.    Otherwise, define just ptrdiff_t, which is all we need.  */
-ifndef|#
-directive|ifndef
-name|__NeXT__
+comment|/* We need the type of the resulting object.  If __PTRDIFF_TYPE__ is    defined, as with GNU C, use that; that way we don't pollute the    namespace with<stddef.h>'s symbols.  Otherwise, if<stddef.h> is    available, include it and use ptrdiff_t.  In traditional C, long is    the best that we can do.  */
+ifdef|#
+directive|ifdef
+name|__PTRDIFF_TYPE__
 define|#
 directive|define
-name|__need_ptrdiff_t
-endif|#
-directive|endif
-endif|#
-directive|endif
+name|PTR_INT_TYPE
+value|__PTRDIFF_TYPE__
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|HAVE_STDDEF_H
 include|#
 directive|include
 file|<stddef.h>
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-name|__STDC__
 define|#
 directive|define
 name|PTR_INT_TYPE
@@ -123,17 +89,15 @@ name|PTR_INT_TYPE
 value|long
 endif|#
 directive|endif
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
-argument_list|(
 name|_LIBC
-argument_list|)
 operator|||
 name|defined
-argument_list|(
 name|HAVE_STRING_H
-argument_list|)
 include|#
 directive|include
 file|<string.h>
@@ -245,9 +209,7 @@ comment|/* Mask of alignment for each object. */
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 comment|/* These prototypes vary based on `use_extra_arg', and we use      casts to the prototypeless function type in all assignments,      but having prototypes here quiets -Wstrict-prototypes.  */
@@ -335,9 +297,7 @@ comment|/* Declare the external functions we use; they are in obstack.c.  */
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 specifier|extern
@@ -475,9 +435,7 @@ directive|endif
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 comment|/* Do the function-declarations after the structs    but before defining the macros.  */
@@ -771,13 +729,11 @@ endif|#
 directive|endif
 comment|/* __STDC__ */
 comment|/* Non-ANSI C cannot really support alternative functions for these macros,    so we do not declare them.  */
-comment|/* Error handler called when `obstack_chunk_alloc' failed to allocate    more memory.  This can be set to a user defined function.  The    default action is to print a message and abort.  */
+comment|/* Error handler called when `obstack_chunk_alloc' failed to allocate    more memory.  This can be set to a user defined function which    should either abort gracefully or use longjump - but shouldn't    return.  The default action is to print a message and abort.  */
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 specifier|extern
@@ -843,9 +799,7 @@ comment|/* To prevent prototype warnings provide complete argument list in    st
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 define|#
@@ -1024,14 +978,10 @@ value|_obstack_memory_used (h)
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__GNUC__
-argument_list|)
 operator|&&
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 comment|/* NextStep 2.0 cc is really gcc 1.93 but it defines __GNUC__ = 2 and    does not implement __extension__.  But that compiler doesn't define    __GNUC_MINOR__.  */
@@ -1079,6 +1029,14 @@ name|length
 parameter_list|)
 define|\
 value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->chunk_limit - __o->next_free< __len)			\      _obstack_newchunk (__o, __len);					\    (void) 0; })
+define|#
+directive|define
+name|obstack_empty_p
+parameter_list|(
+name|OBSTACK
+parameter_list|)
+define|\
+value|__extension__								\   ({ struct obstack *__o = (OBSTACK);					\      (__o->chunk->prev == 0&& __o->next_free - __o->chunk->contents == 0); })
 define|#
 directive|define
 name|obstack_grow
@@ -1214,7 +1172,7 @@ parameter_list|,
 name|OBJ
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    void *__obj = (OBJ);							\    if (__obj> (void *)__o->chunk&& __obj< (void *)__o->chunk_limit)  \      __o->next_free = __o->object_base = __obj;				\    else (obstack_free) (__o, __obj); })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    void *__obj = (OBJ);							\    if (__obj> (void *)__o->chunk&& __obj< (void *)__o->chunk_limit)  \      __o->next_free = __o->object_base = (char *)__obj;			\    else (obstack_free) (__o, __obj); })
 else|#
 directive|else
 comment|/* not __GNUC__ or not __STDC__ */
@@ -1234,6 +1192,14 @@ name|h
 parameter_list|)
 define|\
 value|(unsigned) ((h)->chunk_limit - (h)->next_free)
+define|#
+directive|define
+name|obstack_empty_p
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|((h)->chunk->prev == 0&& (h)->next_free - (h)->chunk->contents == 0)
 comment|/* Note that the call to _obstack_newchunk is enclosed in (..., 0)    so that we can avoid having void expressions    in the arms of the conditional expression.    Casting the third operand to void was tried before,    but some compilers won't accept it.  */
 define|#
 directive|define
@@ -1372,9 +1338,7 @@ value|( ((h)->next_free == (h)->object_base					\    ? (((h)->maybe_empty_object
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 define|#
