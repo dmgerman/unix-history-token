@@ -1,14 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)ps.c	4.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * ps; VAX 4BSD version  */
 end_comment
@@ -139,6 +129,14 @@ directive|define
 name|X_NSWAP
 value|4
 block|{
+literal|"_maxslp"
+block|}
+block|,
+define|#
+directive|define
+name|X_MAXSLP
+value|5
+block|{
 literal|0
 block|}
 block|, }
@@ -202,6 +200,12 @@ decl_stmt|,
 name|a_pid
 decl_stmt|,
 name|a_nice
+decl_stmt|,
+name|a_pri
+decl_stmt|,
+name|a_slptime
+decl_stmt|,
+name|a_time
 decl_stmt|;
 name|size_t
 name|a_size
@@ -220,7 +224,7 @@ name|dev_t
 name|a_ttyd
 decl_stmt|;
 name|time_t
-name|a_time
+name|a_cpu
 decl_stmt|;
 block|}
 struct|;
@@ -234,7 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	    F S UID   PID  PPID CP PRI NICE ADDR  SZ  RSS WCHAN TTY TIME */
+comment|/*	     F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN S  TT  TIME */
 end_comment
 
 begin_struct
@@ -246,8 +250,6 @@ name|l_ppid
 decl_stmt|;
 name|char
 name|l_cpu
-decl_stmt|,
-name|l_pri
 decl_stmt|;
 name|int
 name|l_addr
@@ -267,7 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	 USER       PID %CPU NICE  SZ  RSS TTY TIME */
+comment|/*	USER       PID %CPU NICE  SZ  RSS TT F  TIME */
 end_comment
 
 begin_decl_stmt
@@ -278,7 +280,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	 SSIZ   PID TTY TIME */
+comment|/*	SSIZ   PID TT S  TIME */
 end_comment
 
 begin_decl_stmt
@@ -289,18 +291,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	F     PID TTY  TIME TIM SL  MINFLT  MAJFLT SIZE  RSS  SRS TSIZ TRS PF*/
+comment|/*	F     PID TT  TIME RES SL  MINFLT  MAJFLT SIZE  RSS  SRS TSIZ TRS PF*/
 end_comment
 
 begin_struct
 struct|struct
 name|vsav
 block|{
-name|short
-name|v_slptime
-decl_stmt|,
-name|v_pri
-decl_stmt|;
 name|u_int
 name|v_minflt
 decl_stmt|,
@@ -451,6 +448,10 @@ decl_stmt|,
 modifier|*
 name|alloc
 argument_list|()
+decl_stmt|,
+modifier|*
+name|state
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -464,6 +465,8 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|nswap
+decl_stmt|,
+name|maxslp
 decl_stmt|;
 end_decl_stmt
 
@@ -1652,6 +1655,57 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|lseek
+argument_list|(
+name|kmem
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_MAXSLP
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|read
+argument_list|(
+name|kmem
+argument_list|,
+operator|&
+name|maxslp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|maxslp
+argument_list|)
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|maxslp
+argument_list|)
+condition|)
+block|{
+name|cantread
+argument_list|(
+literal|"maxslp"
+argument_list|,
+name|kmemf
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|vflg
@@ -1832,7 +1886,7 @@ name|hdr
 operator|+=
 name|strlen
 argument_list|(
-literal|" SSIZ"
+literal|"SSIZ "
 argument_list|)
 expr_stmt|;
 name|cmdstart
@@ -2677,6 +2731,16 @@ name|stb
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFCHR
 condition|)
 name|dp
 operator|->
@@ -3002,6 +3066,27 @@ argument_list|,
 name|p_rssize
 argument_list|)
 expr_stmt|;
+name|e
+argument_list|(
+name|a_pri
+argument_list|,
+name|p_pri
+argument_list|)
+expr_stmt|;
+name|e
+argument_list|(
+name|a_slptime
+argument_list|,
+name|p_slptime
+argument_list|)
+expr_stmt|;
+name|e
+argument_list|(
+name|a_time
+argument_list|,
+name|p_time
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|e
@@ -3060,7 +3145,7 @@ name|mproc
 decl_stmt|;
 name|ap
 operator|->
-name|a_time
+name|a_cpu
 operator|=
 name|xp
 operator|->
@@ -3099,7 +3184,7 @@ name|u_ttyd
 expr_stmt|;
 name|ap
 operator|->
-name|a_time
+name|a_cpu
 operator|=
 name|u
 operator|.
@@ -3116,7 +3201,7 @@ expr_stmt|;
 block|}
 name|ap
 operator|->
-name|a_time
+name|a_cpu
 operator|/=
 name|HZ
 expr_stmt|;
@@ -3174,13 +3259,6 @@ argument_list|(
 name|l_cpu
 argument_list|,
 name|p_cpu
-argument_list|)
-expr_stmt|;
-name|e
-argument_list|(
-name|l_pri
-argument_list|,
-name|p_pri
 argument_list|)
 expr_stmt|;
 if|if
@@ -3257,20 +3335,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|vp->a = mproc->b
-name|e
-argument_list|(
-name|v_slptime
-argument_list|,
-name|p_slptime
-argument_list|)
-expr_stmt|;
-name|e
-argument_list|(
-name|v_pri
-argument_list|,
-name|p_pri
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ap
@@ -4482,34 +4546,9 @@ expr_stmt|;
 block|}
 end_if
 
-begin_if
-if|if
-condition|(
-name|xflg
-operator|==
-literal|0
-operator|&&
-name|gflg
-operator|==
-literal|0
-operator|&&
-name|tptr
-operator|==
-literal|0
-operator|&&
-name|cp
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-end_if
+begin_comment
+comment|/* 	if (xflg == 0&& gflg == 0&& tptr == 0&& cp[0] == '-') 		return (0); */
+end_comment
 
 begin_return
 return|return
@@ -4601,7 +4640,7 @@ unit|}  char
 operator|*
 name|lhdr
 operator|=
-literal|"     F S UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN TTY TIME"
+literal|"     F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN S  TT  TIME"
 expr_stmt|;
 end_expr_stmt
 
@@ -4646,18 +4685,11 @@ name|lp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%6x %c%4d%6u%6u%3d%4d%2d%6x%4d%5d"
+literal|"%6x%4d%6u%6u%3d%4d%3d%5x%4d%5d"
 argument_list|,
 name|ap
 operator|->
 name|a_flag
-argument_list|,
-literal|"0SWRIZT"
-index|[
-name|ap
-operator|->
-name|a_stat
-index|]
 argument_list|,
 name|ap
 operator|->
@@ -4677,9 +4709,9 @@ name|l_cpu
 operator|&
 literal|0377
 argument_list|,
-name|lp
+name|ap
 operator|->
-name|l_pri
+name|a_pri
 operator|-
 name|PZERO
 argument_list|,
@@ -4696,10 +4728,14 @@ argument_list|,
 name|ap
 operator|->
 name|a_size
+operator|/
+literal|2
 argument_list|,
 name|ap
 operator|->
 name|a_rss
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4720,6 +4756,16 @@ operator|->
 name|l_wchan
 operator|&
 literal|0xfffff
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %2.2s "
+argument_list|,
+name|state
+argument_list|(
+name|ap
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptty
@@ -4755,7 +4801,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|" %-2.2s"
+literal|"%-2.2s"
 argument_list|,
 name|tp
 argument_list|)
@@ -4786,13 +4832,13 @@ literal|"%3ld:%02ld"
 argument_list|,
 name|ap
 operator|->
-name|a_time
+name|a_cpu
 operator|/
 name|HZ
 argument_list|,
 name|ap
 operator|->
-name|a_time
+name|a_cpu
 operator|%
 name|HZ
 argument_list|)
@@ -4805,7 +4851,7 @@ name|char
 modifier|*
 name|uhdr
 init|=
-literal|"USER       PID %CPU NICE  SZ  RSS TTY TIME"
+literal|"USER       PID %CPU NICE  SZ  RSS TT F   TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -4866,10 +4912,19 @@ argument_list|,
 name|ap
 operator|->
 name|a_size
+operator|/
+literal|2
 argument_list|,
 name|ap
 operator|->
 name|a_rss
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|' '
 argument_list|)
 expr_stmt|;
 name|ptty
@@ -4877,6 +4932,16 @@ argument_list|(
 name|ap
 operator|->
 name|a_tty
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %2.2s"
+argument_list|,
+name|state
+argument_list|(
+name|ap
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptime
@@ -4892,7 +4957,7 @@ name|char
 modifier|*
 name|vhdr
 init|=
-literal|"F     PID TTY  TIME RES SL  MINFLT  MAJFLT SIZE  RSS  SRS TSIZ TRS PF"
+literal|"   PID TT S     TIME RES SL MINFLT MAJFLT SIZE  RSS  SRS TSIZ TRS PF"
 decl_stmt|;
 end_decl_stmt
 
@@ -4935,131 +5000,9 @@ name|sp
 operator|->
 name|ap
 decl_stmt|;
-name|char
-name|stat
-decl_stmt|,
-name|nice
-decl_stmt|,
-name|anom
-decl_stmt|;
-switch|switch
-condition|(
-name|ap
-operator|->
-name|a_stat
-condition|)
-block|{
-case|case
-name|SSLEEP
-case|:
-case|case
-name|SSTOP
-case|:
-if|if
-condition|(
-operator|(
-name|ap
-operator|->
-name|a_flag
-operator|&
-name|SLOAD
-operator|)
-operator|==
-literal|0
-condition|)
-name|stat
-operator|=
-literal|'W'
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|vp
-operator|->
-name|v_pri
-operator|>=
-name|PZERO
-condition|)
-name|stat
-operator|=
-literal|'S'
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ap
-operator|->
-name|a_flag
-operator|&
-name|SPAGE
-condition|)
-name|stat
-operator|=
-literal|'P'
-expr_stmt|;
-else|else
-name|stat
-operator|=
-literal|'D'
-expr_stmt|;
-break|break;
-case|case
-name|SRUN
-case|:
-case|case
-name|SIDL
-case|:
-name|stat
-operator|=
-name|ap
-operator|->
-name|a_flag
-operator|&
-name|SLOAD
-condition|?
-literal|'R'
-else|:
-literal|'W'
-expr_stmt|;
-break|break;
-block|}
-name|nice
-operator|=
-name|ap
-operator|->
-name|a_nice
-operator|>
-name|NZERO
-condition|?
-literal|'N'
-else|:
-literal|' '
-expr_stmt|;
-name|anom
-operator|=
-name|ap
-operator|->
-name|a_flag
-operator|&
-operator|(
-name|SANOM
-operator||
-name|SUANOM
-operator|)
-condition|?
-literal|'A'
-else|:
-literal|' '
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"%c%c%c%6u "
-argument_list|,
-name|stat
-argument_list|,
-name|nice
-argument_list|,
-name|anom
+literal|"%6u "
 argument_list|,
 name|ap
 operator|->
@@ -5073,6 +5016,16 @@ operator|->
 name|a_tty
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" %4s"
+argument_list|,
+name|state
+argument_list|(
+name|ap
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ptime
 argument_list|(
 name|ap
@@ -5080,15 +5033,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4d%3d%8d%8d%5d%5d%5d%5d%4d%3d"
+literal|"%4d%3d%7d%7d%5d%5d%5d%5d%4d%3d"
 argument_list|,
 name|ap
 operator|->
 name|a_time
 argument_list|,
-name|vp
+name|ap
 operator|->
-name|v_slptime
+name|a_slptime
 argument_list|,
 name|vp
 operator|->
@@ -5101,6 +5054,8 @@ argument_list|,
 name|ap
 operator|->
 name|a_size
+operator|/
+literal|2
 argument_list|,
 name|ap
 operator|->
@@ -5139,7 +5094,7 @@ name|char
 modifier|*
 name|shdr
 init|=
-literal|" SSIZ   PID TTY TIME"
+literal|"SSIZ   PID TT S   TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -5176,7 +5131,7 @@ name|sflg
 condition|)
 name|printf
 argument_list|(
-literal|"%5d"
+literal|"%4d "
 argument_list|,
 name|sp
 operator|->
@@ -5187,11 +5142,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %5u"
+literal|"%5u"
 argument_list|,
 name|ap
 operator|->
 name|a_pid
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|' '
 argument_list|)
 expr_stmt|;
 name|ptty
@@ -5201,6 +5161,16 @@ operator|->
 name|a_tty
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" %2.2s"
+argument_list|,
+name|state
+argument_list|(
+name|ap
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ptime
 argument_list|(
 name|ap
@@ -5208,6 +5178,202 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_function
+name|char
+modifier|*
+name|state
+parameter_list|(
+name|ap
+parameter_list|)
+specifier|register
+name|struct
+name|asav
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|char
+name|stat
+decl_stmt|,
+name|load
+decl_stmt|,
+name|nice
+decl_stmt|,
+name|anom
+decl_stmt|;
+specifier|static
+name|char
+name|res
+index|[
+literal|5
+index|]
+decl_stmt|;
+switch|switch
+condition|(
+name|ap
+operator|->
+name|a_stat
+condition|)
+block|{
+case|case
+name|SSTOP
+case|:
+name|stat
+operator|=
+literal|'T'
+expr_stmt|;
+break|break;
+case|case
+name|SSLEEP
+case|:
+if|if
+condition|(
+name|ap
+operator|->
+name|a_pri
+operator|>=
+name|PZERO
+condition|)
+if|if
+condition|(
+name|ap
+operator|->
+name|a_slptime
+operator|>=
+name|MAXSLP
+condition|)
+name|stat
+operator|=
+literal|'I'
+expr_stmt|;
+else|else
+name|stat
+operator|=
+literal|'S'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ap
+operator|->
+name|a_flag
+operator|&
+name|SPAGE
+condition|)
+name|stat
+operator|=
+literal|'P'
+expr_stmt|;
+else|else
+name|stat
+operator|=
+literal|'D'
+expr_stmt|;
+break|break;
+case|case
+name|SWAIT
+case|:
+case|case
+name|SRUN
+case|:
+case|case
+name|SIDL
+case|:
+name|stat
+operator|=
+literal|'R'
+expr_stmt|;
+break|break;
+case|case
+name|SZOMB
+case|:
+name|stat
+operator|=
+literal|'Z'
+expr_stmt|;
+break|break;
+default|default:
+name|stat
+operator|=
+literal|'?'
+expr_stmt|;
+block|}
+name|load
+operator|=
+name|ap
+operator|->
+name|a_flag
+operator|&
+name|SLOAD
+condition|?
+literal|' '
+else|:
+literal|'W'
+expr_stmt|;
+name|nice
+operator|=
+name|ap
+operator|->
+name|a_nice
+operator|>
+name|NZERO
+condition|?
+literal|'N'
+else|:
+literal|' '
+expr_stmt|;
+name|anom
+operator|=
+name|ap
+operator|->
+name|a_flag
+operator|&
+operator|(
+name|SANOM
+operator||
+name|SUANOM
+operator|)
+condition|?
+literal|'A'
+else|:
+literal|' '
+expr_stmt|;
+name|res
+index|[
+literal|0
+index|]
+operator|=
+name|stat
+expr_stmt|;
+name|res
+index|[
+literal|1
+index|]
+operator|=
+name|load
+expr_stmt|;
+name|res
+index|[
+literal|2
+index|]
+operator|=
+name|nice
+expr_stmt|;
+name|res
+index|[
+literal|3
+index|]
+operator|=
+name|anom
+expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Given a base/size pair in virtual swap area,  * return a physical base/size pair which is the  * (largest) initial, physically contiguous block.  */
