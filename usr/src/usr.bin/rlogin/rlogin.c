@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.34 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,13 +281,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1912,12 +1905,7 @@ name|WNOHANG
 operator||
 name|WUNTRACED
 argument_list|,
-operator|(
-expr|struct
-name|rusage
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3768,7 +3756,7 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|KERBEROS
-literal|"8EL"
+literal|"8EKL"
 argument_list|,
 literal|" [-k realm] "
 argument_list|)
