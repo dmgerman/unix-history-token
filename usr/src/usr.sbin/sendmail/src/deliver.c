@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.19 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,18 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
 end_include
 
 begin_comment
@@ -218,6 +230,31 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* unless interactive, try twice, over a minute */
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|||
+name|OpMode
+operator|==
+name|MD_SMTP
+condition|)
+block|{
+name|_res
+operator|.
+name|retrans
+operator|=
+literal|30
+expr_stmt|;
+name|_res
+operator|.
+name|retry
+operator|=
+literal|2
+expr_stmt|;
+block|}
 name|m
 operator|=
 name|to
@@ -1261,6 +1298,18 @@ name|e
 operator|->
 name|e_from
 expr_stmt|;
+name|_res
+operator|.
+name|options
+operator|&=
+operator|~
+operator|(
+name|RES_DEFNAMES
+operator||
+name|RES_DNSRCH
+operator|)
+expr_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|SMTP
@@ -1315,10 +1364,7 @@ operator|=
 name|host
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|(
+else|else
 name|Nmx
 operator|=
 name|getmxrr
@@ -1332,10 +1378,32 @@ argument_list|,
 operator|&
 name|rcode
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|Nmx
 operator|>=
 literal|0
-operator|&&
+condition|)
+block|{
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Connecting to %s (%s)..."
+argument_list|,
+name|MxHosts
+index|[
+literal|0
+index|]
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|rcode
 operator|=
@@ -1350,22 +1418,6 @@ operator|==
 name|EX_OK
 condition|)
 block|{
-name|message
-argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"Connecting to %s.%s..."
-argument_list|,
-name|MxHosts
-index|[
-literal|0
-index|]
-argument_list|,
-name|m
-operator|->
-name|m_name
-argument_list|)
-expr_stmt|;
 comment|/* send the recipient list */
 name|tobuf
 index|[
@@ -1408,6 +1460,9 @@ name|to
 operator|->
 name|q_paddr
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|i
 operator|=
 name|smtprcpt
@@ -1416,10 +1471,7 @@ name|to
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|)
 operator|!=
 name|EX_OK
 condition|)
@@ -1517,6 +1569,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 else|else
 endif|#
 directive|endif
@@ -1526,7 +1579,7 @@ name|message
 argument_list|(
 name|Arpa_Info
 argument_list|,
-literal|"Connecting to %s.%s..."
+literal|"Connecting to %s (%s)..."
 argument_list|,
 name|host
 argument_list|,
@@ -1549,6 +1602,15 @@ name|ctladdr
 argument_list|)
 expr_stmt|;
 block|}
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_DEFNAMES
+operator||
+name|RES_DNSRCH
+expr_stmt|;
+comment|/* XXX */
 comment|/* 	**  Do final status disposal. 	**	We check for something in tobuf for the SMTP case. 	**	If we got a temporary failure, arrange to queue the 	**		addressees. 	*/
 if|if
 condition|(
@@ -1889,6 +1951,7 @@ comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Param
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|sendoff
 argument_list|(
 name|e
@@ -2516,6 +2579,29 @@ name|ho_exitstat
 operator|==
 name|EX_OK
 condition|)
+block|{
+if|if
+condition|(
+name|j
+operator|>
+literal|1
+condition|)
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Connecting to %s (%s)..."
+argument_list|,
+name|MxHosts
+index|[
+name|j
+index|]
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|makeconnection
@@ -2532,6 +2618,7 @@ argument_list|,
 name|prfile
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|i
