@@ -4547,18 +4547,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|pmap_pinit2
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-comment|/* XXX: Remove this stub when no longer called */
-block|}
-end_function
-
 begin_comment
 comment|/*  * Release any resources held by the given physical map.  * Called when a pmap initialized by pmap_pinit is being released.  * Should only be called if the map contains no valid mappings.  */
 end_comment

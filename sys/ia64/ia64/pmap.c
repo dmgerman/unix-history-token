@@ -2874,22 +2874,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wire in kernel global address entries.  To avoid a race condition  * between pmap initialization and pmap_growkernel, this procedure  * should be called after the vmspace is attached to the process  * but before this pmap is activated.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_pinit2
-parameter_list|(
-name|struct
-name|pmap
-modifier|*
-name|pmap
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
 comment|/***************************************************  * Pmap allocation/deallocation routines.  ***************************************************/
 end_comment
 

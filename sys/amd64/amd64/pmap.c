@@ -4376,26 +4376,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wire in kernel global address entries.  To avoid a race condition  * between pmap initialization and pmap_growkernel, this procedure  * should be called after the vmspace is attached to the process  * but before this pmap is activated.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_pinit2
-parameter_list|(
-name|pmap
-parameter_list|)
-name|struct
-name|pmap
-modifier|*
-name|pmap
-decl_stmt|;
-block|{
-comment|/* XXX: Remove this stub when no longer called */
-block|}
-end_function
-
-begin_comment
 comment|/*  * this routine is called if the page table page is not  * mapped correctly.  *  * Note: If a page allocation fails at page table level two or three,  * one or two pages may be held during the wait, only to be released  * afterwards.  This conservative approach is easily argued to avoid  * race conditions.  */
 end_comment
 

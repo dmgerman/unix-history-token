@@ -353,15 +353,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_pinit2
-parameter_list|(
-name|pmap_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_protect
 parameter_list|(
 name|pmap_t

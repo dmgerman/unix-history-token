@@ -6249,18 +6249,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|pmap_pinit2
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-comment|/* XXX: Remove this stub when no longer called */
-block|}
-end_function
-
 begin_comment
 comment|/*  * Set the physical protection on the specified range of this map as requested.  */
 end_comment

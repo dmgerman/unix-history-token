@@ -2542,16 +2542,6 @@ operator|->
 name|p_vmspace
 argument_list|)
 expr_stmt|;
-name|pmap_pinit2
-argument_list|(
-name|vmspace_pmap
-argument_list|(
-name|p2
-operator|->
-name|p_vmspace
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p1
