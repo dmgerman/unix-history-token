@@ -1380,7 +1380,6 @@ name|gp
 operator|==
 name|gp1
 condition|)
-block|{
 return|return
 operator|(
 name|ELOOP
@@ -1407,7 +1406,6 @@ argument_list|,
 name|geoms
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
