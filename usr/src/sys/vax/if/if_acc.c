@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.11	82/03/19	*/
+comment|/*	if_acc.c	4.12	82/04/10	*/
 end_comment
 
 begin_include
@@ -682,9 +682,9 @@ modifier|*
 name|addr
 decl_stmt|;
 name|int
-name|x
-decl_stmt|,
 name|info
+decl_stmt|,
+name|i
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -787,11 +787,6 @@ operator|->
 name|ui_addr
 expr_stmt|;
 comment|/* 	 * Reset the imp interface; 	 * the delays are pure guesswork. 	 */
-name|x
-operator|=
-name|spl5
-argument_list|()
-expr_stmt|;
 name|addr
 operator|->
 name|icsr
@@ -832,11 +827,6 @@ name|ocsr
 operator|=
 literal|0
 expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 name|addr
 operator|->
 name|icsr
@@ -852,17 +842,19 @@ literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* YECH!!! */
-name|x
+for|for
+control|(
+name|i
 operator|=
-literal|500
-expr_stmt|;
-while|while
-condition|(
-name|x
-operator|--
-operator|>
 literal|0
-condition|)
+init|;
+name|i
+operator|<
+literal|500
+condition|;
+name|i
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -888,7 +880,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-break|break;
+goto|goto
+name|ok
+goto|;
 name|addr
 operator|->
 name|icsr
@@ -904,13 +898,6 @@ argument_list|)
 expr_stmt|;
 comment|/* keep turning IN_RMR off */
 block|}
-if|if
-condition|(
-name|x
-operator|<=
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"acc%d: imp doesn't respond, icsr=%b\n"
@@ -924,16 +911,22 @@ argument_list|,
 name|ACC_INBITS
 argument_list|)
 expr_stmt|;
-goto|goto
 name|down
-goto|;
-block|}
-comment|/* 	 * Put up a read.  We can't restart any outstanding writes 	 * until we're back in synch with the IMP (i.e. we've flushed 	 * the NOOPs it throws at us). 	 * Note: IMPMTU includes the leader. 	 */
-name|x
+label|:
+name|ui
+operator|->
+name|ui_alive
 operator|=
-name|spl5
-argument_list|()
+literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|ok
+label|:
+comment|/* 	 * Put up a read.  We can't restart any outstanding writes 	 * until we're back in synch with the IMP (i.e. we've flushed 	 * the NOOPs it throws at us). 	 * Note: IMPMTU includes the leader. 	 */
 name|info
 operator|=
 name|sc
@@ -997,27 +990,9 @@ operator|)
 operator||
 name|ACC_GO
 expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
-operator|)
-return|;
-name|down
-label|:
-name|ui
-operator|->
-name|ui_alive
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
