@@ -280,6 +280,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUE_REG_1D
+value|0x1D
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUE_EE_REG
 value|0x20
 end_define
@@ -406,6 +413,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUE_REG_7B
+value|0x7B
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUE_GPIO0
 value|0x7E
 end_define
@@ -415,6 +429,13 @@ define|#
 directive|define
 name|AUE_GPIO1
 value|0x7F
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_REG_81
+value|0x81
 end_define
 
 begin_define
@@ -839,6 +860,24 @@ decl_stmt|;
 name|u_int16_t
 name|aue_did
 decl_stmt|;
+name|u_int16_t
+name|aue_flags
+decl_stmt|;
+define|#
+directive|define
+name|LSYS
+value|0x0001
+comment|/* use Linksys reset */
+define|#
+directive|define
+name|PNA
+value|0x0002
+comment|/* has Home PNA */
+define|#
+directive|define
+name|PII
+value|0x0004
+comment|/* Pegasus II chip */
 block|}
 struct|;
 end_struct
