@@ -257,14 +257,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+modifier|*
 name|shmat
 name|__P
 argument_list|(
 operator|(
 name|int
 operator|,
-name|caddr_t
+name|void
+operator|*
 operator|,
 name|int
 operator|)
@@ -298,7 +300,8 @@ name|int
 operator|,
 name|int
 operator|,
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -310,7 +313,8 @@ name|shmdt
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
