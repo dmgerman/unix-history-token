@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.50	82/10/05	*/
+comment|/*	ip_input.c	1.51	82/10/09	*/
 end_comment
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
+file|"../netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in_systm.h"
+file|"../netinet/in_systm.h"
 end_include
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/ip.h"
+file|"../netinet/ip.h"
 end_include
 
 begin_comment
@@ -64,19 +64,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../net/ip_var.h"
+file|"../netinet/ip_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/ip_icmp.h"
+file|"../netinet/ip_icmp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tcp.h"
+file|"../netinet/tcp.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.12	82/06/20	*/
+comment|/*	raw_imp.c	4.13	82/10/09	*/
 end_comment
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
+file|"../netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in_systm.h"
+file|"../netinet/in_systm.h"
 end_include
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/if_imp.h"
+file|"../netimp/if_imp.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.13	82/06/26	*/
+comment|/*	raw_pup.c	4.14	82/10/09	*/
 end_comment
 
 begin_include
@@ -36,19 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/pup.h"
+file|"../netpup/pup.h"
 end_include
 
 begin_include

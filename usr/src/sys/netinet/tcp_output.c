@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.45	82/10/05	*/
+comment|/*	tcp_output.c	4.46	82/10/09	*/
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
+file|"../netinet/in.h"
 end_include
 
 begin_include
@@ -54,31 +54,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in_pcb.h"
+file|"../netinet/in_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in_systm.h"
+file|"../netinet/in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/ip.h"
+file|"../netinet/ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/ip_var.h"
+file|"../netinet/ip_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tcp.h"
+file|"../netinet/tcp.h"
 end_include
 
 begin_define
@@ -90,37 +90,37 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../net/tcp_fsm.h"
+file|"../netinet/tcp_fsm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tcp_seq.h"
+file|"../netinet/tcp_seq.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tcp_timer.h"
+file|"../netinet/tcp_timer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tcp_var.h"
+file|"../netinet/tcp_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tcpip.h"
+file|"../netinet/tcpip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tcp_debug.h"
+file|"../netinet/tcp_debug.h"
 end_include
 
 begin_include
