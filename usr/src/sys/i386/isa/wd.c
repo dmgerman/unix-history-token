@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1961,7 +1961,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|nulldev
+name|nullop
 argument_list|()
 expr_stmt|;
 comment|/* So compiler won't optimize out */
@@ -2072,7 +2072,7 @@ operator|)
 operator|&
 name|WDCS_BUSY
 condition|)
-name|nulldev
+name|nullop
 argument_list|()
 expr_stmt|;
 if|if
@@ -2433,7 +2433,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|nulldev
+name|nullop
 argument_list|()
 expr_stmt|;
 comment|/*dprintf(DDSK,"addr %x\n", (int)bp->b_un.b_addr + du->dk_skip * 512);*/
@@ -3396,7 +3396,7 @@ operator|)
 operator|&
 name|WDCS_BUSY
 condition|)
-name|nulldev
+name|nullop
 argument_list|()
 expr_stmt|;
 endif|#
@@ -3806,7 +3806,7 @@ operator|)
 operator|&
 name|WDCS_BUSY
 condition|)
-name|nulldev
+name|nullop
 argument_list|()
 expr_stmt|;
 name|outb
@@ -3897,7 +3897,7 @@ operator|)
 operator|&
 name|WDCS_BUSY
 condition|)
-name|nulldev
+name|nullop
 argument_list|()
 expr_stmt|;
 name|outb
@@ -4857,12 +4857,12 @@ operator|>
 literal|0
 operator|)
 condition|)
-name|nulldev
+name|nullop
 argument_list|()
 expr_stmt|;
 name|inb
 argument_list|(
-argument|wdc+wd_sdh = du->dk_sdh ; 	inb(wdc+wd_command = WDCC_RESTORE | WD_STEP; 	while (inb(wdc+wd_status& WDCS_BUSY) nulldev() ; 	 	blknum = dumplo; 	while (num>
+argument|wdc+wd_sdh = du->dk_sdh ; 	inb(wdc+wd_command = WDCC_RESTORE | WD_STEP; 	while (inb(wdc+wd_status& WDCS_BUSY) nullop() ; 	 	blknum = dumplo; 	while (num>
 literal|0
 argument|) {
 ifdef|#
@@ -4895,7 +4895,7 @@ argument|inb(wdc+wd_sdh = du->dk_sdh | (head&
 literal|07
 argument|); 		while ((inb(wdc+wd_status& WDCS_READY) ==
 literal|0
-argument|) nulldev();
+argument|) nullop();
 comment|/* transfer some blocks */
 argument|inb(wdc+wd_sector = sector; 		inb(wdc+wd_seccnt =
 literal|1
@@ -4933,7 +4933,7 @@ argument|inb(wdc+wd_command = WDCC_WRITE;
 comment|/* Ready to send data?	*/
 argument|while ((inb(wdc+wd_status& WDCS_DRQ) ==
 literal|0
-argument|) nulldev(); 		if (inb(wdc+wd_status& WDCS_ERR) return(EIO) ;  		end = (char *)addr + du->dk_dd.dk_secsize; 		for (; addr< end; addr +=
+argument|) nullop(); 		if (inb(wdc+wd_status& WDCS_ERR) return(EIO) ;  		end = (char *)addr + du->dk_dd.dk_secsize; 		for (; addr< end; addr +=
 literal|8
 argument|) { 			wdp->wd_data = addr[
 literal|0
@@ -4959,7 +4959,7 @@ argument|for ( i =
 literal|1000000
 argument|; inb(wdc+wd_status& WDCS_BUSY ; i--) { 				if (i<
 literal|0
-argument|) return (EIO) ; 				nulldev () ; 		}
+argument|) return (EIO) ; 				nullop () ; 		}
 comment|/* error check the xfer */
 argument|if (inb(wdc+wd_status& WDCS_ERR) return(EIO) ;
 comment|/* update block count */
