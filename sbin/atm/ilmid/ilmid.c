@@ -3144,7 +3144,8 @@ name|Snmp_Header
 modifier|*
 name|h
 decl_stmt|;
-name|caddr_t
+name|u_char
+modifier|*
 modifier|*
 name|bp
 decl_stmt|;
@@ -3163,7 +3164,8 @@ name|Variable
 modifier|*
 name|var
 decl_stmt|;
-name|caddr_t
+name|u_char
+modifier|*
 name|bufp
 init|=
 operator|*
@@ -3297,6 +3299,11 @@ return|return;
 block|}
 name|asn_get_objid
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|*
+operator|)
 operator|&
 name|bufp
 argument_list|,
@@ -8841,7 +8848,8 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|caddr_t
+name|u_char
+modifier|*
 name|bpp
 decl_stmt|;
 name|Snmp_Header
@@ -9557,9 +9565,6 @@ if|if
 condition|(
 name|oid_ncmp
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|Hdr
 operator|->
@@ -9567,9 +9572,6 @@ name|head
 operator|->
 name|oid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|Objids
 index|[
@@ -9731,9 +9733,6 @@ if|if
 condition|(
 name|oid_ncmp
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|Hdr
 operator|->
@@ -9741,9 +9740,6 @@ name|head
 operator|->
 name|oid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|Objids
 index|[
