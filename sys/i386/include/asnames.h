@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 John D. Polstra  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: asnames.h,v 1.17 1998/03/04 09:55:13 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 John D. Polstra  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: asnames.h,v 1.18 1998/04/04 13:24:22 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -1365,6 +1365,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_getmicroruntime
+value|getmicroruntime
+end_define
+
+begin_define
+define|#
+directive|define
 name|_idqs
 value|idqs
 end_define
@@ -1386,6 +1393,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_in_vm86call
+value|in_vm86call
+end_define
+
+begin_define
+define|#
+directive|define
 name|_init386
 value|init386
 end_define
@@ -1395,6 +1409,13 @@ define|#
 directive|define
 name|_init_secondary
 value|init_secondary
+end_define
+
+begin_define
+define|#
+directive|define
+name|_initial_bioscalls
+value|initial_bioscalls
 end_define
 
 begin_define
@@ -1542,13 +1563,6 @@ define|#
 directive|define
 name|_maskRTC
 value|maskRTC
-end_define
-
-begin_define
-define|#
-directive|define
-name|_microtime
-value|microtime
 end_define
 
 begin_define
@@ -1745,6 +1759,13 @@ define|#
 directive|define
 name|_probetrap
 value|probetrap
+end_define
+
+begin_define
+define|#
+directive|define
+name|_proc0
+value|proc0
 end_define
 
 begin_define
@@ -2144,6 +2165,34 @@ define|#
 directive|define
 name|_vecRTC
 value|vecRTC
+end_define
+
+begin_define
+define|#
+directive|define
+name|_vm86_emulate
+value|vm86_emulate
+end_define
+
+begin_define
+define|#
+directive|define
+name|_vm86_prepcall
+value|vm86_prepcall
+end_define
+
+begin_define
+define|#
+directive|define
+name|_vm86_sysarch
+value|vm86_sysarch
+end_define
+
+begin_define
+define|#
+directive|define
+name|_vm86_trap
+value|vm86_trap
 end_define
 
 begin_define
