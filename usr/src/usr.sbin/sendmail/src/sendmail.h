@@ -6394,6 +6394,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|DontExpandCnames
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do not $[...$] expand CNAMEs */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|int
 name|MaxMciCache
 decl_stmt|;
