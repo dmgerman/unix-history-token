@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.11 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.11.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4073,30 +4073,12 @@ block|}
 else|else
 block|{
 comment|/* decryption */
-name|num_iter
-operator|=
-operator|-
-name|num_iter
-expr_stmt|;
-name|kp
-operator|=
-operator|&
-name|KS
-index|[
-name|KS_SIZE
-operator|-
+return|return
+operator|(
 literal|1
-index|]
-expr_stmt|;
-name|ks_inc
-operator|=
-operator|-
-sizeof|sizeof
-argument_list|(
-operator|*
-name|kp
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
+comment|/* always fail */
 block|}
 while|while
 condition|(
