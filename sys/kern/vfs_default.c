@@ -803,7 +803,21 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/* 	 * Just return what we were asked for. 	 */
+comment|/* 	 * Return true for read/write.  If the user asked for something 	 * special, return POLLNVAL, so that clients have a way of 	 * determining reliably whether or not the extended 	 * functionality is present without hard-coding knowledge 	 * of specific filesystem implementations. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_events
+operator|&
+operator|~
+name|POLLSTANDARD
+condition|)
+return|return
+operator|(
+name|POLLNVAL
+operator|)
+return|;
 return|return
 operator|(
 name|ap
@@ -819,6 +833,44 @@ name|POLLRDNORM
 operator||
 name|POLLWRNORM
 operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Implement poll for local filesystems that support it.  */
+end_comment
+
+begin_function
+name|int
+name|vop_stdpoll
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_poll_args
+comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|vn_pollrecord
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|,
+name|ap
+operator|->
+name|a_events
+argument_list|)
 operator|)
 return|;
 block|}
