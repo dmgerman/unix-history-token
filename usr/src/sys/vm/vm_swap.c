@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -683,6 +683,12 @@ condition|)
 block|{
 name|bp
 operator|->
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|bp
+operator|->
 name|b_flags
 operator||=
 name|B_ERROR
@@ -737,6 +743,12 @@ operator|>
 name|dmmax
 condition|)
 block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -867,6 +879,20 @@ condition|)
 block|{
 name|bp
 operator|->
+name|b_error
+operator|=
+name|swp
+operator|->
+name|sw_dev
+operator|==
+name|NODEV
+condition|?
+name|ENODEV
+else|:
+name|EINVAL
+expr_stmt|;
+name|bp
+operator|->
 name|b_flags
 operator||=
 name|B_ERROR
@@ -898,6 +924,12 @@ operator|>
 name|dmmax
 condition|)
 block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
