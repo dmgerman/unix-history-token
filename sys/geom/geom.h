@@ -1366,7 +1366,8 @@ name|d_ioctl_t
 modifier|*
 name|func
 decl_stmt|;
-name|dev_t
+name|void
+modifier|*
 name|dev
 decl_stmt|;
 block|}
