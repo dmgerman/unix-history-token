@@ -934,18 +934,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|mlx_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/*      * Start the controller.      */
 name|mlx_startup
 argument_list|(
