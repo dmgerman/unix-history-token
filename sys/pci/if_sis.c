@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_vlan_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -5176,6 +5188,19 @@ argument_list|,
 name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
+argument_list|)
+expr_stmt|;
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -8011,6 +8036,16 @@ argument_list|,
 name|SIS_RX_CFG
 argument_list|,
 name|SIS_RXCFG
+argument_list|)
+expr_stmt|;
+comment|/* Accept Long Packets for VLAN support */
+name|SIS_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|SIS_RX_CFG
+argument_list|,
+name|SIS_RXCFG_RX_JABBER
 argument_list|)
 expr_stmt|;
 comment|/* Set TX configuration */
