@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	7.3 (Berkeley) %G%  *  * from: $Header: clock.c,v 1.14 92/07/07 05:34:08 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	7.4 (Berkeley) %G%  *  * from: $Header: clock.c,v 1.17 92/11/26 03:04:47 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -66,23 +66,6 @@ directive|include
 file|<machine/autoconf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -105,17 +88,19 @@ begin_comment
 comment|/*  * Statistics clock interval and variance, in usec.  Variance must be a  * power of two.  Since this gives us an even number, not an odd number,  * we discard one case and compensate.  That is, a variance of 1024 would  * give us offsets in [0..1023].  Instead, we take offsets in [1..1023].  * This is symmetric about the point 512, or statvar/2, and thus averages  * to that value (assuming uniform random numbers).  */
 end_comment
 
+begin_comment
+comment|/* XXX fix comment to match value */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|int
 name|statvar
 init|=
-literal|1024
+literal|8192
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|statmin
 decl_stmt|;
@@ -124,6 +109,28 @@ end_decl_stmt
 begin_comment
 comment|/* statclock interval - 1/2*variance */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|clockmatch
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|,
+expr|struct
+name|cfdata
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -155,9 +162,9 @@ init|=
 block|{
 name|NULL
 block|,
-literal|"eeprom"
+literal|"clock"
 block|,
-name|matchbyname
+name|clockmatch
 block|,
 name|clockattach
 block|,
@@ -169,6 +176,28 @@ expr|struct
 name|device
 operator|)
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|timermatch
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|,
+expr|struct
+name|cfdata
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -202,9 +231,9 @@ init|=
 block|{
 name|NULL
 block|,
-literal|"counter-timer"
+literal|"timer"
 block|,
-name|matchbyname
+name|timermatch
 block|,
 name|timerattach
 block|,
@@ -218,6 +247,60 @@ operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The OPENPROM calls the clock the "eeprom", so we have to have our  * own special match function to call it the "clock".  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|clockmatch
+parameter_list|(
+name|parent
+parameter_list|,
+name|cf
+parameter_list|,
+name|aux
+parameter_list|)
+name|struct
+name|device
+modifier|*
+name|parent
+decl_stmt|;
+name|struct
+name|cfdata
+modifier|*
+name|cf
+decl_stmt|;
+name|void
+modifier|*
+name|aux
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|strcmp
+argument_list|(
+literal|"eeprom"
+argument_list|,
+operator|(
+operator|(
+expr|struct
+name|romaux
+operator|*
+operator|)
+name|aux
+operator|)
+operator|->
+name|ra_name
+argument_list|)
+operator|==
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
@@ -272,7 +355,7 @@ name|aux
 decl_stmt|;
 name|printf
 argument_list|(
-literal|": %s\n"
+literal|": %s (eeprom)\n"
 argument_list|,
 name|getpropstring
 argument_list|(
@@ -374,6 +457,60 @@ name|cl
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * The OPENPROM calls the timer the "counter-timer".  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|timermatch
+parameter_list|(
+name|parent
+parameter_list|,
+name|cf
+parameter_list|,
+name|aux
+parameter_list|)
+name|struct
+name|device
+modifier|*
+name|parent
+decl_stmt|;
+name|struct
+name|cfdata
+modifier|*
+name|cf
+decl_stmt|;
+name|void
+modifier|*
+name|aux
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|strcmp
+argument_list|(
+literal|"counter-timer"
+argument_list|,
+operator|(
+operator|(
+expr|struct
+name|romaux
+operator|*
+operator|)
+name|aux
+operator|)
+operator|->
+name|ra_name
+argument_list|)
+operator|==
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
