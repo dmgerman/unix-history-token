@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -434,11 +434,6 @@ name|struct
 name|pte
 modifier|*
 name|ip
-decl_stmt|;
-specifier|extern
-name|char
-name|Sysbase
-index|[]
 decl_stmt|;
 name|cpusid
 operator|.
@@ -4418,12 +4413,17 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|UAMSIZ
 operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|map
+argument_list|)
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -4446,16 +4446,24 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|uhp
 operator|->
 name|uh_map
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|UAMSIZ
 operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|map
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4616,9 +4624,14 @@ name|caddr_t
 operator|)
 name|malloc
 argument_list|(
+call|(
+name|u_long
+call|)
+argument_list|(
 literal|8
 operator|*
 literal|1024
+argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,

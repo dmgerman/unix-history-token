@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -167,26 +167,8 @@ function_decl|(
 modifier|*
 name|UNIvec
 index|[
-literal|128
-index|]
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_if
-if|#
-directive|if
 name|NUBA
-operator|>
-literal|1
-end_if
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|UNI1vec
+index|]
 index|[
 literal|128
 index|]
@@ -195,10 +177,23 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* unibus vec for ubas */
+end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|eUNIvec
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* end of unibus vec */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -567,25 +562,12 @@ name|UNIvec
 index|[
 literal|0
 index|]
-call|)
-argument_list|()
-expr_stmt|;
-if|#
-directive|if
-name|NUBA
-operator|>
-literal|1
-call|(
-modifier|*
-name|UNI1vec
 index|[
 literal|0
 index|]
 call|)
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|ubaerror
 argument_list|(
 literal|0
@@ -873,6 +855,9 @@ name|dumpflag
 operator|=
 name|dumpflag
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KADB
 name|bootesym
 operator|=
 literal|0
@@ -881,6 +866,8 @@ name|bootesym
 operator|=
 name|bootesym
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 operator|!
@@ -994,6 +981,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KADB
+end_ifdef
+
 begin_decl_stmt
 name|char
 name|Sysbase
@@ -1006,6 +999,11 @@ name|NBPG
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -1324,6 +1322,11 @@ name|kmempt
 index|[
 literal|200
 index|]
+decl_stmt|,
+name|ekmempt
+index|[
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1380,10 +1383,13 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|int
+name|char
 name|kmembase
-decl_stmt|,
-name|kmemlimit
+index|[
+literal|100
+operator|*
+name|NBPG
+index|]
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_output.c	7.13.1.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_output.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -823,6 +823,9 @@ name|sb_mb
 argument_list|,
 name|off
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|mtod
@@ -862,6 +865,9 @@ name|sb_mb
 argument_list|,
 name|off
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -1462,6 +1468,10 @@ name|in_cksum
 argument_list|(
 name|m
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1474,6 +1484,7 @@ operator|)
 name|optlen
 operator|+
 name|len
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * In transmit state, time the transmission and arrange for 	 * the retransmit.  In persist state, just set snd_max. 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)udp_usrreq.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)udp_usrreq.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1181,7 +1181,7 @@ block|}
 end_block
 
 begin_decl_stmt
-name|int
+name|u_long
 name|udp_sendspace
 init|=
 literal|2048
@@ -1193,7 +1193,7 @@ comment|/* really max datagram size */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_long
 name|udp_recvspace
 init|=
 literal|4

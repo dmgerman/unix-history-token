@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdb_opset.c	7.2 (Berkeley) %G%  */
+comment|/*  *	@(#)kdb_opset.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1618,6 +1618,10 @@ name|val
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_macro
 name|printins
