@@ -192,9 +192,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NETBSD_SYSCALLS
 return|return
 operator|(
 name|__semctl
@@ -209,26 +206,6 @@ name|semun_ptr
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|semsys
-argument_list|(
-literal|0
-argument_list|,
-name|semid
-argument_list|,
-name|semnum
-argument_list|,
-name|cmd
-argument_list|,
-name|semun_ptr
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
