@@ -436,6 +436,13 @@ name|Am79C970
 value|0x0242
 end_define
 
+begin_define
+define|#
+directive|define
+name|HITACHI_Am79C970
+value|0x2621
+end_define
+
 begin_comment
 comment|/* Board types */
 end_comment
