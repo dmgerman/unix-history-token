@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: callbootd.c,v 1.6 1997/09/04 11:50:37 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,18 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -869,6 +881,13 @@ name|server_name
 argument_list|,
 name|inet_ntoa
 argument_list|(
+operator|*
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|)
+operator|&
 name|res
 operator|->
 name|server_address
