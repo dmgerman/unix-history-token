@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mt.c	4.6 (Berkeley) 83/02/08"
+literal|"@(#)mt.c	4.7 (Berkeley) 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,13 +608,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/tmreg.h>
+file|<sundev/tmreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/arreg.h>
+file|<sundev/arreg.h>
 end_include
 
 begin_endif
@@ -719,7 +719,7 @@ literal|0
 block|}
 block|,
 block|{
-name|MT_ISARCH
+name|MT_ISAR
 block|,
 literal|"Archive"
 block|,
