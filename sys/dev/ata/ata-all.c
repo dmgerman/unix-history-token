@@ -1501,6 +1501,12 @@ return|return
 literal|"Promise TX2 ATA100 controller"
 return|;
 case|case
+literal|0x4d69105a
+case|:
+return|return
+literal|"Promise TX2 ATA133 controller"
+return|;
+case|case
 literal|0x00041103
 case|:
 switch|switch
