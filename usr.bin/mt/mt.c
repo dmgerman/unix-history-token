@@ -1502,6 +1502,12 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bits
+condition|)
+return|return;
 name|bits
 operator|++
 expr_stmt|;
