@@ -858,6 +858,17 @@ begin_comment
 comment|/* has kqfilter entry */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_NOGIANT
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Doesn't want Giant */
+end_comment
+
 begin_comment
 comment|/*  * Character device switch table  */
 end_comment
