@@ -1464,14 +1464,6 @@ name|unsigned
 name|nHash
 parameter_list|)
 function_decl|;
-name|void
-name|dictHashSummary
-parameter_list|(
-name|FICL_VM
-modifier|*
-name|pVM
-parameter_list|)
-function_decl|;
 name|int
 name|dictIncludes
 parameter_list|(
