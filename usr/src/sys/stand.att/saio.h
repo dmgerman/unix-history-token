@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.3	%G%	*/
+comment|/*	saio.h	4.4	%G%	*/
 end_comment
 
 begin_comment
@@ -189,39 +189,6 @@ name|NFILES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mbaact
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-end_if
-
-begin_struct
-struct|struct
-name|mba_info
-block|{
-name|struct
-name|mba_regs
-modifier|*
-name|mi_phys
-decl_stmt|;
-comment|/* physical address of mba */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
