@@ -114,17 +114,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<osreldate.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
