@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.16 (Berkeley) %G%"
+literal|"@(#)inet.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,7 +218,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|inetname
@@ -234,7 +233,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|inetprint
 name|__P
@@ -1619,7 +1617,6 @@ comment|/*  * Pretty print an Internet address (net address + port).  * If the n
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|inetprint
 parameter_list|(
@@ -1779,7 +1776,6 @@ comment|/*  * Construct an Internet address representation.  * If the nflag has 
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|inetname
