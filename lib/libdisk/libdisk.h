@@ -147,6 +147,8 @@ name|mbr
 block|,
 name|gpt
 block|,
+name|efi
+block|,
 name|fat
 block|,
 name|freebsd
