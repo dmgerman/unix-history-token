@@ -279,7 +279,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|line
+name|p
 operator|=
 name|realloc
 argument_list|(
@@ -304,9 +304,9 @@ name|NULL
 operator|)
 return|;
 block|}
-name|p
-operator|=
 name|line
+operator|=
+name|p
 expr_stmt|;
 if|if
 condition|(
