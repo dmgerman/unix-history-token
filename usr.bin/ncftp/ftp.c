@@ -642,23 +642,12 @@ name|is_ls
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
 name|passivemode
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -8311,9 +8300,6 @@ decl_stmt|;
 name|Sig_t
 name|oldintr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
 name|int
 name|a1
 decl_stmt|,
@@ -8334,8 +8320,6 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|oldintr
 operator|=
 name|Signal
@@ -8345,9 +8329,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
 if|if
 condition|(
 name|passivemode
@@ -8660,8 +8641,6 @@ goto|goto
 name|Return
 goto|;
 block|}
-endif|#
-directive|endif
 name|noport
 label|:
 name|data_addr
@@ -9310,9 +9289,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
 if|if
 condition|(
 name|passivemode
@@ -9327,8 +9303,6 @@ name|mode
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|Accept

@@ -197,6 +197,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|dPASSIVE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|dPASSIVE
+value|1
+end_define
+
+begin_comment
+comment|/* Works for most folks... */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|dVERBOSE
 end_ifndef
 

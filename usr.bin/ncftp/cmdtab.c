@@ -249,23 +249,12 @@ name|PAGEUSAGE
 value|REMOTEFILE
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|PASSIVEHELP
 value|"enter passive transfer mode"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1017,9 +1006,6 @@ block|,
 name|PAGEUSAGE
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
 block|{
 literal|"passive"
 block|,
@@ -1034,8 +1020,6 @@ block|,
 name|EMPTYSTR
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"page"
 block|,
