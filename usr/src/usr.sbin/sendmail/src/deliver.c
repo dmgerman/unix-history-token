@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.94
+literal|3.95
 operator|%
 name|G
 operator|%
@@ -3403,6 +3403,7 @@ name|h_flags
 argument_list|)
 condition|)
 block|{
+comment|/* macro expand value if generated internally */
 name|expand
 argument_list|(
 name|h
@@ -3505,6 +3506,7 @@ name|obp
 operator|+=
 name|opos
 expr_stmt|;
+comment|/* 			**  Run through the list of values. 			*/
 while|while
 condition|(
 operator|*
@@ -3517,8 +3519,6 @@ specifier|register
 name|char
 modifier|*
 name|name
-init|=
-name|p
 decl_stmt|;
 specifier|extern
 name|char
@@ -3529,7 +3529,36 @@ function_decl|;
 name|char
 name|savechar
 decl_stmt|;
-comment|/* find the end of the name */
+comment|/* 				**  Find the end of the name.  New style names 				**  end with a comma, old style names end with 				**  a space character.  However, spaces do not 				**  necessarily delimit an old-style name -- at 				**  signs mean keep going. 				*/
+comment|/* clean up the leading trash in source */
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|&&
+operator|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|||
+operator|*
+name|p
+operator|==
+literal|','
+operator|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+name|name
+operator|=
+name|p
+expr_stmt|;
+comment|/* find end of name */
 while|while
 condition|(
 operator|*
@@ -3572,6 +3601,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* look to see if we have an at sign */
 name|oldp
 operator|=
 name|p
@@ -3640,6 +3670,38 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+comment|/* at the end of one complete name */
+comment|/* strip off trailing white space */
+while|while
+condition|(
+name|p
+operator|>=
+name|name
+operator|&&
+operator|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|||
+operator|*
+name|p
+operator|==
+literal|','
+operator|)
+condition|)
+name|p
+operator|--
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|p
+operator|==
+name|name
+condition|)
+continue|continue;
 name|savechar
 operator|=
 operator|*
@@ -3669,7 +3731,14 @@ name|name
 operator|==
 literal|'\0'
 condition|)
+block|{
+operator|*
+name|p
+operator|=
+name|savechar
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* output the name with nice formatting */
 name|opos
 operator|+=
@@ -3792,34 +3861,10 @@ name|firstone
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* clean up the source string */
 operator|*
 name|p
 operator|=
 name|savechar
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|!=
-literal|'\0'
-operator|&&
-operator|(
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-operator|||
-operator|*
-name|p
-operator|==
-literal|','
-operator|)
-condition|)
-name|p
-operator|++
 expr_stmt|;
 block|}
 operator|(
