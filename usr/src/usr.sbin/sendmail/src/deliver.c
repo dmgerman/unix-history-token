@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.35 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1300,12 +1300,6 @@ expr_stmt|;
 name|ee
 operator|->
 name|e_xfp
-operator|=
-name|NULL
-expr_stmt|;
-name|ee
-operator|->
-name|e_lockfp
 operator|=
 name|NULL
 expr_stmt|;
@@ -4349,14 +4343,6 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|SIG_DFL
-argument_list|)
-expr_stmt|;
-comment|/* close any other cached connections */
-name|mci_flush
-argument_list|(
-name|FALSE
-argument_list|,
-name|mci
 argument_list|)
 expr_stmt|;
 comment|/* reset user and group */
