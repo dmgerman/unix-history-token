@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	5.1 (Berkeley) %G%"
+literal|"@(#)test.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,21 +207,6 @@ comment|/* Status info on file. */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|long
-name|atol
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
