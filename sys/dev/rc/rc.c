@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_comconsole.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rc.h"
 end_include
 
