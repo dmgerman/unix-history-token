@@ -296,6 +296,14 @@ literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
+name|USB_VENDOR_LINKSYS
+block|,
+name|USB_PRODUCT_LINKSYS_USB100TX
+block|,
+literal|"ADMtek AN986 Pegasus 10/100BaseTX"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
