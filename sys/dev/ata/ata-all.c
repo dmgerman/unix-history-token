@@ -520,6 +520,11 @@ name|atadevices
 index|[
 name|ctlr
 index|]
+operator|&&
+name|atadevices
+index|[
+name|ctlr
+index|]
 operator|->
 name|ioaddr
 operator|==
