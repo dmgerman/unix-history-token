@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rand_.c	5.3	%G%  *  * Routines to return random values  *  * calling sequence:  *	double precision d, drand  *	i = irand(iflag)  *	x = rand(iflag)  *	d = drand(iflag)  * where:  *	If arg is 1, generator is restarted. If arg is 0, next value  *	is returned. Any other arg is a new seed for the generator.  *	Integer values will range from 0 thru 2147483647.  *	Real values will range from 0.0 thru 1.0  *	(see rand(3))  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rand_.c	5.4	%G%  *  * Routines to return random values  *  * calling sequence:  *	double precision d, drand  *	i = irand(iflag)  *	x = rand(iflag)  *	d = drand(iflag)  * where:  *	If arg is 1, generator is restarted. If arg is 0, next value  *	is returned. Any other arg is a new seed for the generator.  *	Integer values will range from 0 thru 2147483647.  *	Real values will range from 0.0 thru 1.0  *	(see rand(3))  */
 end_comment
 
 begin_if
@@ -14,6 +14,11 @@ operator|||
 name|defined
 argument_list|(
 name|tahoe
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp300
 argument_list|)
 end_if
 
