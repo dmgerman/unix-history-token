@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.8 (Berkeley) %G%"
+literal|"@(#)library.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,12 +91,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -104,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -602,6 +602,9 @@ name|int
 name|count
 decl_stmt|;
 comment|/* IN: number of file systems */
+name|int
+name|use_mmap
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -2550,10 +2553,6 @@ name|u_long
 modifier|*
 name|datap
 decl_stmt|;
-name|SEGUSE
-modifier|*
-name|sup
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -3503,11 +3502,11 @@ name|p1
 argument_list|)
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|p1
-argument_list|,
 name|p
+argument_list|,
+name|p1
 argument_list|,
 name|i
 operator|*
