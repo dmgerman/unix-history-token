@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Macros for tracing/loging information in the CAM layer  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_debug.h,v 1.2 1998/10/02 21:00:50 ken Exp $  */
+comment|/*  * Macros for tracing/loging information in the CAM layer  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_debug.h,v 1.3 1998/12/05 23:55:48 mjacob Exp $  */
 end_comment
 
 begin_ifndef
@@ -81,7 +81,12 @@ comment|/* print out SCSI CDBs only */
 name|CAM_DEBUG_XPT
 init|=
 literal|0x10
+block|,
 comment|/* print out xpt scheduling */
+name|CAM_DEBUG_PERIPH
+init|=
+literal|0x20
+comment|/* print out peripheral calls */
 block|}
 name|cam_debug_flags
 typedef|;
@@ -126,6 +131,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Printf delay value (to prevent scrolling */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|cam_debug_delay
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Debugging macros. */
 end_comment
 
@@ -139,7 +155,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|((cam_dflags& (flag))				\&& (cam_dpath != NULL)				\&& (xpt_path_comp(path, cam_dpath)>= 0))
+value|((cam_dflags& (flag))				\&& (cam_dpath != NULL)				\&& (xpt_path_comp(cam_dpath, path)>= 0)	\&& (xpt_path_comp(cam_dpath, path)< 2))
 end_define
 
 begin_define
@@ -154,7 +170,7 @@ parameter_list|,
 name|printfargs
 parameter_list|)
 define|\
-value|if ((cam_dflags& (flag))			\&& (cam_dpath != NULL)				\&& (xpt_path_comp(path, cam_dpath)>= 0)) {	\ 		xpt_print_path(path);			\  		printf printfargs;			\ 		DELAY(100000);				\ 	}
+value|if ((cam_dflags& (flag))			\&& (cam_dpath != NULL)				\&& (xpt_path_comp(cam_dpath, path)>= 0)	\&& (xpt_path_comp(cam_dpath, path)< 2)) {	\ 		xpt_print_path(path);			\  		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
 end_define
 
 begin_define
@@ -167,7 +183,7 @@ parameter_list|,
 name|printfargs
 parameter_list|)
 define|\
-value|if (cam_dflags& (flag)) {			\ 		printf("cam_debug: ");			\  		printf printfargs;			\ 		DELAY(100000);				\ 	}
+value|if (cam_dflags& (flag)) {			\ 		printf("cam_debug: ");			\  		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
 end_define
 
 begin_else
