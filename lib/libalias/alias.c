@@ -3880,7 +3880,7 @@ expr_stmt|;
 if|if
 condition|(
 name|iclass
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
