@@ -1495,7 +1495,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|char
+name|int
 name|ch
 decl_stmt|;
 name|int

@@ -1375,6 +1375,8 @@ index|[]
 parameter_list|)
 block|{
 name|int
+name|ch
+decl_stmt|,
 name|res
 decl_stmt|,
 name|rv
@@ -1387,8 +1389,6 @@ init|=
 name|MIN_SIZE
 decl_stmt|;
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|buf
 decl_stmt|,

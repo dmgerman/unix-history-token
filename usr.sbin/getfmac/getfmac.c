@@ -100,8 +100,6 @@ index|[]
 parameter_list|)
 block|{
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|labellist
 decl_stmt|,
@@ -112,6 +110,8 @@ name|mac_t
 name|label
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|hflag
 decl_stmt|;
 name|int

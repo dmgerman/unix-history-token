@@ -199,7 +199,7 @@ decl_stmt|;
 name|int
 name|base64
 decl_stmt|;
-name|char
+name|int
 name|ch
 decl_stmt|;
 name|char

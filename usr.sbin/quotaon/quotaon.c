@@ -278,8 +278,6 @@ modifier|*
 name|fs
 decl_stmt|;
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|qfnp
 decl_stmt|,
@@ -294,6 +292,8 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|i
 decl_stmt|,
 name|offmode

@@ -392,15 +392,14 @@ name|argv
 parameter_list|)
 block|{
 name|char
-name|ch
-decl_stmt|;
-name|char
 name|pathacct
 index|[]
 init|=
 name|_PATH_ACCT
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|error
 init|=
 literal|0

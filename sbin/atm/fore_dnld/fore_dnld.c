@@ -3599,10 +3599,9 @@ name|Aali
 modifier|*
 name|aap
 decl_stmt|;
-name|char
-name|c
-decl_stmt|;
 name|int
+name|c
+decl_stmt|,
 name|i
 decl_stmt|,
 name|err

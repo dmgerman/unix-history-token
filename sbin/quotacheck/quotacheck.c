@@ -697,6 +697,8 @@ decl_stmt|,
 name|maxrun
 decl_stmt|,
 name|errs
+decl_stmt|,
+name|ch
 decl_stmt|;
 name|long
 name|done
@@ -704,8 +706,6 @@ init|=
 literal|0
 decl_stmt|;
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|name
 decl_stmt|;

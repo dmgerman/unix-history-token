@@ -1743,6 +1743,9 @@ name|PAGEDEF
 block|}
 name|state
 enum|;
+name|int
+name|ch
+decl_stmt|;
 name|char
 name|c
 decl_stmt|;
@@ -1812,7 +1815,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|c
+name|ch
 operator|=
 name|fgetc
 argument_list|(
@@ -1829,14 +1832,14 @@ expr_stmt|;
 comment|/* Skip over comments anywhere in the mode database. */
 if|if
 condition|(
-name|c
+name|ch
 operator|==
 literal|'#'
 condition|)
 block|{
 do|do
 block|{
-name|c
+name|ch
 operator|=
 name|fgetc
 argument_list|(
@@ -1846,11 +1849,11 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|c
+name|ch
 operator|!=
 literal|'\n'
 operator|&&
-name|c
+name|ch
 operator|!=
 name|EOF
 condition|)
@@ -1859,6 +1862,10 @@ name|UPDATE_LINENO
 expr_stmt|;
 continue|continue;
 block|}
+name|c
+operator|=
+name|ch
+expr_stmt|;
 comment|/* Strip out newline characters. */
 if|if
 condition|(

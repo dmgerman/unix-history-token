@@ -498,8 +498,6 @@ name|cp
 decl_stmt|,
 modifier|*
 name|oldoptarg
-decl_stmt|,
-name|ch
 decl_stmt|;
 name|int
 name|eflag
@@ -513,6 +511,8 @@ decl_stmt|,
 name|pflag
 init|=
 literal|0
+decl_stmt|,
+name|ch
 decl_stmt|;
 name|char
 modifier|*

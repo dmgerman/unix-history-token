@@ -462,6 +462,8 @@ modifier|*
 name|gr
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|gflag
 init|=
 literal|0
@@ -484,8 +486,6 @@ init|=
 literal|0
 decl_stmt|;
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|qfnp
 decl_stmt|;

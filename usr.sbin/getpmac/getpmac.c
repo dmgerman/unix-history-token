@@ -100,8 +100,6 @@ index|[]
 parameter_list|)
 block|{
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|labellist
 decl_stmt|,
@@ -115,6 +113,8 @@ name|pid_t
 name|pid
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|error
 decl_stmt|,
 name|pid_set

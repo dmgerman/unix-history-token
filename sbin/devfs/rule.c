@@ -327,7 +327,7 @@ name|cmd
 modifier|*
 name|c
 decl_stmt|;
-name|char
+name|int
 name|ch
 decl_stmt|;
 name|setprogname

@@ -468,10 +468,11 @@ modifier|*
 name|unitstr
 decl_stmt|;
 name|char
-name|ch
-decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|ch
 decl_stmt|;
 name|void
 modifier|*
