@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.55 1997/09/03 12:41:15 kato Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.56 1997/09/05 10:14:36 kato Exp $  */
 end_comment
 
 begin_include
@@ -1163,6 +1163,35 @@ operator|&
 name|netisr_set
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Calculate callout wheel size 	 */
+for|for
+control|(
+name|callwheelsize
+operator|=
+literal|1
+operator|,
+name|callwheelbits
+operator|=
+literal|0
+init|;
+name|callwheelsize
+operator|<
+name|ncallout
+condition|;
+name|callwheelsize
+operator|<<=
+literal|1
+operator|,
+operator|++
+name|callwheelbits
+control|)
+empty_stmt|;
+name|callwheelmask
+operator|=
+name|callwheelsize
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 	 * Allocate space for system data structures. 	 * The first available kernel virtual address is in "v". 	 * As pages of kernel virtual memory are allocated, "v" is incremented. 	 * As pages of memory are allocated and cleared, 	 * "firstaddr" is incremented. 	 * An index into the kernel page table corresponding to the 	 * virtual memory address maintained in "v" is kept in "mapaddr". 	 */
 comment|/* 	 * Make two passes.  The first pass calculates how much memory is 	 * needed and allocates it.  The second pass assigns virtual 	 * addresses to the various data structures. 	 */
 name|firstaddr
@@ -1212,6 +1241,16 @@ expr|struct
 name|callout
 argument_list|,
 name|ncallout
+argument_list|)
+expr_stmt|;
+name|valloc
+argument_list|(
+name|callwheel
+argument_list|,
+expr|struct
+name|callout_tailq
+argument_list|,
+name|callwheelsize
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1806,15 +1845,17 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize callouts 	 */
+name|SLIST_INIT
+argument_list|(
+operator|&
 name|callfree
-operator|=
-name|callout
+argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
 operator|<
@@ -1823,21 +1864,48 @@ condition|;
 name|i
 operator|++
 control|)
-name|callout
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|c_next
-operator|=
+block|{
+name|SLIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|callfree
+argument_list|,
 operator|&
 name|callout
 index|[
 name|i
 index|]
+argument_list|,
+name|c_links
+operator|.
+name|sle
+argument_list|)
 expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|callwheelsize
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|callwheel
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -3846,6 +3914,14 @@ name|struct
 name|segment_descriptor
 name|common_tssd
 decl_stmt|;
+specifier|extern
+name|int
+name|private_tss
+decl_stmt|;
+specifier|extern
+name|u_int
+name|my_tr
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* VM86 */
@@ -3864,10 +3940,12 @@ name|common_tssd
 decl_stmt|;
 name|u_int
 name|private_tss
-init|=
-literal|0
 decl_stmt|;
 comment|/* flag indicating private tss */
+name|u_int
+name|my_tr
+decl_stmt|;
+comment|/* which task register setting */
 endif|#
 directive|endif
 comment|/* VM86 */
@@ -6600,6 +6678,19 @@ argument_list|(
 name|gsel_tss
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VM86
+name|private_tss
+operator|=
+literal|0
+expr_stmt|;
+name|my_tr
+operator|=
+name|GPROC0_SEL
+expr_stmt|;
+endif|#
+directive|endif
 name|dblfault_tss
 operator|.
 name|tss_esp
