@@ -1383,25 +1383,6 @@ argument_list|,
 argument|mnt_list
 argument_list|)
 block|{
-name|error
-operator|=
-name|VFS_STATFS
-argument_list|(
-name|mp
-argument_list|,
-operator|&
-name|mp
-operator|->
-name|mnt_stat
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-break|break;
 comment|/* determine device name */
 name|mntfrom
 operator|=
