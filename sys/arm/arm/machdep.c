@@ -1250,6 +1250,26 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+comment|/* XXX */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ptrace_clear_single_step
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+comment|/* XXX */
 return|return
 operator|(
 literal|0
@@ -1272,6 +1292,14 @@ name|long
 name|addr
 parameter_list|)
 block|{
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_pc
+operator|=
+name|addr
+expr_stmt|;
 return|return
 operator|(
 literal|0
