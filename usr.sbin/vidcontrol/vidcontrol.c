@@ -2742,7 +2742,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"argument to -m must either on or off"
+literal|"argument to -m must be either on or off"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2805,7 +2805,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"argument to -S must either on or off"
+literal|"argument to -S must be either on or off"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3414,7 +3414,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"argument to -i must either adapter or mode"
+literal|"argument to -i must be either adapter or mode"
 argument_list|)
 expr_stmt|;
 return|return;
