@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.14 %G%"
+literal|"@(#)asmain.c 4.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,11 +67,17 @@ directive|include
 file|"asexpr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 4.14"
+value|"VAX/UNIX Assembler V%G% 4.15"
 end_define
 
 begin_comment
@@ -1947,6 +1953,10 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|stat
+name|stb
+decl_stmt|;
 comment|/* 	 *	Open up the a.out file now, and get set to build 	 *	up offsets into it for all of the various text,data 	 *	text relocation and data relocation segments. 	 */
 name|a_out_file
 operator|=
@@ -1980,6 +1990,20 @@ operator|=
 name|a_out_file
 operator|->
 name|_file
+expr_stmt|;
+name|fstat
+argument_list|(
+name|biofd
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+expr_stmt|;
+name|biobufsize
+operator|=
+name|stb
+operator|.
+name|st_blksize
 expr_stmt|;
 name|a_out_off
 operator|=

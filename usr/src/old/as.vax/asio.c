@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asio.c 4.4 %G%"
+literal|"@(#)asio.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* file descriptor for block I/O file */
+end_comment
+
+begin_decl_stmt
+name|int
+name|biobufsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* optimal block size for I/O */
 end_comment
 
 begin_decl_stmt
@@ -166,16 +176,25 @@ operator|=
 name|bp
 operator|->
 name|b_buf
+operator|=
+name|Calloc
+argument_list|(
+literal|1
+argument_list|,
+name|biobufsize
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
 name|b_nleft
 operator|=
-name|BUFSIZ
+name|biobufsize
 operator|-
+operator|(
 name|off
 operator|%
-name|BUFSIZ
+name|biobufsize
+operator|)
 expr_stmt|;
 name|bp
 operator|->
@@ -324,7 +343,7 @@ if|if
 condition|(
 name|cnt
 operator|>=
-name|BUFSIZ
+name|biobufsize
 condition|)
 block|{
 if|if
@@ -348,7 +367,7 @@ name|cnt
 operator|-
 name|cnt
 operator|%
-name|BUFSIZ
+name|biobufsize
 expr_stmt|;
 if|if
 condition|(
@@ -587,7 +606,7 @@ name|bp
 operator|->
 name|b_nleft
 operator|=
-name|BUFSIZ
+name|biobufsize
 expr_stmt|;
 block|}
 end_block

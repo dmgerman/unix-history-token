@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.21 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.22 %G%  */
 end_comment
 
 begin_define
@@ -1875,12 +1875,10 @@ name|b_ptr
 decl_stmt|;
 comment|/* Next place to stuff characters */
 name|char
+modifier|*
 name|b_buf
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
-comment|/* The buffer itself */
+comment|/* Pointer to the buffer */
 name|off_t
 name|b_off
 decl_stmt|;
@@ -1935,6 +1933,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* file descriptor for block I/O file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|biobufsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* optimal block size for I/O */
 end_comment
 
 begin_decl_stmt
