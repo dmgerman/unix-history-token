@@ -2582,7 +2582,7 @@ parameter_list|,
 name|desc
 parameter_list|)
 define|\
-value|asc, asc, action
+value|asc, ascq, action
 end_define
 
 begin_endif
