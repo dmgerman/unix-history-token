@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.70 1998/01/05 00:14:05 alex Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.71 1998/01/05 00:57:15 alex Exp $  */
 end_comment
 
 begin_comment
@@ -902,18 +902,13 @@ if|if
 condition|(
 name|type
 operator|<
-name|IP_FW_ICMPTYPES_DIM
-operator|*
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-literal|8
+name|IP_FW_ICMPTYPES_MAX
 operator|&&
 operator|(
 name|f
 operator|->
+name|fw_uar
+operator|.
 name|fw_icmptypes
 index|[
 name|type
@@ -1411,7 +1406,7 @@ name|oif
 parameter_list|)
 block|{
 specifier|static
-name|int
+name|u_int64_t
 name|counter
 decl_stmt|;
 name|struct
@@ -2493,6 +2488,8 @@ argument_list|(
 operator|&
 name|f
 operator|->
+name|fw_uar
+operator|.
 name|fw_pts
 index|[
 literal|0
@@ -2521,6 +2518,8 @@ argument_list|(
 operator|&
 name|f
 operator|->
+name|fw_uar
+operator|.
 name|fw_pts
 index|[
 name|IP_FW_GETNSRCP

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.29 1997/09/16 11:43:57 bde Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.30 1997/10/28 15:58:45 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -60,7 +60,7 @@ begin_struct
 struct|struct
 name|ip_fw
 block|{
-name|u_long
+name|u_int64_t
 name|fw_pcnt
 decl_stmt|,
 name|fw_bcnt
@@ -93,6 +93,8 @@ directive|define
 name|IP_FW_MAX_PORTS
 value|10
 comment|/* A reasonable maximum */
+union|union
+block|{
 name|u_short
 name|fw_pts
 index|[
@@ -100,6 +102,24 @@ name|IP_FW_MAX_PORTS
 index|]
 decl_stmt|;
 comment|/* Array of port numbers to match */
+define|#
+directive|define
+name|IP_FW_ICMPTYPES_MAX
+value|128
+define|#
+directive|define
+name|IP_FW_ICMPTYPES_DIM
+value|(IP_FW_ICMPTYPES_MAX / (sizeof(unsigned) * 8))
+name|unsigned
+name|fw_icmptypes
+index|[
+name|IP_FW_ICMPTYPES_DIM
+index|]
+decl_stmt|;
+comment|/* ICMP types bitmap */
+block|}
+name|fw_uar
+union|;
 name|u_char
 name|fw_ipopt
 decl_stmt|,
@@ -112,17 +132,6 @@ decl_stmt|,
 name|fw_tcpnf
 decl_stmt|;
 comment|/* TCP flags set/unset */
-define|#
-directive|define
-name|IP_FW_ICMPTYPES_DIM
-value|(32 / (sizeof(unsigned) * 8))
-name|unsigned
-name|fw_icmptypes
-index|[
-name|IP_FW_ICMPTYPES_DIM
-index|]
-decl_stmt|;
-comment|/* ICMP types bitmap */
 name|long
 name|timestamp
 decl_stmt|;
