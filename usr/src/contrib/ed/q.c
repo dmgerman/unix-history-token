@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)q.c	5.4 (Berkeley) %G%"
+literal|"@(#)q.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,14 @@ name|l_which
 operator|=
 name|ss
 expr_stmt|;
+if|if
+condition|(
+name|ss
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 for|for
 control|(
 init|;
@@ -215,6 +223,7 @@ argument_list|,
 name|inputt
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Note: 'Q' will bypass this if stmt., which warns of no save. */
 if|if
 condition|(
@@ -225,9 +234,18 @@ literal|1L
 operator|)
 operator|&&
 operator|(
+operator|(
 name|l_which
 operator|==
 literal|'q'
+operator|)
+operator|||
+operator|(
+name|l_which
+operator|==
+operator|-
+literal|1
+operator|)
 operator|)
 condition|)
 block|{
@@ -252,6 +270,19 @@ name|ss
 operator|=
 name|l_ss
 expr_stmt|;
+if|if
+condition|(
+name|l_which
+operator|==
+name|EOF
+condition|)
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|inputt
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* Do cleanup; should it be even bothered?? */
@@ -270,6 +301,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* We don't care about the returned errnum val anymore. */
+if|if
+condition|(
+name|l_which
+operator|==
+name|EOF
+condition|)
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|inputt
+argument_list|)
+expr_stmt|;
 name|d
 argument_list|(
 name|inputt

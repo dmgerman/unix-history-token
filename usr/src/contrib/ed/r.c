@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)r.c	5.5 (Berkeley) %G%"
+literal|"@(#)r.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,8 +385,9 @@ expr_stmt|;
 if|if
 condition|(
 name|explain_flag
+operator|>
+literal|0
 condition|)
-comment|/* !=0 */
 name|printf
 argument_list|(
 literal|"%ld\n"

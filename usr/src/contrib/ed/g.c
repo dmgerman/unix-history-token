@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)g.c	5.5 (Berkeley) %G%"
+literal|"@(#)g.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -629,6 +629,7 @@ name|do_hup
 argument_list|()
 expr_stmt|;
 comment|/* does not return */
+block|}
 name|sigspecial
 operator|--
 expr_stmt|;
@@ -644,7 +645,6 @@ condition|)
 goto|goto
 name|point
 goto|;
-block|}
 block|}
 name|ss
 operator|=

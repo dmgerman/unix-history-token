@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.4 (Berkeley) %G%"
+literal|"@(#)w.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,7 +421,7 @@ expr_stmt|;
 if|if
 condition|(
 name|explain_flag
-operator|!=
+operator|>
 literal|0
 condition|)
 comment|/* For -s option. */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bang.c	5.3 (Berkeley) %G%"
+literal|"@(#)bang.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,7 +348,7 @@ expr_stmt|;
 if|if
 condition|(
 name|explain_flag
-operator|!=
+operator|>
 literal|0
 condition|)
 comment|/* for the -s option */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,11 +500,25 @@ name|l_fnametmp
 decl_stmt|,
 modifier|*
 name|l_col
+decl_stmt|,
+name|buf
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|struct
 name|winsize
 name|win
 decl_stmt|;
+name|setbuffer
+argument_list|(
+name|stdin
+argument_list|,
+name|buf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|line_length
 operator|=
 operator|(
@@ -796,6 +810,29 @@ name|l_err
 operator|=
 literal|1
 expr_stmt|;
+case|case
+literal|'v'
+case|:
+ifdef|#
+directive|ifdef
+name|BSD
+name|printf
+argument_list|(
+literal|"ed: in BSD mode:\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|POSIX
+name|printf
+argument_list|(
+literal|"ed: in POSIX mode:\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 default|default:
 name|l_err
 operator|++
@@ -1466,10 +1503,7 @@ operator|>
 literal|0
 condition|)
 return|return;
-name|ss
-operator|=
-literal|'q'
-expr_stmt|;
+comment|/*ss = 'q';*/
 case|case
 literal|'q'
 case|:
@@ -2201,18 +2235,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|SIGINT_ILACTION
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|sigspecial2
-condition|)
-block|{
-name|sigspecial2
-operator|=
-literal|0
-expr_stmt|;
-name|SIGINT_ALACTION
 expr_stmt|;
 block|}
 elseif|else

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input_lines.c	5.7 (Berkeley) %G%"
+literal|"@(#)input_lines.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -264,11 +264,6 @@ block|{
 if|if
 condition|(
 name|sigint_flag
-operator|&&
-operator|(
-operator|!
-name|sigspecial
-operator|)
 condition|)
 goto|goto
 name|point
@@ -314,13 +309,9 @@ goto|;
 block|}
 break|break;
 block|}
-if|if
-condition|(
-operator|!
-name|l_ss
-condition|)
+comment|/*if (!l_ss)*/
 comment|/* 8-bit okay, but NULL not */
-continue|continue;
+comment|/*continue;*/
 name|l_text
 index|[
 name|l_nn
@@ -342,11 +333,6 @@ block|{
 if|if
 condition|(
 name|sigint_flag
-operator|&&
-operator|(
-operator|!
-name|sigspecial
-operator|)
 condition|)
 goto|goto
 name|point
