@@ -5844,7 +5844,9 @@ operator|->
 name|data
 argument_list|)
 argument_list|,
+operator|(
 literal|"aac_sync_fib: datasize to large"
+operator|)
 argument_list|)
 expr_stmt|;
 name|bcopy
