@@ -2472,6 +2472,9 @@ literal|'b'
 case|:
 name|num
 operator|=
+operator|(
+name|u_int
+operator|)
 name|va_arg
 argument_list|(
 name|ap
