@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.31 1998/07/15 11:27:11 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.32 1999/01/27 23:45:38 dillon Exp $  */
 end_comment
 
 begin_include
@@ -74,6 +74,7 @@ name|db_regs
 index|[]
 init|=
 block|{
+block|{
 literal|"cs"
 block|,
 operator|&
@@ -82,7 +83,9 @@ operator|.
 name|tf_cs
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"ds"
 block|,
 operator|&
@@ -91,7 +94,9 @@ operator|.
 name|tf_ds
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"es"
 block|,
 operator|&
@@ -100,13 +105,15 @@ operator|.
 name|tf_es
 block|,
 name|FCN_NULL
+block|}
 block|,
 if|#
 directive|if
 literal|0
-block|"fs",&ddb_regs.tf_fs,  FCN_NULL, 	"gs",&ddb_regs.tf_gs,  FCN_NULL,
+block|{ "fs",&ddb_regs.tf_fs,  FCN_NULL }, 	{ "gs",&ddb_regs.tf_gs,  FCN_NULL },
 endif|#
 directive|endif
+block|{
 literal|"ss"
 block|,
 operator|&
@@ -115,7 +122,9 @@ operator|.
 name|tf_ss
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"eax"
 block|,
 operator|&
@@ -124,7 +133,9 @@ operator|.
 name|tf_eax
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"ecx"
 block|,
 operator|&
@@ -133,7 +144,9 @@ operator|.
 name|tf_ecx
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"edx"
 block|,
 operator|&
@@ -142,7 +155,9 @@ operator|.
 name|tf_edx
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"ebx"
 block|,
 operator|&
@@ -151,7 +166,9 @@ operator|.
 name|tf_ebx
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"esp"
 block|,
 operator|&
@@ -160,7 +177,9 @@ operator|.
 name|tf_esp
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"ebp"
 block|,
 operator|&
@@ -169,7 +188,9 @@ operator|.
 name|tf_ebp
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"esi"
 block|,
 operator|&
@@ -178,7 +199,9 @@ operator|.
 name|tf_esi
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"edi"
 block|,
 operator|&
@@ -187,7 +210,9 @@ operator|.
 name|tf_edi
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"eip"
 block|,
 operator|&
@@ -196,7 +221,9 @@ operator|.
 name|tf_eip
 block|,
 name|FCN_NULL
+block|}
 block|,
+block|{
 literal|"efl"
 block|,
 operator|&
@@ -205,6 +232,7 @@ operator|.
 name|tf_eflags
 block|,
 name|FCN_NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

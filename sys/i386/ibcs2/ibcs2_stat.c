@@ -524,6 +524,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -531,6 +532,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -561,6 +565,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_STATFS
@@ -571,6 +576,9 @@ name|sp
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -653,6 +661,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -671,6 +680,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -701,6 +713,7 @@ name|mnt_stat
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_STATFS
@@ -711,6 +724,9 @@ name|sp
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -844,6 +860,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|stat
@@ -853,12 +870,16 @@ argument_list|,
 operator|&
 name|cup
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -879,6 +900,9 @@ argument_list|(
 name|st
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -1008,6 +1032,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|lstat
@@ -1017,12 +1042,16 @@ argument_list|,
 operator|&
 name|cup
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -1043,6 +1072,9 @@ argument_list|(
 name|st
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -1157,6 +1189,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|fstat
@@ -1166,12 +1199,16 @@ argument_list|,
 operator|&
 name|cup
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -1192,6 +1229,9 @@ argument_list|(
 name|st
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error

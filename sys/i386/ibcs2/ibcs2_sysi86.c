@@ -176,6 +176,7 @@ expr_stmt|;
 comment|/* FPU emulator */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyout
@@ -195,6 +196,9 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error

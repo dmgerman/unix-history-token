@@ -3132,6 +3132,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|setpgid
@@ -3141,6 +3142,9 @@ argument_list|,
 operator|&
 name|sa
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error

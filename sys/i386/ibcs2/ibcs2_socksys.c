@@ -163,6 +163,7 @@ decl_stmt|;
 comment|/* 	 * SOCKET should only be legal on /dev/socksys. 	 * GETIPDOMAINNAME should only be legal on /dev/socksys ? 	 * The others are (and should be) only legal on sockets. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -181,6 +182,9 @@ argument_list|(
 name|realargs
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error

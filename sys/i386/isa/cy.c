@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.82 1998/12/24 14:17:57 bde Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.83 1999/01/08 19:17:46 bde Exp $  */
 end_comment
 
 begin_include
@@ -4071,13 +4071,16 @@ name|tp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
 name|t_cflag
 operator|&
 name|HUPCL
+operator|)
 comment|/* 		     * XXX we will miss any carrier drop between here and the 		     * next open.  Perhaps we should watch DCD even when the 		     * port is closed; it is not sufficient to check it at 		     * the next open because it might go up and down while 		     * we're not watching. 		     */
 operator|||
+operator|(
 operator|!
 name|com
 operator|->
@@ -4101,6 +4104,7 @@ operator|.
 name|c_cflag
 operator|&
 name|CLOCAL
+operator|)
 operator|)
 operator|||
 operator|!
@@ -4820,6 +4824,7 @@ name|TS_ISOPEN
 operator|)
 operator|||
 operator|(
+operator|(
 name|line_status
 operator|&
 operator|(
@@ -4838,7 +4843,9 @@ name|t_iflag
 operator|&
 name|IGNPAR
 operator|)
+operator|)
 operator|||
+operator|(
 operator|(
 name|line_status
 operator|&
@@ -4853,6 +4860,7 @@ operator|->
 name|t_iflag
 operator|&
 name|IGNBRK
+operator|)
 operator|)
 condition|)
 goto|goto
@@ -4888,6 +4896,7 @@ name|LSR_FE
 operator|)
 operator|||
 operator|(
+operator|(
 name|line_status
 operator|&
 name|LSR_PE
@@ -4901,6 +4910,7 @@ operator|->
 name|t_iflag
 operator|&
 name|INPCK
+operator|)
 operator|)
 operator|)
 condition|)
@@ -5940,12 +5950,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXRDY
+operator|)
 operator||
 name|CD1400_SRER_TXMPTY
 argument_list|)
@@ -6370,12 +6382,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXRDY
+operator|)
 operator||
 name|CD1400_SRER_TXMPTY
 argument_list|)
@@ -9505,12 +9519,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXMPTY
+operator|)
 operator||
 name|CD1400_SRER_TXRDY
 argument_list|)
@@ -9536,12 +9552,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXRDY
+operator|)
 operator||
 name|CD1400_SRER_TXMPTY
 argument_list|)
@@ -9672,12 +9690,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXRDY
+operator|)
 operator||
 name|CD1400_SRER_TXMPTY
 argument_list|)
@@ -9724,12 +9744,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXMPTY
+operator|)
 operator||
 name|CD1400_SRER_TXRDY
 argument_list|)
@@ -10090,12 +10112,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXMPTY
+operator|)
 operator||
 name|CD1400_SRER_TXRDY
 argument_list|)
@@ -10312,12 +10336,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXMPTY
+operator|)
 operator||
 name|CD1400_SRER_TXRDY
 argument_list|)
@@ -11969,6 +11995,7 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|etc
 operator|==
 name|CD1400_ETC_SENDBREAK
@@ -11986,7 +12013,9 @@ name|etc
 operator|==
 name|ETC_BREAK_STARTED
 operator|)
+operator|)
 operator|||
+operator|(
 name|etc
 operator|==
 name|CD1400_ETC_STOPBREAK
@@ -12009,6 +12038,7 @@ operator|->
 name|etc
 operator|==
 name|ETC_NONE
+operator|)
 operator|)
 condition|)
 block|{
@@ -12033,12 +12063,14 @@ name|com
 operator|->
 name|intr_enable
 operator|=
+operator|(
 name|com
 operator|->
 name|intr_enable
 operator|&
 operator|~
 name|CD1400_SRER_TXRDY
+operator|)
 operator||
 name|CD1400_SRER_TXMPTY
 argument_list|)

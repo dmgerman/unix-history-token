@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.32 1998/10/22 05:58:38 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.33 1999/01/27 10:10:00 bde Exp $  */
 end_comment
 
 begin_include
@@ -2107,6 +2107,7 @@ expr_stmt|;
 comment|/* ignore stray interrupts... */
 if|if
 condition|(
+operator|(
 name|scu
 operator|->
 name|flags
@@ -2115,6 +2116,7 @@ operator|(
 name|OPEN
 operator||
 name|READING
+operator|)
 operator|)
 operator|!=
 operator|(

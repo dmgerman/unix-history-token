@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_cs.c,v 1.7 1998/12/07 21:58:21 archie Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
+comment|/*  * $Id: if_cs.c,v 1.8 1999/01/12 00:27:43 eivind Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
 end_comment
 
 begin_comment
@@ -5429,12 +5429,16 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|enable_bnc
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|error
 operator|=
@@ -5449,12 +5453,16 @@ name|IFM_10_T
 case|:
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|enable_tp
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.31 1998/11/15 15:33:50 bde Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.32 1999/01/17 20:30:13 peter Exp $  */
 end_comment
 
 begin_comment
@@ -4401,6 +4401,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ti
 operator|.
 name|sign
@@ -4412,6 +4413,9 @@ name|a
 operator|<
 literal|0
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|ti
 operator|.
@@ -4489,6 +4493,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ti
 operator|.
 name|sign
@@ -4500,6 +4505,9 @@ name|a
 operator|<
 literal|0
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|ti
 operator|.
@@ -4586,6 +4594,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ti
 operator|.
 name|sign
@@ -4597,6 +4606,9 @@ name|b
 operator|<
 literal|0
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 asm|__asm__("notl %0 ; notl %1\n\t" 			"addl $1,%0 ; adcl $0,%1" 			:"=r" (ti.a),"=r" (ti.b) 			:"0" (ti.a),"1" (ti.b));
 name|int_to_real

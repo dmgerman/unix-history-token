@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.57 1998/10/22 05:58:39 bde Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.58 1998/12/10 01:49:49 archie Exp $  */
 end_comment
 
 begin_comment
@@ -777,6 +777,7 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
+specifier|volatile
 name|struct
 name|ie_tdr_cmd
 modifier|*
@@ -873,10 +874,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|caddr_t
+name|v_caddr_t
 name|setup_rfa
 parameter_list|(
-name|caddr_t
+name|v_caddr_t
 name|ptr
 parameter_list|,
 name|struct
@@ -894,7 +895,7 @@ name|mc_setup
 parameter_list|(
 name|int
 parameter_list|,
-name|caddr_t
+name|v_caddr_t
 parameter_list|,
 specifier|volatile
 name|struct
@@ -1215,6 +1216,7 @@ modifier|*
 name|xmit_buffs
 decl_stmt|;
 comment|/* ntxbufs worth */
+specifier|volatile
 name|u_char
 modifier|*
 modifier|*
@@ -3644,6 +3646,7 @@ operator|->
 name|xmit_cbuffs
 operator|=
 operator|(
+specifier|volatile
 name|u_char
 operator|*
 operator|*
@@ -4648,7 +4651,7 @@ argument_list|(
 name|unit
 argument_list|,
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|ie
 operator|->
@@ -4724,7 +4727,7 @@ name|doesnt_work
 name|setup_rfa
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|ie
 operator|->
@@ -4786,7 +4789,7 @@ comment|/* just in case */
 name|setup_rfa
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|ie
 operator|->
@@ -5658,7 +5661,7 @@ comment|/* 	 * Snarf the Ethernet header. 	 */
 name|bcopy
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|ie
 operator|->
@@ -6012,7 +6015,7 @@ decl_stmt|;
 name|bcopy
 argument_list|(
 call|(
-name|caddr_t
+name|v_caddr_t
 call|)
 argument_list|(
 name|ie
@@ -6029,7 +6032,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|v_caddr_t
 argument_list|)
 operator|+
 name|thismboff
@@ -6079,7 +6082,7 @@ block|{
 name|bcopy
 argument_list|(
 call|(
-name|caddr_t
+name|v_caddr_t
 call|)
 argument_list|(
 name|ie
@@ -6125,7 +6128,7 @@ comment|/* 		 * Otherwise, there is exactly enough space to put this 		 * buffer
 name|bcopy
 argument_list|(
 call|(
-name|caddr_t
+name|v_caddr_t
 call|)
 argument_list|(
 name|ie
@@ -6306,7 +6309,7 @@ directive|endif
 name|bcopy
 argument_list|(
 call|(
-name|caddr_t
+name|v_caddr_t
 call|)
 argument_list|(
 name|ie
@@ -6837,6 +6840,7 @@ decl_stmt|,
 modifier|*
 name|m
 decl_stmt|;
+specifier|volatile
 name|unsigned
 name|char
 modifier|*
@@ -7003,6 +7007,10 @@ name|arpcom
 operator|.
 name|ac_if
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ie
 operator|->
 name|xmit_cbuffs
@@ -7308,6 +7316,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -7332,6 +7341,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -7355,6 +7365,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -7382,7 +7393,7 @@ operator|->
 name|ie_iscp_ptr
 operator|=
 call|(
-name|caddr_t
+name|v_caddr_t
 call|)
 argument_list|(
 operator|(
@@ -7502,6 +7513,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -7518,16 +7530,16 @@ operator|->
 name|ie_iscp_ptr
 operator|=
 call|(
-name|caddr_t
+name|v_caddr_t
 call|)
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|iscp
 operator|-
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 operator|(
 name|uintptr_t
@@ -8744,6 +8756,7 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
+specifier|volatile
 name|struct
 name|ie_tdr_cmd
 modifier|*
@@ -9005,10 +9018,10 @@ expr_stmt|;
 block|}
 comment|/*  * Here is a helper routine for iernr() and ieinit().  This sets up  * the RFA.  */
 specifier|static
-name|caddr_t
+name|v_caddr_t
 name|setup_rfa
 parameter_list|(
-name|caddr_t
+name|v_caddr_t
 name|ptr
 parameter_list|,
 name|struct
@@ -9024,6 +9037,7 @@ modifier|*
 name|rfd
 init|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9078,6 +9092,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -9096,12 +9111,12 @@ block|}
 name|ptr
 operator|=
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|Align
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|rfd
 argument_list|)
@@ -9174,6 +9189,7 @@ comment|/* 	 * Now lay out some buffers for the incoming frames.  Note that we 	
 name|rbd
 operator|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9207,6 +9223,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -9256,6 +9273,7 @@ name|i
 index|]
 operator|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9268,6 +9286,7 @@ expr_stmt|;
 name|rbd
 operator|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9430,7 +9449,7 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
-name|caddr_t
+name|v_caddr_t
 name|ptr
 parameter_list|,
 specifier|volatile
@@ -9458,6 +9477,7 @@ modifier|*
 name|cmd
 init|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9493,14 +9513,14 @@ comment|/* ignore cast-qual */
 name|bcopy
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|ie
 operator|->
 name|mcast_addrs
 argument_list|,
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|cmd
 operator|->
@@ -9613,7 +9633,7 @@ name|ie
 operator|->
 name|scb
 decl_stmt|;
-name|caddr_t
+name|v_caddr_t
 name|ptr
 decl_stmt|;
 name|int
@@ -9622,12 +9642,12 @@ decl_stmt|;
 name|ptr
 operator|=
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|Align
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|scb
 operator|+
@@ -9645,6 +9665,7 @@ modifier|*
 name|cmd
 init|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9746,6 +9767,7 @@ modifier|*
 name|cmd
 init|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9780,6 +9802,7 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -9793,6 +9816,7 @@ operator|.
 name|ac_enaddr
 argument_list|,
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)
@@ -9860,6 +9884,7 @@ argument_list|(
 name|unit
 argument_list|,
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9918,6 +9943,7 @@ name|i
 index|]
 operator|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -9949,6 +9975,7 @@ name|i
 index|]
 operator|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -10000,6 +10027,7 @@ name|i
 index|]
 operator|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -10029,6 +10057,7 @@ literal|1
 index|]
 operator|=
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
@@ -10053,7 +10082,7 @@ block|{
 name|bzero
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|ie
 operator|->
@@ -10075,7 +10104,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
-name|caddr_t
+name|v_caddr_t
 operator|)
 name|ie
 operator|->
@@ -10919,6 +10948,7 @@ literal|"actual %04x, next %04x, buffer %p\n"
 literal|"length %04x, mbz %04x\n"
 argument_list|,
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)

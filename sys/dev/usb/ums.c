@@ -2014,14 +2014,11 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|devinfo
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|device_get_desc
 argument_list|(
 name|self
@@ -2081,6 +2078,10 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|devinfo
 argument_list|,
 name|M_USB
