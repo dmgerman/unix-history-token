@@ -5401,8 +5401,8 @@ literal|0x18
 block|,
 name|COM_FREQ
 block|}
-block|,             }
-block|,         }
+block|, 	    }
+block|, 	}
 block|,
 block|{
 literal|"PCCOM dual port RS232/422/485"
