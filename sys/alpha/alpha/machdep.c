@@ -1948,7 +1948,21 @@ literal|"EV6 (21264)"
 block|,
 comment|/* 8 */
 literal|"PCA56 (21164PC)"
+block|,
 comment|/* 9 */
+literal|"PCA57 (21164PC)"
+block|,
+comment|/* 10 */
+literal|"EV67 (21264A)"
+block|,
+comment|/* 11 */
+literal|"EV68CB (21264C)"
+comment|/* 12 */
+literal|"EV68AL (21264B)"
+block|,
+comment|/* 13 */
+literal|"EV68CX (21264D)"
+comment|/* 14 */
 block|}
 decl_stmt|;
 comment|/* 	 * print out CPU identification information. 	 */

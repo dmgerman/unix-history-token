@@ -222,6 +222,16 @@ directive|define
 name|ST_DEC_6600
 value|34
 comment|/* "Monet/Goldrush" */
+define|#
+directive|define
+name|ST_DEC_CUSCO
+value|36
+comment|/* "CUSCO" */
+define|#
+directive|define
+name|ST_DEC_EIGER
+value|37
+comment|/* "Eiger" */
 comment|/*  * System types for Alpha Processor Inc. machines  */
 define|#
 directive|define
@@ -894,6 +904,31 @@ directive|define
 name|PCS_PROC_PCA56
 value|9
 comment|/* PCA256: 21164PC */
+define|#
+directive|define
+name|PCS_PROC_PCA57
+value|10
+comment|/* PCA257: 21164PC */
+define|#
+directive|define
+name|PCS_PROC_EV67
+value|11
+comment|/* EV67: 21264A */
+define|#
+directive|define
+name|PCS_PROC_EV68CB
+value|12
+comment|/* EV68CB: 21264C */
+define|#
+directive|define
+name|PCS_PROC_EV68AL
+value|13
+comment|/* EV6AL: 21264B */
+define|#
+directive|define
+name|PCS_PROC_EV68CX
+value|14
+comment|/* EV6CX: 21264D */
 define|#
 directive|define
 name|PCS_PROC_MINOR
