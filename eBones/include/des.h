@@ -41,29 +41,9 @@ typedef|typedef
 struct|struct
 name|des_ks_struct
 block|{
-union|union
-block|{
 name|des_cblock
 name|_
 decl_stmt|;
-comment|/* make sure things are correct size on machines with 		 * 8 byte longs */
-name|unsigned
-name|long
-name|pad
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|ks
-union|;
-undef|#
-directive|undef
-name|_
-define|#
-directive|define
-name|_
-value|ks._
 block|}
 name|des_key_schedule
 index|[
@@ -232,10 +212,25 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|des_key_schedule
+name|struct
+name|des_ks_struct
 name|bit_64
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|des_fixup_key_parity
+value|des_set_odd_parity
+end_define
+
+begin_define
+define|#
+directive|define
+name|des_check_key_parity
+value|check_parity
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -351,9 +346,6 @@ name|ks1
 parameter_list|,
 name|des_key_schedule
 name|ks2
-parameter_list|,
-name|des_key_schedule
-name|ks3
 parameter_list|,
 name|int
 name|enc
