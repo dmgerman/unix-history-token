@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctl_transact.c	5.5 (Berkeley) %G%"
+literal|"@(#)ctl_transact.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,28 +151,6 @@ expr_stmt|;
 comment|/* resend message until a response is obtained */
 do|do
 block|{
-ifdef|#
-directive|ifdef
-name|MSG_EOR
-comment|/* 			 * New sockaddr structure has 1st 8bits as 			 * length field.  We have to zero these out 			 * to be compatible with old talkd's (yech) 			 */
-name|msg
-operator|.
-name|addr
-operator|.
-name|sa_len
-operator|=
-literal|0
-expr_stmt|;
-name|msg
-operator|.
-name|ctl_addr
-operator|.
-name|sa_len
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|cc
 operator|=
 name|sendto
@@ -202,35 +180,6 @@ name|daemon_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MSG_EOR
-name|msg
-operator|.
-name|addr
-operator|.
-name|sa_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in
-argument_list|)
-expr_stmt|;
-name|msg
-operator|.
-name|ctl_addr
-operator|.
-name|sa_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cc

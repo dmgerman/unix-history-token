@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invite.c	5.5 (Berkeley) %G%"
+literal|"@(#)invite.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,39 @@ argument_list|(
 literal|"Error on attempt to listen for caller"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MSG_EOR
+comment|/* copy new style sockaddr to old, swap family (short in old) */
+name|msg
+operator|.
+name|addr
+operator|=
+operator|*
+operator|(
+expr|struct
+name|osockaddr
+operator|*
+operator|)
+operator|&
+name|my_addr
+expr_stmt|;
+comment|/* XXX new to old  style*/
+name|msg
+operator|.
+name|addr
+operator|.
+name|sa_family
+operator|=
+name|htons
+argument_list|(
+name|my_addr
+operator|.
+name|sin_family
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|msg
 operator|.
 name|addr
@@ -157,21 +190,8 @@ operator|)
 operator|&
 name|my_addr
 expr_stmt|;
-name|msg
-operator|.
-name|addr
-operator|.
-name|sa_family
-operator|=
-name|htons
-argument_list|(
-name|msg
-operator|.
-name|addr
-operator|.
-name|sa_family
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 name|msg
 operator|.
 name|id_num

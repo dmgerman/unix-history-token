@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look_up.c	5.4 (Berkeley) %G%"
+literal|"@(#)look_up.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,10 @@ operator|&
 name|response
 decl_stmt|;
 comment|/* the rest of msg was set up in get_names */
+ifdef|#
+directive|ifdef
+name|MSG_EOR
+comment|/* copy new style sockaddr to old, swap family (short in old) */
 name|msg
 operator|.
 name|ctl_addr
@@ -64,7 +68,7 @@ operator|=
 operator|*
 operator|(
 expr|struct
-name|sockaddr
+name|osockaddr
 operator|*
 operator|)
 operator|&
@@ -78,13 +82,28 @@ name|sa_family
 operator|=
 name|htons
 argument_list|(
+name|ctl_addr
+operator|.
+name|sin_family
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|msg
 operator|.
 name|ctl_addr
-operator|.
-name|sa_family
-argument_list|)
+operator|=
+operator|*
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|ctl_addr
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* must be initiating a talk */
 if|if
 condition|(
