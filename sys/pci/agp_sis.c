@@ -359,20 +359,6 @@ name|NULL
 return|;
 block|}
 empty_stmt|;
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x1039
-condition|)
-return|return
-operator|(
-literal|"SIS Generic host to PCI bridge"
-operator|)
-return|;
 return|return
 name|NULL
 return|;

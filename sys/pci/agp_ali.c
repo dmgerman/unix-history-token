@@ -198,22 +198,16 @@ operator|(
 literal|"Ali M1541 host to AGP bridge"
 operator|)
 return|;
-block|}
-empty_stmt|;
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x10b9
-condition|)
+case|case
+literal|0x162110b9
+case|:
 return|return
 operator|(
-literal|"Ali Generic host to PCI bridge"
+literal|"Ali M1621 host to AGP bridge"
 operator|)
 return|;
+block|}
+empty_stmt|;
 return|return
 name|NULL
 return|;

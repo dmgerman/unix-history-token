@@ -339,20 +339,6 @@ operator|)
 return|;
 block|}
 empty_stmt|;
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x8086
-condition|)
-return|return
-operator|(
-literal|"Intel Generic host to PCI bridge"
-operator|)
-return|;
 return|return
 name|NULL
 return|;

@@ -248,11 +248,51 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|0x01981106
+case|:
+return|return
+operator|(
+literal|"VIA 8763 (P4X600) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x02591106
+case|:
+return|return
+operator|(
+literal|"VIA PM800/PN800/PM880/PN880 host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x02691106
+case|:
+return|return
+operator|(
+literal|"VIA KT880 host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x02961106
+case|:
+return|return
+operator|(
+literal|"VIA 3296 (P4M800) host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x03051106
 case|:
 return|return
 operator|(
-literal|"VIA 82C8363 (Apollo KT133A) host to PCI bridge"
+literal|"VIA 82C8363 (Apollo KT133x/KM133) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x03911106
+case|:
+return|return
+operator|(
+literal|"VIA 8371 (Apollo KX133) host to PCI bridge"
 operator|)
 return|;
 case|case
@@ -280,6 +320,14 @@ literal|"VIA 82C598 (Apollo MVP3) host to PCI bridge"
 operator|)
 return|;
 case|case
+literal|0x06011106
+case|:
+return|return
+operator|(
+literal|"VIA 8601 (Apollo ProMedia/PLE133Ta) host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x06051106
 case|:
 return|return
@@ -296,11 +344,84 @@ literal|"VIA 82C691 (Apollo Pro) host to PCI bridge"
 operator|)
 return|;
 case|case
-literal|0x31881106
+literal|0x30911106
 case|:
-comment|/* AMD64 GART */
 return|return
-name|NULL
+operator|(
+literal|"VIA 8633 (Pro 266) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x30991106
+case|:
+return|return
+operator|(
+literal|"VIA 8367 (KT266/KY266x/KT333) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31011106
+case|:
+return|return
+operator|(
+literal|"VIA 8653 (Pro266T) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31121106
+case|:
+return|return
+operator|(
+literal|"VIA 8361 (KLE133) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31161106
+case|:
+return|return
+operator|(
+literal|"VIA XM266 (PM266/KM266) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31231106
+case|:
+return|return
+operator|(
+literal|"VIA 862x (CLE266) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31281106
+case|:
+return|return
+operator|(
+literal|"VIA 8753 (P4X266) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31481106
+case|:
+return|return
+operator|(
+literal|"VIA 8703 (P4M266x/P4N266) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31561106
+case|:
+return|return
+operator|(
+literal|"VIA XN266 (Apollo Pro266) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x31681106
+case|:
+return|return
+operator|(
+literal|"VIA 8754 (PT800) host to PCI bridge"
+operator|)
 return|;
 case|case
 literal|0x31891106
@@ -310,22 +431,40 @@ operator|(
 literal|"VIA 8377 (Apollo KT400/KT400A/KT600) host to PCI bridge"
 operator|)
 return|;
-block|}
-empty_stmt|;
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x1106
-condition|)
+case|case
+literal|0x32051106
+case|:
 return|return
 operator|(
-literal|"VIA Generic host to PCI bridge"
+literal|"VIA 8235/8237 (Apollo KM400/KM400A) host to PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x32081106
+case|:
+return|return
+operator|(
+literal|"VIA 8783 (PT890) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x32581106
+case|:
+return|return
+operator|(
+literal|"VIA PT880 host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0xb1981106
+case|:
+return|return
+operator|(
+literal|"VIA VT83xx/VT87xx/KTxxx/Px8xx host to PCI bridge"
+operator|)
+return|;
+block|}
+empty_stmt|;
 return|return
 name|NULL
 return|;
@@ -427,6 +566,7 @@ decl_stmt|;
 name|u_int32_t
 name|agpsel
 decl_stmt|;
+comment|/* XXX: This should be keying off of whether the bridge is AGP3 capable, 	 * rather than a bunch of device ids for chipsets that happen to do 8x. 	 */
 switch|switch
 condition|(
 name|pci_get_devid
@@ -436,7 +576,34 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|0x01981106
+case|:
+case|case
+literal|0x02591106
+case|:
+case|case
+literal|0x02691106
+case|:
+case|case
+literal|0x02961106
+case|:
+case|case
+literal|0x31231106
+case|:
+case|case
+literal|0x31681106
+case|:
+case|case
 literal|0x31891106
+case|:
+case|case
+literal|0x32051106
+case|:
+case|case
+literal|0x32581106
+case|:
+case|case
+literal|0xb1981106
 case|:
 comment|/* The newer VIA chipsets will select the AGP version based on 		 * what AGP versions the card supports.  We still have to 		 * program it using the v2 registers if it has chosen to use 		 * compatibility mode. 		 */
 name|agpsel
