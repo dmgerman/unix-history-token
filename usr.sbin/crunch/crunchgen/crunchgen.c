@@ -5111,7 +5111,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t(cd $(%s_SRCDIR)&& $(MAKE) clean)\n\n"
+literal|"\t(cd $(%s_SRCDIR)&& $(MAKE) $(BUILDOPTS) clean)\n\n"
 argument_list|,
 name|p
 operator|->
