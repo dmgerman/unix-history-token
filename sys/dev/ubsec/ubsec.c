@@ -1159,6 +1159,13 @@ name|dev
 argument_list|)
 operator|==
 name|PCI_PRODUCT_BROADCOM_5822
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_PRODUCT_BROADCOM_5823
 operator|)
 condition|)
 return|return
@@ -1234,6 +1241,12 @@ name|PCI_PRODUCT_BROADCOM_5822
 case|:
 return|return
 literal|"Broadcom 5822"
+return|;
+case|case
+name|PCI_PRODUCT_BROADCOM_5823
+case|:
+return|return
+literal|"Broadcom 5823"
 return|;
 block|}
 return|return
@@ -1479,6 +1492,13 @@ name|dev
 argument_list|)
 operator|==
 name|PCI_PRODUCT_BROADCOM_5822
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_PRODUCT_BROADCOM_5823
 operator|)
 condition|)
 block|{
