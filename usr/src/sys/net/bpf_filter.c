@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf_filter.c	7.5 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf_filter.c,v 1.16 91/10/27 21:22:35 mccanne Exp $";  */
+comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf_filter.c	7.6 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf_filter.c,v 1.16 91/10/27 21:22:35 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
 end_include
 
 begin_ifdef
@@ -621,6 +615,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
+end_include
 
 begin_comment
 comment|/*  * Execute the filter program starting at pc on the packet p  * wirelen is the length of the original packet  * buflen is the amount of data present  */
