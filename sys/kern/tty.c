@@ -13932,6 +13932,24 @@ block|}
 end_function
 
 begin_function
+name|struct
+name|tty
+modifier|*
+name|ttyalloc
+parameter_list|()
+block|{
+return|return
+operator|(
+name|ttymalloc
+argument_list|(
+name|NULL
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|sysctl_kern_ttys

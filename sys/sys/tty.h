@@ -1737,6 +1737,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|tty
+modifier|*
+name|ttyalloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ttyblock
 parameter_list|(
