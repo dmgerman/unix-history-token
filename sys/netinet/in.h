@@ -2837,6 +2837,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|in_localip
+parameter_list|(
+name|struct
+name|in_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|inet_ntoa
