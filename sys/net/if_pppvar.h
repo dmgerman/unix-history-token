@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: if_pppvar.h,v 1.5 1997/04/30 05:42:08 paulus Exp $	*/
+comment|/*	$Id: if_pppvar.h,v 1.6 1998/02/04 01:36:40 paulus Exp $	*/
 end_comment
 
 begin_comment
@@ -307,6 +307,32 @@ expr|struct
 name|ppp_softc
 operator|*
 name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pppoutput
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+operator|,
+expr|struct
+name|rtentry
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

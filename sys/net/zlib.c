@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file is derived from various .h and .c files from the zlib-1.0.4  * distribution by Jean-loup Gailly and Mark Adler, with some additions  * by Paul Mackerras to aid in implementing Deflate compression and  * decompression for PPP packets.  See zlib.h for conditions of  * distribution and use.  *  * Changes that have been made include:  * - added Z_PACKET_FLUSH (see zlib.h for details)  * - added inflateIncomp and deflateOutputPending  * - allow strm->next_out to be NULL, meaning discard the output  *  * $Id: zlib.c,v 1.7 1997/05/22 06:44:39 paulus Exp $  */
+comment|/*  * This file is derived from various .h and .c files from the zlib-1.0.4  * distribution by Jean-loup Gailly and Mark Adler, with some additions  * by Paul Mackerras to aid in implementing Deflate compression and  * decompression for PPP packets.  See zlib.h for conditions of  * distribution and use.  *  * Changes that have been made include:  * - added Z_PACKET_FLUSH (see zlib.h for details)  * - added inflateIncomp and deflateOutputPending  * - allow strm->next_out to be NULL, meaning discard the output  *  * $Id: zlib.c,v 1.10 1998/03/19 04:55:37 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -5108,11 +5108,18 @@ name|source
 operator|->
 name|state
 expr_stmt|;
+name|zmemcpy
+argument_list|(
+name|dest
+argument_list|,
+name|source
+argument_list|,
+sizeof|sizeof
+argument_list|(
 operator|*
 name|dest
-operator|=
-operator|*
-name|source
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ds
 operator|=
@@ -5153,11 +5160,18 @@ operator|*
 operator|)
 name|ds
 expr_stmt|;
+name|zmemcpy
+argument_list|(
+name|ds
+argument_list|,
+name|ss
+argument_list|,
+sizeof|sizeof
+argument_list|(
 operator|*
 name|ds
-operator|=
-operator|*
-name|ss
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ds
 operator|->

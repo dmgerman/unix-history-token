@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp-deflate.c,v 1.7 1997/11/27 06:06:31 paulus Exp $	*/
+comment|/*	$Id: ppp-deflate.c,v 1.8 1998/03/24 23:48:04 paulus Exp $	*/
 end_comment
 
 begin_comment
@@ -473,6 +473,58 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|compressor
+name|ppp_deflate
+init|=
+block|{
+name|CI_DEFLATE_DRAFT
+block|,
+comment|/* compress_proto */
+name|z_comp_alloc
+block|,
+comment|/* comp_alloc */
+name|z_comp_free
+block|,
+comment|/* comp_free */
+name|z_comp_init
+block|,
+comment|/* comp_init */
+name|z_comp_reset
+block|,
+comment|/* comp_reset */
+name|z_compress
+block|,
+comment|/* compress */
+name|z_comp_stats
+block|,
+comment|/* comp_stat */
+name|z_decomp_alloc
+block|,
+comment|/* decomp_alloc */
+name|z_decomp_free
+block|,
+comment|/* decomp_free */
+name|z_decomp_init
+block|,
+comment|/* decomp_init */
+name|z_decomp_reset
+block|,
+comment|/* decomp_reset */
+name|z_decompress
+block|,
+comment|/* decompress */
+name|z_incomp
+block|,
+comment|/* incomp */
+name|z_comp_stats
+block|,
+comment|/* decomp_stat */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Space allocation and freeing routines for use by zlib routines.  */
 end_comment
@@ -587,12 +639,21 @@ name|opt_len
 operator|!=
 name|CILEN_DEFLATE
 operator|||
+operator|(
 name|options
 index|[
 literal|0
 index|]
 operator|!=
 name|CI_DEFLATE
+operator|&&
+name|options
+index|[
+literal|0
+index|]
+operator|!=
+name|CI_DEFLATE_DRAFT
+operator|)
 operator|||
 name|options
 index|[
@@ -857,12 +918,21 @@ name|opt_len
 operator|<
 name|CILEN_DEFLATE
 operator|||
+operator|(
 name|options
 index|[
 literal|0
 index|]
 operator|!=
 name|CI_DEFLATE
+operator|&&
+name|options
+index|[
+literal|0
+index|]
+operator|!=
+name|CI_DEFLATE_DRAFT
+operator|)
 operator|||
 name|options
 index|[
@@ -1885,12 +1955,21 @@ name|opt_len
 operator|!=
 name|CILEN_DEFLATE
 operator|||
+operator|(
 name|options
 index|[
 literal|0
 index|]
 operator|!=
 name|CI_DEFLATE
+operator|&&
+name|options
+index|[
+literal|0
+index|]
+operator|!=
+name|CI_DEFLATE_DRAFT
+operator|)
 operator|||
 name|options
 index|[
@@ -2151,12 +2230,21 @@ name|opt_len
 operator|<
 name|CILEN_DEFLATE
 operator|||
+operator|(
 name|options
 index|[
 literal|0
 index|]
 operator|!=
 name|CI_DEFLATE
+operator|&&
+name|options
+index|[
+literal|0
+index|]
+operator|!=
+name|CI_DEFLATE_DRAFT
+operator|)
 operator|||
 name|options
 index|[

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: slcompress.h,v 1.11 1997/05/17 21:12:11 christos Exp $	*/
-end_comment
-
-begin_comment
-comment|/*	Id: slcompress.h,v 1.4 1994/09/21 06:50:08 paulus Exp 	*/
+comment|/*	$Id: slcompress.h,v 1.1 1995/12/11 05:17:12 paulus Exp $	*/
 end_comment
 
 begin_comment
@@ -14,18 +10,6 @@ end_comment
 begin_comment
 comment|/*  * Definitions for tcp compression routines.  *  * Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SLCOMPRESS_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_SLCOMPRESS_H_
-end_define
 
 begin_define
 define|#
@@ -344,20 +328,6 @@ operator|(
 expr|struct
 name|slcompress
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|sl_compress_setup
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|slcompress
-operator|*
 operator|,
 name|int
 operator|)
@@ -440,15 +410,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SLCOMPRESS_H_ */
-end_comment
 
 end_unit
 
