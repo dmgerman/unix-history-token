@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.34 (Berkeley) %G%"
+literal|"@(#)wwinit.c	3.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -936,7 +936,7 @@ name|tt_inschar
 operator|||
 name|tt
 operator|.
-name|tt_setinsert
+name|tt_insspace
 condition|)
 name|wwaddcap1
 argument_list|(

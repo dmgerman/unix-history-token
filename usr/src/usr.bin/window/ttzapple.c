@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttzapple.c	3.4 (Berkeley) %G%"
+literal|"@(#)ttzapple.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -931,7 +931,7 @@ block|}
 end_block
 
 begin_macro
-name|zz_inschar
+name|zz_insspace
 argument_list|(
 argument|n
 argument_list|)
@@ -1454,9 +1454,9 @@ begin_block
 block|{
 name|tt
 operator|.
-name|tt_inschar
+name|tt_insspace
 operator|=
-name|zz_inschar
+name|zz_insspace
 expr_stmt|;
 name|tt
 operator|.

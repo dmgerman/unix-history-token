@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinschar.c	3.17 (Berkeley) %G%"
+literal|"@(#)wwinschar.c	3.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

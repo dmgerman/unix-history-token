@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwwrite.c	3.29 (Berkeley) %G%"
+literal|"@(#)wwwrite.c	3.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,12 +331,10 @@ argument_list|,
 operator|*
 name|p
 operator|++
-operator||
+argument_list|,
 name|w
 operator|->
 name|ww_modes
-operator|<<
-name|WWC_MSHIFT
 argument_list|)
 expr_stmt|;
 goto|goto
