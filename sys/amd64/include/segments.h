@@ -1243,24 +1243,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|currentldt
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|currentldt
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|int
