@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.37	82/05/12	*/
+comment|/*	dz.c	4.38	82/05/19	*/
 end_comment
 
 begin_include
@@ -1569,7 +1569,11 @@ name|tp
 operator|->
 name|t_state
 operator|&
+operator|(
 name|TS_HUPCLS
+operator||
+name|TS_WOPEN
+operator|)
 operator|)
 operator|||
 operator|(
