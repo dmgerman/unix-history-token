@@ -3548,6 +3548,20 @@ name|DC_21143_NWAY
 value|0x00000800
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_128BIT_HASH
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_64BIT_HASH
+value|0x00002000
+end_define
+
 begin_comment
 comment|/*  * register space access macros  */
 end_comment
@@ -3672,6 +3686,13 @@ define|#
 directive|define
 name|DC_REVISION_98715
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_REVISION_98715AEC_C
+value|0x25
 end_define
 
 begin_define
