@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pppctl.c,v 1.11 1997/12/17 00:26:58 brian Exp $  */
+comment|/*  * $Id: pppctl.c,v 1.12 1997/12/18 00:29:56 brian Exp $  */
 end_comment
 
 begin_include
@@ -1075,6 +1075,17 @@ operator|=
 sizeof|sizeof
 name|ifsun
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|ifsun
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|ifsun
+argument_list|)
+expr_stmt|;
 name|ifsun
 operator|.
 name|sun_len
@@ -1250,6 +1261,17 @@ operator|=
 name|strlen
 argument_list|(
 name|host
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|ifsin
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|ifsin
 argument_list|)
 expr_stmt|;
 if|if
