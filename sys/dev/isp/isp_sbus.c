@@ -1305,21 +1305,6 @@ expr_stmt|;
 name|locksetup
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
-define|#
-directive|define
-name|INTR_FLAGS
-value|INTR_TYPE_CAM | INTR_MPSAFE | INTR_ENTROPY
-else|#
-directive|else
-define|#
-directive|define
-name|INTR_FLAGS
-value|INTR_TYPE_CAM | INTR_ENTROPY
-endif|#
-directive|endif
 if|if
 condition|(
 name|bus_setup_intr
@@ -1330,7 +1315,7 @@ name|sbs
 operator|->
 name|sbus_ires
 argument_list|,
-name|INTR_FLAGS
+name|ISP_IFLAGS
 argument_list|,
 name|isp_sbus_intr
 argument_list|,
@@ -2273,6 +2258,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|ISP_UNLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|bl
 operator|=
 name|BUS_SPACE_MAXADDR_24BIT
@@ -2317,6 +2307,11 @@ argument_list|,
 name|ISP_LOGERR
 argument_list|,
 literal|"could not create master dma tag"
+argument_list|)
+expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2374,6 +2369,11 @@ argument_list|,
 name|ISP_LOGERR
 argument_list|,
 literal|"cannot alloc xflist array"
+argument_list|)
+expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2435,6 +2435,11 @@ operator|->
 name|isp_xflist
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2536,6 +2541,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2603,6 +2613,11 @@ operator|->
 name|dmaps
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2764,6 +2779,11 @@ name|isp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp
 operator|->
 name|isp_result
@@ -2813,6 +2833,11 @@ operator|->
 name|dmaps
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 name|isp

@@ -238,6 +238,43 @@ name|HANDLE_LOOPSTATE_IN_OUTER_LAYERS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_SMPLOCK
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP_IFLAGS
+value|INTR_TYPE_CAM | INTR_ENTROPY | INTR_MPSAFE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISP_IFLAGS
+value|INTR_TYPE_CAM | INTR_ENTROPY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|void
