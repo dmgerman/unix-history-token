@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda_fbsd.cr,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_fbsd.c,v 1.4 1998/09/13 13:57:59 rvb Exp $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda_fbsd.cr,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_fbsd.c,v 1.5 1998/09/25 17:38:31 rvb Exp $  *   */
 end_comment
 
 begin_ifdef
@@ -144,7 +144,18 @@ begin_decl_stmt
 specifier|static
 name|void
 modifier|*
-name|devfs_token
+name|cfs_devfs_token
+index|[
+name|NVCODA
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|coda_devfs_token
 index|[
 name|NVCODA
 index|]
@@ -377,6 +388,14 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEVFS
+comment|/* tmp */
+undef|#
+directive|undef
+name|NVCODA
+define|#
+directive|define
+name|NVCODA
+value|1
 for|for
 control|(
 name|i
@@ -391,48 +410,54 @@ name|i
 operator|++
 control|)
 block|{
-name|devfs_token
+name|cfs_devfs_token
 index|[
 name|i
 index|]
 operator|=
 name|devfs_add_devswf
 argument_list|(
-argument|&codadevsw
+operator|&
+name|codadevsw
 argument_list|,
-argument|i 				DV_CHR
+name|i
 argument_list|,
-literal|0
+name|DV_CHR
 argument_list|,
-literal|0
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
 literal|"cfs%d"
 argument_list|,
-argument|i
+name|i
 argument_list|)
 expr_stmt|;
-name|devfs_token
+name|coda_devfs_token
 index|[
 name|i
 index|]
 operator|=
 name|devfs_add_devswf
 argument_list|(
-argument|&codadevsw
+operator|&
+name|codadevsw
 argument_list|,
-argument|i 				DV_CHR
+name|i
 argument_list|,
-literal|0
+name|DV_CHR
 argument_list|,
-literal|0
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
 literal|"coda%d"
 argument_list|,
-argument|i
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -459,25 +484,6 @@ name|ap
 init|=
 name|v
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|ap
-operator|->
-name|a_vp
-decl_stmt|;
-name|struct
-name|cnode
-modifier|*
-name|cp
-init|=
-name|VTOC
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
 name|int
 name|ret
 init|=
@@ -486,7 +492,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|1
-comment|/*??? a_offset */
+comment|/* ??? a_offset */
 name|ret
 operator|=
 name|vnode_pager_generic_getpages
