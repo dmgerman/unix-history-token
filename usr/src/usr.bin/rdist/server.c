@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.8 (Berkeley) 83/11/29"
+literal|"@(#)server.c	4.9 (Berkeley) 83/11/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,8 +165,32 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|ack
-argument_list|()
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"V%d\n"
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|rem
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
