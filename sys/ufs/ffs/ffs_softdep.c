@@ -1403,22 +1403,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|softdep_move_dependencies
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|,
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|softdep_count_dependencies
 parameter_list|(
@@ -3248,7 +3232,6 @@ comment|/*  * Move dependencies from one buffer to another.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|softdep_move_dependencies
 parameter_list|(
@@ -5030,12 +5013,6 @@ operator|.
 name|io_deallocate
 operator|=
 name|softdep_deallocate_dependencies
-expr_stmt|;
-name|bioops
-operator|.
-name|io_movedeps
-operator|=
-name|softdep_move_dependencies
 expr_stmt|;
 name|bioops
 operator|.

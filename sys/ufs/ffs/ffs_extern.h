@@ -738,6 +738,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|softdep_move_dependencies
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|softdep_flushworklist
 parameter_list|(
