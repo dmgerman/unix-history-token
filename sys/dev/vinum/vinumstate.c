@@ -688,10 +688,25 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* save config now */
+if|if
+condition|(
+name|setstate_noupdate
+condition|)
+comment|/* we can't update now, */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_DIRTYCONFIG
+expr_stmt|;
+comment|/* wait until later */
+else|else
 name|save_config
 argument_list|()
 expr_stmt|;
+block|}
 return|return
 name|status
 return|;

@@ -157,6 +157,33 @@ operator|->
 name|rq
 expr_stmt|;
 comment|/* and the complete request */
+name|ubp
+operator|=
+name|rq
+operator|->
+name|bp
+expr_stmt|;
+comment|/* user buffer */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_LASTREQS
+condition|)
+name|logrq
+argument_list|(
+name|loginfo_iodone
+argument_list|,
+name|rqe
+argument_list|,
+name|ubp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -224,6 +251,8 @@ argument_list|,
 name|sd_crashed
 argument_list|,
 name|setstate_force
+operator||
+name|setstate_noupdate
 argument_list|)
 expr_stmt|;
 comment|/* take the subdisk down */
@@ -390,13 +419,6 @@ operator|->
 name|b_bcount
 expr_stmt|;
 block|}
-name|ubp
-operator|=
-name|rq
-operator|->
-name|bp
-expr_stmt|;
-comment|/* user buffer */
 name|rqg
 operator|->
 name|active
@@ -435,7 +457,7 @@ if|if
 condition|(
 name|debug
 operator|&
-literal|4
+name|DEBUG_RESID
 condition|)
 block|{
 if|if

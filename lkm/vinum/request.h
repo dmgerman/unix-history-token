@@ -381,5 +381,138 @@ block|}
 enum|;
 end_enum
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_comment
+comment|/* Trace entry for request info (DEBUG_LASTREQS) */
+end_comment
+
+begin_enum
+enum|enum
+name|rqinfo_type
+block|{
+name|loginfo_unused
+block|,
+comment|/* never been used */
+name|loginfo_user_bp
+block|,
+comment|/* this is the bp when strategy is called */
+name|loginfo_user_bpl
+block|,
+comment|/* and this is the bp at launch time */
+name|loginfo_rqe
+block|,
+comment|/* user RQE */
+name|loginfo_iodone
+block|,
+comment|/* iodone */
+name|loginfo_raid5_data
+block|,
+comment|/* write RAID-5 data block */
+name|loginfo_raid5_parity
+comment|/* write RAID-5 parity block */
+block|}
+enum|;
+end_enum
+
+begin_union
+union|union
+name|rqinfou
+block|{
+comment|/* info to pass to logrq */
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+name|struct
+name|rqelement
+modifier|*
+name|rqe
+decl_stmt|;
+comment|/* address of request, for correlation */
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|rqinfo
+block|{
+name|enum
+name|rqinfo_type
+name|type
+decl_stmt|;
+comment|/* kind of event */
+name|struct
+name|timeval
+name|timestamp
+decl_stmt|;
+comment|/* time it happened */
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* point to user buffer */
+union|union
+block|{
+name|struct
+name|buf
+name|b
+decl_stmt|;
+comment|/* yup, the *whole* buffer header */
+name|struct
+name|rqelement
+name|rqe
+decl_stmt|;
+comment|/* and the whole rqe */
+block|}
+name|info
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RQINFO_SIZE
+value|64
+end_define
+
+begin_comment
+comment|/* number of info slots in buffer */
+end_comment
+
+begin_function_decl
+name|void
+name|logrq
+parameter_list|(
+name|enum
+name|rqinfo_type
+name|type
+parameter_list|,
+name|union
+name|rqinfou
+name|info
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+name|ubp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

@@ -484,6 +484,11 @@ init|=
 literal|0x8000
 block|,
 comment|/* we're performing ops from kernel space */
+name|VF_DIRTYCONFIG
+init|=
+literal|0x10000
+block|,
+comment|/* config needs updating */
 block|}
 enum|;
 end_enum
@@ -561,6 +566,17 @@ name|buf
 modifier|*
 name|lastbuf
 decl_stmt|;
+name|struct
+name|rqinfo
+modifier|*
+modifier|*
+name|rqipp
+decl_stmt|;
+name|struct
+name|rqinfo
+modifier|*
+name|rqinfop
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -607,7 +623,7 @@ value|vinum_conf.flags
 end_define
 
 begin_comment
-comment|/* Slice header   * Vinum drives start with this structure:  *  *                                             Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      2  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      3  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      3 + size of config  * |                                      |  * |--------------------------------------|  */
+comment|/* Slice header   * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      2  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      3  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      3 + size of config  * |                                      |  * |--------------------------------------|  */
 end_comment
 
 begin_comment
@@ -1484,7 +1500,12 @@ comment|/* we're called from another setstate function */
 name|setstate_norecurse
 init|=
 literal|8
+block|,
 comment|/* don't call other setstate functions */
+name|setstate_noupdate
+init|=
+literal|16
+comment|/* don't update config */
 block|}
 enum|;
 end_enum
@@ -1512,6 +1533,39 @@ directive|define
 name|DEBUG_NUMOUTPUT
 value|2
 end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_RESID
+value|4
+end_define
+
+begin_comment
+comment|/* go into debugger in complete_rqe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG_LASTREQS
+value|8
+end_define
+
+begin_comment
+comment|/* keep a circular buffer of last requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG_REMOTEGDB
+value|256
+end_define
+
+begin_comment
+comment|/* go into remote gdb */
+end_comment
 
 begin_endif
 endif|#
