@@ -1357,6 +1357,8 @@ comment|/* 	 * Each minor can be opened by only one process.  If the requested 	
 if|if
 condition|(
 name|d
+operator|!=
+name|NULL
 condition|)
 block|{
 name|mtx_unlock
@@ -1684,7 +1686,7 @@ name|dev
 operator|->
 name|si_drv1
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|free
 argument_list|(
@@ -1713,7 +1715,7 @@ parameter_list|(
 name|d
 parameter_list|)
 define|\
-value|(d)->bd_hbuf = (d)->bd_sbuf; \ 	(d)->bd_hlen = (d)->bd_slen; \ 	(d)->bd_sbuf = (d)->bd_fbuf; \ 	(d)->bd_slen = 0; \ 	(d)->bd_fbuf = 0;
+value|(d)->bd_hbuf = (d)->bd_sbuf; \ 	(d)->bd_hlen = (d)->bd_slen; \ 	(d)->bd_sbuf = (d)->bd_fbuf; \ 	(d)->bd_slen = 0; \ 	(d)->bd_fbuf = NULL;
 end_define
 
 begin_comment
