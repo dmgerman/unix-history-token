@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.71 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7761,7 +7761,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|", relay=%s"
+literal|"relay=%s"
 argument_list|,
 name|mci
 operator|->
@@ -7838,7 +7838,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|", relay=%s"
+literal|"relay=%s"
 argument_list|,
 name|p
 argument_list|)
