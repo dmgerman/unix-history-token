@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vasprintf.c,v 1.8 1998/03/09 06:51:23 jb Exp $"
+literal|"$Id: vasprintf.c,v 1.9 1998/07/08 00:44:56 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,7 +191,7 @@ name|_bf
 operator|.
 name|_base
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|f
 operator|.

@@ -327,6 +327,8 @@ argument_list|,
 name|resolved
 argument_list|,
 name|MAXPATHLEN
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -6459,7 +6459,7 @@ operator|(
 name|cset
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 operator|(
 name|char
@@ -6516,7 +6516,7 @@ operator|(
 name|uch
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 operator|(
 name|char
@@ -7251,7 +7251,7 @@ name|cs
 operator|->
 name|multis
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|cs
 operator|->
@@ -7432,7 +7432,7 @@ name|cs
 operator|->
 name|multis
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|cs
 operator|->

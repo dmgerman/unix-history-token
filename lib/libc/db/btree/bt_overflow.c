@@ -217,7 +217,7 @@ argument_list|(
 name|sz
 argument_list|)
 else|:
-name|realloc
+name|reallocf
 argument_list|(
 operator|*
 name|buf

@@ -1957,6 +1957,12 @@ name|np
 operator|==
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|_kvm_err
 argument_list|(
 name|kd
@@ -1968,6 +1974,7 @@ argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|np

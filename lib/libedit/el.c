@@ -213,6 +213,11 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
+name|issetugid
+argument_list|()
+operator|==
+literal|0
+operator|&&
 operator|(
 name|tty
 operator|=
@@ -1083,6 +1088,11 @@ condition|)
 block|{
 if|if
 condition|(
+name|issetugid
+argument_list|()
+operator|!=
+literal|0
+operator|||
 operator|(
 name|ptr
 operator|=

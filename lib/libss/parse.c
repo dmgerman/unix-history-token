@@ -69,7 +69,7 @@ name|old
 parameter_list|,
 name|n
 parameter_list|)
-value|(char **)realloc((char *)old,\ 					 (unsigned)(n+2)*sizeof(char*))
+value|(char **)reallocf((char *)old,\ 					 (unsigned)(n+2)*sizeof(char*))
 end_define
 
 begin_function

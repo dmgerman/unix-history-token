@@ -1540,7 +1540,7 @@ operator|!
 operator|(
 name|line
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|line
 argument_list|,

@@ -116,7 +116,7 @@ name|ssrt
 operator|*
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 operator|(
 name|char

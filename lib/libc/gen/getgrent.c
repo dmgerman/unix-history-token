@@ -1095,7 +1095,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 name|line
 argument_list|,
@@ -1633,7 +1633,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 name|members
 argument_list|,
@@ -1942,7 +1942,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 name|members
 argument_list|,

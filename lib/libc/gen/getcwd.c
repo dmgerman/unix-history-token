@@ -681,7 +681,7 @@ condition|(
 operator|(
 name|up
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|up
 argument_list|,

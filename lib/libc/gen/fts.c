@@ -3751,7 +3751,7 @@ name|sp
 operator|->
 name|fts_array
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|sp
 operator|->
@@ -4136,7 +4136,7 @@ name|sp
 operator|->
 name|fts_path
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|sp
 operator|->

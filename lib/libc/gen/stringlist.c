@@ -207,7 +207,7 @@ name|sl
 operator|->
 name|sl_str
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|sl
 operator|->

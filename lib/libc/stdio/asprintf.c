@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: asprintf.c,v 1.3 1997/02/22 15:01:45 peter Exp $"
+literal|"$Id: asprintf.c,v 1.4 1998/07/08 00:44:51 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +265,7 @@ name|_bf
 operator|.
 name|_base
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|f
 operator|.

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fvwrite.c,v 1.7 1997/12/24 23:23:18 ache Exp $"
+literal|"$Id: fvwrite.c,v 1.8 1998/07/08 00:44:54 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,7 +370,7 @@ name|_bf
 operator|.
 name|_base
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|fp
 operator|->

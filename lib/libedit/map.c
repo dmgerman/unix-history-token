@@ -6029,7 +6029,7 @@ operator|(
 name|el_func_t
 operator|*
 operator|)
-name|el_realloc
+name|el_reallocf
 argument_list|(
 name|el
 operator|->
@@ -6055,7 +6055,7 @@ operator|(
 name|el_bindings_t
 operator|*
 operator|)
-name|el_realloc
+name|el_reallocf
 argument_list|(
 name|el
 operator|->

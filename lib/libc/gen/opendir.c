@@ -414,7 +414,7 @@ name|incr
 expr_stmt|;
 name|buf
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|buf
 argument_list|,

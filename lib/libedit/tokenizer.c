@@ -151,6 +151,18 @@ parameter_list|)
 value|realloc(a, b)
 end_define
 
+begin_define
+define|#
+directive|define
+name|tok_reallocf
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|reallocf(a, b)
+end_define
+
 begin_struct
 struct|struct
 name|tokenizer
@@ -1444,7 +1456,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|tok_realloc
+name|tok_reallocf
 argument_list|(
 name|tok
 operator|->

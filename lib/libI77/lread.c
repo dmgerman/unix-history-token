@@ -2574,7 +2574,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 name|f__lchar
 argument_list|,

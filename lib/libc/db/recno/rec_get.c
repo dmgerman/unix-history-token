@@ -404,7 +404,7 @@ operator|->
 name|bt_reclen
 argument_list|)
 else|:
-name|realloc
+name|reallocf
 argument_list|(
 name|t
 operator|->
@@ -838,7 +838,7 @@ operator|.
 name|size
 argument_list|)
 else|:
-name|realloc
+name|reallocf
 argument_list|(
 name|t
 operator|->
@@ -993,7 +993,7 @@ operator|->
 name|bt_reclen
 argument_list|)
 else|:
-name|realloc
+name|reallocf
 argument_list|(
 name|t
 operator|->

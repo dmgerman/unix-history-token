@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfprintf.c,v 1.18 1998/04/11 07:40:47 jb Exp $"
+literal|"$Id: vfprintf.c,v 1.19 1998/05/08 05:10:32 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4908,7 +4908,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 name|typetable
 argument_list|,

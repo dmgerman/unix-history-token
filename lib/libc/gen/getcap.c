@@ -1290,7 +1290,7 @@ name|BFRAG
 expr_stmt|;
 name|record
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|record
 argument_list|,
@@ -1786,7 +1786,7 @@ name|record
 expr_stmt|;
 name|record
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|record
 argument_list|,
@@ -1932,7 +1932,7 @@ condition|(
 operator|(
 name|record
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|record
 argument_list|,
@@ -3392,7 +3392,7 @@ condition|(
 operator|(
 name|mem
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|mem
 argument_list|,
@@ -3452,7 +3452,7 @@ condition|(
 operator|(
 name|mem
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|mem
 argument_list|,
@@ -3640,7 +3640,7 @@ condition|(
 operator|(
 name|mem
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|mem
 argument_list|,
@@ -3700,7 +3700,7 @@ condition|(
 operator|(
 name|mem
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|mem
 argument_list|,
