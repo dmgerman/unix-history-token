@@ -880,6 +880,13 @@ block|}
 comment|/*      * did find a token, but it might be escaped.      */
 if|if
 condition|(
+operator|(
+name|cp
+operator|>
+name|npp
+operator|)
+operator|&&
+operator|(
 name|cp
 index|[
 operator|-
@@ -887,11 +894,21 @@ literal|1
 index|]
 operator|==
 literal|'\\'
+operator|)
 condition|)
 block|{
 comment|/* if slash was also escaped, carry on, otherwise find next token */
 if|if
 condition|(
+operator|(
+name|cp
+operator|>
+name|npp
+operator|+
+literal|1
+operator|)
+operator|&&
+operator|(
 name|cp
 index|[
 operator|-
@@ -899,6 +916,7 @@ literal|2
 index|]
 operator|!=
 literal|'\\'
+operator|)
 condition|)
 block|{
 comment|/* shift r-o-s  onto the escaped token */
