@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.42 2003/01/18 02:12:44 shiba Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.43 2003/02/01 04:47:29 shiba Exp   */
 end_comment
 
 begin_comment
@@ -4817,6 +4817,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_YIS
+value|-1
+end_define
+
+begin_comment
+comment|/* YIS Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_ZOOM
 value|-1
 end_define
@@ -6452,6 +6463,27 @@ define|#
 directive|define
 name|PCMCIA_STR_YEDATA_EXTERNAL_FDD
 value|"Y-E DATA External FDD"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_YIS_YWL11B
+value|{ "YIS Corp.", "YWL-11b", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_YIS_YWL11B
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_YIS_YWL11B
+value|"YIS Corp. YWL-11b"
 end_define
 
 begin_define
