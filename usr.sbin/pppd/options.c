@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.10 1994/05/27 00:43:34 paulus Exp $"
+literal|"$Id: options.c,v 1.2 1994/09/25 02:32:08 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4908,6 +4908,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: can't escape character 0x%x\n"
+argument_list|,
+name|progname
 argument_list|,
 name|n
 argument_list|)
