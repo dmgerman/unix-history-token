@@ -2673,6 +2673,7 @@ argument_list|(
 name|sb
 argument_list|,
 sizeof|sizeof
+expr|*
 name|sb
 argument_list|)
 expr_stmt|;

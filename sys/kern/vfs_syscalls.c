@@ -13368,6 +13368,7 @@ argument_list|(
 name|nsb
 argument_list|,
 sizeof|sizeof
+expr|*
 name|nsb
 argument_list|)
 expr_stmt|;
