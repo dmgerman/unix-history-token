@@ -338,6 +338,17 @@ name|PAL_VM_TR_READ
 value|261
 end_define
 
+begin_comment
+comment|/*  * Default physical address of the Processor Interrupt Block (PIB).  * See also: IA-64 SDM, rev 1.1, volume 2, page 5-31.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAL_PIB_DEFAULT_ADDR
+value|0x00000000FEE00000L
+end_define
+
 begin_struct
 struct|struct
 name|ia64_pal_result
