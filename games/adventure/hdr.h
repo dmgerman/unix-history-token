@@ -715,7 +715,7 @@ name|char
 modifier|*
 name|ptr
 parameter_list|,
-name|int
+name|size_t
 name|nr
 parameter_list|)
 function_decl|;

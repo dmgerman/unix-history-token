@@ -73,7 +73,7 @@ name|void
 modifier|*
 name|address
 decl_stmt|;
-name|int
+name|size_t
 name|width
 decl_stmt|;
 block|}
@@ -717,10 +717,11 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|unsigned
 name|long
 name|sum
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|crc_start
@@ -756,9 +757,6 @@ argument_list|)
 expr_stmt|;
 name|srandom
 argument_list|(
-operator|(
-name|int
-operator|)
 name|sum
 argument_list|)
 expr_stmt|;
@@ -911,12 +909,13 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|unsigned
 name|long
 name|sum
 decl_stmt|,
 name|cksum
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|cksum
@@ -970,9 +969,6 @@ expr_stmt|;
 comment|/* Get the seed */
 name|srandom
 argument_list|(
-operator|(
-name|int
-operator|)
 name|sum
 argument_list|)
 expr_stmt|;
