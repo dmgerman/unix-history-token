@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fwrite.c	4.3 (Berkeley) %G% */
+comment|/* @(#)fwrite.c	4.4 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -65,9 +65,8 @@ name|_IOLBF
 condition|)
 while|while
 condition|(
-operator|--
 name|s
-operator|>=
+operator|>
 literal|0
 condition|)
 block|{
@@ -118,6 +117,9 @@ operator|==
 name|EOF
 condition|)
 break|break;
+name|s
+operator|--
+expr_stmt|;
 block|}
 else|else
 while|while
