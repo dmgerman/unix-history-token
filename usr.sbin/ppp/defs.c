@@ -1219,6 +1219,11 @@ while|while
 condition|(
 operator|*
 name|script
+operator|&&
+operator|*
+name|script
+operator|!=
+literal|'#'
 condition|)
 block|{
 name|script
