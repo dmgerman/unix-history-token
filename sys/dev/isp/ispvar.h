@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id: $ */
+end_comment
+
+begin_comment
+comment|/* ispvar.h 1.21 */
 end_comment
 
 begin_comment
@@ -81,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|3
+value|4
 end_define
 
 begin_comment
@@ -266,6 +270,13 @@ define|#
 directive|define
 name|MAX_FC_TARG
 value|126
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_LOOPID
+value|113
 end_define
 
 begin_comment
@@ -722,7 +733,7 @@ name|ispmdvec
 modifier|*
 name|isp_mdvec
 decl_stmt|;
-comment|/* 	 * State, debugging, etc.. 	 */
+comment|/* 	 * Mostly nonvolatile state, debugging, etc.. 	 */
 name|u_int
 label|:
 literal|8
