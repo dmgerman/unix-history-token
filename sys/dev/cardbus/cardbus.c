@@ -6540,7 +6540,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|cardbus
 argument_list|,
-name|pccbb
+name|cbb
 argument_list|,
 name|cardbus_driver
 argument_list|,

@@ -6448,6 +6448,10 @@ name|pccard_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Maybe we need to have a slot device? */
+end_comment
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -6489,7 +6493,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pccard
 argument_list|,
-name|pccbb
+name|cbb
 argument_list|,
 name|pccard_driver
 argument_list|,
