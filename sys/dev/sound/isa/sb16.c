@@ -1176,7 +1176,21 @@ literal|4
 block|,
 literal|1
 block|}
-block|, }
+block|,
+index|[
+name|SOUND_MIXER_LINE1
+index|]
+operator|=
+block|{
+literal|0x52
+block|,
+literal|5
+block|,
+literal|3
+block|,
+literal|1
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,6 +1235,8 @@ name|SOUND_MASK_IGAIN
 operator||
 name|SOUND_MASK_OGAIN
 operator||
+name|SOUND_MASK_LINE1
+operator||
 name|SOUND_MASK_VOLUME
 operator||
 name|SOUND_MASK_BASS
@@ -1235,6 +1251,8 @@ argument_list|,
 name|SOUND_MASK_SYNTH
 operator||
 name|SOUND_MASK_LINE
+operator||
+name|SOUND_MASK_LINE1
 operator||
 name|SOUND_MASK_MIC
 operator||
@@ -1522,6 +1540,32 @@ argument_list|,
 name|SB16_IMASK_R
 argument_list|,
 name|recdev
+argument_list|)
+expr_stmt|;
+comment|/* Switch on/off FM tuner source */
+if|if
+condition|(
+name|src
+operator|&
+name|SOUND_MASK_LINE1
+condition|)
+name|sb_setmixer
+argument_list|(
+name|sb
+argument_list|,
+literal|0x4a
+argument_list|,
+literal|0x0c
+argument_list|)
+expr_stmt|;
+else|else
+name|sb_setmixer
+argument_list|(
+name|sb
+argument_list|,
+literal|0x4a
+argument_list|,
+literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* 	 * since the same volume controls apply to the input and 	 * output sections, the best approach to have a consistent 	 * behaviour among cards would be to disable the output path 	 * on devices which are used to record. 	 * However, since users like to have feedback, we only disable 	 * the mic -- permanently. 	 */
