@@ -1394,9 +1394,6 @@ name|ssipx
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sipx
 argument_list|,
 sizeof|sizeof
@@ -1442,7 +1439,7 @@ operator|*
 operator|)
 name|sipx
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
