@@ -5635,6 +5635,21 @@ operator|->
 name|cr_uidinfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cr
+operator|->
+name|cr_ruidinfo
+operator|!=
+name|NULL
+condition|)
+name|uifree
+argument_list|(
+name|cr
+operator|->
+name|cr_ruidinfo
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Free a prison, if any. 		 */
 if|if
 condition|(
