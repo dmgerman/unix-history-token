@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -506,6 +506,58 @@ block|}
 comment|/* NOTREACHED */
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initial UFS filesystems, done only once.  */
+end_comment
+
+begin_function
+name|int
+name|ufs_init
+parameter_list|(
+name|vfsp
+parameter_list|)
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
+block|{
+specifier|static
+name|int
+name|done
+decl_stmt|;
+if|if
+condition|(
+name|done
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|done
+operator|=
+literal|1
+expr_stmt|;
+name|ufs_ihashinit
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QUOTA
+name|dqinit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
