@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.4 (Berkeley) %G%"
+literal|"@(#)parse.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,14 +258,14 @@ end_block
 begin_macro
 name|add
 argument_list|(
-argument|fmt
+argument|xfmt
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|fmt
+name|xfmt
 decl_stmt|;
 end_decl_stmt
 
@@ -308,6 +308,26 @@ modifier|*
 name|strdup
 argument_list|()
 decl_stmt|;
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fmt
+operator|=
+name|strdup
+argument_list|(
+name|xfmt
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
+expr_stmt|;
 comment|/* start new linked list of format units */
 comment|/* NOSTRICT */
 name|tfs
