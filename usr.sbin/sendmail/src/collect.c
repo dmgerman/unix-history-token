@@ -243,7 +243,7 @@ specifier|volatile
 name|int
 name|c
 init|=
-literal|'\0'
+name|EOF
 decl_stmt|;
 specifier|volatile
 name|bool
@@ -602,10 +602,6 @@ name|pbp
 expr_stmt|;
 else|else
 block|{
-name|c
-operator|=
-name|EOF
-expr_stmt|;
 while|while
 condition|(
 operator|!
