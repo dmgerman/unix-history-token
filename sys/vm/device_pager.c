@@ -344,8 +344,7 @@ name|vm_offset_t
 name|foff
 decl_stmt|;
 block|{
-name|unsigned
-name|long
+name|dev_t
 name|dev
 decl_stmt|;
 name|vm_pager_t
@@ -415,6 +414,9 @@ comment|/* 	 * Make sure this device can be mapped. 	 */
 name|dev
 operator|=
 operator|(
+name|dev_t
+operator|)
+operator|(
 name|u_long
 operator|)
 name|handle
@@ -425,9 +427,6 @@ name|cdevsw
 index|[
 name|major
 argument_list|(
-operator|(
-name|dev_t
-operator|)
 name|dev
 argument_list|)
 index|]
@@ -975,8 +974,7 @@ decl_stmt|;
 name|vm_page_t
 name|page
 decl_stmt|;
-name|unsigned
-name|long
+name|dev_t
 name|dev
 decl_stmt|;
 name|int
@@ -1017,6 +1015,9 @@ expr_stmt|;
 name|dev
 operator|=
 operator|(
+name|dev_t
+operator|)
+operator|(
 name|u_long
 operator|)
 name|pager
@@ -1044,9 +1045,6 @@ name|cdevsw
 index|[
 name|major
 argument_list|(
-operator|(
-name|dev_t
-operator|)
 name|dev
 argument_list|)
 index|]
