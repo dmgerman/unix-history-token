@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: config.h,v 1.3 2000/05/16 13:34:13 itojun Exp $	*/
+comment|/*	$KAME: config.h,v 1.8 2003/06/17 08:26:22 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -107,6 +107,39 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|get_prefix
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|rainfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * it is highly unlikely to have 100 prefix information options,  * so it should be okay to limit it  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPREFIX
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXROUTE
+value|100
+end_define
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: rtadvd.c,v 1.50 2001/02/04 06:15:15 itojun Exp $	*/
+comment|/*	$KAME: rtadvd.c,v 1.82 2003/08/05 12:34:23 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -429,7 +429,7 @@ name|nd_opt_hdr
 modifier|*
 name|nd_opt_array
 index|[
-literal|7
+literal|9
 index|]
 decl_stmt|;
 struct|struct
@@ -570,7 +570,7 @@ block|,
 name|NDOPT_FLAG_RDHDR
 block|,
 name|NDOPT_FLAG_MTU
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -802,6 +802,21 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|set_short_delay
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|rainfo
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1171,11 +1186,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> failed to open a log file(%s), run anyway."
+literal|"<%s> failed to open the pid log file, run anyway."
 argument_list|,
 name|__func__
-argument_list|,
-name|pidfilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -1877,6 +1890,11 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
+name|int
+name|prefixchange
+init|=
+literal|0
+decl_stmt|;
 name|n
 operator|=
 name|read
@@ -2266,6 +2284,10 @@ argument_list|(
 name|prefix
 argument_list|)
 expr_stmt|;
+name|prefixchange
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2320,6 +2342,10 @@ name|addr
 argument_list|,
 name|plen
 argument_list|)
+expr_stmt|;
+name|prefixchange
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2455,6 +2481,10 @@ name|invalidate_prefix
 argument_list|(
 name|prefix
 argument_list|)
+expr_stmt|;
+name|prefixchange
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2670,6 +2700,36 @@ argument_list|,
 name|rai
 operator|->
 name|timer
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|prefixchange
+operator|&&
+operator|(
+name|iflist
+index|[
+name|ifindex
+index|]
+operator|->
+name|ifm_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|)
+block|{
+comment|/* 			 * An advertised prefix has been added or invalidated. 			 * Will notice the change in a short delay. 			 */
+name|rai
+operator|->
+name|initcounter
+operator|=
+literal|0
+expr_stmt|;
+name|set_short_delay
+argument_list|(
+name|rai
 argument_list|)
 expr_stmt|;
 block|}
@@ -3515,6 +3575,11 @@ name|rainfo
 modifier|*
 name|ra
 decl_stmt|;
+name|struct
+name|soliciter
+modifier|*
+name|sol
+decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -3729,30 +3794,7 @@ operator|++
 expr_stmt|;
 comment|/* increment statistics */
 comment|/* 	 * Decide whether to send RA according to the rate-limit 	 * consideration. 	 */
-block|{
-name|long
-name|delay
-decl_stmt|;
-comment|/* must not be greater than 1000000 */
-name|struct
-name|timeval
-name|interval
-decl_stmt|,
-name|now
-decl_stmt|,
-name|min_delay
-decl_stmt|,
-name|tm_tmp
-decl_stmt|,
-modifier|*
-name|rest
-decl_stmt|;
-name|struct
-name|soliciter
-modifier|*
-name|sol
-decl_stmt|;
-comment|/* 		 * record sockaddr waiting for RA, if possible 		 */
+comment|/* record sockaddr waiting for RA, if possible */
 name|sol
 operator|=
 operator|(
@@ -3781,7 +3823,7 @@ operator|=
 operator|*
 name|from
 expr_stmt|;
-comment|/*XXX RFC2553 need clarification on flowinfo */
+comment|/* XXX RFC2553 need clarification on flowinfo */
 name|sol
 operator|->
 name|addr
@@ -3803,11 +3845,9 @@ operator|->
 name|soliciter
 operator|=
 name|sol
-operator|->
-name|next
 expr_stmt|;
 block|}
-comment|/* 		 * If there is already a waiting RS packet, don't 		 * update the timer. 		 */
+comment|/* 	 * If there is already a waiting RS packet, don't 	 * update the timer. 	 */
 if|if
 condition|(
 name|ra
@@ -3818,7 +3858,66 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* 		 * Compute a random delay. If the computed value 		 * corresponds to a time later than the time the next 		 * multicast RA is scheduled to be sent, ignore the random 		 * delay and send the advertisement at the 		 * already-scheduled time. RFC-2461 6.2.6 		 */
+name|set_short_delay
+argument_list|(
+name|ra
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free_ndopts
+argument_list|(
+operator|&
+name|ndopts
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|set_short_delay
+parameter_list|(
+name|rai
+parameter_list|)
+name|struct
+name|rainfo
+modifier|*
+name|rai
+decl_stmt|;
+block|{
+name|long
+name|delay
+decl_stmt|;
+comment|/* must not be greater than 1000000 */
+name|struct
+name|timeval
+name|interval
+decl_stmt|,
+name|now
+decl_stmt|,
+name|min_delay
+decl_stmt|,
+name|tm_tmp
+decl_stmt|,
+modifier|*
+name|rest
+decl_stmt|;
+comment|/* 	 * Compute a random delay. If the computed value 	 * corresponds to a time later than the time the next 	 * multicast RA is scheduled to be sent, ignore the random 	 * delay and send the advertisement at the 	 * already-scheduled time. RFC-2461 6.2.6 	 */
+ifdef|#
+directive|ifdef
+name|HAVE_ARC4RANDOM
+name|delay
+operator|=
+name|arc4random
+argument_list|()
+operator|%
+name|MAX_RA_DELAY_TIME
+expr_stmt|;
+else|#
+directive|else
 name|delay
 operator|=
 name|random
@@ -3826,6 +3925,8 @@ argument_list|()
 operator|%
 name|MAX_RA_DELAY_TIME
 expr_stmt|;
+endif|#
+directive|endif
 name|interval
 operator|.
 name|tv_sec
@@ -3842,7 +3943,7 @@ name|rest
 operator|=
 name|rtadvd_timer_rest
 argument_list|(
-name|ra
+name|rai
 operator|->
 name|timer
 argument_list|)
@@ -3863,7 +3964,7 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"<%s> random delay is larger than "
-literal|"the rest of normal timer"
+literal|"the rest of the current timer"
 argument_list|,
 name|__func__
 argument_list|)
@@ -3874,7 +3975,7 @@ operator|*
 name|rest
 expr_stmt|;
 block|}
-comment|/* 		 * If we sent a multicast Router Advertisement within 		 * the last MIN_DELAY_BETWEEN_RAS seconds, schedule 		 * the advertisement to be sent at a time corresponding to 		 * MIN_DELAY_BETWEEN_RAS plus the random value after the 		 * previous advertisement was sent. 		 */
+comment|/* 	 * If we sent a multicast Router Advertisement within 	 * the last MIN_DELAY_BETWEEN_RAS seconds, schedule 	 * the advertisement to be sent at a time corresponding to 	 * MIN_DELAY_BETWEEN_RAS plus the random value after the 	 * previous advertisement was sent. 	 */
 name|gettimeofday
 argument_list|(
 operator|&
@@ -3889,7 +3990,7 @@ operator|&
 name|now
 argument_list|,
 operator|&
-name|ra
+name|rai
 operator|->
 name|lastsent
 argument_list|,
@@ -3949,24 +4050,11 @@ argument_list|(
 operator|&
 name|interval
 argument_list|,
-name|ra
+name|rai
 operator|->
 name|timer
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-name|done
-label|:
-name|free_ndopts
-argument_list|(
-operator|&
-name|ndopts
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4914,6 +5002,11 @@ name|tv_sec
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|pp
+operator|->
+name|timer
+operator|&&
 name|rai
 operator|->
 name|clockskew
@@ -4993,6 +5086,11 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|pp
+operator|->
+name|timer
+operator|&&
 name|preferred_time
 operator|!=
 name|pp
@@ -5086,6 +5184,11 @@ name|tv_sec
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|pp
+operator|->
+name|timer
+operator|&&
 name|rai
 operator|->
 name|clockskew
@@ -5165,6 +5268,11 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|pp
+operator|->
+name|timer
+operator|&&
 name|valid_time
 operator|!=
 name|pp
@@ -5267,6 +5375,9 @@ name|bytelen
 decl_stmt|,
 name|bitlen
 decl_stmt|;
+name|u_char
+name|bitmask
+decl_stmt|;
 for|for
 control|(
 name|pp
@@ -5312,6 +5423,16 @@ name|plen
 operator|%
 literal|8
 expr_stmt|;
+name|bitmask
+operator|=
+literal|0xff
+operator|<<
+operator|(
+literal|8
+operator|-
+name|bitlen
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|memcmp
@@ -5337,19 +5458,23 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|bitlen
+operator|==
+literal|0
+operator|||
+operator|(
+operator|(
 name|prefix
 operator|->
 name|s6_addr
 index|[
 name|bytelen
 index|]
-operator|>>
-operator|(
-literal|8
-operator|-
-name|bitlen
+operator|&
+name|bitmask
 operator|)
 operator|==
+operator|(
 name|pp
 operator|->
 name|prefix
@@ -5358,18 +5483,18 @@ name|s6_addr
 index|[
 name|bytelen
 index|]
-operator|>>
-operator|(
-literal|8
-operator|-
-name|bitlen
+operator|&
+name|bitmask
+operator|)
 operator|)
 condition|)
+block|{
 return|return
 operator|(
 name|pp
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
@@ -5409,6 +5534,9 @@ name|bytelen
 decl_stmt|,
 name|bitlen
 decl_stmt|;
+name|u_char
+name|bitmask
+decl_stmt|;
 if|if
 condition|(
 name|plen0
@@ -5431,6 +5559,16 @@ operator|=
 name|plen1
 operator|%
 literal|8
+expr_stmt|;
+name|bitmask
+operator|=
+literal|0xff
+operator|<<
+operator|(
+literal|8
+operator|-
+name|bitlen
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -5458,37 +5596,41 @@ operator|)
 return|;
 if|if
 condition|(
+name|bitlen
+operator|==
+literal|0
+operator|||
+operator|(
+operator|(
 name|p0
 operator|->
 name|s6_addr
 index|[
 name|bytelen
 index|]
-operator|>>
-operator|(
-literal|8
-operator|-
-name|bitlen
+operator|&
+name|bitmask
 operator|)
 operator|==
+operator|(
 name|p1
 operator|->
 name|s6_addr
 index|[
 name|bytelen
 index|]
-operator|>>
-operator|(
-literal|8
-operator|-
-name|bitlen
+operator|&
+name|bitmask
+operator|)
 operator|)
 condition|)
+block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -7167,6 +7309,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* update counter */
+if|if
+condition|(
+name|rainfo
+operator|->
+name|initcounter
+operator|<
+name|MAX_INITIAL_RTR_ADVERTISEMENTS
+condition|)
+name|rainfo
+operator|->
+name|initcounter
+operator|++
+expr_stmt|;
+name|rainfo
+operator|->
+name|raoutput
+operator|++
+expr_stmt|;
 comment|/* 	 * unicast advertisements 	 * XXX commented out.  reason: though spec does not forbit it, unicast 	 * advert does not really help 	 */
 for|for
 control|(
@@ -7206,25 +7367,6 @@ operator|->
 name|soliciter
 operator|=
 name|NULL
-expr_stmt|;
-comment|/* update counter */
-if|if
-condition|(
-name|rainfo
-operator|->
-name|initcounter
-operator|<
-name|MAX_INITIAL_RTR_ADVERTISEMENTS
-condition|)
-name|rainfo
-operator|->
-name|initcounter
-operator|++
-expr_stmt|;
-name|rainfo
-operator|->
-name|raoutput
-operator|++
 expr_stmt|;
 comment|/* update timestamp */
 name|gettimeofday

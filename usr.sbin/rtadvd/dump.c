@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: dump.c,v 1.16 2001/03/21 17:41:13 jinmei Exp $	*/
+comment|/*	$KAME: dump.c,v 1.32 2003/05/19 09:46:50 keiichi Exp $	*/
 end_comment
 
 begin_comment
@@ -333,11 +333,16 @@ name|prefix
 modifier|*
 name|pfx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ROUTEINFO
 name|struct
 name|rtinfo
 modifier|*
 name|rti
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|prefixbuf
 index|[
@@ -1033,6 +1038,9 @@ literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ROUTEINFO
 for|for
 control|(
 name|first
@@ -1164,6 +1172,8 @@ literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 end_function
