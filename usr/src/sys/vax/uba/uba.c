@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	3.3	%G%	*/
+comment|/*	uba.c	3.4	%G%	*/
 end_comment
 
 begin_include
@@ -897,10 +897,11 @@ name|cdp
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|s
 decl_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
@@ -966,11 +967,10 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
