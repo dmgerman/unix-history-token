@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_systm.h>
 end_include
 
@@ -648,30 +642,6 @@ else|else
 name|m_freem
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* for backward compatibility - messy... */
-comment|/* XXX 	 * I THINK they meant to call ip_input() 	 * The original code called ipip_input() 	 * which just calls rip_input() 	 * which makes no sense. 	 * (It is also not compiled in in LINT) 	 */
-if|if
-condition|(
-name|proto
-operator|==
-name|IPPROTO_IPV4
-condition|)
-block|{
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-name|off
-argument_list|)
-expr_stmt|;
-name|ip_input
-argument_list|(
-name|m
-comment|/*, off */
 argument_list|)
 expr_stmt|;
 return|return;
