@@ -2090,7 +2090,7 @@ name|_DIST_USER
 expr_stmt|;
 name|CRYPTODists
 operator||=
-name|DIST_CRYPTO_BIN
+name|DIST_CRYPTO_CRYPTO
 expr_stmt|;
 name|i
 operator|=
@@ -2163,7 +2163,7 @@ name|DIST_CRYPTO
 expr_stmt|;
 name|CRYPTODists
 operator||=
-name|DIST_CRYPTO_BIN
+name|DIST_CRYPTO_CRYPTO
 expr_stmt|;
 name|distVerifyFlags
 argument_list|()
