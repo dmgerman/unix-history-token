@@ -2394,10 +2394,6 @@ index|]
 operator|=
 literal|"-lg++"
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-comment|/* Temporary only */
 if|if
 condition|(
 name|library
@@ -2410,8 +2406,6 @@ index|]
 operator|=
 literal|"-lstdc++"
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|saw_math
