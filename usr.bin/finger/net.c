@@ -585,11 +585,6 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
