@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.84.1.1 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.121 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6667,7 +6667,7 @@ name|EX_USAGE
 case|:
 name|stat
 operator|=
-literal|"550"
+literal|"5.5.4"
 expr_stmt|;
 break|break;
 case|case
@@ -6675,17 +6675,22 @@ name|EX_DATAERR
 case|:
 name|stat
 operator|=
-literal|"501"
+literal|"5.5.2"
 expr_stmt|;
 break|break;
-case|case
-name|EX_NOINPUT
-case|:
 case|case
 name|EX_NOUSER
 case|:
 case|case
 name|EX_NOHOST
+case|:
+name|stat
+operator|=
+literal|"5.1.1"
+expr_stmt|;
+break|break;
+case|case
+name|EX_NOINPUT
 case|:
 case|case
 name|EX_CANTCREAT
@@ -6695,7 +6700,7 @@ name|EX_NOPERM
 case|:
 name|stat
 operator|=
-literal|"550"
+literal|"5.3.0"
 expr_stmt|;
 break|break;
 case|case
@@ -6715,7 +6720,7 @@ name|EX_CONFIG
 case|:
 name|stat
 operator|=
-literal|"554"
+literal|"5.5.0"
 expr_stmt|;
 break|break;
 case|case
@@ -6726,7 +6731,7 @@ name|EX_IOERR
 case|:
 name|stat
 operator|=
-literal|"451"
+literal|"4.5.0"
 expr_stmt|;
 break|break;
 case|case
@@ -6734,7 +6739,7 @@ name|EX_TEMPFAIL
 case|:
 name|stat
 operator|=
-literal|"426"
+literal|"4.2.0"
 expr_stmt|;
 break|break;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.50 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -629,7 +629,7 @@ name|a
 operator|->
 name|q_status
 operator|=
-literal|"466"
+literal|"4.4.3"
 expr_stmt|;
 block|}
 comment|/* 	**  Compute return value. 	*/
