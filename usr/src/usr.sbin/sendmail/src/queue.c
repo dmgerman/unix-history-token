@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.47 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.48 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.47 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.48 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4609,6 +4609,98 @@ name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
+comment|/* if this has been tried recently, let it be */
+if|if
+condition|(
+name|e
+operator|->
+name|e_ntries
+operator|>
+literal|0
+operator|&&
+operator|(
+name|curtime
+argument_list|()
+operator|-
+name|e
+operator|->
+name|e_dtime
+operator|)
+operator|>
+name|MinQueueAge
+condition|)
+block|{
+name|char
+modifier|*
+name|howlong
+init|=
+name|pintvl
+argument_list|(
+name|curtime
+argument_list|()
+operator|-
+name|e
+operator|->
+name|e_dtime
+argument_list|,
+name|TRUE
+argument_list|)
+decl_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_KEEPQUEUE
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
+operator|||
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s: too young (%s)\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|howlong
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|19
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: too young (%s)"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|howlong
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+else|else
+block|{
 name|eatheader
 argument_list|(
 name|e
@@ -4637,6 +4729,7 @@ argument_list|,
 name|SM_DELIVER
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* finish up and exit */
 if|if
 condition|(
@@ -4819,23 +4912,14 @@ block|{
 comment|/* being processed by another queuer */
 if|if
 condition|(
+name|Verbose
+operator|||
 name|tTd
 argument_list|(
 literal|40
 argument_list|,
 literal|8
 argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"readqf(%s): locked\n"
-argument_list|,
-name|qf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Verbose
 condition|)
 name|printf
 argument_list|(
