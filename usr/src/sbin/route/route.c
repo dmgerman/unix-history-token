@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	8.3 (Berkeley) %G%"
+literal|"@(#)route.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5344,7 +5344,7 @@ operator|.
 name|sa
 operator|.
 name|sa_family
-operator|==
+operator|=
 name|AF_LINK
 expr_stmt|;
 name|so_ifp
@@ -5352,7 +5352,7 @@ operator|.
 name|sa
 operator|.
 name|sa_len
-operator|==
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
