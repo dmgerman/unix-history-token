@@ -2934,11 +2934,11 @@ name|va_ctime
 expr_stmt|;
 name|sb
 operator|->
-name|st_createtimespec
+name|st_birthtimespec
 operator|=
 name|vap
 operator|->
-name|va_createtime
+name|va_birthtime
 expr_stmt|;
 comment|/* 	 * According to www.opengroup.org, the meaning of st_blksize is  	 *   "a filesystem-specific preferred I/O block size for this  	 *    object.  In some filesystem types, this may vary from file 	 *    to file" 	 * Default to PAGE_SIZE after much discussion. 	 */
 if|if

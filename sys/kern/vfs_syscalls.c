@@ -8112,11 +8112,11 @@ name|st_gen
 expr_stmt|;
 name|nsb
 operator|->
-name|st_createtimespec
+name|st_birthtimespec
 operator|=
 name|sb
 operator|->
-name|st_createtimespec
+name|st_birthtimespec
 expr_stmt|;
 block|}
 end_function

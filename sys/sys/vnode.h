@@ -791,7 +791,7 @@ decl_stmt|;
 comment|/* time file changed */
 name|struct
 name|timespec
-name|va_createtime
+name|va_birthtime
 decl_stmt|;
 comment|/* time file created */
 name|u_long

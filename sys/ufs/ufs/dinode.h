@@ -324,9 +324,9 @@ name|di_ctime
 decl_stmt|;
 comment|/*  48: Last inode change time. */
 name|ufs_time_t
-name|di_createtime
+name|di_birthtime
 decl_stmt|;
-comment|/*  56: Last inode change time. */
+comment|/*  56: Inode creation time. */
 name|int32_t
 name|di_mtimensec
 decl_stmt|;
@@ -340,9 +340,9 @@ name|di_ctimensec
 decl_stmt|;
 comment|/*  72: Last inode change time. */
 name|int32_t
-name|di_creatensec
+name|di_birthnsec
 decl_stmt|;
-comment|/*  76: Last inode change time. */
+comment|/*  76: Inode creation time. */
 name|int32_t
 name|di_gen
 decl_stmt|;

@@ -2049,7 +2049,7 @@ name|di_ctimensec
 expr_stmt|;
 name|vap
 operator|->
-name|va_createtime
+name|va_birthtime
 operator|.
 name|tv_sec
 operator|=
@@ -2057,7 +2057,7 @@ literal|0
 expr_stmt|;
 name|vap
 operator|->
-name|va_createtime
+name|va_birthtime
 operator|.
 name|tv_nsec
 operator|=
@@ -2176,7 +2176,7 @@ name|di_ctimensec
 expr_stmt|;
 name|vap
 operator|->
-name|va_createtime
+name|va_birthtime
 operator|.
 name|tv_sec
 operator|=
@@ -2184,11 +2184,11 @@ name|ip
 operator|->
 name|i_din2
 operator|->
-name|di_createtime
+name|di_birthtime
 expr_stmt|;
 name|vap
 operator|->
-name|va_createtime
+name|va_birthtime
 operator|.
 name|tv_nsec
 operator|=
@@ -2196,7 +2196,7 @@ name|ip
 operator|->
 name|i_din2
 operator|->
-name|di_creatensec
+name|di_birthnsec
 expr_stmt|;
 name|vap
 operator|->
