@@ -3198,6 +3198,20 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* 	 * Windows may put the chip in suspend mode when it 	 * shuts down. Be sure to kick it in the head to wake it 	 * up again. 	 */
+name|VR_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|VR_STICKHW
+argument_list|,
+operator|(
+name|VR_STICKHW_DS0
+operator||
+name|VR_STICKHW_DS1
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Reset the adapter. */
 name|vr_reset
 argument_list|(

@@ -364,6 +364,13 @@ name|VR_CRC_CNT
 value|0x7E
 end_define
 
+begin_define
+define|#
+directive|define
+name|VR_STICKHW
+value|0x83
+end_define
+
 begin_comment
 comment|/*  * RX config bits.  */
 end_comment
@@ -1515,6 +1522,45 @@ define|#
 directive|define
 name|VR_CFG_GPIOEN
 value|0x80000000
+end_define
+
+begin_comment
+comment|/* Sticky HW bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VR_STICKHW_DS0
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_STICKHW_DS1
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_STICKHW_WOL_ENB
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_STICKHW_WOL_STS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_STICKHW_LEGWOL_ENB
+value|0x80
 end_define
 
 begin_comment
