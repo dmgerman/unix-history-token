@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.10 (Berkeley) %G%"
+literal|"@(#)conf.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2768,6 +2768,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* try /etc/whoami -- one line with the node name */
 if|if
 condition|(
 operator|(
@@ -2810,7 +2811,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|name
 operator|->
@@ -2847,6 +2848,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* try /usr/include/whoami.h -- has a #define somewhere */
 if|if
 condition|(
 operator|(
@@ -2929,6 +2931,7 @@ ifdef|#
 directive|ifdef
 name|TRUST_POPEN
 comment|/* 	**  Popen is known to have security holes. 	*/
+comment|/* try uuname -l to return local name */
 if|if
 condition|(
 operator|(
@@ -2969,7 +2972,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -2995,6 +2998,8 @@ name|nodename
 index|[
 literal|0
 index|]
+operator|!=
+literal|'\0'
 condition|)
 return|return
 operator|(

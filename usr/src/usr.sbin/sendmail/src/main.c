@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.9 (Berkeley) %G%"
+literal|"@(#)main.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -838,7 +838,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"b:C:cd:eF:f:h:Iimno:p:q:R:r:sTtv"
+value|"b:C:cd:e:F:f:h:Iimno:p:q:R:r:sTtv"
 end_define
 
 begin_while
@@ -2108,10 +2108,6 @@ literal|'c'
 case|:
 comment|/* connect to non-local mailers */
 case|case
-literal|'e'
-case|:
-comment|/* error message disposition */
-case|case
 literal|'i'
 case|:
 comment|/* don't let dot stop me */
@@ -2132,6 +2128,22 @@ argument_list|(
 name|j
 argument_list|,
 literal|"T"
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* error message disposition */
+name|setoption
+argument_list|(
+name|j
+argument_list|,
+name|optarg
 argument_list|,
 name|FALSE
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	6.3 (Berkeley) %G%"
+literal|"@(#)arpadate.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2060,7 +2060,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
