@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)script.c	4.6 (Berkeley) 84/12/23"
+literal|"@(#)script.c	4.7 (Berkeley) 85/02/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,6 +154,13 @@ begin_decl_stmt
 name|struct
 name|ltchars
 name|lc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|winsize
+name|win
 decl_stmt|;
 end_decl_stmt
 
@@ -1113,6 +1120,20 @@ operator|&
 name|lb
 argument_list|)
 expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCGWINSZ
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|win
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|close
@@ -1246,6 +1267,20 @@ operator|*
 operator|)
 operator|&
 name|l
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|slave
+argument_list|,
+name|TIOCSWINSZ
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|win
 argument_list|)
 expr_stmt|;
 block|}
