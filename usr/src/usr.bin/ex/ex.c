@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	7.5 (Berkeley) %G%"
+literal|"@(#)ex.c	7.5.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -762,20 +762,6 @@ operator|-
 literal|'0'
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|CRYPT
-case|case
-literal|'x'
-case|:
-comment|/* -x: encrypted mode */
-name|xflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 name|smerror
 argument_list|(
@@ -876,33 +862,6 @@ name|av
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|CRYPT
-if|if
-condition|(
-name|xflag
-condition|)
-block|{
-name|key
-operator|=
-name|getpass
-argument_list|(
-name|KEYPROMPT
-argument_list|)
-expr_stmt|;
-name|kflag
-operator|=
-name|crinit
-argument_list|(
-name|key
-argument_list|,
-name|perm
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * If we are doing a recover and no filename 	 * was given, then execute an exrecover command with 	 * the -r option to type out the list of saved file names. 	 * Otherwise set the remembered file name to the first argument 	 * file name so the "recover" initial command will find it. 	 */
 if|if
 condition|(
@@ -1395,28 +1354,6 @@ name|anymarks
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CRYPT
-if|if
-condition|(
-name|xflag
-condition|)
-block|{
-name|xtflag
-operator|=
-literal|1
-expr_stmt|;
-name|makekey
-argument_list|(
-name|key
-argument_list|,
-name|tperm
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.7.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1615,118 +1615,6 @@ directive|define
 name|UNDPUT
 value|4
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CRYPT
-end_ifdef
-
-begin_comment
-comment|/*  * Various miscellaneous flags and buffers needed by the encryption routines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KSIZE
-value|9
-end_define
-
-begin_comment
-comment|/* key size for encryption */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEYPROMPT
-value|"Key: "
-end_define
-
-begin_decl_stmt
-name|var
-name|int
-name|xflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* True if we are in encryption mode */
-end_comment
-
-begin_decl_stmt
-name|var
-name|int
-name|xtflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* True if the temp file is being encrypted */
-end_comment
-
-begin_decl_stmt
-name|var
-name|int
-name|kflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* True if the key has been accepted */
-end_comment
-
-begin_decl_stmt
-name|var
-name|char
-name|perm
-index|[
-literal|768
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|var
-name|char
-name|tperm
-index|[
-literal|768
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|var
-name|char
-modifier|*
-name|key
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|var
-name|char
-name|crbuf
-index|[
-name|CRSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|getpass
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Function type definitions  */
