@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $Id: in_pcb.h,v 1.14.2.1 1996/11/11 23:40:40 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $Id: in_pcb.h,v 1.14.2.2 1997/03/03 09:24:37 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -58,34 +58,41 @@ name|inpcbinfo
 modifier|*
 name|inp_pcbinfo
 decl_stmt|;
+comment|/* PCB list info */
 name|struct
 name|in_addr
 name|inp_faddr
 decl_stmt|;
 comment|/* foreign host table entry */
-name|u_short
-name|inp_fport
-decl_stmt|;
-comment|/* foreign port */
 name|struct
 name|in_addr
 name|inp_laddr
 decl_stmt|;
 comment|/* local host table entry */
 name|u_short
+name|inp_fport
+decl_stmt|;
+comment|/* foreign port */
+name|u_short
 name|inp_lport
 decl_stmt|;
 comment|/* local port */
+name|caddr_t
+name|inp_ppcb
+decl_stmt|;
+comment|/* pointer to per-protocol pcb */
 name|struct
 name|socket
 modifier|*
 name|inp_socket
 decl_stmt|;
 comment|/* back pointer to socket */
-name|caddr_t
-name|inp_ppcb
+name|struct
+name|mbuf
+modifier|*
+name|inp_options
 decl_stmt|;
-comment|/* pointer to per-protocol pcb */
+comment|/* IP options */
 name|struct
 name|route
 name|inp_route
@@ -95,23 +102,39 @@ name|int
 name|inp_flags
 decl_stmt|;
 comment|/* generic IP/datagram flags */
-name|struct
-name|ip
-name|inp_ip
+name|u_char
+name|inp_ip_tos
 decl_stmt|;
-comment|/* header prototype; should have more */
-name|struct
-name|mbuf
-modifier|*
-name|inp_options
+comment|/* type of service proto */
+name|u_char
+name|inp_ip_ttl
 decl_stmt|;
-comment|/* IP options */
+comment|/* time to live proto */
+name|u_char
+name|inp_ip_p
+decl_stmt|;
+comment|/* protocol proto */
+name|u_char
+name|pad
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* alignment */
 name|struct
 name|ip_moptions
 modifier|*
 name|inp_moptions
 decl_stmt|;
 comment|/* IP multicast options */
+if|#
+directive|if
+literal|0
+comment|/* Someday, perhaps... */
+block|struct	ip inp_ip;
+comment|/* header prototype; should have more */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
