@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)register.c	1.6 (Berkeley) %G%"
+literal|"@(#)register.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1154,6 +1154,7 @@ argument_list|(
 name|namebuf
 argument_list|,
 literal|"%s%s"
+argument_list|,
 name|CLIENT_KEYFILE
 argument_list|,
 name|inet_ntoa

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)registerd.c	1.5 (Berkeley) %G%"
+literal|"@(#)registerd.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,6 +334,7 @@ argument_list|(
 name|keyfile
 argument_list|,
 literal|"%s%s%s"
+argument_list|,
 name|SERVER_KEYDIR
 argument_list|,
 name|CLIENT_KEYFILE
