@@ -58,21 +58,10 @@ comment|/* link layer selector length */
 name|char
 name|sdl_data
 index|[
-literal|12
+literal|46
 index|]
 decl_stmt|;
 comment|/* minimum work area, can be larger; 				   contains both if name and ll address */
-name|u_short
-name|sdl_rcf
-decl_stmt|;
-comment|/* source routing control */
-name|u_short
-name|sdl_route
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* source routing information */
 block|}
 struct|;
 end_struct
