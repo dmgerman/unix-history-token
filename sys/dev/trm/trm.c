@@ -16164,7 +16164,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 case|case
@@ -16178,7 +16178,9 @@ literal|"Tekram DC395U2D/U2W Fast40 Wide SCSI Adapter"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
 return|;
 default|default:
 return|return

@@ -325,7 +325,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -353,14 +353,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
 comment|/* 	 * The (Fast) Etherlink XL adapters are now supported by 	 * the xl driver, which uses bus master DMA and is much 	 * faster. (And which also supports the 3c905B. 	 */
-ifdef|#
-directive|ifdef
-name|VORTEX_ETHERLINK_XL
 if|if
 condition|(
 name|device_id
@@ -381,7 +378,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_LOW_PRIORITY
 operator|)
 return|;
 block|}
@@ -405,12 +402,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_LOW_PRIORITY
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|ENXIO

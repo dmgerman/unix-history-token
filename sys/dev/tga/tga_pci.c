@@ -468,7 +468,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 break|break;
 block|}
