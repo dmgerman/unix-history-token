@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.20 1997/10/10 14:08:07 phk Exp $"
+literal|"$Id: vmstat.c,v 1.21 1997/10/10 18:19:48 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3983,6 +3983,7 @@ name|totreq
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
