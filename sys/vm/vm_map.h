@@ -250,6 +250,43 @@ begin_comment
 comment|/* don't include in a core */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|u_char
+name|vm_map_entry_behavior
+parameter_list|(
+name|vm_map_entry_t
+name|entry
+parameter_list|)
+block|{
+return|return
+operator|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_BEHAV_MASK
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_comment
 comment|/*  *	Maps are doubly-linked lists of map entries, kept sorted  *	by address.  A single hint is provided to start  *	searches again from the last successful search,  *	insertion, or removal.  *  *	Note: the lock structure cannot be the first element of vm_map  *	because this can result in a running lockup between two or more  *	system processes trying to kmem_alloc_wait() due to kmem_alloc_wait()  *	and free tsleep/waking up 'map' and the underlying lockmgr also  *	sleeping and waking up on 'map'.  The lockup occurs when the map fills  *	up.  The 'exec' map, for example.  *  * List of locks  *	(c)	const until freed  */
 end_comment
@@ -475,33 +512,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_function_decl
-name|u_char
-name|vm_map_entry_behavior
-parameter_list|(
-name|struct
-name|vm_map_entry
-modifier|*
-name|entry
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_map_entry_set_behavior
-parameter_list|(
-name|struct
-name|vm_map_entry
-modifier|*
-name|entry
-parameter_list|,
-name|u_char
-name|behavior
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  Note that  *		these macros mimic procedure calls returning void.  The  *		semicolon is supplied by the user of these macros, not  *		by the macros themselves.  The macros can safely be used  *		as unbraced elements in a higher level statement.  */
