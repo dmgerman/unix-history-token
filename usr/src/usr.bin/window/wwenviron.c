@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.15 %G%"
+literal|"@(#)wwenviron.c	3.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,7 @@ argument_list|,
 name|pgrp
 argument_list|)
 expr_stmt|;
+comment|/* SIGPIPE is the only one we ignore */
 operator|(
 name|void
 operator|)
@@ -228,6 +229,14 @@ argument_list|(
 name|SIGPIPE
 argument_list|,
 name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
