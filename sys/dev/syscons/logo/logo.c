@@ -6,16 +6,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|logo_w
+name|logo_width
 value|88
 end_define
 
 begin_define
 define|#
 directive|define
-name|logo_h
+name|logo_height
 value|88
 end_define
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|logo_w
+init|=
+name|logo_width
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|logo_h
+init|=
+name|logo_height
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
@@ -1570,9 +1588,9 @@ name|unsigned
 name|char
 name|logo_img
 index|[
-name|logo_w
+name|logo_width
 operator|*
-name|logo_h
+name|logo_height
 index|]
 init|=
 block|{
@@ -17064,6 +17082,18 @@ literal|0x00
 block|,
 literal|0x00
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|logo_img_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|logo_img
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
