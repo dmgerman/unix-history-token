@@ -1902,12 +1902,8 @@ argument_list|(
 name|nbp
 argument_list|)
 expr_stmt|;
-name|VOP_STRATEGY
+name|BUF_STRATEGY
 argument_list|(
-name|nbp
-operator|->
-name|b_vp
-argument_list|,
 name|nbp
 argument_list|)
 expr_stmt|;

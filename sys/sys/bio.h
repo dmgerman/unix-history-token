@@ -1843,6 +1843,26 @@ return|;
 block|}
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|BUF_WRITE
+parameter_list|(
+name|bp
+parameter_list|)
+value|VOP_BWRITE((bp)->b_vp, (bp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUF_STRATEGY
+parameter_list|(
+name|bp
+parameter_list|)
+value|VOP_STRATEGY((bp)->b_vp, (bp))
+end_define
+
 begin_endif
 endif|#
 directive|endif

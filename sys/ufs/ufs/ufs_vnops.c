@@ -6922,12 +6922,8 @@ block|{
 operator|(
 name|void
 operator|)
-name|VOP_BWRITE
+name|BUF_WRITE
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -6969,12 +6965,8 @@ operator|(
 operator|(
 name|error
 operator|=
-name|VOP_BWRITE
+name|BUF_WRITE
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 operator|)

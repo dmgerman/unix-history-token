@@ -4192,12 +4192,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|VOP_BWRITE
+name|BUF_WRITE
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 operator|==
@@ -4479,12 +4475,8 @@ name|B_NOCACHE
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BWRITE
+name|BUF_WRITE
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;

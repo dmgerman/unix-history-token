@@ -1262,7 +1262,7 @@ name|b_bcount
 operator|=
 name|len
 expr_stmt|;
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,
@@ -3596,7 +3596,7 @@ operator|=
 name|BIO_WRITE
 expr_stmt|;
 comment|/*      * This should read:      *      *       vinumstrategy (bp);      *      * Negotiate with phk to get it fixed.      */
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,

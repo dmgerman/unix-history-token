@@ -1104,7 +1104,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,

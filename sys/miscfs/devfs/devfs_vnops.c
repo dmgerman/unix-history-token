@@ -5798,7 +5798,7 @@ name|ap
 operator|->
 name|a_length
 expr_stmt|;
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,
@@ -6622,12 +6622,8 @@ operator|+=
 name|pcount
 expr_stmt|;
 comment|/* Do the input. */
-name|VOP_STRATEGY
+name|BUF_STRATEGY
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;

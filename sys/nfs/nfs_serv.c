@@ -19373,12 +19373,8 @@ operator|&=
 operator|~
 name|B_ASYNC
 expr_stmt|;
-name|VOP_BWRITE
+name|BUF_WRITE
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;

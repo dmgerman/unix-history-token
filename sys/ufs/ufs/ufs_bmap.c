@@ -718,12 +718,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VOP_STRATEGY
+name|BUF_STRATEGY
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;

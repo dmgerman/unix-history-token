@@ -12850,7 +12850,7 @@ name|b_dev
 operator|=
 name|dev
 expr_stmt|;
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,

@@ -1643,12 +1643,8 @@ operator|=
 name|bsize
 expr_stmt|;
 comment|/* do the input */
-name|VOP_STRATEGY
+name|BUF_STRATEGY
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3037,12 +3033,8 @@ operator|+=
 name|count
 expr_stmt|;
 comment|/* do the input */
-name|VOP_STRATEGY
+name|BUF_STRATEGY
 argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;

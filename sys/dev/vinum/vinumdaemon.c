@@ -584,7 +584,7 @@ name|rq
 parameter_list|)
 block|{
 comment|/*      * This should read:      *      *     vinumstrategy(rq->bp);      *      * Negotiate with phk to get it fixed.      */
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|rq
 operator|->

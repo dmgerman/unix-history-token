@@ -4831,7 +4831,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* Perform transfer. */
-name|BUF_STRATEGY
+name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|,
