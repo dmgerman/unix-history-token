@@ -41,12 +41,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -112,12 +106,15 @@ name|argc
 operator|<
 literal|2
 condition|)
+block|{
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|rval
 operator|=
-literal|0
+name|EX_OK
 expr_stmt|;
 for|for
 control|(
@@ -148,8 +145,9 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|warn
@@ -162,9 +160,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+name|EX_OK
+condition|)
 name|rval
 operator|=
-name|errno
+name|EX_NOINPUT
 expr_stmt|;
 continue|continue;
 block|}
@@ -174,8 +178,9 @@ name|fsync
 argument_list|(
 name|fd
 argument_list|)
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|warn
@@ -188,9 +193,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+name|EX_OK
+condition|)
 name|rval
 operator|=
-name|errno
+name|EX_OSERR
 expr_stmt|;
 block|}
 name|close
@@ -199,11 +210,12 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|exit
+argument_list|(
 name|rval
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -211,7 +223,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -225,6 +239,7 @@ argument_list|(
 name|EX_USAGE
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
