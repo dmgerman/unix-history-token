@@ -405,13 +405,6 @@ parameter_list|)
 value|do { \ 				    if (ct_mpsafenet) \ 					mtx_assert (&(_bd)->ct_mtx, MA_OWNED); \ 				} while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|99
-end_define
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -10037,11 +10030,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ct"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags
