@@ -821,6 +821,16 @@ block|{
 block|{
 name|USB_VENDOR_PRIMAX
 block|,
+name|USB_PRODUCT_PRIMAX_6200
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_PRIMAX
+block|,
 name|USB_PRODUCT_PRIMAX_19200
 block|}
 block|,
