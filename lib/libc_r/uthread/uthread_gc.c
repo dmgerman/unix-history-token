@@ -549,6 +549,24 @@ name|pthread_cln
 operator|!=
 name|NULL
 condition|)
+if|if
+condition|(
+name|pthread_cln
+operator|->
+name|name
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Free the thread name string. */
+name|free
+argument_list|(
+name|pthread_cln
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 			 * Free the memory allocated for the thread 			 * structure. 			 */
 name|free
 argument_list|(
