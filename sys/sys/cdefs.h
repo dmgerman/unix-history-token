@@ -705,6 +705,8 @@ end_comment
 begin_if
 if|#
 directive|if
+literal|0
+operator|&&
 name|__FreeBSD_cc_version
 operator|>=
 literal|300001
