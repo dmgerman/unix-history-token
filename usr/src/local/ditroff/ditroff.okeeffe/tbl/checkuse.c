@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)checkuse.c	1.2 (CWI) 85/10/02"
+literal|"@(#)checkuse.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,7 +314,7 @@ begin_define
 define|#
 directive|define
 name|MAXVEC
-value|20
+value|128
 end_define
 
 begin_decl_stmt
@@ -437,7 +437,7 @@ begin_define
 define|#
 directive|define
 name|MAXPC
-value|50
+value|256
 end_define
 
 begin_decl_stmt

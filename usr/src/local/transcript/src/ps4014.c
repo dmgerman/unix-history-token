@@ -110,10 +110,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|private
-end_macro
-
 begin_struct
 struct|struct
 name|Params
@@ -171,10 +167,6 @@ block|}
 struct|;
 end_struct
 
-begin_macro
-name|private
-end_macro
-
 begin_struct
 struct|struct
 name|Real4110
@@ -191,10 +183,6 @@ end_struct
 begin_comment
 comment|/* 4110-format real number */
 end_comment
-
-begin_macro
-name|private
-end_macro
 
 begin_struct
 struct|struct

@@ -5,13 +5,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)ni.c	2.3 (CWI) 89/08/14"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ni.c	2.3 (CWI) 89/08/14"
+literal|"@(#)ni.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"tdef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -44,7 +54,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/local/lib/ditroff/term/tab."
+name|_PATH_TERMTAB
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +100,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/local/lib/font"
+name|_PATH_FONTS
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +115,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/local/lib/font"
+name|_PATH_FONTS
 decl_stmt|;
 end_decl_stmt
 
@@ -132,28 +142,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|char
-name|obuf
-index|[
-name|OBUFSZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* characters collected here for typesetter output */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|obufp
-init|=
-name|obuf
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -333,7 +321,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/tmac/tmac."
+name|_PATH_TMAC
 decl_stmt|;
 end_decl_stmt
 
@@ -476,10 +464,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|FILE
+modifier|*
 name|ptid
 init|=
-name|PTID
+name|stdout
 decl_stmt|;
 end_decl_stmt
 
@@ -1942,8 +1931,12 @@ end_comment
 begin_decl_stmt
 name|struct
 name|env
-name|env
+name|env_array
+index|[
+name|NEV
+index|]
 init|=
+block|{
 block|{
 comment|/* int	ics	 */
 literal|0
@@ -2178,6 +2171,21 @@ block|,
 comment|/* int	lnsize	 */
 name|LNSIZE
 block|, }
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|env
+modifier|*
+name|env
+init|=
+operator|&
+name|env_array
+index|[
+literal|0
+index|]
 decl_stmt|;
 end_decl_stmt
 

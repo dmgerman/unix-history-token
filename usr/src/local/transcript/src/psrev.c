@@ -127,10 +127,6 @@ begin_comment
 comment|/* Maximum number of intervals in a page range spec */
 end_comment
 
-begin_macro
-name|private
-end_macro
-
 begin_struct
 struct|struct
 name|Range
@@ -148,10 +144,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_macro
-name|private
-end_macro
 
 begin_struct
 struct|struct
@@ -193,10 +185,6 @@ comment|/* entry in the "-s" parameter */
 block|}
 struct|;
 end_struct
-
-begin_macro
-name|private
-end_macro
 
 begin_struct
 struct|struct

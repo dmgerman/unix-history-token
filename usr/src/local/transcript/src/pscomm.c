@@ -529,9 +529,8 @@ name|private
 name|int
 name|flg
 init|=
-name|FREAD
-operator||
-name|FWRITE
+literal|3
+comment|/*FREAD|FWRITE*/
 decl_stmt|;
 end_decl_stmt
 
@@ -4186,7 +4185,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|'\%'
+literal|'%'
 condition|)
 block|{
 name|putc
@@ -4243,7 +4242,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|'\]'
+literal|']'
 condition|)
 name|st
 operator|=
@@ -4273,7 +4272,7 @@ name|close2
 expr_stmt|;
 break|break;
 case|case
-literal|'\]'
+literal|']'
 case|:
 name|st
 operator|=
@@ -4311,7 +4310,7 @@ name|close3
 expr_stmt|;
 break|break;
 case|case
-literal|'\]'
+literal|']'
 case|:
 name|st
 operator|=
@@ -4349,7 +4348,7 @@ name|close4
 expr_stmt|;
 break|break;
 case|case
-literal|'\]'
+literal|']'
 case|:
 name|st
 operator|=
@@ -4387,7 +4386,7 @@ name|normal
 expr_stmt|;
 break|break;
 case|case
-literal|'\]'
+literal|']'
 case|:
 name|st
 operator|=

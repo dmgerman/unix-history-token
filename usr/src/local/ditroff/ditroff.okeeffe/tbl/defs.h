@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	1.3 (CWI) 86/11/13	*/
+comment|/*	@(#)defs.h	1.4 (Berkeley) %G%	*/
 end_comment
 
 begin_define
@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|MAXLIN
-value|200
+value|1024
 end_define
 
 begin_comment
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|MAXCOL
-value|30
+value|64
 end_define
 
 begin_comment
@@ -53,28 +53,28 @@ begin_define
 define|#
 directive|define
 name|MAXHEAD
-value|44
+value|64
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXCHS
-value|2000
+value|8192
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXRPT
-value|100
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|CLLEN
-value|10
+value|128
 end_define
 
 begin_define
@@ -228,14 +228,14 @@ begin_define
 define|#
 directive|define
 name|MACROS
-value|"/usr/lib/tmac.s"
+value|"/usr/share/tmac/tmac.s"
 end_define
 
 begin_define
 define|#
 directive|define
 name|PYMACS
-value|"/usr/lib/tmac.m"
+value|"/usr/share/tmac/tmac.m"
 end_define
 
 begin_comment

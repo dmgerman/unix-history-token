@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * @(#)tdef.h	2.3 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/* starting values for typesetting parameters: */
 end_comment
 
@@ -168,13 +172,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PTID
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|LG
 value|0
 end_define
@@ -323,13 +320,6 @@ define|#
 directive|define
 name|ASCII
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTID
-value|1
 end_define
 
 begin_define
@@ -849,7 +839,7 @@ begin_define
 define|#
 directive|define
 name|NFONT
-value|10
+value|128
 end_define
 
 begin_comment
@@ -937,7 +927,7 @@ begin_define
 define|#
 directive|define
 name|DSIZE
-value|512
+value|2048
 end_define
 
 begin_comment
@@ -959,7 +949,7 @@ begin_define
 define|#
 directive|define
 name|DELTA
-value|1024
+value|8192
 end_define
 
 begin_comment
@@ -1101,19 +1091,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OBUFSZ
-value|4096
-end_define
-
-begin_comment
-comment|/* bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IBUFSZ
-value|4096
+value|8192
 end_define
 
 begin_comment
@@ -1521,7 +1500,7 @@ name|oput
 parameter_list|(
 name|c
 parameter_list|)
-value|if ((*obufp++ = (c)), obufp>=&obuf[OBUFSZ]) flusho(); else
+value|putc(c, ptid)
 end_define
 
 begin_comment
@@ -1849,19 +1828,7 @@ name|c_dagger
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|stderr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* this is NOT the stdio value! */
-end_comment
-
 begin_struct
-specifier|extern
 struct|struct
 name|d
 block|{
@@ -1907,7 +1874,6 @@ struct|;
 end_struct
 
 begin_struct
-specifier|extern
 struct|struct
 name|s
 block|{
@@ -2122,518 +2088,518 @@ begin_define
 define|#
 directive|define
 name|ics
-value|env._ics
+value|(env->_ics)
 end_define
 
 begin_define
 define|#
 directive|define
 name|sps
-value|env._sps
+value|(env->_sps)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spacesz
-value|env._spacesz
+value|(env->_spacesz)
 end_define
 
 begin_define
 define|#
 directive|define
 name|lss
-value|env._lss
+value|(env->_lss)
 end_define
 
 begin_define
 define|#
 directive|define
 name|lss1
-value|env._lss1
+value|(env->_lss1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ll
-value|env._ll
+value|(env->_ll)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ll1
-value|env._ll1
+value|(env->_ll1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|lt
-value|env._lt
+value|(env->_lt)
 end_define
 
 begin_define
 define|#
 directive|define
 name|lt1
-value|env._lt1
+value|(env->_lt1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ic
-value|env._ic
+value|(env->_ic)
 end_define
 
 begin_define
 define|#
 directive|define
 name|icf
-value|env._icf
+value|(env->_icf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|chbits
-value|env._chbits
+value|(env->_chbits)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spbits
-value|env._spbits
+value|(env->_spbits)
 end_define
 
 begin_define
 define|#
 directive|define
 name|nmbits
-value|env._nmbits
+value|(env->_nmbits)
 end_define
 
 begin_define
 define|#
 directive|define
 name|apts
-value|env._apts
+value|(env->_apts)
 end_define
 
 begin_define
 define|#
 directive|define
 name|apts1
-value|env._apts1
+value|(env->_apts1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|pts
-value|env._pts
+value|(env->_pts)
 end_define
 
 begin_define
 define|#
 directive|define
 name|pts1
-value|env._pts1
+value|(env->_pts1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|font
-value|env._font
+value|(env->_font)
 end_define
 
 begin_define
 define|#
 directive|define
 name|font1
-value|env._font1
+value|(env->_font1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ls
-value|env._ls
+value|(env->_ls)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ls1
-value|env._ls1
+value|(env->_ls1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ad
-value|env._ad
+value|(env->_ad)
 end_define
 
 begin_define
 define|#
 directive|define
 name|nms
-value|env._nms
+value|(env->_nms)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ndf
-value|env._ndf
+value|(env->_ndf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fi
-value|env._fi
+value|(env->_fi)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cc
-value|env._cc
+value|(env->_cc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|c2
-value|env._c2
+value|(env->_c2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ohc
-value|env._ohc
+value|(env->_ohc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|tdelim
-value|env._tdelim
+value|(env->_tdelim)
 end_define
 
 begin_define
 define|#
 directive|define
 name|hyf
-value|env._hyf
+value|(env->_hyf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|hyoff
-value|env._hyoff
+value|(env->_hyoff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|hyalg
-value|env._hyalg
+value|(env->_hyalg)
 end_define
 
 begin_define
 define|#
 directive|define
 name|hyalg1
-value|env._hyalg1
+value|(env->_hyalg1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|thresh
-value|env._thresh
+value|(env->_thresh)
 end_define
 
 begin_define
 define|#
 directive|define
 name|un1
-value|env._un1
+value|(env->_un1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|tabc
-value|env._tabc
+value|(env->_tabc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|dotc
-value|env._dotc
+value|(env->_dotc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|adsp
-value|env._adsp
+value|(env->_adsp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|adrem
-value|env._adrem
+value|(env->_adrem)
 end_define
 
 begin_define
 define|#
 directive|define
 name|lastl
-value|env._lastl
+value|(env->_lastl)
 end_define
 
 begin_define
 define|#
 directive|define
 name|nel
-value|env._nel
+value|(env->_nel)
 end_define
 
 begin_define
 define|#
 directive|define
 name|admod
-value|env._admod
+value|(env->_admod)
 end_define
 
 begin_define
 define|#
 directive|define
 name|wordp
-value|env._wordp
+value|(env->_wordp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spflg
-value|env._spflg
+value|(env->_spflg)
 end_define
 
 begin_define
 define|#
 directive|define
 name|linep
-value|env._linep
+value|(env->_linep)
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdend
-value|env._wdend
+value|(env->_wdend)
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdstart
-value|env._wdstart
+value|(env->_wdstart)
 end_define
 
 begin_define
 define|#
 directive|define
 name|wne
-value|env._wne
+value|(env->_wne)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ne
-value|env._ne
+value|(env->_ne)
 end_define
 
 begin_define
 define|#
 directive|define
 name|nc
-value|env._nc
+value|(env->_nc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|nb
-value|env._nb
+value|(env->_nb)
 end_define
 
 begin_define
 define|#
 directive|define
 name|lnmod
-value|env._lnmod
+value|(env->_lnmod)
 end_define
 
 begin_define
 define|#
 directive|define
 name|nwd
-value|env._nwd
+value|(env->_nwd)
 end_define
 
 begin_define
 define|#
 directive|define
 name|nn
-value|env._nn
+value|(env->_nn)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ni
-value|env._ni
+value|(env->_ni)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ul
-value|env._ul
+value|(env->_ul)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cu
-value|env._cu
+value|(env->_cu)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ce
-value|env._ce
+value|(env->_ce)
 end_define
 
 begin_define
 define|#
 directive|define
 name|in
-value|env._in
+value|(env->_in)
 end_define
 
 begin_define
 define|#
 directive|define
 name|in1
-value|env._in1
+value|(env->_in1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|un
-value|env._un
+value|(env->_un)
 end_define
 
 begin_define
 define|#
 directive|define
 name|wch
-value|env._wch
+value|(env->_wch)
 end_define
 
 begin_define
 define|#
 directive|define
 name|pendt
-value|env._pendt
+value|(env->_pendt)
 end_define
 
 begin_define
 define|#
 directive|define
 name|pendw
-value|env._pendw
+value|(env->_pendw)
 end_define
 
 begin_define
 define|#
 directive|define
 name|pendnf
-value|env._pendnf
+value|(env->_pendnf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spread
-value|env._spread
+value|(env->_spread)
 end_define
 
 begin_define
 define|#
 directive|define
 name|it
-value|env._it
+value|(env->_it)
 end_define
 
 begin_define
 define|#
 directive|define
 name|itmac
-value|env._itmac
+value|(env->_itmac)
 end_define
 
 begin_define
 define|#
 directive|define
 name|lnsize
-value|env._lnsize
+value|(env->_lnsize)
 end_define
 
 begin_define
 define|#
 directive|define
 name|hyptr
-value|env._hyptr
+value|(env->_hyptr)
 end_define
 
 begin_define
 define|#
 directive|define
 name|tabtab
-value|env._tabtab
+value|(env->_tabtab)
 end_define
 
 begin_define
 define|#
 directive|define
 name|line
-value|env._line
+value|(env->_line)
 end_define
 
 begin_define
 define|#
 directive|define
 name|word
-value|env._word
+value|(env->_word)
 end_define
 
 begin_comment
@@ -2641,7 +2607,6 @@ comment|/*  * Note (jaap)  * If this structure changes in ni.c, you should chang
 end_comment
 
 begin_struct
-specifier|extern
 struct|struct
 name|env
 block|{
@@ -2886,9 +2851,26 @@ name|WDSIZE
 index|]
 decl_stmt|;
 block|}
-name|env
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|env
+modifier|*
+name|env
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|env
+name|env_array
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * All changes will come after this comment (jaap)  */
@@ -2973,6 +2955,26 @@ define|#
 directive|define
 name|EXTRAFONT
 value|(3*MAXCHARS * sizeof(char) + dev.nchtab + (128-32) \ 	* sizeof(char) + sizeof(struct Font) + 255 * sizeof(short))
+end_define
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|fdprintf
+value|fprintf
+end_define
+
+begin_define
+define|#
+directive|define
+name|flusho
+parameter_list|()
 end_define
 
 end_unit

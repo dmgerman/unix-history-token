@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)maktab.c	1.3 (CWI) 86/11/13"
+literal|"@(#)maktab.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1586,7 +1586,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".if t .if(\\n(TW+\\n(.o)>\\n(Tw .tm Table at line %d file %s is too wide - \\n(TW units\n"
+literal|".if t .if\\n(TW>\\n(.lu .tm Table at line %d file %s is too wide - \\n(TW units\n"
 argument_list|,
 name|iline
 operator|-

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	1.4 (CWI) 86/11/13"
+literal|"@(#)io.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,7 @@ begin_define
 define|#
 directive|define
 name|BACKMAX
-value|500
+value|2048
 end_define
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rdata.c	1.2 (CWI) 85/10/02"
+literal|"@(#)rdata.c	1.3 (CWI) 93/07/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,15 +99,11 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|savsign
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|cstore

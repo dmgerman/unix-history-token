@@ -5,13 +5,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)t10.c	2.4 (CWI) 89/08/14"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t10.c	2.4 (CWI) 89/08/14"
+literal|"@(#)t10.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,12 +181,6 @@ name|nchtab
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|0
-end_ifndef
-
 begin_decl_stmt
 name|int
 name|nstips
@@ -195,11 +193,6 @@ modifier|*
 name|stiplab
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* these characters are used as various signals or values /* in miscellaneous places. /* values are set in specnames in t10.c */
@@ -343,10 +336,6 @@ name|nw
 decl_stmt|;
 name|char
 modifier|*
-name|setbrk
-argument_list|()
-decl_stmt|,
-modifier|*
 name|filebase
 decl_stmt|,
 modifier|*
@@ -464,23 +453,19 @@ name|dev
 operator|.
 name|nchtab
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|0
 name|nstips
 operator|=
 name|dev
 operator|.
 name|spare1
 expr_stmt|;
-comment|/* "unsigned" so very large files will work properly */
 name|stiplab
 operator|=
 operator|(
 name|tchar
 operator|*
 operator|)
-name|setbrk
+name|malloc
 argument_list|(
 operator|(
 name|nstips
@@ -494,11 +479,9 @@ name|tchar
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|filebase
 operator|=
-name|setbrk
+name|malloc
 argument_list|(
 name|dev
 operator|.
@@ -509,7 +492,6 @@ operator|*
 name|EXTRAFONT
 argument_list|)
 expr_stmt|;
-comment|/* enough room for whole file */
 name|read
 argument_list|(
 name|fin
@@ -705,36 +687,7 @@ literal|128
 operator|-
 literal|32
 expr_stmt|;
-comment|/* 		 * jaap 		 * 		 * skip also fcode, if there 		 * See remarks in dev.h and makedev.c 		 */
-ifdef|#
-directive|ifdef
-name|0
-if|if
-condition|(
-name|fontbase
-index|[
-name|i
-index|]
-operator|->
-name|fonttab
-operator|==
-literal|1
-condition|)
-name|p
-operator|+=
-name|nw
-operator|*
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
-ifndef|#
-directive|ifndef
-name|0
 for|for
 control|(
 name|i
@@ -778,8 +731,6 @@ operator|)
 condition|)
 empty_stmt|;
 block|}
-endif|#
-directive|endif
 name|fontbase
 index|[
 literal|0
@@ -924,7 +875,153 @@ literal|"x init\n"
 argument_list|)
 expr_stmt|;
 comment|/* do initialization for particular device */
-comment|/* 	for (i = 1; i<= nfonts; i++) 		fdprintf(ptid, "x font %d %s\n", i, fontbase[i]->namefont); 	fdprintf(ptid, "x xxx fonts=%d sizes=%d unit=%d\n", nfonts, nsizes, Unitwidth); 	fdprintf(ptid, "x xxx nchtab=%d lchname=%d nfitab=%d\n", 		dev.nchtab, dev.lchname, dev.nchtab+128-32); 	fdprintf(ptid, "x xxx sizes:\nx xxx "); 	for (i = 0; i< nsizes; i++) 		fdprintf(ptid, " %d", pstab[i]); 	fdprintf(ptid, "\nx xxx chars:\nx xxx "); 	for (i = 0; i< dev.nchtab; i++) 		fdprintf(ptid, " %s",&chname[chtab[i]]); 	fdprintf(ptid, "\nx xxx\n");   */
+ifdef|#
+directive|ifdef
+name|notdef
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<=
+name|nfonts
+condition|;
+name|i
+operator|++
+control|)
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"x font %d %s\n"
+argument_list|,
+name|i
+argument_list|,
+name|fontbase
+index|[
+name|i
+index|]
+operator|->
+name|namefont
+argument_list|)
+expr_stmt|;
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"x xxx fonts=%d sizes=%d unit=%d\n"
+argument_list|,
+name|nfonts
+argument_list|,
+name|nsizes
+argument_list|,
+name|Unitwidth
+argument_list|)
+expr_stmt|;
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"x xxx nchtab=%d lchname=%d nfitab=%d\n"
+argument_list|,
+name|dev
+operator|.
+name|nchtab
+argument_list|,
+name|dev
+operator|.
+name|lchname
+argument_list|,
+name|dev
+operator|.
+name|nchtab
+operator|+
+literal|128
+operator|-
+literal|32
+argument_list|)
+expr_stmt|;
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"x xxx sizes:\nx xxx "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nsizes
+condition|;
+name|i
+operator|++
+control|)
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|" %d"
+argument_list|,
+name|pstab
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"\nx xxx chars:\nx xxx "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|dev
+operator|.
+name|nchtab
+condition|;
+name|i
+operator|++
+control|)
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|" %s"
+argument_list|,
+operator|&
+name|chname
+index|[
+name|chtab
+index|[
+name|i
+index|]
+index|]
+argument_list|)
+expr_stmt|;
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"\nx xxx\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

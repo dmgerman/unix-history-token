@@ -71,14 +71,6 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|obufp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
 name|unlkp
 decl_stmt|;
 end_decl_stmt
@@ -143,17 +135,6 @@ specifier|extern
 name|char
 name|nextf
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|obuf
-index|[]
-decl_stmt|,
-modifier|*
-name|obufp
 decl_stmt|;
 end_decl_stmt
 
@@ -765,7 +746,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|FILE
+modifier|*
 name|ptid
 decl_stmt|;
 end_decl_stmt
@@ -1103,6 +1085,15 @@ modifier|*
 name|dip
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 
