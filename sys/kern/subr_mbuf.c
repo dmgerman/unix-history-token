@@ -99,6 +99,18 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_map.h>
+end_include
+
 begin_comment
 comment|/*  * Maximum number of PCPU containers. If you know what you're doing you could  * explicitly define MBALLOC_NCPU to be exactly the number of CPUs on your  * system during compilation, and thus prevent kernel structure bloat.  *  * SMP and non-SMP kernels clearly have a different number of possible CPUs,  * but because we cannot assume a dense array of CPUs, we always allocate  * and traverse PCPU containers up to NCPU amount and merely check for  * CPU availability.  */
 end_comment
@@ -1173,6 +1185,14 @@ argument_list|)
 expr_stmt|;
 name|mb_list_mbuf
 operator|.
+name|ml_map
+operator|->
+name|system_map
+operator|=
+literal|1
+expr_stmt|;
+name|mb_list_mbuf
+operator|.
 name|ml_mapfull
 operator|=
 literal|0
@@ -1274,6 +1294,14 @@ argument_list|)
 expr_stmt|;
 name|mb_list_clust
 operator|.
+name|ml_map
+operator|->
+name|system_map
+operator|=
+literal|1
+expr_stmt|;
+name|mb_list_clust
+operator|.
 name|ml_mapfull
 operator|=
 literal|0
@@ -1291,7 +1319,6 @@ operator|=
 operator|&
 name|clust_limit
 expr_stmt|;
-comment|/* XXX XXX XXX: mbuf_map->system_map = clust_map->system_map = 1. */
 comment|/* 	 * Allocate required general (global) containers for each object type. 	 */
 name|mb_list_mbuf
 operator|.
