@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.10	81/12/21	*/
+comment|/*	ioctl.h	4.11	82/01/13	*/
 end_comment
 
 begin_comment
@@ -644,6 +644,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCNOTTY
+value|(('t'<<8)|113)
+end_define
+
+begin_comment
+comment|/* get rid of tty association */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OTTYDISC
 value|0
 end_define
@@ -706,12 +717,70 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FIONBIO
+value|(('f'<<8)|126)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIOASYNC
+value|(('f'<<8)|125)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIOCDONE
 value|(('s'<<8)|0)
 end_define
 
 begin_comment
 comment|/* shutdown read/write on socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSKEEP
+value|(('s'<<8)|1)
+end_define
+
+begin_comment
+comment|/* set keep alive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGKEEP
+value|(('s'<<8)|2)
+end_define
+
+begin_comment
+comment|/* inspect keep alive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSLINGER
+value|(('s'<<8)|3)
+end_define
+
+begin_comment
+comment|/* set linger time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGLINGER
+value|(('s'<<8)|4)
+end_define
+
+begin_comment
+comment|/* get linger time */
 end_comment
 
 begin_endif
