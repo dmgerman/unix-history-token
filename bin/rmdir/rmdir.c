@@ -97,6 +97,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|int
 name|rm_path
 parameter_list|(
@@ -107,6 +108,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -114,6 +116,20 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vflag
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -133,13 +149,6 @@ name|ch
 decl_stmt|,
 name|errors
 decl_stmt|;
-name|int
-name|pflag
-decl_stmt|;
-name|pflag
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -151,7 +160,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p"
+literal|"pv"
 argument_list|)
 operator|)
 operator|!=
@@ -167,6 +176,14 @@ case|case
 literal|'p'
 case|:
 name|pflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
 operator|=
 literal|1
 expr_stmt|;
@@ -211,6 +228,22 @@ control|)
 block|{
 if|if
 condition|(
+name|pflag
+condition|)
+block|{
+name|errors
+operator||=
+name|rm_path
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|rmdir
 argument_list|(
 operator|*
@@ -233,19 +266,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
-name|pflag
+name|vflag
 condition|)
-name|errors
-operator||=
-name|rm_path
+name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|exit
 argument_list|(
@@ -256,6 +289,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rm_path
 parameter_list|(
@@ -355,6 +389,17 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|vflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -365,6 +410,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
