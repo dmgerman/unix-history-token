@@ -263,11 +263,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+continue|continue;
 name|di
 operator|->
 name|bas
