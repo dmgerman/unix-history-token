@@ -6,20 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"joy.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NJOY
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -33,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -1376,15 +1356,6 @@ end_endif
 
 begin_comment
 comment|/* JOY_MODULE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NJOY> 0 */
 end_comment
 
 end_unit
