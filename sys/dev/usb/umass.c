@@ -10196,11 +10196,9 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|sc
+name|csio
 operator|->
-name|cam_scsi_sense
-operator|.
-name|length
+name|sense_len
 operator|)
 argument_list|)
 expr_stmt|;
