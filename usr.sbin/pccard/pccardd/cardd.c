@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.30 1998/03/09 05:18:50 hosokawa Exp $"
+literal|"$Id: cardd.c,v 1.31 1998/04/20 15:24:28 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,6 +594,7 @@ case|:
 case|case
 name|noslot
 case|:
+comment|/* Debounce potentially incorrectly reported removals */
 if|if
 condition|(
 name|state
@@ -601,19 +602,7 @@ operator|.
 name|laststate
 operator|==
 name|filled
-condition|)
-name|card_removed
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|filled
-case|:
-comment|/* 		 * If the previous state was suspend, fake a removal to get 		 * our state in sync with the kernel. This happens when the 		 * system resumes, since we can only reliably process 		 * the state change after we resume. 		 */
-if|if
-condition|(
+operator|||
 name|state
 operator|.
 name|laststate
@@ -625,6 +614,10 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|filled
+case|:
 name|card_inserted
 argument_list|(
 name|sp
