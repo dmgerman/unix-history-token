@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.9 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -650,6 +650,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|flags
+init|=
+name|ifr
+operator|.
+name|ifr_flags
+decl_stmt|;
 name|getaddr
 argument_list|(
 name|addr
@@ -702,6 +709,12 @@ name|Perror
 argument_list|(
 literal|"ioctl (SIOCSIFDSTADDR)"
 argument_list|)
+expr_stmt|;
+name|ifr
+operator|.
+name|ifr_flags
+operator|=
+name|flags
 expr_stmt|;
 block|}
 end_block
