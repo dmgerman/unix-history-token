@@ -129,6 +129,17 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|INTR_TYPE_AV
+value|INTR_TYPE_TTY
+end_define
+
+begin_comment
+comment|/* for source compatability with 5.x */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|int
