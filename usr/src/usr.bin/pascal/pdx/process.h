@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)process.h 1.4 %G%"; */
+comment|/* static char sccsid[] = "@(#)process.h 1.5 %G%"; */
 end_comment
 
 begin_comment
@@ -164,6 +164,16 @@ end_expr_stmt
 
 begin_comment
 comment|/* print current error */
+end_comment
+
+begin_expr_stmt
+name|printwhere
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* print current source line and file */
 end_comment
 
 begin_function_decl
