@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signal.h>
 end_include
 
@@ -26,7 +38,7 @@ comment|/*  * Kernel signal definitions and data structures,  * not exported to 
 end_comment
 
 begin_comment
-comment|/*  * Process signal actions and state, needed only within the process  * (not necessarily resident).  */
+comment|/*  * Logical process signal actions and state, needed only within the process  * The mapping between sigacts and proc structures is 1:1 except for rfork()  * processes masquerading as threads which use one structure for the whole  * group.  All members are locked by the included mutex.  The reference count  * and mutex must be last for the bcopy in sigacts_copy() to work.  */
 end_comment
 
 begin_struct
@@ -68,9 +80,17 @@ name|ps_siginfo
 decl_stmt|;
 comment|/* Signals that want SA_SIGINFO args. */
 name|sigset_t
+name|ps_sigignore
+decl_stmt|;
+comment|/* Signals being ignored. */
+name|sigset_t
+name|ps_sigcatch
+decl_stmt|;
+comment|/* Signals being caught by user. */
+name|sigset_t
 name|ps_freebsd4
 decl_stmt|;
-comment|/* Signals using freebsd4 ucontext. */
+comment|/* signals using freebsd4 ucontext. */
 name|sigset_t
 name|ps_osigset
 decl_stmt|;
@@ -78,10 +98,53 @@ comment|/* Signals using<= 3.x osigset_t. */
 name|sigset_t
 name|ps_usertramp
 decl_stmt|;
-comment|/* SunOS compat; libc sigtramp XXX. */
+comment|/* SunOS compat; libc sigtramp. XXX */
+name|int
+name|ps_flag
+decl_stmt|;
+name|int
+name|ps_refcnt
+decl_stmt|;
+name|struct
+name|mtx
+name|ps_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PS_NOCLDWAIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* No zombies if child dies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_NOCLDSTOP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* No SIGCHLD when children stop. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_CLDSIGIGN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* The SIGCHLD handler is SIG_IGN. */
+end_comment
 
 begin_if
 if|#
@@ -875,6 +938,72 @@ name|p
 parameter_list|,
 name|int
 name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sigacts
+modifier|*
+name|sigacts_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sigacts_copy
+parameter_list|(
+name|struct
+name|sigacts
+modifier|*
+name|dest
+parameter_list|,
+name|struct
+name|sigacts
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sigacts_free
+parameter_list|(
+name|struct
+name|sigacts
+modifier|*
+name|ps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sigacts
+modifier|*
+name|sigacts_hold
+parameter_list|(
+name|struct
+name|sigacts
+modifier|*
+name|ps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sigacts_shared
+parameter_list|(
+name|struct
+name|sigacts
+modifier|*
+name|ps
 parameter_list|)
 function_decl|;
 end_function_decl

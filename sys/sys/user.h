@@ -725,11 +725,6 @@ struct|struct
 name|user
 block|{
 name|struct
-name|sigacts
-name|u_sigacts
-decl_stmt|;
-comment|/* *p_sigacts */
-name|struct
 name|pstats
 name|u_stats
 decl_stmt|;

@@ -4325,7 +4325,9 @@ name|SIGISMEMBER
 argument_list|(
 name|p
 operator|->
-name|p_sigignore
+name|p_sigacts
+operator|->
+name|ps_sigignore
 argument_list|,
 name|SIGTTOU
 argument_list|)
@@ -9885,7 +9887,9 @@ name|SIGISMEMBER
 argument_list|(
 name|p
 operator|->
-name|p_sigignore
+name|p_sigacts
+operator|->
+name|ps_sigignore
 argument_list|,
 name|SIGTTOU
 argument_list|)

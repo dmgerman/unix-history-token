@@ -277,14 +277,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|procsig
-name|procsig0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
 name|filedesc0
 name|filedesc0
 decl_stmt|;
@@ -1505,21 +1497,13 @@ operator|->
 name|p_ucred
 argument_list|)
 expr_stmt|;
-comment|/* Create procsig. */
+comment|/* Create sigacts. */
 name|p
 operator|->
-name|p_procsig
+name|p_sigacts
 operator|=
-operator|&
-name|procsig0
-expr_stmt|;
-name|p
-operator|->
-name|p_procsig
-operator|->
-name|ps_refcnt
-operator|=
-literal|1
+name|sigacts_alloc
+argument_list|()
 expr_stmt|;
 comment|/* Initialize signal state for process 0. */
 name|siginit
@@ -1810,7 +1794,7 @@ operator|&
 name|vmspace0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We continue to place resource usage info and signal 	 * actions in the user struct so they're pageable. 	 */
+comment|/* 	 * We continue to place resource usage info 	 * in the user struct so that it's pageable. 	 */
 name|p
 operator|->
 name|p_stats
@@ -1821,17 +1805,6 @@ operator|->
 name|p_uarea
 operator|->
 name|u_stats
-expr_stmt|;
-name|p
-operator|->
-name|p_sigacts
-operator|=
-operator|&
-name|p
-operator|->
-name|p_uarea
-operator|->
-name|u_sigacts
 expr_stmt|;
 comment|/* 	 * Charge root for one process. 	 */
 operator|(

@@ -273,67 +273,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|procsig
-block|{
-name|sigset_t
-name|ps_sigignore
-decl_stmt|;
-comment|/* Signals being ignored. */
-name|sigset_t
-name|ps_sigcatch
-decl_stmt|;
-comment|/* Signals being caught by user. */
-name|int
-name|ps_flag
-decl_stmt|;
-name|struct
-name|sigacts
-modifier|*
-name|ps_sigacts
-decl_stmt|;
-comment|/* Signal actions, state. */
-name|int
-name|ps_refcnt
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|PS_NOCLDWAIT
-value|0x0001
-end_define
-
-begin_comment
-comment|/* No zombies if child dies */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_NOCLDSTOP
-value|0x0002
-end_define
-
-begin_comment
-comment|/* No SIGCHLD when children stop. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_CLDSIGIGN
-value|0x0004
-end_define
-
-begin_comment
-comment|/* The SIGCHLD handler is SIG_IGN. */
-end_comment
-
 begin_comment
 comment|/*  * pargs, used to hold a copy of the command line, if it had a sane length.  */
 end_comment
@@ -362,7 +301,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      r - p_peers lock  *      z - zombie threads/kse/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads/kse/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -1778,11 +1717,11 @@ name|p_upages_obj
 decl_stmt|;
 comment|/* (a) Upages object. */
 name|struct
-name|procsig
+name|sigacts
 modifier|*
-name|p_procsig
+name|p_sigacts
 decl_stmt|;
-comment|/* (c) Signal actions, state (CPU). */
+comment|/* (x) Signal actions, state (CPU). */
 comment|/*struct ksegrp	p_ksegrp; 	struct kse	p_kse; */
 comment|/* 	 * The following don't make too much sense.. 	 * See the td_ or ke_ versions of the same flags 	 */
 name|int
@@ -2131,27 +2070,6 @@ define|#
 directive|define
 name|p_rlimit
 value|p_limit->pl_rlimit
-end_define
-
-begin_define
-define|#
-directive|define
-name|p_sigacts
-value|p_procsig->ps_sigacts
-end_define
-
-begin_define
-define|#
-directive|define
-name|p_sigignore
-value|p_procsig->ps_sigignore
-end_define
-
-begin_define
-define|#
-directive|define
-name|p_sigcatch
-value|p_procsig->ps_sigcatch
 end_define
 
 begin_define
