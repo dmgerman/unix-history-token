@@ -7882,6 +7882,11 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_walktree
@@ -7895,6 +7900,11 @@ name|void
 operator|*
 operator|)
 name|gateway
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
 argument_list|)
 expr_stmt|;
 name|splx

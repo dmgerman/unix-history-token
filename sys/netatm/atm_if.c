@@ -2695,6 +2695,11 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2707,6 +2712,11 @@ argument_list|,
 name|atm_netif_rtdel
 argument_list|,
 name|ifp
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
 argument_list|)
 expr_stmt|;
 block|}

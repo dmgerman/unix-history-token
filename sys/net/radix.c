@@ -5292,6 +5292,11 @@ name|rnh
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK_INIT
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 operator|*
 name|head
 operator|=

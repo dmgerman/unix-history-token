@@ -1775,6 +1775,15 @@ argument_list|(
 literal|"Routing table:\n"
 argument_list|)
 expr_stmt|;
+name|RADIX_NODE_LOCK
+argument_list|(
+name|rt_tables
+index|[
+name|AF_INET
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* could sleep XXX */
 name|bootpboot_p_tree
 argument_list|(
 name|rt_tables
@@ -1783,6 +1792,14 @@ name|AF_INET
 index|]
 operator|->
 name|rnh_treetop
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_UNLOCK
+argument_list|(
+name|rt_tables
+index|[
+name|AF_INET
+index|]
 argument_list|)
 expr_stmt|;
 block|}

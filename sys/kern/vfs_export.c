@@ -580,7 +580,7 @@ name|i
 index|]
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Seems silly to initialize every AF when most are not used, 		 * do so on demand here 		 */
@@ -648,7 +648,7 @@ name|i
 index|]
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -660,6 +660,11 @@ name|out
 goto|;
 block|}
 block|}
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|rn
 operator|=
 call|(
@@ -680,11 +685,16 @@ operator|->
 name|netc_rnodes
 argument_list|)
 expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rn
 operator|==
-literal|0
+name|NULL
 operator|||
 name|np
 operator|!=
@@ -933,6 +943,11 @@ index|]
 operator|)
 condition|)
 block|{
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|rnh
@@ -944,6 +959,11 @@ name|rnh
 argument_list|,
 name|vfs_free_netcred
 argument_list|,
+name|rnh
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_DESTROY
+argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
@@ -961,8 +981,9 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
+comment|/* not SMP safe XXX */
 block|}
 block|}
 end_function
@@ -1619,6 +1640,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|np
 operator|=
 operator|(
@@ -1635,6 +1661,11 @@ call|)
 argument_list|(
 name|saddr
 argument_list|,
+name|rnh
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;

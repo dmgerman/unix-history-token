@@ -1252,6 +1252,11 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_walktree
@@ -1262,6 +1267,11 @@ name|in6_rtqkill
 argument_list|,
 operator|&
 name|arg
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1356,6 +1366,11 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_walktree
@@ -1366,6 +1381,11 @@ name|in6_rtqkill
 argument_list|,
 operator|&
 name|arg
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1586,6 +1606,11 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_walktree
@@ -1596,6 +1621,11 @@ name|in6_mtuexpire
 argument_list|,
 operator|&
 name|arg
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1664,7 +1694,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void in6_rtqdrain() { 	struct radix_node_head *rnh = rt_tables[AF_INET6]; 	struct rtqk_arg arg; 	int s; 	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	s = splnet(); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	splx(s); }
+unit|void in6_rtqdrain() { 	struct radix_node_head *rnh = rt_tables[AF_INET6]; 	struct rtqk_arg arg; 	int s; 	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	s = splnet(); 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); 	splx(s); }
 endif|#
 directive|endif
 end_endif

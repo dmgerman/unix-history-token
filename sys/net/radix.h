@@ -15,6 +15,18 @@ directive|define
 name|_RADIX_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -539,6 +551,10 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* empty tree for common case */
+name|struct
+name|mtx
+name|rnh_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -680,6 +696,47 @@ parameter_list|(
 name|p
 parameter_list|)
 value|free((caddr_t)p, M_RTABLE);
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_LOCK_INIT
+parameter_list|(
+name|rnh
+parameter_list|)
+define|\
+value|mtx_init(&(rnh)->rnh_mtx, "radix node head", NULL, MTX_DEF | MTX_RECURSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_LOCK
+parameter_list|(
+name|rnh
+parameter_list|)
+value|mtx_lock(&(rnh)->rnh_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_UNLOCK
+parameter_list|(
+name|rnh
+parameter_list|)
+value|mtx_unlock(&(rnh)->rnh_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_DESTROY
+parameter_list|(
+name|rnh
+parameter_list|)
+value|mtx_destroy(&(rnh)->rnh_mtx)
 end_define
 
 begin_endif

@@ -451,7 +451,26 @@ comment|/* 	 * Look up the address in the table for that Address Family 	 */
 if|if
 condition|(
 name|rnh
-operator|&&
+operator|==
+name|NULL
+condition|)
+block|{
+name|rtstat
+operator|.
+name|rts_unreach
+operator|++
+expr_stmt|;
+goto|goto
+name|miss2
+goto|;
+block|}
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|rn
 operator|=
@@ -697,6 +716,11 @@ operator|->
 name|rt_refcnt
 operator|++
 expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -707,6 +731,13 @@ name|rts_unreach
 operator|++
 expr_stmt|;
 name|miss
+label|:
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
+name|miss2
 label|:
 if|if
 condition|(
@@ -782,7 +813,6 @@ name|rt
 decl_stmt|;
 block|{
 comment|/* 	 * find the tree for that address family 	 */
-specifier|register
 name|struct
 name|radix_node_head
 modifier|*
@@ -959,16 +989,20 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* compare two sockaddr structures */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|equal
+name|sa_equal
 parameter_list|(
 name|a1
 parameter_list|,
 name|a2
 parameter_list|)
-value|(bcmp((caddr_t)(a1), (caddr_t)(a2), (a1)->sa_len) == 0)
+value|(bcmp((a1), (a2), (a1)->sa_len) == 0)
 end_define
 
 begin_comment
@@ -1097,7 +1131,7 @@ name|rt
 operator|&&
 operator|(
 operator|!
-name|equal
+name|sa_equal
 argument_list|(
 name|src
 argument_list|,
@@ -2238,6 +2272,11 @@ argument_list|(
 name|EAFNOSUPPORT
 argument_list|)
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we are adding a host route then we don't want to put 	 * a netmask in the tree, nor do we want to clone it. 	 */
 if|if
 condition|(
@@ -3080,6 +3119,11 @@ expr_stmt|;
 block|}
 name|bad
 label|:
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -4156,6 +4200,11 @@ name|rt0
 operator|=
 name|rt
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_walktree_from
@@ -4176,6 +4225,11 @@ name|rt_fixchange
 argument_list|,
 operator|&
 name|arg
+argument_list|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
 argument_list|)
 expr_stmt|;
 block|}
@@ -4526,7 +4580,18 @@ index|]
 operator|)
 operator|==
 name|NULL
-operator|||
+condition|)
+goto|goto
+name|bad
+goto|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+operator|(
 operator|(
 name|rn
 operator|=
@@ -4566,7 +4631,7 @@ operator|!=
 name|ifa
 operator|||
 operator|!
-name|equal
+name|sa_equal
 argument_list|(
 name|SA
 argument_list|(
@@ -4577,8 +4642,20 @@ argument_list|)
 argument_list|,
 name|dst
 argument_list|)
+operator|)
+expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
+name|bad
+label|:
 if|if
 condition|(
 name|m
