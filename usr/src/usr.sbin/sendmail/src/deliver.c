@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.6 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1038,19 +1038,13 @@ expr_stmt|;
 if|if
 condition|(
 name|rcode
-operator|<=
-literal|0
+operator|!=
+name|EX_OK
 condition|)
 block|{
 name|giveresponse
 argument_list|(
 name|rcode
-operator|==
-literal|0
-condition|?
-name|EX_UNAVAILABLE
-else|:
-name|EX_TEMPFAIL
 argument_list|,
 name|m
 argument_list|,

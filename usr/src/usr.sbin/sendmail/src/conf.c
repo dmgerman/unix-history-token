@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.7 (Berkeley) %G%"
+literal|"@(#)conf.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1390,7 +1390,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and 0 should **	be returned. ** **	'NoReturn' can be set to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		+1 -- ok to send. **		0 -- not ok. **		-1 -- return TEMPFAIL. ** **	Side Effects: **		none (unless you include the usrerr stuff) */
+comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and 0 should **	be returned. ** **	'NoReturn' can be set to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		an exit status ** **	Side Effects: **		none (unless you include the usrerr stuff) */
 end_comment
 
 begin_expr_stmt
@@ -1483,7 +1483,7 @@ expr_stmt|;
 comment|/* NoReturn = TRUE; to supress return copy */
 return|return
 operator|(
-name|FALSE
+name|EX_UNAVAILABLE
 operator|)
 return|;
 block|}
@@ -1492,7 +1492,7 @@ directive|endif
 comment|/* EXAMPLE_CODE */
 return|return
 operator|(
-name|TRUE
+name|EX_OK
 operator|)
 return|;
 block|}
