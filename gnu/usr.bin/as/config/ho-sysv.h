@@ -13,6 +13,12 @@ directive|define
 name|HO_USG
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -26,6 +32,11 @@ name|size
 parameter_list|)
 value|setvbuf((stream), (buf), _IOLBF, (size))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
