@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.13 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.14 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.13 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.14 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,6 +1446,8 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Now run through the search list for the name in question. 	*/
+name|cnameloop
+label|:
 name|dp
 operator|=
 name|searchlist
@@ -1953,9 +1955,10 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return
-name|TRUE
-return|;
+comment|/* 				**  RFC 1034 section 3.6 specifies that CNAME 				**  should point at the canonical name -- but 				**  urges software to try again anyway. 				*/
+goto|goto
+name|cnameloop
+goto|;
 default|default:
 comment|/* not a record of interest */
 continue|continue;
