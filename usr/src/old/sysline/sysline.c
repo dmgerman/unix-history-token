@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.5 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5651,13 +5651,6 @@ argument_list|,
 literal|"\r"
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|from_status_line
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
 name|cp
 operator|=
 name|dis_status_line
@@ -5675,6 +5668,27 @@ literal|"ce"
 argument_list|,
 operator|&
 name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|leftline
+condition|)
+name|strcpy
+argument_list|(
+name|from_status_line
+argument_list|,
+name|dis_status_line
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|strcpy
+argument_list|(
+name|from_status_line
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
