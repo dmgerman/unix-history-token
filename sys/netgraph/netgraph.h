@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|_NG_ABI_VERSION
-value|5
+value|6
 end_define
 
 begin_ifdef
