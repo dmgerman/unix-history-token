@@ -3108,7 +3108,7 @@ operator|->
 name|sc_ioh
 decl_stmt|;
 name|int
-name|s
+name|ss
 decl_stmt|;
 name|int
 name|tout
@@ -3180,7 +3180,7 @@ operator|==
 literal|0xff
 condition|)
 block|{
-name|s
+name|ss
 operator|=
 name|splhigh
 argument_list|()
@@ -3220,7 +3220,7 @@ directive|endif
 block|}
 name|splx
 argument_list|(
-name|s
+name|ss
 argument_list|)
 expr_stmt|;
 return|return
@@ -3243,7 +3243,7 @@ operator|==
 literal|0
 condition|)
 do|;
-name|s
+name|ss
 operator|=
 name|splhigh
 argument_list|()
@@ -3282,7 +3282,7 @@ endif|#
 directive|endif
 name|splx
 argument_list|(
-name|s
+name|ss
 argument_list|)
 expr_stmt|;
 block|}
@@ -3290,7 +3290,7 @@ else|else
 block|{
 name|splx
 argument_list|(
-name|s
+name|ss
 argument_list|)
 expr_stmt|;
 name|printf
