@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.5 (Berkeley) %G%"
+literal|"@(#)map.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1996,12 +1996,33 @@ block|{
 ifdef|#
 directive|ifdef
 name|YPCOMPAT
+name|bool
+name|inclnull
+decl_stmt|;
 name|char
 name|buf
 index|[
 literal|200
 index|]
 decl_stmt|;
+name|inclnull
+operator|=
+name|bitset
+argument_list|(
+name|MF_INCLNULL
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+name|MF_INCLNULL
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2043,6 +2064,16 @@ literal|"YP_MASTER_NAME"
 argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inclnull
+condition|)
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_INCLNULL
 expr_stmt|;
 endif|#
 directive|endif
