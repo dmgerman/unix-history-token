@@ -2139,13 +2139,6 @@ name|meo
 operator|->
 name|me_fwmajor
 expr_stmt|;
-name|free
-argument_list|(
-name|meo
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 comment|/* XXX require 2.42 or better (PCI) or 2.14 or better (EISA) */
 if|if
 condition|(
@@ -2175,6 +2168,13 @@ literal|" *** WARNING *** Use revision 2.42 or later\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|meo
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|MLX_IFTYPE_3
