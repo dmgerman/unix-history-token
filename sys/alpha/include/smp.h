@@ -68,7 +68,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|u_int
+name|u_int64_t
 name|boot_cpu_id
 decl_stmt|;
 end_decl_stmt
