@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.2 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -123,10 +123,23 @@ directive|include
 file|"../vax/tmscp.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXCTLR
+value|1
+end_define
+
+begin_comment
+comment|/* all addresses must be specified */
+end_comment
+
 begin_decl_stmt
 name|u_short
 name|tmscpstd
-index|[]
+index|[
+name|MAXCTLR
+index|]
 init|=
 block|{
 literal|0174500
@@ -256,6 +269,22 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
+name|i_ctlr
+operator|>=
+name|MAXCTLR
+condition|)
+return|return
+operator|(
+name|ECTLR
+operator|)
+return|;
 comment|/* 	 * Have the tmscp controller characteristics already been set up 	 * (STCON)? 	 */
 if|if
 condition|(
@@ -279,7 +308,7 @@ name|ubamem
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|,
 name|tmscpstd
 index|[
@@ -724,43 +753,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * This makes no sense, but I could be wrong... KB 	 * 	 *	if ((u_int)io->i_part> 3) 	 *		return (EPART); 	 */
 if|if
 condition|(
 name|io
 operator|->
-name|i_boff
-operator|<
-literal|0
-operator|||
-name|io
-operator|->
-name|i_boff
-operator|>
-literal|3
+name|i_part
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"tms: bad offset\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EUNIT
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|io
-operator|->
-name|i_boff
-operator|>
-literal|0
-condition|)
 comment|/* 		 * Skip forward the appropriate number of files on the tape. 		 */
-block|{
 name|tmscp
 operator|.
 name|tmscp_cmd
@@ -769,8 +770,11 @@ name|mscp_tmkcnt
 operator|=
 name|io
 operator|->
-name|i_boff
+name|i_part
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tmscpcmd
 argument_list|(
 name|M_OP_REPOS
@@ -814,6 +818,9 @@ end_expr_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|tmscpcmd
 argument_list|(
 name|M_OP_REPOS
@@ -969,8 +976,7 @@ name|ca_cmdint
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * This is to handle the case of devices not setting the 		 * interrupt field in the communications area. Some 		 * devices (early TU81's) only clear the ownership field 		 * in the Response Descriptor. 		 */
-comment|/* 		if (tmscp.tmscp_ca.ca_rspint) 			break; */
+comment|/* 		 * This is to handle the case of devices not setting the 		 * interrupt field in the communications area. Some 		 * devices (early TU81's) only clear the ownership field 		 * in the Response Descriptor. 		 * 		 * 		 *	if (tmscp.tmscp_ca.ca_rspint) 		 *		break; 		 */
 if|if
 condition|(
 operator|!
@@ -1029,7 +1035,7 @@ operator|!=
 name|M_ST_SUCC
 condition|)
 block|{
-comment|/* Detect hitting tape mark.  This signifies the end of the 		 * tape mini-root file.  We don't want to return an error 		 * condition to the strategy routine. 		 */
+comment|/* 		 * Detect hitting tape mark.  This signifies the end of the 		 * tape mini-root file.  We don't want to return an error 		 * condition to the strategy routine. 		 */
 if|if
 condition|(
 operator|(
@@ -1039,14 +1045,9 @@ name|mscp_status
 operator|&
 name|M_ST_MASK
 operator|)
-operator|==
+operator|!=
 name|M_ST_TAPEM
 condition|)
-return|return
-operator|(
-name|mp
-operator|)
-return|;
 return|return
 operator|(
 literal|0
@@ -1234,51 +1235,6 @@ operator|(
 name|io
 operator|->
 name|i_cc
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|tmscpioctl
-argument_list|(
-argument|io
-argument_list|,
-argument|cmd
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|iob
-modifier|*
-name|io
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|caddr_t
-name|arg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|ECMD
 operator|)
 return|;
 block|}
