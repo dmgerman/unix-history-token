@@ -660,7 +660,7 @@ comment|/* total # corrections performed */
 name|u_int32_t
 name|processed
 decl_stmt|;
-comment|/* total # corrections succssful */
+comment|/* total # corrections successful */
 name|u_int32_t
 name|failures
 decl_stmt|;
