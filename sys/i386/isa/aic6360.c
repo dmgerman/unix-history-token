@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.41 1998/06/21 14:53:09 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.42 1998/10/22 05:58:38 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3948,6 +3948,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/cardinfo.h>
 end_include
 
@@ -4002,36 +4008,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|pccard_device
-name|aic_info
-init|=
-block|{
-literal|"aic"
-block|,
-name|aicinit
-block|,
-name|aicunload
-block|,
-name|aic_card_intr
-block|,
-literal|0
-block|,
-comment|/* Attributes - presently unused */
-operator|&
-name|bio_imask
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|DATA_SET
+name|PCCARD_MODULE
 argument_list|(
-name|pccarddrv_set
+name|aic
 argument_list|,
-name|aic_info
+name|aicinit
+argument_list|,
+name|aicunload
+argument_list|,
+name|aic_card_intr
+argument_list|,
+literal|0
+argument_list|,
+name|bio_imask
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.76 1998/06/21 18:02:38 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.77 1998/10/22 05:58:39 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -600,6 +600,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/cardinfo.h>
 end_include
 
@@ -673,36 +679,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|pccard_device
-name|ep_info
-init|=
-block|{
-literal|"ep"
-block|,
-name|ep_pccard_init
-block|,
-name|ep_unload
-block|,
-name|card_intr
-block|,
-literal|0
-block|,
-comment|/* Attributes - presently unused */
-operator|&
-name|net_imask
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|DATA_SET
+name|PCCARD_MODULE
 argument_list|(
-name|pccarddrv_set
+name|ep
 argument_list|,
-name|ep_info
+name|ep_pccard_init
+argument_list|,
+name|ep_unload
+argument_list|,
+name|card_intr
+argument_list|,
+literal|0
+argument_list|,
+name|net_imask
 argument_list|)
 expr_stmt|;
 end_expr_stmt
