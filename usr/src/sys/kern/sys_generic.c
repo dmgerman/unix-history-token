@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.14	82/09/08	*/
+comment|/*	sys_generic.c	5.15	82/10/10	*/
 end_comment
 
 begin_include
@@ -55,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inline.h"
 end_include
 
 begin_include
@@ -872,6 +866,8 @@ operator|)
 literal|0
 operator|,
 name|uio
+operator|,
+literal|0
 operator|)
 expr_stmt|;
 block|}
@@ -904,7 +900,7 @@ operator|==
 name|IFREG
 condition|)
 block|{
-name|ilock
+name|ILOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -922,7 +918,7 @@ argument_list|,
 name|rw
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
