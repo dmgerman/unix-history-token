@@ -1052,7 +1052,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Yes, this is kinda cheating */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -1191,7 +1191,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|SLIST_FIRST
+name|STAILQ_FIRST
 argument_list|(
 name|rl
 argument_list|)
