@@ -156,6 +156,19 @@ name|DEFNICE
 decl_stmt|;
 if|if
 condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"usage: nice [-number] command [arguments]"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|argv
 index|[
 literal|1
