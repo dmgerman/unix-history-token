@@ -309,21 +309,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRINT_AD
-parameter_list|(
-name|adp
-parameter_list|)
-define|\
-value|printf("  ad%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s %s%s\n", \                adp->lun, adp->total_secs / ((1024L * 1024L) / DEV_BSIZE), \ 	       adp->controller->dev_param[ATA_DEV(adp->unit)]->model, \ 	       adp->total_secs / (adp->heads * adp->sectors), \                adp->heads, adp->sectors, device_get_unit(adp->controller->dev),\                (adp->unit == ATA_MASTER) ? "master" : "slave", \                (adp->flags& AD_F_TAG_ENABLED) ? "tagged " : "", \                ata_mode2str(adp->controller->mode[ATA_DEV(adp->unit)]))
-end_define
-
 begin_function
 name|int
 name|ar_probe
@@ -546,7 +531,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|PRINT_AD
+name|ad_print
 argument_list|(
 name|raid
 operator|->
@@ -554,6 +539,8 @@ name|subdisk
 index|[
 name|i
 index|]
+argument_list|,
+literal|"   "
 argument_list|)
 expr_stmt|;
 for|for
@@ -571,7 +558,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|PRINT_AD
+name|ad_print
 argument_list|(
 name|raid
 operator|->
@@ -579,6 +566,8 @@ name|mirrordisk
 index|[
 name|i
 index|]
+argument_list|,
+literal|"   "
 argument_list|)
 expr_stmt|;
 name|dev

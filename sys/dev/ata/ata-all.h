@@ -1199,7 +1199,7 @@ name|ATA_ACTIVE_ATAPI
 value|0x0020
 define|#
 directive|define
-name|ATA_REINITING
+name|ATA_CONTROL
 value|0x0040
 name|TAILQ_HEAD
 argument_list|(
