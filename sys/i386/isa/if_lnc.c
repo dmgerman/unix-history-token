@@ -5205,6 +5205,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* 	 * XXX - is it safe to call isa_dmacascade() after if_attach()  	 *       and ether_ifattach() have been called in lnc_attach() ??? 	 */
 if|if
 condition|(
@@ -5245,6 +5248,8 @@ operator|->
 name|id_drq
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|result
 return|;
