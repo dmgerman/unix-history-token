@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	8.2 (Berkeley) %G%"
+literal|"@(#)setterm.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -566,7 +566,7 @@ name|p
 operator|=
 name|getenv
 argument_list|(
-literal|"ROWS"
+literal|"LINES"
 argument_list|)
 operator|)
 operator|!=
