@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.c,v 1.26 2000/04/27 15:26:50 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.c,v 1.30 2000/10/24 03:59:16 explorer Exp $	*/
 end_comment
 
 begin_comment
@@ -170,6 +170,18 @@ block|}
 block|}
 block|,
 block|{
+name|USB_VENDOR_DALLAS
+block|,
+name|USB_PRODUCT_DALLAS_J6502
+block|,
+literal|0x0a2
+block|,
+block|{
+name|UQ_NO_XU
+block|}
+block|}
+block|,
+block|{
 name|USB_VENDOR_ALTEC
 block|,
 name|USB_PRODUCT_ALTEC_ADA70
@@ -206,6 +218,18 @@ block|}
 block|}
 block|,
 block|{
+name|USB_VENDOR_ALCOR2
+block|,
+name|USB_PRODUCT_ALCOR2_KBD_HUB
+block|,
+literal|0x001
+block|,
+block|{
+name|UQ_SPUR_BUT_UP
+block|}
+block|}
+block|,
+block|{
 name|USB_VENDOR_MCT
 block|,
 name|USB_PRODUCT_MCT_HUB0100
@@ -226,6 +250,20 @@ literal|0x102
 block|,
 block|{
 name|UQ_BUS_POWERED
+block|}
+block|}
+block|,
+block|{
+name|USB_VENDOR_METRICOM
+block|,
+name|USB_PRODUCT_METRICOM_RICOCHET_GS
+block|,
+literal|0x100
+block|,
+block|{
+name|UQ_ASSUME_CM_OVER_DATA
+operator||
+name|UQ_NO_STRINGS
 block|}
 block|}
 block|,
@@ -261,12 +299,10 @@ name|usbd_quirks
 modifier|*
 name|usbd_find_quirk
 parameter_list|(
-name|d
-parameter_list|)
 name|usb_device_descriptor_t
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|usbd_quirk_entry
