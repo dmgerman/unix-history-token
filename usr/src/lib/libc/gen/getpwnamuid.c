@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getpwnamuid.c	4.2	83/12/20	*/
+comment|/*	getpwnamuid.c	4.3	84/01/31	*/
 end_comment
 
 begin_include
@@ -69,13 +69,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|datum
-name|curkey
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|DBM
 modifier|*
 name|db
@@ -101,14 +94,13 @@ specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|tp
 decl_stmt|;
-name|curkey
-operator|=
-name|key
-expr_stmt|;
 if|if
 condition|(
-name|curkey
+name|key
 operator|.
 name|dptr
 operator|==
@@ -130,7 +122,7 @@ name|dbmfetch
 argument_list|(
 name|db
 argument_list|,
-name|curkey
+name|key
 argument_list|)
 expr_stmt|;
 if|if
@@ -157,6 +149,10 @@ name|key
 operator|.
 name|dptr
 expr_stmt|;
+name|tp
+operator|=
+name|line
+expr_stmt|;
 define|#
 directive|define
 name|EXPAND
@@ -165,7 +161,7 @@ name|e
 parameter_list|)
 value|passwd.pw_
 comment|/**/
-value|e = cp; while (*cp++);
+value|e = tp; while (*tp++ = *cp++);
 name|EXPAND
 argument_list|(
 name|name
