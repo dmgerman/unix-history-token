@@ -352,7 +352,7 @@ specifier|static
 name|void
 name|psm_poll_status
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -580,17 +580,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|AUX_PORT
-value|0x60
-end_define
-
-begin_comment
-comment|/* AUX_PORT base (S.Yuen) */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -604,7 +593,9 @@ name|value
 parameter_list|)
 block|{
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -616,7 +607,9 @@ literal|0xd4
 argument_list|)
 expr_stmt|;
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -644,7 +637,9 @@ name|value
 parameter_list|)
 block|{
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -656,7 +651,9 @@ literal|0x60
 argument_list|)
 expr_stmt|;
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -713,7 +710,9 @@ argument_list|)
 expr_stmt|;
 comment|/* Reset aux device */
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -727,7 +726,9 @@ literal|0xa9
 argument_list|)
 expr_stmt|;
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -831,7 +832,9 @@ name|ioport
 expr_stmt|;
 comment|/* Disable mouse interrupts */
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -907,7 +910,9 @@ expr_stmt|;
 endif|#
 directive|endif
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -1109,7 +1114,9 @@ name|PSM_DEV_ENABLE
 argument_list|)
 expr_stmt|;
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -1202,14 +1209,20 @@ specifier|static
 name|void
 name|psm_poll_status
 parameter_list|(
-name|void
+name|int
+name|ioport
 parameter_list|)
 block|{
+name|u_char
+name|c
+decl_stmt|;
 while|while
 condition|(
+name|c
+operator|=
 name|inb
 argument_list|(
-name|AUX_PORT
+name|ioport
 operator|+
 name|PSM_STATUS
 argument_list|)
@@ -1219,20 +1232,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|inb
-argument_list|(
-name|AUX_PORT
-operator|+
-name|PSM_STATUS
-argument_list|)
+name|c
 operator|&
-literal|0x2
+name|PSM_OUTPUT_ACK
 operator|==
-literal|0x2
+name|PSM_OUTPUT_ACK
 condition|)
 name|inb
 argument_list|(
-name|AUX_PORT
+name|ioport
 operator|+
 name|PSM_DATA
 argument_list|)
@@ -1304,7 +1312,9 @@ name|PSM_INT_DISABLE
 argument_list|)
 expr_stmt|;
 name|psm_poll_status
-argument_list|()
+argument_list|(
+name|ioport
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
