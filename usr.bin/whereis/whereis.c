@@ -1099,7 +1099,7 @@ name|nele
 operator|++
 index|]
 operator|=
-literal|"/usr/libexec"
+name|PATH_LIBEXEC
 expr_stmt|;
 name|bindirs
 index|[
@@ -1107,7 +1107,7 @@ name|nele
 operator|++
 index|]
 operator|=
-literal|"/usr/games"
+name|PATH_GAMES
 expr_stmt|;
 name|bindirs
 index|[

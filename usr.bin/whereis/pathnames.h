@@ -4,6 +4,24 @@ comment|/*  * Copyright © 2002, Jörg Wunsch  *  * Redistribution and use in so
 end_comment
 
 begin_comment
+comment|/* Where to look for libexec and games */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATH_LIBEXEC
+value|"/usr/libexec"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_GAMES
+value|"/usr/games"
+end_define
+
+begin_comment
 comment|/* Where to look for sources. */
 end_comment
 
