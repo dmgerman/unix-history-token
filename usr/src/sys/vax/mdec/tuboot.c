@@ -1,13 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tuboot.c	6.1	83/08/01	*/
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
-begin_comment
-comment|/*  * VAX tu58 console cassette boot block  *  * Helge Skrivervik CSRG/UCB 18jun83  *  * Reads a program from a rt-11 directory on tape  * and executes it.  Programs must be stripped of  * the header and is loaded ``bits as is''.  * You can return to this loader via ``ret'' as  * you are called ``calls $0,ent''.  * Error checking and recovery is almost nonexistant  * due to the severe space constraints.  *  * NOTE: Any changes to this program are likely to  *	 bring the size over 512 bytes ....  *  * Based on tp format bootstrap originally written by Thomas Ferrin.  *  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_label
+name|_sccsid
+label|:
+end_label
 
 begin_expr_stmt
+operator|.
+name|asciz
+literal|"@(#)tuboot.c	6.2 (Berkeley) %G%"
+endif|#
+directive|endif
+endif|not lint
+comment|/*  * VAX tu58 console cassette boot block  *  * Helge Skrivervik CSRG/UCB 18jun83  *  * Reads a program from a rt-11 directory on tape  * and executes it.  Programs must be stripped of  * the header and is loaded ``bits as is''.  * You can return to this loader via ``ret'' as  * you are called ``calls $0,ent''.  * Error checking and recovery is almost nonexistant  * due to the severe space constraints.  *  * NOTE: Any changes to this program are likely to  *	 bring the size over 512 bytes ....  *  * Based on tp format bootstrap originally written by Thomas Ferrin.  *  */
 operator|.
 name|set
 name|CTABLE
