@@ -620,6 +620,10 @@ block|}
 end_function
 
 begin_comment
+comment|/* Character generator */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -635,7 +639,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Character generator */
 block|{
 name|struct
 name|sockaddr_storage
@@ -832,6 +835,10 @@ block|}
 end_function
 
 begin_comment
+comment|/* Character generator */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -847,7 +854,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Character generator */
 block|{
 name|int
 name|len
@@ -1002,6 +1008,10 @@ comment|/*  * RFC867 Daytime Protocol. Sends the current date and time as an asc
 end_comment
 
 begin_comment
+comment|/* Return human-readable time of day */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1017,7 +1027,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Return human-readable time of day */
 block|{
 name|char
 name|buffer
@@ -1146,6 +1155,10 @@ block|}
 end_function
 
 begin_comment
+comment|/* Return human-readable time of day */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1160,8 +1173,8 @@ name|struct
 name|servtab
 modifier|*
 name|sep
+name|__unused
 parameter_list|)
-comment|/* Return human-readable time of day */
 block|{
 name|char
 name|buffer
@@ -1224,6 +1237,10 @@ comment|/*  * RFC863 Discard Protocol. Any data received is thrown away and no r
 end_comment
 
 begin_comment
+comment|/* Discard service -- ignore data */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1239,7 +1256,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Discard service -- ignore data */
 block|{
 name|char
 name|buffer
@@ -1266,6 +1282,10 @@ block|}
 end_function
 
 begin_comment
+comment|/* Discard service -- ignore data */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1281,7 +1301,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Discard service -- ignore data */
 block|{
 name|int
 name|ret
@@ -1352,6 +1371,10 @@ comment|/*  * RFC862 Echo Protocol. Any data received is sent back to the sender
 end_comment
 
 begin_comment
+comment|/* Echo service -- echo data back */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1367,7 +1390,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Echo service -- echo data back */
 block|{
 name|char
 name|buffer
@@ -1471,6 +1493,10 @@ block|}
 end_function
 
 begin_comment
+comment|/* Echo service -- echo data back */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1486,7 +1512,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Echo service -- echo data back */
 block|{
 name|char
 name|buffer
@@ -1599,6 +1624,10 @@ comment|/* Everything else. */
 end_comment
 
 begin_comment
+comment|/* Generic ident_stream error-sending func */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1620,7 +1649,6 @@ name|char
 modifier|*
 name|er
 parameter_list|)
-comment|/* Generic ident_stream error-sending func */
 block|{
 name|char
 modifier|*
@@ -1688,6 +1716,10 @@ block|}
 end_function
 
 begin_comment
+comment|/* Ident service (AKA "auth") */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1703,7 +1735,6 @@ name|servtab
 modifier|*
 name|sep
 parameter_list|)
-comment|/* Ident service (AKA "auth") */
 block|{
 name|struct
 name|utsname
