@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine draws a box around the given window with "vert"  * as the vertical delimiting char, and "hor", as the horizontal one.  *  * %G% (Berkeley) @(#)box.c	1.2  */
+comment|/*  *	This routine draws a box around the given window with "vert"  * as the vertical delimiting char, and "hor", as the horizontal one.  *  * @(#)box.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_macro
