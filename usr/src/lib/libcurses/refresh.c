@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.34 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,6 +241,10 @@ name|hash
 operator|=
 name|__hash
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|wlp
 operator|->
 name|line
@@ -2848,6 +2852,10 @@ name|blank_hash
 operator|=
 name|__hash
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|win
