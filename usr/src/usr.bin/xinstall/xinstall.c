@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.13 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,27 +100,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|YES
-value|1
-end_define
-
-begin_comment
-comment|/* yes/true */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO
-value|0
-end_define
-
-begin_comment
-comment|/* no/false */
-end_comment
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_define
 define|#
@@ -251,7 +235,7 @@ literal|'c'
 case|:
 name|docopy
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -286,7 +270,7 @@ literal|'s'
 case|:
 name|dostrip
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -426,7 +410,7 @@ name|argv
 argument_list|,
 name|to_name
 argument_list|,
-name|YES
+literal|1
 argument_list|)
 expr_stmt|;
 name|exit
@@ -561,7 +545,7 @@ name|argv
 argument_list|,
 name|to_name
 argument_list|,
-name|NO
+literal|0
 argument_list|)
 expr_stmt|;
 name|exit
@@ -624,7 +608,7 @@ modifier|*
 name|rindex
 argument_list|()
 decl_stmt|;
-comment|/* if try to install "/dev/null" to a directory, fails */
+comment|/* if try to install NULL file to a directory, fails */
 if|if
 condition|(
 name|isdir
@@ -633,7 +617,7 @@ name|strcmp
 argument_list|(
 name|from_name
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 condition|)
 block|{
@@ -732,13 +716,13 @@ expr_stmt|;
 block|}
 name|devnull
 operator|=
-name|NO
+literal|0
 expr_stmt|;
 block|}
 else|else
 name|devnull
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 comment|/* unlink now... avoid ETXTBSY errors later */
 operator|(
