@@ -1180,12 +1180,9 @@ begin_comment
 comment|/* Define to 1 if you have the `readline' library (-lreadline). */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LIBREADLINE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LIBREADLINE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `rt' library (-lrt). */
@@ -1553,23 +1550,17 @@ begin_comment
 comment|/* Define to 1 if you have the<readline/history.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_READLINE_HISTORY_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_READLINE_HISTORY_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<readline/readline.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_READLINE_READLINE_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_READLINE_READLINE_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `readlink' function. */
