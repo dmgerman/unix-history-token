@@ -631,6 +631,10 @@ condition|(
 name|NewDesc
 operator|==
 name|SourceDesc
+operator|||
+name|ObjDesc
+operator|==
+name|NULL
 condition|)
 block|{
 name|AcpiUtAddReference
