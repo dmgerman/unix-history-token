@@ -4300,6 +4300,14 @@ block|{
 continue|continue;
 block|}
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -4315,8 +4323,24 @@ operator|!=
 name|SSLEEP
 condition|)
 block|{
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* 			 * get the process size 			 */
 name|size
 operator|=
@@ -5555,6 +5579,14 @@ block|{
 continue|continue;
 block|}
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -5570,8 +5602,24 @@ operator|!=
 name|SSLEEP
 condition|)
 block|{
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* 			 * get a limit 			 */
 name|limit
 operator|=
