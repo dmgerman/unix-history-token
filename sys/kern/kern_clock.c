@@ -10,7 +10,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Poul-Henning Kamp<phk@FreeBSD.org>  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_clock.c	8.5 (Berkeley) 1/21/94  * $Id: kern_clock.c,v 1.68 1998/05/17 11:52:39 phk Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998 Poul-Henning Kamp<phk@FreeBSD.org>  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_clock.c	8.5 (Berkeley) 1/21/94  * $Id: kern_clock.c,v 1.69 1998/05/19 18:54:38 phk Exp $  */
 end_comment
 
 begin_include
@@ -198,6 +198,23 @@ begin_decl_stmt
 specifier|static
 name|void
 name|tco_setscales
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timecounter
+operator|*
+name|tc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|__inline
+name|unsigned
+name|tco_getdelta
 name|__P
 argument_list|(
 operator|(
@@ -1697,16 +1714,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|TC_DELTA
+begin_function
+specifier|static
+name|__inline
+name|unsigned
+name|tco_getdelta
 parameter_list|(
+name|struct
+name|timecounter
+modifier|*
 name|tc
 parameter_list|)
-define|\
-value|(((tc)->get_timecount() - (tc)->offset_count)& (tc)->counter_mask)
-end_define
+block|{
+return|return
+operator|(
+operator|(
+name|tc
+operator|->
+name|get_timecount
+argument_list|()
+operator|-
+name|tc
+operator|->
+name|offset_count
+operator|)
+operator|&
+name|tc
+operator|->
+name|counter_mask
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * We have four functions for looking at the clock, two for microseconds  * and two for nanoseconds.  For each there is fast but less precise  * version "get{nano|micro}time" which will return a time which is up  * to 1/HZ previous to the call, whereas the raw version "{nano|micro}time"  * will return a timestamp which is as precise as possible.  */
@@ -1818,7 +1857,7 @@ operator|(
 operator|(
 name|u_int64_t
 operator|)
-name|TC_DELTA
+name|tco_getdelta
 argument_list|(
 name|tc
 argument_list|)
@@ -1910,7 +1949,7 @@ name|offset_sec
 expr_stmt|;
 name|count
 operator|=
-name|TC_DELTA
+name|tco_getdelta
 argument_list|(
 name|tc
 argument_list|)
@@ -2119,7 +2158,7 @@ operator|(
 operator|(
 name|u_int64_t
 operator|)
-name|TC_DELTA
+name|tco_getdelta
 argument_list|(
 name|tc
 argument_list|)
@@ -2165,7 +2204,7 @@ modifier|*
 name|tv
 parameter_list|)
 block|{
-name|u_int
+name|unsigned
 name|count
 decl_stmt|;
 name|u_int64_t
@@ -2195,7 +2234,7 @@ name|offset_sec
 expr_stmt|;
 name|count
 operator|=
-name|TC_DELTA
+name|tco_getdelta
 argument_list|(
 name|tc
 argument_list|)
@@ -2759,7 +2798,7 @@ name|tco
 expr_stmt|;
 name|delta
 operator|=
-name|TC_DELTA
+name|tco_getdelta
 argument_list|(
 name|tc
 argument_list|)
@@ -3186,14 +3225,14 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int
+name|unsigned
 name|dummy_get_timecount
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 specifier|static
-name|u_int
+name|unsigned
 name|now
 decl_stmt|;
 return|return
