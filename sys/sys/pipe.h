@@ -170,13 +170,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|maxpipes
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|maxpipekva
 decl_stmt|;
 end_decl_stmt

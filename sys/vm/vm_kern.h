@@ -57,6 +57,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|vm_map_t
+name|pipe_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_int
 name|vm_kmem_size
 decl_stmt|;

@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pipe.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bio.h>
 end_include
 
@@ -498,6 +510,21 @@ literal|3
 operator|)
 operator|)
 operator|)
+argument_list|)
+expr_stmt|;
+name|pipe_map
+operator|=
+name|kmem_suballoc
+argument_list|(
+name|kernel_map
+argument_list|,
+operator|&
+name|minaddr
+argument_list|,
+operator|&
+name|maxaddr
+argument_list|,
+name|maxpipekva
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */

@@ -224,16 +224,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|maxpipes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Limit on # of pipes */
-end_comment
-
-begin_decl_stmt
-name|int
 name|maxpipekva
 decl_stmt|;
 end_decl_stmt
@@ -635,14 +625,18 @@ name|long
 name|kmempages
 parameter_list|)
 block|{
-comment|/* 	 * Limit number of pipes to a reasonable fraction of kmap entries, 	 * pageable pipe memory usage to 2.5% of the kernel map, and wired 	 * pipe memory usage to 1% of the same.  Ensure that all have 	 * reasonable floors.  (See sys_pipe.c for more info.) 	 */
-name|maxpipes
+comment|/* 	 * Limit pageable pipe memory usage to 5% of the kernel map 	 * (via pipe_map), and nonpageable pipe memory usage to 2.5% 	 * of the same.  Ensure that all have reasonable floors. 	 * (See sys_pipe.c for more info.) 	 */
+name|maxpipekva
 operator|=
+operator|(
 name|kmempages
 operator|/
-literal|5
+literal|20
+operator|)
+operator|*
+name|PAGE_SIZE
 expr_stmt|;
-name|maxpipekva
+name|maxpipekvawired
 operator|=
 operator|(
 name|kmempages
@@ -652,26 +646,6 @@ operator|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-name|maxpipekvawired
-operator|=
-operator|(
-name|kmempages
-operator|/
-literal|100
-operator|)
-operator|*
-name|PAGE_SIZE
-expr_stmt|;
-if|if
-condition|(
-name|maxpipes
-operator|<
-literal|128
-condition|)
-name|maxpipes
-operator|=
-literal|128
-expr_stmt|;
 if|if
 condition|(
 name|maxpipekva
@@ -699,6 +673,14 @@ operator|=
 literal|512
 operator|*
 literal|1024
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.maxpipekva"
+argument_list|,
+operator|&
+name|maxpipekva
+argument_list|)
 expr_stmt|;
 block|}
 end_function
