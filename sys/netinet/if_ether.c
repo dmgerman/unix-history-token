@@ -630,6 +630,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|u_char
+name|arcbroadcastaddr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IF_BCASTADDR
+parameter_list|(
+name|ifp
+parameter_list|)
+define|\
+value|((ifp)->if_type == IFT_ARCNET ?				\&arcbroadcastaddr : etherbroadcastaddr)
+end_define
+
 begin_comment
 comment|/*  * Timeout routine.  Age arp_tab entries periodically.  */
 end_comment
@@ -1264,11 +1283,12 @@ name|gate
 argument_list|)
 argument_list|)
 argument_list|,
+name|IF_BCASTADDR
+argument_list|(
 name|rt
 operator|->
 name|rt_ifp
-operator|->
-name|if_broadcastaddr
+argument_list|)
 argument_list|,
 name|rt
 operator|->
@@ -1634,10 +1654,7 @@ name|arh
 operator|->
 name|arc_dhost
 operator|=
-operator|*
-name|ifp
-operator|->
-name|if_broadcastaddr
+name|arcbroadcastaddr
 expr_stmt|;
 name|arh
 operator|->
@@ -1737,9 +1754,7 @@ name|sa
 operator|.
 name|sa_data
 argument_list|,
-name|ifp
-operator|->
-name|if_broadcastaddr
+name|etherbroadcastaddr
 argument_list|,
 literal|6
 argument_list|)
@@ -1891,9 +1906,7 @@ name|eh
 operator|->
 name|ether_dhost
 argument_list|,
-name|ifp
-operator|->
-name|if_broadcastaddr
+name|etherbroadcastaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2134,9 +2147,10 @@ name|memcpy
 argument_list|(
 name|desten
 argument_list|,
+name|IF_BCASTADDR
+argument_list|(
 name|ifp
-operator|->
-name|if_broadcastaddr
+argument_list|)
 argument_list|,
 name|ifp
 operator|->
@@ -3193,9 +3207,10 @@ argument_list|(
 name|ah
 argument_list|)
 argument_list|,
+name|IF_BCASTADDR
+argument_list|(
 name|ifp
-operator|->
-name|if_broadcastaddr
+argument_list|)
 argument_list|,
 name|ifp
 operator|->

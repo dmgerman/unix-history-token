@@ -2758,12 +2758,6 @@ name|IFF_NOTRAILERS
 expr_stmt|;
 endif|#
 directive|endif
-name|ifp
-operator|->
-name|if_broadcastaddr
-operator|=
-name|fddibroadcastaddr
-expr_stmt|;
 if|#
 directive|if
 name|defined

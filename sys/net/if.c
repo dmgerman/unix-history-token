@@ -3379,13 +3379,6 @@ name|info
 argument_list|)
 expr_stmt|;
 block|}
-name|ifp
-operator|->
-name|if_broadcastaddr
-operator|=
-literal|0
-expr_stmt|;
-comment|/* reliably crash if used uninitialized */
 block|}
 end_function
 

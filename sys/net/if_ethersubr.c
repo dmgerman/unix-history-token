@@ -3415,12 +3415,6 @@ name|if_baudrate
 operator|=
 literal|10000000
 expr_stmt|;
-name|ifp
-operator|->
-name|if_broadcastaddr
-operator|=
-name|etherbroadcastaddr
-expr_stmt|;
 name|ifa
 operator|=
 name|ifnet_addrs

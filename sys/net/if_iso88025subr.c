@@ -263,12 +263,6 @@ name|if_mtu
 operator|=
 name|ISO88025_DEFAULT_MTU
 expr_stmt|;
-name|ifp
-operator|->
-name|if_broadcastaddr
-operator|=
-name|etherbroadcastaddr
-expr_stmt|;
 name|ifa
 operator|=
 name|ifnet_addrs

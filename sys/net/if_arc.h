@@ -371,13 +371,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|u_int8_t
-name|arcbroadcastaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|arc_ipmtu
 decl_stmt|;

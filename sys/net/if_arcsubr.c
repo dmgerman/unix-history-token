@@ -228,14 +228,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|u_int8_t
-name|arcbroadcastaddr
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2954,13 +2946,6 @@ name|ifp
 argument_list|,
 name|lla
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_broadcastaddr
-operator|=
-operator|&
-name|arcbroadcastaddr
 expr_stmt|;
 name|bpfattach
 argument_list|(

@@ -321,6 +321,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|arcbroadcastaddr
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
