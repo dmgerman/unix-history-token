@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getgrent.c	5.4 (Berkeley) %G%"
+literal|"@(#)getgrent.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,6 +498,10 @@ name|m
 decl_stmt|;
 name|char
 modifier|*
+name|bp
+decl_stmt|;
+name|char
+modifier|*
 name|fgets
 argument_list|()
 decl_stmt|,
@@ -535,6 +539,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|bp
+operator|=
+name|line
+expr_stmt|;
 comment|/* skip lines that are too big */
 if|if
 condition|(
@@ -576,7 +584,8 @@ name|gr_name
 operator|=
 name|strsep
 argument_list|(
-name|line
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -603,11 +612,8 @@ name|gr_passwd
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -620,11 +626,8 @@ name|cp
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -696,11 +699,8 @@ name|m
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|", \n"
 argument_list|)

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.12 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -752,6 +752,10 @@ argument_list|()
 block|;
 name|char
 operator|*
+name|bp
+block|;
+name|char
+operator|*
 name|fgets
 argument_list|()
 block|,
@@ -791,6 +795,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|bp
+operator|=
+name|line
+expr_stmt|;
 comment|/* skip lines that are too big */
 if|if
 condition|(
@@ -832,7 +840,8 @@ name|pw_name
 operator|=
 name|strsep
 argument_list|(
-name|line
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -846,11 +855,8 @@ name|pw_passwd
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -866,11 +872,8 @@ name|cp
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -900,11 +903,8 @@ name|cp
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -937,11 +937,8 @@ name|pw_class
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -954,11 +951,8 @@ name|cp
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -982,11 +976,8 @@ name|cp
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -1012,11 +1003,8 @@ name|pw_gecos
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -1030,11 +1018,8 @@ name|pw_dir
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
@@ -1048,11 +1033,8 @@ name|pw_shell
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|":\n"
 argument_list|)
