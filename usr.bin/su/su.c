@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.25 1997/10/28 21:20:21 guido Exp $"
+literal|"$Id: su.c,v 1.26 1998/05/25 03:34:52 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,6 +680,34 @@ operator|++
 index|]
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|user
+argument_list|)
+operator|>
+name|MAXLOGNAME
+operator|-
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"su: username too long.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
