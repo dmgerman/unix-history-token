@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.10 83/08/17"
+literal|"@(#)ttgeneric.c	3.11 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,24 +303,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|gen_LI
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|gen_strings
-index|[
-literal|1024
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|gen_strp
-init|=
-name|gen_strings
 decl_stmt|;
 end_decl_stmt
 
