@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	1.3 (Berkeley) %G%"
+literal|"@(#)master.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,6 +258,11 @@ argument_list|(
 name|fi
 argument_list|,
 literal|"w"
+argument_list|)
+expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -970,6 +975,11 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fd
@@ -978,14 +988,6 @@ literal|"Tracing started on: %s\n\n"
 argument_list|,
 name|date
 argument_list|()
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1010,14 +1012,6 @@ literal|"Tracing ended on: %s\n"
 argument_list|,
 name|date
 argument_list|()
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1664,14 +1658,6 @@ name|tv_usec
 operator|/
 literal|1000
 operator|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fp
 argument_list|)
 expr_stmt|;
 endif|#

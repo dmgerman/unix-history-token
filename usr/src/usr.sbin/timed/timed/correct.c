@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)correct.c	1.3 (Berkeley) %G%"
+literal|"@(#)correct.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,14 +433,6 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fp
 argument_list|)
 expr_stmt|;
 endif|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	1.2 (Berkeley) %G%"
+literal|"@(#)slave.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -872,6 +872,11 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fd
@@ -880,14 +885,6 @@ literal|"Tracing started on: %s\n\n"
 argument_list|,
 name|date
 argument_list|()
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 block|}
@@ -912,14 +909,6 @@ literal|"Tracing ended on: %s\n"
 argument_list|,
 name|date
 argument_list|()
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 operator|(

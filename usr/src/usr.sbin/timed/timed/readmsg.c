@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	1.3 (Berkeley) %G%"
+literal|"@(#)readmsg.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,14 +577,6 @@ argument_list|,
 name|rwait
 operator|.
 name|tv_usec
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1523,14 +1515,6 @@ argument_list|,
 name|msg
 operator|->
 name|tsp_name
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 block|}
