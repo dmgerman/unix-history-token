@@ -759,6 +759,11 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|u_char
+name|snewpath
+init|=
+name|newpath
+decl_stmt|;
 if|if
 condition|(
 name|where
@@ -1129,6 +1134,12 @@ operator|=
 operator|*
 name|dir
 operator|++
+operator|&&
+name|np
+operator|-
+name|snewpath
+operator|<
+literal|1023
 condition|)
 operator|++
 name|np
