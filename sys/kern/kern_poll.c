@@ -302,7 +302,7 @@ specifier|static
 name|u_int32_t
 name|poll_in_idle_loop
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
