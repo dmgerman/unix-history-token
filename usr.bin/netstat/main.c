@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.20 1998/05/15 20:19:16 wollman Exp $"
+literal|"$Id: main.c,v 1.21 1998/08/05 13:54:07 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,7 @@ file|"netstat.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nlist
 name|nl
@@ -951,6 +952,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kvmd
@@ -1003,12 +1005,6 @@ decl_stmt|;
 comment|/* for printing cblocks& stats */
 name|int
 name|ch
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|_POSIX2_LINE_MAX
-index|]
 decl_stmt|;
 name|af
 operator|=
@@ -1482,10 +1478,34 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|tp
 operator|->
 name|pr_stats
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: no stats routine\n"
+argument_list|,
+name|tp
+operator|->
+name|pr_name
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tp
+operator|->
+name|pr_usesysctl
+condition|)
+block|{
 call|(
 modifier|*
 name|tp
@@ -1496,11 +1516,31 @@ argument_list|(
 name|tp
 operator|->
 name|pr_usesysctl
-condition|?
+argument_list|,
 name|tp
 operator|->
-name|pr_usesysctl
-else|:
+name|pr_name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|kread
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|tp
+operator|->
+name|pr_stats
+call|)
+argument_list|(
 name|nl
 index|[
 name|tp
@@ -1515,16 +1555,7 @@ operator|->
 name|pr_name
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%s: no stats routine\n"
-argument_list|,
-name|tp
-operator|->
-name|pr_name
-argument_list|)
-expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -1546,6 +1577,15 @@ condition|(
 name|iflag
 condition|)
 block|{
+name|kread
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|intpr
 argument_list|(
 name|interval
@@ -1569,6 +1609,15 @@ condition|(
 name|rflag
 condition|)
 block|{
+name|kread
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sflag
@@ -1605,6 +1654,15 @@ condition|(
 name|gflag
 condition|)
 block|{
+name|kread
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sflag
@@ -2180,6 +2238,16 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|kvm_read
