@@ -158,7 +158,7 @@ begin_struct
 struct|struct
 name|_snd_dbuf
 block|{
-name|char
+name|u_int8_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -217,6 +217,9 @@ name|first_poll
 decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
+decl_stmt|;
+name|int
+name|underflow
 decl_stmt|;
 block|}
 struct|;

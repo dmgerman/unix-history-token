@@ -383,6 +383,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SD_F_EVILERSB16X
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
 name|SD_F_PRIO_RD
 value|0x10000000
 end_define

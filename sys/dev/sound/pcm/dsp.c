@@ -179,8 +179,8 @@ modifier|*
 name|wrch
 parameter_list|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 operator|(
 name|d
 operator|->
@@ -188,12 +188,12 @@ name|flags
 operator|&
 name|SD_F_PRIO_SET
 operator|)
-operator|==
+operator|!=
 name|SD_F_PRIO_SET
-condition|)
-name|panic
-argument_list|(
-literal|"read and write both prioritised"
+argument_list|, \
+operator|(
+literal|"getchns: read and write both prioritised"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -294,8 +294,8 @@ name|int
 name|chan
 parameter_list|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 operator|(
 name|d
 operator|->
@@ -303,12 +303,12 @@ name|flags
 operator|&
 name|SD_F_PRIO_SET
 operator|)
-operator|==
+operator|!=
 name|SD_F_PRIO_SET
-condition|)
-name|panic
-argument_list|(
-literal|"read and write both prioritised"
+argument_list|, \
+operator|(
+literal|"getchns: read and write both prioritised"
+operator|)
 argument_list|)
 expr_stmt|;
 name|d
@@ -813,6 +813,12 @@ if|if
 condition|(
 name|wrch
 condition|)
+block|{
+name|chn_flush
+argument_list|(
+name|wrch
+argument_list|)
+expr_stmt|;
 name|wrch
 operator|->
 name|flags
@@ -826,6 +832,7 @@ operator||
 name|CHN_F_MAPPED
 operator|)
 expr_stmt|;
+block|}
 name|d
 operator|->
 name|aplay
@@ -925,29 +932,26 @@ operator|&
 name|wrch
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|rdch
-operator|||
-operator|!
+name|KASSERT
+argument_list|(
+name|wrch
+argument_list|,
 operator|(
-name|rdch
+literal|"dsp_read: nonexistant channel"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|wrch
 operator|->
 name|flags
 operator|&
 name|CHN_F_BUSY
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"dsp_read: non%s channel"
 argument_list|,
-name|rdch
-condition|?
-literal|"busy"
-else|:
-literal|"existant"
+operator|(
+literal|"dsp_read: nonbusy channel"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1071,29 +1075,26 @@ operator|&
 name|wrch
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|KASSERT
+argument_list|(
 name|wrch
-operator|||
-operator|!
+argument_list|,
 operator|(
+literal|"dsp_write: nonexistant channel"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|wrch
 operator|->
 name|flags
 operator|&
 name|CHN_F_BUSY
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"dsp_write: non%s channel"
 argument_list|,
-name|wrch
-condition|?
-literal|"busy"
-else|:
-literal|"existant"
+operator|(
+literal|"dsp_write: nonbusy channel"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3002,9 +3003,9 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"default ioctl snd%d fn 0x%08x fail\n"
+literal|"default ioctl chan%d fn 0x%08lx fail\n"
 argument_list|,
-name|unit
+name|chan
 argument_list|,
 name|cmd
 argument_list|)

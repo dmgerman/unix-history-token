@@ -1697,9 +1697,11 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sndpoll dev 0x%04x events 0x%08x\n"
+literal|"sndpoll d 0x%p dev 0x%04x events 0x%08x\n"
 argument_list|,
-name|i_dev
+name|d
+argument_list|,
+name|dev
 argument_list|,
 name|events
 argument_list|)
