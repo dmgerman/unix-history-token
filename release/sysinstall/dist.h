@@ -95,35 +95,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86
+name|DIST_COMPAT22
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_DES
+name|DIST_XF86
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_CATPAGES
+name|DIST_DES
 value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_PORTS
+name|DIST_CATPAGES
 value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_USR1
+name|DIST_PORTS
 value|0x8000
 end_define
 
@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|DIST_ALL
-value|0x7FFF
+value|0xFFFF
 end_define
 
 begin_comment
