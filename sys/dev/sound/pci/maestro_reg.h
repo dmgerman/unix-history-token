@@ -710,6 +710,34 @@ begin_comment
 comment|/* BYTE RW */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HWVOL_NOP
+value|0x88
+end_define
+
+begin_define
+define|#
+directive|define
+name|HWVOL_MUTE
+value|0x99
+end_define
+
+begin_define
+define|#
+directive|define
+name|HWVOL_UP
+value|0xaa
+end_define
+
+begin_define
+define|#
+directive|define
+name|HWVOL_DOWN
+value|0x66
+end_define
+
 begin_comment
 comment|/* CODEC */
 end_comment

@@ -3,6 +3,28 @@ begin_comment
 comment|/*  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_struct
+struct|struct
+name|feeder_class
+block|{
+name|KOBJ_CLASS_FIELDS
+expr_stmt|;
+name|int
+name|align
+decl_stmt|;
+name|struct
+name|pcm_feederdesc
+modifier|*
+name|desc
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|void
 name|feeder_register
@@ -15,41 +37,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|pcm_feeder
+name|struct
+name|feeder_class
 modifier|*
-name|feeder_get
+name|feeder_getclass
 parameter_list|(
 name|struct
 name|pcm_feederdesc
 modifier|*
 name|desc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pcm_feeder
-modifier|*
-name|feeder_getroot
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|feeder_set
-parameter_list|(
-name|pcm_feeder
-modifier|*
-name|feeder
-parameter_list|,
-name|int
-name|what
-parameter_list|,
-name|int
-name|value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -77,9 +73,15 @@ name|pcm_channel
 modifier|*
 name|c
 parameter_list|,
-name|pcm_feeder
+name|struct
+name|feeder_class
 modifier|*
-name|f
+name|fc
+parameter_list|,
+name|struct
+name|pcm_feederdesc
+modifier|*
+name|desc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -116,8 +118,13 @@ directive|define
 name|FEEDER_DECLARE
 parameter_list|(
 name|feeder
+parameter_list|,
+name|palign
+parameter_list|,
+name|pdata
 parameter_list|)
-value|SYSINIT(feeder, SI_SUB_DRIVERS, SI_ORDER_MIDDLE, feeder_register,&feeder)
+define|\
+value|static struct feeder_class feeder ## _class = { \ 	name:		#feeder, \ 	methods:	feeder ## _methods, \ 	size:		sizeof(pcm_feeder), \ 	align:		palign, \ 	desc:		feeder ## _desc, \ 	data:		pdata, \ }; \ SYSINIT(feeder, SI_SUB_DRIVERS, SI_ORDER_MIDDLE, feeder_register,&feeder ## _class);
 end_define
 
 begin_define

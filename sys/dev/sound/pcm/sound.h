@@ -205,7 +205,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isa/isavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kobj.h>
 end_include
 
 begin_include
@@ -306,6 +318,12 @@ begin_include
 include|#
 directive|include
 file|<dev/sound/pcm/channel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sound/pcm/buffer.h>
 end_include
 
 begin_include
@@ -484,6 +502,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AFMT_8BIT
+value|(AFMT_U8 | AFMT_S8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AFMT_SIGNED
 value|(AFMT_S16_LE | AFMT_S16_BE | AFMT_S8)
 end_define
@@ -498,6 +523,17 @@ end_define
 begin_function_decl
 name|int
 name|fkchan_setup
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fkchan_kill
 parameter_list|(
 name|pcm_channel
 modifier|*
@@ -706,6 +742,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_snd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|int
 name|pcm_addchan
@@ -716,9 +760,8 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|,
-name|pcm_channel
-modifier|*
-name|templ
+name|kobj_class_t
+name|cls
 parameter_list|,
 name|void
 modifier|*
@@ -801,20 +844,6 @@ name|pcm_getdevinfo
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pcm_setswap
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|pcm_swap_t
-modifier|*
-name|swap
 parameter_list|)
 function_decl|;
 end_function_decl
