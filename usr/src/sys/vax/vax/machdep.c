@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.4	%G%	*/
+comment|/*	machdep.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -324,19 +324,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ERNIE
-if|if
-condition|(
-name|coresw
-condition|)
-name|maxmem
-operator|=
-literal|4096
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize maps. 	 */
 name|meminit
 argument_list|(
