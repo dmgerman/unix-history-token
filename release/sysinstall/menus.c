@@ -119,6 +119,59 @@ end_function
 begin_function
 specifier|static
 name|int
+name|setDES
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|Dists
+operator||=
+name|DIST_DES
+expr_stmt|;
+name|DESDists
+operator|=
+name|DIST_DES_ALL
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearDES
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|Dists
+operator|&=
+operator|~
+name|DIST_DES
+expr_stmt|;
+name|DESDists
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|setX11All
 parameter_list|(
 name|dialogMenuItem
@@ -699,7 +752,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"Anon FTP"
+literal|" Anon FTP"
 block|,
 literal|"Configure anonymous FTP logins."
 block|,
@@ -713,7 +766,7 @@ literal|"anon_ftp"
 block|}
 block|,
 block|{
-literal|"Commit"
+literal|" Commit"
 block|,
 literal|"Commit any pending actions (dangerous!)"
 block|,
@@ -723,7 +776,7 @@ name|installCustomCommit
 block|}
 block|,
 block|{
-literal|"Console settings"
+literal|" Console settings"
 block|,
 literal|"Customize system console behavior."
 block|,
@@ -738,7 +791,7 @@ name|MenuSyscons
 block|}
 block|,
 block|{
-literal|"Configure"
+literal|" Configure"
 block|,
 literal|"The system configuration menu."
 block|,
@@ -753,7 +806,7 @@ name|MenuConfigure
 block|}
 block|,
 block|{
-literal|"Defaults, Load"
+literal|" Defaults, Load"
 block|,
 literal|"Load default settings."
 block|,
@@ -763,7 +816,7 @@ name|dispatch_load_floppy
 block|}
 block|,
 block|{
-literal|"Device, Mouse"
+literal|" Device, Mouse"
 block|,
 literal|"The mouse configuration menu."
 block|,
@@ -778,7 +831,7 @@ name|MenuMouse
 block|}
 block|,
 block|{
-literal|"Disklabel"
+literal|" Disklabel"
 block|,
 literal|"The disk Label editor"
 block|,
@@ -788,7 +841,7 @@ name|diskLabelEditor
 block|}
 block|,
 block|{
-literal|"Dists, All"
+literal|" Dists, All"
 block|,
 literal|"Root of the distribution tree."
 block|,
@@ -803,7 +856,7 @@ name|MenuDistributions
 block|}
 block|,
 block|{
-literal|"Dists, Basic"
+literal|" Dists, Basic"
 block|,
 literal|"Basic FreeBSD distribution menu."
 block|,
@@ -818,7 +871,7 @@ name|MenuSubDistributions
 block|}
 block|,
 block|{
-literal|"Dists, DES"
+literal|" Dists, DES"
 block|,
 literal|"DES distribution menu."
 block|,
@@ -833,7 +886,7 @@ name|MenuDESDistributions
 block|}
 block|,
 block|{
-literal|"Dists, Developer"
+literal|" Dists, Developer"
 block|,
 literal|"Select developer's distribution."
 block|,
@@ -843,7 +896,7 @@ name|distSetDeveloper
 block|}
 block|,
 block|{
-literal|"Dists, Src"
+literal|" Dists, Src"
 block|,
 literal|"Src distribution menu."
 block|,
@@ -858,7 +911,7 @@ name|MenuSrcDistributions
 block|}
 block|,
 block|{
-literal|"Dists, X Developer"
+literal|" Dists, X Developer"
 block|,
 literal|"Select X developer's distribution."
 block|,
@@ -868,7 +921,7 @@ name|distSetXDeveloper
 block|}
 block|,
 block|{
-literal|"Dists, Kern Developer"
+literal|" Dists, Kern Developer"
 block|,
 literal|"Select kernel developer's distribution."
 block|,
@@ -878,7 +931,7 @@ name|distSetKernDeveloper
 block|}
 block|,
 block|{
-literal|"Dists, User"
+literal|" Dists, User"
 block|,
 literal|"Select average user distribution."
 block|,
@@ -888,7 +941,7 @@ name|distSetUser
 block|}
 block|,
 block|{
-literal|"Dists, X User"
+literal|" Dists, X User"
 block|,
 literal|"Select average X user distribution."
 block|,
@@ -898,7 +951,7 @@ name|distSetXUser
 block|}
 block|,
 block|{
-literal|"Distributions, Adding"
+literal|" Distributions, Adding"
 block|,
 literal|"Installing additional distribution sets"
 block|,
@@ -908,7 +961,7 @@ name|distExtractAll
 block|}
 block|,
 block|{
-literal|"Distributions, XFree86"
+literal|" Distributions, XFree86"
 block|,
 literal|"XFree86 distribution menu."
 block|,
@@ -918,7 +971,7 @@ name|distSetXF86
 block|}
 block|,
 block|{
-literal|"Documentation"
+literal|" Documentation"
 block|,
 literal|"Installation instructions, README, etc."
 block|,
@@ -933,7 +986,7 @@ name|MenuDocumentation
 block|}
 block|,
 block|{
-literal|"Doc, README"
+literal|" Doc, README"
 block|,
 literal|"The distribution README file."
 block|,
@@ -947,7 +1000,7 @@ literal|"README"
 block|}
 block|,
 block|{
-literal|"Doc, Hardware"
+literal|" Doc, Hardware"
 block|,
 literal|"The distribution hardware guide."
 block|,
@@ -961,7 +1014,7 @@ literal|"HARDWARE"
 block|}
 block|,
 block|{
-literal|"Doc, Install"
+literal|" Doc, Install"
 block|,
 literal|"The distribution installation guide."
 block|,
@@ -975,7 +1028,7 @@ literal|"INSTALL"
 block|}
 block|,
 block|{
-literal|"Doc, Copyright"
+literal|" Doc, Copyright"
 block|,
 literal|"The distribution copyright notices."
 block|,
@@ -989,7 +1042,7 @@ literal|"COPYRIGHT"
 block|}
 block|,
 block|{
-literal|"Doc, Release"
+literal|" Doc, Release"
 block|,
 literal|"The distribution release notes."
 block|,
@@ -1003,7 +1056,7 @@ literal|"RELNOTES"
 block|}
 block|,
 block|{
-literal|"Doc, HTML"
+literal|" Doc, HTML"
 block|,
 literal|"The HTML documentation menu."
 block|,
@@ -1013,7 +1066,7 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"Dump Vars"
+literal|" Dump Vars"
 block|,
 literal|"(debugging) dump out internal variables."
 block|,
@@ -1023,7 +1076,7 @@ name|dump_variables
 block|}
 block|,
 block|{
-literal|"Emergency shell"
+literal|" Emergency shell"
 block|,
 literal|"Start an Emergency Holographic shell."
 block|,
@@ -1036,7 +1089,7 @@ ifdef|#
 directive|ifdef
 name|__i386__
 block|{
-literal|"Fdisk"
+literal|" Fdisk"
 block|,
 literal|"The disk Partition Editor"
 block|,
@@ -1048,7 +1101,7 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|"Fixit"
+literal|" Fixit"
 block|,
 literal|"Repair mode with CDROM or fixit floppy."
 block|,
@@ -1063,7 +1116,7 @@ name|MenuFixit
 block|}
 block|,
 block|{
-literal|"FTP sites"
+literal|" FTP sites"
 block|,
 literal|"The FTP mirror site listing."
 block|,
@@ -1078,7 +1131,7 @@ name|MenuMediaFTP
 block|}
 block|,
 block|{
-literal|"Gateway"
+literal|" Gateway"
 block|,
 literal|"Set flag to route packets between interfaces."
 block|,
@@ -1092,7 +1145,7 @@ literal|"gateway=YES"
 block|}
 block|,
 block|{
-literal|"HTML Docs"
+literal|" HTML Docs"
 block|,
 literal|"The HTML documentation menu"
 block|,
@@ -1102,7 +1155,7 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"Install, Novice"
+literal|" Install, Novice"
 block|,
 literal|"A novice system installation."
 block|,
@@ -1112,7 +1165,7 @@ name|installNovice
 block|}
 block|,
 block|{
-literal|"Install, Express"
+literal|" Install, Express"
 block|,
 literal|"An express system installation."
 block|,
@@ -1122,7 +1175,7 @@ name|installExpress
 block|}
 block|,
 block|{
-literal|"Install, Custom"
+literal|" Install, Custom"
 block|,
 literal|"The custom installation menu"
 block|,
@@ -1137,7 +1190,7 @@ name|MenuInstallCustom
 block|}
 block|,
 block|{
-literal|"Label"
+literal|" Label"
 block|,
 literal|"The disk Label editor"
 block|,
@@ -1147,7 +1200,7 @@ name|diskLabelEditor
 block|}
 block|,
 block|{
-literal|"Media"
+literal|" Media"
 block|,
 literal|"Top level media selection menu."
 block|,
@@ -1162,7 +1215,7 @@ name|MenuMedia
 block|}
 block|,
 block|{
-literal|"Media, Tape"
+literal|" Media, Tape"
 block|,
 literal|"Select tape installation media."
 block|,
@@ -1172,7 +1225,7 @@ name|mediaSetTape
 block|}
 block|,
 block|{
-literal|"Media, NFS"
+literal|" Media, NFS"
 block|,
 literal|"Select NFS installation media."
 block|,
@@ -1182,7 +1235,7 @@ name|mediaSetNFS
 block|}
 block|,
 block|{
-literal|"Media, Floppy"
+literal|" Media, Floppy"
 block|,
 literal|"Select floppy installation media."
 block|,
@@ -1192,7 +1245,7 @@ name|mediaSetFloppy
 block|}
 block|,
 block|{
-literal|"Media, CDROM"
+literal|" Media, CDROM"
 block|,
 literal|"Select CDROM installation media."
 block|,
@@ -1202,7 +1255,7 @@ name|mediaSetCDROM
 block|}
 block|,
 block|{
-literal|"Media, DOS"
+literal|" Media, DOS"
 block|,
 literal|"Select DOS installation media."
 block|,
@@ -1212,7 +1265,7 @@ name|mediaSetDOS
 block|}
 block|,
 block|{
-literal|"Media, UFS"
+literal|" Media, UFS"
 block|,
 literal|"Select UFS installation media."
 block|,
@@ -1222,7 +1275,7 @@ name|mediaSetUFS
 block|}
 block|,
 block|{
-literal|"Media, FTP"
+literal|" Media, FTP"
 block|,
 literal|"Select FTP installation media."
 block|,
@@ -1232,7 +1285,7 @@ name|mediaSetFTP
 block|}
 block|,
 block|{
-literal|"Media, FTP Passive"
+literal|" Media, FTP Passive"
 block|,
 literal|"Select passive FTP installation media."
 block|,
@@ -1242,7 +1295,7 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|"Network Interfaces"
+literal|" Network Interfaces"
 block|,
 literal|"Configure network interfaces"
 block|,
@@ -1252,7 +1305,7 @@ name|tcpMenuSelect
 block|}
 block|,
 block|{
-literal|"Networking Services"
+literal|" Networking Services"
 block|,
 literal|"The network services menu."
 block|,
@@ -1267,7 +1320,7 @@ name|MenuNetworking
 block|}
 block|,
 block|{
-literal|"NFS, client"
+literal|" NFS, client"
 block|,
 literal|"Set NFS client flag."
 block|,
@@ -1281,7 +1334,7 @@ literal|"nfs_client_enable=YES"
 block|}
 block|,
 block|{
-literal|"NFS, server"
+literal|" NFS, server"
 block|,
 literal|"Set NFS server flag."
 block|,
@@ -1295,7 +1348,7 @@ literal|"nfs_server_enable=YES"
 block|}
 block|,
 block|{
-literal|"NTP Menu"
+literal|" NTP Menu"
 block|,
 literal|"The NTP configuration menu."
 block|,
@@ -1310,7 +1363,7 @@ name|MenuNTP
 block|}
 block|,
 block|{
-literal|"Options"
+literal|" Options"
 block|,
 literal|"The options editor."
 block|,
@@ -1320,7 +1373,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"Packages"
+literal|" Packages"
 block|,
 literal|"The packages collection"
 block|,
@@ -1330,7 +1383,7 @@ name|configPackages
 block|}
 block|,
 block|{
-literal|"Partition"
+literal|" Partition"
 block|,
 literal|"The disk Slice (PC-style partition) Editor"
 block|,
@@ -1340,7 +1393,7 @@ name|diskPartitionEditor
 block|}
 block|,
 block|{
-literal|"PCNFSD"
+literal|" PCNFSD"
 block|,
 literal|"Run authentication server for PC-NFS."
 block|,
@@ -1354,7 +1407,7 @@ literal|"pcnfsd"
 block|}
 block|,
 block|{
-literal|"Root Password"
+literal|" Root Password"
 block|,
 literal|"Set the system manager's password."
 block|,
@@ -1368,7 +1421,7 @@ literal|"passwd root"
 block|}
 block|,
 block|{
-literal|"Router"
+literal|" Router"
 block|,
 literal|"Select routing daemon (default: routed)"
 block|,
@@ -1382,7 +1435,7 @@ literal|"router"
 block|}
 block|,
 block|{
-literal|"Syscons"
+literal|" Syscons"
 block|,
 literal|"The system console configuration menu."
 block|,
@@ -1397,7 +1450,7 @@ name|MenuSyscons
 block|}
 block|,
 block|{
-literal|"Syscons, Font"
+literal|" Syscons, Font"
 block|,
 literal|"The console screen font."
 block|,
@@ -1412,7 +1465,7 @@ name|MenuSysconsFont
 block|}
 block|,
 block|{
-literal|"Syscons, Keymap"
+literal|" Syscons, Keymap"
 block|,
 literal|"The console keymap configuration menu."
 block|,
@@ -1427,7 +1480,7 @@ name|MenuSysconsKeymap
 block|}
 block|,
 block|{
-literal|"Syscons, Keyrate"
+literal|" Syscons, Keyrate"
 block|,
 literal|"The console key rate configuration menu."
 block|,
@@ -1442,7 +1495,7 @@ name|MenuSysconsKeyrate
 block|}
 block|,
 block|{
-literal|"Syscons, Saver"
+literal|" Syscons, Saver"
 block|,
 literal|"The console screen saver configuration menu."
 block|,
@@ -1457,7 +1510,7 @@ name|MenuSysconsSaver
 block|}
 block|,
 block|{
-literal|"Syscons, Screenmap"
+literal|" Syscons, Screenmap"
 block|,
 literal|"The console screenmap configuration menu."
 block|,
@@ -1472,7 +1525,7 @@ name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
-literal|"Time Zone"
+literal|" Time Zone"
 block|,
 literal|"Set the system's time zone."
 block|,
@@ -1486,7 +1539,7 @@ literal|"tzsetup"
 block|}
 block|,
 block|{
-literal|"Upgrade"
+literal|" Upgrade"
 block|,
 literal|"Upgrade an existing system."
 block|,
@@ -1496,7 +1549,7 @@ name|installUpgrade
 block|}
 block|,
 block|{
-literal|"Usage"
+literal|" Usage"
 block|,
 literal|"Quick start - How to use this menu system."
 block|,
@@ -1510,7 +1563,7 @@ literal|"usage"
 block|}
 block|,
 block|{
-literal|"User Management"
+literal|" User Management"
 block|,
 literal|"Add user and group information."
 block|,
@@ -1525,7 +1578,7 @@ name|MenuUsermgmt
 block|}
 block|,
 block|{
-literal|"XFree86, Fonts"
+literal|" XFree86, Fonts"
 block|,
 literal|"XFree86 Font selection menu."
 block|,
@@ -1540,7 +1593,7 @@ name|MenuXF86SelectFonts
 block|}
 block|,
 block|{
-literal|"XFree86, Server"
+literal|" XFree86, Server"
 block|,
 literal|"XFree86 Server selection menu."
 block|,
@@ -1558,7 +1611,7 @@ ifdef|#
 directive|ifdef
 name|__i386__
 block|{
-literal|"XFree86, PC98 Server"
+literal|" XFree86, PC98 Server"
 block|,
 literal|"XFree86 PC98 Server selection menu."
 block|,
@@ -1614,7 +1667,7 @@ literal|"Select"
 block|}
 block|,
 block|{
-literal|"Exit Install"
+literal|"X Exit Install"
 block|,
 name|NULL
 block|,
@@ -1624,7 +1677,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 Usage"
+literal|"? Usage"
 block|,
 literal|"Quick start - How to use this menu system"
 block|,
@@ -1638,7 +1691,7 @@ literal|"usage"
 block|}
 block|,
 block|{
-literal|"2 Novice"
+literal|"Novice"
 block|,
 literal|"Begin a novice installation (for beginners)"
 block|,
@@ -1648,7 +1701,7 @@ name|installNovice
 block|}
 block|,
 block|{
-literal|"3 Express"
+literal|"Express"
 block|,
 literal|"Begin a quick installation (for the impatient)"
 block|,
@@ -1658,7 +1711,7 @@ name|installExpress
 block|}
 block|,
 block|{
-literal|"4 Custom"
+literal|" Custom"
 block|,
 literal|"Begin a custom installation (for experts)"
 block|,
@@ -1673,7 +1726,7 @@ name|MenuInstallCustom
 block|}
 block|,
 block|{
-literal|"5 Configure"
+literal|"Configure"
 block|,
 literal|"Do post-install configuration of FreeBSD"
 block|,
@@ -1688,7 +1741,7 @@ name|MenuConfigure
 block|}
 block|,
 block|{
-literal|"D Doc"
+literal|"Doc"
 block|,
 literal|"Installation instructions, README, etc."
 block|,
@@ -1703,7 +1756,7 @@ name|MenuDocumentation
 block|}
 block|,
 block|{
-literal|"K Keymap"
+literal|"Keymap"
 block|,
 literal|"Select keyboard type"
 block|,
@@ -1718,7 +1771,7 @@ name|MenuSysconsKeymap
 block|}
 block|,
 block|{
-literal|"O Options"
+literal|"Options"
 block|,
 literal|"View/Set various installation options"
 block|,
@@ -1728,7 +1781,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"F Fixit"
+literal|"Fixit"
 block|,
 literal|"Enter repair mode with CDROM/floppy or start shell"
 block|,
@@ -1743,7 +1796,7 @@ name|MenuFixit
 block|}
 block|,
 block|{
-literal|"U Upgrade"
+literal|"Upgrade"
 block|,
 literal|"Upgrade an existing system"
 block|,
@@ -1753,7 +1806,7 @@ name|installUpgrade
 block|}
 block|,
 block|{
-literal|"L Load Config"
+literal|"Load Config"
 block|,
 literal|"Load default install configuration"
 block|,
@@ -1763,7 +1816,7 @@ name|dispatch_load_floppy
 block|}
 block|,
 block|{
-literal|"I Index"
+literal|"Index"
 block|,
 literal|"Glossary of functions"
 block|,
@@ -1904,7 +1957,7 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"0 Exit"
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -1945,7 +1998,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"Auto"
+literal|"1 Auto"
 block|,
 literal|"Bus mouse, PS/2 style mouse or PnP serial mouse"
 block|,
@@ -1960,7 +2013,7 @@ literal|"=auto"
 block|}
 block|,
 block|{
-literal|"GlidePoint"
+literal|"2 GlidePoint"
 block|,
 literal|"ALPS GlidePoint pad (serial)"
 block|,
@@ -1975,7 +2028,7 @@ literal|"=glidepoint"
 block|}
 block|,
 block|{
-literal|"Hitachi"
+literal|"3 Hitachi"
 block|,
 literal|"Hitachi tablet (serial)"
 block|,
@@ -1990,7 +2043,7 @@ literal|"=mmhittab"
 block|}
 block|,
 block|{
-literal|"IntelliMouse"
+literal|"4 IntelliMouse"
 block|,
 literal|"Microsoft IntelliMouse (serial)"
 block|,
@@ -2005,7 +2058,7 @@ literal|"=intellimouse"
 block|}
 block|,
 block|{
-literal|"Logitech"
+literal|"5 Logitech"
 block|,
 literal|"Logitech protocol (old models) (serial)"
 block|,
@@ -2020,7 +2073,7 @@ literal|"=logitech"
 block|}
 block|,
 block|{
-literal|"Microsoft"
+literal|"6 Microsoft"
 block|,
 literal|"Microsoft protocol (serial)"
 block|,
@@ -2035,7 +2088,7 @@ literal|"=microsoft"
 block|}
 block|,
 block|{
-literal|"MM Series"
+literal|"7 MM Series"
 block|,
 literal|"MM Series protocol (serial)"
 block|,
@@ -2050,7 +2103,7 @@ literal|"=mmseries"
 block|}
 block|,
 block|{
-literal|"MouseMan"
+literal|"8 MouseMan"
 block|,
 literal|"Logitech MouseMan/TrackMan models (serial)"
 block|,
@@ -2065,7 +2118,7 @@ literal|"=mouseman"
 block|}
 block|,
 block|{
-literal|"MouseSystems"
+literal|"9 MouseSystems"
 block|,
 literal|"MouseSystems protocol (serial)"
 block|,
@@ -2080,7 +2133,7 @@ literal|"=mousesystems"
 block|}
 block|,
 block|{
-literal|"ThinkingMouse"
+literal|"A ThinkingMouse"
 block|,
 literal|"Kensington ThinkingMouse (serial)"
 block|,
@@ -2122,7 +2175,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"COM1"
+literal|"1 COM1"
 block|,
 literal|"Serial mouse on COM1 (/dev/cuaa0)"
 block|,
@@ -2137,7 +2190,7 @@ literal|"=/dev/cuaa0"
 block|}
 block|,
 block|{
-literal|"COM2"
+literal|"2 COM2"
 block|,
 literal|"Serial mouse on COM2 (/dev/cuaa1)"
 block|,
@@ -2152,7 +2205,7 @@ literal|"=/dev/cuaa1"
 block|}
 block|,
 block|{
-literal|"COM3"
+literal|"3 COM3"
 block|,
 literal|"Serial mouse on COM3 (/dev/cuaa2)"
 block|,
@@ -2167,7 +2220,7 @@ literal|"=/dev/cuaa2"
 block|}
 block|,
 block|{
-literal|"COM4"
+literal|"4 COM4"
 block|,
 literal|"Serial mouse on COM4 (/dev/cuaa3)"
 block|,
@@ -2182,7 +2235,7 @@ literal|"=/dev/cuaa3"
 block|}
 block|,
 block|{
-literal|"BusMouse"
+literal|"5 BusMouse"
 block|,
 literal|"Logitech, ATI or MS bus mouse (/dev/mse0)"
 block|,
@@ -2197,7 +2250,7 @@ literal|"=/dev/mse0"
 block|}
 block|,
 block|{
-literal|"PS/2"
+literal|"6 PS/2"
 block|,
 literal|"PS/2 style mouse (/dev/psm0)"
 block|,
@@ -2301,7 +2354,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"0 Exit"
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -2465,7 +2518,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"KDE"
+literal|"1 KDE"
 block|,
 literal|"The K Desktop Environment."
 block|,
@@ -2480,7 +2533,7 @@ literal|"=kde"
 block|}
 block|,
 block|{
-literal|"GNOME + Afterstep"
+literal|"2 GNOME + Afterstep"
 block|,
 literal|"GNOME + Afterstep window manager."
 block|,
@@ -2495,7 +2548,7 @@ literal|"=gnome"
 block|}
 block|,
 block|{
-literal|"GNOME + Enlightenment"
+literal|"3 GNOME + Enlightenment"
 block|,
 literal|"GNOME + The E window manager"
 block|,
@@ -2510,7 +2563,7 @@ literal|"=enlightenment"
 block|}
 block|,
 block|{
-literal|"Afterstep"
+literal|"4 Afterstep"
 block|,
 literal|"The Afterstep window manager"
 block|,
@@ -2525,7 +2578,7 @@ literal|"=afterstep"
 block|}
 block|,
 block|{
-literal|"Windowmaker"
+literal|"5 Windowmaker"
 block|,
 literal|"The Windowmaker window manager"
 block|,
@@ -2540,7 +2593,7 @@ literal|"=windowmaker"
 block|}
 block|,
 block|{
-literal|"fvwm2"
+literal|"6 fvwm2"
 block|,
 literal|"The fvwm2 window manager"
 block|,
@@ -2694,7 +2747,7 @@ literal|"=other"
 block|}
 block|,
 block|{
-literal|"4.0 SNAP Server"
+literal|" 4.0 SNAP Server"
 block|,
 literal|"current.freebsd.org"
 block|,
@@ -2712,7 +2765,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"3.0 SNAP Server"
+literal|" 3.0 SNAP Server"
 block|,
 literal|"releng3.freebsd.org"
 block|,
@@ -2748,7 +2801,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Australia"
+literal|" Australia"
 block|,
 literal|"ftp.au.freebsd.org"
 block|,
@@ -2766,7 +2819,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Australia #2"
+literal|" Australia #2"
 block|,
 literal|"ftp2.au.freebsd.org"
 block|,
@@ -2784,7 +2837,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Australia #3"
+literal|" Australia #3"
 block|,
 literal|"ftp3.au.freebsd.org"
 block|,
@@ -2802,7 +2855,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Australia #4"
+literal|" Australia #4"
 block|,
 literal|"ftp4.au.freebsd.org"
 block|,
@@ -2820,7 +2873,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Australia #5"
+literal|" Australia #5"
 block|,
 literal|"ftp5.au.freebsd.org"
 block|,
@@ -2856,7 +2909,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Brazil #2"
+literal|" Brazil #2"
 block|,
 literal|"ftp2.br.freebsd.org"
 block|,
@@ -2874,7 +2927,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Brazil #3"
+literal|" Brazil #3"
 block|,
 literal|"ftp3.br.freebsd.org"
 block|,
@@ -2892,7 +2945,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Brazil #4"
+literal|" Brazil #4"
 block|,
 literal|"ftp4.br.freebsd.org"
 block|,
@@ -2910,7 +2963,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Brazil #5"
+literal|" Brazil #5"
 block|,
 literal|"ftp5.br.freebsd.org"
 block|,
@@ -2928,7 +2981,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Brazil #6"
+literal|" Brazil #6"
 block|,
 literal|"ftp6.br.freebsd.org"
 block|,
@@ -2946,7 +2999,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Brazil #7"
+literal|" Brazil #7"
 block|,
 literal|"ftp7.br.freebsd.org"
 block|,
@@ -2964,7 +3017,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Canada"
+literal|" Canada"
 block|,
 literal|"ftp.ca.freebsd.org"
 block|,
@@ -2982,7 +3035,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Czech Republic"
+literal|" Czech Republic"
 block|,
 literal|"ftp.cz.freebsd.org"
 block|,
@@ -3018,7 +3071,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Denmark #2"
+literal|" Denmark #2"
 block|,
 literal|"ftp2.dk.freebsd.org"
 block|,
@@ -3072,7 +3125,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"France"
+literal|" France"
 block|,
 literal|"ftp.fr.freebsd.org"
 block|,
@@ -3090,7 +3143,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"France #2"
+literal|" France #2"
 block|,
 literal|"ftp2.fr.freebsd.org"
 block|,
@@ -3108,7 +3161,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"France #3"
+literal|" France #3"
 block|,
 literal|"ftp3.fr.freebsd.org"
 block|,
@@ -3144,7 +3197,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Germany #2"
+literal|" Germany #2"
 block|,
 literal|"ftp2.de.freebsd.org"
 block|,
@@ -3162,7 +3215,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Germany #3"
+literal|" Germany #3"
 block|,
 literal|"ftp3.de.freebsd.org"
 block|,
@@ -3180,7 +3233,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Germany #4"
+literal|" Germany #4"
 block|,
 literal|"ftp4.de.freebsd.org"
 block|,
@@ -3198,7 +3251,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Germany #5"
+literal|" Germany #5"
 block|,
 literal|"ftp5.de.freebsd.org"
 block|,
@@ -3216,7 +3269,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Germany #6"
+literal|" Germany #6"
 block|,
 literal|"ftp6.de.freebsd.org"
 block|,
@@ -3234,7 +3287,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Germany #7"
+literal|" Germany #7"
 block|,
 literal|"ftp7.de.freebsd.org"
 block|,
@@ -3270,7 +3323,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Hong Kong"
+literal|" Hong Kong"
 block|,
 literal|"ftp.hk.super.net"
 block|,
@@ -3306,7 +3359,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Ireland"
+literal|" Ireland"
 block|,
 literal|"ftp.ie.freebsd.org"
 block|,
@@ -3324,7 +3377,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Israel"
+literal|" Israel"
 block|,
 literal|"ftp.il.freebsd.org"
 block|,
@@ -3342,7 +3395,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Israel #2"
+literal|" Israel #2"
 block|,
 literal|"ftp2.il.freebsd.org"
 block|,
@@ -3378,7 +3431,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Japan #2"
+literal|" Japan #2"
 block|,
 literal|"ftp2.jp.freebsd.org"
 block|,
@@ -3396,7 +3449,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Japan #3"
+literal|" Japan #3"
 block|,
 literal|"ftp3.jp.freebsd.org"
 block|,
@@ -3414,7 +3467,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Japan #4"
+literal|" Japan #4"
 block|,
 literal|"ftp4.jp.freebsd.org"
 block|,
@@ -3432,7 +3485,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Japan #5"
+literal|" Japan #5"
 block|,
 literal|"ftp5.jp.freebsd.org"
 block|,
@@ -3450,7 +3503,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Japan #6"
+literal|" Japan #6"
 block|,
 literal|"ftp6.jp.freebsd.org"
 block|,
@@ -3486,7 +3539,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Korea #2"
+literal|" Korea #2"
 block|,
 literal|"ftp2.kr.freebsd.org"
 block|,
@@ -3504,7 +3557,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Korea #3"
+literal|" Korea #3"
 block|,
 literal|"ftp3.kr.freebsd.org"
 block|,
@@ -3522,7 +3575,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Korea #4"
+literal|" Korea #4"
 block|,
 literal|"ftp4.kr.freebsd.org"
 block|,
@@ -3540,7 +3593,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Korea #5"
+literal|" Korea #5"
 block|,
 literal|"ftp5.kr.freebsd.org"
 block|,
@@ -3594,7 +3647,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Portugal"
+literal|" Portugal"
 block|,
 literal|"ftp.pt.freebsd.org"
 block|,
@@ -3612,7 +3665,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Portugal #2"
+literal|" Portugal #2"
 block|,
 literal|"ftp2.pt.freebsd.org"
 block|,
@@ -3648,7 +3701,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Russia #2"
+literal|" Russia #2"
 block|,
 literal|"ftp2.ru.freebsd.org"
 block|,
@@ -3666,7 +3719,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Russia #3"
+literal|" Russia #3"
 block|,
 literal|"ftp3.ru.freebsd.org"
 block|,
@@ -3684,7 +3737,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Russia #4"
+literal|" Russia #4"
 block|,
 literal|"ftp4.ru.freebsd.org"
 block|,
@@ -3720,7 +3773,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"South Africa"
+literal|" South Africa"
 block|,
 literal|"ftp.za.freebsd.org"
 block|,
@@ -3738,7 +3791,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"South Africa #2"
+literal|" South Africa #2"
 block|,
 literal|"ftp2.za.freebsd.org"
 block|,
@@ -3756,7 +3809,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"South Africa #3"
+literal|" South Africa #3"
 block|,
 literal|"ftp3.za.freebsd.org"
 block|,
@@ -3774,7 +3827,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"South Africa #4"
+literal|" South Africa #4"
 block|,
 literal|"ftp4.za.freebsd.org"
 block|,
@@ -3792,7 +3845,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Spain"
+literal|" Spain"
 block|,
 literal|"ftp.es.freebsd.org"
 block|,
@@ -3810,7 +3863,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Spain #2"
+literal|" Spain #2"
 block|,
 literal|"ftp2.es.freebsd.org"
 block|,
@@ -3828,7 +3881,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Sweden"
+literal|" Sweden"
 block|,
 literal|"ftp.se.freebsd.org"
 block|,
@@ -3846,7 +3899,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Sweden #2"
+literal|" Sweden #2"
 block|,
 literal|"ftp2.se.freebsd.org"
 block|,
@@ -3864,7 +3917,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Sweden #3"
+literal|" Sweden #3"
 block|,
 literal|"ftp3.se.freebsd.org"
 block|,
@@ -3900,7 +3953,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Taiwan #2"
+literal|" Taiwan #2"
 block|,
 literal|"ftp2.tw.freebsd.org"
 block|,
@@ -3918,7 +3971,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Taiwan #3"
+literal|" Taiwan #3"
 block|,
 literal|"ftp3.tw.freebsd.org"
 block|,
@@ -3936,7 +3989,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"Thailand"
+literal|" Thailand"
 block|,
 literal|"ftp.nectec.or.th"
 block|,
@@ -3972,7 +4025,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"UK #2"
+literal|" UK #2"
 block|,
 literal|"ftp2.uk.freebsd.org"
 block|,
@@ -3990,7 +4043,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"UK #3"
+literal|" UK #3"
 block|,
 literal|"ftp3.uk.freebsd.org"
 block|,
@@ -4008,7 +4061,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"UK #4"
+literal|" UK #4"
 block|,
 literal|"ftp4.uk.freebsd.org"
 block|,
@@ -4026,7 +4079,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"UK #5"
+literal|" UK #5"
 block|,
 literal|"ftp5.uk.freebsd.org"
 block|,
@@ -4044,7 +4097,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"USA"
+literal|" USA"
 block|,
 literal|"ftp.freebsd.org"
 block|,
@@ -4062,7 +4115,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"USA #2"
+literal|" USA #2"
 block|,
 literal|"ftp2.freebsd.org"
 block|,
@@ -4080,7 +4133,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"USA #3"
+literal|" USA #3"
 block|,
 literal|"ftp3.freebsd.org"
 block|,
@@ -4098,7 +4151,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"USA #4"
+literal|" USA #4"
 block|,
 literal|"ftp4.freebsd.org"
 block|,
@@ -4116,7 +4169,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"USA #5"
+literal|" USA #5"
 block|,
 literal|"ftp5.freebsd.org"
 block|,
@@ -4134,7 +4187,7 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|"USA #6"
+literal|" USA #6"
 block|,
 literal|"ftp6.freebsd.org"
 block|,
@@ -4318,7 +4371,7 @@ name|mediaSetTape
 block|}
 block|,
 block|{
-literal|"9 Options"
+literal|"Options"
 block|,
 literal|"Go to the Options screen"
 block|,
@@ -4357,6 +4410,36 @@ block|,
 literal|"distributions"
 block|,
 block|{
+block|{
+literal|"All"
+block|,
+literal|"All system sources, binaries and X Window System)"
+block|,
+name|checkDistEverything
+block|,
+name|distSetEverything
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset selected distribution list to nothing"
+block|,
+name|NULL
+block|,
+name|distReset
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
 block|{
 literal|"1 Developer"
 block|,
@@ -4449,56 +4532,6 @@ literal|'>'
 block|}
 block|,
 block|{
-literal|"8 All"
-block|,
-literal|"All sources and binaries (incl X Window System)"
-block|,
-name|checkDistEverything
-block|,
-name|distSetEverything
-block|}
-block|,
-block|{
-literal|"9 Clear"
-block|,
-literal|"Reset selected distribution list to nothing"
-block|,
-name|NULL
-block|,
-name|distReset
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"0 Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
@@ -4524,7 +4557,47 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"bin"
+literal|"All"
+block|,
+literal|"All system sources, binaries and X Window System"
+block|,
+name|NULL
+block|,
+name|distSetEverything
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset all of the below"
+block|,
+name|NULL
+block|,
+name|distReset
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" bin"
 block|,
 literal|"Binary base distribution (required)"
 block|,
@@ -4550,7 +4623,7 @@ ifdef|#
 directive|ifdef
 name|__i386__
 block|{
-literal|"compat1x"
+literal|" compat1x"
 block|,
 literal|"FreeBSD 1.x binary compatibility"
 block|,
@@ -4573,7 +4646,7 @@ name|DIST_COMPAT1X
 block|}
 block|,
 block|{
-literal|"compat20"
+literal|" compat20"
 block|,
 literal|"FreeBSD 2.0 binary compatibility"
 block|,
@@ -4596,7 +4669,7 @@ name|DIST_COMPAT20
 block|}
 block|,
 block|{
-literal|"compat21"
+literal|" compat21"
 block|,
 literal|"FreeBSD 2.1 binary compatibility"
 block|,
@@ -4619,7 +4692,7 @@ name|DIST_COMPAT21
 block|}
 block|,
 block|{
-literal|"compat22"
+literal|" compat22"
 block|,
 literal|"FreeBSD 2.2.x and 3.0 a.out binary compatibility"
 block|,
@@ -4647,7 +4720,7 @@ name|__FreeBSD__
 operator|>
 literal|3
 block|{
-literal|"compat3x"
+literal|" compat3x"
 block|,
 literal|"FreeBSD 3.x binary compatibility"
 block|,
@@ -4674,7 +4747,7 @@ directive|endif
 endif|#
 directive|endif
 block|{
-literal|"DES"
+literal|" DES"
 block|,
 literal|"DES encryption code - NOT FOR EXPORT!"
 block|,
@@ -4684,7 +4757,7 @@ name|distSetDES
 block|}
 block|,
 block|{
-literal|"dict"
+literal|" dict"
 block|,
 literal|"Spelling checker dictionary files"
 block|,
@@ -4707,7 +4780,7 @@ name|DIST_DICT
 block|}
 block|,
 block|{
-literal|"doc"
+literal|" doc"
 block|,
 literal|"Miscellaneous FreeBSD online docs"
 block|,
@@ -4730,7 +4803,7 @@ name|DIST_DOC
 block|}
 block|,
 block|{
-literal|"games"
+literal|" games"
 block|,
 literal|"Games (non-commercial)"
 block|,
@@ -4753,7 +4826,7 @@ name|DIST_GAMES
 block|}
 block|,
 block|{
-literal|"info"
+literal|" info"
 block|,
 literal|"GNU info files"
 block|,
@@ -4776,7 +4849,7 @@ name|DIST_INFO
 block|}
 block|,
 block|{
-literal|"man"
+literal|" man"
 block|,
 literal|"System manual pages - recommended"
 block|,
@@ -4799,7 +4872,7 @@ name|DIST_MANPAGES
 block|}
 block|,
 block|{
-literal|"catman"
+literal|" catman"
 block|,
 literal|"Preformatted system manual pages"
 block|,
@@ -4822,7 +4895,7 @@ name|DIST_CATPAGES
 block|}
 block|,
 block|{
-literal|"proflibs"
+literal|" proflibs"
 block|,
 literal|"Profiled versions of the libraries"
 block|,
@@ -4845,7 +4918,7 @@ name|DIST_PROFLIBS
 block|}
 block|,
 block|{
-literal|"src"
+literal|" src"
 block|,
 literal|"Sources for everything but DES"
 block|,
@@ -4855,7 +4928,7 @@ name|distSetSrc
 block|}
 block|,
 block|{
-literal|"ports"
+literal|" ports"
 block|,
 literal|"The FreeBSD Ports collection"
 block|,
@@ -4878,7 +4951,7 @@ name|DIST_PORTS
 block|}
 block|,
 block|{
-literal|"local"
+literal|" local"
 block|,
 literal|"Local additions collection"
 block|,
@@ -4901,73 +4974,13 @@ name|DIST_LOCAL
 block|}
 block|,
 block|{
-literal|"XFree86"
+literal|" XFree86"
 block|,
 literal|"The XFree86 3.3.5 distribution"
 block|,
 name|x11FlagCheck
 block|,
 name|distSetXF86
-block|}
-block|,
-block|{
-literal|"All"
-block|,
-literal|"All sources, binaries and X Window System binaries"
-block|,
-name|NULL
-block|,
-name|distSetEverything
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Clear"
-block|,
-literal|"Reset all of the above"
-block|,
-name|NULL
-block|,
-name|distReset
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
 block|}
 block|,
 block|{
@@ -5208,7 +5221,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|"Clear"
+literal|"Reset"
 block|,
 literal|"Reset all of the below"
 block|,
@@ -5228,7 +5241,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|"base"
+literal|" base"
 block|,
 literal|"top-level files in /usr/src"
 block|,
@@ -5251,7 +5264,7 @@ name|DIST_SRC_BASE
 block|}
 block|,
 block|{
-literal|"contrib"
+literal|" contrib"
 block|,
 literal|"/usr/src/contrib (contributed software)"
 block|,
@@ -5274,7 +5287,7 @@ name|DIST_SRC_CONTRIB
 block|}
 block|,
 block|{
-literal|"gnu"
+literal|" gnu"
 block|,
 literal|"/usr/src/gnu (software from the GNU Project)"
 block|,
@@ -5297,7 +5310,7 @@ name|DIST_SRC_GNU
 block|}
 block|,
 block|{
-literal|"etc"
+literal|" etc"
 block|,
 literal|"/usr/src/etc (miscellaneous system files)"
 block|,
@@ -5320,7 +5333,7 @@ name|DIST_SRC_ETC
 block|}
 block|,
 block|{
-literal|"games"
+literal|" games"
 block|,
 literal|"/usr/src/games (the obvious!)"
 block|,
@@ -5343,7 +5356,7 @@ name|DIST_SRC_GAMES
 block|}
 block|,
 block|{
-literal|"include"
+literal|" include"
 block|,
 literal|"/usr/src/include (header files)"
 block|,
@@ -5366,7 +5379,7 @@ name|DIST_SRC_INCLUDE
 block|}
 block|,
 block|{
-literal|"lib"
+literal|" lib"
 block|,
 literal|"/usr/src/lib (system libraries)"
 block|,
@@ -5389,7 +5402,7 @@ name|DIST_SRC_LIB
 block|}
 block|,
 block|{
-literal|"libexec"
+literal|" libexec"
 block|,
 literal|"/usr/src/libexec (system programs)"
 block|,
@@ -5412,7 +5425,7 @@ name|DIST_SRC_LIBEXEC
 block|}
 block|,
 block|{
-literal|"release"
+literal|" release"
 block|,
 literal|"/usr/src/release (release-generation tools)"
 block|,
@@ -5435,7 +5448,7 @@ name|DIST_SRC_RELEASE
 block|}
 block|,
 block|{
-literal|"bin"
+literal|" bin"
 block|,
 literal|"/usr/src/bin (system binaries)"
 block|,
@@ -5458,7 +5471,7 @@ name|DIST_SRC_BIN
 block|}
 block|,
 block|{
-literal|"sbin"
+literal|" sbin"
 block|,
 literal|"/usr/src/sbin (system binaries)"
 block|,
@@ -5481,7 +5494,7 @@ name|DIST_SRC_SBIN
 block|}
 block|,
 block|{
-literal|"share"
+literal|" share"
 block|,
 literal|"/usr/src/share (documents and shared files)"
 block|,
@@ -5504,7 +5517,7 @@ name|DIST_SRC_SHARE
 block|}
 block|,
 block|{
-literal|"sys"
+literal|" sys"
 block|,
 literal|"/usr/src/sys (FreeBSD kernel)"
 block|,
@@ -5527,7 +5540,7 @@ name|DIST_SRC_SYS
 block|}
 block|,
 block|{
-literal|"ubin"
+literal|" ubin"
 block|,
 literal|"/usr/src/usr.bin (user binaries)"
 block|,
@@ -5550,7 +5563,7 @@ name|DIST_SRC_UBIN
 block|}
 block|,
 block|{
-literal|"usbin"
+literal|" usbin"
 block|,
 literal|"/usr/src/usr.sbin (aux system binaries)"
 block|,
@@ -5570,26 +5583,6 @@ block|,
 literal|']'
 block|,
 name|DIST_SRC_USBIN
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
 block|}
 block|,
 block|{
@@ -5614,6 +5607,26 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"All"
+block|,
+literal|"Select all XFree86 distribution sets"
+block|,
+name|NULL
+block|,
+name|setX11All
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset XFree86 distribution sets"
+block|,
+name|NULL
+block|,
+name|clearX11All
+block|}
+block|,
 block|{
 literal|"Basic"
 block|,
@@ -5660,27 +5673,7 @@ name|MenuXF86SelectFonts
 block|}
 block|,
 block|{
-literal|"All"
-block|,
-literal|"Select all XFree86 distribution sets"
-block|,
-name|NULL
-block|,
-name|setX11All
-block|}
-block|,
-block|{
-literal|"Clear"
-block|,
-literal|"Reset XFree86 distribution list"
-block|,
-name|NULL
-block|,
-name|clearX11All
-block|}
-block|,
-block|{
-literal|"Exit"
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -5724,7 +5717,47 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"bin"
+literal|"All"
+block|,
+literal|"Select all below"
+block|,
+name|NULL
+block|,
+name|setX11Misc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset all below"
+block|,
+name|NULL
+block|,
+name|clearX11Misc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" bin"
 block|,
 literal|"Client applications and shared libs"
 block|,
@@ -5747,7 +5780,7 @@ name|DIST_XF86_BIN
 block|}
 block|,
 block|{
-literal|"cfg"
+literal|" cfg"
 block|,
 literal|"Configuration files"
 block|,
@@ -5770,7 +5803,7 @@ name|DIST_XF86_CFG
 block|}
 block|,
 block|{
-literal|"doc"
+literal|" doc"
 block|,
 literal|"READMEs and release notes"
 block|,
@@ -5793,7 +5826,7 @@ name|DIST_XF86_DOC
 block|}
 block|,
 block|{
-literal|"html"
+literal|" html"
 block|,
 literal|"HTML documentation files"
 block|,
@@ -5816,7 +5849,7 @@ name|DIST_XF86_HTML
 block|}
 block|,
 block|{
-literal|"lib"
+literal|" lib"
 block|,
 literal|"Data files needed at runtime"
 block|,
@@ -5838,36 +5871,8 @@ block|,
 name|DIST_XF86_LIB
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
-literal|"lk98"
-block|,
-literal|"Server link kit for PC98 machines"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_LKIT98
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|"lkit"
+literal|" lkit"
 block|,
 literal|"Server link kit for all other machines"
 block|,
@@ -5890,7 +5895,7 @@ name|DIST_XF86_LKIT
 block|}
 block|,
 block|{
-literal|"man"
+literal|" man"
 block|,
 literal|"Manual pages"
 block|,
@@ -5913,7 +5918,7 @@ name|DIST_XF86_MAN
 block|}
 block|,
 block|{
-literal|"prog"
+literal|" prog"
 block|,
 literal|"Programmer's header and library files"
 block|,
@@ -5936,7 +5941,7 @@ name|DIST_XF86_PROG
 block|}
 block|,
 block|{
-literal|"set"
+literal|" set"
 block|,
 literal|"XFree86 Setup Utility"
 block|,
@@ -5962,7 +5967,7 @@ ifdef|#
 directive|ifdef
 name|__i386__
 block|{
-literal|"9set"
+literal|" 9set"
 block|,
 literal|"XFree86 Setup Utility for PC98 machines"
 block|,
@@ -5984,10 +5989,33 @@ block|,
 name|DIST_XF86_9SET
 block|}
 block|,
+block|{
+literal|" lk98"
+block|,
+literal|"Server link kit for PC98 machines"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_LKIT98
+block|}
+block|,
 endif|#
 directive|endif
 block|{
-literal|"sources"
+literal|" sources"
 block|,
 literal|"XFree86 3.3.5 standard sources"
 block|,
@@ -6010,7 +6038,7 @@ name|DIST_XF86_SRC
 block|}
 block|,
 block|{
-literal|"csources"
+literal|" csources"
 block|,
 literal|"XFree86 3.3.5 contrib sources"
 block|,
@@ -6030,66 +6058,6 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_CSRC
-block|}
-block|,
-block|{
-literal|"All"
-block|,
-literal|"Select all of the above"
-block|,
-name|NULL
-block|,
-name|setX11Misc
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Clear"
-block|,
-literal|"Reset all of the above"
-block|,
-name|NULL
-block|,
-name|clearX11Misc
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
 block|}
 block|,
 block|{
@@ -6116,7 +6084,47 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"fnts"
+literal|"All"
+block|,
+literal|"All fonts"
+block|,
+name|NULL
+block|,
+name|setX11Fonts
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset font selections"
+block|,
+name|NULL
+block|,
+name|clearX11Fonts
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" fnts"
 block|,
 literal|"Standard 75 DPI and miscellaneous fonts"
 block|,
@@ -6139,7 +6147,7 @@ name|DIST_XF86_FONTS_MISC
 block|}
 block|,
 block|{
-literal|"f100"
+literal|" f100"
 block|,
 literal|"100 DPI fonts"
 block|,
@@ -6162,7 +6170,7 @@ name|DIST_XF86_FONTS_100
 block|}
 block|,
 block|{
-literal|"fcyr"
+literal|" fcyr"
 block|,
 literal|"Cyrillic Fonts"
 block|,
@@ -6185,7 +6193,7 @@ name|DIST_XF86_FONTS_CYR
 block|}
 block|,
 block|{
-literal|"fscl"
+literal|" fscl"
 block|,
 literal|"Speedo and Type scalable fonts"
 block|,
@@ -6208,7 +6216,7 @@ name|DIST_XF86_FONTS_SCALE
 block|}
 block|,
 block|{
-literal|"non"
+literal|" non"
 block|,
 literal|"Japanese, Chinese and other non-english fonts"
 block|,
@@ -6231,7 +6239,7 @@ name|DIST_XF86_FONTS_NON
 block|}
 block|,
 block|{
-literal|"server"
+literal|" server"
 block|,
 literal|"Font server"
 block|,
@@ -6251,66 +6259,6 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_FONTS_SERVER
-block|}
-block|,
-block|{
-literal|"All"
-block|,
-literal|"All fonts"
-block|,
-name|NULL
-block|,
-name|setX11Fonts
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Clear"
-block|,
-literal|"Reset font selections"
-block|,
-name|NULL
-block|,
-name|clearX11Fonts
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
 block|}
 block|,
 block|{
@@ -6340,7 +6288,47 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"SVGA"
+literal|"All"
+block|,
+literal|"Select all of the above"
+block|,
+name|NULL
+block|,
+name|setX11Servers
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset all of the above"
+block|,
+name|NULL
+block|,
+name|clearX11Servers
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" SVGA"
 block|,
 literal|"Standard VGA or Super VGA card"
 block|,
@@ -6363,7 +6351,7 @@ name|DIST_XF86_SERVER_SVGA
 block|}
 block|,
 block|{
-literal|"VGA16"
+literal|" VGA16"
 block|,
 literal|"Standard 16 color VGA card"
 block|,
@@ -6386,7 +6374,7 @@ name|DIST_XF86_SERVER_VGA16
 block|}
 block|,
 block|{
-literal|"Mono"
+literal|" Mono"
 block|,
 literal|"Standard Monochrome card"
 block|,
@@ -6409,7 +6397,7 @@ name|DIST_XF86_SERVER_MONO
 block|}
 block|,
 block|{
-literal|"3DL"
+literal|" 3DL"
 block|,
 literal|"8, 16 and 24 bit color 3D Labs boards"
 block|,
@@ -6432,7 +6420,7 @@ name|DIST_XF86_SERVER_3DL
 block|}
 block|,
 block|{
-literal|"8514"
+literal|" 8514"
 block|,
 literal|"8-bit (256 color) IBM 8514 or compatible card"
 block|,
@@ -6455,7 +6443,7 @@ name|DIST_XF86_SERVER_8514
 block|}
 block|,
 block|{
-literal|"AGX"
+literal|" AGX"
 block|,
 literal|"8-bit AGX card"
 block|,
@@ -6478,7 +6466,7 @@ name|DIST_XF86_SERVER_AGX
 block|}
 block|,
 block|{
-literal|"I128"
+literal|" I128"
 block|,
 literal|"8, 16 and 24-bit #9 Imagine I128 card"
 block|,
@@ -6501,7 +6489,7 @@ name|DIST_XF86_SERVER_I128
 block|}
 block|,
 block|{
-literal|"Ma8"
+literal|" Ma8"
 block|,
 literal|"8-bit ATI Mach8 card"
 block|,
@@ -6524,7 +6512,7 @@ name|DIST_XF86_SERVER_MACH8
 block|}
 block|,
 block|{
-literal|"Ma32"
+literal|" Ma32"
 block|,
 literal|"8 and 16-bit (65K color) ATI Mach32 card"
 block|,
@@ -6547,7 +6535,7 @@ name|DIST_XF86_SERVER_MACH32
 block|}
 block|,
 block|{
-literal|"Ma64"
+literal|" Ma64"
 block|,
 literal|"8 and 16-bit (65K color) ATI Mach64 card"
 block|,
@@ -6570,7 +6558,7 @@ name|DIST_XF86_SERVER_MACH64
 block|}
 block|,
 block|{
-literal|"P9K"
+literal|" P9K"
 block|,
 literal|"8, 16, and 24-bit color Weitek P9000 based boards"
 block|,
@@ -6593,7 +6581,7 @@ name|DIST_XF86_SERVER_P9000
 block|}
 block|,
 block|{
-literal|"S3"
+literal|" S3"
 block|,
 literal|"8, 16 and 24-bit color S3 based boards"
 block|,
@@ -6616,7 +6604,7 @@ name|DIST_XF86_SERVER_S3
 block|}
 block|,
 block|{
-literal|"S3V"
+literal|" S3V"
 block|,
 literal|"8, 16 and 24-bit color S3 Virge based boards"
 block|,
@@ -6639,7 +6627,7 @@ name|DIST_XF86_SERVER_S3V
 block|}
 block|,
 block|{
-literal|"W32"
+literal|" W32"
 block|,
 literal|"8-bit ET4000/W32, /W32i and /W32p cards"
 block|,
@@ -6665,7 +6653,7 @@ ifdef|#
 directive|ifdef
 name|__i386__
 block|{
-literal|"PC98"
+literal|" PC98"
 block|,
 literal|"Select an X server for a NEC PC98 [Submenu]"
 block|,
@@ -6691,7 +6679,7 @@ elif|#
 directive|elif
 name|__alpha__
 block|{
-literal|"TGA"
+literal|" TGA"
 block|,
 literal|"TGA cards (alpha architecture only)"
 block|,
@@ -6715,66 +6703,6 @@ block|}
 block|,
 endif|#
 directive|endif
-block|{
-literal|"All"
-block|,
-literal|"Select all of the above"
-block|,
-name|NULL
-block|,
-name|setX11Servers
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Clear"
-block|,
-literal|"Reset all of the above"
-block|,
-name|NULL
-block|,
-name|clearX11Servers
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|}
-block|,
 block|{
 name|NULL
 block|}
@@ -6802,7 +6730,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"9480"
+literal|" 9480"
 block|,
 literal|"PC98 8-bit (256 color) PEGC-480 card"
 block|,
@@ -6825,7 +6753,7 @@ name|DIST_XF86_SERVER_9480
 block|}
 block|,
 block|{
-literal|"9EGC"
+literal|" 9EGC"
 block|,
 literal|"PC98 4-bit (16 color) EGC card"
 block|,
@@ -6848,7 +6776,7 @@ name|DIST_XF86_SERVER_9EGC
 block|}
 block|,
 block|{
-literal|"9GA9"
+literal|" 9GA9"
 block|,
 literal|"PC98 GA-968V4/PCI (S3 968) card"
 block|,
@@ -6871,7 +6799,7 @@ name|DIST_XF86_SERVER_9GA9
 block|}
 block|,
 block|{
-literal|"9GAN"
+literal|" 9GAN"
 block|,
 literal|"PC98 GANB-WAP (cirrus) card"
 block|,
@@ -6894,7 +6822,7 @@ name|DIST_XF86_SERVER_9GAN
 block|}
 block|,
 block|{
-literal|"9LPW"
+literal|" 9LPW"
 block|,
 literal|"PC98 PowerWindowLB (S3) card"
 block|,
@@ -6917,7 +6845,7 @@ name|DIST_XF86_SERVER_9LPW
 block|}
 block|,
 block|{
-literal|"9MGA"
+literal|" 9MGA"
 block|,
 literal|"PC98 MGA (Matrox) card"
 block|,
@@ -6940,7 +6868,7 @@ name|DIST_XF86_SERVER_9MGA
 block|}
 block|,
 block|{
-literal|"9NKV"
+literal|" 9NKV"
 block|,
 literal|"PC98 NKV-NEC (cirrus) card"
 block|,
@@ -6963,7 +6891,7 @@ name|DIST_XF86_SERVER_9NKV
 block|}
 block|,
 block|{
-literal|"9NS3"
+literal|" 9NS3"
 block|,
 literal|"PC98 NEC (S3) card"
 block|,
@@ -6986,7 +6914,7 @@ name|DIST_XF86_SERVER_9NS3
 block|}
 block|,
 block|{
-literal|"9SPW"
+literal|" 9SPW"
 block|,
 literal|"PC98 SKB-PowerWindow (S3) card"
 block|,
@@ -7009,7 +6937,7 @@ name|DIST_XF86_SERVER_9SPW
 block|}
 block|,
 block|{
-literal|"9SVG"
+literal|" 9SVG"
 block|,
 literal|"PC98 generic SVGA card"
 block|,
@@ -7032,7 +6960,7 @@ name|DIST_XF86_SERVER_9SVG
 block|}
 block|,
 block|{
-literal|"9TGU"
+literal|" 9TGU"
 block|,
 literal|"PC98 Cyber9320 and TGUI9680 cards"
 block|,
@@ -7055,7 +6983,7 @@ name|DIST_XF86_SERVER_9TGU
 block|}
 block|,
 block|{
-literal|"9WEP"
+literal|" 9WEP"
 block|,
 literal|"PC98 WAB-EP (cirrus) card"
 block|,
@@ -7078,7 +7006,7 @@ name|DIST_XF86_SERVER_9WEP
 block|}
 block|,
 block|{
-literal|"9WS"
+literal|" 9WS"
 block|,
 literal|"PC98 WABS (cirrus) card"
 block|,
@@ -7101,7 +7029,7 @@ name|DIST_XF86_SERVER_9WS
 block|}
 block|,
 block|{
-literal|"9WSN"
+literal|" 9WSN"
 block|,
 literal|"PC98 WSN-A2F (cirrus) card"
 block|,
@@ -7121,26 +7049,6 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_SERVER_9WSN
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
 block|}
 block|,
 block|{
@@ -7198,7 +7106,7 @@ literal|"html"
 block|,
 block|{
 block|{
-literal|"Handbook"
+literal|"1 Handbook"
 block|,
 literal|"The FreeBSD Handbook."
 block|,
@@ -7208,7 +7116,7 @@ name|docShowDocument
 block|}
 block|,
 block|{
-literal|"FAQ"
+literal|"2 FAQ"
 block|,
 literal|"The Frequently Asked Questions guide."
 block|,
@@ -7218,7 +7126,7 @@ name|docShowDocument
 block|}
 block|,
 block|{
-literal|"Home"
+literal|"3 Home"
 block|,
 literal|"The Home Pages for the FreeBSD Project (requires net)"
 block|,
@@ -7228,13 +7136,23 @@ name|docShowDocument
 block|}
 block|,
 block|{
-literal|"Other"
+literal|"4 Other"
 block|,
 literal|"Enter a URL."
 block|,
 name|NULL
 block|,
 name|docShowDocument
+block|}
+block|,
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
 block|}
 block|,
 block|{
@@ -7389,7 +7307,7 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|"0 Exit"
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -7519,7 +7437,7 @@ literal|"configure"
 block|,
 block|{
 block|{
-literal|"D Distributions"
+literal|" Distributions"
 block|,
 literal|"Install additional distribution sets"
 block|,
@@ -7529,7 +7447,7 @@ name|distExtractAll
 block|}
 block|,
 block|{
-literal|"P Packages"
+literal|" Packages"
 block|,
 literal|"Install pre-packaged software for FreeBSD"
 block|,
@@ -7539,7 +7457,7 @@ name|configPackages
 block|}
 block|,
 block|{
-literal|"R Root Password"
+literal|" Root Password"
 block|,
 literal|"Set the system manager's password"
 block|,
@@ -7553,7 +7471,7 @@ literal|"passwd root"
 block|}
 block|,
 block|{
-literal|"L Label"
+literal|" Label"
 block|,
 literal|"The disk Label editor"
 block|,
@@ -7566,7 +7484,7 @@ ifdef|#
 directive|ifdef
 name|__i386__
 block|{
-literal|"F Fdisk"
+literal|" Fdisk"
 block|,
 literal|"The disk Slice (PC-style partition) Editor"
 block|,
@@ -7578,7 +7496,7 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|"1 User Management"
+literal|" User Management"
 block|,
 literal|"Add user and group information"
 block|,
@@ -7593,7 +7511,7 @@ name|MenuUsermgmt
 block|}
 block|,
 block|{
-literal|"2 Console"
+literal|" Console"
 block|,
 literal|"Customize system console behavior"
 block|,
@@ -7608,7 +7526,7 @@ name|MenuSyscons
 block|}
 block|,
 block|{
-literal|"3 Time Zone"
+literal|" Time Zone"
 block|,
 literal|"Set which time zone you're in"
 block|,
@@ -7622,7 +7540,7 @@ literal|"tzsetup"
 block|}
 block|,
 block|{
-literal|"4 Media"
+literal|" Media"
 block|,
 literal|"Change the installation media type"
 block|,
@@ -7637,7 +7555,7 @@ name|MenuMedia
 block|}
 block|,
 block|{
-literal|"5 Mouse"
+literal|" Mouse"
 block|,
 literal|"Configure your mouse"
 block|,
@@ -7654,7 +7572,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"6 Networking"
+literal|" Networking"
 block|,
 literal|"Configure additional network services"
 block|,
@@ -7669,7 +7587,7 @@ name|MenuNetworking
 block|}
 block|,
 block|{
-literal|"7 Startup"
+literal|" Startup"
 block|,
 literal|"Configure system startup options"
 block|,
@@ -7684,7 +7602,7 @@ name|MenuStartup
 block|}
 block|,
 block|{
-literal|"8 Options"
+literal|" Options"
 block|,
 literal|"View/Set various installation options"
 block|,
@@ -7694,7 +7612,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"X XFree86"
+literal|" XFree86"
 block|,
 literal|"Configure XFree86 Server"
 block|,
@@ -7704,7 +7622,7 @@ name|configXSetup
 block|}
 block|,
 block|{
-literal|"D Desktop"
+literal|" Desktop"
 block|,
 literal|"Configure XFree86 Desktop"
 block|,
@@ -7714,7 +7632,7 @@ name|configXDesktop
 block|}
 block|,
 block|{
-literal|"H HTML Docs"
+literal|" HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)"
 block|,
@@ -7724,7 +7642,7 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"E Exit"
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -7759,7 +7677,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"APM"
+literal|" APM"
 block|,
 literal|"Auto-power management services (typically laptops)"
 block|,
@@ -7773,7 +7691,7 @@ literal|"apm_enable=YES"
 block|}
 block|,
 block|{
-literal|"pccard"
+literal|" pccard"
 block|,
 literal|"Enable PCCARD (AKA PCMCIA) services (also laptops)"
 block|,
@@ -7787,7 +7705,7 @@ literal|"pccard_enable=YES"
 block|}
 block|,
 block|{
-literal|"pccard mem"
+literal|" pccard mem"
 block|,
 literal|"Set PCCARD memory address (if enabled)"
 block|,
@@ -7801,7 +7719,7 @@ literal|"pccard_mem"
 block|}
 block|,
 block|{
-literal|"pccard ifconfig"
+literal|" pccard ifconfig"
 block|,
 literal|"List of PCCARD ethernet devices to configure"
 block|,
@@ -7835,7 +7753,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|"startup dirs"
+literal|" startup dirs"
 block|,
 literal|"Set the list of dirs to look for startup scripts"
 block|,
@@ -7849,7 +7767,7 @@ literal|"local_startup"
 block|}
 block|,
 block|{
-literal|"named"
+literal|" named"
 block|,
 literal|"Run a local name server on this host"
 block|,
@@ -7863,7 +7781,7 @@ literal|"named_enable=YES"
 block|}
 block|,
 block|{
-literal|"named flags"
+literal|" named flags"
 block|,
 literal|"Set default flags to named (if enabled)"
 block|,
@@ -7877,7 +7795,7 @@ literal|"named_flags"
 block|}
 block|,
 block|{
-literal|"nis client"
+literal|" nis client"
 block|,
 literal|"This host wishes to be an NIS client."
 block|,
@@ -7891,7 +7809,7 @@ literal|"nis_client_enable=YES"
 block|}
 block|,
 block|{
-literal|"nis domainname"
+literal|" nis domainname"
 block|,
 literal|"Set NIS domainname (if enabled)"
 block|,
@@ -7905,7 +7823,7 @@ literal|"nisdomainname"
 block|}
 block|,
 block|{
-literal|"nis server"
+literal|" nis server"
 block|,
 literal|"This host wishes to be an NIS server."
 block|,
@@ -7939,7 +7857,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|"accounting"
+literal|" accounting"
 block|,
 literal|"This host wishes to run process accounting."
 block|,
@@ -7953,7 +7871,7 @@ literal|"accounting_enable=YES"
 block|}
 block|,
 block|{
-literal|"lpd"
+literal|" lpd"
 block|,
 literal|"This host has a printer and wants to run lpd."
 block|,
@@ -7970,7 +7888,7 @@ ifdef|#
 directive|ifdef
 name|__i386__
 block|{
-literal|"linux"
+literal|" linux"
 block|,
 literal|"This host wants to be able to run linux binaries."
 block|,
@@ -7985,7 +7903,7 @@ literal|"=YES"
 block|}
 block|,
 block|{
-literal|"SCO"
+literal|" SCO"
 block|,
 literal|"This host wants to be able to run IBCS2 binaries."
 block|,
@@ -8001,7 +7919,7 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|"quotas"
+literal|" quotas"
 block|,
 literal|"This host wishes to check quotas on startup."
 block|,
@@ -8012,26 +7930,6 @@ block|,
 name|NULL
 block|,
 literal|"check_quotas=YES"
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
 block|}
 block|,
 block|{
@@ -8061,7 +7959,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"Interfaces"
+literal|" Interfaces"
 block|,
 literal|"Configure additional network interfaces"
 block|,
@@ -8071,7 +7969,7 @@ name|tcpMenuSelect
 block|}
 block|,
 block|{
-literal|"NFS client"
+literal|" NFS client"
 block|,
 literal|"This machine will be an NFS client"
 block|,
@@ -8085,7 +7983,7 @@ literal|"nfs_client_enable=YES"
 block|}
 block|,
 block|{
-literal|"NFS server"
+literal|" NFS server"
 block|,
 literal|"This machine will be an NFS server"
 block|,
@@ -8099,7 +7997,7 @@ literal|"nfs_server_enable=YES"
 block|}
 block|,
 block|{
-literal|"AMD"
+literal|" AMD"
 block|,
 literal|"This machine wants to run the auto-mounter service"
 block|,
@@ -8113,7 +8011,7 @@ literal|"amd_enable=YES"
 block|}
 block|,
 block|{
-literal|"AMD Flags"
+literal|" AMD Flags"
 block|,
 literal|"Set flags to AMD service (if enabled)"
 block|,
@@ -8127,7 +8025,7 @@ literal|"amd_flags"
 block|}
 block|,
 block|{
-literal|"TCP Extensions"
+literal|" TCP Extensions"
 block|,
 literal|"Allow RFC1323 and RFC1644 TCP extensions?"
 block|,
@@ -8141,7 +8039,7 @@ literal|"tcp_extensions=YES"
 block|}
 block|,
 block|{
-literal|"Gateway"
+literal|" Gateway"
 block|,
 literal|"This machine will route packets between interfaces"
 block|,
@@ -8155,7 +8053,7 @@ literal|"gateway_enable=YES"
 block|}
 block|,
 block|{
-literal|"Ntpdate"
+literal|" Ntpdate"
 block|,
 literal|"Select a clock-synchronization server"
 block|,
@@ -8178,7 +8076,7 @@ literal|"ntpdate_enable=YES"
 block|}
 block|,
 block|{
-literal|"router"
+literal|" router"
 block|,
 literal|"Select routing daemon (default: routed)"
 block|,
@@ -8192,7 +8090,7 @@ literal|"router"
 block|}
 block|,
 block|{
-literal|"Rwhod"
+literal|" Rwhod"
 block|,
 literal|"This machine wants to run the rwho daemon"
 block|,
@@ -8206,7 +8104,7 @@ literal|"rwhod_enable=YES"
 block|}
 block|,
 block|{
-literal|"Anon FTP"
+literal|" Anon FTP"
 block|,
 literal|"This machine wishes to allow anonymous FTP."
 block|,
@@ -8220,7 +8118,7 @@ literal|"anon_ftp"
 block|}
 block|,
 block|{
-literal|"PCNFSD"
+literal|" PCNFSD"
 block|,
 literal|"Run authentication server for clients with PC-NFS."
 block|,
@@ -8231,26 +8129,6 @@ block|,
 name|NULL
 block|,
 literal|"pcnfsd"
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
 block|}
 block|,
 block|{
@@ -8321,7 +8199,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.syd.dms.csiro.au"
 block|}
 block|,
 block|{
-literal|"Canada"
+literal|" Canada"
 block|,
 literal|"tick.usask.ca (GOES clock)"
 block|,
@@ -8363,7 +8241,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntps1-0.uni-erlangen.de"
 block|}
 block|,
 block|{
-literal|"Germany #2"
+literal|" Germany #2"
 block|,
 literal|"ntps1-0.cs.tu-berlin.de (GPS)"
 block|,
@@ -8391,7 +8269,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=clock.nc.fukuoka-u.ac.jp"
 block|}
 block|,
 block|{
-literal|"Japan #2"
+literal|" Japan #2"
 block|,
 literal|"clock.tl.fukuoka-u.ac.jp (GPS clock)"
 block|,
@@ -8419,7 +8297,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.nl.net"
 block|}
 block|,
 block|{
-literal|"Norway"
+literal|" Norway"
 block|,
 literal|"timehost.ifi.uio.no (NTP clock)"
 block|,
@@ -8447,7 +8325,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=Time1.Stupi.SE"
 block|}
 block|,
 block|{
-literal|"Switzerland"
+literal|" Switzerland"
 block|,
 literal|"swisstime.ethz.ch (DCF77 clock)"
 block|,
@@ -8475,7 +8353,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=bitsy.mit.edu"
 block|}
 block|,
 block|{
-literal|"U.S. East Coast #2"
+literal|" U.S. East Coast #2"
 block|,
 literal|"otc1.psu.edu (WWV clock)"
 block|,
@@ -8489,7 +8367,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=otc1.psu.edu"
 block|}
 block|,
 block|{
-literal|"U.S. West Coast #1"
+literal|" U.S. West Coast #1"
 block|,
 literal|"clepsydra.dec.com (GOES clock)"
 block|,
@@ -8503,7 +8381,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=clepsydra.dec.com"
 block|}
 block|,
 block|{
-literal|"U.S. West Coast #2"
+literal|" U.S. West Coast #2"
 block|,
 literal|"clock.llnl.gov (WWVB clock)"
 block|,
@@ -8517,7 +8395,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=clock.llnl.gov"
 block|}
 block|,
 block|{
-literal|"U.S. Midwest"
+literal|" U.S. Midwest"
 block|,
 literal|"ncar.ucar.edu (WWVB clock)"
 block|,
@@ -8555,7 +8433,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"Font"
+literal|"1 Font"
 block|,
 literal|"Choose an alternate screen font"
 block|,
@@ -8570,7 +8448,7 @@ name|MenuSysconsFont
 block|}
 block|,
 block|{
-literal|"Keymap"
+literal|"2 Keymap"
 block|,
 literal|"Choose an alternate keyboard map"
 block|,
@@ -8585,7 +8463,7 @@ name|MenuSysconsKeymap
 block|}
 block|,
 block|{
-literal|"Repeat"
+literal|"3 Repeat"
 block|,
 literal|"Set the rate at which keys repeat"
 block|,
@@ -8600,7 +8478,7 @@ name|MenuSysconsKeyrate
 block|}
 block|,
 block|{
-literal|"Saver"
+literal|"4 Saver"
 block|,
 literal|"Configure the screen saver"
 block|,
@@ -8615,7 +8493,7 @@ name|MenuSysconsSaver
 block|}
 block|,
 block|{
-literal|"Screenmap"
+literal|"5 Screenmap"
 block|,
 literal|"Choose an alternate screenmap"
 block|,
@@ -8630,7 +8508,7 @@ name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
-literal|"Exit"
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -8683,7 +8561,7 @@ literal|"keymap=be.iso"
 block|}
 block|,
 block|{
-literal|"Brazil CP850"
+literal|" Brazil CP850"
 block|,
 literal|"Brazil CP850 keymap"
 block|,
@@ -8697,7 +8575,7 @@ literal|"keymap=br275.cp850"
 block|}
 block|,
 block|{
-literal|"Brazil ISO (accent)"
+literal|" Brazil ISO (accent)"
 block|,
 literal|"Brazil ISO keymap (accent keys)"
 block|,
@@ -8711,7 +8589,7 @@ literal|"keymap=br275.iso.acc"
 block|}
 block|,
 block|{
-literal|"Brazil ISO"
+literal|" Brazil ISO"
 block|,
 literal|"Brazil ISO keymap"
 block|,
@@ -8725,7 +8603,7 @@ literal|"keymap=br275.iso"
 block|}
 block|,
 block|{
-literal|"Croatian ISO"
+literal|" Croatian ISO"
 block|,
 literal|"Croatian ISO keymap"
 block|,
@@ -8753,7 +8631,7 @@ literal|"keymap=danish.cp865"
 block|}
 block|,
 block|{
-literal|"Danish ISO"
+literal|" Danish ISO"
 block|,
 literal|"Danish ISO keymap"
 block|,
@@ -8781,7 +8659,7 @@ literal|"keymap=estonian.iso"
 block|}
 block|,
 block|{
-literal|"Estonian ISO 15"
+literal|" Estonian ISO 15"
 block|,
 literal|"Estonian ISO 8859-15 keymap"
 block|,
@@ -8795,7 +8673,7 @@ literal|"keymap=estonian.iso15"
 block|}
 block|,
 block|{
-literal|"Estonian CP850"
+literal|" Estonian CP850"
 block|,
 literal|"Estonian Code Page 850 keymap"
 block|,
@@ -8809,7 +8687,7 @@ literal|"keymap=estonian.cp850"
 block|}
 block|,
 block|{
-literal|"Finnish CP850"
+literal|" Finnish CP850"
 block|,
 literal|"Finnish Code Page 850 keymap"
 block|,
@@ -8823,7 +8701,7 @@ literal|"keymap=finnish.cp850"
 block|}
 block|,
 block|{
-literal|"Finnish ISO"
+literal|" Finnish ISO"
 block|,
 literal|"Finnish ISO keymap"
 block|,
@@ -8837,7 +8715,7 @@ literal|"keymap=finnish.iso"
 block|}
 block|,
 block|{
-literal|"French ISO (accent)"
+literal|" French ISO (accent)"
 block|,
 literal|"French ISO keymap (accent keys)"
 block|,
@@ -8851,7 +8729,7 @@ literal|"keymap=fr.iso.acc"
 block|}
 block|,
 block|{
-literal|"French ISO"
+literal|" French ISO"
 block|,
 literal|"French ISO keymap"
 block|,
@@ -8879,7 +8757,7 @@ literal|"keymap=german.cp850"
 block|}
 block|,
 block|{
-literal|"German ISO"
+literal|" German ISO"
 block|,
 literal|"German ISO keymap"
 block|,
@@ -8907,7 +8785,7 @@ literal|"keymap=hu.iso2.101keys"
 block|}
 block|,
 block|{
-literal|"Hungarian 102"
+literal|" Hungarian 102"
 block|,
 literal|"Hungarian ISO keymap (102 key)"
 block|,
@@ -8935,7 +8813,7 @@ literal|"keymap=icelandic.iso.acc"
 block|}
 block|,
 block|{
-literal|"Icelandic"
+literal|" Icelandic"
 block|,
 literal|"Icelandic ISO keymap"
 block|,
@@ -8949,7 +8827,7 @@ literal|"keymap=icelandic.iso"
 block|}
 block|,
 block|{
-literal|"Italian"
+literal|" Italian"
 block|,
 literal|"Italian ISO keymap"
 block|,
@@ -9019,7 +8897,7 @@ literal|"keymap=pl_PL.ISO_8859-2"
 block|}
 block|,
 block|{
-literal|"Portuguese (accent)"
+literal|" Portuguese (accent)"
 block|,
 literal|"Portuguese ISO keymap (accent keys)"
 block|,
@@ -9033,7 +8911,7 @@ literal|"keymap=pt.iso.acc"
 block|}
 block|,
 block|{
-literal|"Portuguese"
+literal|" Portuguese"
 block|,
 literal|"Portuguese ISO keymap"
 block|,
@@ -9061,7 +8939,7 @@ literal|"keymap=ru.cp866"
 block|}
 block|,
 block|{
-literal|"Russia KOI8-R"
+literal|" Russia KOI8-R"
 block|,
 literal|"Russian KOI8-R keymap"
 block|,
@@ -9089,7 +8967,7 @@ literal|"keymap=si.iso.acc"
 block|}
 block|,
 block|{
-literal|"Spanish (accent)"
+literal|" Spanish (accent)"
 block|,
 literal|"Spanish ISO keymap (accent keys)"
 block|,
@@ -9103,7 +8981,7 @@ literal|"keymap=spanish.iso.acc"
 block|}
 block|,
 block|{
-literal|"Spanish"
+literal|" Spanish"
 block|,
 literal|"Spanish ISO keymap"
 block|,
@@ -9117,7 +8995,7 @@ literal|"keymap=spanish.iso"
 block|}
 block|,
 block|{
-literal|"Swedish CP850"
+literal|" Swedish CP850"
 block|,
 literal|"Swedish Code Page 850 keymap"
 block|,
@@ -9131,7 +9009,7 @@ literal|"keymap=swedish.cp850"
 block|}
 block|,
 block|{
-literal|"Swedish ISO"
+literal|" Swedish ISO"
 block|,
 literal|"Swedish ISO keymap"
 block|,
@@ -9145,7 +9023,7 @@ literal|"keymap=swedish.iso"
 block|}
 block|,
 block|{
-literal|"Swiss French ISO (accent)"
+literal|" Swiss French ISO (accent)"
 block|,
 literal|"Swiss French ISO keymap (accent keys)"
 block|,
@@ -9159,7 +9037,7 @@ literal|"keymap=swissfrench.iso.acc"
 block|}
 block|,
 block|{
-literal|"Swiss French ISO"
+literal|" Swiss French ISO"
 block|,
 literal|"Swiss French ISO keymap"
 block|,
@@ -9173,7 +9051,7 @@ literal|"keymap=swissfrench.iso"
 block|}
 block|,
 block|{
-literal|"Swiss French CP850"
+literal|" Swiss French CP850"
 block|,
 literal|"Swiss French Code Page 850 keymap"
 block|,
@@ -9187,7 +9065,7 @@ literal|"keymap=swissfrench.cp850"
 block|}
 block|,
 block|{
-literal|"Swiss German ISO (accent)"
+literal|" Swiss German ISO (accent)"
 block|,
 literal|"Swiss German ISO keymap (accent keys)"
 block|,
@@ -9201,7 +9079,7 @@ literal|"keymap=swissgerman.iso.acc"
 block|}
 block|,
 block|{
-literal|"Swiss German ISO"
+literal|" Swiss German ISO"
 block|,
 literal|"Swiss German ISO keymap"
 block|,
@@ -9215,7 +9093,7 @@ literal|"keymap=swissgerman.iso"
 block|}
 block|,
 block|{
-literal|"Swiss German CP850"
+literal|" Swiss German CP850"
 block|,
 literal|"Swiss German Code Page 850 keymap"
 block|,
@@ -9243,7 +9121,7 @@ literal|"keymap=uk.cp850"
 block|}
 block|,
 block|{
-literal|"U.K. ISO"
+literal|" U.K. ISO"
 block|,
 literal|"United Kingdom ISO keymap"
 block|,
@@ -9257,7 +9135,7 @@ literal|"keymap=uk.iso"
 block|}
 block|,
 block|{
-literal|"U.S. Dvorak"
+literal|" U.S. Dvorak"
 block|,
 literal|"United States Dvorak keymap"
 block|,
@@ -9271,7 +9149,7 @@ literal|"keymap=us.dvorak"
 block|}
 block|,
 block|{
-literal|"U.S. ISO"
+literal|" U.S. ISO"
 block|,
 literal|"United States ISO keymap"
 block|,
@@ -9391,7 +9269,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"Blank"
+literal|"1 Blank"
 block|,
 literal|"Simply blank the screen"
 block|,
@@ -9405,7 +9283,7 @@ literal|"saver=blank"
 block|}
 block|,
 block|{
-literal|"Daemon"
+literal|"2 Daemon"
 block|,
 literal|"\"BSD Daemon\" animated screen saver (text)"
 block|,
@@ -9419,7 +9297,7 @@ literal|"saver=daemon"
 block|}
 block|,
 block|{
-literal|"Fade"
+literal|"3 Fade"
 block|,
 literal|"Fade out effect screen saver"
 block|,
@@ -9433,7 +9311,7 @@ literal|"saver=fade"
 block|}
 block|,
 block|{
-literal|"Fire"
+literal|"4 Fire"
 block|,
 literal|"Flames effect screen saver"
 block|,
@@ -9447,7 +9325,7 @@ literal|"saver=fire"
 block|}
 block|,
 block|{
-literal|"Green"
+literal|"5 Green"
 block|,
 literal|"\"Green\" power saving mode (if supported by monitor)"
 block|,
@@ -9461,7 +9339,7 @@ literal|"saver=green"
 block|}
 block|,
 block|{
-literal|"Logo"
+literal|"6 Logo"
 block|,
 literal|"\"BSD Daemon\" animated screen saver (graphics)"
 block|,
@@ -9475,7 +9353,7 @@ literal|"saver=logo"
 block|}
 block|,
 block|{
-literal|"Rain"
+literal|"7 Rain"
 block|,
 literal|"Rain drops screen saver"
 block|,
@@ -9489,7 +9367,7 @@ literal|"saver=rain"
 block|}
 block|,
 block|{
-literal|"Snake"
+literal|"8 Snake"
 block|,
 literal|"Draw a FreeBSD \"snake\" on your screen"
 block|,
@@ -9503,7 +9381,7 @@ literal|"saver=snake"
 block|}
 block|,
 block|{
-literal|"Star"
+literal|"9 Star"
 block|,
 literal|"A \"twinkling stars\" effect"
 block|,
@@ -9657,7 +9535,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"None"
+literal|"1 None"
 block|,
 literal|"Use default font"
 block|,
@@ -9671,7 +9549,7 @@ literal|"font8x8=NO,font8x14=NO,font8x16=NO"
 block|}
 block|,
 block|{
-literal|"IBM 437"
+literal|"2 IBM 437"
 block|,
 literal|"English"
 block|,
@@ -9685,7 +9563,7 @@ literal|"font8x8=cp437-8x8,font8x14=cp437-8x14,font8x16=cp437-8x16"
 block|}
 block|,
 block|{
-literal|"IBM 850"
+literal|"3 IBM 850"
 block|,
 literal|"Western Europe, IBM encoding"
 block|,
@@ -9699,7 +9577,7 @@ literal|"font8x8=cp850-8x8,font8x14=cp850-8x14,font8x16=cp850-8x16"
 block|}
 block|,
 block|{
-literal|"IBM 865"
+literal|"4 IBM 865"
 block|,
 literal|"Norwegian, IBM encoding"
 block|,
@@ -9713,7 +9591,7 @@ literal|"font8x8=cp865-8x8,font8x14=cp865-8x14,font8x16=cp865-8x16"
 block|}
 block|,
 block|{
-literal|"IBM 866"
+literal|"5 IBM 866"
 block|,
 literal|"Russian, IBM encoding"
 block|,
@@ -9727,7 +9605,7 @@ literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866-8x16"
 block|}
 block|,
 block|{
-literal|"ISO 8859-1"
+literal|"6 ISO 8859-1"
 block|,
 literal|"Western Europe, ISO encoding"
 block|,
@@ -9741,7 +9619,7 @@ literal|"font8x8=iso-8x8,font8x14=iso-8x14,font8x16=iso-8x16"
 block|}
 block|,
 block|{
-literal|"KOI8-R"
+literal|"7 KOI8-R"
 block|,
 literal|"Russian, KOI8-R encoding"
 block|,
@@ -9755,7 +9633,7 @@ literal|"font8x8=koi8-r-8x8,font8x14=koi8-r-8x14,font8x16=koi8-r-8x16"
 block|}
 block|,
 block|{
-literal|"SWISS"
+literal|"8 SWISS"
 block|,
 literal|"English, better resolution"
 block|,
@@ -9791,7 +9669,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"Add user"
+literal|"User"
 block|,
 literal|"Add a new user to the system."
 block|,
@@ -9801,7 +9679,7 @@ name|userAddUser
 block|}
 block|,
 block|{
-literal|"Add group"
+literal|"Group"
 block|,
 literal|"Add a new user group to the system."
 block|,
@@ -9811,7 +9689,7 @@ name|userAddGroup
 block|}
 block|,
 block|{
-literal|"Exit"
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -9874,6 +9752,16 @@ block|,
 name|NULL
 block|,
 name|installFixitHoloShell
+block|}
+block|,
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
 block|}
 block|,
 block|{

@@ -834,6 +834,13 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 comment|/* We need a curses window */
 if|if
 condition|(
@@ -864,6 +871,11 @@ expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Cannot open anonymous ftp dialog window!!"
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 return|return
@@ -1037,12 +1049,14 @@ argument_list|(
 name|ds_win
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|use_helpfile
 argument_list|(
 name|NULL
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 if|if
@@ -1075,9 +1089,6 @@ name|i
 operator|=
 name|DITEM_SUCCESS
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|i
 operator|=
 name|anonftpOpenDialog
@@ -1100,8 +1111,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|i
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 comment|/*** Use defaults for any invalid values ***/
@@ -1458,9 +1467,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|vsystem
 argument_list|(
 literal|"echo Your welcome message here.> %s/etc/%s"
@@ -1546,8 +1552,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|i
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function

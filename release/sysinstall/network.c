@@ -94,6 +94,10 @@ index|[
 literal|255
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -248,6 +252,11 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|w
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -292,6 +301,11 @@ argument_list|(
 literal|"slattach command was empty.  Try again!"
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -319,10 +333,20 @@ literal|"slattach returned a bad status!  Please verify that\n"
 literal|"the command is correct and try this operation again."
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
 block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 block|}
 name|snprintf
 argument_list|(
@@ -734,6 +758,13 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 comment|/* These are needed to make ppp work */
 name|Mkdir
 argument_list|(
@@ -1048,6 +1079,11 @@ argument_list|(
 literal|"Couldn't open /etc/ppp/ppp.conf file!  This isn't going to work"
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1349,6 +1385,11 @@ argument_list|(
 literal|"Warning:  No /dev/tun0 device.  PPP will not work!"
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1575,6 +1616,11 @@ literal|"ESTABLISHED!"
 argument_list|)
 expr_stmt|;
 block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|pid
 return|;

@@ -869,6 +869,13 @@ name|currOpt
 init|=
 literal|0
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -1297,10 +1304,13 @@ expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 default|default:
 name|beep
@@ -1311,8 +1321,6 @@ block|}
 comment|/* NOTREACHED */
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
