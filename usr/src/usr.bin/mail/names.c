@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)names.c	5.4 (Berkeley) %G%"
+literal|"@(#)names.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,6 +282,9 @@ literal|"at"
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|abuf
@@ -305,6 +308,9 @@ operator|==
 name|NOSTR
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|nbuf
@@ -316,6 +322,9 @@ goto|goto
 name|normal
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|abuf
@@ -332,6 +341,9 @@ argument_list|,
 literal|'@'
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|abuf
@@ -1183,6 +1195,9 @@ name|np
 operator|=
 name|names
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -1310,6 +1325,9 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|tempEdit
@@ -1380,6 +1398,9 @@ operator|)
 operator|!=
 name|EOF
 condition|)
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|c
@@ -1392,6 +1413,9 @@ argument_list|(
 name|fo
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'\n'
@@ -1399,6 +1423,9 @@ argument_list|,
 name|fout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|fout
@@ -1416,6 +1443,9 @@ argument_list|(
 name|tempEdit
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fout
@@ -1429,6 +1459,9 @@ condition|(
 name|ispipe
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|wait
 argument_list|(
 operator|&
@@ -1444,6 +1477,9 @@ block|{
 case|case
 literal|0
 case|:
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -1451,6 +1487,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1458,6 +1497,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -1465,16 +1507,25 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup
 argument_list|(
 name|image
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|image
@@ -1591,6 +1642,9 @@ argument_list|,
 literal|"Can't reopen image\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fout
@@ -1621,6 +1675,9 @@ operator|)
 operator|!=
 name|EOF
 condition|)
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|c
@@ -1643,11 +1700,17 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fin
@@ -1747,6 +1810,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|image
@@ -2446,10 +2512,6 @@ modifier|*
 name|n
 decl_stmt|;
 name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|char
 name|hbuf
 index|[
 literal|10
@@ -2566,7 +2628,8 @@ name|extra
 operator|)
 operator|*
 sizeof|sizeof
-name|cp
+expr|*
+name|top
 argument_list|)
 expr_stmt|;
 name|ap
@@ -2642,6 +2705,12 @@ operator|++
 operator|=
 literal|"-h"
 expr_stmt|;
+operator|*
+name|ap
+operator|++
+operator|=
+name|savestr
+argument_list|(
 name|sprintf
 argument_list|(
 name|hbuf
@@ -2650,14 +2719,6 @@ literal|"%d"
 argument_list|,
 name|hflag
 argument_list|)
-expr_stmt|;
-operator|*
-name|ap
-operator|++
-operator|=
-name|savestr
-argument_list|(
-name|hbuf
 argument_list|)
 expr_stmt|;
 block|}

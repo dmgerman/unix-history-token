@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)send.c	5.3 (Berkeley) %G%"
+literal|"@(#)send.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,6 +334,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'\n'
@@ -451,6 +454,9 @@ operator|!
 name|ignoring
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 name|line
@@ -849,6 +855,9 @@ name|h_seq
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mail1
 argument_list|(
 operator|&
@@ -931,6 +940,9 @@ name|h_seq
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mail1
 argument_list|(
 operator|&
@@ -1099,6 +1111,9 @@ argument_list|(
 literal|"EOT\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -1208,11 +1223,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|deadletter
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exwrite
 argument_list|(
 name|deadletter
@@ -1423,6 +1444,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -1445,6 +1469,9 @@ operator|)
 operator|!=
 name|NOSTR
 condition|)
+operator|(
+name|void
+operator|)
 name|savemail
 argument_list|(
 name|expand
@@ -1499,11 +1526,17 @@ argument_list|(
 literal|"fork"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|deadletter
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exwrite
 argument_list|(
 name|deadletter
@@ -1534,6 +1567,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -1541,6 +1577,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTIN
@@ -1548,6 +1587,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -1558,6 +1600,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -1565,6 +1610,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1572,6 +1620,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -1610,7 +1661,7 @@ name|fprintf
 argument_list|(
 name|postage
 argument_list|,
-literal|"%s %d %d\n"
+literal|"%s %d %ld\n"
 argument_list|,
 name|myname
 argument_list|,
@@ -1625,17 +1676,26 @@ name|mtf
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|postage
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup
 argument_list|(
 name|fileno
@@ -1657,6 +1717,9 @@ operator|>
 literal|2
 condition|;
 control|)
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|i
@@ -1762,6 +1825,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|mtf
@@ -1991,6 +2057,9 @@ argument_list|(
 name|tempMail
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|nfo
@@ -2002,11 +2071,17 @@ name|fi
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|tempMail
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|puthead
 argument_list|(
 name|hp
@@ -2036,6 +2111,9 @@ operator|!=
 name|EOF
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|c
@@ -2070,6 +2148,9 @@ name|fi
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|nfo
@@ -2088,11 +2169,17 @@ argument_list|(
 name|tempMail
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|nfo
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|nfi
@@ -2104,11 +2191,17 @@ name|fi
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|nfo
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fi
@@ -2279,6 +2372,9 @@ name|w
 operator|&
 name|GNL
 condition|)
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'\n'
@@ -2593,6 +2689,9 @@ literal|1
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -2653,6 +2752,9 @@ operator|)
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 name|buf
@@ -2664,6 +2766,9 @@ argument_list|,
 name|fo
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'\n'
@@ -2671,6 +2776,9 @@ argument_list|,
 name|fo
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|fo
@@ -2688,6 +2796,9 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fo

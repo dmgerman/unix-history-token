@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)edit.c	5.3 (Berkeley) %G%"
+literal|"@(#)edit.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,11 +227,6 @@ name|edname
 index|[
 literal|15
 index|]
-decl_stmt|,
-name|nbuf
-index|[
-literal|10
-index|]
 decl_stmt|;
 specifier|register
 name|struct
@@ -331,6 +326,9 @@ operator|=
 name|mp
 expr_stmt|;
 comment|/* 		 * Make up a name for the edit file of the 		 * form "Message%d" and make sure it doesn't 		 * already exist. 		 */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|edname
@@ -363,6 +361,9 @@ name|out
 goto|;
 block|}
 comment|/* 		 * Copy the message into the edit file. 		 */
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|creat
@@ -417,11 +418,17 @@ argument_list|(
 name|edname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|edname
@@ -431,6 +438,9 @@ goto|goto
 name|out
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|obuf
@@ -444,11 +454,17 @@ name|obuf
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|edname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|obuf
@@ -458,6 +474,9 @@ goto|goto
 name|out
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|obuf
@@ -468,6 +487,9 @@ if|if
 condition|(
 name|readonly
 condition|)
+operator|(
+name|void
+operator|)
 name|chmod
 argument_list|(
 name|edname
@@ -516,6 +538,9 @@ argument_list|(
 literal|"fork"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|edname
@@ -538,6 +563,9 @@ name|sigint
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -551,6 +579,9 @@ name|sigquit
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -597,6 +628,9 @@ condition|(
 name|readonly
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|edname
@@ -636,6 +670,9 @@ operator|.
 name|st_mtime
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|edname
@@ -666,6 +703,9 @@ argument_list|(
 name|edname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|edname
@@ -675,11 +715,17 @@ goto|goto
 name|out
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 name|edname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fseek
 argument_list|(
 name|otf
@@ -757,6 +803,9 @@ operator|->
 name|m_lines
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|c
@@ -785,6 +834,9 @@ argument_list|(
 literal|"/tmp"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|ibuf
@@ -794,6 +846,9 @@ block|}
 comment|/* 	 * Restore signals and return. 	 */
 name|out
 label|:
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -801,6 +856,9 @@ argument_list|,
 name|sigint
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
