@@ -1406,6 +1406,27 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* XXX Figure out how this is happening when the append succeeds. */
+if|if
+condition|(
+name|crsbuf
+operator|.
+name|Pointer
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|pcib
+argument_list|,
+literal|"_CRS buf NULL after append?\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE
