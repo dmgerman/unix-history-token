@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)vacation.c	5.5 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,7 +1104,7 @@ operator|->
 name|len
 operator|&&
 operator|!
-name|strcasencmp
+name|strncasecmp
 argument_list|(
 name|I
 operator|->
@@ -1159,7 +1159,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcasencmp
+name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
@@ -1230,7 +1230,7 @@ comment|/* see if it is "junk" or "bulk" */
 if|if
 condition|(
 operator|!
-name|strcasencmp
+name|strncasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -1240,7 +1240,7 @@ literal|4
 argument_list|)
 operator|||
 operator|!
-name|strcasecmp
+name|strncasecmp
 argument_list|(
 name|p
 argument_list|,
