@@ -834,6 +834,17 @@ begin_comment
 comment|/* Michael MIC failure detected */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_REJOIN
+value|108
+end_define
+
+begin_comment
+comment|/* station re-associate (ap mode) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
