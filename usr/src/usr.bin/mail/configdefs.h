@@ -8,7 +8,7 @@ comment|/*  * This file contains the definitions of data structures used in  * c
 end_comment
 
 begin_comment
-comment|/*  * Sccs ID @(#)configdefs.h	1.1 %G%  */
+comment|/*  * Sccs ID @(#)configdefs.h	1.2 %G%  */
 end_comment
 
 begin_comment
@@ -76,14 +76,14 @@ end_comment
 
 begin_struct
 struct|struct
-name|nettypetab
+name|ntypetab
 block|{
 name|char
 name|nt_char
 decl_stmt|;
 comment|/* Actual character separator */
 name|int
-name|nt_type
+name|nt_bcode
 decl_stmt|;
 comment|/* Type bit code */
 block|}
@@ -114,7 +114,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|netkindtab
+name|nkindtab
 block|{
 name|int
 name|nk_type
@@ -170,8 +170,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nettypetab
-name|nettypetab
+name|ntypetab
+name|ntypetab
 index|[
 literal|1
 index|]
@@ -181,8 +181,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|netkindtab
-name|netkindtab
+name|nkindtab
+name|nkindtab
 index|[
 literal|1
 index|]
