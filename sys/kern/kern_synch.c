@@ -115,16 +115,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
-end_include
-
-begin_comment
-comment|/* for UCHAR_MAX = typeof(p_priority)_MAX */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -683,11 +673,6 @@ name|realstathz
 decl_stmt|,
 name|s
 decl_stmt|;
-specifier|register
-name|unsigned
-name|int
-name|newcpu
-decl_stmt|;
 name|realstathz
 operator|=
 name|stathz
@@ -848,11 +833,10 @@ name|p_cpticks
 operator|=
 literal|0
 expr_stmt|;
-name|newcpu
+name|p
+operator|->
+name|p_estcpu
 operator|=
-operator|(
-name|u_int
-operator|)
 name|decay_cpu
 argument_list|(
 name|loadfac
@@ -860,21 +844,6 @@ argument_list|,
 name|p
 operator|->
 name|p_estcpu
-argument_list|)
-operator|+
-name|p
-operator|->
-name|p_nice
-expr_stmt|;
-name|p
-operator|->
-name|p_estcpu
-operator|=
-name|min
-argument_list|(
-name|newcpu
-argument_list|,
-name|UCHAR_MAX
 argument_list|)
 expr_stmt|;
 name|resetpriority
@@ -891,11 +860,6 @@ operator|>=
 name|PUSER
 condition|)
 block|{
-define|#
-directive|define
-name|PPQ
-value|(128 / NQS)
-comment|/* priorities per queue */
 if|if
 condition|(
 operator|(
@@ -1086,9 +1050,6 @@ name|p_slptime
 condition|)
 name|newcpu
 operator|=
-operator|(
-name|int
-operator|)
 name|decay_cpu
 argument_list|(
 name|loadfac
@@ -1100,12 +1061,7 @@ name|p
 operator|->
 name|p_estcpu
 operator|=
-name|min
-argument_list|(
 name|newcpu
-argument_list|,
-name|UCHAR_MAX
-argument_list|)
 expr_stmt|;
 block|}
 name|resetpriority
@@ -3139,9 +3095,9 @@ name|p
 operator|->
 name|p_estcpu
 operator|/
-literal|4
+name|INVERSE_ESTCPU_WEIGHT
 operator|+
-literal|2
+name|NICE_WEIGHT
 operator|*
 name|p
 operator|->
@@ -3202,7 +3158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We adjust the priority of the current process.  The priority of  * a process gets worse as it accumulates CPU time.  The cpu usage  * estimator (p_estcpu) is increased here.  resetpriority() will  * compute a different priority each time p_estcpu increases by 4  * (until MAXPRI is reached).  The cpu usage estimator ramps up  * quite quickly when the process is running (linearly), and decays  * away exponentially, at a rate which is proportionally slower when  * the system is busy.  The basic principle is that the system will  * 90% forget that the process used a lot of CPU time in 5 * loadav  * seconds.  This causes the system to favor processes which haven't  * run much recently, and to round-robin among other processes.  */
+comment|/*  * We adjust the priority of the current process.  The priority of  * a process gets worse as it accumulates CPU time.  The cpu usage  * estimator (p_estcpu) is increased here.  resetpriority() will  * compute a different priority each time p_estcpu increases by  * INVERSE_ESTCPU_WEIGHT  * (until MAXPRI is reached).  The cpu usage estimator ramps up  * quite quickly when the process is running (linearly), and decays  * away exponentially, at a rate which is proportionally slower when  * the system is busy.  The basic principle is that the system will  * 90% forget that the process used a lot of CPU time in 5 * loadav  * seconds.  This causes the system to favor processes which haven't  * run much recently, and to round-robin among other processes.  */
 end_comment
 
 begin_function
@@ -3222,19 +3178,18 @@ operator|->
 name|p_cpticks
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|++
 name|p
 operator|->
 name|p_estcpu
-operator|==
-literal|0
-condition|)
+operator|=
+name|ESTCPULIM
+argument_list|(
 name|p
 operator|->
 name|p_estcpu
-operator|--
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3242,8 +3197,8 @@ operator|(
 name|p
 operator|->
 name|p_estcpu
-operator|&
-literal|3
+operator|%
+name|INVERSE_ESTCPU_WEIGHT
 operator|)
 operator|==
 literal|0
