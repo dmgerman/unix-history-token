@@ -227,6 +227,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Access to the SADB are interlocked with splnet.  In particular,  * holders of SA's use this to block accesses by protocol processing  * that can happen either by network swi's or by continuations that  * occur on crypto callbacks.  Much of this could go away if  * key_checkrequest were redone.  */
+end_comment
+
 begin_define
 define|#
 directive|define

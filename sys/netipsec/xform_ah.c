@@ -2187,12 +2187,13 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ah_input");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ah_input"
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sav
@@ -3861,12 +3862,13 @@ name|newah
 modifier|*
 name|ah
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ah_output");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ah_output"
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr

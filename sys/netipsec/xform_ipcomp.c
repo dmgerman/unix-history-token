@@ -511,12 +511,13 @@ name|hlen
 init|=
 name|IPCOMP_HLENGTH
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipcomp_input");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ipcomp_input"
+argument_list|)
+expr_stmt|;
 comment|/* Get crypto descriptors */
 name|crp
 operator|=
@@ -1522,12 +1523,13 @@ name|ipcomp
 modifier|*
 name|ipcomp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipcomp_output");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ipcomp_output"
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr

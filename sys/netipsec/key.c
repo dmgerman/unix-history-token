@@ -4110,12 +4110,13 @@ name|isr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX guard against protocol callbacks from the crypto 	 * thread as they reference ipsecrequest.sav which we 	 * temporarily null out below.  Need to rethink how we 	 * handle bundled SA's in the callback thread. 	 */
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "key_checkrequest");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"key_checkrequest"
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -5611,7 +5612,7 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_freesav SA:%p (SPI %u) from %s:%u; refcnt now %u\n"
+literal|"DP key_freesav SA:%p (SPI %lu) from %s:%u; refcnt now %u\n"
 argument_list|,
 name|sav
 argument_list|,
@@ -7659,7 +7660,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7802,7 +7803,7 @@ index|[
 name|idx
 index|]
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -9970,7 +9971,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -9988,7 +9989,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10117,7 +10118,7 @@ index|[
 name|SADB_X_EXT_POLICY
 index|]
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15657,7 +15658,7 @@ name|tres
 argument_list|,
 name|l
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15926,7 +15927,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -15944,7 +15945,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -20519,7 +20520,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -20535,7 +20536,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -25131,7 +25132,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -25613,7 +25614,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -25651,7 +25652,7 @@ name|m
 argument_list|,
 name|l
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -25822,7 +25823,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -25860,7 +25861,7 @@ name|m
 argument_list|,
 name|l
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -26014,7 +26015,7 @@ name|m
 argument_list|,
 name|l
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -27957,7 +27958,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -27973,7 +27974,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -30562,7 +30563,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -30584,7 +30585,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -32819,7 +32820,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -32836,7 +32837,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

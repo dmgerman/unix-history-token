@@ -297,12 +297,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipsec_process_done");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ipsec_process_done"
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
@@ -803,12 +804,13 @@ name|secasvar
 modifier|*
 name|sav
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipsec_nextisr");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ipsec_nextisr"
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|af
@@ -2232,7 +2234,7 @@ name|MGETHDR
 argument_list|(
 name|mh
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -2748,7 +2750,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3228,7 +3230,7 @@ operator|(
 name|LOG_ERR
 operator|,
 literal|"ipsec6_output_tunnel: "
-literal|"family mismatched between inner and outer, spi=%u\n"
+literal|"family mismatched between inner and outer, spi=%lu\n"
 operator|,
 name|ntohl
 argument_list|(

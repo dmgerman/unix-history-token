@@ -141,6 +141,22 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|int
+name|pr_output_t
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|key_cb
@@ -571,7 +587,7 @@ expr|struct
 name|sadb_msg
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -875,7 +891,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -893,7 +909,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -932,7 +948,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1628,7 +1644,7 @@ name|int
 name|proto
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
 name|td
 parameter_list|)
@@ -1671,6 +1687,8 @@ name|kp
 argument_list|,
 name|M_PCB
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1847,7 +1865,7 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
 name|td
 parameter_list|)
@@ -1907,7 +1925,7 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
 name|td
 parameter_list|)
@@ -2174,7 +2192,7 @@ modifier|*
 name|control
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
 name|td
 parameter_list|)

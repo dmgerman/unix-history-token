@@ -235,6 +235,26 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|void
+name|pr_in_input_t
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* XXX FIX THIS */
+end_comment
+
 begin_comment
 comment|/*  * We can control the acceptance of IP4 packets by altering the sysctl  * net.inet.ipip.allow value.  Zero means drop them, all else is acceptance.  */
 end_comment
@@ -623,6 +643,20 @@ break|break;
 endif|#
 directive|endif
 default|default:
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"_ipip_input: bad protocol version 0x%x (%u) "
+literal|"for outer header\n"
+operator|,
+name|v
+operator|,
+name|v
+operator|>>
+literal|4
+operator|)
+argument_list|)
+expr_stmt|;
 name|ipipstat
 operator|.
 name|ipips_family
@@ -904,6 +938,20 @@ break|break;
 endif|#
 directive|endif
 default|default:
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"_ipip_input: bad protocol version 0x%x (%u) "
+literal|"for inner header\n"
+operator|,
+name|v
+operator|,
+name|v
+operator|>>
+literal|4
+operator|)
+argument_list|)
+expr_stmt|;
 name|ipipstat
 operator|.
 name|ipips_family
@@ -1125,9 +1173,6 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|IFNET_RLOCK
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -1227,9 +1272,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 block|}
@@ -1292,9 +1334,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return;
 block|}
 block|}
@@ -1303,9 +1342,6 @@ directive|endif
 comment|/* INET6 */
 block|}
 block|}
-name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
 block|}
 comment|/* Statistics */
 name|ipipstat
@@ -1481,12 +1517,13 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipip_output");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ipip_output"
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr
@@ -1653,7 +1690,7 @@ expr|struct
 name|ip
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2144,7 +2181,7 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -246,11 +246,10 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* 		 * Writable mbufs are left alone (for now). 		 */
+comment|/* 		 * Writable mbufs are left alone (for now).  Note 		 * that for 4.x systems it's not possible to identify 		 * whether or not mbufs with external buffers are 		 * writable unless they use clusters. 		 */
 if|if
 condition|(
-operator|!
-name|MEXT_IS_REF
+name|M_EXT_WRITABLE
 argument_list|(
 name|m
 argument_list|)
@@ -383,7 +382,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|m
 operator|->
@@ -419,7 +418,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -458,7 +457,7 @@ name|n
 operator|=
 name|m_getcl
 argument_list|(
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|m
 operator|->
@@ -590,7 +589,7 @@ name|n
 operator|=
 name|m_getcl
 argument_list|(
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|m
 operator|->
@@ -810,7 +809,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -930,7 +929,7 @@ name|MGET
 argument_list|(
 name|n2
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1362,7 +1361,7 @@ name|MGET
 argument_list|(
 name|m1
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

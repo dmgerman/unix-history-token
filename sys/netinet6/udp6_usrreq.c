@@ -234,6 +234,33 @@ begin_comment
 comment|/* IPSEC */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FAST_IPSEC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FAST_IPSEC */
+end_comment
+
 begin_comment
 comment|/*  * UDP protocol inplementation.  * Per RFC 768, August, 1980.  */
 end_comment
@@ -826,6 +853,24 @@ elseif|else
 endif|#
 directive|endif
 comment|/* IPSEC */
+ifdef|#
+directive|ifdef
+name|FAST_IPSEC
+comment|/* 				 * Check AH/ESP integrity. 				 */
+if|if
+condition|(
+name|ipsec6_in_reject
+argument_list|(
+name|m
+argument_list|,
+name|last
+argument_list|)
+condition|)
+empty_stmt|;
+elseif|else
+endif|#
+directive|endif
+comment|/* FAST_IPSEC */
 if|if
 condition|(
 operator|(
@@ -1022,6 +1067,27 @@ block|}
 endif|#
 directive|endif
 comment|/* IPSEC */
+ifdef|#
+directive|ifdef
+name|FAST_IPSEC
+comment|/* 		 * Check AH/ESP integrity. 		 */
+if|if
+condition|(
+name|ipsec6_in_reject
+argument_list|(
+name|m
+argument_list|,
+name|last
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|bad
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* FAST_IPSEC */
 if|if
 condition|(
 name|last
@@ -1279,6 +1345,27 @@ block|}
 endif|#
 directive|endif
 comment|/* IPSEC */
+ifdef|#
+directive|ifdef
+name|FAST_IPSEC
+comment|/* 	 * Check AH/ESP integrity. 	 */
+if|if
+condition|(
+name|ipsec6_in_reject
+argument_list|(
+name|m
+argument_list|,
+name|in6p
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|bad
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* FAST_IPSEC */
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
 name|init_sin6
 argument_list|(

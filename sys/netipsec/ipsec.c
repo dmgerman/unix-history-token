@@ -7880,12 +7880,13 @@ name|int
 name|frlast
 decl_stmt|;
 comment|/* constant: last frame */
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipsec_chkreplay");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ipsec_chkreplay"
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sav
@@ -8083,12 +8084,13 @@ name|int
 name|frlast
 decl_stmt|;
 comment|/* constant: last frame */
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipsec_updatereplay");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"ipsec_updatereplay"
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sav

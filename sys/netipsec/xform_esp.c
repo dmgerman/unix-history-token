@@ -705,7 +705,7 @@ name|ivlen
 argument_list|,
 name|M_XDATA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1071,12 +1071,13 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "esp_input");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"esp_input"
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sav
@@ -3066,12 +3067,13 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "esp_output");
-endif|#
-directive|endif
+name|SPLASSERT
+argument_list|(
+name|net
+argument_list|,
+literal|"esp_output"
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr
