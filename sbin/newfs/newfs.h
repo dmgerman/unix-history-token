@@ -4,6 +4,28 @@ comment|/*  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rig
 end_comment
 
 begin_comment
+comment|/*  * libufs interfaces.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<libufs.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uufsd
+name|disk
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the disk where we will operate */
+end_comment
+
+begin_comment
 comment|/*  * variables set up by front end.  */
 end_comment
 
@@ -203,17 +225,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* expected number of files per directory */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fso
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* filedescriptor to device */
 end_comment
 
 begin_function_decl
