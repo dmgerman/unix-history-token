@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.7.4.2 1995/10/11 02:42:42 davidg Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.7.4.3 1996/01/29 04:44:13 bde Exp $  */
 end_comment
 
 begin_include
@@ -8491,16 +8491,10 @@ argument_list|,
 name|opt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX we probably alway want to track carrier changes, so that 	 * TS_CARR_ON gives the true carrier.  If we don't track them, 	 * then we should set TS_CARR_ON when CLOCAL drops. 	 */
+comment|/* 	 * We always generate modem status change interrupts for CD changes. 	 * Among other things, this is necessary to track TS_CARR_ON for 	 * pstat to print even when the driver doesn't care.  CD changes 	 * should be rare so interrupts for them are not worth extra code to 	 * avoid.  We avoid interrupts for other modem status changes (except 	 * for CTS changes when SOFT_CTS_OFLOW is configured) since this is 	 * simplest and best. 	 */
 comment|/* 	 * set modem change option register 1 	 *	generate modem interrupts on which 1 -> 0 input transitions 	 *	also controls auto-DTR output flow-control, which we don't use 	 */
 name|opt
 operator|=
-name|cflag
-operator|&
-name|CLOCAL
-condition|?
-literal|0
-else|:
 name|CD1400_MCOR1_CDzd
 expr_stmt|;
 ifdef|#
@@ -8530,12 +8524,6 @@ expr_stmt|;
 comment|/* 	 * set modem change option register 2 	 *	generate modem interrupts on specific 0 -> 1 input transitions 	 */
 name|opt
 operator|=
-name|cflag
-operator|&
-name|CLOCAL
-condition|?
-literal|0
-else|:
 name|CD1400_MCOR2_CDod
 expr_stmt|;
 ifdef|#
@@ -9772,6 +9760,12 @@ decl_stmt|;
 name|int
 name|msr
 decl_stmt|;
+name|iobase
+operator|=
+name|com
+operator|->
+name|iobase
+expr_stmt|;
 if|if
 condition|(
 name|how
@@ -9824,6 +9818,20 @@ name|com
 operator|->
 name|prev_modem_status
 expr_stmt|;
+comment|/* 		 * We must read the modem status from the hardware because 		 * we don't generate modem status change interrupts for all 		 * changes, so com->prev_modem_status is not guaranteed to 		 * be up to date.  This is safe, unlike for sio, because 		 * reading the status register doesn't clear pending modem 		 * status change interrupts. 		 */
+name|msr
+operator|=
+name|cd_inb
+argument_list|(
+name|iobase
+argument_list|,
+name|CD1400_MSVR2
+argument_list|,
+name|com
+operator|->
+name|cy_align
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msr
@@ -9871,12 +9879,6 @@ name|bits
 operator|)
 return|;
 block|}
-name|iobase
-operator|=
-name|com
-operator|->
-name|iobase
-expr_stmt|;
 name|mcr
 operator|=
 literal|0
