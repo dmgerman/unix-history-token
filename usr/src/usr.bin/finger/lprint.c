@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprint.c	5.4 (Berkeley) %G%"
+literal|"@(#)lprint.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +253,10 @@ decl_stmt|,
 modifier|*
 name|ctime
 argument_list|()
+decl_stmt|,
+modifier|*
+name|prphone
+argument_list|()
 decl_stmt|;
 comment|/* 	 * long format -- 	 *	login name 	 *	real name 	 *	home directory 	 *	shell 	 *	office, office phone, home phone if available 	 */
 operator|(
@@ -358,9 +362,12 @@ name|pn
 operator|->
 name|office
 argument_list|,
+name|prphone
+argument_list|(
 name|pn
 operator|->
 name|officephone
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|oddfield
@@ -426,9 +433,12 @@ literal|"%s: %s"
 argument_list|,
 name|OFFICE_PHONE_TAG
 argument_list|,
+name|prphone
+argument_list|(
 name|pn
 operator|->
 name|officephone
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|oddfield
@@ -460,9 +470,12 @@ literal|"%s: %s"
 argument_list|,
 literal|"Home Phone"
 argument_list|,
+name|prphone
+argument_list|(
 name|pn
 operator|->
 name|homephone
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|oddfield

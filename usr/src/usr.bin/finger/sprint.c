@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sprint.c	5.4 (Berkeley) %G%"
+literal|"@(#)sprint.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,8 +112,12 @@ function_decl|;
 name|char
 modifier|*
 name|ctime
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|prphone
+argument_list|()
+decl_stmt|;
 name|list
 operator|=
 name|sort
@@ -139,7 +143,7 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|"Tty  Idle  Login        Office      Office Phone"
+literal|"Tty  Idle  Login        Office     Office Phone"
 argument_list|)
 expr_stmt|;
 for|for
@@ -420,7 +424,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-11.11s"
+literal|" %-10.10s"
 argument_list|,
 name|pn
 operator|->
@@ -439,7 +443,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-11.11s"
+literal|" %-10.10s"
 argument_list|,
 literal|" "
 argument_list|)
@@ -455,11 +459,14 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-.14s"
+literal|" %-.15s"
 argument_list|,
+name|prphone
+argument_list|(
 name|pn
 operator|->
 name|officephone
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putchar
