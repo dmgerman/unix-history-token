@@ -66,6 +66,14 @@ name|int
 name|ki_valid
 decl_stmt|;
 comment|/* 1 => uarea stuff valid */
+name|double
+name|ki_pcpu
+decl_stmt|;
+comment|/* calculated in main() */
+name|segsz_t
+name|ki_memsize
+decl_stmt|;
+comment|/* calculated in main() */
 block|}
 name|KINFO
 typedef|;
