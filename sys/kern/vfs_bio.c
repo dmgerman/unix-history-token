@@ -3668,9 +3668,6 @@ modifier|*
 name|origbp
 decl_stmt|;
 comment|/* 	 * Find the original buffer that we are writing. 	 */
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|VI_LOCK
 argument_list|(
 name|bp
@@ -3709,8 +3706,6 @@ operator|->
 name|b_vp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Process dependencies then return any unfinished ones. 	 */
 if|if
 condition|(
