@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)halt.c	4.6 (Berkeley) %G%"
+literal|"@(#)halt.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+comment|/* for network connections */
 if|if
 condition|(
 name|kill
