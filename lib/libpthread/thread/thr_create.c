@@ -1126,6 +1126,8 @@ argument_list|,
 name|new_thread
 argument_list|)
 expr_stmt|;
+else|else
+block|{
 comment|/* Return a pointer to the thread structure: */
 operator|(
 operator|*
@@ -1134,6 +1136,7 @@ operator|)
 operator|=
 name|new_thread
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Return the status: */
