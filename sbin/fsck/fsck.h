@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|USTATE
-value|01
+value|0x1
 end_define
 
 begin_comment
@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|FSTATE
-value|02
+value|0x2
 end_define
 
 begin_comment
@@ -118,8 +118,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FZLINK
+value|0x3
+end_define
+
+begin_comment
+comment|/* inode is file with a link count of zero */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DSTATE
-value|03
+value|0x4
 end_define
 
 begin_comment
@@ -129,19 +140,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DZLINK
+value|0x5
+end_define
+
+begin_comment
+comment|/* inode is directory with a zero link count  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DFOUND
-value|04
+value|0x6
 end_define
 
 begin_comment
 comment|/* directory found during descent */
 end_comment
 
+begin_comment
+comment|/*     		0x7		   UNUSED - see S_IS_DVALID() definition */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DCLEAR
-value|05
+value|0x8
 end_define
 
 begin_comment
@@ -152,12 +178,60 @@ begin_define
 define|#
 directive|define
 name|FCLEAR
-value|06
+value|0x9
 end_define
 
 begin_comment
 comment|/* file is to be cleared */
 end_comment
+
+begin_comment
+comment|/*     	DUNFOUND === (state == DSTATE || state == DZLINK) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IS_DUNFOUND
+parameter_list|(
+name|state
+parameter_list|)
+value|(((state)& ~0x1) == DSTATE)
+end_define
+
+begin_comment
+comment|/*     	DVALID   === (state == DSTATE || state == DZLINK || state == DFOUND) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IS_DVALID
+parameter_list|(
+name|state
+parameter_list|)
+value|(((state)& ~0x3) == DSTATE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INO_IS_DUNFOUND
+parameter_list|(
+name|ino
+parameter_list|)
+value|S_IS_DUNFOUND(inoinfo(ino)->ino_state)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INO_IS_DVALID
+parameter_list|(
+name|ino
+parameter_list|)
+value|S_IS_DVALID(inoinfo(ino)->ino_state)
+end_define
 
 begin_comment
 comment|/*  * Inode state information is contained on per cylinder group lists  * which are described by the following structure.  */
@@ -520,38 +594,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* end of unique duplicate dup block numbers */
-end_comment
-
-begin_comment
-comment|/*  * Linked list of inodes with zero link counts.  */
-end_comment
-
-begin_struct
-struct|struct
-name|zlncnt
-block|{
-name|struct
-name|zlncnt
-modifier|*
-name|next
-decl_stmt|;
-name|ino_t
-name|zlncnt
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|struct
-name|zlncnt
-modifier|*
-name|zlnhead
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* head of zero link count list */
 end_comment
 
 begin_comment

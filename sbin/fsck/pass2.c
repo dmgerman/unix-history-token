@@ -292,6 +292,9 @@ case|:
 case|case
 name|FCLEAR
 case|:
+case|case
+name|FZLINK
+case|:
 name|pfatal
 argument_list|(
 literal|"ROOT INODE NOT DIRECTORY"
@@ -379,6 +382,9 @@ expr_stmt|;
 break|break;
 case|case
 name|DSTATE
+case|:
+case|case
+name|DZLINK
 case|:
 break|break;
 default|default:
@@ -880,16 +886,12 @@ name|ino_state
 operator|==
 name|DFOUND
 operator|&&
-name|inoinfo
+name|INO_IS_DUNFOUND
 argument_list|(
 name|inp
 operator|->
 name|i_number
 argument_list|)
-operator|->
-name|ino_state
-operator|==
-name|DSTATE
 condition|)
 name|inoinfo
 argument_list|(
@@ -2480,6 +2482,9 @@ goto|;
 case|case
 name|DSTATE
 case|:
+case|case
+name|DZLINK
+case|:
 if|if
 condition|(
 name|inoinfo
@@ -2638,6 +2643,9 @@ expr_stmt|;
 comment|/* fall through */
 case|case
 name|FSTATE
+case|:
+case|case
+name|FZLINK
 case|:
 if|if
 condition|(

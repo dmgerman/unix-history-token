@@ -2975,6 +2975,9 @@ block|{
 case|case
 name|FSTATE
 case|:
+case|case
+name|FZLINK
+case|:
 name|inoinfo
 argument_list|(
 name|ino
@@ -2987,6 +2990,9 @@ expr_stmt|;
 return|return;
 case|case
 name|DSTATE
+case|:
+case|case
+name|DZLINK
 case|:
 name|inoinfo
 argument_list|(
