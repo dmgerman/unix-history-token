@@ -165,7 +165,7 @@ name|ch
 decl_stmt|;
 name|struct
 name|timeval
-name|second
+name|interval
 decl_stmt|;
 switch|switch
 condition|(
@@ -559,14 +559,13 @@ operator|!
 name|fflag
 condition|)
 break|break;
-comment|/* Sleep(3) is eight system calls.  Do it fast. */
-name|second
+name|interval
 operator|.
 name|tv_sec
 operator|=
 literal|0
 expr_stmt|;
-name|second
+name|interval
 operator|.
 name|tv_usec
 operator|=
@@ -585,7 +584,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|second
+name|interval
 argument_list|)
 operator|==
 operator|-
