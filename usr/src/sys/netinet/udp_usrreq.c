@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.39	82/10/22	*/
+comment|/*	udp_usrreq.c	4.40	82/11/03	*/
 end_comment
 
 begin_include
@@ -1218,7 +1218,7 @@ condition|)
 break|break;
 name|error
 operator|=
-name|in_pcbreserve
+name|soreserve
 argument_list|(
 name|so
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_proto.c	5.2	82/08/01	*/
+comment|/*	in_proto.c	5.3	82/11/03	*/
 end_comment
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
+file|"../netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in_systm.h"
+file|"../netinet/in_systm.h"
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.69	82/10/30	*/
+comment|/*	tcp_usrreq.c	1.70	82/11/03	*/
 end_comment
 
 begin_include
@@ -1027,7 +1027,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|in_pcbreserve
+name|soreserve
 argument_list|(
 name|so
 argument_list|,

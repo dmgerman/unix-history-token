@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.h	4.17	82/10/31	*/
+comment|/*	in.h	4.18	82/11/03	*/
 end_comment
 
 begin_comment
@@ -572,6 +572,34 @@ name|x
 parameter_list|)
 value|(x)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|domain
+name|inetdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|protosw
+name|inetsw
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

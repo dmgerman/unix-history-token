@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.57	82/10/30	*/
+comment|/*	ip_input.c	1.58	82/11/03	*/
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/domain.h"
 end_include
 
 begin_include
@@ -195,17 +201,21 @@ index|]
 operator|=
 name|pr
 operator|-
-name|protosw
+name|inetsw
 expr_stmt|;
 for|for
 control|(
 name|pr
 operator|=
-name|protosw
+name|inetdomain
+operator|.
+name|dom_protosw
 init|;
 name|pr
 operator|<=
-name|protoswLAST
+name|inetdomain
+operator|.
+name|dom_protoswNPROTOSW
 condition|;
 name|pr
 operator|++
@@ -237,7 +247,7 @@ index|]
 operator|=
 name|pr
 operator|-
-name|protosw
+name|inetsw
 expr_stmt|;
 name|ipq
 operator|.
@@ -959,7 +969,7 @@ expr_stmt|;
 comment|/* 	 * Switch out to protocol's input routine. 	 */
 operator|(
 operator|*
-name|protosw
+name|inetsw
 index|[
 name|ip_protox
 index|[
