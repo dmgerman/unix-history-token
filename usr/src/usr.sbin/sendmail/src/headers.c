@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.56 (Berkeley) %G%"
+literal|"@(#)headers.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,13 +150,23 @@ argument_list|,
 literal|6
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"chompheader: %s\n"
-argument_list|,
+literal|"chompheader: "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|headeronly
 operator|=
 name|hdrp
