@@ -30,14 +30,14 @@ begin_comment
 comment|/* allow sorting of addresses in gethostbyname */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|RFC1535
-end_undef
+end_define
 
 begin_comment
-comment|/* comply with RFC1535 */
+comment|/* comply with RFC1535 (STRONGLY reccomended by vixie)*/
 end_comment
 
 begin_undef
@@ -68,6 +68,16 @@ end_undef
 
 begin_comment
 comment|/* verify gethostbyaddr() calls - WE DONT NEED IT  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MULTI_PTRS_ARE_ALIASES
+end_define
+
+begin_comment
+comment|/* fold multiple PTR records into aliases */
 end_comment
 
 end_unit

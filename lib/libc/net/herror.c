@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: herror.c,v 1.2 1995/05/30 05:40:49 rgrimes Exp $"
+literal|"$Id: herror.c,v 1.3 1995/08/20 20:02:41 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,17 +109,13 @@ name|h_nerr
 init|=
 block|{
 sizeof|sizeof
-argument_list|(
 name|h_errlist
-argument_list|)
 operator|/
-expr|sizeof
-operator|(
+sizeof|sizeof
 name|h_errlist
 index|[
 literal|0
 index|]
-operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
