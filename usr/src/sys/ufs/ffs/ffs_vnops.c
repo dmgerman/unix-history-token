@@ -627,7 +627,11 @@ if|if
 condition|(
 name|mode
 operator|&
+operator|(
 name|FWRITE
+operator||
+name|FTRUNC
+operator|)
 condition|)
 block|{
 if|if
