@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)allo.c	4.1 (Berkeley) %G%"
+literal|"@(#)allo.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,6 +1202,9 @@ operator|)
 condition|)
 block|{
 comment|/* only do the pairing for real regs */
+ifndef|#
+directive|ifndef
+name|NOEVENODD
 if|if
 condition|(
 name|r
@@ -1213,6 +1216,8 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1930,6 +1935,30 @@ operator|==
 literal|2
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NOEVENODD
+if|if
+condition|(
+name|istreg
+argument_list|(
+name|r
+argument_list|)
+operator|^
+name|istreg
+argument_list|(
+name|r
+operator|+
+literal|1
+argument_list|)
+condition|)
+name|cerror
+argument_list|(
+literal|"illegal free"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -1957,6 +1986,8 @@ argument_list|(
 literal|"illegal free"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|--
@@ -2075,6 +2106,30 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOEVENODD
+if|if
+condition|(
+name|istreg
+argument_list|(
+name|r
+argument_list|)
+operator|^
+name|istreg
+argument_list|(
+name|r
+operator|+
+literal|1
+argument_list|)
+condition|)
+name|cerror
+argument_list|(
+literal|"illegal register pair freed"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -2102,6 +2157,8 @@ argument_list|(
 literal|"illegal register pair freed"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_block
@@ -2848,6 +2905,9 @@ name|type
 operator|=
 name|UNSIGNED
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|FORT
 elseif|else
 if|if
 condition|(
@@ -2867,6 +2927,8 @@ name|type
 operator|=
 name|DOUBLE
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
