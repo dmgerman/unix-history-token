@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.1	%G%	*/
+comment|/*	buf.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_struct
 struct|struct
 name|buf
 block|{
-name|int
+name|long
 name|b_flags
 decl_stmt|;
 comment|/* see defines below */
@@ -263,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|B_WRITE
-value|0x0000
+value|0x00000
 end_define
 
 begin_comment
@@ -274,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|B_READ
-value|0x0001
+value|0x00001
 end_define
 
 begin_comment
@@ -285,7 +285,7 @@ begin_define
 define|#
 directive|define
 name|B_DONE
-value|0x0002
+value|0x00002
 end_define
 
 begin_comment
@@ -296,7 +296,7 @@ begin_define
 define|#
 directive|define
 name|B_ERROR
-value|0x0004
+value|0x00004
 end_define
 
 begin_comment
@@ -307,7 +307,7 @@ begin_define
 define|#
 directive|define
 name|B_BUSY
-value|0x0008
+value|0x00008
 end_define
 
 begin_comment
@@ -318,7 +318,7 @@ begin_define
 define|#
 directive|define
 name|B_PHYS
-value|0x0010
+value|0x00010
 end_define
 
 begin_comment
@@ -329,7 +329,7 @@ begin_define
 define|#
 directive|define
 name|B_MAP
-value|0x0020
+value|0x00020
 end_define
 
 begin_comment
@@ -340,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|B_WANTED
-value|0x0040
+value|0x00040
 end_define
 
 begin_comment
@@ -351,7 +351,7 @@ begin_define
 define|#
 directive|define
 name|B_AGE
-value|0x0080
+value|0x00080
 end_define
 
 begin_comment
@@ -362,7 +362,7 @@ begin_define
 define|#
 directive|define
 name|B_ASYNC
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -373,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|B_DELWRI
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -384,7 +384,7 @@ begin_define
 define|#
 directive|define
 name|B_TAPE
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
@@ -395,7 +395,7 @@ begin_define
 define|#
 directive|define
 name|B_UAREA
-value|0x0800
+value|0x00800
 end_define
 
 begin_comment
@@ -406,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|B_PAGET
-value|0x1000
+value|0x01000
 end_define
 
 begin_comment
@@ -417,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|B_DIRTY
-value|0x2000
+value|0x02000
 end_define
 
 begin_comment
@@ -428,7 +428,7 @@ begin_define
 define|#
 directive|define
 name|B_PGIN
-value|0x4000
+value|0x04000
 end_define
 
 begin_comment
@@ -439,11 +439,22 @@ begin_define
 define|#
 directive|define
 name|B_CACHE
-value|0x8000
+value|0x08000
 end_define
 
 begin_comment
 comment|/* did bread find us in the cache ? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_INVAL
+value|0x10000
+end_define
+
+begin_comment
+comment|/* buffer contains invalid data */
 end_comment
 
 begin_comment
