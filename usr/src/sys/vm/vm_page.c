@@ -114,6 +114,16 @@ name|vm_page_queue_free_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* has physical page allocation been initialized? */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|vm_page_startup_initialized
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|vm_page_t
 name|vm_page_array
@@ -235,31 +245,22 @@ comment|/*  *	vm_page_startup:  *  *	Initializes the resident memory module.  * 
 end_comment
 
 begin_function
-name|vm_offset_t
+name|void
 name|vm_page_startup
 parameter_list|(
 name|start
 parameter_list|,
 name|end
-parameter_list|,
-name|vaddr
 parameter_list|)
-specifier|register
 name|vm_offset_t
+modifier|*
 name|start
 decl_stmt|;
 name|vm_offset_t
+modifier|*
 name|end
 decl_stmt|;
-specifier|register
-name|vm_offset_t
-name|vaddr
-decl_stmt|;
 block|{
-specifier|register
-name|vm_offset_t
-name|mapped
-decl_stmt|;
 specifier|register
 name|vm_page_t
 name|m
@@ -270,10 +271,6 @@ name|bucket
 decl_stmt|;
 name|vm_size_t
 name|npages
-decl_stmt|;
-specifier|register
-name|vm_offset_t
-name|new_start
 decl_stmt|;
 name|int
 name|i
@@ -321,18 +318,7 @@ operator|&
 name|vm_page_queue_inactive
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Allocate (and initialize) the hash table buckets. 	 * 	 *	The number of buckets MUST BE a power of 2, and 	 *	the actual value is the next power of 2 greater 	 *	than the number of physical pages in the system. 	 * 	 *	Note: 	 *		This computation can be tweaked if desired. 	 */
-name|vm_page_buckets
-operator|=
-operator|(
-name|queue_t
-operator|)
-name|vaddr
-expr_stmt|;
-name|bucket
-operator|=
-name|vm_page_buckets
-expr_stmt|;
+comment|/* 	 *	Calculate the number of hash table buckets. 	 * 	 *	The number of buckets MUST BE a power of 2, and 	 *	the actual value is the next power of 2 greater 	 *	than the number of physical pages in the system. 	 * 	 *	Note: 	 *		This computation can be tweaked if desired. 	 */
 if|if
 condition|(
 name|vm_page_bucket_count
@@ -350,8 +336,10 @@ name|vm_page_bucket_count
 operator|<
 name|atop
 argument_list|(
+operator|*
 name|end
 operator|-
+operator|*
 name|start
 argument_list|)
 condition|)
@@ -366,59 +354,26 @@ name|vm_page_bucket_count
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 *	Validate these addresses. 	 */
-name|new_start
+comment|/* 	 *	Allocate (and initialize) the hash table buckets. 	 */
+name|vm_page_buckets
 operator|=
-name|round_page
-argument_list|(
-operator|(
 operator|(
 name|queue_t
 operator|)
-name|start
-operator|)
-operator|+
+name|pmap_bootstrap_alloc
+argument_list|(
 name|vm_page_bucket_count
-argument_list|)
-expr_stmt|;
-name|mapped
-operator|=
-name|vaddr
-expr_stmt|;
-name|vaddr
-operator|=
-name|pmap_map
+operator|*
+sizeof|sizeof
 argument_list|(
-name|mapped
-argument_list|,
-name|start
-argument_list|,
-name|new_start
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
+expr|struct
+name|queue_entry
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|start
+name|bucket
 operator|=
-name|new_start
-expr_stmt|;
-name|blkclr
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|mapped
-argument_list|,
-name|vaddr
-operator|-
-name|mapped
-argument_list|)
-expr_stmt|;
-name|mapped
-operator|=
-name|vaddr
+name|vm_page_buckets
 expr_stmt|;
 for|for
 control|(
@@ -446,11 +401,13 @@ operator|&
 name|bucket_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	round (or truncate) the addresses to our page size. 	 */
+comment|/* 	 *	Truncate the remainder of physical memory to our page size. 	 */
+operator|*
 name|end
 operator|=
 name|trunc_page
 argument_list|(
+operator|*
 name|end
 argument_list|)
 expr_stmt|;
@@ -473,69 +430,15 @@ expr|struct
 name|vm_map_entry
 argument_list|)
 expr_stmt|;
-name|kentry_data_size
-operator|=
-name|round_page
-argument_list|(
-name|kentry_data_size
-argument_list|)
-expr_stmt|;
 name|kentry_data
 operator|=
 operator|(
 name|vm_offset_t
 operator|)
-name|vaddr
-expr_stmt|;
-name|vaddr
-operator|+=
+name|pmap_bootstrap_alloc
+argument_list|(
 name|kentry_data_size
-expr_stmt|;
-comment|/* 	 *	Validate these zone addresses. 	 */
-name|new_start
-operator|=
-name|start
-operator|+
-operator|(
-name|vaddr
-operator|-
-name|mapped
-operator|)
-expr_stmt|;
-name|pmap_map
-argument_list|(
-name|mapped
-argument_list|,
-name|start
-argument_list|,
-name|new_start
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
 argument_list|)
-expr_stmt|;
-name|blkclr
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|mapped
-argument_list|,
-operator|(
-name|vaddr
-operator|-
-name|mapped
-operator|)
-argument_list|)
-expr_stmt|;
-name|mapped
-operator|=
-name|vaddr
-expr_stmt|;
-name|start
-operator|=
-name|new_start
 expr_stmt|;
 comment|/*  	 *	Compute the number of pages of memory that will be 	 *	available for use (taking into account the overhead 	 *	of a page structure per page). 	 */
 name|cnt
@@ -545,8 +448,10 @@ operator|=
 name|npages
 operator|=
 operator|(
+operator|*
 name|end
 operator|-
+operator|*
 name|start
 operator|)
 operator|/
@@ -560,18 +465,10 @@ name|vm_page
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* 	 *	Initialize the mem entry structures now, and 	 *	put them in the free queue. 	 */
-name|m
-operator|=
-name|vm_page_array
-operator|=
-operator|(
-name|vm_page_t
-operator|)
-name|vaddr
-expr_stmt|;
+comment|/* 	 *	Record the extent of physical memory that the 	 *	virtual memory system manages. 	 */
 name|first_page
 operator|=
+operator|*
 name|start
 expr_stmt|;
 name|first_page
@@ -618,75 +515,26 @@ argument_list|)
 operator|+
 name|PAGE_MASK
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|i386
-comment|/* XXX - waiting for pmap_bootstrap_malloc() (or somebody like him) */
-if|if
-condition|(
-name|first_phys_addr
-operator|>
-literal|0xa0000
-condition|)
-name|panic
-argument_list|(
-literal|"vm_page_startup: fell into the hole"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 *	Validate these addresses. 	 */
-name|new_start
-operator|=
-name|start
-operator|+
-operator|(
-name|round_page
-argument_list|(
+comment|/* 	 *	Allocate and clear the mem entry structures. 	 */
 name|m
-operator|+
-name|npages
-argument_list|)
-operator|-
-name|mapped
-operator|)
-expr_stmt|;
-name|mapped
 operator|=
-name|pmap_map
-argument_list|(
-name|mapped
-argument_list|,
-name|start
-argument_list|,
-name|new_start
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|)
-expr_stmt|;
-name|start
+name|vm_page_array
 operator|=
-name|new_start
-expr_stmt|;
-comment|/* 	 *	Clear all of the page structures 	 */
-name|blkclr
-argument_list|(
 operator|(
-name|caddr_t
+name|vm_page_t
 operator|)
-name|m
-argument_list|,
+name|pmap_bootstrap_alloc
+argument_list|(
 name|npages
 operator|*
 sizeof|sizeof
 argument_list|(
-operator|*
-name|m
+expr|struct
+name|vm_page
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 *	Initialize the mem entry structures now, and 	 *	put them in the free queue. 	 */
 name|pa
 operator|=
 name|first_phys_addr
@@ -819,11 +667,11 @@ operator|&
 name|vm_pages_needed_lock
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|mapped
-operator|)
-return|;
+comment|/* from now on, pmap_bootstrap_alloc can't be used */
+name|vm_page_startup_initialized
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 end_function
 
@@ -849,6 +697,7 @@ comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_page_insert
 parameter_list|(
@@ -988,7 +837,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_remove:		[ internal use only ]  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list.  *  *	The object and page must be locked.  */
+comment|/*  *	vm_page_remove:		[ internal use only ]  *				NOTE: used by device pager as well -wfj  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list.  *  *	The object and page must be locked.  */
 end_comment
 
 begin_function
