@@ -1072,6 +1072,19 @@ condition|)
 break|break;
 if|if
 condition|(
+name|p
+operator|==
+name|optarg
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"null variable cannot be defined"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|*
 name|p
 condition|)
