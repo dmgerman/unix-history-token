@@ -142,12 +142,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<langinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -298,16 +292,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* calculated width of requested variables */
-end_comment
-
-begin_decl_stmt
-name|int
-name|use_ampm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* use AM/PM time */
 end_comment
 
 begin_decl_stmt
@@ -694,18 +678,6 @@ name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
-expr_stmt|;
-name|use_ampm
-operator|=
-operator|(
-operator|*
-name|nl_langinfo
-argument_list|(
-name|T_FMT_AMPM
-argument_list|)
-operator|!=
-literal|'\0'
-operator|)
 expr_stmt|;
 if|if
 condition|(

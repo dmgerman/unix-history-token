@@ -59,8 +59,6 @@ decl_stmt|,
 name|termwidth
 decl_stmt|,
 name|totwidth
-decl_stmt|,
-name|use_ampm
 decl_stmt|;
 end_decl_stmt
 
