@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.5 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,12 +233,33 @@ name|s
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"socket: All ports in use\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|perror
+argument_list|(
+literal|"rcmd: socket"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|sin
 operator|.
 name|sin_family
@@ -835,27 +856,10 @@ return|;
 if|if
 condition|(
 name|errno
-operator|==
-name|EADDRNOTAVAIL
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|errno
 operator|!=
 name|EADDRINUSE
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"socket"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -887,13 +891,6 @@ operator|/
 literal|2
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"socket: All ports in use\n"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -902,6 +899,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|EAGAIN
+expr_stmt|;
+comment|/* close */
 return|return
 operator|(
 operator|-
