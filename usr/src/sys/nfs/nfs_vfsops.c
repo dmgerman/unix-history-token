@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -733,6 +733,8 @@ name|int
 name|error
 decl_stmt|,
 name|i
+decl_stmt|,
+name|s
 decl_stmt|;
 comment|/* 	 * XXX time must be non-zero when we init the interface or else 	 * the arp code will wedge... 	 */
 if|if
@@ -929,22 +931,27 @@ condition|)
 block|{
 name|struct
 name|sockaddr_in
+name|mask
+decl_stmt|,
 name|sin
 decl_stmt|;
-specifier|extern
-name|struct
-name|sockaddr_in
-name|icmpmask
-decl_stmt|;
-name|sin
-operator|.
-name|sin_len
-operator|=
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|mask
+argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sockaddr_in
+name|mask
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|sin
+operator|=
+name|mask
 expr_stmt|;
 name|sin
 operator|.
@@ -954,21 +961,11 @@ name|AF_INET
 expr_stmt|;
 name|sin
 operator|.
-name|sin_addr
-operator|.
-name|s_addr
+name|sin_len
 operator|=
-literal|0
-expr_stmt|;
-comment|/* default */
-name|in_sockmaskof
+sizeof|sizeof
 argument_list|(
 name|sin
-operator|.
-name|sin_addr
-argument_list|,
-operator|&
-name|icmpmask
 argument_list|)
 expr_stmt|;
 if|if
@@ -1003,7 +1000,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|icmpmask
+name|mask
 argument_list|,
 name|RTF_UP
 operator||
