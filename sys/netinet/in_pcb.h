@@ -779,6 +779,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_INFO_LOCK_DESTROY
+parameter_list|(
+name|ipi
+parameter_list|)
+value|mtx_destroy(&(ipi)->ipi_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_INFO_RLOCK
 parameter_list|(
 name|ipi
