@@ -890,6 +890,9 @@ value|(0x7ff<< 16)
 name|ohci_physaddr_t
 name|ed_tailp
 decl_stmt|;
+name|ohci_physaddr_t
+name|ed_headp
+decl_stmt|;
 define|#
 directive|define
 name|OHCI_HALTED
@@ -900,11 +903,8 @@ name|OHCI_TOGGLECARRY
 value|0x00000001
 define|#
 directive|define
-name|OHCI_TAILMASK
+name|OHCI_HEADMASK
 value|0xfffffffc
-name|ohci_physaddr_t
-name|ed_headp
-decl_stmt|;
 name|ohci_physaddr_t
 name|ed_nexted
 decl_stmt|;

@@ -201,6 +201,7 @@ decl_stmt|;
 name|u_int32_t
 name|sc_eintrs
 decl_stmt|;
+comment|/* enabled interrupts */
 name|ohci_soft_ed_t
 modifier|*
 name|sc_isoc_head
