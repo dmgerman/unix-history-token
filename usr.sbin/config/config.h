@@ -206,22 +206,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|COMPSPEC
+name|NODEPEND
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODEPEND
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOCAL
-value|10
+value|9
 end_define
 
 begin_define
@@ -272,23 +265,6 @@ end_define
 
 begin_struct
 struct|struct
-name|idlst
-block|{
-name|char
-modifier|*
-name|id
-decl_stmt|;
-name|struct
-name|idlst
-modifier|*
-name|id_next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|device
 block|{
 name|int
@@ -306,20 +282,6 @@ modifier|*
 name|d_name
 decl_stmt|;
 comment|/* name of device (e.g. rk11) */
-name|struct
-name|idlst
-modifier|*
-name|d_vec
-decl_stmt|;
-comment|/* interrupt vectors */
-name|int
-name|d_pri
-decl_stmt|;
-comment|/* interrupt priority */
-name|int
-name|d_addr
-decl_stmt|;
-comment|/* address of csr */
 name|int
 name|d_unit
 decl_stmt|;
@@ -375,11 +337,6 @@ name|int
 name|d_portn
 decl_stmt|;
 comment|/* io port base (if number not manifest) */
-name|char
-modifier|*
-name|d_mask
-decl_stmt|;
-comment|/* interrupt mask */
 name|int
 name|d_maddr
 decl_stmt|;

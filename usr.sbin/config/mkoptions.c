@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkoptions.c,v 1.9 1999/04/17 14:41:40 peter Exp $"
+literal|"$Id: mkoptions.c,v 1.10 1999/04/18 13:36:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -448,9 +448,14 @@ name|op_name
 operator|=
 literal|"MAXUSERS"
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,

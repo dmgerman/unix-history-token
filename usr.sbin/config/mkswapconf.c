@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkswapconf.c,v 1.17 1999/04/17 14:41:40 peter Exp $"
+literal|"$Id: mkswapconf.c,v 1.18 1999/04/18 13:36:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,9 +248,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|swapname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|swapname
+argument_list|)
 argument_list|,
 literal|"swap%s.c"
 argument_list|,
@@ -262,9 +267,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|newswapname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newswapname
+argument_list|)
 argument_list|,
 literal|"swap%s.c.new"
 argument_list|,
@@ -981,9 +991,14 @@ name|slice
 operator|!=
 name|COMPATIBILITY_SLICE
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|slicename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|slicename
+argument_list|)
 argument_list|,
 literal|"s%d"
 argument_list|,
@@ -996,9 +1011,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s%d%s%s"
 argument_list|,
@@ -1065,9 +1085,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"../conf/devices.%s"
 argument_list|,

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.52 1999/04/18 14:27:33 kato Exp $"
+literal|"$Id: mkioconf.c,v 1.53 1999/04/19 14:40:55 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,9 +148,14 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -1504,9 +1509,14 @@ return|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"%3d"
 argument_list|,
@@ -1551,9 +1561,14 @@ return|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,

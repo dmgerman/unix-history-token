@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.39 1999/04/18 13:36:29 peter Exp $"
+literal|"$Id: mkmakefile.c,v 1.40 1999/04/19 13:53:07 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2916,9 +2916,14 @@ continue|continue;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|swapname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|swapname
+argument_list|)
 argument_list|,
 literal|"swap%s.c"
 argument_list|,
@@ -3213,9 +3218,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|swapname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|swapname
+argument_list|)
 argument_list|,
 literal|"swap%s.c"
 argument_list|,
@@ -3950,9 +3960,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|,
 literal|"${%s_%c%s}"
 argument_list|,

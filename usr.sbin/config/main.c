@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.30 1999/04/17 14:41:40 peter Exp $"
+literal|"$Id: main.c,v 1.31 1999/04/18 13:36:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,9 +471,14 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
 argument_list|,
 literal|"rm -rf %s"
 argument_list|,
