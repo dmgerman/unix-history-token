@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* moreobj.c 		Larn is copyrighted 1986 by Noah Morgan.  *  *	Routines in this file:  *  *	oaltar()  *	othrone()  *	ochest()  *	ofountain()  */
+comment|/* moreobj.c 		Larn is copyrighted 1986 by Noah Morgan.  * $FreeBSD$  *  *	Routines in this file:  *  *	oaltar()  *	othrone()  *	ochest()  *	ofountain()  */
 end_comment
 
 begin_include

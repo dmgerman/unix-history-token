@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Phantasia 3.3.2 -- Interterminal fantasy game  *  * Edward A. Estes  * AT&T, March 12, 1986  */
+comment|/*  * Phantasia 3.3.2 -- Interterminal fantasy game  *  * Edward A. Estes  * AT&T, March 12, 1986  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

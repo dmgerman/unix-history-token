@@ -7,6 +7,10 @@ begin_comment
 comment|/* makedefs.c - version 1.0.2 */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	movem.c (move monster)		Larn is copyrighted 1986 by Noah Morgan.  *  *	Here are the functions in this file:  *  *	movemonst()		Routine to move the monsters toward the player  *	movemt(x,y)		Function to move a monster at (x,y) -- must determine where  *	mmove(x,y,xd,yd)	Function to actually perform the monster movement  *	movsphere() 		Function to look for and move spheres of annihilation  */
+comment|/*  *	movem.c (move monster)		Larn is copyrighted 1986 by Noah Morgan.  * $FreeBSD$  *  *	Here are the functions in this file:  *  *	movemonst()		Routine to move the monsters toward the player  *	movemt(x,y)		Function to move a monster at (x,y) -- must determine where  *	mmove(x,y,xd,yd)	Function to actually perform the monster movement  *	movsphere() 		Function to look for and move spheres of annihilation  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  */
+comment|/*  * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  *  * $FreeBSD$  */
 end_comment
 
 begin_include

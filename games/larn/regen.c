@@ -3,6 +3,10 @@ begin_comment
 comment|/* regen.c 			Larn is copyrighted 1986 by Noah Morgan. */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
