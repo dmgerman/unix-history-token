@@ -536,11 +536,6 @@ name|vop_stdputpages
 block|,
 comment|/* pager intf.*/
 operator|.
-name|vop_createvobject
-operator|=
-name|vop_stdcreatevobject
-block|,
-operator|.
 name|vop_destroyvobject
 operator|=
 name|vop_stddestroyvobject

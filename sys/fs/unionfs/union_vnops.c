@@ -251,13 +251,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_createvobject_t
-name|union_createvobject
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|vop_deleteextattr_t
 name|union_deleteextattr
 decl_stmt|;
@@ -6221,32 +6214,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * unionvp do not hold a VM object and there is no need to create one for  * upper or lower vp because it is done in the union_open()  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|union_createvobject
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_createvobject_args
-comment|/* { 		struct vnode *vp; 		struct ucred *cred; 		struct thread *td; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * We have nothing to destroy and this operation shouldn't be bypassed.  */
 end_comment
 
@@ -7423,11 +7390,6 @@ operator|.
 name|vop_create
 operator|=
 name|union_create
-block|,
-operator|.
-name|vop_createvobject
-operator|=
-name|union_createvobject
 block|,
 operator|.
 name|vop_deleteextattr
