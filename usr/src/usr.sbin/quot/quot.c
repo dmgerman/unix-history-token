@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quot.c	8.4 (Berkeley) %G%"
+literal|"@(#)quot.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1601,8 +1601,6 @@ operator|-
 name|ip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 operator|>
 literal|30
 operator|*
@@ -1623,8 +1621,6 @@ operator|-
 name|ip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 operator|>
 literal|60
 operator|*
@@ -1645,8 +1641,6 @@ operator|-
 name|ip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 operator|>
 literal|90
 operator|*

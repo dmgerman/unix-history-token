@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	8.2 (Berkeley) %G%"
+literal|"@(#)mkproto.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2146,8 +2146,6 @@ expr_stmt|;
 name|ip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 operator|=
 name|t
 operator|.
@@ -2155,9 +2153,7 @@ name|tv_sec
 expr_stmt|;
 name|ip
 operator|->
-name|di_atime
-operator|.
-name|ts_nsec
+name|di_atimensec
 operator|=
 literal|0
 expr_stmt|;
