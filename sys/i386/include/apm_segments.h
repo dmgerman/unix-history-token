@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * LP (Laptop Package)  *  * Copyright (C) 1994 by HOSOKAWA Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_segments.h,v 1.3 1995/02/17 02:22:46 phk Exp $  */
+comment|/*  * LP (Laptop Package)  *  * Copyright (C) 1994 by HOSOKAWA Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_segments.h,v 1.4 1995/05/30 08:00:25 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -33,20 +33,27 @@ begin_define
 define|#
 directive|define
 name|APM_INIT_CS_INDEX
-value|(BOOTSTRAP_GDT_NUM - 3)
+value|(BOOTSTRAP_GDT_NUM - 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|APM_INIT_DS_INDEX
-value|(BOOTSTRAP_GDT_NUM - 2)
+value|(BOOTSTRAP_GDT_NUM - 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|APM_INIT_CS16_INDEX
+value|(BOOTSTRAP_GDT_NUM - 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_INIT_DS16_INDEX
 value|(BOOTSTRAP_GDT_NUM - 1)
 end_define
 
@@ -74,8 +81,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|APM_INIT_DS16_SEL
+value|(APM_INIT_DS16_INDEX<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CS32_ATTRIB
 value|0x409e
+end_define
+
+begin_define
+define|#
+directive|define
+name|DS32_ATTRIB
+value|0x4092
 end_define
 
 begin_define
@@ -88,8 +109,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DS32_ATTRIB
-value|0x4092
+name|DS16_ATTRIB
+value|0x0092
 end_define
 
 begin_endif
