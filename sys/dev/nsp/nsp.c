@@ -5682,6 +5682,33 @@ literal|0
 condition|)
 block|{
 comment|/* XXX:IMPORTANT: 				 * To avoid timeout of pcmcia bus 				 * (not scsi bus!), we should check 				 * the scsi device sends us request 				 * signals, which means the scsi device 				 * is ready to recieve data without 				 * heavy delays.  				 */
+if|if
+condition|(
+operator|(
+name|slp
+operator|->
+name|sl_scp
+operator|.
+name|scp_datalen
+operator|%
+name|suspendio
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Step I: 					 * fill the nsp fifo, and waiting for 					 * the fifo empty. 					 */
+name|nsp_write_fifo
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Step II: 					 * check the request singals. 					 */
 name|acount
 operator|=
 name|nsp_fifo_count
@@ -5742,6 +5769,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NSP_STATICS */
+block|}
 block|}
 block|}
 else|else
