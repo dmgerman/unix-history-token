@@ -630,11 +630,14 @@ parameter_list|)
 value|256
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -650,6 +653,32 @@ parameter_list|,
 name|size
 parameter_list|)
 value|alpha_mb()
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MEMORYBARRIER
+parameter_list|(
+name|isp
+parameter_list|,
+name|type
+parameter_list|,
+name|offset
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|do { ia64_mf(); ia64_mf_a(); } while (0)
 end_define
 
 begin_else
