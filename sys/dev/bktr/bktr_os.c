@@ -23,6 +23,12 @@ directive|include
 file|"bktr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"smbus.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
