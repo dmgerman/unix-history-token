@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.50 1996/10/03 07:50:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51 1996/10/14 21:32:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2039,27 +2039,135 @@ end_function
 
 begin_function
 name|int
-name|configRoutedFlags
+name|configRouter
 parameter_list|(
 name|dialogMenuItem
 modifier|*
 name|self
 parameter_list|)
 block|{
-return|return
-operator|(
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|variable_get_value
 argument_list|(
-name|VAR_ROUTEDFLAGS
+name|VAR_ROUTER
 argument_list|,
-literal|"Specify the flags for routed; -q is the default, -s is\n"
-literal|"a good choice for gateway machines."
+literal|"Please specify the router you wish to use.  Routed is\n"
+literal|"provided with the stock system and gated is provided\n"
+literal|"as an optional package which this installation system\n"
+literal|"will attempt to load if you select gated.  Any other\n"
+literal|"choice of routing daemon will be assumed to be something\n"
+literal|"the user intends to install themselves before rebooting\n"
+literal|"the system.  If you don't want any routing daemon, say NO"
 argument_list|)
 condition|?
 name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|DITEM_SUCCESS
+condition|)
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_ROUTER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"NO"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"gated"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|package_add
+argument_list|(
+name|PACKAGE_GATED
+argument_list|)
+operator|!=
+name|DITEM_SUCCESS
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to load gated package.  Falling back to routed."
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_ROUTER
+argument_list|,
+literal|"routed"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Now get the flags, if they chose a router */
+name|ret
+operator|=
+name|variable_get_value
+argument_list|(
+name|VAR_ROUTERFLAGS
+argument_list|,
+literal|"Please Specify the routing daemon flags; if you're running routed\n"
+literal|"then -q is the right choice for nodes and -s for gateway hosts.\n"
+argument_list|)
+condition|?
+name|DITEM_SUCCESS
+else|:
+name|DITEM_FAILURE
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|DITEM_SUCCESS
+condition|)
+block|{
+name|variable_unset
+argument_list|(
+name|VAR_ROUTER
+argument_list|)
+expr_stmt|;
+name|variable_unset
+argument_list|(
+name|VAR_ROUTERFLAGS
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+return|return
+name|ret
 operator||
 name|DITEM_RESTORE
 return|;
@@ -2394,68 +2502,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Load gated package */
-end_comment
-
-begin_function
-name|int
-name|configGated
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|int
-name|ret
-init|=
-name|DITEM_SUCCESS
-decl_stmt|;
-if|if
-condition|(
-name|variable_get
-argument_list|(
-name|VAR_GATED
-argument_list|)
-condition|)
-name|variable_unset
-argument_list|(
-name|VAR_GATED
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|ret
-operator|=
-name|package_add
-argument_list|(
-literal|"gated-3.5a11"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|ret
-argument_list|)
-operator|==
-name|DITEM_SUCCESS
-condition|)
-name|variable_set2
-argument_list|(
-name|VAR_GATED
-argument_list|,
-literal|"YES"
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|ret
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Load novell client/server package */
 end_comment
 
@@ -2506,7 +2552,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"commerce/netcon/bsd60"
+name|PACKAGE_NETCON
 argument_list|)
 expr_stmt|;
 if|if
@@ -2570,7 +2616,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"pcnfsd-93.02.16"
+name|PACKAGE_PCNFSD
 argument_list|)
 expr_stmt|;
 if|if
