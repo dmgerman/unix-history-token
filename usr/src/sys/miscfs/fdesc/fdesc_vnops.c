@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.10 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.11 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -1472,12 +1472,29 @@ operator|==
 name|VDIR
 condition|)
 block|{
-comment|/* 			 * don't allow directories to show up because 			 * that causes loops in the namespace. 			 */
+comment|/* 			 * directories can cause loops in the namespace, 			 * so turn off the 'x' bits to avoid trouble. 			 */
 name|vap
 operator|->
-name|va_type
-operator|=
-name|VFIFO
+name|va_mode
+operator|&=
+operator|~
+operator|(
+operator|(
+name|VEXEC
+operator|)
+operator||
+operator|(
+name|VEXEC
+operator|>>
+literal|3
+operator|)
+operator||
+operator|(
+name|VEXEC
+operator|>>
+literal|6
+operator|)
+operator|)
 expr_stmt|;
 block|}
 break|break;
