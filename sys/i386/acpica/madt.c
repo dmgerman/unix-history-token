@@ -1244,11 +1244,10 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: Found table at %p\n"
+literal|"MADT: Found table at 0x%jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|madt_physaddr
 argument_list|)
@@ -1305,11 +1304,10 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: Failed to map table at %p\n"
+literal|"MADT: Failed to map table at 0x%jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|address
 argument_list|)
@@ -1326,15 +1324,14 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Table '%.4s' at %p\n"
+literal|"Table '%.4s' at 0x%jx\n"
 argument_list|,
 name|table
 operator|->
 name|Signature
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|address
 argument_list|)
