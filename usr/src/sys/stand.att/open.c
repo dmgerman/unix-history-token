@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)open.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)open.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -61,6 +61,10 @@ name|struct
 name|iob
 modifier|*
 name|io
+decl_stmt|;
+name|char
+modifier|*
+name|name
 decl_stmt|;
 block|}
 struct|;
@@ -1617,6 +1621,12 @@ name|io
 operator|=
 name|io
 expr_stmt|;
+name|dirp
+operator|.
+name|name
+operator|=
+name|dir
+expr_stmt|;
 for|for
 control|(
 name|dp
@@ -1863,7 +1873,11 @@ name|i_error
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bn %ld: directory read error\n"
+literal|"%s: directory read error, bn %ld\n"
+argument_list|,
+name|dirp
+operator|->
+name|name
 argument_list|,
 name|io
 operator|->
@@ -1908,7 +1922,37 @@ name|d_ino
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|d_reclen
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: bad directory entry, offset %ld\n"
+argument_list|,
+name|dirp
+operator|->
+name|name
+argument_list|,
+name|dirp
+operator|->
+name|loc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 continue|continue;
+block|}
 return|return
 operator|(
 name|dp
