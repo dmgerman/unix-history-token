@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.57
+literal|3.58
 operator|%
 name|G
 operator|%
@@ -993,7 +993,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"MAIL FAILURE: %s"
+literal|"Returned mail: %s"
 argument_list|,
 name|msg
 argument_list|)

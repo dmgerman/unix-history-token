@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|%
 name|G
 operator|%
@@ -481,6 +481,8 @@ specifier|auto
 name|ADDRESS
 modifier|*
 name|rlist
+init|=
+name|NULL
 decl_stmt|;
 name|sendtolist
 argument_list|(
