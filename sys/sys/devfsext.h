@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.9 1996/03/28 14:35:36 scrappy Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.10 1996/04/02 06:17:14 scrappy Exp $  */
 end_comment
 
 begin_ifndef
@@ -97,24 +97,15 @@ name|void
 modifier|*
 name|devfs_link
 parameter_list|(
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
 name|void
 modifier|*
 name|original
+parameter_list|,
+comment|/* the result of a previous dev_link 		 char *fmt,			or dev_add operation */
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* the result of a previous dev_link 					or dev_add operation */
-end_comment
 
 begin_comment
 comment|/* remove the device the cookie represents */
