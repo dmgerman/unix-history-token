@@ -2666,15 +2666,6 @@ case|case
 name|TZ_NOTIFY_TEMPERATURE
 case|:
 comment|/* temperature change occurred */
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|tz_dev
-argument_list|,
-literal|"notified of temperature reaching setpoint\n"
-argument_list|)
-expr_stmt|;
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
@@ -2695,15 +2686,6 @@ case|case
 name|TZ_NOTIFY_LEVELS
 case|:
 comment|/* zone devices/setpoints changed */
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|tz_dev
-argument_list|,
-literal|"notified of zone configuration change\n"
-argument_list|)
-expr_stmt|;
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
