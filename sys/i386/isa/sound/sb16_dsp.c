@@ -34,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/sb.h>
+file|<i386/isa/sound/sb_defs.h>
 end_include
 
 begin_include
