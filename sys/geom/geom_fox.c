@@ -1840,7 +1840,7 @@ name|softc
 expr_stmt|;
 if|if
 condition|(
-name|sc
+name|sc2
 operator|==
 name|NULL
 condition|)
@@ -1955,7 +1955,7 @@ name|printf
 argument_list|(
 literal|"WARNING: New path (%s) to fox(%s) not added: %s\n%s"
 argument_list|,
-name|cp
+name|cp2
 operator|->
 name|provider
 operator|->
