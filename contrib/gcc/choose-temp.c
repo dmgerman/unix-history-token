@@ -11,6 +11,10 @@ begin_comment
 comment|/* This file lives in at least two places: libiberty and gcc.    Don't change one without the other.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -447,6 +451,15 @@ argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
+name|base
+operator|=
+name|try
+argument_list|(
+name|tmp
+argument_list|,
+name|base
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|P_tmpdir
@@ -461,21 +474,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Try /usr/tmp, then /tmp.  */
+comment|/* Try /usr/tmp even though it usually doesn't exist on FreeBSD.  */
 name|base
 operator|=
 name|try
 argument_list|(
 name|usrtmp
-argument_list|,
-name|base
-argument_list|)
-expr_stmt|;
-name|base
-operator|=
-name|try
-argument_list|(
-name|tmp
 argument_list|,
 name|base
 argument_list|)
@@ -698,6 +702,15 @@ argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
+name|base
+operator|=
+name|try
+argument_list|(
+name|tmp
+argument_list|,
+name|base
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|P_tmpdir
@@ -712,21 +725,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Try /usr/tmp, then /tmp.  */
+comment|/* Try /usr/tmp even though it usually doesn't exist on FreeBSD.  */
 name|base
 operator|=
 name|try
 argument_list|(
 name|usrtmp
-argument_list|,
-name|base
-argument_list|)
-expr_stmt|;
-name|base
-operator|=
-name|try
-argument_list|(
-name|tmp
 argument_list|,
 name|base
 argument_list|)
