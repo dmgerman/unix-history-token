@@ -87,6 +87,23 @@ end_endif
 begin_if
 if|#
 directive|if
+name|__powerpc__
+end_if
+
+begin_include
+include|#
+directive|include
+file|"powerpc.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|vax
 end_if
 
