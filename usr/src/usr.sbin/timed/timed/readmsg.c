@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	2.5 (Berkeley) %G%"
+literal|"@(#)readmsg.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1587,6 +1587,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|TSP_SETTIME
+case|:
 case|case
 name|TSP_ADJTIME
 case|:

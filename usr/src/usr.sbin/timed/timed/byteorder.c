@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)byteorder.c	2.3 (Berkeley) %G%"
+literal|"@(#)byteorder.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,9 @@ operator|->
 name|tsp_type
 condition|)
 block|{
+case|case
+name|TSP_SETTIME
+case|:
 case|case
 name|TSP_ADJTIME
 case|:
@@ -170,6 +173,9 @@ operator|->
 name|tsp_type
 condition|)
 block|{
+case|case
+name|TSP_SETTIME
+case|:
 case|case
 name|TSP_ADJTIME
 case|:
