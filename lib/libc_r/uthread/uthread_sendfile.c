@@ -93,11 +93,14 @@ name|_get_curthread
 argument_list|()
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|,
 name|type
 decl_stmt|,
 name|blocking
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|ssize_t
 name|wvret
@@ -596,7 +599,9 @@ name|num
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
