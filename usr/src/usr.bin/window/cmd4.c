@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.1 83/08/11"
+literal|"@(#)cmd4.c	3.2 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,6 +332,12 @@ condition|(
 name|terse
 condition|)
 name|wwdelete
+argument_list|(
+name|cmdwin
+argument_list|)
+expr_stmt|;
+else|else
+name|wwcurtowin
 argument_list|(
 name|cmdwin
 argument_list|)
