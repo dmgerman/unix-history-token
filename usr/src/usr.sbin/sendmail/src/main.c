@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.84
+literal|3.85
 operator|%
 name|G
 operator|%
@@ -1544,7 +1544,7 @@ name|DAEMON
 end_ifdef
 
 begin_comment
-comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	**	If we should also be processing the queue, start 	**	doing it in background. 	*/
+comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	**	If we should also be processing the queue, start 	**		doing it in background. 	**	We check for any errors that might have happened 	**		during startup. 	*/
 end_comment
 
 begin_if
@@ -1570,6 +1570,11 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|QUEUE
+name|checkerrors
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
 name|getrequests
 argument_list|()
 expr_stmt|;
