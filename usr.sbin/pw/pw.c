@@ -35,6 +35,8 @@ literal|"mod"
 block|,
 literal|"show"
 block|,
+literal|"next"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -74,6 +76,8 @@ literal|"usermod"
 block|,
 literal|"usershow"
 block|,
+literal|"usernext"
+block|,
 literal|"groupadd"
 block|,
 literal|"groupdel"
@@ -81,6 +85,8 @@ block|,
 literal|"groupmod"
 block|,
 literal|"groupshow"
+block|,
+literal|"groupnext"
 block|,
 name|NULL
 block|}
@@ -104,6 +110,8 @@ literal|"moduser"
 block|,
 literal|"showuser"
 block|,
+literal|"nextuser"
+block|,
 literal|"addgroup"
 block|,
 literal|"delgroup"
@@ -111,6 +119,8 @@ block|,
 literal|"modgroup"
 block|,
 literal|"showgroup"
+block|,
+literal|"nextgroup"
 block|,
 name|NULL
 block|}
@@ -204,26 +214,30 @@ name|M_NUM
 index|]
 init|=
 block|{
-comment|/* user */
 block|{
-literal|"C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db"
+comment|/* user */
+literal|"C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NP"
 block|,
 literal|"C:qn:u:r"
 block|,
-literal|"C:qn:u:c:d:e:p:g:G:mk:s:L:h:F"
+literal|"C:qn:u:c:d:e:p:g:G:mk:s:w:L:h:FNP"
 block|,
-literal|"C:qn:u:Fpa"
+literal|"C:qn:u:FPa"
+block|,
+literal|"C:q"
 block|}
 block|,
-comment|/* grp  */
 block|{
-literal|"C:qn:g:h:p"
+comment|/* grp  */
+literal|"C:qn:g:h:M:pNP"
 block|,
 literal|"C:qn:g:"
 block|,
-literal|"C:qn:g:l:h:F"
+literal|"C:qn:g:l:h:FM:m:NP"
 block|,
-literal|"C:qn:g:Fpa"
+literal|"C:qn:g:FPa"
+block|,
+literal|"C:q"
 block|}
 block|}
 decl_stmt|;
@@ -497,7 +511,7 @@ expr_stmt|;
 else|else
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_USAGE
 argument_list|,
 literal|"Unknown keyword `%s'\n"
 argument_list|,
@@ -538,31 +552,6 @@ argument_list|(
 name|mode
 argument_list|,
 name|which
-argument_list|)
-expr_stmt|;
-end_if
-
-begin_comment
-comment|/* 	 * Must be root to attempt an update 	 */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|getuid
-argument_list|()
-operator|!=
-literal|0
-operator|&&
-name|mode
-operator|!=
-name|M_PRINT
-condition|)
-name|cmderr
-argument_list|(
-name|X_PERMERR
-argument_list|,
-literal|"you must be root to run this program\n"
 argument_list|)
 expr_stmt|;
 end_if
@@ -626,7 +615,7 @@ literal|'?'
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_USAGE
 argument_list|,
 name|NULL
 argument_list|)
@@ -648,6 +637,45 @@ name|NULL
 expr_stmt|;
 block|}
 end_while
+
+begin_comment
+comment|/* 	 * Must be root to attempt an update 	 */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+operator|&&
+name|mode
+operator|!=
+name|M_PRINT
+operator|&&
+name|mode
+operator|!=
+name|M_NEXT
+operator|&&
+name|getarg
+argument_list|(
+operator|&
+name|arglist
+argument_list|,
+literal|'N'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|cmderr
+argument_list|(
+name|EX_NOPERM
+argument_list|,
+literal|"you must be root to run this program\n"
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* 	 * We should immediately look for the -q 'quiet' switch so that we 	 * don't bother with extraneous errors 	 */
@@ -676,13 +704,6 @@ name|stderr
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_expr_stmt
-name|ch
-operator|=
-name|X_CMDERR
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* 	 * Now, let's do the common initialisation 	 */
@@ -716,16 +737,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|if
-condition|(
-name|funcs
-index|[
-name|which
-index|]
-condition|)
-name|ch
-operator|=
+begin_return
+return|return
 name|funcs
 index|[
 name|which
@@ -738,32 +751,6 @@ operator|,
 operator|&
 name|arglist
 operator|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s[%s] not yet implemented.\n"
-argument_list|,
-name|progname
-argument_list|,
-name|Which
-index|[
-name|which
-index|]
-argument_list|,
-name|Modes
-index|[
-name|mode
-index|]
-argument_list|)
-expr_stmt|;
-end_if
-
-begin_return
-return|return
-name|ch
 return|;
 end_return
 
@@ -933,7 +920,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [user|group] [add|del|mod|show] [ help | switches/values ]\n"
+literal|"usage: %s [user|group] [add|del|mod|show|next] [ help | switches/values ]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -950,7 +937,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s [add|del|mod] [ help | switches/values ]\n"
+literal|"usage: %s %s [add|del|mod|show|next] [ help | switches/values ]\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -994,6 +981,7 @@ literal|"\t-s shell       name of login shell\n"
 literal|"\t-o             duplicate uid ok\n"
 literal|"\t-L class       user class\n"
 literal|"\t-h fd          read password on fd\n"
+literal|"\t-N             no update\n"
 literal|"  Setting defaults:\n"
 literal|"\t-D             set user defaults\n"
 literal|"\t-b dir         default home root dir\n"
@@ -1029,14 +1017,19 @@ literal|"\t-l name        new login name\n"
 literal|"\t-L class       user class\n"
 literal|"\t-m [ -k dir ]  create and set up home\n"
 literal|"\t-s shell       name of login shell\n"
+literal|"\t-w method      set new password using method\n"
 literal|"\t-h fd          read password on fd\n"
+literal|"\t-N             no update\n"
 block|,
 literal|"usage: %s usershow [uid|name] [switches]\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-F             force print\n"
-literal|"\t-p             prettier format\n"
+literal|"\t-P             prettier format\n"
 literal|"\t-a             print all users\n"
+block|,
+literal|"usage: %s usernext [switches]\n"
+literal|"\t-C config      configuration file\n"
 block|}
 block|,
 block|{
@@ -1045,7 +1038,9 @@ literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-n group       group name\n"
 literal|"\t-g gid         group id\n"
+literal|"\t-M usr1,usr2   add users as group members\n"
 literal|"\t-o             duplicate gid ok\n"
+literal|"\t-N             no update\n"
 block|,
 literal|"usage: %s groupdel [group|gid] [switches]\n"
 literal|"\t-n name        group name\n"
@@ -1057,14 +1052,20 @@ literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if not exists\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
+literal|"\t-M usr1,usr2   replaces users as group members\n"
+literal|"\t-m usr1,usr2   add users as group members\n"
 literal|"\t-l name        new group name\n"
+literal|"\t-N             no update\n"
 block|,
 literal|"usage: %s groupshow [group|gid] [switches]\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-F             force print\n"
-literal|"\t-p             prettier format\n"
+literal|"\t-P             prettier format\n"
 literal|"\t-a             print all accounting groups\n"
+block|,
+literal|"usage: %s groupnext [switches]\n"
+literal|"\t-C config      configuration file\n"
 block|}
 block|}
 decl_stmt|;
@@ -1086,7 +1087,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|X_CMDERR
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1183,7 +1184,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_MEMERR
+name|EX_OSERR
 argument_list|,
 literal|"Abort - out of memory\n"
 argument_list|)

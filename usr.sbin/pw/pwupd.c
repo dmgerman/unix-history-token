@@ -69,6 +69,13 @@ directive|include
 file|"pwupd.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|HAVE_PWDB_C
+value|1
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -473,7 +480,10 @@ decl_stmt|;
 name|endpwent
 argument_list|()
 expr_stmt|;
-comment|/* 	 * First, let's check the see if the database is alright 	 */
+comment|/* 	 * First, let's check the see if the database is alright 	 * Note: -c is only available in FreeBSD 2.2 and above 	 */
+ifdef|#
+directive|ifdef
+name|HAVE_PWDB_C
 if|if
 condition|(
 name|pwdb
@@ -487,6 +497,12 @@ literal|0
 condition|)
 block|{
 comment|/* Check only */
+else|#
+directive|else
+block|{
+comment|/* No -c */
+endif|#
+directive|endif
 name|char
 name|pfx
 index|[
@@ -611,9 +627,6 @@ return|return
 name|rc
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|addpwent
 parameter_list|(
@@ -636,9 +649,6 @@ name|UPD_CREATE
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|chgpwent
 parameter_list|(
@@ -664,9 +674,6 @@ name|UPD_REPLACE
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|delpwent
 parameter_list|(
