@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -398,7 +398,7 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/* 	 * Increment the time-of-day. 	 */
+comment|/* 	 * Increment the time-of-day.  The increment is just ``tick'' unless 	 * we are still adjusting the clock; see adjtime(). 	 */
 end_comment
 
 begin_ifdef
@@ -476,48 +476,10 @@ name|timedelta
 operator|==
 literal|0
 condition|)
-block|{
-name|BUMPTIME
-argument_list|(
-operator|&
-name|time
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
-name|BUMPTIME
-argument_list|(
-operator|&
-name|mono_time
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-specifier|register
-name|int
-name|delta
-decl_stmt|;
-if|if
-condition|(
-name|timedelta
-operator|<
-literal|0
-condition|)
-block|{
 name|delta
 operator|=
 name|tick
-operator|-
-name|tickdelta
 expr_stmt|;
-name|timedelta
-operator|+=
-name|tickdelta
-expr_stmt|;
-block|}
 else|else
 block|{
 name|delta
@@ -531,6 +493,9 @@ operator|-=
 name|tickdelta
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|BUMPTIME
 argument_list|(
 operator|&
@@ -539,6 +504,9 @@ argument_list|,
 name|delta
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|BUMPTIME
 argument_list|(
 operator|&
@@ -547,8 +515,7 @@ argument_list|,
 name|delta
 argument_list|)
 expr_stmt|;
-block|}
-end_if
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * Process callouts at a very low cpu priority, so we don't keep the 	 * relatively high clock interrupt priority any longer than necessary. 	 */
