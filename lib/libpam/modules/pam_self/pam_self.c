@@ -86,7 +86,7 @@ end_include
 begin_enum
 enum|enum
 block|{
-name|PAM_OPT_EVEN_ROOT
+name|PAM_OPT_ALLOW_ROOT
 init|=
 name|PAM_OPT_STD_MAX
 block|, }
@@ -102,9 +102,9 @@ index|[]
 init|=
 block|{
 block|{
-literal|"even_root"
+literal|"allow_root"
 block|,
-name|PAM_OPT_EVEN_ROOT
+name|PAM_OPT_ALLOW_ROOT
 block|}
 block|,
 block|{
@@ -238,7 +238,7 @@ argument_list|(
 operator|&
 name|options
 argument_list|,
-name|PAM_OPT_EVEN_ROOT
+name|PAM_OPT_ALLOW_ROOT
 argument_list|,
 name|NULL
 argument_list|)
