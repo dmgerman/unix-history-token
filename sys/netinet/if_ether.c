@@ -2790,9 +2790,7 @@ if|if
 condition|(
 name|m
 operator|->
-name|m_pkthdr
-operator|.
-name|len
+name|m_len
 operator|<
 name|arphdr_len
 argument_list|(
