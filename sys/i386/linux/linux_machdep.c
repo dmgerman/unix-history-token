@@ -2208,12 +2208,9 @@ name|vm_maxsaddr
 condition|)
 block|{
 comment|/* Some linux apps will attempt to mmap 			 * thread stacks near the top of their 			 * address space.  If their TOS is greater 			 * than vm_maxsaddr, vm_map_growstack() 			 * will confuse the thread stack with the 			 * process stack and deliver a SEGV if they 			 * attempt to grow the thread stack past their 			 * current stacksize rlimit.  To avoid this, 			 * adjust vm_maxsaddr upwards to reflect 			 * the current stacksize rlimit rather 			 * than the maximum possible stacksize. 			 * It would be better to adjust the 			 * mmap'ed region, but some apps do not check 			 * mmap's return value. 			 */
-name|mtx_assert
+name|PROC_LOCK
 argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_OWNED
+name|p
 argument_list|)
 expr_stmt|;
 name|p
@@ -2228,14 +2225,17 @@ operator|*
 operator|)
 name|USRSTACK
 operator|-
+name|lim_cur
+argument_list|(
 name|p
-operator|->
-name|p_rlimit
-index|[
+argument_list|,
 name|RLIMIT_STACK
-index|]
-operator|.
-name|rlim_cur
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* This gives us our maximum stack size */

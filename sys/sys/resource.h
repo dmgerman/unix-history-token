@@ -466,7 +466,7 @@ end_decl_stmt
 
 begin_function_decl
 name|int
-name|dosetrlimit
+name|kern_setrlimit
 parameter_list|(
 name|struct
 name|thread

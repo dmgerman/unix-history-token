@@ -851,8 +851,16 @@ name|EINVAL
 operator|)
 return|;
 block|}
+else|else
+block|{
 comment|/* 	 * XXX for non-fixed mappings where no hint is provided or 	 * the hint would fall in the potential heap space, 	 * place it after the end of the largest possible heap. 	 * 	 * There should really be a pmap call to determine a reasonable 	 * location. 	 */
-elseif|else
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|addr
@@ -883,16 +891,14 @@ name|vms
 operator|->
 name|vm_daddr
 operator|+
+name|lim_max
+argument_list|(
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_rlimit
-index|[
+argument_list|,
 name|RLIMIT_DATA
-index|]
-operator|.
-name|rlim_max
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -907,18 +913,24 @@ name|vms
 operator|->
 name|vm_daddr
 operator|+
+name|lim_max
+argument_list|(
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_rlimit
-index|[
+argument_list|,
 name|RLIMIT_DATA
-index|]
-operator|.
-name|rlim_max
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3727,7 +3739,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|if (size + ptoa(pmap_wired_count(vm_map_pmap(&td->td_proc->p_vmspace->vm_map)))> 	    td->td_proc->p_rlimit[RLIMIT_MEMLOCK].rlim_cur) 		return (ENOMEM);
+block|PROC_LOCK(td->td_proc); 	if (size + ptoa(pmap_wired_count(vm_map_pmap(&td->td_proc->p_vmspace->vm_map)))> 	    lim_cur(td->td_proc, RLIMIT_MEMLOCK)) { 		PROC_UNLOCK(td->td_proc); 		return (ENOMEM); 	} 	PROC_UNLOCK(td->td_proc);
 else|#
 directive|else
 name|error
@@ -3888,7 +3900,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If wiring all pages in the process would cause it to exceed 	 * a hard resource limit, return ENOMEM. 	 */
-block|if (map->size - ptoa(pmap_wired_count(vm_map_pmap(map))> 		td->td_proc->p_rlimit[RLIMIT_MEMLOCK].rlim_cur)) 		return (ENOMEM);
+block|PROC_LOCK(td->td_proc); 	if (map->size - ptoa(pmap_wired_count(vm_map_pmap(map))> 		lim_cur(td->td_proc, RLIMIT_MEMLOCK))) { 		PROC_UNLOCK(td->td_proc); 		return (ENOMEM); 	} 	PROC_UNLOCK(td->td_proc);
 else|#
 directive|else
 name|error
@@ -4383,6 +4395,13 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -4397,24 +4416,36 @@ name|size
 operator|+
 name|size
 operator|>
+name|lim_cur
+argument_list|(
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_rlimit
-index|[
+argument_list|,
 name|RLIMIT_VMEM
-index|]
-operator|.
-name|rlim_cur
+argument_list|)
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We currently can only deal with page aligned file offsets. 	 * The check is here rather than in the syscall because the 	 * kernel calls this function internally for other mmaping 	 * operations (such as in exec) and non-aligned offsets will 	 * cause pmap inconsistencies...so we want to be sure to 	 * disallow this in all cases. 	 */
 if|if
 condition|(

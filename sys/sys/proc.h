@@ -1858,7 +1858,7 @@ name|plimit
 modifier|*
 name|p_limit
 decl_stmt|;
-comment|/* (c*) Process limits. */
+comment|/* (c) Process limits. */
 name|struct
 name|vm_object
 modifier|*
@@ -2209,13 +2209,6 @@ comment|/* (*) Scheduler-specific data. */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|p_rlimit
-value|p_limit->pl_rlimit
-end_define
 
 begin_define
 define|#

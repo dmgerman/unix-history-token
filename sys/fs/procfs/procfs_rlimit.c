@@ -22,6 +22,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -52,6 +64,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/pseudofs/pseudofs.h>
 end_include
 
@@ -68,9 +92,34 @@ parameter_list|(
 name|PFS_FILL_ARGS
 parameter_list|)
 block|{
+name|struct
+name|plimit
+modifier|*
+name|limp
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Obtain a private reference to resource limits 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|limp
+operator|=
+name|lim_hold
+argument_list|(
+name|p
+operator|->
+name|p_limit
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -102,9 +151,9 @@ comment|/* 		 * Replace RLIM_INFINITY with -1 in the string 		 */
 comment|/* 		 * current limit 		 */
 if|if
 condition|(
-name|p
+name|limp
 operator|->
-name|p_rlimit
+name|pl_rlimit
 index|[
 name|i
 index|]
@@ -135,9 +184,9 @@ name|unsigned
 name|long
 name|long
 operator|)
-name|p
+name|limp
 operator|->
-name|p_rlimit
+name|pl_rlimit
 index|[
 name|i
 index|]
@@ -149,9 +198,9 @@ block|}
 comment|/* 		 * maximum limit 		 */
 if|if
 condition|(
-name|p
+name|limp
 operator|->
-name|p_rlimit
+name|pl_rlimit
 index|[
 name|i
 index|]
@@ -182,9 +231,9 @@ name|unsigned
 name|long
 name|long
 operator|)
-name|p
+name|limp
 operator|->
-name|p_rlimit
+name|pl_rlimit
 index|[
 name|i
 index|]
@@ -194,6 +243,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|lim_free
+argument_list|(
+name|limp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
