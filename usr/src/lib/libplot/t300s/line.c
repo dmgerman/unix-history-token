@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)line.c	4.2 (Berkeley) %G%"
+literal|"@(#)line.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,7 +162,7 @@ name|xd
 decl_stmt|,
 name|yd
 decl_stmt|;
-name|float
+name|double
 name|dist2
 argument_list|()
 decl_stmt|,

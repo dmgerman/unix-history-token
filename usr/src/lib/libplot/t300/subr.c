@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	4.2 (Berkeley) %G%"
+literal|"@(#)subr.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,7 +239,7 @@ block|}
 end_block
 
 begin_function
-name|float
+name|double
 name|dist2
 parameter_list|(
 name|x1
