@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logwtmp.c	5.3 (Berkeley) %G%"
+literal|"@(#)logwtmp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,7 +135,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
 name|fstat
 argument_list|(
 name|fd
@@ -143,6 +142,8 @@ argument_list|,
 operator|&
 name|buf
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 operator|(
