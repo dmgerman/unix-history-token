@@ -1854,11 +1854,14 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|buffer
 operator|+
 name|file_offset
-operator|)
+argument_list|)
 argument_list|,
 operator|(
 name|void
