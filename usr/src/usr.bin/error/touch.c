@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)touch.c	1.6 (Berkeley) %G%"
+literal|"@(#)touch.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,6 +1146,26 @@ name|int
 name|errordest
 decl_stmt|;
 comment|/* where errors go*/
+if|if
+condition|(
+operator|!
+name|oktotouch
+argument_list|(
+name|name
+argument_list|)
+condition|)
+block|{
+name|previewed
+operator|=
+name|FALSE
+expr_stmt|;
+name|errordest
+operator|=
+name|TOSTDOUT
+expr_stmt|;
+block|}
+else|else
+block|{
 name|previewed
 operator|=
 name|preview
@@ -1166,6 +1186,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|errordest
@@ -1260,31 +1281,18 @@ name|erpp
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|oktotouch
-argument_list|(
-name|name
-argument_list|)
-condition|)
-return|return
-operator|(
-name|false
-operator|)
-return|;
-if|if
-condition|(
 name|nerrors
 operator|<=
 literal|0
 condition|)
 return|return
 operator|(
-name|false
+name|FALSE
 operator|)
 return|;
 name|back
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -1311,7 +1319,7 @@ name|Q_yes
 case|:
 name|back
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|EITERATE
 argument_list|(
