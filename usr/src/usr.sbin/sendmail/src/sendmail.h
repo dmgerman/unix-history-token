@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.1		%G%"
+literal|"@(#)sendmail.h	4.2		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,6 +1824,21 @@ end_define
 
 begin_comment
 comment|/* verify only (used internally) */
+end_comment
+
+begin_comment
+comment|/* used only as a parameter to sendall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_DEFAULT
+value|'\0'
+end_define
+
+begin_comment
+comment|/* unspecified, use SendMode */
 end_comment
 
 begin_decl_stmt
