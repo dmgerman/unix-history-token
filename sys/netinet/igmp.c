@@ -497,7 +497,6 @@ name|rti
 return|;
 block|}
 block|}
-comment|/* 	 * XXXRW: return value of malloc not checked, despite M_NOWAIT. 	 */
 name|MALLOC
 argument_list|(
 name|rti
@@ -515,6 +514,22 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rti
+operator|==
+name|NULL
+condition|)
+block|{
+name|IGMP_PRINTF
+argument_list|(
+literal|"[igmp.c, _find_rti] --> no memory for entry\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|rti
 operator|->
 name|rti_ifp
@@ -853,6 +868,26 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rti
+operator|==
+name|NULL
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|rti
 operator|->
 name|rti_type
@@ -1276,6 +1311,15 @@ operator|&
 name|igmp_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inm
+operator|->
+name|inm_rti
+operator|!=
+name|NULL
+condition|)
+block|{
 name|igmp_sendpkt
 argument_list|(
 name|inm
@@ -1310,6 +1354,8 @@ name|igmp_timers_are_running
 operator|=
 literal|1
 expr_stmt|;
+block|}
+comment|/* XXX handling of failure case? */
 block|}
 name|splx
 argument_list|(
