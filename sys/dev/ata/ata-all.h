@@ -1376,6 +1376,10 @@ define|#
 directive|define
 name|ATA_DMA_ACTIVE
 value|0x20
+define|#
+directive|define
+name|ATA_48BIT_ACTIVE
+value|0x40
 name|struct
 name|ata_device
 name|device

@@ -7265,6 +7265,14 @@ operator|-
 literal|1
 return|;
 block|}
+name|atadev
+operator|->
+name|channel
+operator|->
+name|flags
+operator||=
+name|ATA_48BIT_ACTIVE
+expr_stmt|;
 block|}
 else|else
 block|{

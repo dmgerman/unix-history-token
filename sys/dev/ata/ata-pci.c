@@ -1188,6 +1188,9 @@ return|return
 literal|"Promise TX2 ATA100 controller"
 return|;
 case|case
+literal|0x1275105a
+case|:
+case|case
 literal|0x5275105a
 case|:
 case|case
@@ -2769,6 +2772,10 @@ literal|0x4d69105a
 case|:
 comment|/* Promise TX2 ATA133 */
 case|case
+literal|0x1275105a
+case|:
+comment|/* Promise TX2 ATA133 */
+case|case
 literal|0x5275105a
 case|:
 comment|/* Promise TX2 ATA133 */
@@ -3121,6 +3128,16 @@ name|lock
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ch
+operator|->
+name|lock_func
 argument_list|)
 expr_stmt|;
 break|break;
