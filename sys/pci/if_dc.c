@@ -8935,6 +8935,12 @@ name|DC_TX_STORENFWD
 expr_stmt|;
 name|sc
 operator|->
+name|dc_flags
+operator||=
+name|DC_TX_ALIGN
+expr_stmt|;
+name|sc
+operator|->
 name|dc_pmode
 operator|=
 name|DC_PMODE_MII
@@ -14112,14 +14118,21 @@ name|dc_flags
 operator|&
 name|DC_TX_COALESCE
 operator|&&
+operator|(
 name|m_head
 operator|->
 name|m_next
 operator|!=
 name|NULL
+operator|||
+name|sc
+operator|->
+name|dc_flags
+operator|&
+name|DC_TX_ALIGN
+operator|)
 condition|)
 block|{
-comment|/* only coalesce if have>1 mbufs */
 name|m
 operator|=
 name|m_defrag
