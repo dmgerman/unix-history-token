@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	4.9 (Berkeley) 85/04/26"
+literal|"@(#)setup.c	4.10 (Berkeley) 85/05/09"
 decl_stmt|;
 end_decl_stmt
 
