@@ -566,13 +566,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
+name|gid_t
 name|rgid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
+name|gid_t
 name|egid
 decl_stmt|;
 end_decl_stmt
@@ -1882,6 +1882,10 @@ operator|||
 operator|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 literal|0
@@ -2485,6 +2489,10 @@ operator|)
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|section
 argument_list|)
@@ -2566,6 +2574,10 @@ operator|)
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|section
 argument_list|)
