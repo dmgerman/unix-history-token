@@ -1795,6 +1795,8 @@ name|err
 argument_list|(
 name|EX_CONFIG
 argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
