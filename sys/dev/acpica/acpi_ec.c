@@ -1435,7 +1435,8 @@ argument_list|(
 literal|"EcGpeQueryHandler:EnableEvent Failed\n"
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -1547,8 +1548,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 end_function
 
