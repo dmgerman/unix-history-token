@@ -13203,7 +13203,7 @@ name|cap_check_xxx
 argument_list|(
 name|cred
 argument_list|,
-name|p
+name|NULL
 argument_list|,
 name|CAP_DAC_EXECUTE
 argument_list|,
@@ -13237,7 +13237,7 @@ name|cap_check_xxx
 argument_list|(
 name|cred
 argument_list|,
-name|p
+name|NULL
 argument_list|,
 name|CAP_DAC_READ_SEARCH
 argument_list|,
@@ -13271,7 +13271,7 @@ name|cap_check_xxx
 argument_list|(
 name|cred
 argument_list|,
-name|p
+name|NULL
 argument_list|,
 name|CAP_DAC_WRITE
 argument_list|,
@@ -13294,7 +13294,7 @@ name|dac_granted
 operator|)
 operator|)
 operator|==
-name|mode
+name|acc_mode
 condition|)
 block|{
 comment|/* XXX audit: privilege used */
