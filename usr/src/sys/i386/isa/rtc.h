@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)rtc.h	1.1 (Berkeley) %G%  * RTC Register locations  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)rtc.h	1.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * RTC Register locations  */
 end_comment
 
 begin_define
@@ -127,6 +131,156 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTCSA_TUP
+value|0x80
+end_define
+
+begin_comment
+comment|/* time update, don't look now */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_STATUSB
+value|0x0b
+end_define
+
+begin_comment
+comment|/* status register B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_INTR
+value|0x0c
+end_define
+
+begin_comment
+comment|/* status register C (R) interrupt source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCIR_UPDATE
+value|0x10
+end_define
+
+begin_comment
+comment|/* update intr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCIR_ALARM
+value|0x20
+end_define
+
+begin_comment
+comment|/* alarm intr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCIR_PERIOD
+value|0x40
+end_define
+
+begin_comment
+comment|/* periodic intr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCIR_INT
+value|0x80
+end_define
+
+begin_comment
+comment|/* interrupt output signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_STATUSD
+value|0x0d
+end_define
+
+begin_comment
+comment|/* status register D (R) Lost Power */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCSD_PWR
+value|0x80
+end_define
+
+begin_comment
+comment|/* clock lost power */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_DIAG
+value|0x0e
+end_define
+
+begin_comment
+comment|/* status register E - bios diagnostic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCDG_BITS
+value|"\020\010clock battery\007ROM cksum\006config unit\005memory size\004fixed disk\003invalid time"
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTC_RESET
+value|0x0f
+end_define
+
+begin_comment
+comment|/* status register F - reset code byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCRS_RST
+value|0x00
+end_define
+
+begin_comment
+comment|/* normal reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCRS_LOAD
+value|0x04
+end_define
+
+begin_comment
+comment|/* load system */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RTC_BASELO
 value|0x15
 end_define
@@ -166,6 +320,17 @@ end_define
 
 begin_comment
 comment|/* low byte of extended mem size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_CENTURY
+value|0x32
+end_define
+
+begin_comment
+comment|/* current century - please increment in Dec99*/
 end_comment
 
 end_unit

@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  *	@(#)wt.c	1.3 (Berkeley) %G%  */
+comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  *	@(#)wt.c	1.4 (Berkeley) 1/18/91  */
 end_comment
 
 begin_comment
@@ -25,64 +25,44 @@ begin_comment
 comment|/*  *  *  Copyright 1988, 1989 by Intel Corporation  *  *	Support Bell Tech QIC-02 and WANGTEK QIC-36 or QIC-02  */
 end_comment
 
+begin_comment
+comment|/*#include<sys/errno.h> #include<sys/signal.h> #include<sys/types.h>*/
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/isa/wtreg.h>
+file|"i386/isa/wtreg.h"
 end_include
 
 begin_ifdef
@@ -888,16 +868,6 @@ parameter_list|)
 value|((unsigned) (x>> 16))
 end_define
 
-begin_define
-define|#
-directive|define
-name|seterror
-parameter_list|(
-name|err
-parameter_list|)
-value|u.u_error = err
-end_define
-
 begin_struct
 struct|struct
 name|wtstatus
@@ -1244,6 +1214,9 @@ name|adr1
 decl_stmt|,
 name|adr2
 decl_stmt|;
+name|int
+name|bad
+decl_stmt|;
 name|adr1
 operator|=
 name|kvtop
@@ -1409,11 +1382,10 @@ operator|&
 name|B_READ
 condition|)
 block|{
-name|int
 name|bad
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 comment|/* For now, we assume that all data will be copied out */
 comment|/* If read command outstanding, just skip down */
 if|if
@@ -1794,12 +1766,24 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
+name|bad
+operator|=
 name|pollrdy
 argument_list|()
 expr_stmt|;
 block|}
 name|endio
 label|:
+if|if
+condition|(
+name|bad
+operator|==
+name|EIO
+condition|)
+name|bad
+operator|=
+literal|0
+expr_stmt|;
 name|wterror
 operator|.
 name|wt_err
@@ -1915,6 +1899,24 @@ name|TPRO
 operator|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|bad
+condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|bad
+expr_stmt|;
 block|}
 name|bp
 operator|->
@@ -2138,11 +2140,6 @@ operator|&
 name|TPSESS
 condition|)
 block|{
-name|seterror
-argument_list|(
-name|EIO
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -2203,11 +2200,6 @@ operator|&
 name|TPSESS
 condition|)
 block|{
-name|seterror
-argument_list|(
-name|EIO
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -2314,19 +2306,23 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|seterror
-argument_list|(
+return|return
+operator|(
 name|EIO
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-name|seterror
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2382,9 +2378,6 @@ operator|!
 name|pageaddr
 condition|)
 block|{
-name|nodev
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2400,11 +2393,6 @@ name|TPINUSE
 operator|)
 condition|)
 block|{
-name|seterror
-argument_list|(
-name|ENXIO
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2420,11 +2408,6 @@ name|TPDEAD
 operator|)
 condition|)
 block|{
-name|seterror
-argument_list|(
-name|EIO
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -2472,9 +2455,6 @@ operator|!=
 name|SUCCESS
 condition|)
 block|{
-name|nodev
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2501,11 +2481,6 @@ operator|==
 name|ERROR
 condition|)
 block|{
-name|seterror
-argument_list|(
-name|EIO
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -2560,9 +2535,7 @@ literal|0
 expr_stmt|;
 name|myproc
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 expr_stmt|;
 comment|/* for comparison */
 switch|switch
@@ -3365,7 +3338,7 @@ end_block
 begin_macro
 name|wtintr
 argument_list|(
-argument|vec
+argument|unit
 argument_list|)
 end_macro
 
@@ -3607,14 +3580,44 @@ while|while
 condition|(
 name|wtio
 condition|)
-name|sleep
+block|{
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|tsleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|wci
 argument_list|,
 name|WTPRI
+operator||
+name|PCATCH
+argument_list|,
+literal|"wtpoll"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|splx
+argument_list|(
+name|sps
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
 name|splx
 argument_list|(
 name|sps
@@ -3635,7 +3638,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|exflag
+operator|(
+name|EIO
+operator|)
 return|;
 block|}
 end_block
@@ -4969,13 +4974,13 @@ end_block
 begin_include
 include|#
 directive|include
-file|"machine/isa/isa_device.h"
+file|"i386/isa/isa_device.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/isa/icu.h"
+file|"i386/isa/icu.h"
 end_include
 
 begin_decl_stmt

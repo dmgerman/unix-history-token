@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  *	@(#)wtreg.h	1.1 (Berkeley) %G%  */
+comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  *	@(#)wtreg.h	1.1 (Berkeley) 11/8/90  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist%  *  *	@(#)isa.c	1.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist%  *  *	@(#)isa.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"file.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -441,9 +435,7 @@ name|IDTVEC
 parameter_list|(
 name|name
 parameter_list|)
-value|X
-comment|/**/
-value|name
+value|__CONCAT(X,name)
 end_define
 
 begin_comment
@@ -1151,9 +1143,16 @@ expr_stmt|;
 comment|/* translate to physical */
 name|phys
 operator|=
+name|pmap_extract
+argument_list|(
+name|pmap_kernel
+argument_list|()
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|phys
-operator|-
-name|sbase
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)isa.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)isa.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -388,7 +388,7 @@ begin_define
 define|#
 directive|define
 name|IOM_BEGIN
-value|0xa0000
+value|0x0a0000
 end_define
 
 begin_comment
@@ -399,12 +399,19 @@ begin_define
 define|#
 directive|define
 name|IOM_END
-value|0xFFFFF
+value|0x100000
 end_define
 
 begin_comment
 comment|/* End of I/O Memory "hole" */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IOM_SIZE
+value|(IOM_END - IOM_BEGIN)
+end_define
 
 begin_endif
 endif|#
@@ -426,7 +433,7 @@ begin_define
 define|#
 directive|define
 name|RAM_BEGIN
-value|0x000000
+value|0x0000000
 end_define
 
 begin_comment
@@ -437,17 +444,24 @@ begin_define
 define|#
 directive|define
 name|RAM_END
-value|0xFFFFFF
+value|0x1000000
 end_define
 
 begin_comment
 comment|/* End of RAM Memory */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RAM_SIZE
+value|(RAM_END - RAM_BEGIN)
+end_define
+
 begin_endif
 endif|#
 directive|endif
-endif|IOM_BEGIN
+endif|RAM_BEGIN
 end_endif
 
 begin_comment

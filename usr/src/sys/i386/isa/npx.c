@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 W. Jolitz  * @(#)npx.c	1.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 W. Jolitz  * @(#)npx.c	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -44,25 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dir.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm.h"
+file|"machine/pcb.h"
 end_include
 
 begin_include
@@ -74,7 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/isa/isa_device.h"
+file|"ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/specialreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"i386/isa/isa_device.h"
 end_include
 
 begin_include
@@ -116,6 +116,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|proc
 modifier|*
@@ -151,6 +152,19 @@ end_decl_stmt
 begin_comment
 comment|/* kernel ptes mapping owner's user structure */
 end_comment
+
+begin_expr_stmt
+specifier|static
+name|npxexists
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|npx0mask
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Probe routine - look device, otherwise set emulator bit  */
@@ -265,6 +279,15 @@ argument_list|)
 expr_stmt|;
 comment|/* check for ET bit to decide 387/287 */
 comment|/*outb(0xb1,0);		/* reset processor */
+name|npxexists
+operator|++
+expr_stmt|;
+name|npx0mask
+operator|=
+name|dvp
+operator|->
+name|id_irq
+expr_stmt|;
 block|}
 end_block
 
@@ -281,10 +304,52 @@ end_macro
 
 begin_block
 block|{
-asm|asm ("	fninit");
+if|if
+condition|(
+name|npxexists
+operator|==
+literal|0
+condition|)
+return|return;
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+argument_list|)
+expr_stmt|;
+comment|/* stop emulating */
+ifdef|#
+directive|ifdef
+name|INTEL_COMPAT
+asm|asm ("	finit");
 asm|asm("	fldcw %0" : : "g" (control));
+asm|asm("	fnsave %0 " : : "g" 		(((struct pcb *)curproc->p_addr)->pcb_savefpu) );
+else|#
+directive|else
+asm|asm("fninit");
+asm|asm("fnsave %0" : : "g" 		(((struct pcb *)curproc->p_addr)->pcb_savefpu) );
+endif|#
+directive|endif
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator||
+name|CR0_EM
+argument_list|)
+expr_stmt|;
+comment|/* start emulating */
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
 
 begin_comment
 comment|/*  * Load floating point context and record ownership to suite  */
@@ -308,9 +373,7 @@ argument_list|)
 expr_stmt|;
 name|npxproc
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 expr_stmt|;
 name|uaccess
 argument_list|(
@@ -322,7 +385,7 @@ operator|&
 name|npxutl
 argument_list|)
 expr_stmt|;
-asm|asm("	frstor %0 " : : "g" (u.u_pcb.pcb_savefpu) );
+asm|asm("	frstor %0 " : : "g" 		(((struct pcb *)curproc->p_addr)->pcb_savefpu) );
 block|}
 end_block
 
@@ -356,46 +419,13 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Record information needed in processing an exception and clear status word  */
-end_comment
-
-begin_macro
-name|npxexcept
-argument_list|()
-end_macro
-
-begin_block
-block|{
-comment|/* save state in appropriate user structure */
-if|if
-condition|(
-name|npxproc
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"npxexcept"
-argument_list|)
-expr_stmt|;
-asm|asm ("	fsave %0 " : : "g" (npxutl.u_pcb.pcb_savefpu) );
-comment|/* 	 * encode the appropriate u_code for detailed information          * on this exception 	 */
-comment|/* signal appropriate process */
-name|psignal
-argument_list|(
-name|npxproc
-argument_list|,
-name|SIGFPE
-argument_list|)
-expr_stmt|;
-comment|/* clear the exception so we can catch others like it */
-asm|asm ("	fnclex");
-block|}
-end_block
-
-begin_comment
-comment|/*  * Catch AT/386 interrupt used to signal exception, and simulate trap()  */
 end_comment
 
 begin_macro
@@ -412,11 +442,40 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|pg
+comment|/* reset processor */
+comment|/* save state in appropriate user structure */
+if|if
+condition|(
+name|npxproc
+operator|==
+literal|0
+operator|||
+name|npxexists
+operator|==
+literal|0
+condition|)
+name|panic
 argument_list|(
 literal|"npxintr"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+asm|asm ("	fnsave %0 " : : "g" (npxutl.u_pcb.pcb_savefpu) );
+endif|#
+directive|endif
+comment|/* 	 * encode the appropriate u_code for detailed information          * on this exception 	 */
+comment|/* signal appropriate process */
+name|psignal
+argument_list|(
+name|npxproc
+argument_list|,
+name|SIGFPE
+argument_list|)
+expr_stmt|;
+comment|/* clear the exception so we can catch others like it */
+asm|asm ("	fnclex");
 block|}
 end_block
 
@@ -430,7 +489,116 @@ argument_list|()
 end_macro
 
 begin_block
-block|{ }
+block|{
+if|if
+condition|(
+name|npxexists
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
+name|pcb_flags
+operator|&
+name|FP_WASUSED
+operator|)
+operator|||
+operator|(
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
+name|pcb_flags
+operator|&
+name|FP_NEEDSRESTORE
+operator|)
+condition|)
+block|{
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+argument_list|)
+expr_stmt|;
+comment|/* stop emulating */
+asm|asm("	frstor %0 " : : "g" (((struct pcb *) curproc->p_addr)->pcb_savefpu) );
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
+name|pcb_flags
+operator||=
+name|FP_WASUSED
+operator||
+name|FP_NEEDSSAVE
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+name|FP_NEEDSRESTORE
+expr_stmt|;
+name|npxproc
+operator|=
+name|curproc
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 end_block
 
 begin_endif

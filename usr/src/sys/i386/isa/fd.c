@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.386.c%  *  *	@(#)fd.c	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.386.c%  *  *	@(#)fd.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -62,18 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ioctl.h"
 end_include
 
@@ -92,37 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"i386/isa/isa_device.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/isa/isa_device.h"
+file|"i386/isa/fdreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/isa/fdreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"icu.h"
+file|"i386/isa/icu.h"
 end_include
 
 begin_define
@@ -1451,7 +1427,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_macro
-name|fdopen
+name|Fdopen
 argument_list|(
 argument|dev
 argument_list|,
@@ -1533,6 +1509,8 @@ begin_macro
 name|fdclose
 argument_list|(
 argument|dev
+argument_list|,
+argument|flags
 argument_list|)
 end_macro
 
@@ -1915,7 +1893,7 @@ block|}
 else|else
 name|fdintr
 argument_list|(
-literal|0
+literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
@@ -2046,15 +2024,9 @@ end_comment
 begin_macro
 name|fdintr
 argument_list|(
-argument|vec
+argument|unit
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|vec
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -2103,11 +2075,11 @@ directive|ifdef
 name|FDTEST
 name|printf
 argument_list|(
-literal|"state %d, vec %d, dr %d|"
+literal|"state %d, unit %d, dr %d|"
 argument_list|,
 name|fd_state
 argument_list|,
-name|vec
+name|unit
 argument_list|,
 name|fd_drive
 argument_list|)
@@ -2163,7 +2135,9 @@ comment|/* SEEK DONE, START DMA */
 comment|/* Make sure seek really happened*/
 if|if
 condition|(
-name|vec
+name|unit
+operator|!=
+literal|0xff
 condition|)
 block|{
 name|out_fdc
@@ -2646,7 +2620,7 @@ block|}
 else|else
 name|fdintr
 argument_list|(
-literal|0
+literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
@@ -2921,7 +2895,7 @@ literal|5
 expr_stmt|;
 name|fdintr
 argument_list|(
-literal|0
+literal|0xff
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2994,7 +2968,7 @@ operator|++
 expr_stmt|;
 name|fdintr
 argument_list|(
-literal|0
+literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
