@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.7 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_comment
@@ -3338,6 +3344,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|h_errno
+operator|==
+name|TRY_AGAIN
+condition|)
+block|{
+specifier|extern
+name|char
+modifier|*
+name|errstring
+parameter_list|()
+function_decl|;
+name|statmsg
+operator|=
+name|errstring
+argument_list|(
+name|h_errno
+operator|+
+name|MAX_ERRNO
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|errno
 operator|!=
 literal|0
@@ -3381,6 +3412,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|SMTP
+block|}
 block|}
 if|if
 condition|(
@@ -3543,6 +3575,10 @@ argument_list|)
 expr_stmt|;
 block|}
 name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|h_errno
 operator|=
 literal|0
 expr_stmt|;
