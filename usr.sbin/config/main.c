@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.14.2.3 1997/09/16 06:57:09 charnier Exp $"
+literal|"$Id: main.c,v 1.14.2.4 1997/11/18 03:43:09 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|PREFIX

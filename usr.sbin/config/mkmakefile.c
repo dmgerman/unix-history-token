@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.18.2.3 1997/09/16 06:57:10 charnier Exp $"
+literal|"$Id: mkmakefile.c,v 1.18.2.4 1998/06/07 13:38:16 thepish Exp $"
 decl_stmt|;
 end_decl_stmt
 
