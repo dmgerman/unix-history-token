@@ -4004,6 +4004,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ef
 operator|->
 name|gdb
