@@ -117,7 +117,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|idprobe
+name|idad_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -128,7 +128,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|idattach
+name|idad_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -139,7 +139,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|iddetach
+name|idad_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -150,50 +150,36 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|d_open_t
-name|idopen
+name|idad_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_close_t
-name|idclose
+name|idad_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_strategy_t
-name|idstrategy
+name|idad_strategy
 decl_stmt|;
 end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|ID_BDEV_MAJOR
+name|IDAD_BDEV_MAJOR
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|ID_CDEV_MAJOR
+name|IDAD_CDEV_MAJOR
 value|109
-end_define
-
-begin_define
-define|#
-directive|define
-name|WD_BDEV_MAJOR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|WD_CDEV_MAJOR
-value|3
 end_define
 
 begin_decl_stmt
@@ -204,10 +190,10 @@ name|id_cdevsw
 init|=
 block|{
 comment|/* open */
-name|idopen
+name|idad_open
 block|,
 comment|/* close */
-name|idclose
+name|idad_close
 block|,
 comment|/* read */
 name|physread
@@ -225,13 +211,13 @@ comment|/* mmap */
 name|nommap
 block|,
 comment|/* strategy */
-name|idstrategy
+name|idad_strategy
 block|,
 comment|/* name */
-literal|"id"
+literal|"idad"
 block|,
 comment|/* maj */
-name|ID_CDEV_MAJOR
+name|IDAD_CDEV_MAJOR
 block|,
 comment|/* dump */
 name|nodump
@@ -243,7 +229,7 @@ comment|/* flags */
 name|D_DISK
 block|,
 comment|/* bmaj */
-name|ID_BDEV_MAJOR
+name|IDAD_BDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -251,7 +237,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|id_devclass
+name|idad_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +245,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|iddisk_cdevsw
+name|idaddisk_cdevsw
 decl_stmt|;
 end_decl_stmt
 
@@ -275,7 +261,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|id_methods
+name|idad_methods
 index|[]
 init|=
 block|{
@@ -283,21 +269,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|idprobe
+name|idad_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|idattach
+name|idad_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|iddetach
+name|idad_detach
 argument_list|)
 block|,
 block|{
@@ -312,29 +298,47 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|id_driver
+name|idad_driver
 init|=
 block|{
 literal|"idad"
 block|,
-name|id_methods
+name|idad_methods
 block|,
 expr|sizeof
 operator|(
 expr|struct
-name|id_softc
+name|idad_softc
 operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|idad
+argument_list|,
+name|ida
+argument_list|,
+name|idad_driver
+argument_list|,
+name|idad_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|__inline
 expr|struct
-name|id_softc
+name|idad_softc
 operator|*
-name|idgetsoftc
+name|idad_getsoftc
 argument_list|(
 argument|dev_t dev
 argument_list|)
@@ -343,7 +347,7 @@ return|return
 operator|(
 operator|(
 expr|struct
-name|id_softc
+name|idad_softc
 operator|*
 operator|)
 name|dev
@@ -357,7 +361,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|idopen
+name|idad_open
 parameter_list|(
 name|dev_t
 name|dev
@@ -375,7 +379,7 @@ name|p
 parameter_list|)
 block|{
 name|struct
-name|id_softc
+name|idad_softc
 modifier|*
 name|drv
 decl_stmt|;
@@ -386,7 +390,7 @@ name|label
 decl_stmt|;
 name|drv
 operator|=
-name|idgetsoftc
+name|idad_getsoftc
 argument_list|(
 name|dev
 argument_list|)
@@ -491,7 +495,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|idclose
+name|idad_close
 parameter_list|(
 name|dev_t
 name|dev
@@ -509,13 +513,13 @@ name|p
 parameter_list|)
 block|{
 name|struct
-name|id_softc
+name|idad_softc
 modifier|*
 name|drv
 decl_stmt|;
 name|drv
 operator|=
-name|idgetsoftc
+name|idad_getsoftc
 argument_list|(
 name|dev
 argument_list|)
@@ -546,7 +550,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|idstrategy
+name|idad_strategy
 parameter_list|(
 name|struct
 name|bio
@@ -555,7 +559,7 @@ name|bp
 parameter_list|)
 block|{
 name|struct
-name|id_softc
+name|idad_softc
 modifier|*
 name|drv
 decl_stmt|;
@@ -564,7 +568,7 @@ name|s
 decl_stmt|;
 name|drv
 operator|=
-name|idgetsoftc
+name|idad_getsoftc
 argument_list|(
 name|bp
 operator|->
@@ -692,7 +696,7 @@ end_function
 
 begin_function
 name|void
-name|id_intr
+name|idad_intr
 parameter_list|(
 name|struct
 name|bio
@@ -701,13 +705,13 @@ name|bp
 parameter_list|)
 block|{
 name|struct
-name|id_softc
+name|idad_softc
 modifier|*
 name|drv
 init|=
 operator|(
 expr|struct
-name|id_softc
+name|idad_softc
 operator|*
 operator|)
 name|bp
@@ -756,7 +760,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|idprobe
+name|idad_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -780,7 +784,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|idattach
+name|idad_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -791,7 +795,7 @@ name|ida_drive_info
 name|dinfo
 decl_stmt|;
 name|struct
-name|id_softc
+name|idad_softc
 modifier|*
 name|drv
 decl_stmt|;
@@ -808,7 +812,7 @@ name|drv
 operator|=
 operator|(
 expr|struct
-name|id_softc
+name|idad_softc
 operator|*
 operator|)
 name|device_get_softc
@@ -1006,7 +1010,7 @@ operator|&
 name|id_cdevsw
 argument_list|,
 operator|&
-name|iddisk_cdevsw
+name|idaddisk_cdevsw
 argument_list|)
 expr_stmt|;
 name|dsk
@@ -1036,14 +1040,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|iddetach
+name|idad_detach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|id_softc
+name|idad_softc
 modifier|*
 name|drv
 decl_stmt|;
@@ -1051,7 +1055,7 @@ name|drv
 operator|=
 operator|(
 expr|struct
-name|id_softc
+name|idad_softc
 operator|*
 operator|)
 name|device_get_softc
@@ -1077,7 +1081,7 @@ condition|)
 name|cdevsw_remove
 argument_list|(
 operator|&
-name|iddisk_cdevsw
+name|idaddisk_cdevsw
 argument_list|)
 expr_stmt|;
 return|return
@@ -1087,24 +1091,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|idad
-argument_list|,
-name|ida
-argument_list|,
-name|id_driver
-argument_list|,
-name|id_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 
