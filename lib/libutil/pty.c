@@ -296,13 +296,8 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-comment|/* out of ptys */
+break|break;
+comment|/* try the next pty group */
 block|}
 else|else
 block|{
