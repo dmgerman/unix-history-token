@@ -1656,7 +1656,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Requires interlock */
+comment|/* Requires interlock. */
 end_comment
 
 begin_define
@@ -1671,7 +1671,7 @@ value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_DOINGINACT))&& \ 	 !(vp)->v_holdcn
 end_define
 
 begin_comment
-comment|/* Requires interlock */
+comment|/* Requires interlock. */
 end_comment
 
 begin_define
@@ -1686,7 +1686,7 @@ value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_XLOCK|VI_DOINGINACT))&& \ 	 LIST_E
 end_define
 
 begin_comment
-comment|/* Requires interlock */
+comment|/* Requires interlock. */
 end_comment
 
 begin_define
