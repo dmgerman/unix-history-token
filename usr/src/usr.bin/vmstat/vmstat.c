@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.21 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3741,7 +3741,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * These names must be kept in sync with  * the types defined in<sys/malloc.h>.  */
+comment|/*  * These names are defined in<sys/malloc.h>.  */
 end_comment
 
 begin_decl_stmt
@@ -3750,139 +3750,7 @@ modifier|*
 name|kmemnames
 index|[]
 init|=
-block|{
-literal|"free"
-block|,
-comment|/* 0 M_FREE */
-literal|"mbuf"
-block|,
-comment|/* 1 M_MBUF */
-literal|"devbuf"
-block|,
-comment|/* 2 M_DEVBUF */
-literal|"socket"
-block|,
-comment|/* 3 M_SOCKET */
-literal|"pcb"
-block|,
-comment|/* 4 M_PCB */
-literal|"routetbl"
-block|,
-comment|/* 5 M_RTABLE */
-literal|"hosttbl"
-block|,
-comment|/* 6 M_HTABLE */
-literal|"fragtbl"
-block|,
-comment|/* 7 M_FTABLE */
-literal|"zombie"
-block|,
-comment|/* 8 M_ZOMBIE */
-literal|"ifaddr"
-block|,
-comment|/* 9 M_IFADDR */
-literal|"soopts"
-block|,
-comment|/* 10 M_SOOPTS */
-literal|"soname"
-block|,
-comment|/* 11 M_SONAME */
-literal|"namei"
-block|,
-comment|/* 12 M_NAMEI */
-literal|"gprof"
-block|,
-comment|/* 13 M_GPROF */
-literal|"ioctlops"
-block|,
-comment|/* 14 M_IOCTLOPS */
-literal|"superblk"
-block|,
-comment|/* 15 M_SUPERBLK */
-literal|"cred"
-block|,
-comment|/* 16 M_CRED */
-literal|"pgrp"
-block|,
-comment|/* 17 M_PGRP */
-literal|"session"
-block|,
-comment|/* 18 M_SESSION */
-literal|"iov"
-block|,
-comment|/* 19 M_IOV */
-literal|"mount"
-block|,
-comment|/* 20 M_MOUNT */
-literal|"fhandle"
-block|,
-comment|/* 21 M_FHANDLE */
-literal|"NFS req"
-block|,
-comment|/* 22 M_NFSREQ */
-literal|"NFS mount"
-block|,
-comment|/* 23 M_NFSMNT */
-literal|"vnodes"
-block|,
-comment|/* 24 M_VNODE */
-literal|"namecache"
-block|,
-comment|/* 25 M_CACHE */
-literal|"UFS quota"
-block|,
-comment|/* 26 M_DQUOT */
-literal|"UFS mount"
-block|,
-comment|/* 27 M_UFSMNT */
-literal|"mapmem"
-block|,
-comment|/* 28 M_MAPMEM */
-literal|"shm"
-block|,
-comment|/* 29 M_SHM */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|"temp"
-block|,
-comment|/* 49 M_TEMP */
-block|}
+name|INITKMEMNAMES
 decl_stmt|;
 end_decl_stmt
 
