@@ -855,7 +855,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Same as above, but always queue.  * This is either used in places where we are not confident that  * direct dispatch is possible, or where queueing is required.  */
+comment|/*  * Same as above, but always queue.  * This is either used in places where we are not confident that  * direct dispatch is possible, or where queueing is required.  * It returns (0) on success and ERRNO on failure.  On failure the  * mbuf has been free'd.  */
 end_comment
 
 begin_function
@@ -936,7 +936,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -961,9 +961,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
+comment|/* IF_HANDOFF has free'd the mbuf */
 name|schednetisr
 argument_list|(
 name|num
@@ -971,7 +972,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}

@@ -2948,21 +2948,14 @@ operator|)
 name|vcc
 expr_stmt|;
 comment|/* 	 * Schedule callback 	 */
-if|if
-condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|NETISR_ATM
 argument_list|,
 name|m
 argument_list|)
-condition|)
-name|KB_FREEALL
-argument_list|(
-name|m
-argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 block|}
 end_function
 

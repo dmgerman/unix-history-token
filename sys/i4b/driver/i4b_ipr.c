@@ -3428,7 +3428,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
@@ -3436,6 +3435,7 @@ argument_list|,
 name|m
 argument_list|)
 condition|)
+comment|/* (0) on success. */
 block|{
 name|NDBGL4
 argument_list|(
@@ -3459,14 +3459,6 @@ name|sc_if
 operator|.
 name|if_iqdrops
 operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|schednetisr
-argument_list|(
-name|NETISR_IP
-argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -1378,6 +1378,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 return|return
 operator|(
 literal|0

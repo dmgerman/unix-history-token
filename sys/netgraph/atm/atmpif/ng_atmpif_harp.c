@@ -2915,15 +2915,19 @@ expr_stmt|;
 comment|/* 	 * Schedule callback 	 */
 if|if
 condition|(
-operator|!
+operator|(
+name|err
+operator|=
 name|netisr_queue
 argument_list|(
 name|NETISR_ATM
 argument_list|,
 name|m
 argument_list|)
+operator|)
 condition|)
 block|{
+comment|/* (0) on success. */
 comment|/* 		 * queue is full. Unable to pass up to the HARP stack 		 * Update the stats. 		 */
 name|vup
 operator|->

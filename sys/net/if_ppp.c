@@ -7280,10 +7280,27 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* (0) on success. */
 if|if
 condition|(
+operator|(
+name|isr
+operator|==
+operator|-
+literal|1
+operator|&&
 operator|!
 name|rv
+operator|)
+operator|||
+operator|(
+name|isr
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|rv
+operator|)
 condition|)
 block|{
 if|if

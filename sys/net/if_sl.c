@@ -3984,7 +3984,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
@@ -3993,6 +3992,7 @@ name|m
 argument_list|)
 condition|)
 block|{
+comment|/* (0) on success. */
 name|sc
 operator|->
 name|sc_if
