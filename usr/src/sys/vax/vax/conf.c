@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.27	81/03/11	*/
+comment|/*	conf.c	4.28	81/03/11	*/
 end_comment
 
 begin_include
@@ -1055,9 +1055,6 @@ decl_stmt|,
 name|lpwrite
 argument_list|()
 decl_stmt|,
-name|lpioctl
-argument_list|()
-decl_stmt|,
 name|lpreset
 argument_list|()
 decl_stmt|;
@@ -1086,13 +1083,6 @@ begin_define
 define|#
 directive|define
 name|lpwrite
-value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|lpioctl
 value|nodev
 end_define
 
@@ -1753,7 +1743,7 @@ block|,
 name|lpwrite
 block|,
 comment|/*15*/
-name|lpioctl
+name|nodev
 block|,
 name|nodev
 block|,
