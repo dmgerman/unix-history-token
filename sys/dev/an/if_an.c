@@ -12802,7 +12802,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"an%d: Buffer to big, %x %x\n"
+literal|"an%d: Buffer to big, %x %zx\n"
 argument_list|,
 name|sc
 operator|->
