@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.14 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.15 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.14 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.15 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.14 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.15 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.14 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.15 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
+comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
 end_comment
 
 begin_comment
@@ -472,6 +472,18 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_VRFYONLY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|LOG

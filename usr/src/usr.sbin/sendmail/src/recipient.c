@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.13 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2692,6 +2692,28 @@ argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_VRFYONLY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+comment|/* don't do any more now */
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* read the file -- each line is a comma-separated list. */
 name|FileName
 operator|=

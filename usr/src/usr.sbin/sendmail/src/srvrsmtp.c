@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.11 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.12 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.11 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.12 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,12 +183,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMDHELP
+name|CMDEXPN
 value|6
 end_define
 
 begin_comment
-comment|/* help -- give usage info */
+comment|/* expn -- expand address */
 end_comment
 
 begin_define
@@ -227,8 +227,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMDONEX
+name|CMDHELP
 value|10
+end_define
+
+begin_comment
+comment|/* help -- give usage info */
+end_comment
+
+begin_comment
+comment|/* non-standard commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDONEX
+value|16
 end_define
 
 begin_comment
@@ -239,7 +254,7 @@ begin_define
 define|#
 directive|define
 name|CMDVERB
-value|11
+value|17
 end_define
 
 begin_comment
@@ -254,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|CMDDBGQSHOW
-value|12
+value|24
 end_define
 
 begin_comment
@@ -265,7 +280,7 @@ begin_define
 define|#
 directive|define
 name|CMDDBGDEBUG
-value|13
+value|25
 end_define
 
 begin_comment
@@ -302,7 +317,7 @@ name|CMDVRFY
 block|,
 literal|"expn"
 block|,
-name|CMDVRFY
+name|CMDEXPN
 block|,
 literal|"expn"
 block|,
@@ -422,10 +437,6 @@ modifier|*
 name|skipword
 parameter_list|()
 function_decl|;
-name|bool
-name|hasmail
-decl_stmt|;
-comment|/* mail command received */
 specifier|extern
 name|ADDRESS
 modifier|*
@@ -563,6 +574,13 @@ expr_stmt|;
 name|LogUsrErrs
 operator|=
 name|FALSE
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_VRFYONLY
 expr_stmt|;
 comment|/* setup for the read */
 name|e
@@ -1521,12 +1539,26 @@ case|case
 name|CMDVRFY
 case|:
 comment|/* vrfy -- verify address */
+case|case
+name|CMDEXPN
+case|:
+comment|/* expn -- expand address */
+name|vrfy
+operator|=
+name|c
+operator|->
+name|cmdcode
+operator|==
+name|CMDVRFY
+expr_stmt|;
 if|if
 condition|(
 name|bitset
 argument_list|(
+name|vrfy
+condition|?
 name|PRIV_NOVRFY
-operator||
+else|:
 name|PRIV_NOEXPN
 argument_list|,
 name|PrivacyFlags
@@ -1550,8 +1582,10 @@ name|gothello
 operator|&&
 name|bitset
 argument_list|(
+name|vrfy
+condition|?
 name|PRIV_NEEDVRFYHELO
-operator||
+else|:
 name|PRIV_NEEDEXPNHELO
 argument_list|,
 name|PrivacyFlags
@@ -1571,7 +1605,11 @@ if|if
 condition|(
 name|runinchild
 argument_list|(
+name|vrfy
+condition|?
 literal|"SMTP-VRFY"
+else|:
+literal|"SMTP-EXPN"
 argument_list|,
 name|e
 argument_list|)
