@@ -7192,6 +7192,14 @@ literal|38400
 block|,
 name|EXTB
 block|,
+literal|57600
+block|,
+name|B57600
+block|,
+literal|115200
+block|,
+name|B115200
+block|,
 literal|0
 block|,
 literal|0
