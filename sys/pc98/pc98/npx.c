@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.8.2.4 1997/02/13 12:22:35 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.8.2.5 1998/03/15 15:23:04 kato Exp $  */
 end_comment
 
 begin_include
@@ -832,8 +832,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|asm (" 	.text _probeintr: 	ss 	incl	_npx_intrs_while_probing 	pushl	%eax 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) #ifdef PC98 	outb	%al,$0x08	# IO_ICU2 	outb	%al,$0x0	# IO_ICU1 #else 	outb	%al,$0xa0	# IO_ICU2 	outb	%al,$0x20	# IO_ICU1 #endif 	movb	$0,%al #ifdef PC98 	outb	%al,$0xf8	# clear BUSY# latch #else 	outb	%al,$0xf0	# clear BUSY# latch #endif 	popl	%eax 	iret ");
+asm|__asm
 end_asm
+
+begin_expr_stmt
+operator|(
+literal|" 	.text _probeintr: 	ss 	incl	_npx_intrs_while_probing 	pushl	%eax 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) #ifdef PC98 	outb	%al,$0x08	# IO_ICU2 	outb	%al,$0x0	# IO_ICU1 #else 	outb	%al,$0xa0	# IO_ICU2 	outb	%al,$0x20	# IO_ICU1 #endif 	movb	$0,%al #ifdef PC98 	outb	%al,$0xf8	# clear BUSY# latch #else 	outb	%al,$0xf0	# clear BUSY# latch #endif 	popl	%eax 	iret "
+operator|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|inthand_t
@@ -842,8 +849,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|asm (" 	.text _probetrap: 	ss 	incl	_npx_traps_while_probing 	fnclex 	iret ");
+asm|__asm
 end_asm
+
+begin_expr_stmt
+operator|(
+literal|" 	.text _probetrap: 	ss 	incl	_npx_traps_while_probing 	fnclex 	iret "
+operator|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Probe routine.  Initialize cr0 to give correct behaviour for [f]wait  * whether the device exists or not (XXX should be elsewhere).  Set flags  * to tell npxattach() what to do.  Modify device struct if npx doesn't  * need to use interrupts.  Return 1 if device exists.  */

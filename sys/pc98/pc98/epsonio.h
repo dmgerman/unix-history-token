@@ -29,7 +29,7 @@ end_include
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 name|epson_inb
 parameter_list|(
@@ -71,7 +71,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|epson_outb
 parameter_list|(
@@ -108,7 +108,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|epson_insw
 parameter_list|(
@@ -177,7 +177,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|epson_outsw
 parameter_list|(
