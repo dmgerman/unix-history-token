@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.2 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -534,6 +534,17 @@ name|amt
 operator|<<=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|amt
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|bucket
 operator|++
 expr_stmt|;
@@ -683,16 +694,18 @@ begin_comment
 comment|/*  * Allocate more memory to the indicated bucket.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|morecore
 argument_list|(
 argument|bucket
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|bucket
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -707,16 +720,15 @@ name|int
 name|sz
 decl_stmt|;
 comment|/* size of desired block */
-specifier|register
 name|int
 name|amt
 decl_stmt|;
 comment|/* amount to allocate */
-specifier|register
 name|int
 name|nblks
 decl_stmt|;
 comment|/* how many blocks we get */
+comment|/* 	 * sbrk_size<= 0 only for big, FLUFFY, requests (about 	 * 2^30 bytes on a VAX, I think) or for a negative arg. 	 */
 name|sz
 operator|=
 literal|1
@@ -727,6 +739,13 @@ operator|+
 literal|3
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|<=
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|sz
