@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getmntopts.c	8.1 (Berkeley) %G%"
+literal|"@(#)getmntopts.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,9 @@ name|opt
 decl_stmt|,
 modifier|*
 name|optbuf
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 comment|/* Copy option string, since it is about to be torn asunder... */
 if|if
@@ -194,6 +197,25 @@ else|else
 name|negative
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 		 * for options with assignments in them (ie. quotas) 		 * ignore the assignment as it's handled elsewhere 		 */
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|opt
+argument_list|,
+literal|'='
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* Scan option table. */
 for|for
