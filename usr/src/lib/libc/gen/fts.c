@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.26 (Berkeley) %G%"
+literal|"@(#)fts.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,6 +548,14 @@ name|parent
 expr_stmt|;
 name|p
 operator|->
+name|fts_accpath
+operator|=
+name|p
+operator|->
+name|fts_name
+expr_stmt|;
+name|p
+operator|->
 name|fts_info
 operator|=
 name|fts_stat
@@ -560,14 +568,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Command-line "." and ".." are real directories. */
-name|p
-operator|->
-name|fts_accpath
-operator|=
-name|p
-operator|->
-name|fts_name
-expr_stmt|;
 if|if
 condition|(
 name|p
