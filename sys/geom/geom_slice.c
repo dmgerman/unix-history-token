@@ -161,6 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|struct
 name|g_slicer
 modifier|*

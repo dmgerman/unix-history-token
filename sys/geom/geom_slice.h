@@ -65,21 +65,6 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|struct
-name|g_slicer
-modifier|*
-name|g_slice_init
-parameter_list|(
-name|unsigned
-name|nslice
-parameter_list|,
-name|unsigned
-name|scsize
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|g_dumpconf_t
 name|g_slice_dumpconf
