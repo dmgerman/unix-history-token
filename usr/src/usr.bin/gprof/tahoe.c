@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tahoe.c	1.1 (Berkeley) %G%"
+literal|"@(#)tahoe.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -797,7 +797,7 @@ block|}
 end_function
 
 begin_macro
-name|findcallf
+name|findcall
 argument_list|(
 argument|parentp
 argument_list|,
@@ -897,7 +897,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcallf] %s: 0x%x to 0x%x\n"
+literal|"[findcall] %s: 0x%x to 0x%x\n"
 argument_list|,
 name|parentp
 operator|->
@@ -956,7 +956,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcallf]\t0x%x:callf"
+literal|"[findcall]\t0x%x:callf"
 argument_list|,
 name|instructp
 operator|-
@@ -1150,7 +1150,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcallf]\tdestpc 0x%x"
+literal|"[findcall]\tdestpc 0x%x"
 argument_list|,
 name|destpc
 argument_list|)
@@ -1234,7 +1234,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcallf]\tbut it's a botch\n"
+literal|"[findcall]\tbut it's a botch\n"
 argument_list|)
 expr_stmt|;
 block|}

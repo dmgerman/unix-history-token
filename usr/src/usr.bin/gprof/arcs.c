@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arcs.c	5.2 (Berkeley) %G%"
+literal|"@(#)arcs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,7 +417,7 @@ condition|(
 name|cflag
 condition|)
 block|{
-name|findcalls
+name|findcall
 argument_list|(
 name|parentp
 argument_list|,

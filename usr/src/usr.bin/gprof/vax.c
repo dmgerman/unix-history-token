@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c	5.2 (Berkeley) %G%"
+literal|"@(#)vax.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -751,7 +751,7 @@ block|}
 end_function
 
 begin_macro
-name|findcalls
+name|findcall
 argument_list|(
 argument|parentp
 argument_list|,
@@ -851,7 +851,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcalls] %s: 0x%x to 0x%x\n"
+literal|"[findcall] %s: 0x%x to 0x%x\n"
 argument_list|,
 name|parentp
 operator|->
@@ -910,7 +910,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcalls]\t0x%x:calls"
+literal|"[findcall]\t0x%x:calls"
 argument_list|,
 name|instructp
 operator|-
@@ -1139,7 +1139,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcalls]\tdestpc 0x%x"
+literal|"[findcall]\tdestpc 0x%x"
 argument_list|,
 name|destpc
 argument_list|)
@@ -1230,7 +1230,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[findcalls]\tbut it's a botch\n"
+literal|"[findcall]\tbut it's a botch\n"
 argument_list|)
 expr_stmt|;
 block|}
