@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	8.2 (Berkeley) %G%"
+literal|"@(#)eval.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4163,7 +4163,7 @@ name|cmdenviron
 argument_list|)
 expr_stmt|;
 return|return
-name|exitstatus
+literal|0
 return|;
 block|}
 end_block
