@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_socket.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_socket.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Socket operations for use by nfs (similar to uipc_socket.c, but never  * with copies to/from a uio vector)  * NB: For now, they only work for UDP datagram sockets.  * (Use on stream sockets would require some record boundary mark in the  *  stream such as Sun's RM (Section 3.2 of the Sun RPC Message Protocol  *  manual, in Networking on the Sun Workstation, Part #800-1324-03  *  and different versions of send, receive and reply that do not assume  *  an atomic protocol  */
+comment|/*  * Socket operations for use by nfs (similar to uipc_socket.c, but never  * with copies to/from a uio vector)  * NB: For now, they only work for UDP datagram sockets.  * (Use on stream sockets would require some record boundary mark in the  *  stream as defined by "RPC: Remote Procedure Call Protocol  *  Specification" RFC1057 Section 10)  *  and different versions of send, receive and reply that do not assume  *  an atomic protocol  */
 end_comment
 
 begin_include
@@ -604,6 +604,10 @@ name|nfs_udpreceive
 argument_list|(
 name|so
 argument_list|,
+name|msk
+argument_list|,
+name|mtch
+argument_list|,
 name|aname
 argument_list|,
 name|mp
@@ -615,6 +619,18 @@ operator|*
 name|so
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|u_long
+name|msk
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|mtch
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -653,6 +669,11 @@ name|struct
 name|mbuf
 modifier|*
 name|nextrecord
+decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|saddr
 decl_stmt|;
 if|if
 condition|(
@@ -786,6 +807,63 @@ argument_list|(
 literal|"nfs_receive 1a"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msk
+condition|)
+block|{
+name|saddr
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|sockaddr_in
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|saddr
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|&
+name|msk
+operator|)
+operator|!=
+name|mtch
+condition|)
+block|{
+name|sbdroprecord
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
+name|sbunlock
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
+block|}
 name|sbfree
 argument_list|(
 operator|&
@@ -2532,6 +2610,10 @@ argument_list|,
 argument|proc
 argument_list|,
 argument|cr
+argument_list|,
+argument|msk
+argument_list|,
+argument|mtch
 argument_list|)
 end_macro
 
@@ -2618,6 +2700,18 @@ name|cr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_long
+name|msk
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|mtch
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -2661,6 +2755,10 @@ operator|=
 name|nfs_udpreceive
 argument_list|(
 name|so
+argument_list|,
+name|msk
+argument_list|,
+name|mtch
 argument_list|,
 name|nam
 argument_list|,
