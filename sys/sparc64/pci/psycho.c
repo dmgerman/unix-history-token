@@ -2887,7 +2887,7 @@ name|intr_setup
 argument_list|(
 name|PIL_LOW
 argument_list|,
-name|intr_dequeue
+name|intr_fast
 argument_list|,
 name|INTVEC
 argument_list|(

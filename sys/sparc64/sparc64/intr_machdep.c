@@ -447,7 +447,7 @@ index|[
 name|PIL_LOW
 index|]
 operator|=
-name|intr_dequeue
+name|intr_fast
 expr_stmt|;
 block|}
 end_function
@@ -758,7 +758,7 @@ name|intr_setup
 argument_list|(
 name|PIL_ITHREAD
 argument_list|,
-name|intr_dequeue
+name|intr_fast
 argument_list|,
 name|vec
 argument_list|,
@@ -791,7 +791,7 @@ name|intr_setup
 argument_list|(
 name|PIL_FAST
 argument_list|,
-name|intr_dequeue
+name|intr_fast
 argument_list|,
 name|vec
 argument_list|,
@@ -878,7 +878,7 @@ name|intr_setup
 argument_list|(
 name|PIL_ITHREAD
 argument_list|,
-name|intr_dequeue
+name|intr_fast
 argument_list|,
 name|vec
 argument_list|,
@@ -894,7 +894,7 @@ name|intr_setup
 argument_list|(
 name|PIL_LOW
 argument_list|,
-name|intr_dequeue
+name|intr_fast
 argument_list|,
 name|vec
 argument_list|,

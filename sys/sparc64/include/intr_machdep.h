@@ -340,7 +340,7 @@ end_function_decl
 
 begin_decl_stmt
 name|ih_func_t
-name|intr_dequeue
+name|intr_fast
 decl_stmt|;
 end_decl_stmt
 
