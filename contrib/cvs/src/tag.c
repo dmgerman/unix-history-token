@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Tag and Rtag  *   * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Tag uses the checked out revision in the current directory, rtag uses  * the modules database, if necessary.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Tag and Rtag  *   * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Tag uses the checked out revision in the current directory, rtag uses  * the modules database, if necessary.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -5178,6 +5178,11 @@ name|TAG_HEAD
 argument_list|)
 operator|==
 literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|readonlyfs
 condition|)
 return|return;
 comment|/* FIXME: This routine doesn't seem to do any locking whatsoever        (and it is called from places which don't have locks in place).        If two processes try to write val-tags at the same time, it would        seem like we are in trouble.  */
