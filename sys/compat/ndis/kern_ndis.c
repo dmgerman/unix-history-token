@@ -380,6 +380,11 @@ argument_list|(
 name|ndis_sendrsrcavail_func
 argument_list|)
 block|,
+name|IMPORT_FUNC
+argument_list|(
+name|ndis_intrhand
+argument_list|)
+block|,
 block|{
 name|NULL
 block|,
@@ -3061,7 +3066,9 @@ argument|, FALSE,&fdo);  	if (status != STATUS_SUCCESS) 		return(status);  	bloc
 comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later.          */
 argument|sc = device_get_softc(pdo->do_devext); 	sc->ndis_block = block; 	sc->ndis_chars = IoGetDriverObjectExtension(drv, (void *)
 literal|1
-argument|);  	IoInitializeDpcRequest(fdo, ndis_intrhand);
+argument|);  	IoInitializeDpcRequest(fdo, kernndis_functbl[
+literal|6
+argument|].ipt_wrap);
 comment|/* Finish up BSD-specific setup. */
 argument|block->nmb_signature = (void *)
 literal|0xcafebabe
