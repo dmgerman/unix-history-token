@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -12,13 +38,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -497,6 +541,19 @@ name|letter
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|char
 modifier|*
@@ -537,27 +594,15 @@ operator|++
 index|]
 operator|)
 return|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: option requires two arguments -- %c\n"
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
+literal|"option requires two arguments -- %c"
 argument_list|,
 name|oc
 argument_list|)
 expr_stmt|;
 name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1113,7 +1158,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|print_entry
 parameter_list|(
 name|FILE
@@ -1541,8 +1586,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|value
 decl_stmt|;
 comment|/* print scancode number */
 if|if
@@ -1779,6 +1822,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|fd
 operator|=
 name|fopen
@@ -1787,6 +1831,7 @@ name|name
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
 condition|)
 break|break;
 block|}
@@ -1797,7 +1842,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"keymap file not found"
 argument_list|)
@@ -2022,7 +2067,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"setting keymap"
 argument_list|)
@@ -2062,18 +2107,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"getting keymap"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"#                                                         alt\n"
@@ -2184,7 +2224,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"setting function key"
 argument_list|)
@@ -2208,9 +2248,6 @@ parameter_list|)
 block|{
 name|fkeyarg_t
 name|fkey
-decl_stmt|;
-name|int
-name|keynum
 decl_stmt|;
 if|if
 condition|(
@@ -2260,11 +2297,9 @@ operator|>
 name|NUM_FKEYS
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"function key number must be between 1 and %d\n"
+literal|"function key number must be between 1 and %d"
 argument_list|,
 name|NUM_FKEYS
 argument_list|)
@@ -2287,11 +2322,9 @@ operator|>
 name|MAXFK
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"function key string too long (%d> %d)\n"
+literal|"function key string too long (%d> %d)"
 argument_list|,
 name|fkey
 operator|.
@@ -2331,7 +2364,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"setting function key"
 argument_list|)
@@ -2402,9 +2435,6 @@ literal|800
 expr_stmt|;
 else|else
 block|{
-name|int
-name|n
-decl_stmt|;
 name|char
 modifier|*
 name|v1
@@ -2485,11 +2515,9 @@ condition|)
 block|{
 name|badopt
 label|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"argument to -b must be DURATION.PITCH\n"
+literal|"argument to -b must be DURATION.PITCH"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2706,11 +2734,9 @@ condition|)
 block|{
 name|badopt
 label|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"argument to -r must be delay.repeat\n"
+literal|"argument to -r must be delay.repeat"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2791,7 +2817,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"setting keyboard rate"
 argument_list|)
@@ -2832,11 +2858,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"argument must be a positive number\n"
+literal|"argument must be a positive number"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2856,7 +2880,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"setting history buffer size"
 argument_list|)
@@ -2864,33 +2888,32 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: kbdcontrol -b duration.pitch   (set bell duration& pitch)\n"
-literal|"                  -b normal | visual  (set bell to visual type)\n"
-literal|"                  -d                  (dump keyboard map to stdout)\n"
-literal|"                  -l filename         (load keyboard map file)\n"
-literal|"                  -h<N>              (set history buffer size (in lines))\n"
-literal|"                  -f<N> string       (set function key N to send<string>)\n"
-literal|"                  -F                  (set function keys back to default)\n"
-literal|"                  -r delay.repeat     (set keyboard delay& repeat rate)\n"
-literal|"                  -r slow             (set keyboard delay& repeat to slow)\n"
-literal|"                  -r normal           (set keyboard delay& repeat to normal)\n"
-literal|"                  -r fast             (set keyboard delay& repeat to fast)\n"
-literal|"                  -x                  (use hexadecimal numbers in -d option)\n"
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: kbdcontrol [-dFx] [-b  duration.pitch | belltype]"
+argument_list|,
+literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
+argument_list|,
+literal|"                  [-h size] [-L mapfile]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -2905,15 +2928,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|opt
 decl_stmt|;
@@ -3036,11 +3050,6 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3056,16 +3065,9 @@ operator|==
 literal|1
 operator|)
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
