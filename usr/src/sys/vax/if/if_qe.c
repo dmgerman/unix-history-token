@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_qe.c	7.1 (Berkeley) %G% */
+comment|/*	@(#)if_qe.c	7.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -229,16 +229,45 @@ directive|include
 file|"../vaxuba/ubavar.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|NQE
+operator|>
+literal|1
+end_if
+
 begin_define
 define|#
 directive|define
 name|NRCV
-value|25
+value|15
 end_define
 
 begin_comment
 comment|/* Receive descriptors		*/
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NRCV
+value|20
+end_define
+
+begin_comment
+comment|/* Receive descriptors		*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -4129,11 +4158,19 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
+operator|(
 name|IFF_UP
+operator||
+name|IFF_RUNNING
+operator|)
+operator|)
+operator|==
+name|IFF_RUNNING
 operator|&&
 operator|(
 name|sc
