@@ -3114,10 +3114,6 @@ decl_stmt|;
 name|char
 name|delim
 decl_stmt|;
-name|char
-modifier|*
-name|re
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3151,7 +3147,9 @@ name|ptr
 operator|++
 expr_stmt|;
 comment|/* consume 1st delim */
-name|re
+name|patt
+operator|.
+name|lhs
 operator|=
 name|VarGetPattern
 argument_list|(
@@ -3168,7 +3166,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|re
+name|patt
+operator|.
+name|lhs
 operator|==
 name|NULL
 condition|)
@@ -3287,7 +3287,9 @@ name|patt
 operator|.
 name|re
 argument_list|,
-name|re
+name|patt
+operator|.
+name|lhs
 argument_list|,
 name|REG_EXTENDED
 argument_list|)
@@ -3318,7 +3320,9 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|re
+name|patt
+operator|.
+name|lhs
 argument_list|)
 expr_stmt|;
 return|return
@@ -3419,7 +3423,9 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|re
+name|patt
+operator|.
+name|lhs
 argument_list|)
 expr_stmt|;
 return|return
