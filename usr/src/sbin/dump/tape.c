@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tape.c	1.2 (Berkeley) %G%"
+literal|"@(#)tape.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,6 +424,9 @@ block|{
 name|int
 name|secs
 decl_stmt|;
+name|int
+name|f
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -440,40 +443,41 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* 	 *	It takes about 3 minutes, 25secs to rewind 2300' of tape 	 */
-name|secs
-operator|=
-operator|(
-operator|(
-operator|(
-literal|60
-operator|*
-literal|3
-operator|)
-operator|+
-literal|25
-operator|)
-operator|*
-name|asize
-operator|)
-operator|/
-operator|(
-literal|2300L
-operator|*
-literal|12L
-operator|*
-literal|10L
-operator|)
-expr_stmt|;
 name|msg
 argument_list|(
-literal|"Waiting %d seconds to rewind.\n"
+literal|"Tape rewinding\n"
 argument_list|,
 name|secs
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|to
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|f
+operator|=
+name|open
+argument_list|(
+name|tape
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
 name|sleep
 argument_list|(
-name|secs
+literal|10
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 endif|#
