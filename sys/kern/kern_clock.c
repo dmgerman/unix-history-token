@@ -614,12 +614,12 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * sched_swi acquires sched_lock, so we don't want to call it with 	 * callout_lock held; incorrect locking order. 	 */
+comment|/* 	 * swi_sched acquires sched_lock, so we don't want to call it with 	 * callout_lock held; incorrect locking order. 	 */
 if|if
 condition|(
 name|need_softclock
 condition|)
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|softclock_ih
 argument_list|,

@@ -84,8 +84,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|intrhand
+name|void
 modifier|*
 name|taskqueue_ih
 decl_stmt|;
@@ -720,7 +719,7 @@ modifier|*
 name|context
 parameter_list|)
 block|{
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|taskqueue_ih
 argument_list|,
@@ -757,13 +756,11 @@ name|taskqueue_swi_enqueue
 argument_list|,
 literal|0
 argument_list|,
-name|taskqueue_ih
-operator|=
-name|sinthand_add
+name|swi_add
 argument_list|(
-literal|"task queue"
-argument_list|,
 name|NULL
+argument_list|,
+literal|"task queue"
 argument_list|,
 name|taskqueue_swi_run
 argument_list|,
@@ -772,6 +769,9 @@ argument_list|,
 name|SWI_TQ
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|taskqueue_ih
 argument_list|)
 argument_list|)
 expr_stmt|;

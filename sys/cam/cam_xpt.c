@@ -2018,16 +2018,14 @@ comment|/* Pointers to software interrupt handlers */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|intrhand
+name|void
 modifier|*
 name|camnet_ih
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|intrhand
+name|void
 modifier|*
 name|cambio_ih
 decl_stmt|;
@@ -5409,13 +5407,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Install our software interrupt handlers */
-name|camnet_ih
-operator|=
-name|sinthand_add
+name|swi_add
 argument_list|(
-literal|"camnet"
-argument_list|,
 name|NULL
+argument_list|,
+literal|"camnet"
 argument_list|,
 name|camisr
 argument_list|,
@@ -5425,15 +5421,16 @@ argument_list|,
 name|SWI_CAMNET
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|camnet_ih
 argument_list|)
 expr_stmt|;
-name|cambio_ih
-operator|=
-name|sinthand_add
+name|swi_add
 argument_list|(
-literal|"cambio"
-argument_list|,
 name|NULL
+argument_list|,
+literal|"cambio"
 argument_list|,
 name|camisr
 argument_list|,
@@ -5443,6 +5440,9 @@ argument_list|,
 name|SWI_CAMBIO
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|cambio_ih
 argument_list|)
 expr_stmt|;
 block|}
@@ -18967,7 +18967,7 @@ name|index
 operator|=
 name|CAM_DONEQ_INDEX
 expr_stmt|;
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|cambio_ih
 argument_list|,
@@ -19003,7 +19003,7 @@ name|index
 operator|=
 name|CAM_DONEQ_INDEX
 expr_stmt|;
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|camnet_ih
 argument_list|,

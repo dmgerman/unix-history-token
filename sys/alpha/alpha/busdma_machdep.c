@@ -2940,7 +2940,7 @@ name|busdma_swi_pending
 operator|=
 literal|1
 expr_stmt|;
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|vm_ih
 argument_list|,
