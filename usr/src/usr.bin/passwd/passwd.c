@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.6 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,6 +257,26 @@ argument_list|(
 name|uname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pwd
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: unknown user\n"
+argument_list|,
+name|uname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|u
 operator|=
 name|getuid
@@ -264,11 +284,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|pwd
-operator|==
-name|NULL
-operator|||
-operator|(
 name|u
 operator|!=
 literal|0
@@ -278,7 +293,6 @@ operator|!=
 name|pwd
 operator|->
 name|pw_uid
-operator|)
 condition|)
 block|{
 name|printf
