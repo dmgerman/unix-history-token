@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	4.2 (Berkeley, from Melbourne) %G%"
+literal|"@(#)edquota.c	4.3 (Berkeley, from Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1790,7 +1790,7 @@ name|open
 argument_list|(
 name|qfilename
 argument_list|,
-name|FRDONLY
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1814,7 +1814,7 @@ sizeof|sizeof
 name|dqblk
 argument_list|)
 argument_list|,
-name|FSEEK_ABSOLUTE
+name|L_SET
 argument_list|)
 expr_stmt|;
 if|if
