@@ -107,28 +107,16 @@ directive|include
 file|<gnu/ext2fs/i386-bitops.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
-name|__ia64__
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<gnu/ext2fs/ia64-bitops.h>
-end_include
-
 begin_else
 else|#
 directive|else
 end_else
 
-begin_error
-error|#
-directive|error
-error|Provide a bitops.h file, please!
-end_error
+begin_include
+include|#
+directive|include
+file|<gnu/ext2fs/ext2_bitops.h>
+end_include
 
 begin_endif
 endif|#
