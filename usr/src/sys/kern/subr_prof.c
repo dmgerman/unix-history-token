@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -641,6 +641,11 @@ name|defined
 argument_list|(
 name|hp300
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
+argument_list|)
 comment|/* 	 * selfpc = pc pushed by mcount jsr, 	 * frompcindex = pc pushed by jsr into self. 	 * In GCC the caller's stack frame has already been built so we 	 * have to chase a6 to find caller's raddr.  This assumes that all 	 * routines we are profiling were built with GCC and that all 	 * profiled routines use link/unlk. 	 */
 asm|asm("movl a6@(4),%0" : "=r" (selfpc));
 asm|asm("movl a6@(0)@(4),%0" : "=r" (frompcindex));
@@ -679,6 +684,11 @@ name|defined
 argument_list|(
 name|hp300
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
+argument_list|)
 name|Fix
 name|Me
 operator|!
@@ -697,6 +707,11 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
 argument_list|)
 asm|asm("movw	sr,%0" : "=g" (s));
 asm|asm("movw	#0x2700,sr");
@@ -998,6 +1013,11 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
 argument_list|)
 asm|asm("movw	%0,sr" : : "g" (s));
 else|#

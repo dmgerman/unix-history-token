@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.57 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.58 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -753,6 +753,11 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
 argument_list|)
 switch|switch
 condition|(
