@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)time.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)time.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +121,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -120,7 +140,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -136,10 +170,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|register
 name|int
 name|pid
@@ -203,17 +233,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: time [-l] command.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -260,14 +281,11 @@ operator|-
 literal|1
 case|:
 comment|/* error */
-name|perror
-argument_list|(
-literal|"time"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"time"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -283,8 +301,10 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 operator|*
 name|argv
 argument_list|)
@@ -353,11 +373,9 @@ name|status
 operator|&
 literal|0377
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Command terminated abnormally.\n"
+literal|"command terminated abnormally"
 argument_list|)
 expr_stmt|;
 name|after
@@ -717,6 +735,27 @@ name|status
 argument_list|)
 else|:
 name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: time [-l] command\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
