@@ -5034,14 +5034,15 @@ modifier|*
 name|mem
 decl_stmt|;
 comment|/* Node for member */
+comment|/* Variables to be copied from the member node */
 specifier|static
 name|char
 modifier|*
+specifier|const
 name|copy
 index|[]
 init|=
 block|{
-comment|/* Variables to be copied from the member node */
 name|TARGET
 block|,
 comment|/* Must be first */

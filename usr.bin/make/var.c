@@ -212,6 +212,7 @@ name|Var
 modifier|*
 name|VarFind
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -228,9 +229,11 @@ specifier|static
 name|void
 name|VarAdd
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -438,6 +441,7 @@ name|Var
 modifier|*
 name|VarFind
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -942,10 +946,12 @@ specifier|static
 name|void
 name|VarAdd
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val
@@ -1012,6 +1018,7 @@ argument_list|,
 name|len
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1189,6 +1196,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val
@@ -1329,6 +1337,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val
@@ -5819,6 +5828,7 @@ literal|':'
 operator|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|error
@@ -6666,6 +6676,7 @@ operator|-
 name|cp
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -6733,6 +6744,7 @@ argument_list|,
 literal|2
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -6819,6 +6831,7 @@ operator|-
 name|str
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)

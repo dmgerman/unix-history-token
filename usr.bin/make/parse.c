@@ -402,6 +402,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2806,7 +2807,7 @@ name|ExPath
 condition|)
 block|{
 name|Boolean
-name|warn
+name|warnFlag
 init|=
 name|FALSE
 decl_stmt|;
@@ -2843,7 +2844,7 @@ operator|!=
 literal|'\t'
 condition|)
 block|{
-name|warn
+name|warnFlag
 operator|=
 name|TRUE
 expr_stmt|;
@@ -2854,7 +2855,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|warn
+name|warnFlag
 condition|)
 block|{
 name|Parse_Error
@@ -4235,7 +4236,9 @@ comment|/* TRUE if the command needs to be freed, i.e. 				  * if any variable e
 name|char
 modifier|*
 name|res
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|error
 decl_stmt|;

@@ -625,6 +625,7 @@ end_comment
 
 begin_decl_stmt
 name|STATIC
+specifier|const
 name|char
 modifier|*
 name|targFmt
@@ -1450,6 +1451,7 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* true if we turned error checking 				     * off before printing the command 				     * and need to turn it back on */
+specifier|const
 name|char
 modifier|*
 name|cmdTemplate

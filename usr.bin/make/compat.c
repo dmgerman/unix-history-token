@@ -217,8 +217,10 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|sh_builtin
 index|[]
 init|=
@@ -249,7 +251,7 @@ literal|"wait"
 block|,
 literal|":"
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -262,6 +264,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -562,8 +565,11 @@ name|char
 modifier|*
 modifier|*
 name|av
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
+specifier|const
 modifier|*
 name|p
 decl_stmt|;

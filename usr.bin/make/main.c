@@ -547,6 +547,7 @@ name|char
 modifier|*
 name|chdir_verify_path
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -615,6 +616,7 @@ specifier|static
 name|void
 name|MFLAGS_append
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|flag
@@ -1560,6 +1562,7 @@ name|char
 modifier|*
 name|chdir_verify_path
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
@@ -1622,7 +1625,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1634,7 +1637,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1789,10 +1792,6 @@ init|=
 name|TRUE
 decl_stmt|;
 comment|/* FALSE if all targets up to date */
-name|struct
-name|stat
-name|sa
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -1801,10 +1800,11 @@ modifier|*
 name|p1
 decl_stmt|,
 modifier|*
-name|path
-decl_stmt|,
-modifier|*
 name|pathp
+decl_stmt|;
+name|char
+modifier|*
+name|path
 decl_stmt|;
 name|char
 name|mdpath
@@ -1824,6 +1824,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|machine
@@ -1833,6 +1834,7 @@ argument_list|(
 literal|"MACHINE"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|machine_arch
@@ -1842,6 +1844,7 @@ argument_list|(
 literal|"MACHINE_ARCH"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|machine_cpu
@@ -2335,6 +2338,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|{
+name|struct
+name|stat
+name|sa
+decl_stmt|;
 if|if
 condition|(
 name|stat
@@ -2357,6 +2365,7 @@ argument_list|,
 name|curdir
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. _PATH_OBJDIR.${MACHINE} 	 *	4. _PATH_OBJDIR 	 *	5. _PATH_OBJDIRPREFIX`cwd` 	 * 	 * If one of the first two fails, use the current directory. 	 * If the remaining three all fail, use the current directory. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
 if|if
 condition|(
@@ -3734,7 +3743,7 @@ name|Cmd_Exec
 argument_list|(
 argument|char *cmd
 argument_list|,
-argument|char **error
+argument|const char **error
 argument_list|)
 block|{
 name|char

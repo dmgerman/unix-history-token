@@ -74,6 +74,7 @@ name|GNode
 modifier|*
 name|Targ_NewGN
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -86,6 +87,7 @@ name|GNode
 modifier|*
 name|Targ_FindNode
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

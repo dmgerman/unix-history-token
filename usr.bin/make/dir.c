@@ -2746,6 +2746,7 @@ name|Lst
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3042,6 +3043,7 @@ name|char
 modifier|*
 name|Dir_MakeFlags
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|flag

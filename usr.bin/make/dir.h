@@ -141,6 +141,7 @@ name|struct
 name|Lst
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -152,6 +153,7 @@ name|char
 modifier|*
 name|Dir_MakeFlags
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

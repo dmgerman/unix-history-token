@@ -136,6 +136,7 @@ operator|-
 name|word
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -467,6 +468,7 @@ operator|-
 name|word
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -486,6 +488,7 @@ name|word
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)

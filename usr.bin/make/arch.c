@@ -186,9 +186,11 @@ name|ar_hdr
 modifier|*
 name|ArchStatMember
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -203,9 +205,11 @@ name|FILE
 modifier|*
 name|ArchFindMember
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -213,6 +217,7 @@ name|struct
 name|ar_hdr
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1194,10 +1199,12 @@ name|ar_hdr
 modifier|*
 name|ArchStatMember
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|archive
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|member
@@ -2471,10 +2478,12 @@ name|FILE
 modifier|*
 name|ArchFindMember
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|archive
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|member
@@ -2484,6 +2493,7 @@ name|ar_hdr
 modifier|*
 name|arhPtr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|mode
@@ -2498,6 +2508,7 @@ name|int
 name|size
 decl_stmt|;
 comment|/* Size of archive member */
+specifier|const
 name|char
 modifier|*
 name|cp
