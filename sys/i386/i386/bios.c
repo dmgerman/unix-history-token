@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -97,11 +103,24 @@ directive|include
 file|<isa/pnpvar.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -170,11 +176,24 @@ directive|include
 file|<i386/isa/icu.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1365,6 +1384,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Return a bitmap of the current interrupt requests.  This is 8259-specific  * and is only suitable for use at probe time.  */
 end_comment
@@ -1407,6 +1434,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
