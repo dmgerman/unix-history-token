@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.c,v 1.14 1999/09/15 13:57:09 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.c,v 1.18 1999/11/16 12:08:38 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -163,6 +163,18 @@ literal|0x110
 block|,
 block|{
 name|UQ_MS_REVZ
+block|}
+block|}
+block|,
+block|{
+name|USB_VENDOR_ALTEC
+block|,
+name|USB_PRODUCT_ALTEC_ASC495
+block|,
+literal|0x000
+block|,
+block|{
+name|UQ_BAD_AUDIO
 block|}
 block|}
 block|,

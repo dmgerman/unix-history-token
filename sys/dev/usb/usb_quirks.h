@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.h,v 1.7 1999/06/26 00:09:15 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.h,v 1.9 1999/11/15 22:04:15 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -51,8 +51,13 @@ value|0x20
 comment|/* device is bus powered, despite claim */
 define|#
 directive|define
-name|UQ_SPUR_BUT_UP
+name|UQ_BAD_AUDIO
 value|0x40
+comment|/* device claims audio class, but isn't */
+define|#
+directive|define
+name|UQ_SPUR_BUT_UP
+value|0x80
 comment|/* spurious mouse button up events */
 block|}
 struct|;
