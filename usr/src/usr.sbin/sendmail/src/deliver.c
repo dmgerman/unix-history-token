@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.51	%G%"
+literal|"@(#)deliver.c	3.52	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1439,7 +1439,7 @@ name|int
 name|pid
 decl_stmt|;
 name|int
-name|pvect
+name|mpvect
 index|[
 literal|2
 index|]
@@ -1512,7 +1512,7 @@ if|if
 condition|(
 name|pipe
 argument_list|(
-name|pvect
+name|mpvect
 argument_list|)
 operator|<
 literal|0
@@ -1562,7 +1562,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|pvect
+name|mpvect
 index|[
 literal|0
 index|]
@@ -1573,7 +1573,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|pvect
+name|mpvect
 index|[
 literal|1
 index|]
@@ -1626,6 +1626,34 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+comment|/* arrange to filter standard& diag output of command */
+if|if
+condition|(
+name|OutChannel
+operator|!=
+name|stdout
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dup
+argument_list|(
+name|fileno
+argument_list|(
+name|OutChannel
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1642,6 +1670,18 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* arrange to get standard input */
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|mpvect
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1654,7 +1694,7 @@ if|if
 condition|(
 name|dup
 argument_list|(
-name|pvect
+name|mpvect
 index|[
 literal|0
 index|]
@@ -1679,20 +1719,9 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|pvect
+name|mpvect
 index|[
 literal|0
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|pvect
-index|[
-literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -1823,7 +1852,7 @@ block|}
 end_if
 
 begin_comment
-comment|/* write out message to mailer */
+comment|/* 	**  Format and write message to mailer. 	*/
 end_comment
 
 begin_expr_stmt
@@ -1832,7 +1861,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|pvect
+name|mpvect
 index|[
 literal|0
 index|]
@@ -1858,7 +1887,7 @@ name|mfile
 operator|=
 name|fdopen
 argument_list|(
-name|pvect
+name|mpvect
 index|[
 literal|1
 index|]

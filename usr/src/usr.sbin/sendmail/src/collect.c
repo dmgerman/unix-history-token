@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.27	%G%"
+literal|"@(#)collect.c	3.28	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,24 +171,15 @@ expr_stmt|;
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(
-name|ArpaMode
-operator|==
-name|ARPA_MAIL
+name|sayok
 condition|)
-block|{
-specifier|extern
-name|char
-name|Arpa_Enter
-index|[]
-decl_stmt|;
 name|message
 argument_list|(
-name|Arpa_Enter
+literal|"354"
 argument_list|,
 literal|"Enter mail, end with \".\" on a line by itself"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	**  Try to read a UNIX-style From line 	*/
 if|if
 condition|(
@@ -742,8 +733,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ArpaMode
-operator|!=
-name|ARPA_NONE
 condition|)
 name|setfrom
 argument_list|(

@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.51	%G%"
+literal|"@(#)sendmail.h	3.52	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,65 +176,6 @@ end_define
 
 begin_comment
 comment|/* substitution for<lwsp> */
-end_comment
-
-begin_comment
-comment|/* values for ArpaMode -- these are ordered!! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARPA_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* not in arpanet mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARPA_OLD
-value|1
-end_define
-
-begin_comment
-comment|/* in old arpanet mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARPA_MAIL
-value|2
-end_define
-
-begin_comment
-comment|/* in regular arpanet mail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARPA_FILE
-value|3
-end_define
-
-begin_comment
-comment|/* reading over data connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARPA_SMTP
-value|4
-end_define
-
-begin_comment
-comment|/* running SMTP protocol */
 end_comment
 
 begin_decl_stmt
@@ -1486,6 +1427,28 @@ comment|/* currently running something from the queue */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
+name|bool
+name|HoldErrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* only output errors to transcript */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|ArpaMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if running arpanet protocol */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|time_t
 name|TimeOut
@@ -1530,6 +1493,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* mail temp file */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|FILE
+modifier|*
+name|Xscript
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail transcript file */
 end_comment
 
 begin_decl_stmt
@@ -1596,17 +1571,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* exit status code */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|ArpaMode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ARPANET handling mode */
 end_comment
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.6	%G%"
+literal|"@(#)srvrsmtp.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,21 +258,23 @@ name|bool
 name|hasmail
 decl_stmt|;
 comment|/* mail command received */
-name|bool
-name|hasmrcp
+name|int
+name|rcps
 decl_stmt|;
-comment|/* has a recipient */
+comment|/* number of recipients */
 name|bool
 name|hasdata
 decl_stmt|;
 comment|/* has mail data */
 name|hasmail
 operator|=
-name|hasmrcp
-operator|=
 name|hasdata
 operator|=
 name|FALSE
+expr_stmt|;
+name|rcps
+operator|=
+literal|0
 expr_stmt|;
 name|message
 argument_list|(
@@ -332,6 +334,16 @@ argument_list|(
 name|inp
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+comment|/* echo command to transcript */
+name|fprintf
+argument_list|(
+name|Xscript
+argument_list|,
+literal|"*** %s\n"
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 comment|/* break off command */
@@ -576,9 +588,8 @@ argument_list|,
 literal|"Recipient ok"
 argument_list|)
 expr_stmt|;
-name|hasmrcp
-operator|=
-name|TRUE
+name|rcps
+operator|++
 expr_stmt|;
 block|}
 break|break;
@@ -586,15 +597,10 @@ case|case
 name|CMDDATA
 case|:
 comment|/* data -- text of mail */
-name|message
-argument_list|(
-literal|"354"
-argument_list|,
-literal|"Enter mail, end with dot"
-argument_list|)
-expr_stmt|;
 name|collect
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -635,8 +641,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
-name|hasmrcp
+name|rcps
+operator|<=
+literal|0
 condition|)
 name|message
 argument_list|(
@@ -660,16 +667,40 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|rcps
+operator|!=
+literal|1
+condition|)
+name|HoldErrs
+operator|=
+name|MailBack
+operator|=
+name|TRUE
+expr_stmt|;
 name|sendall
 argument_list|(
 name|FALSE
 argument_list|)
+expr_stmt|;
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
+name|To
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
 name|Errors
 operator|==
 literal|0
+operator|||
+name|rcps
+operator|!=
+literal|1
 condition|)
 name|message
 argument_list|(

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.21	%G%"
+literal|"@(#)savemail.c	3.22	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +179,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|Xscript
+argument_list|)
+expr_stmt|;
 name|xfile
 operator|=
 name|fopen
@@ -305,8 +313,6 @@ comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back,
 if|if
 condition|(
 name|ArpaMode
-operator|!=
-name|ARPA_NONE
 condition|)
 return|return;
 name|p
@@ -818,6 +824,14 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|Xscript
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1009,6 +1023,14 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"\n   ----- Transcript of session follows -----\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|Xscript
 argument_list|)
 expr_stmt|;
 while|while
