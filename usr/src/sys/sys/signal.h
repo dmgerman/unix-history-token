@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.h	6.4	85/03/07	*/
+comment|/*	signal.h	6.5	85/03/11	*/
 end_comment
 
 begin_ifndef
@@ -514,12 +514,45 @@ name|sv_mask
 decl_stmt|;
 comment|/* signal mask to apply */
 name|int
-name|sv_onstack
+name|sv_flags
 decl_stmt|;
-comment|/* if non-zero, take on signal stack */
+comment|/* see signal options below */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SV_ONSTACK
+value|0x0001
+end_define
+
+begin_comment
+comment|/* take signal on signal stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SV_INTERRUPT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* do not restart system on signal return */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sv_onstack
+value|sv_flags
+end_define
+
+begin_comment
+comment|/* isn't compatibility wonderful! */
+end_comment
 
 begin_comment
 comment|/*  * Structure used in sigstack call.  */
