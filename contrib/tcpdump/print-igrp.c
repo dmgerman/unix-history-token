@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.15 2000/09/29 04:58:40 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.16 2001/06/15 22:17:32 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,23 +424,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s> %s: igrp: "
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
+literal|"igrp:"
 argument_list|)
 expr_stmt|;
 comment|/* Header */
@@ -650,7 +634,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"[extra bytes %d]"
+literal|" [extra bytes %d]"
 argument_list|,
 name|length
 argument_list|)
@@ -685,7 +669,7 @@ name|trunc
 label|:
 name|fputs
 argument_list|(
-literal|"[|igrp]"
+literal|" [|igrp]"
 argument_list|,
 name|stdout
 argument_list|)

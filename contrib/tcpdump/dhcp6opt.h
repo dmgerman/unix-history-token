@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/dhcp6opt.h,v 1.3 2000/12/17 23:07:49 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/Attic/dhcp6opt.h,v 1.4 2001/09/17 21:57:51 fenner Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -82,6 +82,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name

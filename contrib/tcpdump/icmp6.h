@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.4 2000/12/17 23:13:32 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.11 2001/06/01 23:01:04 itojun Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -883,6 +883,72 @@ end_define
 begin_define
 define|#
 directive|define
+name|ND_RA_FLAG_HOME_AGENT
+value|0x20
+end_define
+
+begin_comment
+comment|/*  * Router preference values based on draft-draves-ipngwg-router-selection-01.  * These are non-standard definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_MASK
+value|0x18
+end_define
+
+begin_comment
+comment|/* 00011000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_HIGH
+value|0x08
+end_define
+
+begin_comment
+comment|/* 00001000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_MEDIUM
+value|0x00
+end_define
+
+begin_comment
+comment|/* 00000000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_LOW
+value|0x18
+end_define
+
+begin_comment
+comment|/* 00011000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_RSV
+value|0x10
+end_define
+
+begin_comment
+comment|/* 00010000 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|nd_ra_router_lifetime
 value|nd_ra_hdr.icmp6_data16[1]
 end_define
@@ -1112,9 +1178,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|ND_OPT_ADVINT
+name|ND_OPT_ADVINTERVAL
 value|7
 end_define
+
+begin_define
+define|#
+directive|define
+name|ND_OPT_HOMEAGENT_INFO
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_OPT_ROUTE_INFO
+value|9
+end_define
+
+begin_comment
+comment|/* draft-ietf-ipngwg-router-preference, not officially assigned yet */
+end_comment
 
 begin_struct
 struct|struct
@@ -1220,21 +1304,70 @@ end_struct
 
 begin_struct
 struct|struct
-name|nd_opt_advint
+name|nd_opt_advinterval
 block|{
 comment|/* Advertisement interval option */
 name|u_int8_t
-name|nd_opt_advint_type
+name|nd_opt_adv_type
 decl_stmt|;
 name|u_int8_t
-name|nd_opt_advint_len
+name|nd_opt_adv_len
 decl_stmt|;
 name|u_int16_t
-name|nd_opt_advint_reserved
+name|nd_opt_adv_reserved
 decl_stmt|;
 name|u_int32_t
-name|nd_opt_advint_advint
+name|nd_opt_adv_interval
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nd_opt_homeagent_info
+block|{
+comment|/* Home Agent info */
+name|u_int8_t
+name|nd_opt_hai_type
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_hai_len
+decl_stmt|;
+name|u_int16_t
+name|nd_opt_hai_reserved
+decl_stmt|;
+name|int16_t
+name|nd_opt_hai_preference
+decl_stmt|;
+name|u_int16_t
+name|nd_opt_hai_lifetime
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nd_opt_route_info
+block|{
+comment|/* route info */
+name|u_int8_t
+name|nd_opt_rti_type
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_rti_len
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_rti_prefixlen
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_rti_flags
+decl_stmt|;
+name|u_int32_t
+name|nd_opt_rti_lifetime
+decl_stmt|;
+comment|/* prefix follows */
 block|}
 struct|;
 end_struct
@@ -1539,7 +1672,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMP6_RR_FLAGS_ALLIF
+name|ICMP6_RR_FLAGS_FORCEAPPLY
 value|0x20
 end_define
 
