@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.79 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.80 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2611,28 +2611,6 @@ end_define
 begin_comment
 comment|/* pretend to be BSD based today */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASFLOCK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HASFLOCK
-value|0
-end_define
-
-begin_comment
-comment|/* don't have a functioning flock(2) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
