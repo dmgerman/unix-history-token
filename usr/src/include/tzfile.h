@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Arthur Olson.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tzfile.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Arthur Olson.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tzfile.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,6 +25,13 @@ name|TZDEFAULT
 value|"localtime"
 end_define
 
+begin_define
+define|#
+directive|define
+name|TZDEFRULES
+value|"posixrules"
+end_define
+
 begin_comment
 comment|/* ** Each file begins with. . . */
 end_comment
@@ -36,10 +43,24 @@ block|{
 name|char
 name|tzh_reserved
 index|[
-literal|32
+literal|24
 index|]
 decl_stmt|;
 comment|/* reserved for future use */
+name|char
+name|tzh_ttisstdcnt
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* coded number of trans. time flags */
+name|char
+name|tzh_leapcnt
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* coded number of leap seconds */
 name|char
 name|tzh_timecnt
 index|[
@@ -66,7 +87,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ** . . .followed by. . . ** **	tzh_timecnt (char [4])s		coded transition times a la time(2) **	tzh_timecnt (unsigned char)s	types of local time starting at above **	tzh_typecnt repetitions of **		one (char [4])		coded GMT offset in seconds **		one (unsigned char)	used to set tm_isdt **		one (unsigned char)	that's an abbreviation list index **	tzh_charcnt (char)s		'\0'-terminated zone abbreviaton strings */
+comment|/* ** . . .followed by. . . ** **	tzh_timecnt (char [4])s		coded transition times a la time(2) **	tzh_timecnt (unsigned char)s	types of local time starting at above **	tzh_typecnt repetitions of **		one (char [4])		coded GMT offset in seconds **		one (unsigned char)	used to set tm_isdst **		one (unsigned char)	that's an abbreviation list index **	tzh_charcnt (char)s		'\0'-terminated zone abbreviations **	tzh_leapcnt repetitions of **		one (char [4])		coded leap second transition times **		one (char [4])		total correction after above **	tzh_ttisstdcnt (char)s		indexed by type; if TRUE, transition **					time is standard time, if FALSE, **					transition time is wall clock time **					if absent, transition times are **					assumed to be wall clock time */
 end_comment
 
 begin_comment
@@ -91,7 +112,7 @@ name|NOSOLAR
 end_define
 
 begin_comment
-comment|/* We currently don't handle solar time */
+comment|/* 4BSD doesn't currently handle solar time */
 end_comment
 
 begin_ifndef
@@ -116,10 +137,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !NOSOLAR */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -136,10 +153,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !NOSOLAR */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -154,63 +167,74 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SECS_PER_MIN
+name|TZ_MAX_LEAPS
+value|50
+end_define
+
+begin_comment
+comment|/* Maximum number of leap second corrections */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECSPERMIN
 value|60
 end_define
 
 begin_define
 define|#
 directive|define
-name|MINS_PER_HOUR
+name|MINSPERHOUR
 value|60
 end_define
 
 begin_define
 define|#
 directive|define
-name|HOURS_PER_DAY
+name|HOURSPERDAY
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|DAYS_PER_WEEK
+name|DAYSPERWEEK
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|DAYS_PER_NYEAR
+name|DAYSPERNYEAR
 value|365
 end_define
 
 begin_define
 define|#
 directive|define
-name|DAYS_PER_LYEAR
+name|DAYSPERLYEAR
 value|366
 end_define
 
 begin_define
 define|#
 directive|define
-name|SECS_PER_HOUR
-value|(SECS_PER_MIN * MINS_PER_HOUR)
+name|SECSPERHOUR
+value|(SECSPERMIN * MINSPERHOUR)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SECS_PER_DAY
-value|((long) SECS_PER_HOUR * HOURS_PER_DAY)
+name|SECSPERDAY
+value|((long) SECSPERHOUR * HOURSPERDAY)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MONS_PER_YEAR
+name|MONSPERYEAR
 value|12
 end_define
 
@@ -345,13 +369,6 @@ define|#
 directive|define
 name|TM_DECEMBER
 value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|TM_SUNDAY
-value|0
 end_define
 
 begin_define
