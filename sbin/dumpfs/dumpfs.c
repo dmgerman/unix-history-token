@@ -707,19 +707,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rotdelay %dms\theadswitch %dus\ttrackseek %dus\trps\t%d\n"
+literal|"rotdelay %dms\trps\t%d\n"
 argument_list|,
 name|afs
 operator|.
 name|fs_rotdelay
-argument_list|,
-name|afs
-operator|.
-name|fs_headswitch
-argument_list|,
-name|afs
-operator|.
-name|fs_trkseek
 argument_list|,
 name|afs
 operator|.
