@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: subr.c,v 1.2 1996/06/19 09:56:30 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,6 +154,14 @@ case|:
 name|facs
 operator||=
 name|KTRFAC_PSIG
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|facs
+operator||=
+name|KTRFAC_USER
 expr_stmt|;
 break|break;
 case|case
