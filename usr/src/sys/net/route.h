@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1079,6 +1079,12 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|socket
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 name|void
