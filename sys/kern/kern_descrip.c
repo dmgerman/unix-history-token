@@ -6904,6 +6904,9 @@ name|struct
 name|flock
 name|lf
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* VFS */
 comment|/* Certain daemons might not have file descriptors. */
 name|fdp
 operator|=
@@ -7597,6 +7600,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* kqueue */
 comment|/* Certain daemons might not have file descriptors. */
 name|fdp
 operator|=
@@ -7985,6 +7991,9 @@ name|flags
 decl_stmt|,
 name|devnull
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* VFS */
 name|fdp
 operator|=
 name|td
@@ -9007,6 +9016,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* VFS */
 operator|*
 name|vpp
 operator|=
@@ -9229,6 +9241,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|NET_ASSERT_GIANT
+argument_list|()
+expr_stmt|;
 operator|*
 name|spp
 operator|=
