@@ -729,8 +729,6 @@ parameter_list|)
 block|{
 name|int
 name|rid
-decl_stmt|,
-name|unit
 decl_stmt|;
 name|u_int32_t
 name|l
@@ -743,13 +741,6 @@ decl_stmt|;
 name|alpm
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
