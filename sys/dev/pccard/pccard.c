@@ -1607,6 +1607,9 @@ name|pccard_config_entry
 modifier|*
 name|cfe
 decl_stmt|;
+name|int
+name|state
+decl_stmt|;
 comment|/* 	 * We are running on either the PCCARD socket's event thread 	 * or in user context detaching a device by user request. 	 */
 name|STAILQ_FOREACH
 argument_list|(
@@ -1617,16 +1620,24 @@ argument_list|,
 argument|pf_list
 argument_list|)
 block|{
-name|int
+if|if
+condition|(
+name|pf
+operator|->
+name|dev
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|state
-init|=
+operator|=
 name|device_get_state
 argument_list|(
 name|pf
 operator|->
 name|dev
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|state
