@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.3.2.6 2002/10/26 07:03:00 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.1 1999/08/04 17:29:54 darrenr Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_ifndef

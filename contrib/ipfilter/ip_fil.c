@@ -869,6 +869,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -890,6 +896,10 @@ literal|"@(#)ip_fil.c	2.41 6/5/96 (C) 1993-2000 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*static const char rcsid[] = "@(#)$Id: ip_fil.c,v 2.42.2.60 2002/08/28 12:40:39 darrenr Exp $";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -897,7 +907,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 2.42.2.64 2002/12/06 11:45:45 darrenr Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -3874,7 +3884,7 @@ condition|(
 operator|(
 name|securelevel
 operator|>=
-literal|2
+literal|3
 operator|)
 operator|&&
 operator|(

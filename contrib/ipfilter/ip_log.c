@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.21 2002/10/26 06:21:30 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.1 2000/07/19 13:11:47 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include

@@ -253,6 +253,9 @@ decl_stmt|;
 name|U_QUAD_T
 name|is_bytes
 decl_stmt|;
+name|U_QUAD_T
+name|is_icmppkts
+decl_stmt|;
 name|union
 name|i6addr
 name|is_src

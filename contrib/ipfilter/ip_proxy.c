@@ -471,6 +471,10 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/*static const char rcsid[] = "@(#)$Id: ip_proxy.c,v 2.9.2.24 2002/08/28 12:45:51 darrenr Exp $";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -478,7 +482,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 2.9.2.26 2002/12/06 11:40:23 darrenr Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -717,6 +717,10 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/*static const char rcsid[] = "@(#)$Id: ip_auth.c,v 2.11.2.20 2002/06/04 14:40:42 darrenr Exp $";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -724,7 +728,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.24 2002/12/06 11:40:21 darrenr Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -2322,6 +2326,13 @@ name|IRIX
 operator|>=
 literal|605
 operator|)
+operator|)
+operator|||
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|470102
 operator|)
 name|error
 operator|=
