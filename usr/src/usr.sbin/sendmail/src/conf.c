@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.31 (Berkeley) %G%"
+literal|"@(#)conf.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1475,6 +1475,11 @@ operator|||
 name|defined
 argument_list|(
 name|BSD4_3
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AUX_SOURCE
 argument_list|)
 return|return
 name|signal
@@ -4810,6 +4815,11 @@ operator|||
 name|defined
 argument_list|(
 name|NeXT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AUX_SOURCE
 argument_list|)
 end_if
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -1446,6 +1452,17 @@ begin_comment
 comment|/* need a replacement for getopt(3) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1530,6 +1547,118 @@ define|#
 directive|define
 name|_PATH_SENDMAILPID
 value|"/usr/ucblib/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Apple A/UX 3.0 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AUX_SOURCE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BSD
+end_define
+
+begin_comment
+comment|/* has BSD routines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUSTAT
+value|1
+end_define
+
+begin_comment
+comment|/* use System V ustat(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|fork
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
 end_define
 
 begin_endif
@@ -2280,23 +2409,6 @@ directive|define
 name|STDERR_FILENO
 value|2
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HASFLOCK
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
 
 begin_endif
 endif|#
