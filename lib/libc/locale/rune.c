@@ -74,23 +74,6 @@ file|<sys/stat.h>
 end_include
 
 begin_function
-name|void
-name|setinvalidrune
-parameter_list|(
-name|ir
-parameter_list|)
-name|rune_t
-name|ir
-decl_stmt|;
-block|{
-name|_INVALID_RUNE
-operator|=
-name|ir
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|_RuneLocale
 modifier|*
 name|_Read_RuneMagi
