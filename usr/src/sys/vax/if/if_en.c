@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.9 81/11/16 */
+comment|/* if_en.c 4.10 81/11/18 */
 end_comment
 
 begin_include
@@ -373,13 +373,19 @@ operator|=
 name|cvec
 expr_stmt|;
 name|enrint
-argument_list|()
-operator|,
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|enxint
-argument_list|()
-operator|,
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|encollide
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

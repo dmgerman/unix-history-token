@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.5	81/11/14	*/
+comment|/*	socket.h	4.6	81/11/18	*/
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|SOCK_STREAM
-value|0
+value|1
 end_define
 
 begin_comment
@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|SOCK_DGRAM
-value|1
+value|2
 end_define
 
 begin_comment
@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|SOCK_RAW
-value|2
+value|3
 end_define
 
 begin_comment
@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|SOCK_RDM
-value|3
+value|4
 end_define
 
 begin_comment
@@ -103,15 +103,294 @@ begin_comment
 comment|/* interrupt when data available */
 end_comment
 
+begin_comment
+comment|/*  * Generic socket protocol format.  *  * Each process is normally operating in a protocol family,  * whose protocols are used unless the process specifies otherwise.  * Most families supply protocols to the basic socket types.  When  * protocols are not present in the family, the higher level (roughly  * ISO session layer) code in the system layers on the protocols  * to support the socket types.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockproto
+block|{
+name|short
+name|sp_family
+decl_stmt|;
+comment|/* protocol family */
+name|short
+name|sp_protocol
+decl_stmt|;
+comment|/* protocol within family */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
-name|SO_NEWFDONCONN
-value|0x10
+name|PF_UNSPEC
+value|0
 end_define
 
 begin_comment
-comment|/* give new fd's for each connect */
+comment|/* unspecified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_LOCAL
+value|1
+end_define
+
+begin_comment
+comment|/* local to host (pipes, portals) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_INET
+value|2
+end_define
+
+begin_comment
+comment|/* internetwork: UDP, TCP, etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_PUP
+value|3
+end_define
+
+begin_comment
+comment|/* pup protocols: e.g. BSP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_CHAOS
+value|4
+end_define
+
+begin_comment
+comment|/* mit CHAOS protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_OISCP
+value|5
+end_define
+
+begin_comment
+comment|/* ois communication protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_NBS
+value|6
+end_define
+
+begin_comment
+comment|/* nbs protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_ECMA
+value|7
+end_define
+
+begin_comment
+comment|/* european computer manufacturers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_DATAKIT
+value|8
+end_define
+
+begin_comment
+comment|/* datakit protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_CCITT
+value|9
+end_define
+
+begin_comment
+comment|/* CCITT protocols, X.25 etc */
+end_comment
+
+begin_comment
+comment|/*  * Generic socket address format.  *  * Each process is also operating in an address family, whose  * addresses are assigned unless otherwise requested.  The address  * family used affects address properties: whether addresses are  * externalized or internalized, location dependent or independent, etc.  * The address can be defined directly if it fits in 14 bytes, or  * a pointer and length can be given to variable length data.  * We give these as two different structures to allow initialization.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockaddr
+block|{
+name|short
+name|sa_family
+decl_stmt|;
+comment|/* address family */
+name|char
+name|sa_data
+index|[
+literal|14
+index|]
+decl_stmt|;
+comment|/* up to 14 bytes of direct address */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sockaddri
+block|{
+name|short
+name|sai_family
+decl_stmt|;
+name|short
+name|sai_length
+decl_stmt|;
+name|caddr_t
+name|sai_addr
+decl_stmt|;
+name|char
+name|sai_ddata
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The first few address families correspond to protocol  * families.  Address families unrelated to protocol families  * are also possible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_UNSPEC
+value|0
+end_define
+
+begin_comment
+comment|/* unspecified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_LOCAL
+value|1
+end_define
+
+begin_comment
+comment|/* local to host (pipes, portals) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_INET
+value|2
+end_define
+
+begin_comment
+comment|/* internetwork: UDP, TCP, etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_PUP
+value|3
+end_define
+
+begin_comment
+comment|/* pup protocols: e.g. BSP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_CHAOS
+value|4
+end_define
+
+begin_comment
+comment|/* mit CHAOS protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_OISCP
+value|5
+end_define
+
+begin_comment
+comment|/* ois communication protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_NBS
+value|6
+end_define
+
+begin_comment
+comment|/* nbs protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_ECMA
+value|7
+end_define
+
+begin_comment
+comment|/* european computer manufacturers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_DATAKIT
+value|8
+end_define
+
+begin_comment
+comment|/* datakit protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_CCITT
+value|9
+end_define
+
+begin_comment
+comment|/* CCITT protocols, X.25 etc */
 end_comment
 
 end_unit

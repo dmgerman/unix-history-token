@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.21	81/11/16	*/
+comment|/*	init_main.c	4.22	81/11/18	*/
 end_comment
 
 begin_include
@@ -128,12 +128,6 @@ ifdef|#
 directive|ifdef
 name|INET
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../h/protocol.h"
-end_include
 
 begin_include
 include|#

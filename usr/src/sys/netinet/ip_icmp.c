@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.c 4.4 81/11/16 */
+comment|/* ip_icmp.c 4.5 81/11/18 */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"../h/param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/systm.h"
 end_include
 
 begin_include
@@ -493,7 +499,7 @@ name|icp
 operator|->
 name|icmp_rtime
 operator|=
-name|ip_time
+name|iptime
 argument_list|()
 expr_stmt|;
 name|icp
@@ -595,7 +601,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|ip_addr
+name|in_addr
 name|t
 decl_stmt|;
 name|t
@@ -775,7 +781,7 @@ end_block
 
 begin_function
 name|n_time
-name|ip_time
+name|iptime
 parameter_list|()
 block|{
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.2	81/11/16	*/
+comment|/*	uipc_pipe.c	4.3	81/11/18	*/
 end_comment
 
 begin_include
@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/protocol.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/protosw.h"
 end_include
 
@@ -54,12 +48,16 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/inaddr.h"
+file|"../net/inet_systm.h"
 end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_function_decl
 name|int
-name|pi_usrreq
+name|piusrreq
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -97,7 +95,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|pi_usrreq
+name|piusrreq
 block|,
 literal|0
 block|,
@@ -119,7 +117,7 @@ comment|/*  * Connect a pipe from wso to rso.  The protocol control block  * for
 end_comment
 
 begin_macro
-name|pi_connect
+name|piconnect
 argument_list|(
 argument|wso
 argument_list|,
@@ -140,6 +138,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|PICONNECT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m_reserve
@@ -251,80 +254,6 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|pi_splice
-argument_list|(
-argument|pso
-argument_list|,
-argument|so
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|socket
-modifier|*
-name|pso
-decl_stmt|,
-modifier|*
-name|so
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|pso
-operator|->
-name|so_proto
-operator|!=
-operator|&
-name|pipeproto
-condition|)
-block|{
-name|struct
-name|socket
-modifier|*
-name|tso
-decl_stmt|;
-name|tso
-operator|=
-name|pso
-expr_stmt|;
-name|pso
-operator|=
-name|so
-expr_stmt|;
-name|so
-operator|=
-name|tso
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|pso
-operator|->
-name|so_proto
-operator|!=
-operator|&
-name|pipeproto
-condition|)
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-comment|/* check types and buffer space */
-comment|/* merge buffers */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
 begin_comment
 comment|/*  * User requests on pipes and other internally implemented  * structures.  */
 end_comment
@@ -334,7 +263,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|pi_usrreq
+name|piusrreq
 argument_list|(
 argument|so
 argument_list|,
@@ -390,6 +319,11 @@ name|so
 operator|->
 name|so_pcb
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|PIUSRREQ
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|req
@@ -404,6 +338,9 @@ case|:
 break|break;
 case|case
 name|PRU_CONNECT
+case|:
+case|case
+name|PRU_ACCEPT
 case|:
 return|return
 operator|(
@@ -437,23 +374,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PRU_FLUSH
-case|:
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-case|case
 name|PRU_SHUTDOWN
 case|:
-name|so
-operator|->
-name|so_state
-operator||=
-name|SS_CANTSENDMORE
-expr_stmt|;
-name|sowwakeup
+name|socantsendmore
 argument_list|(
 name|so
 argument_list|)
@@ -462,19 +385,11 @@ if|if
 condition|(
 name|so2
 condition|)
-block|{
-name|so2
-operator|->
-name|so_state
-operator||=
-name|SS_CANTRCVMORE
-expr_stmt|;
-name|sorwakeup
+name|socantrcvmore
 argument_list|(
 name|so2
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|PRU_RCVD
@@ -608,7 +523,7 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"pi_usrreq"
+literal|"piusrreq"
 argument_list|)
 expr_stmt|;
 block|}

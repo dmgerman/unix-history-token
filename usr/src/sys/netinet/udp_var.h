@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_var.h	4.2	81/11/15	*/
+comment|/*	udp_var.h	4.3	81/11/18	*/
+end_comment
+
+begin_comment
+comment|/*  * UDP kernel structures and variables.  */
 end_comment
 
 begin_struct
@@ -98,6 +102,23 @@ name|ui_sum
 value|ui_u.uh_sum
 end_define
 
+begin_struct
+struct|struct
+name|udpstat
+block|{
+name|int
+name|udps_hdrops
+decl_stmt|;
+name|int
+name|udps_badsum
+decl_stmt|;
+name|int
+name|udps_badlen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -108,6 +129,13 @@ begin_decl_stmt
 name|struct
 name|inpcb
 name|udb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|udpstat
+name|udpstat
 decl_stmt|;
 end_decl_stmt
 

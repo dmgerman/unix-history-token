@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.4	81/11/16	*/
+comment|/*	uipc_proto.c	4.5	81/11/18	*/
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"../h/socket.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/protocol.h"
 end_include
 
 begin_include
@@ -39,6 +33,12 @@ directive|include
 file|"../net/inet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../net/inet_systm.h"
+end_include
+
 begin_comment
 comment|/*  * Protocol configuration table and routines to search it.  *  * SHOULD INCLUDE A HEADER FILE GIVING DESIRED PROTOCOLS  */
 end_comment
@@ -49,7 +49,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|pi_usrreq
+name|piusrreq
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -202,7 +202,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|pi_usrreq
+name|piusrreq
 block|,
 literal|0
 block|,
@@ -236,7 +236,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|pi_usrreq
+name|piusrreq
 block|,
 literal|0
 block|,
@@ -270,7 +270,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|pi_usrreq
+name|piusrreq
 block|,
 literal|0
 block|,
@@ -304,7 +304,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|pi_usrreq
+name|piusrreq
 block|,
 literal|0
 block|,
@@ -530,6 +530,11 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|PFINIT
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pr
@@ -586,6 +591,11 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|PFFINDTYPE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|family
@@ -663,6 +673,11 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|PFFINDPROTO
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|family

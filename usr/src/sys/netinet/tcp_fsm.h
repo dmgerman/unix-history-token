@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_fsm.h	4.5	81/11/15	*/
+comment|/*	tcp_fsm.h	4.6	81/11/18	*/
 end_comment
 
 begin_comment
-comment|/*  * TCP FSM definitions.  *  * The TCP is conceptually a finite state machine with 13 states  * and 9 inputs.  The states and inputs are defined here, as well  * as an array which is used in network profiling to keep event  * counters on the state transitions.  The actual state transitions  * occur on input to the tcp machine (tcp_input.c) and when user  * requests are made (tcp_states.c).  *  * This TCP machine has two more states than suggested in RFC 793,  * the extra states being L_SYN_RCVD and RCV_WAIT.  *  * EXPLAIN THE EXTRA STATES!!!  */
+comment|/*  * TCP FSM state definitions.  *  * This TCP machine has two more states than suggested in RFC 793,  * the extra states being L_SYN_RCVD and RCV_WAIT  *  * EXPLAIN THE EXTRA STATES.  */
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* rcvd fin, waiting for UCLOSE */
+comment|/* rcvd fin, waiting for close */
 end_comment
 
 begin_define
@@ -150,7 +150,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* had fin and UCLOSE; await FIN ACK */
+comment|/* had fin and close; await FIN ACK */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.h 4.1 81/11/08 */
+comment|/* ip_icmp.h 4.2 81/11/18 */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ name|ih_pptr
 decl_stmt|;
 comment|/* ICMP_PARAMPROB */
 name|struct
-name|ip_addr
+name|in_addr
 name|ih_gwaddr
 decl_stmt|;
 comment|/* ICMP_REDIRECT */

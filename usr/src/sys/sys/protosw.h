@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.4	81/11/15	*/
+comment|/*	protosw.h	4.5	81/11/18	*/
 end_comment
 
 begin_comment
@@ -210,23 +210,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRU_DISCONNECT
+name|PRU_ACCEPT
 value|3
 end_define
 
 begin_comment
-comment|/* disconnect from peer */
+comment|/* accept connection from peer */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRU_FLUSH
+name|PRU_DISCONNECT
 value|4
 end_define
 
 begin_comment
-comment|/* flush data in queues */
+comment|/* disconnect from peer */
 end_comment
 
 begin_define
@@ -362,9 +362,9 @@ literal|"DETACH"
 block|,
 literal|"CONNECT"
 block|,
-literal|"DISCONNECT"
+literal|"ACCEPT"
 block|,
-literal|"FLUSH"
+literal|"DISCONNECT"
 block|,
 literal|"SHUTDOWN"
 block|,
@@ -382,7 +382,7 @@ literal|"SLOWTIMO"
 block|,
 literal|"PROTORCV"
 block|,
-literal|"PROTOSND"
+literal|"PROTOSEND"
 block|, }
 decl_stmt|;
 end_decl_stmt

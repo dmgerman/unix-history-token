@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.29 81/11/16 */
+comment|/* tcp_usrreq.c 1.30 81/11/18 */
 end_comment
 
 begin_include
@@ -696,7 +696,7 @@ name|in_hosteval
 argument_list|(
 operator|(
 expr|struct
-name|inaddr
+name|sockaddr
 operator|*
 operator|)
 name|addr
@@ -732,6 +732,15 @@ name|so
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PRU_ACCEPT
+case|:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+comment|/* XXX */
 case|case
 name|PRU_DISCONNECT
 case|:
@@ -789,14 +798,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|PRU_FLUSH
-case|:
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
 break|break;
 case|case
 name|PRU_SHUTDOWN
@@ -1464,31 +1465,10 @@ block|}
 end_block
 
 begin_comment
-comment|/* /*###366 [cc] warning: struct/union or struct/union pointer required %%%*/
-end_comment
-
-begin_comment
-comment|/*###366 [cc] member of structure or union required %%%*/
-end_comment
-
-begin_comment
-comment|/*###366 [cc] tp_inpcb undefined %%%*/
+comment|/*  * Send data queue headed by m0 into the protocol.  */
 end_comment
 
 begin_expr_stmt
-operator|*
-name|Send
-name|data
-name|queue
-name|headed
-name|by
-name|m0
-name|into
-name|the
-name|protocol
-operator|.
-modifier|*
-expr|/
 name|tcp_usrsend
 argument_list|(
 name|tp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.2	81/11/15	*/
+comment|/*	ip_var.h	4.3	81/11/18	*/
 end_comment
 
 begin_comment
@@ -30,12 +30,12 @@ name|ih_len
 decl_stmt|;
 comment|/* protocol length */
 name|struct
-name|ip_addr
+name|in_addr
 name|ih_src
 decl_stmt|;
 comment|/* source internet address */
 name|struct
-name|ip_addr
+name|in_addr
 name|ih_dst
 decl_stmt|;
 comment|/* destination internet address */
@@ -82,7 +82,7 @@ name|ipq_prev
 decl_stmt|;
 comment|/* to ip headers of fragments */
 name|struct
-name|ip_addr
+name|in_addr
 name|ipq_src
 decl_stmt|,
 name|ipq_dst
@@ -146,11 +146,29 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ipstat
+block|{
+name|int
+name|ips_badsum
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_decl_stmt
+name|struct
+name|ipstat
+name|ipstat
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct

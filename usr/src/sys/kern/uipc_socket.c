@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.5	81/11/16	*/
+comment|/*	uipc_socket.c	4.6	81/11/18	*/
 end_comment
 
 begin_include
@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/protocol.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/protosw.h"
 end_include
 
@@ -79,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"../h/socketvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inaddr.h"
 end_include
 
 begin_include
@@ -106,7 +94,7 @@ file|"../net/inet_systm.h"
 end_include
 
 begin_comment
-comment|/*  * Socket support routines.  *  * DEAL WITH INTERRUPT NOTIFICATION.  * DO NEWFD STUFF  */
+comment|/*  * Socket support routines.  *  * DEAL WITH INTERRUPT NOTIFICATION.  */
 end_comment
 
 begin_comment
@@ -114,13 +102,15 @@ comment|/*  * Create a socket.  */
 end_comment
 
 begin_macro
-name|socket
+name|socreate
 argument_list|(
 argument|aso
 argument_list|,
 argument|type
 argument_list|,
-argument|iap
+argument|asp
+argument_list|,
+argument|asa
 argument_list|,
 argument|options
 argument_list|)
@@ -142,11 +132,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
-name|in_addr
+name|sockproto
 modifier|*
-name|iap
+name|asp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|sockaddr
+modifier|*
+name|asa
 decl_stmt|;
 end_decl_stmt
 
@@ -182,10 +179,15 @@ name|proto
 decl_stmt|,
 name|error
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|SOCREATE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Use process standard protocol/protocol family if none 	 * specified by address argument. 	 */
 if|if
 condition|(
-name|iap
+name|asp
 operator|==
 literal|0
 condition|)
@@ -204,15 +206,15 @@ else|else
 block|{
 name|pf
 operator|=
-name|iap
+name|asp
 operator|->
-name|ia_pf
+name|sp_family
 expr_stmt|;
 name|proto
 operator|=
-name|iap
+name|asp
 operator|->
-name|ia_proto
+name|sp_protocol
 expr_stmt|;
 block|}
 comment|/* 	 * If protocol specified, look for it, otherwise 	 * for a protocol of the correct type in the right family. 	 */
@@ -306,7 +308,7 @@ name|PRU_ATTACH
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|asa
 argument_list|)
 expr_stmt|;
 if|if
@@ -366,6 +368,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|SOFREE
+argument_list|)
+expr_stmt|;
 name|m_free
 argument_list|(
 name|dtom
@@ -403,6 +410,11 @@ name|splnet
 argument_list|()
 decl_stmt|;
 comment|/* conservative */
+name|COUNT
+argument_list|(
+name|SOCLOSE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -440,13 +452,13 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|disconnect
+name|sodisconnect
 argument_list|(
 name|so
 argument_list|,
 operator|(
 expr|struct
-name|in_addr
+name|sockaddr
 operator|*
 operator|)
 literal|0
@@ -568,6 +580,87 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|sosplice
+argument_list|(
+argument|pso
+argument_list|,
+argument|so
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|socket
+modifier|*
+name|pso
+decl_stmt|,
+modifier|*
+name|so
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|COUNT
+argument_list|(
+name|SOSPLICE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pso
+operator|->
+name|so_proto
+operator|->
+name|pr_family
+operator|!=
+name|PF_LOCAL
+condition|)
+block|{
+name|struct
+name|socket
+modifier|*
+name|tso
+decl_stmt|;
+name|tso
+operator|=
+name|pso
+expr_stmt|;
+name|pso
+operator|=
+name|so
+expr_stmt|;
+name|so
+operator|=
+name|tso
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pso
+operator|->
+name|so_proto
+operator|->
+name|pr_family
+operator|!=
+name|PF_LOCAL
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+comment|/* check types and buffer space */
+comment|/* merge buffers */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -599,6 +692,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|SOSTAT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -608,15 +706,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Connect socket to a specified address.  * If already connected or connecting, then avoid  * the protocol entry, to keep its job simpler.  */
+comment|/*  * Accept connection on a socket.  */
 end_comment
 
 begin_macro
-name|connect
+name|soaccept
 argument_list|(
 argument|so
 argument_list|,
-argument|iap
+argument|asa
 argument_list|)
 end_macro
 
@@ -630,9 +728,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|in_addr
+name|sockaddr
 modifier|*
-name|iap
+name|asa
 decl_stmt|;
 end_decl_stmt
 
@@ -647,6 +745,137 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|SOACCEPT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+operator|(
+name|SS_ISCONNECTED
+operator||
+name|SS_ISCONNECTING
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|EISCONN
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* XXX */
+goto|goto
+name|bad
+goto|;
+block|}
+name|error
+operator|=
+call|(
+modifier|*
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreq
+call|)
+argument_list|(
+name|so
+argument_list|,
+name|PRU_ACCEPT
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|asa
+argument_list|)
+expr_stmt|;
+name|bad
+label|:
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Connect socket to a specified address.  * If already connected or connecting, then avoid  * the protocol entry, to keep its job simpler.  */
+end_comment
+
+begin_macro
+name|soconnect
+argument_list|(
+argument|so
+argument_list|,
+argument|asa
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|sockaddr
+modifier|*
+name|asa
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|COUNT
+argument_list|(
+name|SOCONNECT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -688,7 +917,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|iap
+name|asa
 argument_list|)
 expr_stmt|;
 name|bad
@@ -710,16 +939,12 @@ begin_comment
 comment|/*  * Disconnect from a socket.  * Address parameter is from system call for later multicast  * protocols.  Check to make sure that connected and no disconnect  * in progress (for protocol's sake), and then invoke protocol.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_macro
-name|disconnect
+name|sodisconnect
 argument_list|(
 argument|so
 argument_list|,
-argument|iap
+argument|asa
 argument_list|)
 end_macro
 
@@ -733,9 +958,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|in_addr
+name|sockaddr
 modifier|*
-name|iap
+name|asa
 decl_stmt|;
 end_decl_stmt
 
@@ -750,6 +975,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|SODISCONNECT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -805,7 +1035,7 @@ name|PRU_DISCONNECT
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|asa
 argument_list|)
 expr_stmt|;
 name|bad
@@ -828,11 +1058,11 @@ comment|/*  * Send on a socket.  * If send must go all at once and message is la
 end_comment
 
 begin_expr_stmt
-name|send
+name|sosend
 argument_list|(
 name|so
 argument_list|,
-name|iap
+name|asa
 argument_list|)
 specifier|register
 expr|struct
@@ -844,9 +1074,9 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|inaddr
+name|sockaddr
 modifier|*
-name|iap
+name|asa
 decl_stmt|;
 end_decl_stmt
 
@@ -885,6 +1115,11 @@ name|space
 decl_stmt|,
 name|s
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|SOSEND
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -997,7 +1232,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|iap
+name|asa
 operator|==
 literal|0
 condition|)
@@ -1042,7 +1277,7 @@ name|PRU_SEND
 argument_list|,
 name|top
 argument_list|,
-name|iap
+name|asa
 argument_list|)
 expr_stmt|;
 if|if
@@ -1316,11 +1551,11 @@ block|}
 end_block
 
 begin_expr_stmt
-name|receive
+name|soreceive
 argument_list|(
 name|so
 argument_list|,
-name|iap
+name|asa
 argument_list|)
 specifier|register
 expr|struct
@@ -1332,9 +1567,9 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|inaddr
+name|sockaddr
 modifier|*
-name|iap
+name|asa
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,6 +1596,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|SORECEIVE
+argument_list|)
+expr_stmt|;
 name|restart
 label|:
 name|sblock
@@ -1500,7 +1740,6 @@ argument_list|(
 literal|"receive"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Pull address off receive chain, if protocol 	 * put one there. 	 */
 if|if
 condition|(
 operator|(
@@ -1526,7 +1765,7 @@ name|m_next
 expr_stmt|;
 if|if
 condition|(
-name|iap
+name|asa
 condition|)
 block|{
 name|so
@@ -1550,7 +1789,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|in_addr
+name|sockaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1566,7 +1805,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|iap
+name|asa
 argument_list|,
 name|len
 argument_list|)
@@ -1578,12 +1817,12 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|iap
+name|asa
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|iap
+name|asa
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1607,7 +1846,6 @@ literal|"receive 2"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Next pull data off the chain. 	 * Stop at eor or when run out of space in user buffer. 	 */
 name|eor
 operator|=
 literal|0
@@ -1741,7 +1979,6 @@ operator|!
 name|eor
 condition|)
 do|;
-comment|/* 	 * If atomic protocol discard rest of record. 	 */
 if|if
 condition|(
 operator|(
@@ -1819,7 +2056,6 @@ operator|==
 literal|0
 condition|)
 do|;
-comment|/* 	 * If protocol cares, inform it that 	 * there is more space in the receive buffer. 	 */
 if|if
 condition|(
 operator|(
@@ -1913,6 +2149,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|SOIOCTL
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmdp

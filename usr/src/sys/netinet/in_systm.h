@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_systm.h 4.3 81/11/16 */
+comment|/* in_systm.h 4.4 81/11/18 */
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|/* ms since 00:00 GMT, byte rev */
 end_comment
 
 begin_comment
-comment|/*  * The network runs as a software interrupt process.  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  Splimp is an ipl high enough to block all imps.  * While manipulating the mbuf buffer pool you have to block imps since  * allocation occurs at interrupt level.  (It would be easier to  * use interlocked instructions, but we don't do this yet.)  */
+comment|/*  * The network runs as a software interrupt process.  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  Splimp is an ipl high enough to block all imps.  * While manipulating the mbuf buffer pool you have to block imps.  */
 end_comment
 
 begin_define
@@ -128,16 +128,12 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_decl_stmt
-name|struct
-name|net_stat
-name|netstat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* net statistics block */
-end_comment
+begin_function_decl
+name|n_time
+name|iptime
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

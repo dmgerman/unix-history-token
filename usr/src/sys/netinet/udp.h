@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp.h	4.2	81/11/15	*/
+comment|/*	udp.h	4.3	81/11/18	*/
 end_comment
 
 begin_comment
-comment|/*  * Udp protocol header.  */
+comment|/*  * Udp protocol header.  * Per RFC 768, September, 1981.  */
 end_comment
 
 begin_struct

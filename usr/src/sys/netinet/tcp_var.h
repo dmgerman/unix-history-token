@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.4	81/11/16	*/
+comment|/*	tcp_var.h	4.5	81/11/18	*/
 end_comment
 
 begin_comment
@@ -697,6 +697,29 @@ begin_comment
 comment|/* maximum retransmission time */
 end_comment
 
+begin_struct
+struct|struct
+name|tcpstat
+block|{
+name|int
+name|tcps_badsum
+decl_stmt|;
+name|int
+name|tcps_badoff
+decl_stmt|;
+name|int
+name|tcps_hdrops
+decl_stmt|;
+name|int
+name|tcps_badsegs
+decl_stmt|;
+name|int
+name|tcps_unack
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -793,6 +816,13 @@ begin_decl_stmt
 name|struct
 name|inpcb
 name|tcb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tcpstat
+name|tcpstat
 decl_stmt|;
 end_decl_stmt
 

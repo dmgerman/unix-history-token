@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.13 81/11/16 */
+comment|/* tcp_output.c 4.14 81/11/18 */
 end_comment
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"../h/socketvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/inet_cksum.h"
 end_include
 
 begin_include
@@ -718,7 +712,7 @@ operator|)
 return|;
 name|m
 operator|=
-name|sbcopy
+name|m_copy
 argument_list|(
 operator|&
 name|so
@@ -1708,13 +1702,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* gratuitous? */
-name|CKSUM_TCPSET
+name|t
+operator|->
+name|ti_sum
+operator|=
+name|inet_cksum
 argument_list|(
 name|m
-argument_list|,
-name|t
-argument_list|,
-name|r9
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1783,8 +1777,6 @@ name|ip_ttl
 operator|=
 name|MAXTTL
 expr_stmt|;
-name|i
-operator|=
 name|ip_send
 argument_list|(
 name|ip
@@ -1792,7 +1784,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|i
+literal|1
 operator|)
 return|;
 block|}

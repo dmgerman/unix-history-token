@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_cksum.c	1.9	81/11/08	*/
+comment|/* in_cksum.c 1.10 81/11/18 */
 end_comment
 
 begin_include
@@ -28,12 +28,14 @@ file|"../net/inet_systm.h"
 end_include
 
 begin_comment
-comment|/*  * Network primitives; this file varies per-cpu,  * and the code here is for VAX only.  */
+comment|/*  * Checksum routine for Internet Protocol family headers.  * This routine is very heavily used in the network  * code and should be rewritten for each CPU to be as fast as possible.  */
 end_comment
 
-begin_comment
-comment|/*  * Checksum routine for TCP/IP headers.  This  * is very heavily used in the network  * code and should be rewritten for each CPU  * to be as fast as possible.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|vax
+end_if
 
 begin_expr_stmt
 name|inet_cksum
@@ -60,9 +62,9 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|long
+name|u_short
 modifier|*
-name|l
+name|w
 decl_stmt|;
 comment|/* known to be r9 */
 specifier|register
@@ -72,12 +74,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* known to be r8 */
-specifier|register
-name|u_short
-modifier|*
-name|w
-decl_stmt|;
-comment|/* known to be r7 */
 specifier|register
 name|int
 name|mlen
@@ -95,22 +91,16 @@ init|;
 condition|;
 control|)
 block|{
+comment|/* 		 * Each trip around loop adds in 		 * word from one mbuf segment. 		 */
 name|w
 operator|=
-operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
 name|u_short
 operator|*
-operator|)
-operator|(
-operator|(
-name|int
-operator|)
-name|m
-operator|+
-name|m
-operator|->
-name|m_off
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -120,6 +110,7 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* 			 * There is a byte left from the last segment; 			 * add it into the checksum.  Don't have to worry 			 * about a carry-out here because we make sure 			 * that high part of (32 bit) sum is small below. 			 */
 name|sum
 operator|+=
 operator|*
@@ -186,14 +177,35 @@ name|len
 operator|-=
 name|mlen
 expr_stmt|;
-name|l
-operator|=
+comment|/* 		 * Force to long boundary so we do longword aligned 		 * memory operations.  It is too hard to do byte 		 * adjustment, do only word adjustment. 		 */
+if|if
+condition|(
 operator|(
-name|long
-operator|*
+operator|(
+name|int
 operator|)
 name|w
+operator|&
+literal|0x2
+operator|)
+operator|&&
+name|mlen
+operator|>=
+literal|2
+condition|)
+block|{
+name|sum
+operator|+=
+operator|*
+name|w
+operator|++
 expr_stmt|;
+name|mlen
+operator|-=
+literal|2
+expr_stmt|;
+block|}
+comment|/* 		 * Do as much of the checksum as possible 32 bits at at time. 		 * In fact, this loop is unrolled to make overhead from 		 * branches&c small. 		 * 		 * We can do a 16 bit ones complement sum 32 bits at a time 		 * because the 32 bit register is acting as two 16 bit 		 * registers for adding, with carries from the low added 		 * into the high (by normal carry-chaining) and carries 		 * from the high carried into the low on the next word 		 * by use of the adwc instruction.  This lets us run 		 * this loop at almost memory speed. 		 * 		 * Here there is the danger of high order carry out, and 		 * we carefully use adwc. 		 */
 while|while
 condition|(
 operator|(
@@ -258,32 +270,11 @@ name|mlen
 operator|+=
 literal|8
 expr_stmt|;
-name|sum
-operator|=
-operator|(
-operator|(
-name|sum
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xffff
-operator|)
-operator|+
-operator|(
-name|sum
-operator|&
-literal|0xffff
-operator|)
-expr_stmt|;
-name|w
-operator|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|l
-expr_stmt|;
+comment|/* 		 * Now eliminate the possibility of carry-out's by 		 * folding back to a 16 bit number (adding high and 		 * low parts together.)  Then mop up trailing words 		 * and maybe an odd byte. 		 */
+block|{
+asm|asm("ashl $-16,r8,r0; addw2 r0,r8");
+asm|asm("adwc $0,r8; movzwl r8,r8");
+block|}
 while|while
 condition|(
 operator|(
@@ -295,7 +286,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-asm|asm("movzwl (r7)+,r0; addl2 r0,r8");
+asm|asm("movzwl (r9)+,r0; addl2 r0,r8");
 block|}
 if|if
 condition|(
@@ -320,6 +311,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* 		 * Locate the next block with some data. 		 * If there is a word split across a boundary we 		 * will wrap to the top with mlen == -1 and 		 * then add it in shifted appropriately. 		 */
 for|for
 control|(
 init|;
@@ -359,7 +351,7 @@ block|}
 block|}
 name|done
 label|:
-comment|/* add together high and low parts of sum and carry to get cksum */
+comment|/* 	 * Add together high and low parts of sum 	 * and carry to get cksum. 	 * Have to be careful to not drop the last 	 * carry here. 	 */
 block|{
 asm|asm("ashl $-16,r8,r0; addw2 r0,r8; adwc $0,r8");
 asm|asm("mcoml r8,r8; movzwl r8,r8");
@@ -371,6 +363,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

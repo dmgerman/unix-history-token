@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.3 81/11/15 */
+comment|/* in.h 4.4 81/11/18 */
 end_comment
 
 begin_comment
@@ -238,7 +238,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ip_addr
+name|in_addr
 block|{
 union|union
 block|{
@@ -302,6 +302,34 @@ directive|define
 name|s_lnet
 value|S_un.S_un_b.s_b2
 comment|/* net library format network */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Socket address, internet style.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockaddr_in
+block|{
+name|short
+name|sin_family
+decl_stmt|;
+name|u_short
+name|sin_port
+decl_stmt|;
+name|struct
+name|in_addr
+name|sin_addr
+decl_stmt|;
+name|char
+name|sin_zero
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

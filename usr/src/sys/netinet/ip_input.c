@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.14 81/11/16 */
+comment|/* ip_input.c 1.15 81/11/18 */
 end_comment
 
 begin_include
@@ -30,19 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/protocol.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_cksum.h"
+file|"../h/socket.h"
 end_include
 
 begin_include
@@ -273,7 +267,6 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
-comment|/* known to be r11 in CKSUM below */
 specifier|register
 name|struct
 name|mbuf
@@ -341,13 +334,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|CKSUM_IPCHK
+name|ip
+operator|->
+name|ip_sum
+operator|=
+name|inet_cksum
 argument_list|(
 name|m
-argument_list|,
-name|ip
-argument_list|,
-name|r11
 argument_list|,
 name|hlen
 argument_list|)
@@ -368,9 +361,9 @@ operator|->
 name|ip_sum
 argument_list|)
 expr_stmt|;
-name|netstat
+name|ipstat
 operator|.
-name|ip_badsum
+name|ips_badsum
 operator|++
 expr_stmt|;
 if|if
@@ -1716,9 +1709,9 @@ decl_stmt|,
 name|cnt
 decl_stmt|;
 name|struct
-name|ip_addr
+name|in_addr
 modifier|*
-name|sp
+name|sin
 decl_stmt|;
 specifier|register
 name|struct
@@ -1841,11 +1834,11 @@ literal|1
 operator|)
 condition|)
 break|break;
-name|sp
+name|sin
 operator|=
 operator|(
 expr|struct
-name|ip_addr
+name|in_addr
 operator|*
 operator|)
 operator|(
@@ -1868,7 +1861,7 @@ operator|(
 name|u_long
 operator|*
 operator|)
-name|sp
+name|sin
 condition|)
 block|{
 if|if
@@ -1885,10 +1878,10 @@ operator|->
 name|ip_dst
 operator|=
 operator|*
-name|sp
+name|sin
 expr_stmt|;
 operator|*
-name|sp
+name|sin
 operator|=
 name|n_lhost
 expr_stmt|;
@@ -1954,11 +1947,11 @@ name|bad
 goto|;
 break|break;
 block|}
-name|sp
+name|sin
 operator|=
 operator|(
 expr|struct
-name|ip_addr
+name|in_addr
 operator|*
 operator|)
 operator|(
@@ -2002,10 +1995,10 @@ goto|;
 operator|*
 operator|(
 expr|struct
-name|ip_addr
+name|in_addr
 operator|*
 operator|)
-name|sp
+name|sin
 operator|++
 operator|=
 name|n_lhost
@@ -2021,7 +2014,7 @@ operator|(
 name|u_long
 operator|*
 operator|)
-name|sp
+name|sin
 operator|!=
 name|n_lhost
 operator|.
@@ -2060,9 +2053,9 @@ operator|(
 name|n_time
 operator|*
 operator|)
-name|sp
+name|sin
 operator|=
-name|ip_time
+name|iptime
 argument_list|()
 expr_stmt|;
 name|ipt

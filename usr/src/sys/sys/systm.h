@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.19	81/11/16	*/
+comment|/*	systm.h	4.20	81/11/18	*/
 end_comment
 
 begin_comment
@@ -35,19 +35,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* daylight savings time in effect? */
-end_comment
-
-begin_decl_stmt
-name|char
-name|canonb
-index|[
-name|CANBSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* buffer for erase and kill (#@) */
 end_comment
 
 begin_decl_stmt

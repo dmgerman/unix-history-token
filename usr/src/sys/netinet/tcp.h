@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.16 81/11/15 */
+comment|/* tcp.h 1.17 81/11/18 */
 end_comment
 
 begin_comment
-comment|/*  * TCP header.  */
+comment|/*  * TCP header.  * Per RFC 793, September, 1981.  */
 end_comment
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip.h 1.8 81/11/15 */
+comment|/* ip.h 1.9 81/11/18 */
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ name|ip_sum
 decl_stmt|;
 comment|/* checksum */
 name|struct
-name|ip_addr
+name|in_addr
 name|ip_src
 decl_stmt|,
 name|ip_dst
@@ -275,7 +275,7 @@ struct|struct
 name|ipt_ta
 block|{
 name|struct
-name|ip_addr
+name|in_addr
 name|ipt_addr
 decl_stmt|;
 name|n_long
