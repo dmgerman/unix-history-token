@@ -1521,11 +1521,14 @@ decl_stmt|;
 name|u_int16_t
 name|session
 init|=
+name|ntohs
+argument_list|(
 name|wh
 operator|->
 name|ph
 operator|.
 name|sid
+argument_list|)
 decl_stmt|;
 comment|/* 	 * find matching peer/session combination. 	 */
 name|AAA
@@ -3227,16 +3230,12 @@ name|ethernet_hook
 condition|)
 block|{
 comment|/* 		 * Incoming data.  		 * Dig out various fields from the packet. 		 * use them to decide where to send it. 		 */
-name|printf
-argument_list|(
-literal|"got packet\n"
-argument_list|)
-expr_stmt|;
-name|LEAVE
-argument_list|(
+if|#
+directive|if
 literal|0
-argument_list|)
-expr_stmt|;
+block|printf("got packet\n"); LEAVE(0);
+endif|#
+directive|endif
 name|privp
 operator|->
 name|packets_in
@@ -3261,6 +3260,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"couldn't m_pullup\n"
+argument_list|)
+expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENOBUFS
@@ -3350,6 +3354,11 @@ argument_list|(
 literal|"packet fragmented\n"
 argument_list|)
 expr_stmt|;
+name|LEAVE
+argument_list|(
+name|EMSGSIZE
+argument_list|)
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -3376,6 +3385,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"no service tag\n"
+argument_list|)
+expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENETUNREACH
@@ -3421,6 +3435,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|printf
+argument_list|(
+literal|"no such service\n"
+argument_list|)
+expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENETUNREACH
@@ -3431,7 +3450,7 @@ break|break;
 case|case
 name|PADO_CODE
 case|:
-comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the  				 * hook this is in response to. 				 * 				 * For now simply accept the first we receive. 				 */
+comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the  				 * hook this is in response to. 				 * Received #2, now send #3 				 * For now simply accept the first we receive. 				 */
 name|tag
 operator|=
 name|get_tag
@@ -3464,6 +3483,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"no host unique field\n"
+argument_list|)
+expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENETUNREACH
@@ -3486,6 +3510,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"no matching session\n"
+argument_list|)
+expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENETUNREACH
@@ -3508,6 +3537,11 @@ operator|!=
 name|PPPOE_SINIT
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"session in wrong state\n"
+argument_list|)
+expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENETUNREACH
@@ -3606,6 +3640,10 @@ argument_list|,
 name|PTT_AC_COOKIE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tag
+condition|)
 name|insert_tag
 argument_list|(
 name|sp
@@ -3613,7 +3651,7 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
-comment|/* returned cookie */
+comment|/* return cookie */
 name|scan_tags
 argument_list|(
 name|sp
@@ -3789,6 +3827,8 @@ name|ph
 operator|.
 name|sid
 operator|=
+name|htons
+argument_list|(
 name|sp
 operator|->
 name|Session_ID
@@ -3796,6 +3836,7 @@ operator|=
 name|get_new_sid
 argument_list|(
 name|node
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|neg
@@ -4042,11 +4083,14 @@ name|sp
 operator|->
 name|Session_ID
 operator|=
+name|ntohs
+argument_list|(
 name|wh
 operator|->
 name|ph
 operator|.
 name|sid
+argument_list|)
 expr_stmt|;
 name|neg
 operator|->
@@ -5276,7 +5320,7 @@ name|PPPOE_CONNECTED
 case|:
 name|printf
 argument_list|(
-literal|"pppoe: timeout: unexpected state\n"
+literal|"pppoe: sendpacket: unexpected state\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5369,9 +5413,9 @@ name|NG_SEND_DATA
 argument_list|(
 name|error
 argument_list|,
-name|sp
+name|privp
 operator|->
-name|hook
+name|ethernet_hook
 argument_list|,
 name|m0
 argument_list|,
