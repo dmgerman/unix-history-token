@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ucred.h>
 end_include
 
@@ -487,6 +493,16 @@ modifier|*
 name|mnt_export
 decl_stmt|;
 comment|/* export list */
+name|struct
+name|label
+name|mnt_mntlabel
+decl_stmt|;
+comment|/* MAC label for the mount */
+name|struct
+name|label
+name|mnt_fslabel
+decl_stmt|;
+comment|/* MAC label for the fs */
 block|}
 struct|;
 end_struct
