@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.5 (Berkeley) %G%"
+literal|"@(#)tables.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|xns_ntoa
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -778,11 +787,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|syslog
+if|if
+condition|(
+name|errno
+operator|!=
+name|EEXIST
+condition|)
+name|perror
 argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"SIOCADDRT: %m"
+literal|"SIOCADDRT"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1029,15 +1042,49 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"SIOCADDRT %m"
+literal|"SIOCADDRT dst %s, gw %s: %m"
+argument_list|,
+name|xns_ntoa
+argument_list|(
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_ns
+operator|*
+operator|)
+operator|&
+name|rt
+operator|->
+name|rt_dst
+operator|)
+operator|->
+name|sns_addr
+argument_list|)
+argument_list|,
+name|xns_ntoa
+argument_list|(
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_ns
+operator|*
+operator|)
+operator|&
+name|rt
+operator|->
+name|rt_router
+operator|)
+operator|->
+name|sns_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|delete
-condition|)
-if|if
-condition|(
+operator|&&
 name|ioctl
 argument_list|(
 name|s
@@ -1054,11 +1101,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|syslog
+name|perror
 argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"SIOCDELRT %m"
+literal|"SIOCDELRT"
 argument_list|)
 expr_stmt|;
 block|}
