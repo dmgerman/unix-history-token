@@ -8186,7 +8186,7 @@ name|newvp
 operator|!=
 name|NULL
 condition|)
-name|vrele
+name|vput
 argument_list|(
 name|newvp
 argument_list|)
