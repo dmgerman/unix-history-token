@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.68 (Berkeley) %G%"
+literal|"@(#)util.c	8.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6990,7 +6990,7 @@ name|strcpy
 argument_list|(
 name|delimbuf
 argument_list|,
-literal|"\t "
+literal|"\n\t "
 argument_list|)
 expr_stmt|;
 else|else
