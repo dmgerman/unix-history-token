@@ -934,8 +934,6 @@ name|all
 decl_stmt|,
 name|ch
 decl_stmt|,
-name|dropgid
-decl_stmt|,
 name|elem
 decl_stmt|,
 name|flag
@@ -1117,8 +1115,6 @@ index|]
 argument_list|)
 expr_stmt|;
 name|all
-operator|=
-name|dropgid
 operator|=
 name|_fmt
 operator|=
@@ -1478,10 +1474,6 @@ name|memf
 operator|=
 name|optarg
 expr_stmt|;
-name|dropgid
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'m'
@@ -1497,10 +1489,6 @@ case|:
 name|nlistf
 operator|=
 name|optarg
-expr_stmt|;
-name|dropgid
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1873,17 +1861,6 @@ comment|/* Neither -X nor -x was specified. */
 name|xkeep
 operator|=
 name|xkeep_implied
-expr_stmt|;
-comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
-if|if
-condition|(
-name|dropgid
-condition|)
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
 expr_stmt|;
 name|kd
 operator|=

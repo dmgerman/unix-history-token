@@ -542,8 +542,6 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|criteria
-decl_stmt|,
-name|drop_privs
 decl_stmt|;
 name|size_t
 name|jsz
@@ -748,10 +746,6 @@ name|debug_opt
 operator|=
 literal|0
 expr_stmt|;
-name|drop_privs
-operator|=
-literal|0
-expr_stmt|;
 name|execf
 operator|=
 name|coref
@@ -813,10 +807,6 @@ name|coref
 operator|=
 name|optarg
 expr_stmt|;
-name|drop_privs
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'N'
@@ -824,10 +814,6 @@ case|:
 name|execf
 operator|=
 name|optarg
-expr_stmt|;
-name|drop_privs
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1038,25 +1024,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Discard privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
-if|if
-condition|(
-name|drop_privs
-condition|)
-block|{
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
 name|mypid
 operator|=
 name|getpid
