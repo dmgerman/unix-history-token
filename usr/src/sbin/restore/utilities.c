@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	8.3 (Berkeley) %G%"
+literal|"@(#)utilities.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1086,7 +1086,7 @@ condition|(
 operator|!
 name|Nflag
 operator|&&
-name|unwhiteout
+name|undelete
 argument_list|(
 name|name
 argument_list|)
