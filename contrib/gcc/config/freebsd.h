@@ -11,6 +11,12 @@ begin_comment
 comment|/* Don't assume anything about the header files. */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|NO_IMPLICIT_EXTERN_C
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -72,6 +78,12 @@ begin_comment
 comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions.      (even though the svr4 ABI for the i386 says that records and unions are    returned in memory)  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_PCC_STRUCT_RETURN
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -88,6 +100,23 @@ undef|#
 directive|undef
 name|NO_DOLLAR_IN_LABEL
 end_undef
+
+begin_comment
+comment|/* Use more efficient ``thunks'' to implement C++ vtables. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_VTABLE_THUNKS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_VTABLE_THUNKS
+value|1
+end_define
 
 begin_comment
 comment|/* Miscellaneous parameters.  */
@@ -135,6 +164,12 @@ begin_comment
 comment|/* Now that GCC knows what the include path applies to, put the G++ one first.    C++ can now have include files that override the default C ones.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|INCLUDE_DEFAULTS
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -146,6 +181,24 @@ end_define
 begin_comment
 comment|/* Under FreeBSD, the normal location of the compiler back ends is the    /usr/libexec directory.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STANDARD_EXEC_PREFIX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TOOLDIR_BASE_PREFIX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MD_EXEC_PREFIX
+end_undef
 
 begin_define
 define|#
@@ -161,9 +214,22 @@ name|TOOLDIR_BASE_PREFIX
 value|"/usr/libexec/"
 end_define
 
+begin_define
+define|#
+directive|define
+name|MD_EXEC_PREFIX
+value|"/usr/libexec/"
+end_define
+
 begin_comment
 comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STANDARD_STARTFILE_PREFIX
+end_undef
 
 begin_define
 define|#
