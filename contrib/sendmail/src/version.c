@@ -21,7 +21,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"8.12.8p1"
+literal|"8.12.8p2"
 decl_stmt|;
 end_decl_stmt
 
