@@ -550,7 +550,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Constants for digital decay and forget:  *	90% of (p_estcpu) usage in 5 * loadav time  *	95% of (p_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that schedclock() updates p_estcpu and p_cpticks asynchronously.  *  * We wish to decay away 90% of p_estcpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		p_estcpu *= decay;  * will compute  * 	p_estcpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
+comment|/*  * Constants for digital decay and forget:  *	90% of (kg_estcpu) usage in 5 * loadav time  *	95% of (ke_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that schedclock() updates kg_estcpu and p_cpticks asynchronously.  *  * We wish to decay away 90% of kg_estcpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		kg_estcpu *= decay;  * will compute  * 	kg_estcpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
 end_comment
 
 begin_comment
@@ -580,7 +580,7 @@ value|(((loadfac) * (cpu)) / ((loadfac) + FSCALE))
 end_define
 
 begin_comment
-comment|/* decay 95% of `p_pctcpu' in 60 seconds; see CCPU_SHIFT before changing */
+comment|/* decay 95% of `ke_pctcpu' in 60 seconds; see CCPU_SHIFT before changing */
 end_comment
 
 begin_decl_stmt
@@ -683,10 +683,9 @@ modifier|*
 name|kg
 decl_stmt|;
 name|int
-name|realstathz
-decl_stmt|;
-name|int
 name|awake
+decl_stmt|,
+name|realstathz
 decl_stmt|;
 name|realstathz
 operator|=
@@ -707,12 +706,14 @@ argument_list|(
 argument|p
 argument_list|)
 block|{
+comment|/* 		 * Prevent state changes and protect run queue. 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Increment time in/out of memory.  We ignore overflow; with 		 * 16-bit int's (remember them?) overflow takes 45 days. 		 */
 name|p
 operator|->
 name|p_swtime
@@ -736,7 +737,7 @@ argument_list|,
 argument|ke
 argument_list|)
 block|{
-comment|/* 				 * Increment time in/out of memory and sleep 				 * time (if sleeping).  We ignore overflow; 				 * with 16-bit int's (remember them?) 				 * overflow takes 45 days. 				 */
+comment|/* 				 * Increment sleep time (if sleeping).  We 				 * ignore overflow, as above. 				 */
 comment|/* 				 * The kse slptimes are not touched in wakeup 				 * because the thread may not HAVE a KSE. 				 */
 if|if
 condition|(
@@ -808,7 +809,7 @@ operator|~
 name|KEF_DIDRUN
 expr_stmt|;
 block|}
-comment|/* 				 * pctcpu is only for ps? 				 * Do it per kse.. and add them up at the end? 				 * XXXKSE 				 */
+comment|/* 				 * ke_pctcpu is only for ps and ttyinfo(). 				 * Do it per kse, and add them up at the end? 				 * XXXKSE 				 */
 name|ke
 operator|->
 name|ke_pctcpu
@@ -962,13 +963,11 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-block|{
 name|kg
 operator|->
 name|kg_slptime
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kg
@@ -1055,7 +1054,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Recalculate the priority of a process after it has slept for a while.  * For all load averages>= 1 and max p_estcpu of 255, sleeping for at  * least six times the loadfactor will decay p_estcpu to zero.  */
+comment|/*  * Recalculate the priority of a process after it has slept for a while.  * For all load averages>= 1 and max kg_estcpu of 255, sleeping for at  * least six times the loadfactor will decay kg_estcpu to zero.  */
 end_comment
 
 begin_function
@@ -1070,14 +1069,16 @@ name|kg
 parameter_list|)
 block|{
 specifier|register
+name|fixpt_t
+name|loadfac
+decl_stmt|;
+specifier|register
 name|unsigned
 name|int
 name|newcpu
 decl_stmt|;
-specifier|register
-name|fixpt_t
 name|loadfac
-init|=
+operator|=
 name|loadfactor
 argument_list|(
 name|averunnable
@@ -1087,12 +1088,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-decl_stmt|;
-name|newcpu
-operator|=
-name|kg
-operator|->
-name|kg_estcpu
 expr_stmt|;
 if|if
 condition|(
@@ -1112,12 +1107,18 @@ literal|0
 expr_stmt|;
 else|else
 block|{
+name|newcpu
+operator|=
+name|kg
+operator|->
+name|kg_estcpu
+expr_stmt|;
 name|kg
 operator|->
 name|kg_slptime
 operator|--
 expr_stmt|;
-comment|/* the first time was done in schedcpu */
+comment|/* was incremented in schedcpu() */
 while|while
 condition|(
 name|newcpu
@@ -1350,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We adjust the priority of the current process.  The priority of  * a process gets worse as it accumulates CPU time.  The cpu usage  * estimator (p_estcpu) is increased here.  resetpriority() will  * compute a different priority each time p_estcpu increases by  * INVERSE_ESTCPU_WEIGHT  * (until MAXPRI is reached).  The cpu usage estimator ramps up  * quite quickly when the process is running (linearly), and decays  * away exponentially, at a rate which is proportionally slower when  * the system is busy.  The basic principle is that the system will  * 90% forget that the process used a lot of CPU time in 5 * loadav  * seconds.  This causes the system to favor processes which haven't  * run much recently, and to round-robin among other processes.  */
+comment|/*  * We adjust the priority of the current process.  The priority of  * a process gets worse as it accumulates CPU time.  The cpu usage  * estimator (kg_estcpu) is increased here.  resetpriority() will  * compute a different priority each time kg_estcpu increases by  * INVERSE_ESTCPU_WEIGHT  * (until MAXPRI is reached).  The cpu usage estimator ramps up  * quite quickly when the process is running (linearly), and decays  * away exponentially, at a rate which is proportionally slower when  * the system is busy.  The basic principle is that the system will  * 90% forget that the process used a lot of CPU time in 5 * loadav  * seconds.  This causes the system to favor processes which haven't  * run much recently, and to round-robin among other processes.  */
 end_comment
 
 begin_function

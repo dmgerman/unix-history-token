@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -122,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -147,12 +159,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ktrace.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
 end_include
 
 begin_include
@@ -201,12 +207,6 @@ begin_include
 include|#
 directive|include
 file|<vm/uma.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
 end_include
 
 begin_include
@@ -334,7 +334,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -423,7 +425,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -526,7 +530,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -750,7 +756,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-comment|/* parent proc */
 name|int
 name|flags
 decl_stmt|;
@@ -763,10 +768,12 @@ modifier|*
 modifier|*
 name|procp
 decl_stmt|;
-comment|/* child proc */
 block|{
 name|struct
 name|proc
+modifier|*
+name|p1
+decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|,
@@ -782,10 +789,9 @@ modifier|*
 name|newproc
 decl_stmt|;
 name|int
-name|trypid
-decl_stmt|;
-name|int
 name|ok
+decl_stmt|,
+name|trypid
 decl_stmt|;
 specifier|static
 name|int
@@ -811,15 +817,6 @@ modifier|*
 name|fdtol
 decl_stmt|;
 name|struct
-name|proc
-modifier|*
-name|p1
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td2
@@ -842,7 +839,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Can't copy and clear */
+comment|/* Can't copy and clear. */
 if|if
 condition|(
 operator|(
@@ -866,6 +863,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|p1
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1208,12 +1211,10 @@ name|trypid
 operator|<
 literal|10
 condition|)
-block|{
 name|trypid
 operator|=
 literal|10
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2275,9 +2276,9 @@ operator|->
 name|p_flag
 operator|&
 operator|(
-name|P_SUGID
-operator||
 name|P_ALTSTACK
+operator||
+name|P_SUGID
 operator|)
 expr_stmt|;
 name|SESS_LOCK
@@ -2760,7 +2761,7 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * tell any interested parties about the new process 	 */
+comment|/* 	 * Tell any interested parties about the new process. 	 */
 name|KNOTE
 argument_list|(
 operator|&
@@ -2990,15 +2991,16 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+comment|/* 	 * Processes normally resume in mi_switch() after being 	 * cpu_switch()'ed to, but when children start up they arrive here 	 * instead, so we must do much the same things as mi_switch() would. 	 */
 if|if
 condition|(
 operator|(
@@ -3117,7 +3119,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * cpu_set_fork_handler intercepts this function call to          * have this call a non-return function to stay in kernel mode.          * initproc has its own fork handler, but it does return.          */
+comment|/* 	 * cpu_set_fork_handler intercepts this function call to 	 * have this call a non-return function to stay in kernel mode. 	 * initproc has its own fork handler, but it does return. 	 */
 name|KASSERT
 argument_list|(
 name|callout

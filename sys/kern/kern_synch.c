@@ -651,7 +651,7 @@ condition|(
 name|cold
 condition|)
 block|{
-comment|/* 		 * During autoconfiguration, just give interrupts 		 * a chance, then just return. 		 * Don't run any other procs or panic below, 		 * in case this is the idle process and already asleep. 		 */
+comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other procs or panic below, 		 * in case this is the idle process and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
 if|if
 condition|(
 name|mtx
@@ -1165,7 +1165,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXX: shouldn't we always be calling cursig() */
+comment|/* XXX: shouldn't we always be calling cursig()? */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1287,7 +1287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement timeout for msleep()  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  * MP-safe, called without the Giant mutex.  */
+comment|/*  * Implement timeout for msleep().  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  * MP-safe, called without the Giant mutex.  */
 end_comment
 
 begin_function
@@ -1307,9 +1307,16 @@ name|struct
 name|thread
 modifier|*
 name|td
-init|=
-name|arg
 decl_stmt|;
+name|td
+operator|=
+operator|(
+expr|struct
+name|thread
+operator|*
+operator|)
+name|arg
+expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -1383,14 +1390,12 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-block|{
 name|td
 operator|->
 name|td_flags
 operator||=
 name|TDF_TIMOFAIL
 expr_stmt|;
-block|}
 name|TD_CLR_SLEEPING
 argument_list|(
 name|td
@@ -1708,6 +1713,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+specifier|register
+name|struct
 name|slpquehead
 modifier|*
 name|qp
@@ -1717,12 +1728,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-specifier|register
-name|struct
-name|proc
-modifier|*
-name|p
 decl_stmt|;
 name|struct
 name|thread
@@ -1991,7 +1996,7 @@ argument_list|()
 expr_stmt|;
 name|db_error
 argument_list|(
-literal|"Context switches not allowed in the debugger."
+literal|"Context switches not allowed in the debugger"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2228,11 +2233,13 @@ name|struct
 name|proc
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|p
+operator|=
 name|td
 operator|->
 name|td_proc
-decl_stmt|;
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -2646,11 +2653,13 @@ name|struct
 name|ksegrp
 modifier|*
 name|kg
-init|=
+decl_stmt|;
+name|kg
+operator|=
 name|td
 operator|->
 name|td_ksegrp
-decl_stmt|;
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
