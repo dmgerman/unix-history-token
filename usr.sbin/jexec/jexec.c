@@ -129,7 +129,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|execv
+name|execvp
 argument_list|(
 name|argv
 index|[
@@ -148,7 +148,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"execv(): %s"
+literal|"execvp(): %s"
 argument_list|,
 name|argv
 index|[
