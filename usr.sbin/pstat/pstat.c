@@ -5109,15 +5109,9 @@ decl_stmt|,
 name|dmmax
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
-name|e
-decl_stmt|,
-name|div
-decl_stmt|,
 name|i
 decl_stmt|,
-name|l
+name|div
 decl_stmt|,
 name|avail
 decl_stmt|,
