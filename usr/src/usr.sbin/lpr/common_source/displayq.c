@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	5.11 (Berkeley) %G%"
+literal|"@(#)displayq.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,11 +661,6 @@ argument_list|()
 expr_stmt|;
 else|else
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 comment|/* get daemon pid */
 name|cp
 operator|=
