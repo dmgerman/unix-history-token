@@ -487,7 +487,7 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
