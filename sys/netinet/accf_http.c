@@ -811,7 +811,7 @@ name|SS_CANTRCVMORE
 operator|)
 operator|==
 literal|0
-operator|||
+operator|&&
 operator|!
 name|sbfull
 argument_list|(
