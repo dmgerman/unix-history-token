@@ -883,9 +883,18 @@ name|argv
 argument_list|)
 operator|)
 condition|)
-name|warnx
+comment|/* let pkg_do() fail later, so that error is reported */
+name|pkgs
+index|[
+name|ch
+index|]
+operator|=
+name|strcpy
 argument_list|(
-literal|"can't find package '%s'"
+name|pkgnames
+index|[
+name|ch
+index|]
 argument_list|,
 operator|*
 name|argv
