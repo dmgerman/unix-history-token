@@ -4727,7 +4727,7 @@ decl_stmt|;
 if|if
 condition|(
 name|current_time
-operator|>
+operator|>=
 name|sp
 operator|->
 name|se_started
