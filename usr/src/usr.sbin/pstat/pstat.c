@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.3 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,7 +427,7 @@ block|,
 define|#
 directive|define
 name|SYSMAP
-value|25
+value|27
 block|{
 literal|"_Sysmap"
 block|}
