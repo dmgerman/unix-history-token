@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.151
+literal|3.152
 operator|%
 name|G
 operator|%
@@ -265,6 +265,15 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|myhostname
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* 	**  Check to see if we reentered. 	**	This would normally happen if e_putheader or e_putbody 	**	were NULL when invoked. 	*/
@@ -652,6 +661,37 @@ name|initmacros
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|p
+operator|=
+name|myhostname
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|define
+argument_list|(
+literal|'w'
+argument_list|,
+name|p
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* 	** Crack argv. 	*/
