@@ -1818,13 +1818,12 @@ name|object
 operator|=
 name|robject
 expr_stmt|;
-comment|/* XXX */
-name|VM_OBJECT_UNLOCK
+name|vm_object_collapse
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_object_collapse
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5166,7 +5165,12 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
-name|GIANT_REQUIRED
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -5177,13 +5181,6 @@ name|vm_object_t
 name|backing_object
 decl_stmt|;
 comment|/* 		 * Verify that the conditions are right for collapse: 		 * 		 * The object exists and the backing object exists. 		 */
-if|if
-condition|(
-name|object
-operator|==
-name|NULL
-condition|)
-break|break;
 if|if
 condition|(
 operator|(
@@ -5296,6 +5293,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* XXX */
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 		 * We know that we can either collapse the backing object (if 		 * the parent is the only reference to it) or (perhaps) have 		 * the parent bypass the object if the parent happens to shadow 		 * all the resident pages in the entire backing object. 		 * 		 * This is ignoring pager-backed pages such as swap pages. 		 * vm_object_backing_scan fails the shadowing test in this 		 * case. 		 */
 if|if
 condition|(
@@ -5619,6 +5622,12 @@ argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* 			 * Make the parent shadow the next object in the 			 * chain.  Deallocating backing_object will not remove 			 * it, since its reference count is at least 2. 			 */
@@ -5720,6 +5729,12 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 		 * Try again with this object's new backing object. 		 */
+comment|/* XXX */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -6061,17 +6076,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Try to collapse the object first 	 */
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|prev_object
-argument_list|)
-expr_stmt|;
 name|vm_object_collapse
-argument_list|(
-name|prev_object
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_LOCK
 argument_list|(
 name|prev_object
 argument_list|)
