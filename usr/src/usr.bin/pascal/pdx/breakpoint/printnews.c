@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printnews.c 1.1 %G%"
+literal|"@(#)printnews.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * print out news during single step tracing  *  * We have to handle all the single stepping possibilities,  * including combinations.  A combination of single stepping  * by line and by instruction causes "curline" to be 0 but  * "ss_lines" to be TRUE.  We avoid trying to print lines in this case.  */
+comment|/*  * Print out news during single step tracing.  *  * We have to handle all the single stepping possibilities,  * including combinations.  A combination of single stepping  * by line and by instruction causes "curline" to be 0 but  * "ss_lines" to be TRUE.  We avoid trying to print lines in this case.  */
 end_comment
 
 begin_include
@@ -90,6 +90,14 @@ operator|>
 literal|0
 condition|)
 block|{
+name|skimsource
+argument_list|(
+name|srcfilename
+argument_list|(
+name|pc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"trace:  "
@@ -110,7 +118,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"inst trace:	"
+literal|"inst trace: "
 argument_list|)
 expr_stmt|;
 name|printinst
@@ -135,27 +143,6 @@ name|isstopped
 operator|=
 name|TRUE
 expr_stmt|;
-name|getsrcinfo
-argument_list|()
-expr_stmt|;
-name|printstatus
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_macro
-name|getsrcinfo
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|char
-modifier|*
-name|filename
-decl_stmt|;
 name|curline
 operator|=
 name|srcline
@@ -163,24 +150,8 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-name|filename
-operator|=
-name|srcfilename
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|filename
-operator|!=
-name|cursource
-condition|)
-block|{
-name|skimsource
-argument_list|(
-name|filename
-argument_list|)
+name|printstatus
+argument_list|()
 expr_stmt|;
 block|}
 block|}

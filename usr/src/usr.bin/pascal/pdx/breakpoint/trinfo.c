@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trinfo.c 1.1 %G%"
+literal|"@(#)trinfo.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,9 +611,22 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"initially (at line %d):\t"
-argument_list|,
+literal|"initially (at "
+argument_list|)
+expr_stmt|;
+name|printwhere
+argument_list|(
 name|curline
+argument_list|,
+name|srcfilename
+argument_list|(
+name|pc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"):\t"
 argument_list|)
 expr_stmt|;
 name|prtree
@@ -683,9 +696,22 @@ name|n
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"after line %d:\t"
-argument_list|,
+literal|"after "
+argument_list|)
+expr_stmt|;
+name|printwhere
+argument_list|(
 name|prevline
+argument_list|,
+name|srcfilename
+argument_list|(
+name|pc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|":\t"
 argument_list|)
 expr_stmt|;
 name|prtree
@@ -723,8 +749,12 @@ name|isstopped
 operator|=
 name|TRUE
 expr_stmt|;
-name|getsrcinfo
-argument_list|()
+name|curline
+operator|=
+name|srcline
+argument_list|(
+name|pc
+argument_list|)
 expr_stmt|;
 name|printstatus
 argument_list|()
