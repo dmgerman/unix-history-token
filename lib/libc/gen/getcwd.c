@@ -282,6 +282,18 @@ operator|+
 name|ptsize
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NETBSD_SYSCALLS
+argument_list|)
+name|have__getcwd
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|have__getcwd
@@ -481,6 +493,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 name|bpt
 operator|=
 name|ept
