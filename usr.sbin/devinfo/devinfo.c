@@ -43,6 +43,12 @@ name|rflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|vflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -517,6 +523,9 @@ name|indent
 decl_stmt|;
 if|if
 condition|(
+name|vflag
+operator|||
+operator|(
 name|dev
 operator|->
 name|dd_name
@@ -525,6 +534,13 @@ literal|0
 index|]
 operator|!=
 literal|0
+operator|&&
+name|dev
+operator|->
+name|dd_state
+operator|>=
+name|DIS_ATTACHED
+operator|)
 condition|)
 block|{
 name|indent
@@ -562,6 +578,15 @@ argument_list|,
 name|dev
 operator|->
 name|dd_name
+index|[
+literal|0
+index|]
+condition|?
+name|dev
+operator|->
+name|dd_name
+else|:
+literal|"unknown"
 argument_list|)
 expr_stmt|;
 if|if
@@ -801,7 +826,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ru"
+literal|"ruv"
 argument_list|)
 operator|)
 operator|!=
@@ -828,12 +853,19 @@ name|uflag
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
+operator|++
+expr_stmt|;
+break|break;
 default|default:
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: %s [-ru]"
+literal|"usage: %s [-ruv]"
 argument_list|,
 name|argv
 index|[
