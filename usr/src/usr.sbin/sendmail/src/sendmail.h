@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.47 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.46		%G%"
+literal|"@(#)sendmail.h	6.47		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -1210,9 +1204,18 @@ begin_comment
 comment|/* **  Envelope structure. **	This structure defines the message itself.  There is usually **	only one of these -- for the message that we originally read **	and which is our primary interest -- but other envelopes can **	be generated during processing.  For example, error messages **	will have their own envelope. */
 end_comment
 
-begin_struct
-struct|struct
-name|envelope
+begin_define
+define|#
+directive|define
+name|ENVELOPE
+value|struct envelope
+end_define
+
+begin_macro
+name|ENVELOPE
+end_macro
+
+begin_block
 block|{
 name|HDR
 modifier|*
@@ -1300,20 +1303,42 @@ name|e_errormode
 decl_stmt|;
 comment|/* error return mode */
 name|int
-function_decl|(
-modifier|*
-name|e_puthdr
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*e_puthdr
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|MAILER
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to put header of message */
 name|int
-function_decl|(
-modifier|*
-name|e_putbody
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*e_putbody
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|MAILER
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to put body of message */
 name|struct
 name|envelope
@@ -1381,16 +1406,11 @@ index|]
 decl_stmt|;
 comment|/* macro definitions */
 block|}
-struct|;
-end_struct
+end_block
 
-begin_typedef
-typedef|typedef
-name|struct
-name|envelope
-name|ENVELOPE
-typedef|;
-end_typedef
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* values for e_flags */
@@ -2123,10 +2143,6 @@ begin_comment
 comment|/* **  Mapping functions ** **	These allow arbitrary mappings in the config file.  The idea **	(albeit not the implementation) comes from IDA sendmail. */
 end_comment
 
-begin_comment
-comment|/* **  The class of a map -- essentially the functions to call */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2134,46 +2150,16 @@ name|MAPCLASS
 value|struct _mapclass
 end_define
 
-begin_macro
-name|MAPCLASS
-end_macro
-
-begin_block
-block|{
-name|bool
-function_decl|(
-modifier|*
-name|map_init
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* initialization function */
-name|char
-modifier|*
-function_decl|(
-modifier|*
-name|map_lookup
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* lookup function */
-block|}
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* **  An actual map. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MAP
 value|struct _map
 end_define
+
+begin_comment
+comment|/* **  An actual map. */
+end_comment
 
 begin_macro
 name|MAP
@@ -2215,6 +2201,12 @@ modifier|*
 name|map_rebuild
 decl_stmt|;
 comment|/* program to run to do auto-rebuild */
+name|char
+modifier|*
+modifier|*
+name|map_deplist
+decl_stmt|;
+comment|/* dependency list */
 block|}
 end_block
 
@@ -2280,6 +2272,69 @@ end_define
 begin_comment
 comment|/* don't use the map value */
 end_comment
+
+begin_comment
+comment|/* **  The class of a map -- essentially the functions to call */
+end_comment
+
+begin_macro
+name|MAPCLASS
+end_macro
+
+begin_block
+block|{
+name|bool
+argument_list|(
+argument|*map_init
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* initialization function */
+name|char
+operator|*
+operator|(
+operator|*
+name|map_lookup
+operator|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* lookup function */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_escape
 end_escape
@@ -2549,12 +2604,16 @@ name|ev_time
 decl_stmt|;
 comment|/* time of the function call */
 name|int
-function_decl|(
-modifier|*
-name|ev_func
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*ev_func
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to call */
 name|int
 name|ev_arg
@@ -4064,56 +4123,12 @@ begin_comment
 comment|/* **  Declarations of useful functions */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_FORGIVING_CC_
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|protos
-parameter_list|)
-value|protos
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|protos
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|ADDRESS
 modifier|*
 name|parseaddr
-name|P
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -4142,7 +4157,7 @@ specifier|extern
 name|char
 modifier|*
 name|xalloc
-name|P
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -4155,7 +4170,7 @@ begin_decl_stmt
 specifier|extern
 name|bool
 name|sameaddr
-name|P
+name|__P
 argument_list|(
 operator|(
 name|ADDRESS
@@ -4173,7 +4188,7 @@ specifier|extern
 name|FILE
 modifier|*
 name|dfopen
-name|P
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -4191,7 +4206,7 @@ specifier|extern
 name|EVENT
 modifier|*
 name|setevent
-name|P
+name|__P
 argument_list|(
 operator|(
 name|time_t
@@ -4213,7 +4228,7 @@ specifier|extern
 name|char
 modifier|*
 name|sfgets
-name|P
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -4235,7 +4250,7 @@ specifier|extern
 name|char
 modifier|*
 name|queuename
-name|P
+name|__P
 argument_list|(
 operator|(
 name|ENVELOPE
@@ -4251,7 +4266,7 @@ begin_decl_stmt
 specifier|extern
 name|time_t
 name|curtime
-name|P
+name|__P
 argument_list|(
 operator|(
 operator|)
@@ -4263,7 +4278,7 @@ begin_decl_stmt
 specifier|extern
 name|bool
 name|transienterror
-name|P
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -4277,7 +4292,7 @@ specifier|extern
 name|char
 modifier|*
 name|errstring
-name|P
+name|__P
 argument_list|(
 operator|(
 name|int
