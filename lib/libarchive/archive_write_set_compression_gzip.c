@@ -1630,6 +1630,12 @@ name|ret
 argument_list|)
 expr_stmt|;
 block|}
+name|a
+operator|->
+name|raw_position
+operator|+=
+name|ret
+expr_stmt|;
 name|state
 operator|->
 name|stream
