@@ -2687,6 +2687,55 @@ operator|!=
 name|EfiConventionalMemory
 condition|)
 continue|continue;
+comment|/* 		 * Wimp out for now since we do not DTRT here with 		 * pci bus mastering (no bounce buffering, for example). 		 */
+if|if
+condition|(
+name|pfn0
+operator|>=
+name|ia64_btop
+argument_list|(
+literal|0x100000000UL
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Skipping memory chunk start 0x%lx\n"
+argument_list|,
+name|mdp
+operator|->
+name|PhysicalStart
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|pfn1
+operator|>=
+name|ia64_btop
+argument_list|(
+literal|0x100000000UL
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Skipping memory chunk end 0x%lx\n"
+argument_list|,
+name|mdp
+operator|->
+name|PhysicalStart
+operator|+
+name|mdp
+operator|->
+name|NumberOfPages
+operator|*
+literal|4096
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * We have a memory descriptor that describes conventional 		 * memory that is for general use. We must determine if the 		 * loader has put the kernel in this region. 		 */
 name|physmem
 operator|+=
