@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.47 (Berkeley) %G%"
+literal|"@(#)alias.c	6.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -775,6 +775,8 @@ operator|->
 name|map_mflags
 operator|=
 name|MF_OPTIONAL
+operator||
+name|MF_INCLNULL
 expr_stmt|;
 block|}
 comment|/* find end of spec */
