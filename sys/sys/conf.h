@@ -15,6 +15,12 @@ directive|define
 name|_SYS_CONF_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -673,6 +679,15 @@ define|\
 value|do {								\ 	if ((bp)->b_flags& B_PHYS)					\ 		(bp)->b_io.bio_offset = (bp)->b_offset;			\ 	else								\ 		(bp)->b_io.bio_offset = dbtob((bp)->b_blkno);		\ 	(bp)->b_io.bio_done = bufdonebio;				\ 	(bp)->b_io.bio_caller2 = (bp);					\ 	BIO_STRATEGY(&(bp)->b_io, dummy);				\ 	} while (0)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_comment
 comment|/*  * Types for d_flags.  */
 end_comment
@@ -704,6 +719,12 @@ directive|define
 name|D_MEM
 value|0x0008
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -898,12 +919,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -963,6 +978,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Swap device table  */
