@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslimits.h>
 end_include
 
@@ -344,10 +350,21 @@ if|if
 condition|(
 name|compress
 condition|)
+block|{
 name|suf
 operator|=
 literal|"tgz"
 expr_stmt|;
+name|setenv
+argument_list|(
+literal|"GZIP"
+argument_list|,
+literal|"-9"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|suf
 operator|=
