@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.4 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -391,7 +391,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|NOTSET
+operator|!
+name|ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -761,7 +762,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|NOTSET
+operator|!
+name|ISSET
 argument_list|(
 name|t
 argument_list|,
