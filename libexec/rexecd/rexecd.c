@@ -1507,6 +1507,24 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setlogin
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setlogin() failed: %m"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
