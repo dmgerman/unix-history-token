@@ -105,6 +105,16 @@ directive|include
 file|"msgcat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../locale/setlocale.h"
+end_include
+
+begin_comment
+comment|/* for ENCODING_LEN */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -140,7 +150,7 @@ name|NLRETERR
 parameter_list|(
 name|errc
 parameter_list|)
-value|errno = errc; return(NLERR);
+value|{ errno = errc; return (NLERR); }
 end_define
 
 begin_function_decl
@@ -186,6 +196,8 @@ decl_stmt|;
 block|{
 name|int
 name|spcleft
+decl_stmt|,
+name|saverr
 decl_stmt|;
 name|char
 name|path
@@ -240,14 +252,12 @@ name|name
 operator|==
 literal|'\0'
 condition|)
-block|{
 name|NLRETERR
 argument_list|(
-name|ENOENT
+name|EINVAL
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* is it absolute path ? if yes, load immidiately */
+comment|/* is it absolute path ? if yes, load immediately */
 if|if
 condition|(
 name|strchr
@@ -256,12 +266,16 @@ name|name
 argument_list|,
 literal|'/'
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 return|return
+operator|(
 name|loadCat
 argument_list|(
 name|name
 argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -296,6 +310,47 @@ operator|*
 name|lang
 operator|==
 literal|'\0'
+operator|||
+name|strlen
+argument_list|(
+name|lang
+argument_list|)
+operator|>
+name|ENCODING_LEN
+operator|||
+operator|(
+name|lang
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+operator|(
+name|lang
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+operator|||
+operator|(
+name|lang
+index|[
+literal|1
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|lang
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+operator|)
+operator|)
+operator|)
 operator|||
 name|strchr
 argument_list|(
@@ -453,10 +508,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|plang
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverr
 expr_stmt|;
 return|return
 operator|(
@@ -716,10 +779,12 @@ name|base
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|loadCat
 argument_list|(
 name|path
 argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -778,7 +843,7 @@ name|NUM
 parameter_list|,
 name|SET
 parameter_list|)
-value|{	\     lo = 0; 					\     if (ID - 1< PARENT->NUM) {			\ 	cur = ID - 1; hi = ID;			\     } else {					\ 	hi = PARENT->NUM; cur = (hi - lo) / 2;	\     }						\     while (TRUE) {				\ 	CHILD = PARENT->SET + cur;		\ 	if (CHILD->ID == ID) break;		\ 	if (CHILD->ID< ID) {			\ 	    lo = cur+1;				\ 	    if (hi> cur+(ID-CHILD->ID)+1)	\ 		hi = cur+(ID-CHILD->ID)+1;	\ 	    dir = 1;				\ 	} else {				\ 	    hi = cur; dir = -1;			\ 	}					\ 	if (lo>= hi) return(NULL);		\ 	if (hi - lo == 1) cur += dir;		\ 	else cur += ((hi - lo) / 2) * dir;	\     }						\   }
+value|{                    \ 	lo = 0;                                                  \ 	if (ID - 1< PARENT->NUM) {                              \ 		cur = ID - 1;                                    \ 		hi = ID;                                         \ 	} else {                                                 \ 		hi = PARENT->NUM;                                \ 		cur = (hi - lo) / 2;                             \ 	}                                                        \ 	while (TRUE) {                                           \ 		CHILD = PARENT->SET + cur;                       \ 		if (CHILD->ID == ID)                             \ 			break;                                   \ 		if (CHILD->ID< ID) {                            \ 			lo = cur + 1;                            \ 			if (hi> cur + (ID - CHILD->ID) + 1)     \ 				hi = cur + (ID - CHILD->ID) + 1; \ 			dir = 1;                                 \ 		} else {                                         \ 			hi = cur;                                \ 			dir = -1;                                \ 		}                                                \ 		if (lo>= hi)                                    \ 			return (NULL);                           \ 		if (hi - lo == 1)                                \ 			cur += dir;                              \ 		else                                             \ 			cur += ((hi - lo) / 2) * dir;            \ 	}                                                        \ }
 end_define
 
 begin_function
@@ -1150,16 +1215,12 @@ literal|"Message Catalog System"
 decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_define
 define|#
 directive|define
 name|CORRUPT
 parameter_list|()
-value|{ 						\ 	fprintf(stderr, "%s: corrupt file.", _errowner);	\ 		free(cat);					\ 		NLRETERR(EINVAL);				\ 	}
+value|{                                            \ 	(void)fprintf(stderr, "%s: corrupt file.", _errowner); \ 	free(cat);                                             \ 	NLRETERR(EFTYPE);                                      \ }
 end_define
 
 begin_define
@@ -1167,7 +1228,7 @@ define|#
 directive|define
 name|NOSPACE
 parameter_list|()
-value|{						\ 	fprintf(stderr, "%s: no more memory.", _errowner);	\ 		free(cat);					\ 		return(NLERR);					\ 	}
+value|{                                              \ 	saverr = errno;                                          \ 	(void)fprintf(stderr, "%s: no more memory.", _errowner); \ 	free(cat);                                               \ 	errno = saverr;                                          \ 	return (NLERR);                                          \ }
 end_define
 
 begin_function
@@ -1284,6 +1345,12 @@ decl_stmt|;
 name|off_t
 name|nextSet
 decl_stmt|;
+name|int
+name|saverr
+decl_stmt|;
+if|if
+condition|(
+operator|(
 name|cat
 operator|=
 operator|(
@@ -1297,10 +1364,7 @@ argument_list|(
 name|MCCatT
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cat
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1333,10 +1397,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|cat
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverr
 expr_stmt|;
 return|return
 operator|(
@@ -1381,12 +1453,7 @@ name|fp
 argument_list|)
 operator|!=
 literal|1
-condition|)
-name|CORRUPT
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|strncmp
 argument_list|(
 name|header
@@ -1417,6 +1484,9 @@ argument_list|(
 name|cat
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1436,7 +1506,7 @@ argument_list|)
 expr_stmt|;
 name|NLRETERR
 argument_list|(
-name|EINVAL
+name|EFTYPE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1454,6 +1524,9 @@ argument_list|(
 name|cat
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1471,7 +1544,7 @@ argument_list|)
 expr_stmt|;
 name|NLRETERR
 argument_list|(
-name|EINVAL
+name|EFTYPE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1483,6 +1556,9 @@ name|header
 operator|.
 name|numSets
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|cat
 operator|->
 name|sets
@@ -1502,12 +1578,7 @@ name|header
 operator|.
 name|numSets
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cat
-operator|->
-name|sets
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1628,7 +1699,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (cat->loadType == MCLoadAll) { 	    int res;  	    if ((res = loadSet(cat, set))<= 0) { 		__nls_free_resources(cat, i); 		if (res< 0) NOSPACE(); 		CORRUPT(); 	    } 	} else
+block|if (cat->loadType == MCLoadAll) { 			int     res;  			if ((res = loadSet(cat, set))<= 0) { 				__nls_free_resources(cat, i); 				if (res< 0) 					NOSPACE(); 				CORRUPT(); 			} 		} else
 endif|#
 directive|endif
 name|set
@@ -1647,7 +1718,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (cat->loadType == MCLoadAll) { 	(void) fclose(cat->fp); 	cat->fp = NULL;     }
+block|if (cat->loadType == MCLoadAll) { 		(void)fclose(cat->fp); 		cat->fp = NULL; 	}
 endif|#
 directive|endif
 return|return
@@ -1685,6 +1756,9 @@ name|msg
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|saverr
 decl_stmt|;
 comment|/* Get the data */
 if|if
@@ -1761,6 +1835,10 @@ operator|!=
 literal|1
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|set
@@ -1769,6 +1847,10 @@ name|data
 operator|.
 name|str
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverr
 expr_stmt|;
 return|return
 operator|(
@@ -1798,6 +1880,10 @@ operator|-
 literal|1
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|set
@@ -1806,6 +1892,10 @@ name|data
 operator|.
 name|str
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverr
 expr_stmt|;
 return|return
 operator|(
@@ -1842,6 +1932,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|set
@@ -1850,6 +1944,10 @@ name|data
 operator|.
 name|str
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverr
 expr_stmt|;
 return|return
 operator|(
@@ -1906,6 +2004,10 @@ operator|!=
 literal|1
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|set
@@ -1923,6 +2025,10 @@ name|data
 operator|.
 name|str
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverr
 expr_stmt|;
 return|return
 operator|(
