@@ -7544,7 +7544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_map_sync  *  * Push any dirty cached pages in the address range to their pager.  * If syncio is TRUE, dirty pages are written synchronously.  * If invalidate is TRUE, any cached pages are freed as well.  *  * Returns an error if any part of the specified range is not mapped.  */
+comment|/*  * vm_map_sync  *  * Push any dirty cached pages in the address range to their pager.  * If syncio is TRUE, dirty pages are written synchronously.  * If invalidate is TRUE, any cached pages are freed as well.  *  * If the size of the region from start to end is zero, we are  * supposed to flush all modified pages within the region containing  * start.  Unfortunately, a region can be split or coalesced with  * neighboring regions, making it difficult to determine what the  * original region was.  Therefore, we approximate this requirement by  * flushing the current region containing start.  *  * Returns an error if any part of the specified range is not mapped.  */
 end_comment
 
 begin_function
@@ -7620,6 +7620,27 @@ operator|(
 name|KERN_INVALID_ADDRESS
 operator|)
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|start
+operator|==
+name|end
+condition|)
+block|{
+name|start
+operator|=
+name|entry
+operator|->
+name|start
+expr_stmt|;
+name|end
+operator|=
+name|entry
+operator|->
+name|end
+expr_stmt|;
 block|}
 comment|/* 	 * Make a first pass to check for holes. 	 */
 for|for
