@@ -737,9 +737,11 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the mutex structure: */
-name|_SPINUNLOCK
+comment|/* Wait for the mutex: */
+name|_thread_kern_sched_state_unlock
 argument_list|(
+name|PS_MUTEX_WAIT
+argument_list|,
 operator|&
 operator|(
 operator|*
@@ -747,12 +749,6 @@ name|mutex
 operator|)
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sched_state
-argument_list|(
-name|PS_MUTEX_WAIT
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -843,9 +839,11 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the mutex structure: */
-name|_SPINUNLOCK
+comment|/* Wait for the mutex: */
+name|_thread_kern_sched_state_unlock
 argument_list|(
+name|PS_MUTEX_WAIT
+argument_list|,
 operator|&
 operator|(
 operator|*
@@ -853,12 +851,6 @@ name|mutex
 operator|)
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sched_state
-argument_list|(
-name|PS_MUTEX_WAIT
 argument_list|,
 name|__FILE__
 argument_list|,

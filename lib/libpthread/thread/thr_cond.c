@@ -434,9 +434,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Unlock the condition variable structure: */
-name|_SPINUNLOCK
+comment|/* Schedule the next thread: */
+name|_thread_kern_sched_state_unlock
 argument_list|(
+name|PS_COND_WAIT
+argument_list|,
 operator|&
 operator|(
 operator|*
@@ -444,12 +446,6 @@ name|cond
 operator|)
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-comment|/* Schedule the next thread: */
-name|_thread_kern_sched_state
-argument_list|(
-name|PS_COND_WAIT
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -668,9 +664,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Unlock the condition variable structure: */
-name|_SPINUNLOCK
+comment|/* Schedule the next thread: */
+name|_thread_kern_sched_state_unlock
 argument_list|(
+name|PS_COND_WAIT
+argument_list|,
 operator|&
 operator|(
 operator|*
@@ -678,12 +676,6 @@ name|cond
 operator|)
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-comment|/* Schedule the next thread: */
-name|_thread_kern_sched_state
-argument_list|(
-name|PS_COND_WAIT
 argument_list|,
 name|__FILE__
 argument_list|,
