@@ -388,6 +388,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|digittoint
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -397,32 +409,41 @@ begin_decl_stmt
 name|__END_DECLS
 define|#
 directive|define
+name|__istype
+parameter_list|(
+name|c
+parameter_list|,
+name|f
+parameter_list|)
+value|(!!__maskrune((c),(f)))
+define|#
+directive|define
 name|isalnum
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), (_A|_D))
+value|__istype((c), _A|_D)
 define|#
 directive|define
 name|isalpha
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _A)
+value|__istype((c), _A)
 define|#
 directive|define
 name|iscntrl
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _C)
+value|__istype((c), _C)
 define|#
 directive|define
 name|isdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|__isctype((c),    _D)
+value|__isctype((c), _D)
 comment|/* ANSI -- locale independent */
 define|#
 directive|define
@@ -430,49 +451,49 @@ name|isgraph
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _G)
+value|__istype((c), _G)
 define|#
 directive|define
 name|islower
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _L)
+value|__istype((c), _L)
 define|#
 directive|define
 name|isprint
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _R)
+value|__istype((c), _R)
 define|#
 directive|define
 name|ispunct
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _P)
+value|__istype((c), _P)
 define|#
 directive|define
 name|isspace
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _S)
+value|__istype((c), _S)
 define|#
 directive|define
 name|isupper
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),     _U)
+value|__istype((c), _U)
 define|#
 directive|define
 name|isxdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|__isctype((c),    _X)
+value|__isctype((c), _X)
 comment|/* ANSI -- locale independent */
 define|#
 directive|define
@@ -522,14 +543,14 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c)& 0x7F)
-comment|/* XXX the following macros are not backed up by functions. */
 define|#
 directive|define
 name|digittoint
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), 0xFF)
+value|__maskrune((c), 0xFF)
+comment|/* XXX the following macros are not backed up by functions. */
 define|#
 directive|define
 name|ishexnumber
@@ -658,7 +679,7 @@ operator|)
 specifier|static
 name|__inline
 name|int
-name|__istype
+name|__maskrune
 parameter_list|(
 name|_BSD_CT_RUNE_T_
 name|_c
@@ -670,6 +691,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|_c
 operator|<
 literal|0
@@ -679,29 +701,20 @@ operator|>=
 name|_CACHED_RUNES
 operator|)
 condition|?
-operator|!
-operator|!
-operator|(
 name|___runetype
 argument_list|(
 name|_c
 argument_list|)
-operator|&
-name|_f
-operator|)
 else|:
-operator|!
-operator|!
-operator|(
 name|_CurrentRuneLocale
 operator|->
 name|runetype
 index|[
 name|_c
 index|]
+operator|)
 operator|&
 name|_f
-operator|)
 return|;
 block|}
 end_function
@@ -833,7 +846,7 @@ end_comment
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
-name|__istype
+name|__maskrune
 name|__P
 argument_list|(
 operator|(
