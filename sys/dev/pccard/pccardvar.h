@@ -1172,6 +1172,8 @@ comment|/* CIS strnig for "Product" */
 name|PCCARD_IVAR_CIS3_STR
 block|,
 name|PCCARD_IVAR_CIS4_STR
+block|,
+name|PCCARD_IVAR_FUNCTION
 block|}
 enum|;
 end_enum
@@ -1230,6 +1232,17 @@ argument_list|(
 argument|function_number
 argument_list|,
 argument|FUNCTION_NUMBER
+argument_list|,
+argument|u_int32_t
+argument_list|)
+end_macro
+
+begin_macro
+name|PCCARD_ACCESSOR
+argument_list|(
+argument|function
+argument_list|,
+argument|FUNCTION
 argument_list|,
 argument|u_int32_t
 argument_list|)
