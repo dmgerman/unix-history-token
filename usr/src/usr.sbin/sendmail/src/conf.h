@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.191 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.192 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1691,6 +1691,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_SRCROUTE
+value|0
+end_define
+
+begin_comment
+comment|/* does not have<netinet/ip_var.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASGETUSERSHELL
 value|0
 end_define
@@ -1758,6 +1769,16 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_comment
+comment|/* compiler doesn't understand const? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|const
+end_define
 
 begin_ifdef
 ifdef|#
