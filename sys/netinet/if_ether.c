@@ -2677,6 +2677,15 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|log_arp_movements
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2694,6 +2703,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"log arp packets arriving on the wrong interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_ether_inet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|log_arp_movements
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|log_arp_movements
+argument_list|,
+literal|0
+argument_list|,
+literal|"log arp replies from MACs different the the one in the cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3264,6 +3294,11 @@ name|rt
 operator|->
 name|rt_expire
 condition|)
+block|{
+if|if
+condition|(
+name|log_arp_movements
+condition|)
 name|log
 argument_list|(
 name|LOG_INFO
@@ -3305,6 +3340,7 @@ operator|.
 name|if_unit
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|log
