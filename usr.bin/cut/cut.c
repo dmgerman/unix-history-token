@@ -185,6 +185,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -238,6 +254,10 @@ expr_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|fcn
+operator|=
+name|NULL
+expr_stmt|;
 name|setlocale
 argument_list|(
 name|LC_ALL
@@ -483,7 +503,6 @@ modifier|*
 name|list
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|setautostart
 decl_stmt|,
@@ -491,7 +510,6 @@ name|start
 decl_stmt|,
 name|stop
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pos
@@ -515,6 +533,8 @@ argument_list|,
 literal|", \t"
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|;
 control|)
 block|{
@@ -546,6 +566,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -590,6 +614,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|p
 index|[
 literal|1
@@ -764,19 +792,19 @@ modifier|*
 name|fname
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
-init|=
-literal|0
 decl_stmt|,
 name|col
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pos
 decl_stmt|;
+name|ch
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -843,6 +871,7 @@ name|ch
 operator|!=
 literal|'\n'
 condition|)
+block|{
 if|if
 condition|(
 name|autostop
@@ -891,6 +920,7 @@ operator|!=
 literal|'\n'
 condition|)
 empty_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -920,7 +950,6 @@ modifier|*
 name|fname
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|,
@@ -928,7 +957,6 @@ name|field
 decl_stmt|,
 name|isdelim
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pos
@@ -1122,6 +1150,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -1138,7 +1167,8 @@ name|ch
 operator|!=
 name|sep
 condition|)
-empty_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|ch
@@ -1153,6 +1183,7 @@ name|ch
 operator|!=
 literal|'\n'
 condition|)
+block|{
 if|if
 condition|(
 name|autostop
@@ -1211,6 +1242,7 @@ operator|++
 name|p
 control|)
 empty_stmt|;
+block|}
 operator|(
 name|void
 operator|)
