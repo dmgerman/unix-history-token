@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stat.h	4.2	81/02/19	*/
+comment|/*	stat.h	4.3	82/02/27	*/
 end_comment
 
 begin_struct
@@ -103,23 +103,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|S_IFMPC
-value|0030000
+name|S_IFLNK
+value|0120000
 end_define
 
 begin_comment
-comment|/* multiplexed char special */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_IFMPB
-value|0070000
-end_define
-
-begin_comment
-comment|/* multiplexed block special */
+comment|/* symbolic link */
 end_comment
 
 begin_define

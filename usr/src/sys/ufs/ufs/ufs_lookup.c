@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.9	82/02/26	*/
+comment|/*	ufs_lookup.c	4.10	82/02/27	*/
 end_comment
 
 begin_include
@@ -107,6 +107,11 @@ name|struct
 name|direct
 modifier|*
 name|ep
+decl_stmt|;
+name|struct
+name|inode
+modifier|*
+name|pdp
 decl_stmt|;
 name|int
 name|i
@@ -353,6 +358,12 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|u
+operator|.
+name|u_pdir
+operator|=
+name|dp
+expr_stmt|;
 while|while
 condition|(
 name|i
@@ -795,10 +806,14 @@ name|dp
 operator|->
 name|i_number
 expr_stmt|;
-name|iput
+name|irele
 argument_list|(
 name|dp
 argument_list|)
+expr_stmt|;
+name|pdp
+operator|=
+name|dp
 expr_stmt|;
 name|dp
 operator|=
@@ -819,9 +834,16 @@ name|dp
 operator|==
 name|NULL
 condition|)
+block|{
+name|iput
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out1
 goto|;
+block|}
 comment|/* 		 * Check for symbolic link 		 */
 if|if
 condition|(
@@ -888,6 +910,11 @@ name|u_error
 operator|=
 name|ELOOP
 expr_stmt|;
+name|iput
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -946,6 +973,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|iput
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -995,6 +1027,11 @@ operator|==
 literal|'/'
 condition|)
 block|{
+name|iput
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -1036,28 +1073,23 @@ else|else
 block|{
 name|dp
 operator|=
-name|iget
+name|pdp
+expr_stmt|;
+name|ilock
 argument_list|(
-name|d
-argument_list|,
-name|ino
+name|dp
 argument_list|)
 expr_stmt|;
-comment|/* retrieve directory */
-if|if
-condition|(
-name|dp
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|out1
-goto|;
 block|}
 goto|goto
 name|dirloop
 goto|;
 block|}
+name|iput
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1124,12 +1156,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|u
-operator|.
-name|u_pdir
-operator|=
-name|dp
-expr_stmt|;
 if|if
 condition|(
 name|eo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.21	82/02/15	*/
+comment|/*	vfs_vnops.c	4.22	82/02/27	*/
 end_comment
 
 begin_include
@@ -831,7 +831,12 @@ name|struct
 name|inode
 modifier|*
 name|owner
-parameter_list|()
+parameter_list|(
+name|follow
+parameter_list|)
+name|int
+name|follow
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -846,6 +851,8 @@ argument_list|(
 name|uchar
 argument_list|,
 literal|0
+argument_list|,
+name|follow
 argument_list|)
 expr_stmt|;
 if|if

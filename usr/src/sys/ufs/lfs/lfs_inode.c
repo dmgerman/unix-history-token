@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_inode.c	4.8	82/02/15	*/
+comment|/*	lfs_inode.c	4.9	82/02/27	*/
 end_comment
 
 begin_include
@@ -1443,6 +1443,10 @@ operator|&&
 name|i
 operator|!=
 name|IFDIR
+operator|&&
+name|i
+operator|!=
+name|IFLNK
 condition|)
 return|return;
 comment|/* 	 * Clean inode on disk before freeing blocks 	 * to insure no duplicates if system crashes. 	 */

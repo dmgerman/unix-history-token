@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.5	81/11/08	*/
+comment|/*	kern_resource.c	4.6	82/02/27	*/
 end_comment
 
 begin_include
@@ -158,6 +158,8 @@ argument_list|(
 name|uchar
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

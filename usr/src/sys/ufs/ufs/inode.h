@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.9	81/11/14	*/
+comment|/*	inode.h	4.10	82/02/27	*/
 end_comment
 
 begin_comment
@@ -363,23 +363,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFSYMREG
-value|0110000
+name|IFLNK
+value|0120000
 end_define
 
 begin_comment
-comment|/* regular symbolic link */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFSYMDIR
-value|0130000
-end_define
-
-begin_comment
-comment|/* directory symbolic link */
+comment|/* symbolic link */
 end_comment
 
 begin_define
