@@ -1440,10 +1440,6 @@ modifier|*
 name|entry
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|dotfd
-decl_stmt|;
 specifier|register
 name|int
 name|cnt
@@ -4640,6 +4636,10 @@ specifier|register
 name|int
 name|state
 decl_stmt|;
+name|state
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -4771,6 +4771,10 @@ specifier|register
 name|int
 name|state
 decl_stmt|;
+name|state
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -4864,6 +4868,10 @@ specifier|register
 name|int
 name|state
 decl_stmt|;
+name|state
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|p
