@@ -3526,9 +3526,10 @@ name|bp
 operator|->
 name|b_iocmd
 operator|=
-name|BIO_READ
+name|ubp
+operator|->
+name|b_iocmd
 expr_stmt|;
-comment|/* inform us when it's done */
 name|BUF_LOCKINIT
 argument_list|(
 name|bp
@@ -4106,6 +4107,16 @@ operator|=
 name|bp
 operator|->
 name|b_flags
+expr_stmt|;
+name|sbp
+operator|->
+name|b
+operator|.
+name|b_iocmd
+operator|=
+name|bp
+operator|->
+name|b_iocmd
 expr_stmt|;
 name|sbp
 operator|->

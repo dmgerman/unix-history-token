@@ -2111,6 +2111,15 @@ operator|&=
 operator|~
 name|B_DONE
 expr_stmt|;
+comment|/* we're not done */
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_iocmd
+operator|=
+name|BIO_WRITE
+expr_stmt|;
 comment|/* we're writing now */
 name|rqe
 operator|->
@@ -2398,6 +2407,15 @@ name|b_flags
 operator|&=
 operator|~
 name|B_DONE
+expr_stmt|;
+comment|/* we're not done */
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_iocmd
+operator|=
+name|BIO_WRITE
 expr_stmt|;
 comment|/* we're writing now */
 name|rqe

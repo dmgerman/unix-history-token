@@ -885,7 +885,7 @@ name|rq
 operator|->
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 operator|==
 name|BIO_READ
 condition|?
