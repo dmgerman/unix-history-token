@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	4.27	82/10/17	*/
+comment|/*	tcp_timer.c	4.28	82/10/20	*/
 end_comment
 
 begin_include
@@ -42,13 +42,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in.h"
 end_include
 
 begin_include
@@ -61,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/if.h"
 end_include
 
 begin_include
@@ -115,12 +121,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/tcpip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_decl_stmt
@@ -386,7 +386,7 @@ name|i
 argument_list|,
 operator|(
 expr|struct
-name|sockopt
+name|socketopt
 operator|*
 operator|)
 literal|0

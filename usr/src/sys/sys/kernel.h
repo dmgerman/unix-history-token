@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kernel.h	4.4	82/09/12	*/
+comment|/*	kernel.h	4.5	82/10/20	*/
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|hostnamelen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nextpid
 decl_stmt|;
 end_decl_stmt
 
@@ -88,13 +82,6 @@ end_decl_stmt
 begin_comment
 comment|/* awoken once a second */
 end_comment
-
-begin_function_decl
-name|int
-name|selitexpire
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int

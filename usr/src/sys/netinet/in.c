@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.c	4.6	82/10/17	*/
+comment|/*	in.c	4.7	82/10/20	*/
 end_comment
 
 begin_include
@@ -109,15 +109,35 @@ name|hp
 operator|->
 name|afh_hosthash
 operator|=
-name|ntohl
-argument_list|(
 name|sin
 operator|->
 name|sin_addr
 operator|.
 name|s_addr
+expr_stmt|;
+if|#
+directive|if
+name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
+name|hp
+operator|->
+name|afh_hosthash
+operator|=
+name|ntohl
+argument_list|(
+operator|(
+name|u_long
+operator|)
+name|hp
+operator|->
+name|afh_hosthash
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
 block|}
 end_block
 
@@ -194,7 +214,7 @@ operator|=
 operator|(
 name|net
 operator|<<
-name|IN_CLASSANSHIFT
+name|IN_CLASSA_NSHIFT
 operator|)
 operator||
 name|host
@@ -211,7 +231,7 @@ operator|=
 operator|(
 name|net
 operator|<<
-name|IN_CLASSBNSHIFT
+name|IN_CLASSB_NSHIFT
 operator|)
 operator||
 name|host
@@ -222,7 +242,7 @@ operator|=
 operator|(
 name|net
 operator|<<
-name|IN_CLASSCNSHIFT
+name|IN_CLASSC_NSHIFT
 operator|)
 operator||
 name|host
@@ -279,7 +299,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|u_int
+name|u_long
 name|i
 init|=
 name|in
@@ -316,10 +336,10 @@ operator|(
 name|i
 operator|)
 operator|&
-name|IN_CLASSANET
+name|IN_CLASSA_NET
 operator|)
 operator|>>
-name|IN_CLASSANSHIFT
+name|IN_CLASSA_NSHIFT
 operator|)
 return|;
 elseif|else
@@ -337,10 +357,10 @@ operator|(
 name|i
 operator|)
 operator|&
-name|IN_CLASSBNET
+name|IN_CLASSB_NET
 operator|)
 operator|>>
-name|IN_CLASSBNSHIFT
+name|IN_CLASSB_NSHIFT
 operator|)
 return|;
 else|else
@@ -351,10 +371,10 @@ operator|(
 name|i
 operator|)
 operator|&
-name|IN_CLASSCNET
+name|IN_CLASSC_NET
 operator|)
 operator|>>
-name|IN_CLASSCNSHIFT
+name|IN_CLASSC_NSHIFT
 operator|)
 return|;
 block|}
@@ -381,7 +401,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|u_int
+name|u_long
 name|i
 init|=
 name|in
@@ -417,7 +437,7 @@ operator|(
 name|i
 operator|)
 operator|&
-name|IN_CLASSAHOST
+name|IN_CLASSA_HOST
 operator|)
 return|;
 elseif|else
@@ -434,7 +454,7 @@ operator|(
 name|i
 operator|)
 operator|&
-name|IN_CLASSBHOST
+name|IN_CLASSB_HOST
 operator|)
 return|;
 else|else
@@ -444,7 +464,7 @@ operator|(
 name|i
 operator|)
 operator|&
-name|IN_CLASSCHOST
+name|IN_CLASSC_HOST
 operator|)
 return|;
 block|}

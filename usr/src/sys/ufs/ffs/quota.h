@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	quota.h	Melb 4.1	82/07/16	*/
+comment|/*	quota.h	Melb 4.2	82/10/20	*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUOTA
+end_ifdef
 
 begin_comment
 comment|/*  *	Various junk to do with various quotas (etc) imposed upon  *	the average user (big brother finally hits unix)  *  *	The following structure exists in core for each logged on user  *	It contains global junk relevant to that user's quotas  *  *	The u_quota field of each user struct contains a pointer to  *	the quota struct relevant to the current process, this is changed  *	by 'setuid' sys call,&/or by the Q_SETUID quota() call  */
@@ -1097,6 +1103,12 @@ end_define
 begin_comment
 comment|/* this process descended from atrun */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|QUOTA
+end_endif
 
 end_unit
 

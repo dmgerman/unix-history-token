@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.67	82/10/17	*/
+comment|/*	tcp_usrreq.c	1.68	82/10/20	*/
 end_comment
 
 begin_include
@@ -42,13 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"../net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in.h"
 end_include
 
 begin_include
@@ -61,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/if.h"
 end_include
 
 begin_include

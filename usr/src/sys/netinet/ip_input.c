@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.53	82/10/17	*/
+comment|/*	ip_input.c	1.54	82/10/20	*/
 end_comment
 
 begin_include
@@ -36,6 +36,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../netinet/in.h"
 end_include
 
@@ -54,18 +84,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../netinet/ip.h"
 end_include
-
-begin_comment
-comment|/* belongs before in.h */
-end_comment
 
 begin_include
 include|#
@@ -83,24 +103,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/tcp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/kernel.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_decl_stmt
@@ -2841,11 +2843,17 @@ name|tcb
 argument_list|,
 operator|(
 expr|struct
-name|sockaddr
+name|in_addr
 operator|*
 operator|)
+operator|&
 name|sin
+operator|->
+name|sin_addr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|inetctlerrmap
 index|[
 name|cmd
@@ -2861,11 +2869,17 @@ name|udb
 argument_list|,
 operator|(
 expr|struct
-name|sockaddr
+name|in_addr
 operator|*
 operator|)
+operator|&
 name|sin
+operator|->
+name|sin_addr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|inetctlerrmap
 index|[
 name|cmd

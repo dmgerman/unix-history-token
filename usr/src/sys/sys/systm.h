@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.28	82/09/08	*/
+comment|/*	systm.h	4.29	82/10/20	*/
 end_comment
 
 begin_comment
@@ -15,26 +15,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* frequency of the clock */
-end_comment
-
-begin_decl_stmt
-name|int
-name|timezone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* minutes west from greenwich */
-end_comment
-
-begin_decl_stmt
-name|int
-name|dstflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* daylight savings time in effect? */
 end_comment
 
 begin_decl_stmt
@@ -268,16 +248,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* device for argument lists */
-end_comment
-
-begin_decl_stmt
-name|dev_t
-name|pipedev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pipe device */
 end_comment
 
 begin_decl_stmt

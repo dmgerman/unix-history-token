@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.40	82/10/13	*/
+comment|/*	if_imp.c	4.41	82/10/20	*/
 end_comment
 
 begin_include
@@ -66,19 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../h/vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ubavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/cpu.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
@@ -90,7 +84,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/vmmac.h"
+file|"../vax/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/netisr.h"
 end_include
 
 begin_include
@@ -108,13 +126,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"../netinet/ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/netisr.h"
+file|"../netinet/ip_var.h"
 end_include
 
 begin_comment
@@ -131,24 +149,6 @@ begin_include
 include|#
 directive|include
 file|"../netimp/if_imphost.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../netinet/ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../netinet/ip_var.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/route.h"
 end_include
 
 begin_include
@@ -1137,10 +1137,18 @@ argument_list|()
 decl_stmt|;
 name|impnotify
 argument_list|(
+operator|(
+name|int
+operator|)
 name|ip
 operator|->
 name|il_mtype
 argument_list|,
+operator|(
+expr|struct
+name|control_leader
+operator|*
+operator|)
 name|ip
 argument_list|,
 name|hostlookup

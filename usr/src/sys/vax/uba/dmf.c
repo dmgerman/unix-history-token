@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.11	82/10/17	*/
+comment|/*	dmf.c	4.12	82/10/20	*/
 end_comment
 
 begin_include
@@ -1742,6 +1742,9 @@ operator|(
 name|tp
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|unit
@@ -1769,6 +1772,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|unit
@@ -2480,6 +2486,9 @@ block|{
 case|case
 name|TIOCSBRK
 case|:
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|dev
@@ -2493,6 +2502,9 @@ break|break;
 case|case
 name|TIOCCBRK
 case|:
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|dev
@@ -2506,6 +2518,9 @@ break|break;
 case|case
 name|TIOCSDTR
 case|:
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|dev
@@ -2521,6 +2536,9 @@ break|break;
 case|case
 name|TIOCCDTR
 case|:
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|dev
@@ -2536,6 +2554,9 @@ break|break;
 case|case
 name|TIOCMSET
 case|:
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|dev
@@ -2557,6 +2578,9 @@ break|break;
 case|case
 name|TIOCMBIS
 case|:
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|dev
@@ -2578,6 +2602,9 @@ break|break;
 case|case
 name|TIOCMBIC
 case|:
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|dev
@@ -2854,6 +2881,9 @@ name|t_state
 operator||=
 name|TS_HUPCLS
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|unit
@@ -4268,6 +4298,9 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dmfmctl
 argument_list|(
 name|unit

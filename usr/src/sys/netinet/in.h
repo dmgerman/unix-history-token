@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.h	4.15	82/10/17	*/
+comment|/*	in.h	4.16	82/10/20	*/
 end_comment
 
 begin_comment
@@ -398,7 +398,7 @@ name|IN_CLASSA
 parameter_list|(
 name|i
 parameter_list|)
-value|(((i)&0x80000000)==0)
+value|((((long)(i))&0x80000000)==0)
 end_define
 
 begin_define
@@ -429,7 +429,7 @@ name|IN_CLASSB
 parameter_list|(
 name|i
 parameter_list|)
-value|(((i)&0xc0000000)==0x80000000)
+value|((((long)(i))&0xc0000000)==0x80000000)
 end_define
 
 begin_define
@@ -460,7 +460,7 @@ name|IN_CLASSC
 parameter_list|(
 name|i
 parameter_list|)
-value|(((i)&0xc0000000)==0xc0000000)
+value|((((long)(i))&0xc0000000)==0xc0000000)
 end_define
 
 begin_define
@@ -483,11 +483,6 @@ directive|define
 name|IN_CLASSC_HOST
 value|0x000000ff
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

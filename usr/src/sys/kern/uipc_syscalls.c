@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.32	82/10/17	*/
+comment|/*	uipc_syscalls.c	4.33	82/10/20	*/
 end_comment
 
 begin_include
@@ -930,6 +930,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
 name|soclose
 argument_list|(
 name|so

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.21	82/10/17	*/
+comment|/*	if.c	4.22	82/10/20	*/
 end_comment
 
 begin_include
@@ -706,6 +706,9 @@ name|timeout
 argument_list|(
 name|if_slowtimo
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
 name|hz

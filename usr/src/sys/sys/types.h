@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	4.6	82/10/17	*/
+comment|/*	types.h	4.7	82/10/20	*/
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|long
 name|swblk_t
 typedef|;
 end_typedef
@@ -178,13 +178,6 @@ begin_typedef
 typedef|typedef
 name|int
 name|off_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
-name|portid_t
 typedef|;
 end_typedef
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.34	82/10/17	*/
+comment|/*	ts.c	4.35	82/10/20	*/
 end_comment
 
 begin_include
@@ -4010,9 +4010,7 @@ name|uh_physuba
 expr_stmt|;
 name|ubainit
 argument_list|(
-name|ui
-operator|->
-name|ui_hd
+name|up
 argument_list|)
 expr_stmt|;
 name|DELAY

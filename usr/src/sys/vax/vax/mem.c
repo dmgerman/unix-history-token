@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.7	82/10/17	*/
+comment|/*	mem.c	4.8	82/10/20	*/
 end_comment
 
 begin_comment
@@ -329,7 +329,7 @@ operator|=
 name|min
 argument_list|(
 call|(
-name|unsigned
+name|u_int
 call|)
 argument_list|(
 name|NBPG
@@ -337,6 +337,9 @@ operator|-
 name|o
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|iov
 operator|->
 name|iov_len
@@ -349,7 +352,7 @@ argument_list|(
 name|c
 argument_list|,
 call|(
-name|unsigned
+name|u_int
 call|)
 argument_list|(
 name|NBPG
@@ -605,6 +608,9 @@ name|iov
 operator|->
 name|iov_base
 argument_list|,
+operator|(
+name|int
+operator|)
 name|c
 argument_list|,
 name|rw
@@ -684,7 +690,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|u_int
+name|int
 name|n
 decl_stmt|;
 end_decl_stmt

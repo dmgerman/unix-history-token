@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.64	82/10/13	*/
+comment|/*	machdep.c	4.65	82/10/20	*/
 end_comment
 
 begin_include
@@ -2929,9 +2929,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|update
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(

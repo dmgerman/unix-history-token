@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.10	82/10/17	*/
+comment|/*	tu.c	4.11	82/10/20	*/
 end_comment
 
 begin_if
@@ -1532,7 +1532,8 @@ name|tucmd
 operator|)
 argument_list|,
 operator|(
-name|caddr_t
+name|u_short
+operator|*
 operator|)
 operator|&
 name|tucmd
@@ -1797,7 +1798,8 @@ name|tudata
 operator|)
 argument_list|,
 operator|(
-name|caddr_t
+name|u_short
+operator|*
 operator|)
 name|tu
 operator|.
@@ -1956,6 +1958,11 @@ operator|&
 name|tudata
 operator|)
 argument_list|,
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|(
 name|tudata
 operator|.
 name|pk_flag
@@ -1970,6 +1977,7 @@ operator|&
 name|tudata
 operator|.
 name|pk_op
+operator|)
 argument_list|,
 operator|(
 name|int
@@ -2866,15 +2874,22 @@ name|cp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
+name|int
 name|c
-operator|=
+init|=
 name|n
 operator|>>
 literal|1
-expr_stmt|;
+decl_stmt|;
 specifier|register
 name|long
 name|temp

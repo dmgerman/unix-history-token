@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.19	82/10/17	*/
+comment|/*	trap.c	4.20	82/10/20	*/
 end_comment
 
 begin_include
@@ -819,6 +819,9 @@ name|u
 operator|.
 name|u_arg
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -958,8 +961,13 @@ operator|.
 name|u_error
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|lint
 name|bad
 label|:
+endif|#
+directive|endif
 name|locr0
 index|[
 name|R0
