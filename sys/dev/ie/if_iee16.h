@@ -10,6 +10,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEE16_DATAPORT
+value|0x00
+end_define
+
+begin_comment
+comment|/* shared memory data port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEE16_WRITEPTR
+value|0x02
+end_define
+
+begin_comment
+comment|/* shared memory write pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEE16_READPTR
+value|0x04
+end_define
+
+begin_comment
+comment|/* shared memory read pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEE16_ATTN
 value|0x06
 end_define
@@ -32,12 +65,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEE16_IRQ_DISABLE
+value|0x00
+end_define
+
+begin_comment
+comment|/* disable board interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEE16_IRQ_ENABLE
 value|0x08
 end_define
 
 begin_comment
 comment|/* enable board interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEE16_SHADOWPTR
+value|0x08
+end_define
+
+begin_comment
+comment|/* shadow memory pointer */
 end_comment
 
 begin_define
@@ -322,6 +377,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEE16_EEPROM_MEDIA_EXT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Using external transceiver 0 = AUI */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEE16_EEPROM_IRQ
 value|0xE000
 end_define
@@ -394,6 +460,28 @@ end_define
 
 begin_comment
 comment|/* Ethernet address, high word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEE16_EEPROM_MEDIA
+value|0x05
+end_define
+
+begin_comment
+comment|/* Selects between TP/BNC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEE16_EEPROM_MEDIA_TP
+value|0x01
+end_define
+
+begin_comment
+comment|/* if ON, using TP, else BNC */
 end_comment
 
 end_unit
