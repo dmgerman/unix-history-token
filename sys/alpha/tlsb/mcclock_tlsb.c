@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mcclock_tlsb.c,v 1.1 1998/06/10 10:55:52 dfr Exp $ */
+comment|/* $Id: mcclock_tlsb.c,v 1.2 1998/06/14 13:45:26 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -425,7 +425,7 @@ end_function
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|mcclock_tlsb
+name|mcclock
 argument_list|,
 name|gbus
 argument_list|,

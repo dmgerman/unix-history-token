@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mcclock_isa.c,v 1.1 1998/07/15 19:21:31 dfr Exp $ */
+comment|/* $Id: mcclock_isa.c,v 1.2 1998/07/22 08:30:25 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -337,7 +337,7 @@ end_function
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|mcclock_isa
+name|mcclock
 argument_list|,
 name|isa
 argument_list|,
