@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* C code produced by gperf version 2.7.2 */
+comment|/* C code produced by gperf version 2.7 */
 end_comment
 
 begin_comment
-comment|/* Command-line: gperf -o -C -E -k '1-6,$' -j1 -D -N libc_name_p /FBSD/src/gnu/usr.bin/cc/cc1plus/../../../../contrib/gcc/cp/cfns.gperf  */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
+comment|/* Command-line: gperf -o -C -E -k 1-6,$ -j1 -D -N libc_name_p ../../../egcs-CVS20000404/gcc/cp/cfns.gperf  */
 end_comment
 
 begin_ifdef
@@ -79,14 +75,6 @@ end_ifdef
 
 begin_function
 name|__inline
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|__cplusplus
-specifier|inline
-endif|#
-directive|endif
 endif|#
 directive|endif
 specifier|static

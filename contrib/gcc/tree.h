@@ -10645,6 +10645,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|bool
+name|variably_modified_type_p
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|tree_log2
 name|PARAMS

@@ -39,6 +39,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|hook_tree_bool_false
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

@@ -13212,19 +13212,6 @@ argument_list|,
 name|newdecl
 argument_list|)
 expr_stmt|;
-name|decl_attributes
-argument_list|(
-operator|&
-name|newdecl
-argument_list|,
-name|DECL_ATTRIBUTES
-argument_list|(
-name|newdecl
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|TREE_CODE
@@ -21738,6 +21725,35 @@ condition|)
 block|{
 if|if
 condition|(
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|!=
+name|TYPE_DECL
+condition|)
+block|{
+if|if
+condition|(
+name|complain
+operator|&
+name|tf_error
+condition|)
+name|error
+argument_list|(
+literal|"no type named `%#T' in `%#T'"
+argument_list|,
+name|name
+argument_list|,
+name|context
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
+if|if
+condition|(
 name|DECL_ARTIFICIAL
 argument_list|(
 name|t
@@ -27749,7 +27765,7 @@ name|TYPE_DECL
 case|:
 name|error
 argument_list|(
-literal|"typedef `%D' is initialized"
+literal|"typedef `%D' is initialized (use __typeof__ instead)"
 argument_list|,
 name|decl
 argument_list|)
@@ -30289,6 +30305,15 @@ if|if
 condition|(
 operator|!
 name|DECL_NAME
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+return|return;
+comment|/* Declarations of __FUNCTION__ and its ilk appear magically when      the variable is first used.  If that happens to be inside a      for-loop, we don't want to do anything special.  */
+if|if
+condition|(
+name|DECL_PRETTY_FUNCTION_P
 argument_list|(
 name|decl
 argument_list|)
@@ -37321,6 +37346,21 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+name|TEMPLATE_DECL
+case|:
+comment|/* Sometimes, we see a template-name used as part of a  	       decl-specifier like in  	             std::allocator alloc;                Handle that gracefully.  */
+name|error
+argument_list|(
+literal|"invalid use of template-name '%E' in a declarator"
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+break|break;
 default|default:
 name|internal_error
 argument_list|(
@@ -39877,66 +39917,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* VLAs never work as fields. */
-if|if
-condition|(
-name|decl_context
-operator|==
-name|FIELD
-operator|&&
-operator|!
-name|processing_template_decl
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|==
-name|ARRAY_TYPE
-operator|&&
-name|TYPE_DOMAIN
-argument_list|(
-name|type
-argument_list|)
-operator|!=
-name|NULL_TREE
-operator|&&
-operator|!
-name|TREE_CONSTANT
-argument_list|(
-name|TYPE_MAX_VALUE
-argument_list|(
-name|TYPE_DOMAIN
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"size of member `%D' is not constant"
-argument_list|,
-name|dname
-argument_list|)
-expr_stmt|;
-comment|/* Proceed with arbitrary constant size, so that offset 		   computations don't get confused. */
-name|type
-operator|=
-name|create_array_type_for_decl
-argument_list|(
-name|dname
-argument_list|,
-name|TREE_TYPE
-argument_list|(
-name|type
-argument_list|)
-argument_list|,
-name|integer_one_node
-argument_list|)
-expr_stmt|;
-block|}
 name|ctype
 operator|=
 name|NULL_TREE
@@ -41021,6 +41001,14 @@ elseif|else
 if|if
 condition|(
 operator|!
+name|TREE_OPERAND
+argument_list|(
+name|declarator
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+operator|!
 name|IS_AGGR_TYPE_CODE
 argument_list|(
 name|TREE_CODE
@@ -41540,6 +41528,33 @@ name|name
 argument_list|)
 expr_stmt|;
 comment|/* If we proceed with the array type as it is, we'll eventually 	 crash in tree_low_cst().  */
+name|type
+operator|=
+name|error_mark_node
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|decl_context
+operator|==
+name|FIELD
+operator|&&
+operator|!
+name|processing_template_decl
+operator|&&
+name|variably_modified_type_p
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"data member may not have variably modified type `%T'"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 name|type
 operator|=
 name|error_mark_node
@@ -51395,6 +51410,17 @@ block|{
 name|tree
 name|exprstmt
 decl_stmt|;
+comment|/* Any return from a destructor will end up here; that way all base      and member cleanups will be run when the function returns.  */
+name|add_stmt
+argument_list|(
+name|build_stmt
+argument_list|(
+name|LABEL_STMT
+argument_list|,
+name|dtor_label
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* And perform cleanups for our bases and members.  */
 name|perform_base_cleanups
 argument_list|()
@@ -51562,32 +51588,7 @@ name|tree
 name|compstmt
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|processing_template_decl
-condition|)
-comment|/* Do nothing now.  */
-empty_stmt|;
-elseif|else
-if|if
-condition|(
-name|DECL_DESTRUCTOR_P
-argument_list|(
-name|current_function_decl
-argument_list|)
-condition|)
-comment|/* Any return from a destructor will end up here.  Put it before the        cleanups so that an explicit return doesn't duplicate them.  */
-name|add_stmt
-argument_list|(
-name|build_stmt
-argument_list|(
-name|LABEL_STMT
-argument_list|,
-name|dtor_label
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Close the block; in a destructor, run the member cleanups.  */
+comment|/* Close the block.  */
 name|finish_compound_stmt
 argument_list|(
 literal|0

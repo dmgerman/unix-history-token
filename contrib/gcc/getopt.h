@@ -155,6 +155,12 @@ name|defined
 argument_list|(
 name|HAVE_DECL_GETOPT
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 specifier|extern
 name|int
 name|getopt

@@ -49,6 +49,23 @@ value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posi
 end_define
 
 begin_comment
+comment|/* The svr4 ABI for the i386 says that records and unions are returned    in memory.  In the 64bit compilation we will turn this flag off in    override_options, as we never do pcc_struct_return scheme on this target.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_PCC_STRUCT_RETURN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PCC_STRUCT_RETURN
+value|1
+end_define
+
+begin_comment
 comment|/* Provide a LINK_SPEC.  Here we provide support for the special GCC    options -static and -shared, which allow us to link things in one    of these three modes by applying the appropriate combinations of    options at link-time.     When the -shared link option is used a final link is not being    done.  */
 end_comment
 

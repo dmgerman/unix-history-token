@@ -11657,6 +11657,26 @@ return|return
 name|error_mark_node
 return|;
 block|}
+comment|/* In order to avoid all sorts of complications, we do 		 not allow variably-modified types as template 		 arguments.  */
+if|if
+condition|(
+name|variably_modified_type_p
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"template-argument `%T' is a variably modified type"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 block|}
 block|}
 block|}

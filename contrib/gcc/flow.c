@@ -1668,6 +1668,12 @@ block|}
 block|}
 endif|#
 directive|endif
+name|rebuild_jump_labels
+argument_list|(
+name|get_insns
+argument_list|()
+argument_list|)
+expr_stmt|;
 comment|/* Removing dead insns should've made jumptables really dead.  */
 name|delete_dead_jumptables
 argument_list|()

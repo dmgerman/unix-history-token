@@ -133,6 +133,12 @@ directive|include
 file|"integrate.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"langhooks.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3427,10 +3433,16 @@ argument_list|(
 name|slot
 argument_list|)
 operator|=
+operator|(
+name|lang_hooks
+operator|.
+name|honor_readonly
+operator|&&
 name|TYPE_READONLY
 argument_list|(
 name|type
 argument_list|)
+operator|)
 expr_stmt|;
 name|MEM_VOLATILE_P
 argument_list|(

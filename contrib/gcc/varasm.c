@@ -2186,13 +2186,6 @@ decl_stmt|,
 name|align
 decl_stmt|;
 block|{
-name|ASM_GLOBALIZE_LABEL
-argument_list|(
-name|file
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 name|bss_section
 argument_list|()
 expr_stmt|;

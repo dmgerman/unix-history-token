@@ -1340,6 +1340,11 @@ block|{
 name|tree
 name|fields
 decl_stmt|;
+operator|*
+name|uses_unions_p
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Note whether or not T is a union.  */
 if|if
 condition|(

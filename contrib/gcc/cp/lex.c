@@ -484,7 +484,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the declaration found for the last IDENTIFIER token read in.    yylex must look this up to detect typedefs, which get token type TYPENAME,    so it is left around in case the identifier is not a typedef but is    used in a context which makes it a reference to a variable.  */
+comment|/* the declaration found for the last IDENTIFIER token read in.  yylex    must look this up to detect typedefs, which get token type    tTYPENAME, so it is left around in case the identifier is not a    typedef but is used in a context which makes it a reference to a    variable.  */
 end_comment
 
 begin_decl_stmt
@@ -3376,7 +3376,7 @@ case|case
 name|IDENTIFIER
 case|:
 case|case
-name|TYPENAME
+name|tTYPENAME
 case|:
 case|case
 name|TYPESPEC
@@ -4398,7 +4398,7 @@ name|IDENTIFIER
 operator|&&
 name|yychar
 operator|!=
-name|TYPENAME
+name|tTYPENAME
 operator|&&
 name|yychar
 operator|!=
@@ -5202,6 +5202,10 @@ operator|(
 name|parsing
 operator|==
 literal|1
+operator|||
+name|parsing
+operator|==
+literal|3
 operator|)
 decl_stmt|;
 if|if
@@ -5274,6 +5278,10 @@ condition|(
 name|id
 operator|&&
 name|parsing
+operator|&&
+name|parsing
+operator|!=
+literal|3
 condition|)
 name|maybe_note_name_used_in_class
 argument_list|(

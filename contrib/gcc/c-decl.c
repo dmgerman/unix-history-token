@@ -12926,7 +12926,7 @@ name|TYPE_DECL
 case|:
 name|error
 argument_list|(
-literal|"typedef `%s' is initialized"
+literal|"typedef `%s' is initialized (use __typeof__ instead)"
 argument_list|,
 name|IDENTIFIER_POINTER
 argument_list|(

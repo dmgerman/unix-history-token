@@ -9204,6 +9204,16 @@ goto|goto
 name|exit_rest_of_compilation
 goto|;
 block|}
+elseif|else
+if|if
+condition|(
+name|TYPE_P
+argument_list|(
+name|parent
+argument_list|)
+condition|)
+comment|/* A function in a local class should be treated normally.  */
+break|break;
 comment|/* If requested, consider whether to make this function inline.  */
 if|if
 condition|(

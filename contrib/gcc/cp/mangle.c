@@ -176,6 +176,14 @@ comment|/* An array of the current substitution candidates, in the order      we
 name|varray_type
 name|substitutions
 decl_stmt|;
+comment|/* The entity that is being mangled.  */
+name|tree
+name|entity
+decl_stmt|;
+comment|/* True if the mangling will be different in a future version of the      ABI.  */
+name|bool
+name|need_abi_warning
+decl_stmt|;
 block|}
 name|G
 struct|;
@@ -920,7 +928,7 @@ name|start_mangling
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -936,7 +944,7 @@ name|finish_mangling
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3179,6 +3187,22 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* In G++ 3.2, the name of the template parameter was used.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|node
+argument_list|)
+operator|==
+name|TEMPLATE_TYPE_PARM
+condition|)
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+name|true
+expr_stmt|;
 if|if
 condition|(
 name|template_info
@@ -3363,6 +3387,25 @@ name|substitution
 argument_list|)
 condition|)
 return|return;
+comment|/* In G++ 3.2, the name of the template template parameter was used.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|template
+argument_list|)
+argument_list|)
+operator|==
+name|TEMPLATE_TEMPLATE_PARM
+condition|)
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+name|true
+expr_stmt|;
 name|write_prefix
 argument_list|(
 name|context
@@ -5889,6 +5932,19 @@ name|expr
 argument_list|)
 condition|)
 block|{
+comment|/* G++ 3.2 incorrectly mangled non-type template arguments of 	 enumeration type using their names.  */
+if|if
+condition|(
+name|code
+operator|==
+name|CONST_DECL
+condition|)
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+literal|1
+expr_stmt|;
 name|write_char
 argument_list|(
 literal|'L'
@@ -6113,6 +6169,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+comment|/* G++ 3.2 incorrectly put out both the "sr" code and 		 the nested name of the qualified name.  */
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+literal|1
+expr_stmt|;
 name|write_encoding
 argument_list|(
 name|TREE_OPERAND
@@ -6123,6 +6187,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 for|for
@@ -6469,6 +6534,19 @@ name|node
 argument_list|)
 condition|)
 block|{
+comment|/* G++ 3.2 incorrectly mangled non-type template arguments of 	 enumeration type using their names.  */
+if|if
+condition|(
+name|code
+operator|==
+name|CONST_DECL
+condition|)
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+literal|1
+expr_stmt|;
 name|write_char
 argument_list|(
 literal|'L'
@@ -6946,8 +7024,23 @@ specifier|static
 specifier|inline
 name|void
 name|start_mangling
-parameter_list|()
+parameter_list|(
+name|tree
+name|entity
+parameter_list|)
 block|{
+name|G
+operator|.
+name|entity
+operator|=
+name|entity
+expr_stmt|;
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+name|false
+expr_stmt|;
 name|obstack_free
 argument_list|(
 operator|&
@@ -6978,8 +7071,31 @@ specifier|const
 name|char
 modifier|*
 name|finish_mangling
-parameter_list|()
+parameter_list|(
+name|bool
+name|warn
+parameter_list|)
 block|{
+if|if
+condition|(
+name|warn_abi
+operator|&&
+name|warn
+operator|&&
+name|G
+operator|.
+name|need_abi_warning
+condition|)
+name|warning
+argument_list|(
+literal|"the mangled name of `%D' will change in a future "
+literal|"version of GCC"
+argument_list|,
+name|G
+operator|.
+name|entity
+argument_list|)
+expr_stmt|;
 comment|/* Clear all the substitutions.  */
 name|VARRAY_POP_ALL
 argument_list|(
@@ -7126,7 +7242,9 @@ modifier|*
 name|result
 decl_stmt|;
 name|start_mangling
-argument_list|()
+argument_list|(
+name|decl
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7242,7 +7360,10 @@ block|}
 name|result
 operator|=
 name|finish_mangling
-argument_list|()
+argument_list|(
+comment|/*warn=*/
+name|true
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7320,7 +7441,9 @@ modifier|*
 name|result
 decl_stmt|;
 name|start_mangling
-argument_list|()
+argument_list|(
+name|type
+argument_list|)
 expr_stmt|;
 name|write_type
 argument_list|(
@@ -7330,7 +7453,10 @@ expr_stmt|;
 name|result
 operator|=
 name|finish_mangling
-argument_list|()
+argument_list|(
+comment|/*warn=*/
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7406,7 +7532,9 @@ name|result
 decl_stmt|;
 comment|/* We don't have an actual decl here for the special component, so      we can't just process the<encoded-name>.  Instead, fake it.  */
 name|start_mangling
-argument_list|()
+argument_list|(
+name|type
+argument_list|)
 expr_stmt|;
 comment|/* Start the mangling.  */
 name|write_string
@@ -7428,7 +7556,10 @@ expr_stmt|;
 name|result
 operator|=
 name|finish_mangling
-argument_list|()
+argument_list|(
+comment|/*warn=*/
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7577,7 +7708,9 @@ modifier|*
 name|result
 decl_stmt|;
 name|start_mangling
-argument_list|()
+argument_list|(
+name|type
+argument_list|)
 expr_stmt|;
 name|write_string
 argument_list|(
@@ -7618,7 +7751,10 @@ expr_stmt|;
 name|result
 operator|=
 name|finish_mangling
-argument_list|()
+argument_list|(
+comment|/*warn=*/
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7672,7 +7808,9 @@ modifier|*
 name|result
 decl_stmt|;
 name|start_mangling
-argument_list|()
+argument_list|(
+name|fn_decl
+argument_list|)
 expr_stmt|;
 name|write_string
 argument_list|(
@@ -7740,7 +7878,10 @@ expr_stmt|;
 name|result
 operator|=
 name|finish_mangling
-argument_list|()
+argument_list|(
+comment|/*warn=*/
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7864,7 +8005,9 @@ name|variable
 decl_stmt|;
 block|{
 name|start_mangling
-argument_list|()
+argument_list|(
+name|variable
+argument_list|)
 expr_stmt|;
 name|write_string
 argument_list|(
@@ -7917,7 +8060,10 @@ return|return
 name|get_identifier
 argument_list|(
 name|finish_mangling
-argument_list|()
+argument_list|(
+comment|/*warn=*/
+name|false
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -7938,7 +8084,9 @@ name|variable
 decl_stmt|;
 block|{
 name|start_mangling
-argument_list|()
+argument_list|(
+name|variable
+argument_list|)
 expr_stmt|;
 name|write_string
 argument_list|(
@@ -7957,7 +8105,10 @@ return|return
 name|get_identifier
 argument_list|(
 name|finish_mangling
-argument_list|()
+argument_list|(
+comment|/*warn=*/
+name|false
+argument_list|)
 argument_list|)
 return|;
 block|}

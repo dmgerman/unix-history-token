@@ -6364,7 +6364,10 @@ argument_list|)
 condition|?
 name|c_alignof
 argument_list|(
+name|complete_type
+argument_list|(
 name|t
+argument_list|)
 argument_list|)
 else|:
 name|c_alignof_expr
