@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.6 %G%"
+literal|"@(#)GETNAME.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,11 +433,35 @@ name|fname
 argument_list|,
 literal|"#tmp.%c%d"
 argument_list|,
+name|filep
+operator|->
+name|fblk
+operator|<=
+literal|'z'
+operator|-
+literal|'a'
+operator|+
+literal|1
+condition|?
 literal|'a'
 operator|+
 name|filep
 operator|->
 name|fblk
+else|:
+literal|'A'
+operator|+
+name|filep
+operator|->
+name|fblk
+operator|-
+operator|(
+literal|'z'
+operator|-
+literal|'a'
+operator|+
+literal|1
+operator|)
 argument_list|,
 name|getpid
 argument_list|()
