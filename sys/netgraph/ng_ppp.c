@@ -6479,6 +6479,9 @@ decl_stmt|;
 name|item_p
 name|item
 decl_stmt|;
+name|int
+name|endseq
+decl_stmt|;
 name|now
 operator|.
 name|tv_sec
@@ -6717,6 +6720,12 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* Extract completed packet */
+name|endseq
+operator|=
+name|end
+operator|->
+name|seq
+expr_stmt|;
 name|ng_ppp_get_packet
 argument_list|(
 name|node
@@ -6739,9 +6748,7 @@ name|priv
 operator|->
 name|mseq
 argument_list|,
-name|end
-operator|->
-name|seq
+name|endseq
 argument_list|)
 operator|<
 literal|0
@@ -6751,9 +6758,7 @@ name|priv
 operator|->
 name|mseq
 operator|=
-name|end
-operator|->
-name|seq
+name|endseq
 expr_stmt|;
 for|for
 control|(
