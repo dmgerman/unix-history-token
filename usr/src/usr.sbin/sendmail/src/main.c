@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.62 (Berkeley) %G%"
+literal|"@(#)main.c	6.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3908,7 +3908,9 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"starting daemon: %s"
+literal|"starting daemon (%s): %s"
+argument_list|,
+name|Version
 argument_list|,
 name|dtype
 operator|+
