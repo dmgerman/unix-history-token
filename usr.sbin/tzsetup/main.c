@@ -10,7 +10,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.5 1996/03/22 22:22:38 joerg Exp $"
+literal|"$Id: main.c,v 1.6 1996/03/31 09:55:00 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -932,6 +932,35 @@ condition|)
 return|return
 literal|1
 return|;
+if|if
+condition|(
+name|lstat
+argument_list|(
+name|PATH_LOCALTIME
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+comment|/* The destination is already a symlink, symlink it. */
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|PATH_LOCALTIME
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|msg
@@ -943,14 +972,6 @@ name|PATH_ZONEINFO
 literal|"/%s"
 argument_list|,
 name|zone
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|PATH_LOCALTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -975,6 +996,46 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+block|}
+else|else
+block|{
+comment|/* Copy it. */
+name|snprintf
+argument_list|(
+name|msg
+argument_list|,
+sizeof|sizeof
+name|msg
+argument_list|,
+literal|"install -C -o bin -g bin -m 0444 "
+name|PATH_ZONEINFO
+literal|"/%s "
+name|PATH_LOCALTIME
+argument_list|,
+name|zone
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|system
+argument_list|(
+name|msg
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|dialog_notify
+argument_list|(
+literal|"Could not copy zone information into "
+name|PATH_LOCALTIME
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 block|}
 name|snprintf
 argument_list|(
