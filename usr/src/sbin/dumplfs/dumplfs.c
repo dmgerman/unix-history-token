@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.12 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -867,8 +867,6 @@ if|if
 condition|(
 operator|!
 operator|(
-name|dip
-operator|=
 name|dpage
 operator|=
 name|malloc
@@ -895,28 +893,30 @@ name|addr
 operator|<<
 name|daddr_shift
 argument_list|,
-name|dip
+name|dpage
 argument_list|,
 name|psize
 argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|lfsp
-operator|->
-name|lfs_inopb
-condition|;
-name|i
-operator|++
-operator|,
 name|dip
-operator|++
+operator|=
+name|dpage
+operator|+
+name|INOPB
+argument_list|(
+name|lfsp
+argument_list|)
+operator|-
+literal|1
+init|;
+name|dip
+operator|>=
+name|dpage
+condition|;
+operator|--
+name|dip
 control|)
 if|if
 condition|(
@@ -929,11 +929,9 @@ condition|)
 break|break;
 if|if
 condition|(
-name|i
-operator|>=
-name|lfsp
-operator|->
-name|lfs_inopb
+name|dip
+operator|<
+name|dpage
 condition|)
 name|err
 argument_list|(
@@ -3121,13 +3119,33 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s0x%X\t%s%d\t%s0x%X\t%s0x%X\n%s0x%X\t%s0x%X\t"
+literal|"%s%d\t%s%d\t%s%d\n"
 argument_list|,
 literal|"bfree    "
 argument_list|,
 name|lfsp
 operator|->
 name|lfs_bfree
+argument_list|,
+literal|"avail    "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_avail
+argument_list|,
+literal|"uinodes  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_uinodes
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s%d\t%s0x%X\t%s0x%X\n%s0x%X\t%s0x%X\t"
 argument_list|,
 literal|"nfiles   "
 argument_list|,
@@ -3193,7 +3211,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s0x%X\t%s%d\t%s%d\t%s%d\n"
+literal|"%s%d\t%s0x%X\t%s%d%s%d\t%s%d\n"
 argument_list|,
 literal|"seglock  "
 argument_list|,
@@ -3231,7 +3249,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s0x%X\t%s%d\n"
+literal|"%s%d\t%s%d\t%s0x%X\t%s%d\n"
+argument_list|,
+literal|"nactive  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_nactive
 argument_list|,
 literal|"fmod     "
 argument_list|,
