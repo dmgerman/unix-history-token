@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.5.1.1 (Berkeley) %G%"
+literal|"@(#)ed.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,8 +419,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|tfname
+index|[]
+init|=
+literal|"/tmp/eXXXXX"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,11 +832,9 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|tfname
-operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/eXXXXX"
+name|tfname
 argument_list|)
 expr_stmt|;
 name|init

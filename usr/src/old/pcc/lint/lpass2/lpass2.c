@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.9	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.10	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1791,7 +1791,7 @@ argument|if( pt2->aty == UNSIGNED&& pt1->aty == INT ) return(
 literal|0
 argument|); 		else if( pt2->aty == ULONG&& pt1->aty == LONG ) return(
 literal|0
-argument|); 		}  	return( pt1->aty != pt2->aty ); 	}  struct tb { int m; char * nm };  struct tb dfs[] = { 	LDI
+argument|); 		}  	return( pt1->aty != pt2->aty ); 	}  struct tb { int m; char *nm; };  struct tb dfs[] = { 	LDI
 argument_list|,
 literal|"LDI"
 argument_list|,

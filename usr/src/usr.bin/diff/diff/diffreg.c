@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.17 %G%"
+literal|"@(#)diffreg.c 4.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
