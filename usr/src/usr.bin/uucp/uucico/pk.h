@@ -34,6 +34,20 @@ name|HDRSIZ
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|PACKSIZE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDOWS
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|pack
@@ -181,8 +195,11 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* input checksums */
-name|DSYSTEM
-expr_stmt|;
+name|int
+name|p_ifn
+decl_stmt|,
+name|p_ofn
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -206,6 +223,22 @@ define|#
 directive|define
 name|MOD8
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PKASSERT
+parameter_list|(
+name|e
+parameter_list|,
+name|s1
+parameter_list|,
+name|s2
+parameter_list|,
+name|i1
+parameter_list|)
+value|if (!(e)) {assert(s1, s2, i1);pkfail();} else
 end_define
 
 begin_define
@@ -537,10 +570,6 @@ directive|define
 name|PKIPRI
 value|30
 end_define
-
-begin_comment
-comment|/*  * allegra.1402, allegra!honey, Peter Honeyman. Increase PKLINES  * to avoid PKSTART FAILEDs.  (This is a kludge.)  */
-end_comment
 
 begin_define
 define|#
