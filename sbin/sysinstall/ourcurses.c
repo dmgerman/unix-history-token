@@ -864,7 +864,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|800
+literal|256
 index|]
 decl_stmt|;
 if|if
@@ -881,7 +881,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Odd, I thought I had a file called %s around here somewhere,\nbut I can't seem to find it now that I need it.  Sorry about that"
+literal|"Odd, I thought I had a file called %s around here somewhere,\nbut I can't seem to find it now that I need it.  Sorry about that!"
 argument_list|,
 name|filename
 argument_list|)
@@ -904,11 +904,20 @@ block|}
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_textbox
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"/stand/gzip -c -d %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|dialog_prgbox
 argument_list|(
 name|header
 argument_list|,
-name|filename
+name|buf
 argument_list|,
 name|LINES
 operator|-

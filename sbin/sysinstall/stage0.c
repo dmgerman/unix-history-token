@@ -60,7 +60,7 @@ literal|"Read the `READ ME FIRST' File ."
 block|,
 literal|"2. Release Notes"
 block|,
-literal|"Read the 2.0 release notes (recommended)."
+literal|"Read the 2.0 Release Notes (recommended)."
 block|,
 literal|"3. COPYRIGHT"
 block|,
