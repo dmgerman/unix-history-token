@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)name.c	4.3 %G%"
+literal|"@(#)name.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,9 +370,44 @@ argument_list|)
 expr_stmt|;
 name|IF
 name|xp
-modifier|&
+operator|&
 name|N_ENVNAM
 name|THEN
+comment|/* 				 * Importing IFS can be very dangerous 				 */
+name|IF
+operator|!
+name|bcmp
+argument_list|(
+argument|argi
+argument_list|,
+literal|"IFS="
+argument_list|,
+argument|sizeof(
+literal|"IFS="
+argument|) -
+literal|1
+argument_list|)
+name|THEN
+name|int
+name|uid
+expr_stmt|;
+name|IF
+argument_list|(
+name|uid
+operator|=
+name|getuid
+argument_list|()
+argument_list|)
+operator|!=
+name|geteuid
+argument_list|()
+name|ORF
+operator|!
+name|uid
+name|THEN
+return|return;
+name|FI
+name|FI
 name|n
 operator|->
 name|namenv
