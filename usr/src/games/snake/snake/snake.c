@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	5.9 (Berkeley) %G%"
+literal|"@(#)snake.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -1641,7 +1653,7 @@ name|post
 argument_list|(
 name|cashvalue
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|length
@@ -2121,9 +2133,25 @@ operator|=
 name|getuid
 argument_list|()
 operator|)
-operator|>
+operator|<=
 literal|1
-operator|&&
+condition|)
+block|{
+name|pr
+argument_list|(
+literal|"No saved scores for uid %d.\n"
+argument_list|,
+name|uid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|rawscores
 operator|=
@@ -2131,13 +2159,35 @@ name|open
 argument_list|(
 name|_PATH_RAWSCORES
 argument_list|,
-literal|2
+name|O_RDWR
+operator||
+name|O_CREAT
+argument_list|,
+literal|0644
 argument_list|)
 operator|)
-operator|>=
+operator|<
 literal|0
 condition|)
 block|{
+name|pr
+argument_list|(
+literal|"No score file %s: %s.\n"
+argument_list|,
+name|_PATH_RAWSCORES
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* Figure out what happened in the past */
 name|read
 argument_list|(
@@ -2199,6 +2249,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|flag
 condition|)
 return|return
@@ -2327,9 +2378,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|!=
-name|NULL
+name|allbwho
 condition|)
 name|pr
 argument_list|(
@@ -2364,18 +2413,6 @@ expr_stmt|;
 name|close
 argument_list|(
 name|rawscores
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|flag
-condition|)
-name|pr
-argument_list|(
-literal|"Unable to post score.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3904,7 +3941,7 @@ name|post
 argument_list|(
 name|cashvalue
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 condition|)
 block|{
