@@ -79,6 +79,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * soelim - a filter to process n/troff input eliminating .so's  *  * Author: Bill Joy UCB July 8, 1977  *  * This program eliminates .so's from a n/troff input stream.  * It can be used to prepare safe input for submission to the  * phototypesetter since the software supporting the operator  * doesn't let him do chdir.  *  * This is a kludge and the operator should be given the  * ability to do chdir.  *  * This program is more generally useful, it turns out, because  * the program tbl doesn't understand ".so" directives.  */
 end_comment
