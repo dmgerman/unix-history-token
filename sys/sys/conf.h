@@ -51,24 +51,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|disk
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|vnode
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|buf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|snapdata
 struct_decl|;
 end_struct_decl
@@ -76,6 +58,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|devfs_dirent
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|cdevsw
 struct_decl|;
 end_struct_decl
 
