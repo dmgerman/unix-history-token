@@ -1,14 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.19 1995/09/07 14:17:46 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.20 1995/09/07 15:40:51 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__PCISUPPORT_C__
-value|"pl4 95/03/21"
-end_define
 
 begin_include
 include|#
@@ -233,20 +226,6 @@ operator|(
 literal|"Intel 82375EB PCI-EISA bridge"
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|undef
-case|case
-literal|0x04868086
-case|:
-return|return
-operator|(
-literal|"Intel 82430ZX (Aries)"
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* undef */
 case|case
 literal|0x04a38086
 case|:
@@ -361,6 +340,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCI_QUIET
+end_ifndef
 
 begin_define
 define|#
@@ -2882,6 +2867,15 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCI_QUIET */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2894,6 +2888,9 @@ name|int
 name|unit
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PCI_QUIET
 if|if
 condition|(
 operator|!
@@ -2986,8 +2983,17 @@ expr_stmt|;
 break|break;
 block|}
 empty_stmt|;
+endif|#
+directive|endif
+comment|/* PCI_QUIET */
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|undef
+end_ifdef
 
 begin_comment
 comment|/*--------------------------------------------------------- ** **	Catchall driver for VGA devices ** **	By Garrett Wollman **<wollman@halloran-eldar.lcs.mit.edu> ** **--------------------------------------------------------- */
@@ -3117,7 +3123,9 @@ operator|==
 name|PCI_SUBCLASS_DISPLAY_VGA
 condition|)
 return|return
+operator|(
 literal|"VGA-compatible display device"
+operator|)
 return|;
 else|else
 return|return
@@ -3160,6 +3168,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* undef */
+end_comment
 
 begin_comment
 comment|/*--------------------------------------------------------- ** **	Hook for loadable pci drivers ** **--------------------------------------------------------- */
