@@ -139,6 +139,9 @@ decl_stmt|;
 name|struct
 name|ACPIsdt
 modifier|*
+name|rsdt
+decl_stmt|,
+modifier|*
 name|sdt
 decl_stmt|;
 name|dsdt_input_file
@@ -309,7 +312,7 @@ argument_list|,
 name|dsdt_input_file
 argument_list|)
 expr_stmt|;
-name|sdt
+name|rsdt
 operator|=
 name|dsdt_load_file
 argument_list|(
@@ -328,7 +331,7 @@ argument_list|(
 literal|"loading RSD PTR from /dev/mem"
 argument_list|)
 expr_stmt|;
-name|sdt
+name|rsdt
 operator|=
 name|sdt_load_devmem
 argument_list|()
@@ -351,7 +354,7 @@ argument_list|)
 expr_stmt|;
 name|sdt_print_all
 argument_list|(
-name|sdt
+name|rsdt
 argument_list|)
 expr_stmt|;
 block|}
@@ -367,9 +370,11 @@ name|sdt
 operator|=
 name|sdt_from_rsdt
 argument_list|(
-name|sdt
+name|rsdt
 argument_list|,
 literal|"FACP"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sdt
@@ -385,6 +390,17 @@ name|sdt
 operator|->
 name|body
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sdt
+operator|=
+name|rsdt
+expr_stmt|;
+name|rsdt
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Dump the DSDT to a file */
@@ -410,6 +426,8 @@ name|dsdt_save_file
 argument_list|(
 name|dsdt_output_file
 argument_list|,
+name|rsdt
+argument_list|,
 name|sdt
 argument_list|)
 expr_stmt|;
@@ -431,6 +449,8 @@ argument_list|)
 expr_stmt|;
 name|aml_disassemble
 argument_list|(
+name|rsdt
+argument_list|,
 name|sdt
 argument_list|)
 expr_stmt|;
