@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.26 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3954,7 +3954,11 @@ condition|(
 operator|!
 name|logged_in
 condition|)
-return|return;
+name|_exit
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
 name|seteuid
 argument_list|(
 literal|0
