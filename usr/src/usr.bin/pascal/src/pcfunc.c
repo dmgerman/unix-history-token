@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcfunc.c 1.11 %G%"
+literal|"@(#)pcfunc.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1008,7 +1008,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|P2CHAR
 argument_list|,
 literal|0
 argument_list|)
@@ -1017,7 +1017,7 @@ name|putop
 argument_list|(
 name|P2COMOP
 argument_list|,
-name|P2INT
+name|P2CHAR
 argument_list|)
 expr_stmt|;
 return|return
@@ -1819,19 +1819,33 @@ argument_list|,
 name|P2INT
 argument_list|)
 expr_stmt|;
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|p2type
+argument_list|(
+name|p1
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 name|p1
 operator|=
-name|rvalue
+name|stkrval
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 name|argv
 index|[
 literal|1
 index|]
 argument_list|,
-name|NIL
+name|NLNIL
 argument_list|,
 name|RREQ
 argument_list|)
@@ -1860,6 +1874,16 @@ else|:
 name|P2MINUS
 argument_list|,
 name|P2INT
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|p2type
+argument_list|(
+name|p1
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1916,7 +1940,7 @@ return|;
 block|}
 name|p1
 operator|=
-name|rvalue
+name|stkrval
 argument_list|(
 operator|(
 name|int
@@ -1932,6 +1956,7 @@ argument_list|,
 name|RREQ
 argument_list|)
 expr_stmt|;
+comment|/* 			     *	THIS IS MACHINE-DEPENDENT!!! 			     */
 name|putleaf
 argument_list|(
 name|P2ICON
@@ -1950,6 +1975,13 @@ argument_list|(
 name|P2AND
 argument_list|,
 name|P2INT
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|P2CHAR
 argument_list|)
 expr_stmt|;
 return|return
@@ -2060,6 +2092,13 @@ argument_list|,
 name|RREQ
 argument_list|)
 expr_stmt|;
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|P2CHAR
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|nl
@@ -2166,7 +2205,7 @@ expr_stmt|;
 return|return
 name|nl
 operator|+
-name|T2INT
+name|T4INT
 return|;
 case|case
 name|O_EOLN
@@ -2237,6 +2276,13 @@ argument_list|(
 name|P2CALL
 argument_list|,
 name|P2INT
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|P2CHAR
 argument_list|)
 expr_stmt|;
 return|return
@@ -2313,6 +2359,13 @@ argument_list|(
 name|P2CALL
 argument_list|,
 name|P2INT
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|P2CHAR
 argument_list|)
 expr_stmt|;
 return|return
