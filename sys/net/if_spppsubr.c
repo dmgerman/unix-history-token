@@ -1218,6 +1218,12 @@ name|u_short
 name|protocol
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1242,6 +1248,12 @@ name|u_short
 name|len
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1275,6 +1287,12 @@ name|u_short
 name|time1
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1282,7 +1300,7 @@ begin_define
 define|#
 directive|define
 name|CISCO_PACKET_LEN
-value|18
+value|sizeof (struct cisco_packet)
 end_define
 
 begin_comment
