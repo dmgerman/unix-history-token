@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	7.11	90/12/16	*/
+comment|/*	cy.c	7.12	91/05/04	*/
 end_comment
 
 begin_comment
@@ -725,11 +725,11 @@ if|if
 condition|(
 name|func
 operator|==
-name|READ
+name|F_READ
 operator|||
 name|func
 operator|==
-name|WRITE
+name|F_WRITE
 condition|)
 block|{
 name|struct
@@ -962,7 +962,7 @@ name|func
 condition|)
 block|{
 case|case
-name|READ
+name|F_READ
 case|:
 ifdef|#
 directive|ifdef
@@ -1020,7 +1020,7 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-name|WRITE
+name|F_WRITE
 case|:
 name|tpb
 operator|.

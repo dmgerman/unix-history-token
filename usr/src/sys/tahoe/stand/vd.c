@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vd.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vd.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -427,7 +427,7 @@ argument_list|(
 operator|&
 name|tio
 argument_list|,
-name|READ
+name|F_READ
 argument_list|)
 operator|!=
 name|DEV_BSIZE
@@ -1669,7 +1669,7 @@ operator|=
 operator|(
 name|cmd
 operator|==
-name|READ
+name|F_READ
 condition|?
 name|VDOP_RD
 else|:
@@ -1915,7 +1915,7 @@ name|i_unit
 argument_list|,
 name|cmd
 operator|==
-name|READ
+name|F_READ
 condition|?
 literal|"read"
 else|:
