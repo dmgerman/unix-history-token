@@ -7719,7 +7719,8 @@ operator|||
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|reqpt
@@ -7860,7 +7861,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -7934,7 +7936,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -7966,7 +7969,7 @@ expr_stmt|;
 if|if
 condition|(
 name|tp
-operator|>
+operator|>=
 name|buf
 operator|+
 sizeof|sizeof
@@ -8072,10 +8075,15 @@ literal|'\0'
 expr_stmt|;
 while|while
 condition|(
+name|tp
+operator|!=
+name|buf
+operator|&&
 name|isspace
 argument_list|(
 call|(
-name|int
+name|unsigned
+name|char
 call|)
 argument_list|(
 operator|*
