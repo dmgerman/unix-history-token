@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.17 1998/11/15 19:30:48 eivind Exp $ */
+comment|/* $Id: if_wl.c,v 1.18 1998/12/07 21:58:21 archie Exp $ */
 end_comment
 
 begin_comment
@@ -1737,7 +1737,7 @@ name|IFF_MULTICAST
 expr_stmt|;
 endif|#
 directive|endif
-endif|MULTICAST
+comment|/* MULTICAST */
 name|ifp
 operator|->
 name|if_name
@@ -2965,7 +2965,7 @@ expr_stmt|;
 comment|/* Display MMC registers */
 endif|#
 directive|endif
-endif|WLDEBUG
+comment|/* WLDEBUG */
 name|wlbldcu
 argument_list|(
 name|unit
@@ -5443,7 +5443,7 @@ directive|endif
 break|break;
 endif|#
 directive|endif
-endif|MULTICAST
+comment|/* MULTICAST */
 comment|/* DEVICE SPECIFIC */
 comment|/* copy the PSA out to the caller */
 case|case
@@ -6578,7 +6578,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|notdef
+comment|/* notdef */
 if|if
 condition|(
 name|ac_status
@@ -7485,7 +7485,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-endif|WLDEBUG
+comment|/* WLDEBUG */
 comment|/*  * wlxmt:  *  *	This routine fills in the appropriate registers and memory  *	locations on the WaveLAN board and starts the board off on  *	the transmit.  *  * input	: board number of interest, and a pointer to the mbuf  * output	: board memory and registers are set for xfer and attention  *  */
 specifier|static
 name|void
@@ -7754,7 +7754,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|WLDEBUG
+comment|/* WLDEBUG */
 name|outw
 argument_list|(
 name|PIOR0
@@ -8169,7 +8169,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|WLDEBUG
+comment|/* WLDEBUG */
 block|}
 ifdef|#
 directive|ifdef
@@ -8197,7 +8197,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|WLDEBUG
+comment|/* WLDEBUG */
 name|outw
 argument_list|(
 name|PIOR0
@@ -8343,7 +8343,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|WLDEBUG
+comment|/* WLDEBUG */
 name|outw
 argument_list|(
 name|PIOR0
@@ -9169,7 +9169,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-endif|MULTICAST
+comment|/* MULTICAST */
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -9899,7 +9899,7 @@ literal|0
 return|;
 endif|#
 directive|endif
-endif|MULTICAST
+comment|/* MULTICAST */
 name|outw
 argument_list|(
 name|PIOR1

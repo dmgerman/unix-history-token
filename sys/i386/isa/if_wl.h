@@ -597,8 +597,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|_IF_WL_H
 end_endif
+
+begin_comment
+comment|/* _IF_WL_H */
+end_comment
 
 end_unit
 
