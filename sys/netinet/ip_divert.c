@@ -2948,6 +2948,13 @@ operator|&
 name|divcbinfo
 argument_list|)
 expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|divcbinfo
+operator|.
+name|ipi_zone
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 return|return
