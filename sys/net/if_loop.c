@@ -923,23 +923,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAC
-comment|/*  		 * XXXMAC: Once we put labels in tags and proper 		 * primitives are used for relocating mbuf header 		 * data, this will no longer be required. 		 */
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|label
-operator|.
-name|l_flags
-operator|&=
-operator|~
-name|MAC_FLAG_INITIALIZED
-expr_stmt|;
-endif|#
-directive|endif
 name|MCLGET
 argument_list|(
 name|n

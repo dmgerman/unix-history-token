@@ -326,7 +326,9 @@ if|#
 directive|if
 literal|0
 comment|/* see below for why these are not enabled */
-block|M_ASSERTPKTHDR(to); 	KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), 	    ("m_move_pkthdr: to has tags"));
+block|M_ASSERTPKTHDR(to);
+comment|/* Note: with MAC, this may not be a good assertion. */
+block|KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), 	    ("m_move_pkthdr: to has tags"));
 endif|#
 directive|endif
 name|KASSERT
@@ -349,6 +351,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
+comment|/* 	 * XXXMAC: It could be this should also occur for non-MAC? 	 */
 if|if
 condition|(
 name|to
@@ -357,9 +360,11 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|mac_destroy_mbuf
+name|m_tag_delete_chain
 argument_list|(
 name|to
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -391,26 +396,6 @@ operator|->
 name|m_pkthdr
 expr_stmt|;
 comment|/* especially tags */
-ifdef|#
-directive|ifdef
-name|MAC
-name|mac_init_mbuf
-argument_list|(
-name|to
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* XXXMAC no way to fail */
-name|mac_create_mbuf_from_mbuf
-argument_list|(
-name|from
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -458,7 +443,9 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * The mbuf allocator only initializes the pkthdr 	 * when the mbuf is allocated with MGETHDR. Many users 	 * (e.g. m_copy*, m_prepend) use MGET and then 	 * smash the pkthdr as needed causing these 	 * assertions to trip.  For now just disable them. 	 */
-block|M_ASSERTPKTHDR(to); 	KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), ("m_dup_pkthdr: to has tags"));
+block|M_ASSERTPKTHDR(to);
+comment|/* Note: with MAC, this may not be a good assertion. */
+block|KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), ("m_dup_pkthdr: to has tags"));
 endif|#
 directive|endif
 ifdef|#
@@ -472,9 +459,11 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|mac_destroy_mbuf
+name|m_tag_delete_chain
 argument_list|(
 name|to
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -527,26 +516,6 @@ name|from
 operator|->
 name|m_pkthdr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAC
-name|mac_init_mbuf
-argument_list|(
-name|to
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* XXXMAC no way to fail */
-name|mac_create_mbuf_from_mbuf
-argument_list|(
-name|from
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -639,7 +608,6 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-block|{
 name|M_MOVE_PKTHDR
 argument_list|(
 name|mn
@@ -647,17 +615,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAC
-name|mac_destroy_mbuf
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 name|mn
 operator|->
 name|m_next

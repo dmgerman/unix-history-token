@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_label.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -229,11 +223,6 @@ argument_list|)
 name|tags
 expr_stmt|;
 comment|/* list of packet tags */
-name|struct
-name|label
-name|label
-decl_stmt|;
-comment|/* MAC label of data in packet */
 block|}
 struct|;
 end_struct
@@ -2278,6 +2267,17 @@ end_define
 
 begin_comment
 comment|/* ipforward info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_MACLABEL
+value|19
+end_define
+
+begin_comment
+comment|/* MAC label */
 end_comment
 
 begin_comment

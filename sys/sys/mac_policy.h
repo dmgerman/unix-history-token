@@ -406,6 +406,23 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
+name|mpo_copy_mbuf_label
+function_decl|)
+parameter_list|(
+name|struct
+name|label
+modifier|*
+name|src
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|dest
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|mpo_copy_pipe_label
 function_decl|)
 parameter_list|(
@@ -3576,6 +3593,13 @@ define|#
 directive|define
 name|MPC_LOADTIME_FLAG_UNLOADOK
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_LOADTIME_FLAG_LABELMBUFS
+value|0x00000004
 end_define
 
 begin_comment
