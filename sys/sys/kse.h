@@ -92,6 +92,9 @@ name|int
 name|tm_sticks
 decl_stmt|;
 name|int
+name|tm_slices
+decl_stmt|;
+name|int
 name|tm_spare
 index|[
 literal|8
