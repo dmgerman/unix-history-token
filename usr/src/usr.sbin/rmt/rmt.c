@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	5.1 (Berkeley) %G%"
+literal|"@(#)rmt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1081,6 +1081,10 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+name|maxrecsize
+operator|=
+name|size
+expr_stmt|;
 while|while
 condition|(
 name|size
