@@ -7115,7 +7115,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MN: sizeof(struct m32xreg) = %d, should have been 256\n"
+literal|"MN: sizeof(struct m32xreg) = %zd, should have been 256\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7143,7 +7143,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MN: sizeof(struct f54rreg) = %d, should have been 128\n"
+literal|"MN: sizeof(struct f54rreg) = %zd, should have been 128\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7171,7 +7171,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MN: sizeof(struct f54wreg) = %d, should have been 128\n"
+literal|"MN: sizeof(struct f54wreg) = %zd, should have been 128\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
