@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.12 1995/11/24 13:27:24 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.13 1995/12/21 19:20:55 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1253,13 +1253,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|argp
-operator|=
-operator|&
-name|frame
-operator|->
-name|f_arg0
-expr_stmt|;
 if|if
 condition|(
 name|lastframe
@@ -1313,6 +1306,21 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|lastframe
+operator|==
+name|NULL
+operator|&&
+name|offset
+operator|==
+literal|0
+operator|&&
+operator|!
+name|have_addr
+condition|)
 name|argp
 operator|=
 operator|&
@@ -1333,8 +1341,14 @@ operator|)
 operator|->
 name|f_arg0
 expr_stmt|;
-block|}
-block|}
+else|else
+name|argp
+operator|=
+operator|&
+name|frame
+operator|->
+name|f_arg0
+expr_stmt|;
 name|narg
 operator|=
 name|MAXNARG
