@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -144,7 +150,25 @@ name|numempty
 block|,
 comment|/* p_sign_posn */
 name|numempty
+block|,
 comment|/* n_sign_posn */
+name|numempty
+block|,
+comment|/* int_p_cs_precedes */
+name|numempty
+block|,
+comment|/* int_n_cs_precedes */
+name|numempty
+block|,
+comment|/* int_p_sep_by_space */
+name|numempty
+block|,
+comment|/* int_n_sep_by_space */
+name|numempty
+block|,
+comment|/* int_p_sign_posn */
+name|numempty
+comment|/* int_n_sign_posn */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -245,7 +269,19 @@ literal|"LC_MONETARY"
 argument_list|,
 name|LCMONETARY_SIZE
 argument_list|,
-name|LCMONETARY_SIZE
+name|offsetof
+argument_list|(
+expr|struct
+name|lc_monetary_T
+argument_list|,
+name|int_p_cs_precedes
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
 argument_list|,
 operator|(
 specifier|const
@@ -328,6 +364,45 @@ name|p_sign_posn
 argument_list|)
 expr_stmt|;
 name|M_ASSIGN_CHAR
+argument_list|(
+name|n_sign_posn
+argument_list|)
+expr_stmt|;
+comment|/* 		 * The six additional C99 international monetary formatting 		 * parameters default to the national parameters when 		 * reading FreeBSD 4 LC_MONETARY data files. 		 */
+define|#
+directive|define
+name|M_ASSIGN_ICHAR
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|do {							\ 			if (_monetary_locale.int_##NAME == NULL)	\ 				_monetary_locale.int_##NAME =		\ 				    _monetary_locale.NAME;		\ 			else						\ 				M_ASSIGN_CHAR(int_##NAME);		\ 		} while (0)
+name|M_ASSIGN_ICHAR
+argument_list|(
+name|p_cs_precedes
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_ICHAR
+argument_list|(
+name|n_cs_precedes
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_ICHAR
+argument_list|(
+name|p_sep_by_space
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_ICHAR
+argument_list|(
+name|n_sep_by_space
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_ICHAR
+argument_list|(
+name|p_sign_posn
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_ICHAR
 argument_list|(
 name|n_sign_posn
 argument_list|)
