@@ -73,28 +73,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISA_NPORT_IVARS
+name|ISA_NPORT
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISA_NMEM_IVARS
+name|ISA_NMEM
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISA_NIRQ_IVARS
+name|ISA_NIRQ
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISA_NDRQ_IVARS
+name|ISA_NDRQ
 value|2
 end_define
 
