@@ -300,9 +300,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
-name|nfs_numnfsd
+name|nfsrv_numnfsd
 init|=
 literal|0
 decl_stmt|;
@@ -1313,7 +1312,7 @@ argument_list|,
 name|nfsd_chain
 argument_list|)
 expr_stmt|;
-name|nfs_numnfsd
+name|nfsrv_numnfsd
 operator|++
 expr_stmt|;
 comment|/* 	 * Loop getting rpc requests until SIGKILL. 	 */
@@ -2475,7 +2474,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|--
-name|nfs_numnfsd
+name|nfsrv_numnfsd
 operator|==
 literal|0
 condition|)

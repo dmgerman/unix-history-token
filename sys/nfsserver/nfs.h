@@ -424,6 +424,13 @@ name|nfsrvw_procrastinate_v3
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfsrv_numnfsd
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Various values converted to XDR form. */
 end_comment

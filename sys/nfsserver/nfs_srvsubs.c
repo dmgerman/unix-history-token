@@ -1551,6 +1551,15 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+if|if
+condition|(
+name|nfsrv_numnfsd
+operator|!=
+literal|0
+condition|)
+return|return
+name|EBUSY
+return|;
 name|callout_stop
 argument_list|(
 operator|&
