@@ -690,8 +690,10 @@ literal|16
 index|]
 decl_stmt|;
 name|char
-modifier|*
 name|card_irq
+index|[
+literal|256
+index|]
 init|=
 literal|""
 decl_stmt|;
@@ -950,13 +952,11 @@ operator|.
 name|my_flag
 argument_list|)
 expr_stmt|;
-name|variable_set2
+name|strcpy
 argument_list|(
-literal|"card_irq"
+name|card_irq
 argument_list|,
 name|temp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
