@@ -2037,7 +2037,7 @@ name|p
 argument_list|,
 name|curline
 argument_list|,
-literal|"%13s%6ld%6ldK%7ldK%9llu"
+literal|"%13s%6lu%6luK%7luK%9llu"
 argument_list|,
 name|type
 operator|->

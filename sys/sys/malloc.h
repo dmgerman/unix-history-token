@@ -100,15 +100,15 @@ modifier|*
 name|ks_next
 decl_stmt|;
 comment|/* next in list */
-name|long
+name|u_long
 name|ks_memuse
 decl_stmt|;
 comment|/* total memory held in bytes */
-name|long
+name|u_long
 name|ks_size
 decl_stmt|;
 comment|/* sizes of this thing that are allocated */
-name|long
+name|u_long
 name|ks_inuse
 decl_stmt|;
 comment|/* # of packets of this type currently in use */
@@ -116,7 +116,7 @@ name|uint64_t
 name|ks_calls
 decl_stmt|;
 comment|/* total packets of this type ever allocated */
-name|long
+name|u_long
 name|ks_maxused
 decl_stmt|;
 comment|/* maximum number ever used */
