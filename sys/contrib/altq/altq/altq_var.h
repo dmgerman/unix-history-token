@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_var.h,v 1.16 2003/10/03 05:05:15 kjc Exp $	*/
 end_comment
 
@@ -777,11 +781,21 @@ parameter_list|)
 value|callout_stop((c))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|CALLOUT_INITIALIZER
-end_ifndef
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|600000
+operator|)
+end_if
 
 begin_define
 define|#
