@@ -22,6 +22,13 @@ name|ENCODING_LEN
 value|31
 end_define
 
+begin_define
+define|#
+directive|define
+name|CATEGORY_LEN
+value|11
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
