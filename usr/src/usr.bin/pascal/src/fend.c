@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.9 %G%"
+literal|"@(#)fend.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -481,9 +481,35 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'t'
+argument_list|)
+condition|)
+block|{
 name|putprintf
 argument_list|(
-literal|"	calls	$0,_PCSTART"
+literal|"	pushl	$1"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|putprintf
+argument_list|(
+literal|"	pushl	$0"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|putprintf
+argument_list|(
+literal|"	calls	$1,_PCSTART"
 argument_list|,
 literal|0
 argument_list|)
@@ -1048,6 +1074,23 @@ name|dispsave
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	     *	set underflow checking if runtime tests 	     */
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'t'
+argument_list|)
+condition|)
+block|{
+name|putprintf
+argument_list|(
+literal|"	bispsw	$0xe0"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	     *	ask second pass to allocate known locals 	     */
 name|putlbracket
 argument_list|(
