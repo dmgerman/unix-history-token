@@ -242,15 +242,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|do_dump
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|do_die
 decl_stmt|;
 end_decl_stmt
