@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.7 (Berkeley) %G%"
+literal|"@(#)cron.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,7 +350,7 @@ condition|)
 name|loct
 operator|->
 name|tm_wday
-operator|==
+operator|=
 literal|7
 expr_stmt|;
 comment|/* sunday is 7, not 0 */
