@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_disksubr.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_disksubr.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1624,10 +1624,26 @@ name|bp
 operator|->
 name|b_bcount
 operator|<=
-name|DEV_BSIZE
+name|lp
+operator|->
+name|d_secsize
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|tahoe
+name|sn
+operator|*=
+name|DEV_BSIZE
+operator|/
+name|lp
+operator|->
+name|d_secsize
+expr_stmt|;
+comment|/* XXX */
+endif|#
+directive|endif
 name|sn
 operator|+=
 name|lp
