@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.7 (Berkeley) 87/04/11"
+literal|"@(#)bugfiler.c	5.8 (Berkeley) 87/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ decl_stmt|;
 comment|/* redistribut BR */
 name|char
 modifier|*
-name|argfolder
+name|argversion
 decl_stmt|,
 comment|/* folder name provided */
 modifier|*
@@ -166,7 +166,7 @@ name|do_redist
 operator|=
 name|YES
 expr_stmt|;
-name|argfolder
+name|argversion
 operator|=
 name|NULL
 expr_stmt|;
@@ -181,7 +181,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"af:r"
+literal|"av:r"
 argument_list|)
 operator|)
 operator|!=
@@ -204,9 +204,9 @@ name|NO
 expr_stmt|;
 break|break;
 case|case
-literal|'f'
+literal|'v'
 case|:
-name|argfolder
+name|argversion
 operator|=
 name|optarg
 expr_stmt|;
@@ -225,7 +225,7 @@ case|:
 default|default:
 name|error
 argument_list|(
-literal|"usage: bugfiler [-ar] [-f folder]"
+literal|"usage: bugfiler [-ar] [-v version]"
 argument_list|,
 name|CHN
 argument_list|)
@@ -315,7 +315,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|argfolder
+name|argversion
 condition|)
 comment|/* specific folder requested */
 operator|(
@@ -325,7 +325,7 @@ name|strcpy
 argument_list|(
 name|dir
 argument_list|,
-name|argfolder
+name|argversion
 argument_list|)
 expr_stmt|;
 name|process
