@@ -662,6 +662,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|arg
+index|[
+literal|1
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+name|arg
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+break|break;
+block|}
 else|else
 block|{
 comment|/* Predefined format */
