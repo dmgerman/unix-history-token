@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)ungetc.c	4.1 (Berkeley) %G% */
+comment|/*	ungetc.c	4.2	83/09/25	*/
 end_comment
 
 begin_include
@@ -82,8 +82,7 @@ expr_stmt|;
 else|else
 return|return
 operator|(
-operator|-
-literal|1
+name|EOF
 operator|)
 return|;
 name|iop
@@ -101,7 +100,7 @@ name|c
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|c
 operator|)
 return|;
 block|}
