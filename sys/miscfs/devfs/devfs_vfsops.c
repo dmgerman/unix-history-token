@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.7 1995/12/14 09:52:55 phk Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.8 1995/12/14 19:04:08 bde Exp $  *  *  */
 end_comment
 
 begin_include
@@ -128,6 +128,51 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * fill in the missing members on the "hidden" mount 	 */
+name|dev_root
+operator|->
+name|dnp
+operator|->
+name|dvm
+operator|->
+name|mount
+operator|->
+name|mnt_op
+operator|=
+name|vfssw
+index|[
+name|MOUNT_DEVFS
+index|]
+expr_stmt|;
+name|dev_root
+operator|->
+name|dnp
+operator|->
+name|dvm
+operator|->
+name|mount
+operator|->
+name|mnt_vfc
+operator|=
+name|vfsconf
+index|[
+name|MOUNT_DEVFS
+index|]
+expr_stmt|;
+comment|/* Mark a reference for the "invisible" blueprint mount */
+name|dev_root
+operator|->
+name|dnp
+operator|->
+name|dvm
+operator|->
+name|mount
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_refcount
+operator|++
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"devfs ready to run\n"

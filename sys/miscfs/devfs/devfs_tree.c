@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /u1/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.10 1995/12/08 11:17:33 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.11 1995/12/09 09:11:01 julian Exp $  */
 end_comment
 
 begin_include
@@ -2566,21 +2566,13 @@ name|EINVAL
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|vn_p
-operator|->
-name|v_usecount
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No references! "
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 	 * XXX: This is actually a "normal" case when vclean calls us without 	 * XXX: incrementing the reference count first. 	 */
+block|if(vn_p->v_usecount == 0) 	{ 		printf("No references! "); 	}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2690,11 +2682,13 @@ operator|->
 name|vn_id
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"bad-id "
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: This is `normal'... */
+block|printf("bad-id ");
+endif|#
+directive|endif
 goto|goto
 name|skip
 goto|;
@@ -2708,11 +2702,13 @@ operator|!=
 name|VT_DEVFS
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"bad-tag "
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: This is `normal'... */
+block|printf("bad-tag ");
+endif|#
+directive|endif
 goto|goto
 name|skip
 goto|;
