@@ -2238,17 +2238,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PGRP_UNLOCK_NOSWITCH
-parameter_list|(
-name|pg
-parameter_list|)
-define|\
-value|mtx_unlock_flags(&(pg)->pg_mtx, MTX_NOSWITCH)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PGRP_LOCKED
 parameter_list|(
 name|pg
@@ -2312,17 +2301,6 @@ parameter_list|(
 name|s
 parameter_list|)
 value|mtx_unlock(&(s)->s_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SESS_UNLOCK_NOSWITCH
-parameter_list|(
-name|s
-parameter_list|)
-define|\
-value|mtx_unlock_flags(&(s)->s_mtx, MTX_NOSWITCH)
 end_define
 
 begin_define
