@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.10	(Berkeley) 83/11/02  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.11	(Berkeley) 83/12/08  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -203,14 +203,20 @@ name|DBNullelt
 argument_list|(
 name|element
 argument_list|)
-condition|)
-block|{
+operator|&&
+operator|!
+name|Nullpoint
+argument_list|(
+operator|(
 name|p1
 operator|=
 name|element
 operator|->
 name|ptlist
-expr_stmt|;
+operator|)
+argument_list|)
+condition|)
+block|{
 comment|/* p1 always has first point */
 if|if
 condition|(
