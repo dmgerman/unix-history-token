@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|POINTER_WIDTH
-value|(sizeof(void *)> 4 ? 18 : 10)
+value|((int)(sizeof(void *) * 2 + 2))
 end_define
 
 begin_function
