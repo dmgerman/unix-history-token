@@ -181,6 +181,30 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Skip if the close-on-exec flag is set */
+name|flags
+operator|=
+name|__sys_fcntl
+argument_list|(
+name|i
+argument_list|,
+name|F_GETFD
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|FD_CLOEXEC
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+comment|/* don't bother, no point */
 comment|/* Get the current flags: */
 name|flags
 operator|=
