@@ -579,7 +579,7 @@ name|_net_graph
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nonstandard
+name|nonstandard_pppoe
 argument_list|,
 name|CTLTYPE_INT
 operator||
