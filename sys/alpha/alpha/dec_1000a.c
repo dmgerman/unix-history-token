@@ -126,6 +126,12 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|NO_SIO
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CONSPEED
 end_ifndef
 
@@ -149,6 +155,52 @@ init|=
 name|CONSPEED
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|comconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|siocnattach
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|siogdbattach
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|extern
+name|int
+name|sccnattach
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -245,40 +297,6 @@ begin_function_decl
 specifier|static
 name|void
 name|dec_1000a_intr_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|siocnattach
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|siogdbattach
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|sccnattach
 parameter_list|(
 name|void
 parameter_list|)
@@ -508,17 +526,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|comconsole
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -554,6 +561,9 @@ name|apecs_init
 argument_list|()
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_SIO
 ifdef|#
 directive|ifdef
 name|DDB
@@ -564,6 +574,8 @@ argument_list|,
 literal|57600
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|ctb
@@ -596,10 +608,11 @@ block|{
 case|case
 literal|2
 case|:
+ifndef|#
+directive|ifndef
+name|NO_SIO
 comment|/* serial console ... */
-comment|/* XXX */
-block|{
-comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)). 			 */
+comment|/* 		 * Delay to allow PROM putchars to complete. 		 * FIFO depth * character time, 		 * character time = (1000000 / (defaultrate / 10)). 		 */
 name|DELAY
 argument_list|(
 literal|160000000
@@ -607,7 +620,7 @@ operator|/
 name|comcnrate
 argument_list|)
 expr_stmt|;
-comment|/*                          * Force a comconsole on com1 if the SRM has a serial 			 * console.                          */
+comment|/* 		 * Force a comconsole on com1 if the SRM has a serial 		 * console. 		 */
 name|comconsole
 operator|=
 literal|0
@@ -630,8 +643,9 @@ name|boothowto
 operator||=
 name|RB_SERIAL
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
-block|}
 case|case
 literal|3
 case|:

@@ -214,6 +214,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -2259,6 +2265,9 @@ name|model
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initalize the real console, so the the bootstrap console is 	 * no longer necessary. 	 */
+ifndef|#
+directive|ifndef
+name|NO_SIO
 if|if
 condition|(
 name|platform
@@ -2275,6 +2284,27 @@ name|promcndetach
 argument_list|()
 expr_stmt|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|platform
+operator|.
+name|cons_init
+condition|)
+name|platform
+operator|.
+name|cons_init
+argument_list|()
+expr_stmt|;
+name|promcndetach
+argument_list|()
+expr_stmt|;
+name|cninit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* NO MORE FIRMWARE ACCESS ALLOWED */
 ifdef|#
 directive|ifdef

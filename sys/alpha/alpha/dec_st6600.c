@@ -122,6 +122,12 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|NO_SIO
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CONSPEED
 end_ifndef
 
@@ -145,6 +151,52 @@ init|=
 name|CONSPEED
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|comconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|siocnattach
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|siogdbattach
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|extern
+name|int
+name|sccnattach
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -188,40 +240,6 @@ directive|define
 name|ST6600_PCI_MAX_IRQ
 value|63
 end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|siocnattach
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|siogdbattach
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|sccnattach
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -278,13 +296,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|comconsole
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -299,6 +310,9 @@ decl_stmt|;
 name|tsunami_init
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SIO
 ifdef|#
 directive|ifdef
 name|DDB
@@ -309,6 +323,8 @@ argument_list|,
 literal|57600
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|ctb
@@ -341,10 +357,11 @@ block|{
 case|case
 literal|2
 case|:
+ifndef|#
+directive|ifndef
+name|NO_SIO
 comment|/* serial console ... */
-comment|/* XXX */
-block|{
-comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
+comment|/* 		 * Delay to allow PROM putchars to complete. 		 * FIFO depth * character time, 		 * character time = (1000000 / (defaultrate / 10)) 		 */
 name|DELAY
 argument_list|(
 literal|160000000
@@ -374,8 +391,9 @@ name|boothowto
 operator||=
 name|RB_SERIAL
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
-block|}
 case|case
 literal|3
 case|:
