@@ -7615,7 +7615,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"                       eg. ufs:da0a\n"
+literal|"                       eg. ufs:/dev/da0a\n"
 argument_list|)
 expr_stmt|;
 endif|#
