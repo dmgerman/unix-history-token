@@ -1057,12 +1057,46 @@ operator|->
 name|sc_events
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_events_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 name|ep
-operator|!=
-name|NULL
-condition|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|g_mirror_event_remove
+parameter_list|(
+name|struct
+name|g_mirror_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|g_mirror_event
+modifier|*
+name|ep
+parameter_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_events_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1083,11 +1117,6 @@ operator|->
 name|sc_events_mtx
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ep
-operator|)
-return|;
 block|}
 end_function
 
@@ -2450,6 +2479,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|g_mirror_event_remove
+argument_list|(
+name|sc
+argument_list|,
+name|ep
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7302,10 +7338,17 @@ condition|(
 name|ep
 operator|!=
 name|NULL
+operator|&&
+name|g_topology_try_lock
+argument_list|()
 condition|)
 block|{
-name|g_topology_lock
-argument_list|()
+name|g_mirror_event_remove
+argument_list|(
+name|sc
+argument_list|,
+name|ep
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7534,6 +7577,24 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|ep
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 				 * No I/O requests and topology lock was 				 * already held? Try again. 				 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_queue_mtx
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -7922,6 +7983,25 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|ep
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 				 * We have some pending events, don't sleep now. 				 */
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|5
+argument_list|,
+literal|"%s: I'm here 7."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7955,7 +8035,7 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|5
 argument_list|,
-literal|"%s: I'm here 7."
+literal|"%s: I'm here 8."
 argument_list|,
 name|__func__
 argument_list|)
@@ -8009,7 +8089,7 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|5
 argument_list|,
-literal|"%s: I'm here 8."
+literal|"%s: I'm here 9."
 argument_list|,
 name|__func__
 argument_list|)
