@@ -7733,7 +7733,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10741,7 +10740,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_ts_referenced:  *  *	Return the count of reference bits for a page, clearing all of them.  *	  */
+comment|/*  *	pmap_ts_referenced:  *  *	Return the count of reference bits for a page, clearing all of them.  */
 end_comment
 
 begin_function
