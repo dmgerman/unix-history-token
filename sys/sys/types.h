@@ -1169,6 +1169,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|__cpumask_t
+name|cpumask_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|__intfptr_t
 name|intfptr_t
 typedef|;
