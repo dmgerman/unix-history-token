@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)objaddr.c 1.1 %G%"
+literal|"@(#)objaddr.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * lookup the object address of a given line from the given file  */
+comment|/*  * Lookup the object address of a given line from the named file.  *  * Potentially all files in the file table need to be checked  * until the line is found since a particular file name may appear  * more than once in the file table (caused by includes).  */
 end_comment
 
 begin_include
@@ -80,6 +80,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|BOOLEAN
+name|foundfile
+decl_stmt|;
 if|if
 condition|(
 name|nlhdr
@@ -108,6 +111,10 @@ operator|=
 name|cursource
 expr_stmt|;
 block|}
+name|foundfile
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 name|ftp
@@ -134,7 +141,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|streq
 argument_list|(
 name|ftp
 operator|->
@@ -142,34 +149,12 @@ name|filename
 argument_list|,
 name|name
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|ftp
-operator|==
-operator|&
-name|filetab
-index|[
-name|nlhdr
-operator|.
-name|nfiles
-index|]
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"unknown source file \"%s\""
-argument_list|,
-name|name
-argument_list|)
+name|foundfile
+operator|=
+name|TRUE
 expr_stmt|;
-block|}
 name|i
 operator|=
 name|ftp
@@ -231,18 +216,32 @@ name|line
 condition|)
 block|{
 return|return
-operator|(
 name|linetab
 index|[
 name|i
 index|]
 operator|.
 name|addr
-operator|)
 return|;
 block|}
 name|i
 operator|++
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|foundfile
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"unknown source file \"%s\""
+argument_list|,
+name|name
+argument_list|)
 expr_stmt|;
 block|}
 return|return
