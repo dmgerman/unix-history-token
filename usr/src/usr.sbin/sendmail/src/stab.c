@@ -11,19 +11,29 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.6	%G%"
+literal|"@(#)stab.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  STAB -- manage the symbol table ** **	Parameters: **		name -- the name to be looked up or inserted. **		type -- the type of symbol. **		op -- what to do: **			ST_ENTER -- enter the name if not **				already present. **			ST_FIND -- find it only. ** **	Returns: **		pointer to a STAB entry for this name. **		NULL if not found and not entered. ** **	Side Effects: **		can update the symbol table. ** **	Notes: **		Obviously, this deserves a better algorithm.  But **		for the moment...... */
+comment|/* **  STAB -- manage the symbol table ** **	Parameters: **		name -- the name to be looked up or inserted. **		type -- the type of symbol. **		op -- what to do: **			ST_ENTER -- enter the name if not **				already present. **			ST_FIND -- find it only. ** **	Returns: **		pointer to a STAB entry for this name. **		NULL if not found and not entered. ** **	Side Effects: **		can update the symbol table. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|STABSIZE
+value|400
+end_define
 
 begin_decl_stmt
 specifier|static
 name|STAB
 modifier|*
 name|SymTab
+index|[
+name|STABSIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -53,23 +63,27 @@ specifier|register
 name|STAB
 modifier|*
 name|s
-init|=
-name|SymTab
 decl_stmt|;
 specifier|register
 name|STAB
 modifier|*
 modifier|*
 name|ps
-init|=
-operator|&
-name|SymTab
 decl_stmt|;
 specifier|extern
 name|bool
 name|sameword
 parameter_list|()
 function_decl|;
+specifier|register
+name|int
+name|hfunc
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -91,9 +105,78 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* 	**  Compute the hashing function 	** 	**	We could probably do better.... 	*/
+name|hfunc
+operator|=
+name|type
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|name
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+name|hfunc
+operator|=
+operator|(
+operator|(
+name|hfunc
+operator|<<
+literal|7
+operator|)
+operator||
+name|lower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|)
+operator|%
+name|STABSIZE
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|15
+condition|)
+name|printf
+argument_list|(
+literal|"(hfunc=%d) "
+argument_list|,
+name|hfunc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+name|ps
+operator|=
+operator|&
+name|SymTab
+index|[
+name|hfunc
+index|]
+expr_stmt|;
 while|while
 condition|(
+operator|(
 name|s
+operator|=
+operator|*
+name|ps
+operator|)
 operator|!=
 name|NULL
 operator|&&
@@ -130,6 +213,7 @@ operator|->
 name|s_next
 expr_stmt|;
 block|}
+comment|/* 	**  Dispose of the entry. 	*/
 if|if
 condition|(
 name|s
@@ -165,7 +249,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"type %d class %x\n"
+literal|"type %d val %x\n"
 argument_list|,
 name|s
 operator|->
@@ -186,6 +270,7 @@ name|s
 operator|)
 return|;
 block|}
+comment|/* 	**  Make a new entry and link it in. 	*/
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -252,7 +337,7 @@ name|s_type
 operator|=
 name|type
 expr_stmt|;
-comment|/* and link it in */
+comment|/* link it in */
 operator|*
 name|ps
 operator|=
