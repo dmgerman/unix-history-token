@@ -1,11 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ftp_var.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ftp_var.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * FTP global variables.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 begin_comment
 comment|/*  * Options and other state info.  */
@@ -261,12 +279,6 @@ begin_comment
 comment|/* output translation table */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
 begin_decl_stmt
 name|char
 name|mapin
@@ -461,12 +473,6 @@ begin_comment
 comment|/* service spec for tcp/ftp */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
 begin_decl_stmt
 name|jmp_buf
 name|toplevel
@@ -609,13 +615,21 @@ name|char
 name|c_proxy
 decl_stmt|;
 comment|/* proxy server may execute */
+name|void
+argument_list|(
+argument|*c_handler
+argument_list|)
+name|__P
+argument_list|(
+operator|(
 name|int
-function_decl|(
-modifier|*
-name|c_handler
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to call */
 block|}
 struct|;
@@ -674,94 +688,6 @@ literal|4096
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|tail
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|remglob
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strncpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strncat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strcat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-end_function_decl
 
 end_unit
 

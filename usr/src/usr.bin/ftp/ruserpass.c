@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	8.1 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -55,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -67,53 +61,45 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ftp_var.h"
 end_include
 
 begin_decl_stmt
-name|char
-modifier|*
-name|renvlook
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getpass
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getlogin
-argument_list|()
+specifier|static
+name|int
+name|token
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|utmp
-modifier|*
-name|getutmp
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -199,60 +185,74 @@ name|toktab
 index|[]
 init|=
 block|{
+block|{
 literal|"default"
 block|,
 name|DEFAULT
+block|}
 block|,
+block|{
 literal|"login"
 block|,
 name|LOGIN
+block|}
 block|,
+block|{
 literal|"password"
 block|,
 name|PASSWD
+block|}
 block|,
+block|{
 literal|"passwd"
 block|,
 name|PASSWD
+block|}
 block|,
+block|{
 literal|"account"
 block|,
 name|ACCOUNT
+block|}
 block|,
+block|{
 literal|"machine"
 block|,
 name|MACH
+block|}
 block|,
+block|{
 literal|"macdef"
 block|,
 name|MACDEF
+block|}
+block|,
+block|{
+name|NULL
 block|,
 literal|0
-block|,
-literal|0
+block|}
 block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|ruserpass
-argument_list|(
-argument|host
-argument_list|,
-argument|aname
-argument_list|,
-argument|apass
-argument_list|,
-argument|aacct
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|host
+parameter_list|,
+name|aname
+parameter_list|,
+name|apass
+parameter_list|,
+name|aacct
+parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|aname
 decl_stmt|,
@@ -264,7 +264,7 @@ modifier|*
 modifier|*
 name|aacct
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -304,11 +304,6 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
-specifier|static
-name|int
-name|token
-parameter_list|()
-function_decl|;
 name|hdir
 operator|=
 name|getenv
@@ -360,8 +355,10 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -397,7 +394,7 @@ condition|(
 operator|(
 name|mydomain
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|myname
 argument_list|,
@@ -486,7 +483,7 @@ condition|(
 operator|(
 name|tmp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hostname
 argument_list|,
@@ -535,7 +532,7 @@ condition|(
 operator|(
 name|tmp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|host
 argument_list|,
@@ -703,18 +700,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Error: .netrc file is readable by others.\n"
+literal|"Error: .netrc file is readable by others."
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Remove password or make file unreadable by others.\n\n"
+literal|"Remove password or make file unreadable by others."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -790,18 +783,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Error: .netrc file is readable by others.\n"
+literal|"Error: .netrc file is readable by others."
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Remove account or make file unreadable by others.\n\n"
+literal|"Remove account or make file unreadable by others."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1192,11 +1181,9 @@ goto|;
 block|}
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown .netrc keyword %s\n"
+literal|"Unknown .netrc keyword %s"
 argument_list|,
 name|tokval
 argument_list|)
@@ -1241,22 +1228,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|token
-argument_list|()
+parameter_list|()
 block|{
 name|char
-operator|*
+modifier|*
 name|cp
-block|;
+decl_stmt|;
 name|int
 name|c
-block|; 	struct
+decl_stmt|;
+name|struct
 name|toktab
-operator|*
+modifier|*
 name|t
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|feof
@@ -1274,9 +1263,6 @@ operator|(
 literal|0
 operator|)
 return|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|(
@@ -1309,9 +1295,6 @@ literal|','
 operator|)
 condition|)
 continue|continue;
-end_while
-
-begin_if
 if|if
 condition|(
 name|c
@@ -1323,16 +1306,10 @@ operator|(
 literal|0
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|cp
 operator|=
 name|tokval
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|c
@@ -1438,17 +1415,11 @@ name|c
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 operator|*
 name|cp
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tokval
@@ -1463,9 +1434,6 @@ operator|(
 literal|0
 operator|)
 return|;
-end_if
-
-begin_for
 for|for
 control|(
 name|t
@@ -1498,16 +1466,13 @@ operator|->
 name|tval
 operator|)
 return|;
-end_for
-
-begin_return
 return|return
 operator|(
 name|ID
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 
