@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -73,14 +73,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR_S
+name|AR_T
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR_T
+name|AR_TR
 value|0x0400
 end_define
 

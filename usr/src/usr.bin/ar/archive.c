@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	5.6 (Berkeley) %G%"
+literal|"@(#)archive.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -955,7 +955,7 @@ if|if
 condition|(
 name|options
 operator|&
-name|AR_S
+name|AR_TR
 condition|)
 block|{
 if|if

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	5.10 (Berkeley) %G%"
+literal|"@(#)ar.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abcdilmopqrstuvx"
+literal|"abcdilmopqrTtuvx"
 argument_list|)
 operator|)
 operator|!=
@@ -434,11 +434,11 @@ name|replace
 expr_stmt|;
 break|break;
 case|case
-literal|'s'
+literal|'T'
 case|:
 name|options
 operator||=
-name|AR_S
+name|AR_TR
 expr_stmt|;
 break|break;
 case|case
@@ -606,7 +606,7 @@ name|posarg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* -d only valid with -sv. */
+comment|/* -d only valid with -Tv. */
 if|if
 condition|(
 name|options
@@ -619,7 +619,7 @@ operator|~
 operator|(
 name|AR_D
 operator||
-name|AR_S
+name|AR_TR
 operator||
 name|AR_V
 operator|)
@@ -629,7 +629,7 @@ argument_list|(
 literal|"-d"
 argument_list|)
 expr_stmt|;
-comment|/* -m only valid with -abisv. */
+comment|/* -m only valid with -abiTv. */
 if|if
 condition|(
 name|options
@@ -646,7 +646,7 @@ name|AR_B
 operator||
 name|AR_M
 operator||
-name|AR_S
+name|AR_TR
 operator||
 name|AR_V
 operator|)
@@ -656,7 +656,7 @@ argument_list|(
 literal|"-m"
 argument_list|)
 expr_stmt|;
-comment|/* -p only valid with -sv. */
+comment|/* -p only valid with -Tv. */
 if|if
 condition|(
 name|options
@@ -669,7 +669,7 @@ operator|~
 operator|(
 name|AR_P
 operator||
-name|AR_S
+name|AR_TR
 operator||
 name|AR_V
 operator|)
@@ -679,7 +679,7 @@ argument_list|(
 literal|"-p"
 argument_list|)
 expr_stmt|;
-comment|/* -q only valid with -csv. */
+comment|/* -q only valid with -cTv. */
 if|if
 condition|(
 name|options
@@ -694,7 +694,7 @@ name|AR_C
 operator||
 name|AR_Q
 operator||
-name|AR_S
+name|AR_TR
 operator||
 name|AR_V
 operator|)
@@ -704,7 +704,7 @@ argument_list|(
 literal|"-q"
 argument_list|)
 expr_stmt|;
-comment|/* -r only valid with -abcusv. */
+comment|/* -r only valid with -abcuTv. */
 if|if
 condition|(
 name|options
@@ -725,7 +725,7 @@ name|AR_R
 operator||
 name|AR_U
 operator||
-name|AR_S
+name|AR_TR
 operator||
 name|AR_V
 operator|)
@@ -735,7 +735,7 @@ argument_list|(
 literal|"-r"
 argument_list|)
 expr_stmt|;
-comment|/* -t only valid with -sv. */
+comment|/* -t only valid with -Tv. */
 if|if
 condition|(
 name|options
@@ -748,7 +748,7 @@ operator|~
 operator|(
 name|AR_T
 operator||
-name|AR_S
+name|AR_TR
 operator||
 name|AR_V
 operator|)
@@ -758,7 +758,7 @@ argument_list|(
 literal|"-t"
 argument_list|)
 expr_stmt|;
-comment|/* -x only valid with -ousv. */
+comment|/* -x only valid with -ouTv. */
 if|if
 condition|(
 name|options
@@ -773,7 +773,7 @@ name|AR_O
 operator||
 name|AR_U
 operator||
-name|AR_S
+name|AR_TR
 operator||
 name|AR_V
 operator||
@@ -902,7 +902,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:  ar -d [-sv] archive file ...\n"
+literal|"usage:  ar -d [-Tv] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -912,7 +912,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -m [-sv] archive file ...\n"
+literal|"\tar -m [-Tv] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -922,7 +922,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -m [-abisv] position archive file ...\n"
+literal|"\tar -m [-abiTv] position archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -932,7 +932,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -p [-sv] archive [file ...]\n"
+literal|"\tar -p [-Tv] archive [file ...]\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -942,7 +942,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -q [-csv] archive file ...\n"
+literal|"\tar -q [-cTv] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -952,7 +952,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-cusv] archive file ...\n"
+literal|"\tar -r [-cuTv] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -962,7 +962,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-abciusv] position archive file ...\n"
+literal|"\tar -r [-abciuTv] position archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -972,7 +972,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -t [-sv] archive [file ...]\n"
+literal|"\tar -t [-Tv] archive [file ...]\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -982,7 +982,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -x [-ousv] archive [file ...]\n"
+literal|"\tar -x [-ouTv] archive [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
