@@ -2187,6 +2187,15 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|char
+modifier|*
+name|tempfile
+init|=
+literal|"/tmp/dXXXXX"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|char
 modifier|*
@@ -2233,11 +2242,9 @@ argument_list|,
 name|done
 argument_list|)
 expr_stmt|;
-name|tempfile
-operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/dXXXXX"
+name|tempfile
 argument_list|)
 expr_stmt|;
 name|f
