@@ -742,14 +742,7 @@ name|pcb2
 operator|->
 name|pcb_psl
 operator|=
-name|td2
-operator|->
-name|td_frame
-operator|->
-name|tf_eflags
-operator|&
-operator|~
-name|PSL_I
+name|PSL_KERNEL
 expr_stmt|;
 comment|/* ints disabled */
 name|pcb2
