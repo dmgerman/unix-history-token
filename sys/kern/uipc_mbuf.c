@@ -488,6 +488,7 @@ name|TUNABLE_INT
 argument_list|(
 literal|"kern.ipc.nmbclusters"
 argument_list|,
+operator|&
 name|nmbclusters
 argument_list|)
 expr_stmt|;
@@ -498,6 +499,7 @@ name|TUNABLE_INT
 argument_list|(
 literal|"kern.ipc.nmbufs"
 argument_list|,
+operator|&
 name|nmbufs
 argument_list|)
 expr_stmt|;
@@ -508,6 +510,7 @@ name|TUNABLE_INT
 argument_list|(
 literal|"kern.ipc.nmbcnt"
 argument_list|,
+operator|&
 name|nmbcnt
 argument_list|)
 expr_stmt|;

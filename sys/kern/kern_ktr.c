@@ -287,6 +287,7 @@ name|TUNABLE_INT
 argument_list|(
 literal|"debug.ktr.cpumask"
 argument_list|,
+operator|&
 name|ktr_cpumask
 argument_list|)
 expr_stmt|;
@@ -326,6 +327,7 @@ name|TUNABLE_INT
 argument_list|(
 literal|"debug.ktr.mask"
 argument_list|,
+operator|&
 name|ktr_mask
 argument_list|)
 expr_stmt|;
@@ -413,6 +415,7 @@ name|TUNABLE_INT
 argument_list|(
 literal|"debug.ktr.verbose"
 argument_list|,
+operator|&
 name|ktr_verbose
 argument_list|)
 expr_stmt|;

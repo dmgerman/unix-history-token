@@ -718,6 +718,34 @@ begin_comment
 comment|/*  * Infrastructure for tunable 'constants'.  Value may be specified at compile  * time or kernel load time.  Rules relating tunables together can be placed  * in a SYSINIT function at SI_SUB_TUNABLES with SI_ORDER_LAST.  */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|void
+name|tunable_int_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|tunable_int
+block|{
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|int
+modifier|*
+name|var
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -728,7 +756,37 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|static void __Tunable_ ## var (void *ignored)		\ {							\ 	TUNABLE_INT_FETCH((path), (var));		\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL)
+value|_TUNABLE_INT((path), (var), __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TUNABLE_INT
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|__TUNABLE_INT((path), (var), line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__TUNABLE_INT
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|static struct tunable_int __tunable_int_ ## line = {	\ 		path,						\ 		var,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_int_init,&__tunable_int_ ## line)
 end_define
 
 begin_define
@@ -741,8 +799,39 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|do {							\ 	getenv_int((path),&(var));			\ } while (0)
+value|do {							\ 	getenv_int((path), (var));			\ } while (0)
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|tunable_str_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|tunable_str
+block|{
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|char
+modifier|*
+name|var
+decl_stmt|;
+name|int
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -756,7 +845,41 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|static void __Tunable_ ## var (void *ignored)		\ {							\ 	TUNABLE_STR_FETCH((path), (var), (size));	\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL)
+value|_TUNABLE_STR((path), (var), (size), __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TUNABLE_STR
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|size
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|__TUNABLE_STR((path), (var), (size), line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__TUNABLE_STR
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|size
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|static struct tunable_str __tunable_str_ ## line = {	\ 		path,						\ 		var,						\ 		size,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_str_init,&__tunable_str_ ## line)
 end_define
 
 begin_define

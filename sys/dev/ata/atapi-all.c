@@ -207,6 +207,7 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.ata.atapi_dma"
 argument_list|,
+operator|&
 name|atapi_dma
 argument_list|)
 expr_stmt|;

@@ -4322,6 +4322,7 @@ name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.ipc.maxsockets"
 argument_list|,
+operator|&
 name|maxsockets
 argument_list|)
 expr_stmt|;
