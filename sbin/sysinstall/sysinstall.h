@@ -194,6 +194,13 @@ name|README_FILE
 value|"/README"
 end_define
 
+begin_define
+define|#
+directive|define
+name|HELPME_FILE
+value|"/HELPME"
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -686,6 +693,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|char
+modifier|*
+name|SetMount
+name|__P
+argument_list|(
+operator|(
+name|int
+name|disk
+operator|,
+name|int
+name|part
+operator|,
+name|char
+operator|*
+name|path
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|CleanMount
+name|__P
+argument_list|(
+operator|(
+name|int
+name|disk
+operator|,
+name|int
+name|part
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* exec.c */
 end_comment
@@ -849,7 +893,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* outcurses.c */
+comment|/* ourcurses.c */
 end_comment
 
 begin_decl_stmt
@@ -902,6 +946,24 @@ name|answer
 operator|,
 name|int
 name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ShowFile
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|filename
+operator|,
+name|char
+operator|*
+name|header
 operator|)
 argument_list|)
 decl_stmt|;

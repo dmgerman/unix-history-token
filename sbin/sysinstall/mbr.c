@@ -1661,7 +1661,7 @@ name|AskEm
 argument_list|(
 name|stdscr
 argument_list|,
-literal|"Enter number of disk to Fdisk "
+literal|"Enter number of disk to Fdisk> "
 argument_list|,
 name|buf
 argument_list|,
@@ -2121,7 +2121,7 @@ literal|22
 argument_list|,
 literal|0
 argument_list|,
-literal|"(D)elete  (E)dit  (R)eread  (W)rite  (Q)uit"
+literal|"(H)elp  (D)elete  (E)dit  (R)eread  (W)rite  (Q)uit"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2143,6 +2143,20 @@ condition|(
 name|i
 condition|)
 block|{
+case|case
+literal|'h'
+case|:
+case|case
+literal|'H'
+case|:
+name|ShowFile
+argument_list|(
+name|HELPME_FILE
+argument_list|,
+literal|"Help file for disklayout"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'r'
 case|:
@@ -2177,7 +2191,7 @@ name|AskEm
 argument_list|(
 name|stdscr
 argument_list|,
-literal|"Edit which Slice ? "
+literal|"Edit which Slice> "
 argument_list|,
 name|buf
 argument_list|,
@@ -2422,7 +2436,7 @@ name|AskEm
 argument_list|(
 name|stdscr
 argument_list|,
-literal|"Size of slice in MB "
+literal|"Size of slice in MB> "
 argument_list|,
 name|buf
 argument_list|,
@@ -2772,7 +2786,7 @@ name|AskEm
 argument_list|(
 name|stdscr
 argument_list|,
-literal|"Type of slice (0xa5=FreeBSD) "
+literal|"Type of slice (0xa5=FreeBSD)> "
 argument_list|,
 name|buf
 argument_list|,
@@ -2881,7 +2895,7 @@ name|AskEm
 argument_list|(
 name|stdscr
 argument_list|,
-literal|"Bootflag (0x80 for YES) "
+literal|"Bootflag (0x80 for YES)> "
 argument_list|,
 name|buf
 argument_list|,
@@ -2924,7 +2938,7 @@ name|AskEm
 argument_list|(
 name|stdscr
 argument_list|,
-literal|"Delete which Slice ? "
+literal|"Delete which Slice> "
 argument_list|,
 name|buf
 argument_list|,
@@ -3005,7 +3019,7 @@ name|AskEm
 argument_list|(
 name|stdscr
 argument_list|,
-literal|"Confirm write "
+literal|"Confirm write> "
 argument_list|,
 name|buf
 argument_list|,
