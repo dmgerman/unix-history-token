@@ -179,10 +179,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|FILE
-modifier|*
-name|tf
-decl_stmt|;
 name|struct
 name|stat
 name|stbuf
@@ -243,8 +239,6 @@ name|request
 operator|->
 name|r_tty
 argument_list|,
-name|tf
-argument_list|,
 name|request
 argument_list|,
 name|remote_machine
@@ -293,10 +287,6 @@ name|char
 modifier|*
 name|tty
 parameter_list|,
-name|FILE
-modifier|*
-name|tf
-parameter_list|,
 name|CTL_MSG
 modifier|*
 name|request
@@ -309,7 +299,7 @@ parameter_list|)
 block|{
 name|struct
 name|timeval
-name|clock
+name|now
 decl_stmt|;
 name|time_t
 name|clock_sec
@@ -318,12 +308,6 @@ name|struct
 name|timezone
 name|zone
 decl_stmt|;
-name|struct
-name|tm
-modifier|*
-name|localtime
-parameter_list|()
-function_decl|;
 name|struct
 name|tm
 modifier|*
@@ -384,7 +368,7 @@ expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
-name|clock
+name|now
 argument_list|,
 operator|&
 name|zone
@@ -392,7 +376,7 @@ argument_list|)
 expr_stmt|;
 name|clock_sec
 operator|=
-name|clock
+name|now
 operator|.
 name|tv_sec
 expr_stmt|;

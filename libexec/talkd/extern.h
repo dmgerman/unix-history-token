@@ -21,7 +21,7 @@ begin_function_decl
 name|int
 name|delete_invite
 parameter_list|(
-name|int
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -107,9 +107,6 @@ name|print_mesg
 parameter_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-name|FILE
 modifier|*
 parameter_list|,
 name|CTL_MSG

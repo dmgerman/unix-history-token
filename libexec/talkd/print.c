@@ -89,6 +89,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|types
@@ -115,6 +116,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|answers
@@ -163,14 +165,16 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|tp
+decl_stmt|;
 name|char
 name|tbuf
 index|[
 literal|80
 index|]
-decl_stmt|,
-modifier|*
-name|tp
 decl_stmt|;
 if|if
 condition|(
@@ -225,6 +229,9 @@ name|cp
 argument_list|,
 name|tp
 argument_list|,
+operator|(
+name|long
+operator|)
 name|mp
 operator|->
 name|id_num
@@ -259,22 +266,24 @@ modifier|*
 name|rp
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|tp
+decl_stmt|,
+modifier|*
+name|ap
+decl_stmt|;
 name|char
 name|tbuf
 index|[
 literal|80
 index|]
 decl_stmt|,
-modifier|*
-name|tp
-decl_stmt|,
 name|abuf
 index|[
 literal|80
 index|]
-decl_stmt|,
-modifier|*
-name|ap
 decl_stmt|;
 if|if
 condition|(

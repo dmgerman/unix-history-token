@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<protocols/talkd.h>
 end_include
 
@@ -754,7 +760,7 @@ begin_function
 name|int
 name|delete_invite
 parameter_list|(
-name|int
+name|u_int32_t
 name|id_num
 parameter_list|)
 block|{
