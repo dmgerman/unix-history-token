@@ -18923,12 +18923,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|alen
-operator|>=
+name|c
+operator|-
 operator|*
 name|pathstore
-operator|-
-name|c
+operator|>=
+name|alen
 condition|)
 block|{
 if|if
