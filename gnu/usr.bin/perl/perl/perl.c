@@ -4,12 +4,12 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$RCSfile: perl.c,v $$Revision: 1.5 $$Date: 1996/06/02 19:59:24 $\nPatch level: ###\n"
+literal|"$RCSfile: perl.c,v $$Revision: 1.7 $$Date: 1996/06/30 09:47:56 $\nPatch level: ###\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: perl.c,v $  * Revision 1.5  1996/06/02 19:59:24  gpalmer  * Use setreuid instead of seteuid for permissions management  *  * Revision 1.4  1995/05/30 05:03:10  rgrimes  * Remove trailing whitespace.  *  * Revision 1.3  1995/05/28  19:21:54  ache  * Fix $] variable value (version number), close PR 449  * Submitted by: Bill Fenner<fenner@parc.xerox.com>  *  * Revision 1.2  1994/10/27  23:16:54  wollman  * Convince Perl to that is is part of the system, as /usr/bin/perl (binary)  * and /usr/share/perl (library).  The latter was chosen as analogous to other  * directories already present in /usr/share, like /usr/share/groff_font and  * (particularly) /usr/share/mk.  *  * Revision 1.1.1.1  1994/09/10  06:27:33  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:37  nate  * PERL!  *  * Revision 4.0.1.8  1993/02/05  19:39:30  lwall  * patch36: the taintanyway code wasn't tainting anyway  * patch36: Malformed cmd links core dump apparently fixed  *  * Revision 4.0.1.7  92/06/08  14:50:39  lwall  * patch20: PERLLIB now supports multiple directories  * patch20: running taintperl explicitly now does checks even if $< == $>  * patch20: -e 'cmd' no longer fails silently if /tmp runs out of space  * patch20: perl -P now uses location of sed determined by Configure  * patch20: form feed for formats is now specifiable via $^L  * patch20: paragraph mode now skips extra newlines automatically  * patch20: eval "1 #comment" didn't work  * patch20: couldn't require . files  * patch20: semantic compilation errors didn't abort execution  *  * Revision 4.0.1.6  91/11/11  16:38:45  lwall  * patch19: default arg for shift was wrong after first subroutine definition  * patch19: op/regexp.t failed from missing arg to bcmp()  *  * Revision 4.0.1.5  91/11/05  18:03:32  lwall  * patch11: random cleanup  * patch11: $0 was being truncated at times  * patch11: cppstdin now installed outside of source directory  * patch11: -P didn't allow use of #elif or #undef  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: added eval {}  * patch11: eval confused by string containing null  *  * Revision 4.0.1.4  91/06/10  01:23:07  lwall  * patch10: perl -v printed incorrect copyright notice  *  * Revision 4.0.1.3  91/06/07  11:40:18  lwall  * patch4: changed old $^P to $^X  *  * Revision 4.0.1.2  91/06/07  11:26:16  lwall  * patch4: new copyright notice  * patch4: added $^P variable to control calling of perldb routines  * patch4: added $^F variable to specify maximum system fd, default 2  * patch4: debugger lost track of lines in eval  *  * Revision 4.0.1.1  91/04/11  17:49:05  lwall  * patch1: fixed undefined environ problem  *  * Revision 4.0  91/03/20  01:37:44  lwall  * 4.0 baseline.  *  */
+comment|/*  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: perl.c,v $  * Revision 1.7  1996/06/30 09:47:56  joerg  * Back out Nate's changes from rev. 1.6; our Perl has not been  * vulnerable since it used setreuid() as opposed to Posix saved IDs.  * The change broke setuid scripts.  *  * Revision 1.5  1996/06/02 19:59:24  gpalmer  * Use setreuid instead of seteuid for permissions management  *  * Revision 1.4  1995/05/30 05:03:10  rgrimes  * Remove trailing whitespace.  *  * Revision 1.3  1995/05/28  19:21:54  ache  * Fix $] variable value (version number), close PR 449  * Submitted by: Bill Fenner<fenner@parc.xerox.com>  *  * Revision 1.2  1994/10/27  23:16:54  wollman  * Convince Perl to that is is part of the system, as /usr/bin/perl (binary)  * and /usr/share/perl (library).  The latter was chosen as analogous to other  * directories already present in /usr/share, like /usr/share/groff_font and  * (particularly) /usr/share/mk.  *  * Revision 1.1.1.1  1994/09/10  06:27:33  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:37  nate  * PERL!  *  * Revision 4.0.1.8  1993/02/05  19:39:30  lwall  * patch36: the taintanyway code wasn't tainting anyway  * patch36: Malformed cmd links core dump apparently fixed  *  * Revision 4.0.1.7  92/06/08  14:50:39  lwall  * patch20: PERLLIB now supports multiple directories  * patch20: running taintperl explicitly now does checks even if $< == $>  * patch20: -e 'cmd' no longer fails silently if /tmp runs out of space  * patch20: perl -P now uses location of sed determined by Configure  * patch20: form feed for formats is now specifiable via $^L  * patch20: paragraph mode now skips extra newlines automatically  * patch20: eval "1 #comment" didn't work  * patch20: couldn't require . files  * patch20: semantic compilation errors didn't abort execution  *  * Revision 4.0.1.6  91/11/11  16:38:45  lwall  * patch19: default arg for shift was wrong after first subroutine definition  * patch19: op/regexp.t failed from missing arg to bcmp()  *  * Revision 4.0.1.5  91/11/05  18:03:32  lwall  * patch11: random cleanup  * patch11: $0 was being truncated at times  * patch11: cppstdin now installed outside of source directory  * patch11: -P didn't allow use of #elif or #undef  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: added eval {}  * patch11: eval confused by string containing null  *  * Revision 4.0.1.4  91/06/10  01:23:07  lwall  * patch10: perl -v printed incorrect copyright notice  *  * Revision 4.0.1.3  91/06/07  11:40:18  lwall  * patch4: changed old $^P to $^X  *  * Revision 4.0.1.2  91/06/07  11:26:16  lwall  * patch4: new copyright notice  * patch4: added $^P variable to control calling of perldb routines  * patch4: added $^F variable to specify maximum system fd, default 2  * patch4: debugger lost track of lines in eval  *  * Revision 4.0.1.1  91/04/11  17:49:05  lwall  * patch1: fixed undefined environ problem  *  * Revision 4.0  91/03/20  01:37:44  lwall  * 4.0 baseline.  *  */
 end_comment
 
 begin_comment
@@ -1776,7 +1776,21 @@ argument|)
 comment|/* normal stat is insecure */
 argument|fatal(
 literal|"Can't stat script \"%s\""
-argument|,origfilename);     if (statbuf.st_mode& (S_ISUID|S_ISGID)) { 	int len;
+argument|,origfilename);
+ifdef|#
+directive|ifdef
+name|IAMSUID
+argument|{ 	struct statfs stfs;  	if (fstatfs(fileno(rsfp),&stfs)<
+literal|0
+argument|) 	    fatal(
+literal|"Can't statfs filesystem of script \"%s\""
+argument|,origfilename);  	if (stfs.f_flags& MNT_NOSUID) 	    fatal(
+literal|"Permission denied"
+argument|);     }
+endif|#
+directive|endif
+comment|/* IAMSUID */
+argument|if (statbuf.st_mode& (S_ISUID|S_ISGID)) { 	int len;
 ifdef|#
 directive|ifdef
 name|IAMSUID

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: perl.h,v $$Revision: 1.1.1.1 $$Date: 1994/09/10 06:27:35 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: perl.h,v $  * Revision 1.1.1.1  1994/09/10  06:27:35  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:35  nate  * PERL!  *  * Revision 4.0.1.7  1993/02/05  19:40:30  lwall  * patch36: worked around certain busted compilers that don't init statics right  *  * Revision 4.0.1.6  92/06/08  14:55:10  lwall  * patch20: added Atari ST portability  * patch20: bcopy() and memcpy() now tested for overlap safety  * patch20: Perl now distinguishes overlapped copies from non-overlapped  * patch20: removed implicit int declarations on functions  *  * Revision 4.0.1.5  91/11/11  16:41:07  lwall  * patch19: uts wrongly defines S_ISDIR() et al  * patch19: too many preprocessors can't expand a macro right in #if  * patch19: added little-endian pack/unpack options  *  * Revision 4.0.1.4  91/11/05  18:06:10  lwall  * patch11: various portability fixes  * patch11: added support for dbz  * patch11: added some support for 64-bit integers  * patch11: hex() didn't understand leading 0x  *  * Revision 4.0.1.3  91/06/10  01:25:10  lwall  * patch10: certain pattern optimizations were botched  *  * Revision 4.0.1.2  91/06/07  11:28:33  lwall  * patch4: new copyright notice  * patch4: made some allowances for "semi-standard" C  * patch4: many, many itty-bitty portability fixes  *  * Revision 4.0.1.1  91/04/11  17:49:51  lwall  * patch1: hopefully straightened out some of the Xenix mess  *  * Revision 4.0  91/03/20  01:37:56  lwall  * 4.0 baseline.  *  */
+comment|/* $RCSfile: perl.h,v $$Revision: 1.2 $$Date: 1995/05/30 05:03:11 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: perl.h,v $  * Revision 1.2  1995/05/30 05:03:11  rgrimes  * Remove trailing whitespace.  *  * Revision 1.1.1.1  1994/09/10  06:27:35  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:35  nate  * PERL!  *  * Revision 4.0.1.7  1993/02/05  19:40:30  lwall  * patch36: worked around certain busted compilers that don't init statics right  *  * Revision 4.0.1.6  92/06/08  14:55:10  lwall  * patch20: added Atari ST portability  * patch20: bcopy() and memcpy() now tested for overlap safety  * patch20: Perl now distinguishes overlapped copies from non-overlapped  * patch20: removed implicit int declarations on functions  *  * Revision 4.0.1.5  91/11/11  16:41:07  lwall  * patch19: uts wrongly defines S_ISDIR() et al  * patch19: too many preprocessors can't expand a macro right in #if  * patch19: added little-endian pack/unpack options  *  * Revision 4.0.1.4  91/11/05  18:06:10  lwall  * patch11: various portability fixes  * patch11: added support for dbz  * patch11: added some support for 64-bit integers  * patch11: hex() didn't understand leading 0x  *  * Revision 4.0.1.3  91/06/10  01:25:10  lwall  * patch10: certain pattern optimizations were botched  *  * Revision 4.0.1.2  91/06/07  11:28:33  lwall  * patch4: new copyright notice  * patch4: made some allowances for "semi-standard" C  * patch4: many, many itty-bitty portability fixes  *  * Revision 4.0.1.1  91/04/11  17:49:51  lwall  * patch1: hopefully straightened out some of the Xenix mess  *  * Revision 4.0  91/03/20  01:37:56  lwall  * 4.0 baseline.  *  */
 end_comment
 
 begin_define
@@ -1196,6 +1196,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
 
 begin_ifdef
 ifdef|#
