@@ -2015,7 +2015,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  RISC/os 4.51 ** **	Untested... */
+comment|/* **  RISC/os 4.52 ** **	Gives a ton of warning messages, but otherwise compiles. */
 end_comment
 
 begin_ifdef
@@ -2049,6 +2049,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WAITUNION
+value|1
+end_define
+
+begin_comment
+comment|/* use "union wait" as wait argument type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
@@ -2066,6 +2088,68 @@ directive|define
 name|_PATH_UNIX
 value|"/unix"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_DEFINED
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|sigfunc_t
+function_decl|)
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
