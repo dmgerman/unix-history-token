@@ -370,6 +370,8 @@ block|,
 name|PLIST_IGNORE_INST
 block|,
 name|PLIST_OPTION
+block|,
+name|PLIST_ORIGIN
 block|}
 enum|;
 end_enum
@@ -463,6 +465,14 @@ name|head
 decl_stmt|,
 modifier|*
 name|tail
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|char
+modifier|*
+name|origin
 decl_stmt|;
 name|int
 name|fmtver_maj
