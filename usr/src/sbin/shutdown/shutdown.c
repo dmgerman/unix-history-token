@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.2 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,6 +236,40 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strncat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|utmp
@@ -286,7 +320,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|reboot
+name|doreboot
 init|=
 literal|0
 decl_stmt|;
@@ -578,6 +612,9 @@ operator|=
 name|getlogin
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gethostname
 argument_list|(
 name|hostname
@@ -656,7 +693,7 @@ continue|continue;
 case|case
 literal|'r'
 case|:
-name|reboot
+name|doreboot
 operator|=
 literal|1
 expr_stmt|;
@@ -751,7 +788,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|time_t
+name|long
 operator|*
 operator|)
 literal|0
@@ -889,6 +926,9 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -896,6 +936,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -903,6 +946,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -912,6 +958,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -919,6 +968,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -926,6 +978,9 @@ argument_list|,
 name|finish
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -933,6 +988,9 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setpriority
 argument_list|(
 name|PRIO_PROCESS
@@ -942,6 +1000,9 @@ argument_list|,
 name|PRIO_MIN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -973,6 +1034,9 @@ expr_stmt|;
 block|}
 else|#
 directive|else
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'\n'
@@ -1130,12 +1194,15 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|time_t
+name|long
 operator|*
 operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|ufd
@@ -1151,6 +1218,10 @@ name|read
 argument_list|(
 name|ufd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|utmp
 argument_list|,
@@ -1195,6 +1266,9 @@ name|alarmbuf
 argument_list|)
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|term
@@ -1202,6 +1276,9 @@ argument_list|,
 name|tpath
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncat
 argument_list|(
 name|term
@@ -1216,6 +1293,9 @@ operator|.
 name|ut_line
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
 literal|3
@@ -1254,6 +1334,9 @@ condition|)
 endif|#
 directive|endif
 block|{
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
 literal|0
@@ -1331,6 +1414,9 @@ name|mess
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fputc
 argument_list|(
 literal|'\r'
@@ -1338,6 +1424,9 @@ argument_list|,
 name|termf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputc
 argument_list|(
 literal|'\n'
@@ -1345,6 +1434,9 @@ argument_list|,
 name|termf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
 literal|5
@@ -1353,6 +1445,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|termf
@@ -1360,6 +1455,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|termf
@@ -1367,6 +1465,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
 literal|0
@@ -1391,6 +1492,9 @@ argument_list|(
 name|sdt
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|nologin
@@ -1421,6 +1525,9 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 operator|-
@@ -1438,7 +1545,7 @@ expr_stmt|;
 comment|/*& wait while they die */
 if|if
 condition|(
-name|reboot
+name|doreboot
 condition|)
 name|execle
 argument_list|(
@@ -1470,6 +1577,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 literal|1
@@ -1478,6 +1588,9 @@ name|SIGTERM
 argument_list|)
 expr_stmt|;
 comment|/* sync */
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 literal|1
@@ -1500,7 +1613,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|reboot
+name|doreboot
 condition|)
 name|printf
 argument_list|(
@@ -1548,7 +1661,7 @@ operator|-
 name|time
 argument_list|(
 operator|(
-name|time_t
+name|long
 operator|*
 operator|)
 literal|0
@@ -1566,6 +1679,10 @@ literal|0
 condition|)
 name|sleep
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|sint
 operator|<
 name|stogo
@@ -1573,6 +1690,7 @@ condition|?
 name|sint
 else|:
 name|stogo
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|stogo
@@ -1697,7 +1815,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|time_t
+name|long
 operator|*
 operator|)
 literal|0
@@ -1813,7 +1931,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|time_t
+name|long
 operator|*
 operator|)
 literal|0
@@ -1889,6 +2007,7 @@ expr_stmt|;
 name|finish
 argument_list|()
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 end_function
 
@@ -2120,6 +2239,9 @@ argument_list|,
 name|fastd
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fastd
@@ -2154,6 +2276,9 @@ modifier|*
 modifier|*
 name|mess
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|nologin
@@ -2193,6 +2318,9 @@ operator|+
 literal|11
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'\t'
@@ -2222,6 +2350,9 @@ operator|*
 name|mess
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'\n'
@@ -2229,6 +2360,9 @@ argument_list|,
 name|nologf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|nologf
@@ -2245,6 +2379,9 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -2252,6 +2389,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|nologin
@@ -2410,6 +2550,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|fseek
 argument_list|(
 name|fp
@@ -2495,6 +2638,9 @@ argument_list|,
 name|shutter
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputc
 argument_list|(
 literal|'\n'
@@ -2502,6 +2648,9 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
