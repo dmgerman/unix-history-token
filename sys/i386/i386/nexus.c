@@ -1441,6 +1441,9 @@ name|r_start
 expr_stmt|;
 name|pmap_unmapdev
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|rman_get_virtual
 argument_list|(
 name|r
