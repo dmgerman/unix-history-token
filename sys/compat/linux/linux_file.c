@@ -3588,7 +3588,7 @@ name|specialfile
 argument_list|,
 name|mntfromname
 argument_list|,
-name|MFSNAMELEN
+name|MNAMELEN
 operator|-
 literal|1
 argument_list|,
@@ -3614,7 +3614,7 @@ name|dir
 argument_list|,
 name|mntonname
 argument_list|,
-name|MFSNAMELEN
+name|MNAMELEN
 operator|-
 literal|1
 argument_list|,
