@@ -1116,6 +1116,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/wtio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|tape_desc
@@ -1245,7 +1262,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-comment|/* 	 * XXX This is terrific.  The st driver reports the tape drive 	 * as 0x7 (MT_ISAR - Sun/Archive compatible); the wt driver 	 * either reports MT_ISVIPER1 for an Archive tape, or 0x11 	 * (MT_ISMFOUR) for other tapes. 	 * XXX for the wt driver, rely on it behaving like a "standard" 	 * magtape driver. 	 */
+comment|/* 	 * XXX This is weird.  The st driver reports the tape drive 	 * as 0x7 (MT_ISAR - Sun/Archive compatible); the wt driver 	 * either reports MT_ISVIPER1 for an Archive tape, or 0x11 	 * (MT_ISMFOUR) for other tapes. 	 * XXX for the wt driver, rely on it behaving like a "standard" 	 * magtape driver. 	 */
 block|{
 name|MT_ISAR
 block|,
@@ -1261,9 +1278,9 @@ name|MT_ISVIPER1
 block|,
 literal|"Archive Viper"
 block|,
-literal|0
+name|WTDS_BITS
 block|,
-literal|0
+name|WTER_BITS
 block|}
 block|,
 block|{
@@ -1271,9 +1288,9 @@ name|MT_ISMFOUR
 block|,
 literal|"Wangtek"
 block|,
-literal|0
+name|WTDS_BITS
 block|,
-literal|0
+name|WTER_BITS
 block|}
 block|,
 endif|#
@@ -1399,6 +1416,10 @@ name|printreg
 argument_list|(
 literal|"ds"
 argument_list|,
+operator|(
+name|unsigned
+name|short
+operator|)
 name|bp
 operator|->
 name|mt_dsreg
@@ -1412,6 +1433,10 @@ name|printreg
 argument_list|(
 literal|"\ner"
 argument_list|,
+operator|(
+name|unsigned
+name|short
+operator|)
 name|bp
 operator|->
 name|mt_erreg
