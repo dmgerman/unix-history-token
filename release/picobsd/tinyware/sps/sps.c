@@ -515,10 +515,11 @@ name|ki_ppid
 argument_list|,
 name|ki
 operator|->
-name|ki_priority
-operator|-
-literal|22
+name|ki_pri
+operator|.
+name|pri_level
 argument_list|,
+comment|/* XXX check this */
 name|ki
 operator|->
 name|ki_nice
