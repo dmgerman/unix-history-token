@@ -582,7 +582,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:e:F:f:hi:LMm:Nn:O:o:p:Ss:t:Uv:w:X"
+literal|"a:b:Cc:Dd:e:F:f:hi:LlMm:Nn:O:o:p:Ss:t:Uv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -771,6 +771,18 @@ expr_stmt|;
 name|loudsubs
 operator|=
 name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|argappend
+argument_list|(
+operator|&
+name|newfs_arg
+argument_list|,
+literal|"-l"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
