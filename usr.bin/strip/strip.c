@@ -44,7 +44,7 @@ name|char
 name|RCSid
 index|[]
 init|=
-literal|"$Id: strip.c,v 1.2 1994/09/03 12:58:05 csgr Exp $"
+literal|"$Id: strip.c,v 1.3 1994/09/08 12:27:08 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,31 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+operator|&&
+name|close
+argument_list|(
+name|fd
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|fn
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -431,6 +456,27 @@ argument_list|,
 name|strerror
 argument_list|(
 name|EFTYPE
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|close
+argument_list|(
+name|fd
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|fn
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
