@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.73 1998/07/06 06:29:03 imp Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.74 1998/09/28 03:41:12 jlemon Exp $  */
 end_comment
 
 begin_include
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
 end_include
 
 begin_include
@@ -1155,10 +1161,16 @@ comment|/*  * Turn off the entire system.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|apm_power_off
 parameter_list|(
+name|int
+name|howto
+parameter_list|,
 name|void
+modifier|*
+name|junk
 parameter_list|)
 block|{
 name|u_long
@@ -1170,8 +1182,16 @@ name|ecx
 decl_stmt|,
 name|edx
 decl_stmt|;
+comment|/* Not halting, or not active */
 if|if
 condition|(
+operator|!
+operator|(
+name|howto
+operator|&
+name|RB_HALT
+operator|)
+operator|||
 operator|!
 name|apm_softc
 operator|.
@@ -3969,6 +3989,18 @@ argument_list|)
 expr_stmt|;
 name|apm_event_enable
 argument_list|()
+expr_stmt|;
+comment|/* Power the system off using APM */
+name|at_shutdown_pri
+argument_list|(
+name|apm_power_off
+argument_list|,
+name|NULL
+argument_list|,
+name|SHUTDOWN_FINAL
+argument_list|,
+name|SHUTDOWN_PRI_LAST
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
