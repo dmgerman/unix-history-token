@@ -449,7 +449,7 @@ comment|/*  * Session Information Services  */
 end_comment
 
 begin_macro
-name|api_query_sesion_id
+name|api_query_session_id
 argument_list|(
 argument|parms
 argument_list|)
@@ -541,7 +541,7 @@ block|}
 end_block
 
 begin_macro
-name|api_query_session_parms
+name|api_query_session_parameters
 argument_list|(
 argument|parms
 argument_list|)
@@ -562,7 +562,7 @@ name|api_issue
 argument_list|(
 literal|0x09
 argument_list|,
-name|QUERY_SESSION_PARMS
+name|QUERY_SESSION_PARAMETERS
 argument_list|,
 literal|0x80
 argument_list|,
@@ -660,7 +660,7 @@ literal|0x80
 argument_list|,
 literal|0x20
 argument_list|,
-literal|0
+literal|0xff
 argument_list|,
 name|gate_sessmgr
 argument_list|,
@@ -1226,7 +1226,7 @@ literal|0x80
 argument_list|,
 literal|0x20
 argument_list|,
-literal|0
+literal|0xff
 argument_list|,
 name|gate_copy
 argument_list|,
@@ -1322,7 +1322,7 @@ literal|0x80
 argument_list|,
 literal|0x20
 argument_list|,
-literal|0
+literal|0xff
 argument_list|,
 name|gate_oiam
 argument_list|,
