@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.23	%G%"
+literal|"@(#)recipient.c	3.24	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,10 @@ name|bool
 name|firstone
 decl_stmt|;
 comment|/* set on first address sent */
+name|bool
+name|selfref
+decl_stmt|;
+comment|/* set if this list includes ctladdr */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -104,13 +108,22 @@ name|Debug
 operator|>
 literal|1
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"sendto: %s\n"
+literal|"sendto: %s\n   ctladdr="
 argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+name|printaddr
+argument_list|(
+name|ctladdr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG
@@ -121,6 +134,10 @@ expr_stmt|;
 name|firstone
 operator|=
 name|TRUE
+expr_stmt|;
+name|selfref
+operator|=
+name|FALSE
 expr_stmt|;
 name|al
 operator|=
@@ -240,7 +257,6 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* put it on the local send list */
 name|a
 operator|->
 name|q_next
@@ -253,6 +269,7 @@ name|q_alias
 operator|=
 name|ctladdr
 expr_stmt|;
+comment|/* see if this should be marked as a primary address */
 if|if
 condition|(
 name|ctladdr
@@ -281,6 +298,27 @@ name|q_flags
 operator||=
 name|QPRIMARY
 expr_stmt|;
+comment|/* put on send queue or suppress self-reference */
+if|if
+condition|(
+name|ctladdr
+operator|!=
+name|NULL
+operator|&&
+name|sameaddr
+argument_list|(
+name|ctladdr
+argument_list|,
+name|a
+argument_list|,
+name|FALSE
+argument_list|)
+condition|)
+name|selfref
+operator|=
+name|TRUE
+expr_stmt|;
+else|else
 name|al
 operator|=
 name|a
@@ -290,6 +328,22 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+comment|/* if this alias doesn't include itself, delete ctladdr */
+if|if
+condition|(
+operator|!
+name|selfref
+operator|&&
+name|ctladdr
+operator|!=
+name|NULL
+condition|)
+name|ctladdr
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+expr_stmt|;
 comment|/* arrange to send to everyone on the local send list */
 while|while
 condition|(
@@ -393,13 +447,20 @@ if|if
 condition|(
 name|Debug
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"recipient(%s)\n"
-argument_list|,
-name|To
+literal|"\nrecipient: "
 argument_list|)
 expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG
@@ -534,15 +595,24 @@ if|if
 condition|(
 name|Debug
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"(%s in sendq)\n"
+literal|"%s in sendq: "
 argument_list|,
 name|a
 operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
+name|printaddr
+argument_list|(
+name|q
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG

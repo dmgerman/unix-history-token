@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.23	%G%	(with DBM)"
+literal|"@(#)alias.c	3.24	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.23	%G%	(without DBM)"
+literal|"@(#)alias.c	3.24	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -302,12 +302,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|a
-operator|->
-name|q_flags
-operator||=
-name|QDONTSEND
-expr_stmt|;
 name|AliasLevel
 operator|++
 expr_stmt|;
@@ -317,17 +311,6 @@ name|p
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|a
-operator|->
-name|q_alias
-operator|==
-name|NULL
-operator|)
-condition|?
-operator|&
-name|From
-else|:
 name|a
 argument_list|)
 expr_stmt|;
@@ -1319,7 +1302,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. **		Sets the QDONTSEND bit in addresses that are forwarded. */
+comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
 end_comment
 
 begin_macro
@@ -1465,12 +1448,6 @@ argument_list|)
 condition|)
 return|return;
 comment|/* we do have an address to forward to -- do it */
-name|user
-operator|->
-name|q_flags
-operator||=
-name|QDONTSEND
-expr_stmt|;
 name|include
 argument_list|(
 name|buf

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.26	%G%"
+literal|"@(#)parseaddr.c	3.27	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,25 +314,20 @@ if|if
 condition|(
 name|Debug
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"parse(\"%s\"): host \"%s\" user \"%s\" mailer %d\n"
-argument_list|,
-name|addr
-argument_list|,
-name|a
-operator|->
-name|q_host
-argument_list|,
-name|a
-operator|->
-name|q_user
-argument_list|,
-name|a
-operator|->
-name|q_mailer
+literal|"parse-->"
 argument_list|)
 expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG
@@ -3141,7 +3136,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"addr@%x: "
+literal|"%x="
 argument_list|,
 name|a
 argument_list|)
@@ -3186,7 +3181,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tnext=%x flags=%o, rmailer %d\n"
+literal|"\tnext=%x, flags=%o, rmailer %d\n"
 argument_list|,
 name|a
 operator|->
@@ -3214,6 +3209,16 @@ operator|->
 name|q_next
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|follow
+condition|)
+name|printf
+argument_list|(
+literal|"[NULL]\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
