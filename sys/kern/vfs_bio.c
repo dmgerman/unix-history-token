@@ -4929,7 +4929,9 @@ name|obj
 operator|=
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 expr_stmt|;
 comment|/* 		 * Get the base offset and length of the buffer.  Note that  		 * in the VMIO case if the buffer block size is not 		 * page-aligned then b_data pointer may not be page-aligned. 		 * But our b_pages[] array *IS* page aligned. 		 * 		 * block sizes less then DEV_BSIZE (usually 512) are not  		 * supported due to the page granularity bits (m->valid, 		 * m->dirty, etc...).  		 * 		 * See man buf(9) for more information 		 */
 name|resid
@@ -9536,10 +9538,12 @@ name|vmo
 operator|==
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|,
 operator|(
-literal|"ARGH! different b_object %p %p %p\n"
+literal|"ARGH! different b_bufobj->bo_object %p %p %p\n"
 operator|,
 name|bp
 operator|,
@@ -9547,7 +9551,9 @@ name|vmo
 operator|,
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9565,18 +9571,22 @@ name|KASSERT
 argument_list|(
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"ARGH! has b_object %p %p\n"
+literal|"ARGH! has b_bufobj->bo_object %p %p\n"
 operator|,
 name|bp
 operator|,
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10464,7 +10474,9 @@ name|obj
 operator|=
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
@@ -11734,7 +11746,9 @@ name|obj
 operator|=
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 expr_stmt|;
 if|#
 directive|if
@@ -12378,7 +12392,9 @@ name|obj
 operator|=
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
@@ -12668,7 +12684,9 @@ name|obj
 operator|=
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 expr_stmt|;
 name|foff
 operator|=
