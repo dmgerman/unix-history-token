@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -143,22 +149,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|f_cut
 name|__P
 argument_list|(
@@ -187,6 +177,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -394,15 +385,12 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s\n"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|fcn
@@ -628,9 +616,11 @@ condition|(
 operator|*
 name|p
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"[-cf] list: illegal list value\n"
+literal|1
+argument_list|,
+literal|"[-cf] list: illegal list value"
 argument_list|)
 expr_stmt|;
 if|if
@@ -641,9 +631,11 @@ operator|||
 operator|!
 name|start
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"[-cf] list: values may not include zero\n"
+literal|1
+argument_list|,
+literal|"[-cf] list: values may not include zero"
 argument_list|)
 expr_stmt|;
 if|if
@@ -652,9 +644,11 @@ name|stop
 operator|>
 name|_POSIX2_LINE_MAX
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"[-cf] list: %d too large (max %d)\n"
+literal|1
+argument_list|,
+literal|"[-cf] list: %d too large (max %d)"
 argument_list|,
 name|stop
 argument_list|,
@@ -977,9 +971,11 @@ operator|*
 name|p
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: line too long.\n"
+literal|1
+argument_list|,
+literal|"%s: line too long"
 argument_list|,
 name|fname
 argument_list|)
@@ -1201,6 +1197,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -1212,7 +1209,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\tcut -c list [file1 ...]\n\tcut -f list [-s] [-d delim] [file ...]\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: cut -c list [file1 ...]"
+argument_list|,
+literal|"       cut -f list [-s] [-d delim] [file ...]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1220,132 +1221,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cut: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
