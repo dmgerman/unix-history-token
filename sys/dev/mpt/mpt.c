@@ -782,7 +782,7 @@ operator|!=
 operator|&
 name|mpt
 operator|->
-name|requests
+name|request_pool
 index|[
 name|req
 operator|->
@@ -872,7 +872,7 @@ operator|!=
 operator|&
 name|mpt
 operator|->
-name|requests
+name|request_pool
 index|[
 name|req
 operator|->
@@ -4861,7 +4861,7 @@ condition|(
 operator|++
 name|count
 operator|==
-literal|1000
+literal|100000
 condition|)
 block|{
 name|device_printf
@@ -5122,6 +5122,9 @@ init|;
 name|val
 operator|<
 name|MPT_MAX_REQUESTS
+argument_list|(
+name|mpt
+argument_list|)
 condition|;
 name|val
 operator|++
@@ -5134,7 +5137,7 @@ argument_list|,
 operator|&
 name|mpt
 operator|->
-name|requests
+name|request_pool
 index|[
 name|val
 index|]
@@ -5292,7 +5295,7 @@ name|mpt
 operator|->
 name|dev
 argument_list|,
-literal|"mpt_get_iocfacts: GlobalCredits=%d BlockSize=%u "
+literal|"IOCFACTS: GlobalCredits=%d BlockSize=%u "
 literal|"Request Frame Size %u\n"
 argument_list|,
 name|facts
@@ -5364,7 +5367,7 @@ name|mpt
 operator|->
 name|dev
 argument_list|,
-literal|"mpt_get_portfacts: Type %x PFlags %x IID %d\n"
+literal|"PORTFACTS: Type %x PFlags %x IID %d MaxDev %d\n"
 argument_list|,
 name|pfp
 operator|.
@@ -5377,6 +5380,10 @@ argument_list|,
 name|pfp
 operator|.
 name|PortSCSIID
+argument_list|,
+name|pfp
+operator|.
+name|MaxDevices
 argument_list|)
 expr_stmt|;
 block|}

@@ -516,12 +516,11 @@ begin_define
 define|#
 directive|define
 name|MPT_MAX_REQUESTS
-value|256
+parameter_list|(
+name|mpt
+parameter_list|)
+value|((mpt)->is_fc? 1024 : 256)
 end_define
-
-begin_comment
-comment|/* XXX: should be derived from GlobalCredits */
-end_comment
 
 begin_define
 define|#
@@ -545,7 +544,10 @@ begin_define
 define|#
 directive|define
 name|MPT_REQ_MEM_SIZE
-value|(MPT_MAX_REQUESTS * MPT_REQUEST_AREA)
+parameter_list|(
+name|mpt
+parameter_list|)
+value|(MPT_MAX_REQUESTS(mpt) * MPT_REQUEST_AREA)
 end_define
 
 begin_comment
@@ -775,6 +777,7 @@ name|verbose
 operator|:
 literal|3
 operator|,
+name|outofbeer
 operator|:
 literal|1
 operator|,
@@ -986,10 +989,8 @@ decl_stmt|;
 comment|/* BusADdr of request memory */
 comment|/* 	 * CAM&& Software Management 	 */
 name|request_t
-name|requests
-index|[
-name|MPT_MAX_REQUESTS
-index|]
+modifier|*
+name|request_pool
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
