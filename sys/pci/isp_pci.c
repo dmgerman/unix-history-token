@@ -2050,6 +2050,12 @@ name|unit
 operator|=
 name|unit
 expr_stmt|;
+name|isp
+operator|->
+name|isp_role
+operator|=
+name|ISP_DEFAULT_ROLES
+expr_stmt|;
 comment|/* 	 * Try and find firmware for this device. 	 */
 if|if
 condition|(
@@ -2753,6 +2759,8 @@ operator|->
 name|isp_dblev
 operator||=
 name|ISP_LOGCONFIG
+operator||
+name|ISP_LOGINFO
 expr_stmt|;
 comment|/* 	 * Make sure we're in reset state. 	 */
 name|ISP_LOCK
@@ -4265,6 +4273,8 @@ argument_list|,
 name|ISP_LOGERR
 argument_list|,
 literal|"cannot allocate %d bytes of CCB memory"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 name|free
