@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -130,6 +130,17 @@ end_define
 
 begin_comment
 comment|/* ISO cnlp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ENCAP
+value|98
+end_define
+
+begin_comment
+comment|/* encapsulation header */
 end_comment
 
 begin_define
@@ -354,7 +365,7 @@ name|IN_EXPERIMENTAL
 parameter_list|(
 name|i
 parameter_list|)
-value|(((long)(i)& 0xe0000000) == 0xe0000000)
+value|(((long)(i)& 0xf0000000) == 0xf0000000)
 end_define
 
 begin_define
@@ -529,7 +540,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* set/get IP multicast interface */
+comment|/* in_addr; set/get IP multicast interface */
 end_comment
 
 begin_define
@@ -540,7 +551,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* set/get IP multicast timetolive */
+comment|/* u_char; set/get IP multicast timetolive */
 end_comment
 
 begin_define
@@ -551,7 +562,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* set/get IP multicast loopback */
+comment|/* u_char; set/get IP multicast loopback */
 end_comment
 
 begin_define
@@ -562,7 +573,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* add	an IP group membership */
+comment|/* ip_mreq; add an IP group membership */
 end_comment
 
 begin_define
@@ -573,7 +584,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* drop an IP group membership */
+comment|/* ip_mreq; drop an IP group membership */
 end_comment
 
 begin_define
