@@ -202,6 +202,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*temporary we aren't 4.4 portability hack*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMET_TO_TIMEVAL
+parameter_list|(
+name|timevalp
+parameter_list|,
+name|tp
+parameter_list|)
+value|(timevalp)->tv_sec = *(tp);
+end_define
+
 begin_function
 name|int
 name|main
@@ -474,6 +490,9 @@ argument_list|,
 name|tv
 argument_list|)
 expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
 block|}
 block|}
 comment|/* Otherwise use the current time of day. */
@@ -598,7 +617,8 @@ condition|(
 operator|!
 name|aflag
 condition|)
-name|TIMESPEC_TO_TIMEVAL
+comment|/*			TIMESPEC_TO_TIMEVAL(&tv[0],&sb.st_atimespec);*/
+name|TIMET_TO_TIMEVAL
 argument_list|(
 operator|&
 name|tv
@@ -609,7 +629,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_atimespec
+name|st_atime
 argument_list|)
 expr_stmt|;
 if|if
@@ -617,7 +637,8 @@ condition|(
 operator|!
 name|mflag
 condition|)
-name|TIMESPEC_TO_TIMEVAL
+comment|/*			TIMESPEC_TO_TIMEVAL(&tv[1],&sb.st_mtimespec);*/
+name|TIMET_TO_TIMEVAL
 argument_list|(
 operator|&
 name|tv
@@ -628,7 +649,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_mtimespec
+name|st_mtime
 argument_list|)
 expr_stmt|;
 comment|/* Try utimes(2). */
@@ -1261,17 +1282,19 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|TIMESPEC_TO_TIMEVAL
+comment|/*	TIMESPEC_TO_TIMEVAL(tvp,&sb.st_atimespec);*/
+name|TIMET_TO_TIMEVAL
 argument_list|(
 name|tvp
 argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_atimespec
+name|st_atime
 argument_list|)
 expr_stmt|;
-name|TIMESPEC_TO_TIMEVAL
+comment|/*	TIMESPEC_TO_TIMEVAL(tvp + 1,&sb.st_mtimespec);*/
+name|TIMET_TO_TIMEVAL
 argument_list|(
 name|tvp
 operator|+
@@ -1280,7 +1303,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_mtimespec
+name|st_mtime
 argument_list|)
 expr_stmt|;
 block|}
