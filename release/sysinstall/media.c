@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.80 1997/02/22 14:11:57 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.81 1997/03/07 16:39:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -999,8 +999,10 @@ name|char
 modifier|*
 name|cp
 decl_stmt|,
-modifier|*
 name|hostname
+index|[
+name|MAXHOSTNAMELEN
+index|]
 decl_stmt|,
 modifier|*
 name|dir
@@ -1201,6 +1203,15 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|SAFE_STRCPY
+argument_list|(
+name|hostname
+argument_list|,
+name|cp
+operator|+
+literal|6
+argument_list|)
+expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -1284,12 +1295,6 @@ operator||
 name|what
 return|;
 block|}
-name|hostname
-operator|=
-name|cp
-operator|+
-literal|6
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1401,21 +1406,21 @@ block|{
 if|if
 condition|(
 operator|(
-name|gethostbyname
-argument_list|(
-name|hostname
-argument_list|)
-operator|==
-name|NULL
-operator|)
-operator|&&
-operator|(
 name|inet_addr
 argument_list|(
 name|hostname
 argument_list|)
 operator|==
 name|INADDR_NONE
+operator|)
+operator|&&
+operator|(
+name|gethostbyname
+argument_list|(
+name|hostname
+argument_list|)
+operator|==
+name|NULL
 operator|)
 condition|)
 block|{
@@ -1706,6 +1711,12 @@ decl_stmt|,
 modifier|*
 name|idx
 decl_stmt|;
+name|char
+name|hostname
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
 name|mediaClose
 argument_list|()
 expr_stmt|;
@@ -1731,6 +1742,13 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
+name|SAFE_STRCPY
+argument_list|(
+name|hostname
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1739,7 +1757,7 @@ name|idx
 operator|=
 name|index
 argument_list|(
-name|cp
+name|hostname
 argument_list|,
 literal|':'
 argument_list|)
@@ -1762,7 +1780,7 @@ name|nfsDevice
 operator|.
 name|name
 argument_list|,
-name|cp
+name|hostname
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1842,21 +1860,21 @@ block|{
 if|if
 condition|(
 operator|(
-name|gethostbyname
-argument_list|(
-name|cp
-argument_list|)
-operator|==
-name|NULL
-operator|)
-operator|&&
-operator|(
 name|inet_addr
 argument_list|(
-name|cp
+name|hostname
 argument_list|)
 operator|==
 name|INADDR_NONE
+operator|)
+operator|&&
+operator|(
+name|gethostbyname
+argument_list|(
+name|hostname
+argument_list|)
+operator|==
+name|NULL
 operator|)
 condition|)
 block|{
@@ -1865,7 +1883,7 @@ argument_list|(
 literal|"Cannot resolve hostname `%s'!  Are you sure that your\n"
 literal|"name server, gateway and network interface are correctly configured?"
 argument_list|,
-name|cp
+name|hostname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1897,7 +1915,7 @@ name|msgDebug
 argument_list|(
 literal|"Found DNS entry for %s successfully.."
 argument_list|,
-name|cp
+name|hostname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1905,7 +1923,7 @@ name|variable_set2
 argument_list|(
 name|VAR_NFS_HOST
 argument_list|,
-name|cp
+name|hostname
 argument_list|)
 expr_stmt|;
 name|nfsDevice
