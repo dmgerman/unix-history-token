@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xxflush.c	3.2 (Berkeley) %G%"
+literal|"@(#)xxflush.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,24 @@ decl_stmt|,
 modifier|*
 name|xq
 decl_stmt|;
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_ntoken
+operator|>
+literal|0
+condition|)
+name|xcscan
+argument_list|(
+name|xxbuf
+argument_list|,
+name|xxbufp
+operator|-
+name|xxbuf
+argument_list|)
+expr_stmt|;
+comment|/* XXX, starting point */
 for|for
 control|(
 name|xp
@@ -407,17 +425,6 @@ expr_stmt|;
 name|xxbufp
 operator|=
 name|xxbuf
-expr_stmt|;
-if|if
-condition|(
-name|tt
-operator|.
-name|tt_ntoken
-operator|>
-literal|0
-condition|)
-name|xcreset
-argument_list|()
 expr_stmt|;
 block|}
 name|ttflush
