@@ -2057,6 +2057,8 @@ argument_list|,
 name|CTLTYPE_OPAQUE
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_ANYBODY
 argument_list|,
 name|NULL
 argument_list|,
