@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.49	82/12/14	*/
+comment|/*	tcp_output.c	4.50	83/01/04	*/
 end_comment
 
 begin_include
@@ -128,18 +128,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tcpstates
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_comment
 comment|/*  * Initial options.  */
@@ -550,7 +538,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 return|return
 operator|(
@@ -1070,7 +1058,7 @@ operator|->
 name|snd_una
 expr_stmt|;
 comment|/* drag it along */
-comment|/* 	 * If anything to send and we can send it all, set PUSH. 	 * (This will keep happy those implementations which only 	 * give data to the user when a buffer fills or a PUSH comes in. 	 */
+comment|/* 	 * If anything to send and we can send it all, set PUSH. 	 * (This will keep happy those implementations which only 	 * give data to the user when a buffer fills or a PUSH comes in.) 	 */
 if|if
 condition|(
 name|len

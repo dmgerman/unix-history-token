@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.37	82/12/16	*/
+comment|/*	tcp_subr.c	4.38	83/01/04	*/
 end_comment
 
 begin_include
@@ -220,7 +220,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -509,7 +509,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|m
@@ -859,10 +859,15 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
+operator|(
+expr|struct
+name|tcpcb
+operator|*
+operator|)
 literal|0
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.37	82/12/14	*/
+comment|/*	in_pcb.c	4.38	83/01/04	*/
 end_comment
 
 begin_include
@@ -139,7 +139,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -271,6 +271,8 @@ operator|->
 name|inp_laddr
 operator|.
 name|s_addr
+operator|!=
+name|INADDR_ANY
 condition|)
 return|return
 operator|(
@@ -321,6 +323,8 @@ operator|->
 name|sin_addr
 operator|.
 name|s_addr
+operator|!=
+name|INADDR_ANY
 condition|)
 block|{
 name|int
@@ -619,7 +623,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 operator|||
 name|sin
 operator|->
@@ -640,7 +644,7 @@ name|inp_laddr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 block|{
 name|ifp
@@ -745,7 +749,7 @@ name|inp_laddr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 name|inp
 operator|->
@@ -802,7 +806,7 @@ name|inp_faddr
 operator|.
 name|s_addr
 operator|=
-literal|0
+name|INADDR_ANY
 expr_stmt|;
 name|inp
 operator|->
@@ -1243,7 +1247,7 @@ name|inp_laddr
 operator|.
 name|s_addr
 operator|!=
-literal|0
+name|INADDR_ANY
 condition|)
 block|{
 if|if
@@ -1252,7 +1256,7 @@ name|laddr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 name|wildcard
 operator|++
@@ -1280,7 +1284,7 @@ name|laddr
 operator|.
 name|s_addr
 operator|!=
-literal|0
+name|INADDR_ANY
 condition|)
 name|wildcard
 operator|++
@@ -1294,7 +1298,7 @@ name|inp_faddr
 operator|.
 name|s_addr
 operator|!=
-literal|0
+name|INADDR_ANY
 condition|)
 block|{
 if|if
@@ -1303,7 +1307,7 @@ name|faddr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 name|wildcard
 operator|++
@@ -1337,7 +1341,7 @@ name|faddr
 operator|.
 name|s_addr
 operator|!=
-literal|0
+name|INADDR_ANY
 condition|)
 name|wildcard
 operator|++

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.60	83/01/03	*/
+comment|/*	ip_input.c	1.61	83/01/04	*/
 end_comment
 
 begin_include
@@ -2427,7 +2427,6 @@ name|sin
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|if_ifwithaddr
 argument_list|(
 operator|(
@@ -2438,6 +2437,8 @@ operator|)
 operator|&
 name|ipaddr
 argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 if|if

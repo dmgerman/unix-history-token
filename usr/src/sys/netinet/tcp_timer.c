@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	4.28	82/10/20	*/
+comment|/*	tcp_timer.c	4.29	83/01/04	*/
 end_comment
 
 begin_include
@@ -526,14 +526,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|tcprexmtprint
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|tcpexprexmtbackoff
 init|=
 literal|0
@@ -694,22 +686,6 @@ name|TCPTV_MAX
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|tcprexmtprint
-condition|)
-name|printf
-argument_list|(
-literal|"rexmt set to %d\n"
-argument_list|,
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_REXMT
-index|]
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|snd_nxt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.41	82/12/14	*/
+comment|/*	udp_usrreq.c	4.42	83/01/04	*/
 end_comment
 
 begin_include
@@ -476,35 +476,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|in_addr
-name|broadcastaddr
-decl_stmt|;
-name|broadcastaddr
-operator|=
-name|if_makeaddr
-argument_list|(
-name|in_netof
-argument_list|(
-name|ui
-operator|->
-name|ui_dst
-argument_list|)
-argument_list|,
-name|INADDR_ANY
-argument_list|)
-expr_stmt|;
+comment|/* don't send ICMP response for broadcast packet */
 if|if
 condition|(
+name|in_lnaof
+argument_list|(
 name|ui
 operator|->
 name|ui_dst
-operator|.
-name|s_addr
+argument_list|)
 operator|==
-name|broadcastaddr
-operator|.
-name|s_addr
+name|INADDR_ANY
 condition|)
 goto|goto
 name|bad
@@ -562,18 +544,6 @@ expr|struct
 name|udpiphdr
 argument_list|)
 expr_stmt|;
-name|SBCHECK
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|inp_socket
-operator|->
-name|so_rcv
-argument_list|,
-literal|"udpinput before"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sbappendaddr
@@ -601,18 +571,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|SBCHECK
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|inp_socket
-operator|->
-name|so_rcv
-argument_list|,
-literal|"udpinput after"
-argument_list|)
-expr_stmt|;
 name|sorwakeup
 argument_list|(
 name|inp
@@ -1286,6 +1244,8 @@ operator|->
 name|inp_faddr
 operator|.
 name|s_addr
+operator|!=
+name|INADDR_ANY
 condition|)
 return|return
 operator|(
@@ -1332,7 +1292,7 @@ name|inp_faddr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 return|return
 operator|(
@@ -1385,6 +1345,8 @@ operator|->
 name|inp_faddr
 operator|.
 name|s_addr
+operator|!=
+name|INADDR_ANY
 condition|)
 return|return
 operator|(
@@ -1416,7 +1378,7 @@ name|inp_faddr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 return|return
 operator|(
