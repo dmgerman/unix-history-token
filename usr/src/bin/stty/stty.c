@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.1 (Berkeley) %G%"
+literal|"@(#)stty.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2578,7 +2578,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"newcrt: (crtbs crterase crtkill ctlecho) "
+literal|"crt: (crtbs crterase crtkill ctlecho) "
 argument_list|)
 expr_stmt|;
 else|else
@@ -2586,7 +2586,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"newcrt "
+literal|"crt "
 argument_list|)
 expr_stmt|;
 name|any
