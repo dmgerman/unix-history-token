@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -142,7 +142,6 @@ file|<ufs/lfs/lfs_extern.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|lfs_mountfs
 name|__P
@@ -915,7 +914,6 @@ comment|/*  * Common code for mount and mountroot  * LFS specific  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|lfs_mountfs
 parameter_list|(
