@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: direntry.h,v 1.8 1998/02/22 18:00:47 ache Exp $ */
+comment|/*	$Id: direntry.h,v 1.9 1998/02/23 09:39:23 ache Exp $ */
 end_comment
 
 begin_comment
@@ -437,7 +437,14 @@ operator|*
 name|un
 operator|,
 name|int
-name|lower
+name|d2u_loaded
+operator|,
+name|u_int8_t
+operator|*
+name|d2u
+operator|,
+name|int
+name|ul_loaded
 operator|,
 name|u_int8_t
 operator|*
@@ -469,6 +476,20 @@ name|unlen
 operator|,
 name|u_int
 name|gen
+operator|,
+name|int
+name|u2d_loaded
+operator|,
+name|u_int8_t
+operator|*
+name|u2d
+operator|,
+name|int
+name|lu_loaded
+operator|,
+name|u_int8_t
+operator|*
+name|lu
 operator|)
 argument_list|)
 decl_stmt|;
@@ -498,6 +519,9 @@ name|cnt
 operator|,
 name|int
 name|chksum
+operator|,
+name|int
+name|table_loaded
 operator|,
 name|u_int16_t
 operator|*
@@ -529,13 +553,19 @@ operator|,
 name|int
 name|chksum
 operator|,
+name|int
+name|u2w_loaded
+operator|,
 name|u_int16_t
 operator|*
 name|u2w
 operator|,
+name|int
+name|lu_loaded
+operator|,
 name|u_int8_t
 operator|*
-name|ul
+name|lu
 operator|)
 argument_list|)
 decl_stmt|;
@@ -559,6 +589,9 @@ name|dp
 operator|,
 name|int
 name|chksum
+operator|,
+name|int
+name|table_loaded
 operator|,
 name|u_int16_t
 operator|*

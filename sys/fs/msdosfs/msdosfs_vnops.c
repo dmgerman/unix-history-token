@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.58 1998/02/22 18:00:54 ache Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.59 1998/02/23 09:39:27 ache Exp $ */
 end_comment
 
 begin_comment
@@ -7709,19 +7709,15 @@ name|dirbuf
 argument_list|,
 name|chksum
 argument_list|,
-operator|(
 name|pmp
 operator|->
 name|pm_flags
 operator|&
 name|MSDOSFSMNT_U2WTABLE
-operator|)
-condition|?
+argument_list|,
 name|pmp
 operator|->
 name|pm_u2w
-else|:
-name|NULL
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -7891,21 +7887,21 @@ name|pmp
 operator|->
 name|pm_flags
 operator|&
-name|MSDOSFSMNT_SHORTNAME
+name|MSDOSFSMNT_U2WTABLE
 argument_list|,
-operator|(
+name|pmp
+operator|->
+name|pm_d2u
+argument_list|,
 name|pmp
 operator|->
 name|pm_flags
 operator|&
 name|MSDOSFSMNT_ULTABLE
-operator|)
-condition|?
+argument_list|,
 name|pmp
 operator|->
 name|pm_ul
-else|:
-name|NULL
 argument_list|)
 expr_stmt|;
 else|else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfsmount.h,v 1.14 1998/02/22 15:09:54 ache Exp $ */
+comment|/*	$Id: msdosfsmount.h,v 1.15 1998/02/23 09:39:29 ache Exp $ */
 end_comment
 
 begin_comment
@@ -209,6 +209,27 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* Local upper->lower table */
+name|u_int8_t
+name|pm_lu
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local lower->upper table */
+name|u_int8_t
+name|pm_d2u
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* DOS->local table */
+name|u_int8_t
+name|pm_u2d
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local->DOS table */
 block|}
 struct|;
 end_struct
@@ -603,6 +624,27 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* Local upper->lower table */
+name|u_int8_t
+name|lu
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local lower->upper table */
+name|u_int8_t
+name|d2u
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* DOS->local table */
+name|u_int8_t
+name|u2d
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local->DOS table */
 block|}
 struct|;
 end_struct
@@ -674,7 +716,11 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Local->Unicode table is loaded */
+comment|/* Local->Unicode and local<->DOS   */
+end_comment
+
+begin_comment
+comment|/* tables loaded                    */
 end_comment
 
 begin_define
@@ -685,7 +731,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Local upper->lower table is loaded */
+comment|/* Local upper<->lower table loaded */
 end_comment
 
 begin_comment
