@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.31 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5336,21 +5336,30 @@ literal|0L
 operator|)
 return|;
 block|}
+define|#
+directive|define
+name|OFFSET
+value|((u_long)25567 * 24*60*60)
 return|return
 operator|(
 name|htonl
 argument_list|(
-operator|(
+call|(
 name|long
-operator|)
+call|)
+argument_list|(
 name|tv
 operator|.
 name|tv_sec
 operator|+
-literal|2208988800
+name|OFFSET
+argument_list|)
 argument_list|)
 operator|)
 return|;
+undef|#
+directive|undef
+name|OFFSET
 block|}
 end_function
 
