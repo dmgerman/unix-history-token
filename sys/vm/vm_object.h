@@ -638,7 +638,7 @@ name|vm_object_coalesce
 parameter_list|(
 name|vm_object_t
 parameter_list|,
-name|vm_pindex_t
+name|vm_ooffset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|,

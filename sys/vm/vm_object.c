@@ -6262,7 +6262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Routine:	vm_object_coalesce  *	Function:	Coalesces two objects backing up adjoining  *			regions of memory into a single object.  *  *	returns TRUE if objects were combined.  *  *	NOTE:	Only works at the moment if the second object is NULL -  *		if it's not, which object do we lock first?  *  *	Parameters:  *		prev_object	First object to coalesce  *		prev_offset	Offset into prev_object  *		next_object	Second object into coalesce  *		next_offset	Offset into next_object  *  *		prev_size	Size of reference to prev_object  *		next_size	Size of reference to next_object  *  *	Conditions:  *	The object must *not* be locked.  */
+comment|/*  *	Routine:	vm_object_coalesce  *	Function:	Coalesces two objects backing up adjoining  *			regions of memory into a single object.  *  *	returns TRUE if objects were combined.  *  *	NOTE:	Only works at the moment if the second object is NULL -  *		if it's not, which object do we lock first?  *  *	Parameters:  *		prev_object	First object to coalesce  *		prev_offset	Offset into prev_object  *		prev_size	Size of reference to prev_object  *		next_size	Size of reference to the second object  *  *	Conditions:  *	The object must *not* be locked.  */
 end_comment
 
 begin_function
@@ -6272,8 +6272,8 @@ parameter_list|(
 name|vm_object_t
 name|prev_object
 parameter_list|,
-name|vm_pindex_t
-name|prev_pindex
+name|vm_ooffset_t
+name|prev_offset
 parameter_list|,
 name|vm_size_t
 name|prev_size
@@ -6364,7 +6364,10 @@ name|PAGE_SHIFT
 expr_stmt|;
 name|next_pindex
 operator|=
-name|prev_pindex
+name|OFF_TO_IDX
+argument_list|(
+name|prev_offset
+argument_list|)
 operator|+
 name|prev_size
 expr_stmt|;

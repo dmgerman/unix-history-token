@@ -3180,12 +3180,9 @@ name|object
 operator|.
 name|vm_object
 argument_list|,
-name|OFF_TO_IDX
-argument_list|(
 name|prev_entry
 operator|->
 name|offset
-argument_list|)
 argument_list|,
 call|(
 name|vm_size_t
@@ -11062,12 +11059,9 @@ name|object
 operator|.
 name|vm_object
 argument_list|,
-name|OFF_TO_IDX
-argument_list|(
 name|stack_entry
 operator|->
 name|offset
-argument_list|)
 argument_list|,
 call|(
 name|vm_size_t
