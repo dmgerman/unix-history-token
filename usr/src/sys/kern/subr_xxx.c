@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	4.5	81/03/09	*/
+comment|/*	subr_xxx.c	4.6	81/03/11	*/
 end_comment
 
 begin_include
@@ -730,11 +730,19 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|unneeded
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"ct."
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCT
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * Pick up and return the next character from the user's  * write call at location u_base;  * update u_base, u_count, and u_offset.  Return -1  * when u_count is exhausted.  u_base is in the user's  * address space unless u_segflg is set.  */
