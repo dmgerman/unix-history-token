@@ -1004,6 +1004,91 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * One deep route cache for ip forwarding.  */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+name|rtcache
+block|{
+name|struct
+name|route
+name|rc_ro
+decl_stmt|;
+comment|/* most recently used route */
+name|struct
+name|mtx
+name|rc_mtx
+decl_stmt|;
+comment|/* update lock for cache */
+block|}
+name|ip_fwdcache
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RTCACHE_LOCK
+parameter_list|()
+value|mtx_lock(&ip_fwdcache.rc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTCACHE_UNLOCK
+parameter_list|()
+value|mtx_unlock(&ip_fwdcache.rc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTCACHE_LOCK_INIT
+parameter_list|()
+define|\
+value|mtx_init(&ip_fwdcache.rc_mtx, "route cache", NULL, MTX_DEF);
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTCACHE_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&ip_fwdcache.rc_mtx, MA_OWNED)
+end_define
+
+begin_comment
+comment|/*  * Get the current route cache contents.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCACHE_GET
+parameter_list|(
+name|_ro
+parameter_list|)
+value|do {					\ 	RTCACHE_LOCK();						\ 	*(_ro) = ip_fwdcache.rc_ro;				\ 	RTCACHE_UNLOCK();					\ } while (0);
+end_define
+
+begin_comment
+comment|/*  * Update the cache contents.  We optimize this using  * the routing table reference. XXX is this safe?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCACHE_UPDATE
+parameter_list|(
+name|_ro
+parameter_list|)
+value|do {				\ 	if ((_ro)->ro_rt != ip_fwdcache.rc_ro.ro_rt) {	\ 		RTCACHE_LOCK();					\ 		ip_fwdcache.rc_ro = *(_ro);			\ 		RTCACHE_UNLOCK();				\ 	}							\ } while (0);
+end_define
+
+begin_comment
 comment|/*  * XXX this is ugly -- the following two global variables are  * used to store packet state while it travels through the stack.  * Note that the code even makes assumptions on the size and  * alignment of fields inside struct ip_srcrt so e.g. adding some  * fields will break the code. This needs to be fixed.  *  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
 end_comment
 
@@ -1100,6 +1185,10 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|struct
+name|route
+modifier|*
 parameter_list|,
 name|int
 name|srcrt
@@ -1352,6 +1441,20 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ip_fwdcache
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ip_fwdcache
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RTCACHE_LOCK_INIT
+argument_list|()
+expr_stmt|;
 name|maxnipq
 operator|=
 name|nmbclusters
@@ -1407,15 +1510,58 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX watch out this one. It is perhaps used as a cache for  * the most recently used route ? it is cleared in in_addroute()  * when a new route is successfully created.  */
+comment|/*  * Invalidate any cached route used for forwarding.  */
 end_comment
 
-begin_decl_stmt
+begin_function
+name|void
+name|ip_forward_cacheinval
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|struct
-name|route
-name|ipforward_rt
+name|rtentry
+modifier|*
+name|rt
+init|=
+name|NULL
 decl_stmt|;
-end_decl_stmt
+name|RTCACHE_LOCK
+argument_list|()
+expr_stmt|;
+name|rt
+operator|=
+name|ip_fwdcache
+operator|.
+name|rc_ro
+operator|.
+name|ro_rt
+expr_stmt|;
+name|ip_fwdcache
+operator|.
+name|rc_ro
+operator|.
+name|ro_rt
+operator|=
+literal|0
+expr_stmt|;
+name|RTCACHE_UNLOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|!=
+name|NULL
+condition|)
+name|RTFREE
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  * try to reassemble.  Process options.  Pass to next level.  */
@@ -1477,6 +1623,11 @@ name|struct
 name|ip_fw_args
 name|args
 decl_stmt|;
+name|struct
+name|route
+name|cro
+decl_stmt|;
+comment|/* copy of cached route */
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
@@ -3018,9 +3169,18 @@ block|}
 endif|#
 directive|endif
 comment|/* FAST_IPSEC */
+name|RTCACHE_GET
+argument_list|(
+operator|&
+name|cro
+argument_list|)
+expr_stmt|;
 name|ip_forward
 argument_list|(
 name|m
+argument_list|,
+operator|&
+name|cro
 argument_list|,
 literal|0
 argument_list|,
@@ -5528,6 +5688,18 @@ block|,
 name|AF_INET
 block|}
 decl_stmt|;
+name|struct
+name|route
+name|cro
+decl_stmt|;
+comment|/* copy of cached route */
+comment|/* 	 * Grab a copy of the route cache in case we need 	 * to update to reflect source routing or the like. 	 * Could optimize this to do it later... 	 */
+name|RTCACHE_GET
+argument_list|(
+operator|&
+name|cro
+argument_list|)
+expr_stmt|;
 name|dst
 operator|=
 name|ip
@@ -6055,7 +6227,7 @@ operator|.
 name|sin_addr
 argument_list|,
 operator|&
-name|ipforward_rt
+name|cro
 argument_list|)
 expr_stmt|;
 if|if
@@ -6294,7 +6466,7 @@ operator|.
 name|sin_addr
 argument_list|,
 operator|&
-name|ipforward_rt
+name|cro
 argument_list|)
 operator|)
 operator|==
@@ -6808,6 +6980,9 @@ block|{
 name|ip_forward
 argument_list|(
 name|m
+argument_list|,
+operator|&
+name|cro
 argument_list|,
 literal|1
 argument_list|,
@@ -7654,6 +7829,11 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+name|struct
+name|route
+modifier|*
+name|ro
+parameter_list|,
 name|int
 name|srcrt
 parameter_list|,
@@ -7857,8 +8037,7 @@ name|ip_rtaddr
 argument_list|(
 name|pkt_dst
 argument_list|,
-operator|&
-name|ipforward_rt
+name|ro
 argument_list|)
 operator|==
 literal|0
@@ -7882,8 +8061,8 @@ block|}
 else|else
 name|rt
 operator|=
-name|ipforward_rt
-operator|.
+name|ro
+operator|->
 name|ro_rt
 expr_stmt|;
 comment|/* 	 * Save the IP header and at most 8 bytes of the payload, 	 * in case we need to generate an ICMP message to the src. 	 * 	 * XXX this can be optimized a lot by saving the data in a local 	 * buffer on the stack (72 bytes at most), and only allocating the 	 * mbuf if really necessary. The vast majority of the packets 	 * are forwarded without having to send an ICMP back (either 	 * because unnecessary, or because rate limited), so we are 	 * really we are wasting a lot of work here. 	 * 	 * We don't use m_copy() because it might return a reference 	 * to a shared cluster. Both this function and ip_output() 	 * assume exclusive access to the IP header in `m', so any 	 * data in a cluster may change before we reach icmp_error(). 	 */
@@ -8217,8 +8396,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|&
-name|ipforward_rt
+name|ro
 argument_list|,
 name|IP_FORWARDING
 argument_list|,
@@ -8228,6 +8406,12 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Update the ip forwarding cache with the route we used. 	 * We may want to do this more selectively; not sure. 	 */
+name|RTCACHE_UPDATE
+argument_list|(
+name|ro
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -8262,8 +8446,7 @@ condition|)
 block|{
 name|ipflow_create
 argument_list|(
-operator|&
-name|ipforward_rt
+name|ro
 argument_list|,
 name|mcopy
 argument_list|)
@@ -8339,8 +8522,8 @@ name|IPSEC
 comment|/* 		 * If the packet is routed over IPsec tunnel, tell the 		 * originator the tunnel MTU. 		 *	tunnel MTU = if MTU - sizeof(IP) - ESP/AH hdrsiz 		 * XXX quickhack!!! 		 */
 if|if
 condition|(
-name|ipforward_rt
-operator|.
+name|ro
+operator|->
 name|ro_rt
 condition|)
 block|{
@@ -8356,11 +8539,6 @@ name|ipsecerror
 decl_stmt|;
 name|int
 name|ipsechdr
-decl_stmt|;
-name|struct
-name|route
-modifier|*
-name|ro
 decl_stmt|;
 name|sp
 operator|=
@@ -8384,8 +8562,8 @@ name|NULL
 condition|)
 name|destifp
 operator|=
-name|ipforward_rt
-operator|.
+name|ro
+operator|->
 name|ro_rt
 operator|->
 name|rt_ifp
@@ -8437,7 +8615,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ro
+name|struct
+name|route
+modifier|*
+name|saro
+decl_stmt|;
+name|saro
 operator|=
 operator|&
 name|sp
@@ -8452,11 +8635,11 @@ name|sa_route
 expr_stmt|;
 if|if
 condition|(
-name|ro
+name|saro
 operator|->
 name|ro_rt
 operator|&&
-name|ro
+name|saro
 operator|->
 name|ro_rt
 operator|->
@@ -8467,7 +8650,7 @@ name|dummyifp
 operator|.
 name|if_mtu
 operator|=
-name|ro
+name|saro
 operator|->
 name|ro_rt
 operator|->
@@ -8501,8 +8684,8 @@ name|FAST_IPSEC
 comment|/* 		 * If the packet is routed over IPsec tunnel, tell the 		 * originator the tunnel MTU. 		 *	tunnel MTU = if MTU - sizeof(IP) - ESP/AH hdrsiz 		 * XXX quickhack!!! 		 */
 if|if
 condition|(
-name|ipforward_rt
-operator|.
+name|ro
+operator|->
 name|ro_rt
 condition|)
 block|{
@@ -8518,11 +8701,6 @@ name|ipsecerror
 decl_stmt|;
 name|int
 name|ipsechdr
-decl_stmt|;
-name|struct
-name|route
-modifier|*
-name|ro
 decl_stmt|;
 name|sp
 operator|=
@@ -8546,8 +8724,8 @@ name|NULL
 condition|)
 name|destifp
 operator|=
-name|ipforward_rt
-operator|.
+name|ro
+operator|->
 name|ro_rt
 operator|->
 name|rt_ifp
@@ -8599,7 +8777,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ro
+name|struct
+name|route
+modifier|*
+name|saro
+decl_stmt|;
+name|saro
 operator|=
 operator|&
 name|sp
@@ -8614,11 +8797,11 @@ name|sa_route
 expr_stmt|;
 if|if
 condition|(
-name|ro
+name|saro
 operator|->
 name|ro_rt
 operator|&&
-name|ro
+name|saro
 operator|->
 name|ro_rt
 operator|->
@@ -8629,7 +8812,7 @@ name|dummyifp
 operator|.
 name|if_mtu
 operator|=
-name|ro
+name|saro
 operator|->
 name|ro_rt
 operator|->
@@ -8663,14 +8846,14 @@ directive|else
 comment|/* !IPSEC&& !FAST_IPSEC */
 if|if
 condition|(
-name|ipforward_rt
-operator|.
+name|ro
+operator|->
 name|ro_rt
 condition|)
 name|destifp
 operator|=
-name|ipforward_rt
-operator|.
+name|ro
+operator|->
 name|ro_rt
 operator|->
 name|rt_ifp

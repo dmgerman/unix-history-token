@@ -495,18 +495,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|route
-name|ipforward_rt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ip forwarding cached route */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|u_char
 name|ip_protox
 index|[]
@@ -628,6 +616,15 @@ name|if_hwassist_flags
 parameter_list|,
 name|int
 name|sw_csum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ip_forward_cacheinval
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
