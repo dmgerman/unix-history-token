@@ -1806,7 +1806,7 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|err
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -1815,7 +1815,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|err
+name|error
 operator|=
 name|dumpout
 argument_list|(
@@ -1826,7 +1826,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|err
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -1836,7 +1836,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|err
+name|error
 operator|==
 literal|0
 operator|&&
@@ -1847,7 +1847,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|err
+name|error
 operator|=
 name|dumpout
 argument_list|(
@@ -1863,7 +1863,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
 block|}
