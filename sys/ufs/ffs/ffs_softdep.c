@@ -26185,6 +26185,19 @@ name|NULL
 operator|)
 return|;
 comment|/* 			 * The mtx argument must be bp->b_vp's mutex in 			 * this case. 			 */
+ifdef|#
+directive|ifdef
+name|DEBUG_VFS_LOCKS
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
+condition|)
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|bp
@@ -26194,6 +26207,8 @@ argument_list|,
 literal|"getdirtybuf"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|->
 name|b_vflags
