@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -617,7 +617,7 @@ name|dev_t
 name|sw_dev
 decl_stmt|;
 name|int
-name|sw_freed
+name|sw_flags
 decl_stmt|;
 name|int
 name|sw_nblks
@@ -642,6 +642,31 @@ endif|SECSIZE
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SW_FREED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_SEQUENTIAL
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|sw_freed
+value|sw_flags
+end_define
+
+begin_comment
+comment|/* XXX compat */
+end_comment
 
 begin_ifdef
 ifdef|#
