@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.7.4.2 1997/09/22 06:26:55 charnier Exp $"
+literal|"$Id: kbdcontrol.c,v 1.7.4.3 1998/01/30 10:49:02 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3405,6 +3405,8 @@ literal|""
 block|,
 name|KEYMAP_PATH
 block|,
+name|KEYMAP_PATH
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -3417,6 +3419,8 @@ block|{
 literal|""
 block|,
 literal|".kbd"
+block|,
+literal|""
 block|,
 literal|".kbd"
 block|}
