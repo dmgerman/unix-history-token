@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.9	%G%	*/
+comment|/*	rk.c	4.10	%G%	*/
 end_comment
 
 begin_include
@@ -177,12 +177,12 @@ block|,
 comment|/* A=cyl 0 thru 240 */
 literal|10032
 block|,
-literal|146
+literal|241
 block|,
 comment|/* B=cyl 241 thru 392 */
 literal|53790
 block|,
-literal|246
+literal|0
 block|,
 comment|/* C=cyl 0 thru 814 */
 literal|0
@@ -2858,6 +2858,17 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* -1 makes 0 origin */
+name|printf
+argument_list|(
+literal|"mask %x pos %x\n"
+argument_list|,
+name|mask
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 name|bit
 operator|=
 name|i
