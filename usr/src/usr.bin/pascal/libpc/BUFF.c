@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)BUFF.c 1.3 %G%"
+literal|"@(#)BUFF.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,14 +18,6 @@ include|#
 directive|include
 file|"h00vars.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|_sobuf
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|BUFF
@@ -46,6 +38,13 @@ name|struct
 name|iorec
 modifier|*
 name|curfile
+decl_stmt|;
+specifier|static
+name|char
+name|sobuf
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 name|curfile
 operator|=
@@ -81,7 +80,7 @@ argument_list|(
 name|curfile
 argument_list|)
 argument_list|,
-name|_sobuf
+name|sobuf
 argument_list|)
 expr_stmt|;
 block|}
