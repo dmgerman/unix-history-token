@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.35 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.36 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.35 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.36 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1477,9 +1477,8 @@ name|msize
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 name|p
 operator|!=
 name|NULL
@@ -1488,10 +1487,7 @@ operator|*
 name|p
 operator|!=
 literal|'\0'
-condition|;
-name|p
-operator|++
-control|)
+condition|)
 block|{
 name|char
 modifier|*
@@ -1635,7 +1631,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"MAIL: got arg %s=%s\n"
+literal|"MAIL: got arg %s=\"%s\"\n"
 argument_list|,
 name|kp
 argument_list|,
