@@ -20,51 +20,6 @@ comment|/*  * Dynamic configuration and disklabel support by:  *	Jason R. Thorpe
 end_comment
 
 begin_comment
-comment|/*  * A concatenated disk is described at initialization time by this structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ccddevice
-block|{
-name|int
-name|ccd_unit
-decl_stmt|;
-comment|/* logical unit of this ccd */
-name|int
-name|ccd_interleave
-decl_stmt|;
-comment|/* interleave (DEV_BSIZE blocks) */
-name|int
-name|ccd_flags
-decl_stmt|;
-comment|/* misc. information */
-name|int
-name|ccd_dk
-decl_stmt|;
-comment|/* disk number */
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|ccd_vpp
-decl_stmt|;
-comment|/* array of component vnodes */
-name|char
-modifier|*
-modifier|*
-name|ccd_cpp
-decl_stmt|;
-comment|/* array of component pathnames */
-name|int
-name|ccd_ndev
-decl_stmt|;
-comment|/* number of component devices */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * This structure is used to configure a ccd via ioctl(2).  */
 end_comment
 
@@ -101,54 +56,6 @@ comment|/* (returned) size of ccd */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* ccd_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCDF_SWAP
-value|0x01
-end_define
-
-begin_comment
-comment|/* interleave should be dmmax */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCDF_UNIFORM
-value|0x02
-end_define
-
-begin_comment
-comment|/* use LCCD of sizes for uniform interleave */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCDF_MIRROR
-value|0x04
-end_define
-
-begin_comment
-comment|/* use mirroring */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCDF_PARITY
-value|0x08
-end_define
-
-begin_comment
-comment|/* use parity (RAID level 5) */
-end_comment
 
 begin_comment
 comment|/* Mask of user-settable ccd flags. */
@@ -254,17 +161,30 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A concatenated disk is described after initialization by this structure.  */
+comment|/*  * A concatenated disk is described by this structure.  */
 end_comment
 
 begin_struct
 struct|struct
-name|ccd_softc
+name|ccd_s
 block|{
+name|LIST_ENTRY
+argument_list|(
+argument|ccd_s
+argument_list|)
+name|list
+expr_stmt|;
 name|int
 name|sc_unit
 decl_stmt|;
 comment|/* logical unit number */
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|sc_vpp
+decl_stmt|;
+comment|/* array of component vnodes */
 name|int
 name|sc_flags
 decl_stmt|;
@@ -337,8 +257,52 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCDF_INITED
+name|CCDF_SWAP
 value|0x01
+end_define
+
+begin_comment
+comment|/* interleave should be dmmax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCDF_UNIFORM
+value|0x02
+end_define
+
+begin_comment
+comment|/* use LCCD of sizes for uniform interleave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCDF_MIRROR
+value|0x04
+end_define
+
+begin_comment
+comment|/* use mirroring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCDF_PARITY
+value|0x08
+end_define
+
+begin_comment
+comment|/* use parity (RAID level 5) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCDF_INITED
+value|0x10
 end_define
 
 begin_comment
@@ -349,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|CCDF_WLABEL
-value|0x02
+value|0x20
 end_define
 
 begin_comment
@@ -360,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|CCDF_LABELLING
-value|0x04
+value|0x40
 end_define
 
 begin_comment
@@ -371,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|CCDF_WANTED
-value|0x40
+value|0x60
 end_define
 
 begin_comment
@@ -413,6 +377,61 @@ end_define
 
 begin_comment
 comment|/* disable ccd */
+end_comment
+
+begin_struct
+struct|struct
+name|ccdconf
+block|{
+name|int
+name|size
+decl_stmt|;
+comment|/* sizeof of buffer below */
+name|struct
+name|ccd_s
+modifier|*
+name|buffer
+decl_stmt|;
+comment|/* pointer to a configuration array */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CCDCONFINFO
+value|_IOWR('F', 19, struct ccdconf)
+end_define
+
+begin_comment
+comment|/* get config */
+end_comment
+
+begin_struct
+struct|struct
+name|ccdcpps
+block|{
+name|int
+name|size
+decl_stmt|;
+name|char
+modifier|*
+name|buffer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CCDCPPINFO
+value|_IOWR('F', 20, struct ccdcpps)
+end_define
+
+begin_comment
+comment|/* get components */
 end_comment
 
 end_unit
