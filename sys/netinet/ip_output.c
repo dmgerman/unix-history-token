@@ -764,11 +764,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 operator|(
 name|m
 operator|->
@@ -776,23 +773,23 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 operator|)
-operator|==
+operator|!=
 literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"ip_output no HDR"
+argument_list|,
+operator|(
+literal|"ip_output: no HDR"
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ro
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"ip_output no route, proto = %d"
+name|ro
+operator|!=
+name|NULL
 argument_list|,
+operator|(
+literal|"ip_output: no route, proto %d"
+operator|,
 name|mtod
 argument_list|(
 name|m
@@ -803,10 +800,9 @@ operator|*
 argument_list|)
 operator|->
 name|ip_p
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|opt
@@ -4867,13 +4863,10 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|cnt
-operator|<
+operator|>=
 name|IPOPT_OLEN
 operator|+
 sizeof|sizeof
@@ -4881,14 +4874,12 @@ argument_list|(
 operator|*
 name|cp
 argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"malformed IPv4 option passed to ip_optcopy"
+argument_list|,
+operator|(
+literal|"ip_optcopy: malformed ipv4 option"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|optlen
 operator|=
 name|cp
@@ -4896,13 +4887,10 @@ index|[
 name|IPOPT_OLEN
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|optlen
-operator|<
+operator|>=
 name|IPOPT_OLEN
 operator|+
 sizeof|sizeof
@@ -4910,18 +4898,16 @@ argument_list|(
 operator|*
 name|cp
 argument_list|)
-operator|||
+operator|&&
 name|optlen
-operator|>
+operator|<=
 name|cnt
-condition|)
-name|panic
-argument_list|(
-literal|"malformed IPv4 option passed to ip_optcopy"
+argument_list|,
+operator|(
+literal|"ip_optcopy: malformed ipv4 option"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* bogus lengths should have been caught by ip_dooptions */
 if|if
 condition|(

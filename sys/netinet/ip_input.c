@@ -1483,15 +1483,12 @@ name|rule
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 operator|(
 name|m
 operator|->
@@ -1499,16 +1496,14 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 operator|)
-operator|==
+operator|!=
 literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"ip_input no HDR"
+argument_list|,
+operator|(
+literal|"ip_input: no HDR"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ipstat
 operator|.
 name|ips_total

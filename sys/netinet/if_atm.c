@@ -368,26 +368,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|rt
 operator|->
 name|rt_ifp
 operator|->
 name|if_ioctl
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"atm_rtrequest: atm null ioctl"
+argument_list|,
+operator|(
+literal|"atm_rtrequest: null ioctl"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|NATM
