@@ -1,7 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* THIS FILE PRODUCED AUTOMATICALLY */
+end_comment
+
 begin_function_decl
 name|void
-name|devfs_back_init
+name|devfs_sinit
 parameter_list|()
 comment|/*proto*/
 function_decl|;
@@ -107,40 +111,6 @@ name|get_bdev_major_num
 parameter_list|(
 name|caddr_t
 name|addr
-parameter_list|)
-comment|/*proto*/
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|devnm_p
-name|dev_add
-parameter_list|(
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|caddr_t
-name|funct
-parameter_list|,
-name|int
-name|minor
-parameter_list|,
-name|int
-name|chrblk
-parameter_list|,
-name|uid_t
-name|uid
-parameter_list|,
-name|gid_t
-name|gid
-parameter_list|,
-name|int
-name|perms
 parameter_list|)
 comment|/*proto*/
 function_decl|;
@@ -564,6 +534,14 @@ parameter_list|)
 comment|/*proto*/
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* THIS FILE PRODUCED AUTOMATICALLY */
+end_comment
+
+begin_comment
+comment|/* DO NOT EDIT (see reproto.sh) */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_back.c,v 1.2 1995/04/20 07:34:51 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_back.c,v 1.3 1995/05/30 08:06:49 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -83,6 +83,27 @@ directive|include
 file|"devfsdefs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sys/devfsext.h"
+end_include
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|devfs
+argument_list|,
+argument|SI_SUB_DEVFS
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|devfs_sinit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
+
 begin_decl_stmt
 name|devnm_p
 name|dev_root
@@ -93,25 +114,13 @@ begin_comment
 comment|/* root of the backing tree */
 end_comment
 
-begin_decl_stmt
-name|int
-name|devfs_set_up
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* note tha we HAVE set up the backing tree */
-end_comment
-
 begin_comment
 comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been  * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  */
 end_comment
 
 begin_function
 name|void
-name|devfs_back_init
+name|devfs_sinit
 parameter_list|()
 comment|/*proto*/
 block|{
@@ -121,14 +130,7 @@ decl_stmt|;
 name|dn_p
 name|dnp
 decl_stmt|;
-comment|/* 	 * This may be called several times.. only do it if it needs 	 * to be done. 	 */
-if|if
-condition|(
-operator|!
-name|devfs_set_up
-condition|)
-block|{
-comment|/* 	 	 * Allocate and fill out a new backing node 	 	 */
+comment|/*  	 * Allocate and fill out a new backing node  	 */
 if|if
 condition|(
 operator|!
@@ -164,7 +166,7 @@ name|devnm_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * And the devnode associated with it 		 */
+comment|/* 	 * And the devnode associated with it 	 */
 if|if
 condition|(
 operator|!
@@ -207,7 +209,7 @@ name|devnode_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Link the two together 		 */
+comment|/* 	 * Link the two together 	 */
 name|devbp
 operator|->
 name|dnp
@@ -220,7 +222,7 @@ name|links
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * set up the directory node for the root 		 * and put in all the usual entries for a directory node 		 */
+comment|/* 	 * set up the directory node for the root 	 * and put in all the usual entries for a directory node 	 */
 name|dnp
 operator|->
 name|type
@@ -250,7 +252,7 @@ name|links
 operator|++
 expr_stmt|;
 comment|/* for ..*/
-comment|/* 		 * set up the list of children (none so far) 		 */
+comment|/* 	 * set up the list of children (none so far) 	 */
 name|dnp
 operator|->
 name|by
@@ -291,7 +293,7 @@ name|myname
 operator|=
 name|devbp
 expr_stmt|;
-comment|/* 		 * set up a pointer to directory type ops 		 */
+comment|/* 	 * set up a pointer to directory type ops 	 */
 name|dnp
 operator|->
 name|ops
@@ -306,7 +308,7 @@ operator||=
 literal|0555
 expr_stmt|;
 comment|/* default perms */
-comment|/* 		 * note creation times etc, as now (boot time) 		 */
+comment|/* 	 * note creation times etc, as now (boot time) 	 */
 name|TIMEVAL_TO_TIMESPEC
 argument_list|(
 argument|&time
@@ -329,7 +331,7 @@ name|dnp
 operator|->
 name|ctime
 expr_stmt|;
-comment|/* 		 * and the list of layers 		 */
+comment|/* 	 * and the list of layers 	 */
 name|devbp
 operator|->
 name|next_front
@@ -347,16 +349,16 @@ operator|->
 name|next_front
 operator|)
 expr_stmt|;
-comment|/* 		 * next time, we don't need to do all this 		 */
+comment|/* 	 * next time, we don't need to do all this 	 */
 name|dev_root
 operator|=
 name|devbp
 expr_stmt|;
-name|devfs_set_up
-operator|=
-literal|1
+name|printf
+argument_list|(
+literal|"DEVFS: ready for devices\n"
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -416,10 +418,6 @@ literal|"dev_finddir\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|devfs_back_init
-argument_list|()
-expr_stmt|;
-comment|/* in case we are the first */
 if|if
 condition|(
 operator|!
@@ -1726,7 +1724,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|devnm_p
+name|void
+modifier|*
 name|dev_add
 parameter_list|(
 name|char
@@ -1737,7 +1736,8 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|funct
 parameter_list|,
 name|int
@@ -1755,7 +1755,6 @@ parameter_list|,
 name|int
 name|perms
 parameter_list|)
-comment|/*proto*/
 block|{
 name|devnm_p
 name|new_dev
@@ -1808,7 +1807,7 @@ name|chrblk
 condition|)
 block|{
 case|case
-literal|0
+name|DV_CHR
 case|:
 name|major
 operator|=
@@ -1862,7 +1861,7 @@ literal|0
 return|;
 break|break;
 case|case
-literal|1
+name|DV_BLK
 case|:
 name|major
 operator|=
