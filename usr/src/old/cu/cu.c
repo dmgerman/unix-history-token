@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cu.c	4.4 (Berkeley) 81/07/02"
+literal|"@(#)cu.c	4.5 (Berkeley) 81/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -903,6 +903,13 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fk
+operator|!=
+operator|-
+literal|1
+condition|)
 name|kill
 argument_list|(
 name|fk
@@ -2152,6 +2159,13 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|efk
+operator|!=
+operator|-
+literal|1
+condition|)
 name|kill
 argument_list|(
 name|efk
