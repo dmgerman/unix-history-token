@@ -4380,7 +4380,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s: Compensating for corrupt (Win98?) "
+literal|"%s: Compensating for corrupt (Win98/WinME?) "
 literal|"CHAP81 RESPONSE\n"
 argument_list|,
 name|l
