@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	4.13	81/11/20	*/
+comment|/*	tty_subr.c	4.14	82/02/08	*/
 end_comment
 
 begin_include
@@ -1685,15 +1685,23 @@ expr_stmt|;
 block|}
 end_block
 
+begin_include
+include|#
+directive|include
+file|"dmc.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NDMC
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * integer (2-byte) get/put  * using clists  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|unneeded
-end_ifdef
 
 begin_expr_stmt
 name|getw
@@ -1752,19 +1760,86 @@ return|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|putw
+argument_list|(
+name|c
+argument_list|,
+name|p
+argument_list|)
+specifier|register
+expr|struct
+name|clist
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
-begin_if
-if|#
-directive|if
+begin_block
+block|{
+specifier|register
+name|s
+expr_stmt|;
+name|s
+operator|=
+name|spl5
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cfreelist
+operator|==
+name|NULL
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+name|c
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+name|c
+operator|>>
+literal|8
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0
-end_if
+operator|)
+return|;
+block|}
+end_block
 
 begin_endif
-unit|putw(c, p) register struct clist *p; { 	register s;  	s = spl5(); 	if (cfreelist==NULL) { 		splx(s); 		return(-1); 	} 	(void) putc(c, p); 	(void) putc(c>>8, p); 	splx(s); 	return(0); }
 endif|#
 directive|endif
 end_endif
