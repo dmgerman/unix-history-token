@@ -3006,7 +3006,7 @@ name|sb_mbcnt
 condition|)
 name|panic
 argument_list|(
-literal|"sbflush: cc %ld || mb %p || mbcnt %ld"
+literal|"sbflush: cc %u || mb %p || mbcnt %u"
 argument_list|,
 name|sb
 operator|->
