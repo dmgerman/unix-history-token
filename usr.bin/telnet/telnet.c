@@ -8062,6 +8062,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|escape
+operator|!=
+name|_POSIX_VDISABLE
+operator|&&
 name|sc
 operator|==
 name|escape
