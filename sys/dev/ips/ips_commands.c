@@ -356,7 +356,7 @@ operator|->
 name|drivenum
 operator|=
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|)
 name|iobuf
 operator|->

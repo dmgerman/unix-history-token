@@ -1311,6 +1311,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|i
 argument_list|)
 expr_stmt|;

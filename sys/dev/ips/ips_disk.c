@@ -342,13 +342,17 @@ argument_list|,
 literal|"in strategy\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|uint32_t
-operator|)
 name|iobuf
 operator|->
 name|bio_driver1
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|dsc
 operator|->
 name|sc
@@ -490,7 +494,7 @@ operator|->
 name|disk_number
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|device_get_ivars
 argument_list|(
