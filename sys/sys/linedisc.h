@@ -1085,7 +1085,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|static struct devsw_module_data name##_devsw_mod = {			\     evh, arg,								\ };									\ 									\ static moduledata_t name##_mod = {					\     #name,								\     devsw_module_handler,						\&name##_devsw_mod							\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|static moduledata_t name##_mod = {					\     #name,								\     evh,								\     arg									\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_decl_stmt
