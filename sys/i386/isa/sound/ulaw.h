@@ -522,6 +522,12 @@ block|,  }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DSP_ULAW_NOT_WANTED
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -1044,6 +1050,15 @@ literal|159
 block|,  }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !DSP_ULAW_NOT_WANTED */
+end_comment
 
 end_unit
 
