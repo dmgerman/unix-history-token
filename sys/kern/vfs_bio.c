@@ -3226,12 +3226,26 @@ name|b_iocmd
 operator|=
 name|BIO_WRITE
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_vp
 operator|->
 name|v_numoutput
 operator|++
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|)
 expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
@@ -3374,6 +3388,13 @@ modifier|*
 name|origbp
 decl_stmt|;
 comment|/* 	 * Find the original buffer that we are writing. 	 */
+name|VI_LOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3396,6 +3417,13 @@ condition|)
 name|panic
 argument_list|(
 literal|"backgroundwritedone: lost buffer"
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process dependencies then return any unfinished ones. 	 */
@@ -5908,6 +5936,11 @@ name|MAXPHYS
 operator|/
 name|size
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6126,6 +6159,11 @@ block|{
 break|break;
 block|}
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 operator|--
 name|j
 expr_stmt|;
@@ -7552,6 +7590,11 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|gbincore
@@ -7559,6 +7602,11 @@ argument_list|(
 name|vp
 argument_list|,
 name|blkno
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|splx
@@ -7608,6 +7656,13 @@ name|vm_ooffset_t
 name|off
 decl_stmt|;
 name|GIANT_REQUIRED
+expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"inmem"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8189,6 +8244,13 @@ name|bh
 decl_stmt|;
 endif|#
 directive|endif
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"getblk"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|size
@@ -8236,6 +8298,11 @@ operator||=
 name|VFS_BIO_NEED_ANY
 expr_stmt|;
 block|}
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8250,6 +8317,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Buffer is in-core.  If the buffer is not busy, it must 		 * be on a queue. 		 */
 if|if
 condition|(
@@ -8529,6 +8601,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Buffer is not in-core, create new buffer.  The buffer 		 * returned by getnewbuf() is locked.  Note that the returned 		 * buffer is also considered valid (not marked B_INVAL). 		 */
 name|int
 name|bsize
@@ -8683,6 +8760,11 @@ name|loop
 goto|;
 block|}
 comment|/* 		 * This code is used to make sure that a buffer is not 		 * created while the getnewbuf routine is blocked. 		 * This can be a problem whether the vnode is locked or not. 		 * If the buffer is created out from under us, we have to 		 * throw away the one we just created.  There is now window 		 * race because we are safely running at splbio() from the 		 * point of the duplicate buffer creation through to here, 		 * and we've locked the buffer. 		 * 		 * Note: this must occur before we associate the buffer 		 * with the vp especially considering limitations in 		 * the splay tree implementation when dealing with duplicate 		 * lblkno's. 		 */
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gbincore
@@ -8693,6 +8775,11 @@ name|blkno
 argument_list|)
 condition|)
 block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -8708,6 +8795,11 @@ goto|goto
 name|loop
 goto|;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Insert the buffer into the hash, so that it can 		 * be found by incore. 		 */
 name|bp
 operator|->
