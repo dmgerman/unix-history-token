@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pass2.h	4.2	86/10/29	*/
+comment|/*	pass2.h	4.3	87/12/10	*/
 end_comment
 
 begin_ifndef
@@ -535,6 +535,17 @@ end_define
 
 begin_comment
 comment|/* non-indexed OREG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMCON
+value|(SPECIAL|6)
+end_define
+
+begin_comment
+comment|/* constant< 0 */
 end_comment
 
 begin_comment
