@@ -189,45 +189,6 @@ directive|include
 file|<dev/pci/pcidevs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_comment
-comment|/* XXX XXX NEED REAL DMA MAPPING SUPPORT XXX XXX */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|vtophys
-end_undef
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)(va))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __alpha__ */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -344,6 +305,45 @@ end_endif
 
 begin_comment
 comment|/* __NetBSD__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_comment
+comment|/* XXX XXX NEED REAL DMA MAPPING SUPPORT XXX XXX */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|vtophys
+end_undef
+
+begin_define
+define|#
+directive|define
+name|vtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|alpha_XXX_dmamap((vm_offset_t)(va))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __alpha__ */
 end_comment
 
 begin_include
@@ -2332,16 +2332,26 @@ goto|;
 block|}
 name|sc
 operator|->
-name|csr
+name|sc_st
 operator|=
-name|rman_get_virtual
+name|rman_get_bustag
 argument_list|(
 name|sc
 operator|->
 name|mem
 argument_list|)
 expr_stmt|;
-comment|/* XXX use bus_space */
+name|sc
+operator|->
+name|sc_sh
+operator|=
+name|rman_get_bushandle
+argument_list|(
+name|sc
+operator|->
+name|mem
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate our interrupt. 	 */
 name|rid
 operator|=
@@ -6992,6 +7002,10 @@ name|rfa
 operator|->
 name|size
 operator|=
+call|(
+name|u_int16_t
+call|)
+argument_list|(
 name|MCLBYTES
 operator|-
 sizeof|sizeof
@@ -7001,6 +7015,7 @@ name|fxp_rfa
 argument_list|)
 operator|-
 name|RFA_ALIGNMENT_FUDGE
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the rest of the RFA.  Note that since the RFA 	 * is misaligned, we cannot store values directly.  Instead, 	 * we use an optimized, inline copy. 	 */
 name|rfa
@@ -7031,7 +7046,11 @@ argument_list|(
 operator|&
 name|v
 argument_list|,
-operator|&
+operator|(
+specifier|volatile
+name|u_int32_t
+operator|*
+operator|)
 name|rfa
 operator|->
 name|link_addr
@@ -7042,7 +7061,11 @@ argument_list|(
 operator|&
 name|v
 argument_list|,
-operator|&
+operator|(
+specifier|volatile
+name|u_int32_t
+operator|*
+operator|)
 name|rfa
 operator|->
 name|rbd_addr
@@ -7097,7 +7120,11 @@ argument_list|(
 operator|&
 name|v
 argument_list|,
-operator|&
+operator|(
+specifier|volatile
+name|u_int32_t
+operator|*
+operator|)
 name|p_rfa
 operator|->
 name|link_addr

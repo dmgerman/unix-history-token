@@ -31,14 +31,6 @@ modifier|*
 name|sc_ih
 decl_stmt|;
 comment|/* interrupt handler cookie */
-name|bus_space_tag_t
-name|sc_st
-decl_stmt|;
-comment|/* bus space tag */
-name|bus_space_handle_t
-name|sc_sh
-decl_stmt|;
-comment|/* bus space handle */
 name|struct
 name|ethercom
 name|sc_ethercom
@@ -51,10 +43,6 @@ name|arpcom
 name|arpcom
 decl_stmt|;
 comment|/* per-interface network data */
-name|caddr_t
-name|csr
-decl_stmt|;
-comment|/* control/status registers */
 name|struct
 name|resource
 modifier|*
@@ -75,6 +63,14 @@ comment|/* interrupt handler cookie */
 endif|#
 directive|endif
 comment|/* __NetBSD__ */
+name|bus_space_tag_t
+name|sc_st
+decl_stmt|;
+comment|/* bus space tag */
+name|bus_space_handle_t
+name|sc_sh
+decl_stmt|;
+comment|/* bus space handle */
 name|struct
 name|mbuf
 modifier|*
@@ -163,15 +159,6 @@ begin_comment
 comment|/* Macros to ease CSR access. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -255,104 +242,6 @@ parameter_list|)
 define|\
 value|bus_space_write_4((sc)->sc_st, (sc)->sc_sh, (reg), (val))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*((u_int8_t *)((sc)->csr + (reg))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*((u_int16_t *)((sc)->csr + (reg))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*((u_int32_t *)((sc)->csr + (reg))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|(*((u_int8_t *)((sc)->csr + (reg)))) = (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|(*((u_int16_t *)((sc)->csr + (reg)))) = (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|(*((u_int32_t *)((sc)->csr + (reg)))) = (val)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ */
-end_comment
 
 begin_comment
 comment|/* Deal with slight differences in software interfaces. */
