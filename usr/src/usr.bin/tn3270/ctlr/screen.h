@@ -301,7 +301,7 @@ name|FieldAttributes
 parameter_list|(
 name|x
 parameter_list|)
-value|(IsStartField(x)? Host[x].data : \ 				    Host[WhereAttrByte(x)].data)
+value|(IsStartField(x)? GetHost(x) : \ 				    GetHost(WhereAttrByte(x)))
 end_define
 
 begin_define
@@ -311,7 +311,7 @@ name|FieldAttributesPointer
 parameter_list|(
 name|p
 parameter_list|)
-value|(IsStartFieldPointer(p)? (p)->data : \ 				    Host[WhereAttrByte((p)-&Host[0])].data)
+value|(IsStartFieldPointer(p)? \ 				    GetHostPointer(p): \ 				    GetHost(WhereAttrByte((p)-&Host[0])))
 end_define
 
 begin_define
@@ -321,7 +321,7 @@ name|TurnOffMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|(Host[WhereAttrByte(x)].data&= ~ATTR_MDT)
+value|ModifyHost(WhereAttrByte(x),&= ~ATTR_MDT)
 end_define
 
 begin_define
@@ -331,7 +331,7 @@ name|TurnOnMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|(Host[WhereAttrByte(x)].data |= ATTR_MDT)
+value|ModifyHost(WhereAttrByte(x), |= ATTR_MDT)
 end_define
 
 begin_define
@@ -341,7 +341,7 @@ name|HasMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|(Host[x].data&ATTR_MDT)
+value|(GetHost(x)&ATTR_MDT)
 end_define
 
 begin_comment
@@ -358,7 +358,7 @@ directive|define
 name|FormattedScreen
 parameter_list|()
 define|\
-value|((WhereAttrByte(0) != 0) || ((Host[0].data&ATTR_MASK) == ATTR_MASK))
+value|((WhereAttrByte(0) != 0) || ((GetHost(0)&ATTR_MASK) == ATTR_MASK))
 end_define
 
 begin_comment
@@ -372,7 +372,7 @@ name|IsStartField
 parameter_list|(
 name|x
 parameter_list|)
-value|((Host[x].data&ATTR_MASK) == ATTR_MASK)
+value|((GetHost(x)&ATTR_MASK) == ATTR_MASK)
 end_define
 
 begin_define
@@ -382,7 +382,7 @@ name|IsStartFieldPointer
 parameter_list|(
 name|p
 parameter_list|)
-value|(((p)->data&ATTR_MASK) == ATTR_MASK)
+value|((GetHostPointer(p)&ATTR_MASK) == ATTR_MASK)
 end_define
 
 begin_define
@@ -394,7 +394,7 @@ name|p
 parameter_list|,
 name|a
 parameter_list|)
-value|(Host[p].data = (a)|ATTR_MASK)
+value|SetHost(p, (a)|ATTR_MASK)
 end_define
 
 begin_define
@@ -404,7 +404,7 @@ name|DeleteField
 parameter_list|(
 name|p
 parameter_list|)
-value|(Host[p].data = 0)
+value|SetHost(p, 0)
 end_define
 
 begin_define
@@ -531,14 +531,8 @@ end_define
 
 begin_typedef
 typedef|typedef
-struct|struct
-block|{
 name|unsigned
 name|char
-name|data
-decl_stmt|;
-comment|/* data at this position */
-block|}
 name|ScreenImage
 typedef|;
 end_typedef
@@ -562,11 +556,71 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|GetGeneric
+parameter_list|(
+name|i
+parameter_list|,
+name|h
+parameter_list|)
+value|(h)[i]
+end_define
+
+begin_define
+define|#
+directive|define
+name|GetGenericPointer
+parameter_list|(
+name|p
+parameter_list|)
+value|(*(p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SetGeneric
+parameter_list|(
+name|i
+parameter_list|,
+name|c
+parameter_list|,
+name|h
+parameter_list|)
+value|((h)[i] = (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ModifyGeneric
+parameter_list|(
+name|i
+parameter_list|,
+name|what
+parameter_list|,
+name|h
+parameter_list|)
+value|{(h)[i] what;}
+end_define
+
+begin_define
+define|#
+directive|define
 name|GetHost
 parameter_list|(
 name|i
 parameter_list|)
-value|Host[i].data
+value|GetGeneric(i,Host)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GetHostPointer
+parameter_list|(
+name|p
+parameter_list|)
+value|GetGenericPointer(p)
 end_define
 
 begin_define
@@ -574,11 +628,23 @@ define|#
 directive|define
 name|SetHost
 parameter_list|(
-name|p
+name|i
 parameter_list|,
 name|c
 parameter_list|)
-value|(Host[p].data = c)
+value|SetGeneric(i,c,Host)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ModifyHost
+parameter_list|(
+name|i
+parameter_list|,
+name|what
+parameter_list|)
+value|ModifyGeneric(i,what,Host)
 end_define
 
 end_unit
