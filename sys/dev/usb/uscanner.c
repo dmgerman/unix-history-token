@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -224,6 +230,27 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uscanner
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|uscannerdebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"uscanner debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
