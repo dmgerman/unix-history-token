@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.37 2003/05/04 05:23:42 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.38 2003/05/07 03:29:30 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -635,7 +635,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"vinum: Can't get partition information for %s: error %d\n"
+literal|"vinum: Can't get drive dimensions for %s: error %d\n"
 argument_list|,
 name|drive
 operator|->
@@ -2169,24 +2169,13 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s plex %s len %llus driveoffset %llus state %s"
+literal|"sd name %s drive %s len %llus driveoffset %llus state %s"
 argument_list|,
 name|sd
 operator|->
 name|name
 argument_list|,
 name|drivename
-argument_list|,
-name|vinum_conf
-operator|.
-name|plex
-index|[
-name|sd
-operator|->
-name|plexno
-index|]
-operator|.
-name|name
 argument_list|,
 operator|(
 name|unsigned
@@ -2239,7 +2228,18 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|" plexoffset %llds"
+literal|" plex %s plexoffset %llds"
+argument_list|,
+name|vinum_conf
+operator|.
+name|plex
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+operator|.
+name|name
 argument_list|,
 operator|(
 name|long
@@ -4505,6 +4505,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* parse the config line */
+comment|/* 		     * parse_config recognizes referenced 		     * drives and builds a drive entry for 		     * them.  This may expand the drive 		     * table, thus invalidating the pointer. 		     */
+name|drive
+operator|=
+operator|&
+name|DRIVE
+index|[
+name|drivelist
+index|[
+name|driveno
+index|]
+index|]
+expr_stmt|;
+comment|/* point to the drive */
 if|if
 condition|(
 name|parse_status
@@ -4556,7 +4569,7 @@ name|flags
 operator||=
 name|VF_CONFIGURED
 expr_stmt|;
-comment|/* read this drive's configuration */
+comment|/* this drive's configuration is complete */
 block|}
 name|Free
 argument_list|(
