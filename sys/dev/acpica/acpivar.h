@@ -401,6 +401,13 @@ name|ACPI_FAN
 value|0x00200000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_TOSHIBA
+value|0x00400000
+end_define
+
 begin_comment
 comment|/*  * Constants for different interrupt models used with acpi_SetIntrModel().  */
 end_comment
