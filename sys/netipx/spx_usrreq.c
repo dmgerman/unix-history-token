@@ -270,9 +270,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_close
 parameter_list|(
 name|struct
@@ -285,9 +283,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_disconnect
 parameter_list|(
 name|struct
@@ -300,9 +296,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_drop
 parameter_list|(
 name|struct
@@ -398,9 +392,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_usrclosed
 parameter_list|(
 name|struct
@@ -1724,6 +1716,10 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|cb
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|si
 operator|->
@@ -1768,6 +1764,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cb
+operator|==
+name|NULL
+operator|||
 name|cb
 operator|->
 name|s_ipxpcb
@@ -7731,9 +7731,6 @@ name|so
 decl_stmt|;
 block|{
 name|int
-name|error
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|struct
@@ -7746,10 +7743,6 @@ name|spxpcb
 modifier|*
 name|cb
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|ipxp
 operator|=
 name|sotoipxpcb
@@ -7774,26 +7767,9 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|cb
-operator|=
 name|spx_usrclosed
 argument_list|(
 name|cb
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cb
-operator|!=
-name|NULL
-condition|)
-name|error
-operator|=
-name|spx_output
-argument_list|(
-name|cb
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|splx
@@ -7803,7 +7779,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -8062,14 +8038,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close a SPIP control block:  *	discard spx control block itself  *	discard ipx protocol control block  *	wake up any sleepers  */
+comment|/*  * Close a SPIP control block:  *	discard spx control block itself  *	discard ipx protocol control block  *	wake up any sleepers  * cb will always be invalid after this call.  */
 end_comment
 
 begin_function
-specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_close
 parameter_list|(
 name|cb
@@ -8197,23 +8170,16 @@ operator|.
 name|spxs_closed
 operator|++
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *	Someday we may do level 3 handshaking  *	to close a connection or send a xerox style error.  *	For now, just close.  */
+comment|/*  *	Someday we may do level 3 handshaking  *	to close a connection or send a xerox style error.  *	For now, just close.  * cb will always be invalid after this call.  */
 end_comment
 
 begin_function
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_usrclosed
 parameter_list|(
 name|cb
@@ -8225,22 +8191,21 @@ modifier|*
 name|cb
 decl_stmt|;
 block|{
-return|return
-operator|(
 name|spx_close
 argument_list|(
 name|cb
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * cb will always be invalid after this call.  */
+end_comment
+
 begin_function
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_disconnect
 parameter_list|(
 name|cb
@@ -8252,26 +8217,21 @@ modifier|*
 name|cb
 decl_stmt|;
 block|{
-return|return
-operator|(
 name|spx_close
 argument_list|(
 name|cb
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Drop connection, reporting  * the specified error.  */
+comment|/*  * Drop connection, reporting  * the specified error.  * cb will always be invalid after this call.  */
 end_comment
 
 begin_function
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_drop
 parameter_list|(
 name|cb
@@ -8335,14 +8295,11 @@ name|so_error
 operator|=
 name|errno
 expr_stmt|;
-return|return
-operator|(
 name|spx_close
 argument_list|(
 name|cb
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -8684,14 +8641,16 @@ operator|.
 name|spxs_timeoutdrop
 operator|++
 expr_stmt|;
-name|cb
-operator|=
 name|spx_drop
 argument_list|(
 name|cb
 argument_list|,
 name|ETIMEDOUT
 argument_list|)
+expr_stmt|;
+name|cb
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -8952,14 +8911,16 @@ operator|.
 name|spxs_keepdrops
 operator|++
 expr_stmt|;
-name|cb
-operator|=
 name|spx_drop
 argument_list|(
 name|cb
 argument_list|,
 name|ETIMEDOUT
 argument_list|)
+expr_stmt|;
+name|cb
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 block|}
