@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	8.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -139,6 +139,9 @@ name|dev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
 name|struct
 name|timespec
 name|st_atimespec
@@ -154,6 +157,34 @@ name|timespec
 name|st_ctimespec
 decl_stmt|;
 comment|/* time of last file status change */
+else|#
+directive|else
+name|time_t
+name|st_atime
+decl_stmt|;
+comment|/* time of last access */
+name|int32_t
+name|st_atimensec
+decl_stmt|;
+comment|/* nsec of last access */
+name|time_t
+name|st_mtime
+decl_stmt|;
+comment|/* time of last data modification */
+name|int32_t
+name|st_mtimensec
+decl_stmt|;
+comment|/* nsec of last data modification */
+name|time_t
+name|st_ctime
+decl_stmt|;
+comment|/* time of last file status change */
+name|int32_t
+name|st_ctimensec
+decl_stmt|;
+comment|/* nsec of last file status change */
+endif|#
+directive|endif
 name|off_t
 name|st_size
 decl_stmt|;
@@ -187,6 +218,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -207,6 +244,11 @@ directive|define
 name|st_ctime
 value|st_ctimespec.ts_sec
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
