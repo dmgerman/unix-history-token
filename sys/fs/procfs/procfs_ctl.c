@@ -858,9 +858,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|td
 operator|->
 name|td_proc
@@ -969,9 +966,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|p
 argument_list|,
 operator|&
@@ -1026,9 +1020,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|p
 argument_list|,
 operator|&
