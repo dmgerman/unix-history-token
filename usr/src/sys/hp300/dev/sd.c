@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2103,6 +2103,12 @@ literal|20
 expr_stmt|;
 name|lp
 operator|->
+name|d_ncylinders
+operator|=
+literal|1
+expr_stmt|;
+name|lp
+operator|->
 name|d_secpercyl
 operator|=
 literal|32
@@ -2125,6 +2131,21 @@ operator|.
 name|p_offset
 operator|=
 literal|0
+expr_stmt|;
+comment|/* XXX we can open a device even without SDF_ALIVE */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_blksize
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_blksize
+operator|=
+name|DEV_BSIZE
 expr_stmt|;
 comment|/* XXX ensure size is at least one device block */
 name|lp
