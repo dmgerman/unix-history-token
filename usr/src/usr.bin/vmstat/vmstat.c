@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.4 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -750,7 +750,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"DK"
+literal|"xx"
 argument_list|)
 expr_stmt|;
 name|dr_unit
@@ -815,9 +815,17 @@ expr_stmt|;
 comment|/* s1 = z; */
 name|printf
 argument_list|(
-literal|"\  procs     memory            page        swap  %s %s %s %s  faults          cpu\n\  r b w   avm  fre  re at pi po fr  de  sr i o  %-2d %-2d %-2d %-2d  in  sy  cs us sy id\n\ "
+literal|"\  procs     memory            page        swap         disk  faults          cpu\n\  r b w   avm  fre  re at pi po fr  de  sr i o  %c%d %c%d %c%d %c%d  in  sy  cs us sy id\n\ "
 argument_list|,
 name|dr_name
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+argument_list|,
+name|dr_unit
 index|[
 literal|0
 index|]
@@ -826,8 +834,24 @@ name|dr_name
 index|[
 literal|1
 index|]
+index|[
+literal|0
+index|]
+argument_list|,
+name|dr_unit
+index|[
+literal|1
+index|]
 argument_list|,
 name|dr_name
+index|[
+literal|2
+index|]
+index|[
+literal|0
+index|]
+argument_list|,
+name|dr_unit
 index|[
 literal|2
 index|]
@@ -836,20 +860,8 @@ name|dr_name
 index|[
 literal|3
 index|]
-argument_list|,
-name|dr_unit
 index|[
 literal|0
-index|]
-argument_list|,
-name|dr_unit
-index|[
-literal|1
-index|]
-argument_list|,
-name|dr_unit
-index|[
-literal|2
 index|]
 argument_list|,
 name|dr_unit
