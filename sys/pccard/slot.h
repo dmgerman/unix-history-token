@@ -176,17 +176,6 @@ name|int
 name|maxio
 decl_stmt|;
 comment|/* Number of allowed I/O windows */
-comment|/* 	 *	The rest is maintained by the mainline PC-CARD code. 	 */
-name|struct
-name|slot_ctrl
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Allows linked list of controllers */
-name|int
-name|slots
-decl_stmt|;
-comment|/* Slots available */
 block|}
 struct|;
 end_struct
