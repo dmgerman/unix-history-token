@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -293,7 +299,9 @@ specifier|static
 name|char
 name|host_name
 index|[
-literal|128
+name|MAXHOSTNAMELEN
+operator|+
+literal|18
 index|]
 decl_stmt|;
 name|char
@@ -381,34 +389,22 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Return host name followed by dotted decimal address 		 */
-name|strcpy
+name|snprintf
 argument_list|(
 name|host_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|host_name
+argument_list|)
+argument_list|,
+literal|"%s (%s)"
 argument_list|,
 name|ip_host
 operator|->
 name|h_name
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|host_name
-argument_list|,
-literal|" ("
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|host_name
 argument_list|,
 name|ip_num
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|host_name
-argument_list|,
-literal|")"
 argument_list|)
 expr_stmt|;
 return|return
