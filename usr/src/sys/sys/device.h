@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.5 (Berkeley) %G%  *  * from: $Header: device.h,v 1.6 92/06/11 17:56:45 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.5 (Berkeley) %G%  *  * from: $Header: device.h,v 1.7 92/11/17 01:55:17 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -53,26 +53,40 @@ modifier|*
 name|dv_cfdata
 decl_stmt|;
 comment|/* config data that found us */
-name|char
-modifier|*
-name|dv_name
-decl_stmt|;
-comment|/* device name */
 name|int
 name|dv_unit
 decl_stmt|;
 comment|/* device unit number */
 name|char
-modifier|*
 name|dv_xname
+index|[
+literal|16
+index|]
 decl_stmt|;
-comment|/* expanded name (name + unit) */
+comment|/* external name (name + unit) */
 name|struct
 name|device
 modifier|*
 name|dv_parent
 decl_stmt|;
 comment|/* pointer to parent device */
+name|int
+name|dv_evcnt
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* event counters */
+name|char
+name|dv_evnam
+index|[
+literal|2
+index|]
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* and their names */
 block|}
 struct|;
 end_struct
@@ -240,6 +254,16 @@ modifier|*
 name|cd_aux
 decl_stmt|;
 comment|/* additional driver, if any */
+name|char
+name|cd_evnam
+index|[
+literal|2
+index|]
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* names for dv_evnam */
 name|int
 name|cd_ndevs
 decl_stmt|;
