@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	5.3 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,12 @@ name|host_addrs
 index|[
 literal|2
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|h_errno
 decl_stmt|;
 end_decl_stmt
 
@@ -627,6 +633,16 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+name|h_errno
+operator|=
+name|HOST_NOT_FOUND
+expr_stmt|;
 return|return
 operator|(
 name|hp
@@ -751,6 +767,16 @@ condition|)
 name|endhostent
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+name|h_errno
+operator|=
+name|HOST_NOT_FOUND
+expr_stmt|;
 return|return
 operator|(
 name|hp
@@ -796,6 +822,16 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+name|h_errno
+operator|=
+name|HOST_NOT_FOUND
+expr_stmt|;
 return|return
 operator|(
 name|hp
