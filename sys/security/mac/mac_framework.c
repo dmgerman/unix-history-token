@@ -354,22 +354,8 @@ comment|/*  * Has the kernel started generating labeled objects yet?  All read/w
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|mac_late
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Warn about EA transactions only the first time they happen.  * Weak coherency, no locking.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ea_warn_once
 init|=
 literal|0
 decl_stmt|;
@@ -386,7 +372,6 @@ name|MAC_ALWAYS_LABEL_MBUF
 end_ifndef
 
 begin_decl_stmt
-specifier|static
 name|int
 name|mac_labelmbufs
 init|=
@@ -1361,35 +1346,25 @@ name|mac_policy_count
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|mac_policy_conf
-argument_list|)
+begin_decl_stmt
+name|struct
+name|mac_policy_list_head
 name|mac_policy_list
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|mac_policy_conf
-argument_list|)
+begin_decl_stmt
+name|struct
+name|mac_policy_list_head
 name|mac_static_policy_list
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * We manually invoke WITNESS_WARN() to allow Witness to generate  * warnings even if we don't end up ever triggering the wait at  * run-time.  The consumer of the exclusive interface must not hold  * any locks (other than potentially Giant) since we may sleep for  * long (potentially indefinite) periods of time waiting for the  * framework to become quiescent so that a policy list change may  * be made.  */
 end_comment
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|mac_policy_grab_exclusive
 parameter_list|(
@@ -1436,8 +1411,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|mac_policy_assert_exclusive
 parameter_list|(
@@ -1467,8 +1440,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|mac_policy_release_exclusive
 parameter_list|(
@@ -1502,8 +1473,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|mac_policy_list_busy
 parameter_list|(
@@ -1529,8 +1498,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|int
 name|mac_policy_list_conditional_busy
 parameter_list|(
@@ -1584,8 +1551,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|mac_policy_list_unbusy
 parameter_list|(
