@@ -94,6 +94,17 @@ name|TR_MAXPLAYCH
 value|4
 end_define
 
+begin_comment
+comment|/*  * Though, it's not clearly documented in trident datasheet, trident  * audio cards can't handle DMA addresses located above 1GB. The LBA  * (loop begin address) register which holds DMA base address is 32bits  * register.  * But the MSB 2bits are used for other purposes(I guess it is really  * bad idea). This effectivly limits the DMA address space up to 1GB.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TR_MAXADDR
+value|((1<< 30) - 1)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|tr_info
@@ -4696,7 +4707,7 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-name|BUS_SPACE_MAXADDR_32BIT
+name|TR_MAXADDR
 argument_list|,
 comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
