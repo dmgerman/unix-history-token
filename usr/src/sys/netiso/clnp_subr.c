@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_subr.c	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_subr.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -460,8 +460,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_ours  *  * PURPOSE:			Decide whether the supplied packet is destined for  *					us, or that it should be forwarded on.  *  * RETURNS:			packet is for us - 1  *					packet is not for us - 0  *  * SIDE EFFECTS:	  *  * NOTES:			  */
@@ -1195,7 +1198,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|DECBIT
+comment|/* DECBIT */
 comment|/* 	 *	Dispatch the datagram if it is small enough, otherwise fragment 	 */
 if|if
 condition|(
@@ -1406,8 +1409,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_route  *  * PURPOSE:			Route a clnp datagram to the first hop toward its   *					destination. In many cases, the first hop will be  *					the destination. The address of a route  *					is specified. If a routing entry is present in  *					that route, and it is still up to the same destination,  *					then no further action is necessary. Otherwise, a  *					new routing entry will be allocated.  *  * RETURNS:			route found - 0  *					unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			It is up to the caller to free the routing entry  *					allocated in route.  */
@@ -2510,8 +2516,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 end_unit
 
