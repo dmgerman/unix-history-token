@@ -812,7 +812,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dfkN:vz"
+literal|"cdfkN:vz"
 argument_list|)
 operator|)
 operator|!=
