@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_hp300.c	5.28 (Berkeley) %G%"
+literal|"@(#)kvm_hp300.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,11 +113,45 @@ directive|include
 file|"kvm_private.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<hp300/hp300/pte.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|luna68k
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<luna68k/luna68k/pte.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
