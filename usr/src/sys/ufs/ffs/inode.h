@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -119,6 +119,10 @@ name|i_lockwaiter
 decl_stmt|;
 comment|/* DEBUG: latest blocked for inode lock */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
+name|long
+name|i_count
+decl_stmt|;
+comment|/* size of free slot in directory */
 name|doff_t
 name|i_endoff
 decl_stmt|;
@@ -131,10 +135,6 @@ name|doff_t
 name|i_offset
 decl_stmt|;
 comment|/* offset of free space in directory */
-name|long
-name|i_count
-decl_stmt|;
-comment|/* size of free slot in directory */
 name|ino_t
 name|i_ino
 decl_stmt|;
@@ -152,7 +152,7 @@ comment|/* the on-disk dinode */
 name|long
 name|i_spare
 index|[
-literal|12
+literal|11
 index|]
 decl_stmt|;
 comment|/* spares to round up to 256 bytes */
