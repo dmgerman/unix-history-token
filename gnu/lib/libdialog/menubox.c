@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ncurses.h>
 end_include
 
@@ -2924,6 +2930,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|tag
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"bad parameter to print_item()\n"
+argument_list|)
+expr_stmt|;
 comment|/* Clear 'residue' of last item */
 name|wattrset
 argument_list|(
