@@ -1921,13 +1921,13 @@ name|tab
 init|;
 name|ent
 operator|->
-name|pp_name
+name|pp_vendor
 operator|!=
-name|NULL
-operator|||
+literal|0
+operator|&&
 name|ent
 operator|->
-name|pp_vendor
+name|pp_product
 operator|!=
 literal|0
 condition|;
