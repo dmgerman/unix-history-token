@@ -1527,25 +1527,25 @@ parameter_list|)
 block|{
 name|struct
 name|getsockopt_args
-comment|/* { 		int s; 		int level; 		int name; 		caddr_t val; 		int *avalsize; 	} */
+comment|/* { 		int	s; 		int	level; 		int	name; 		void * __restrict val; 		socklen_t * __restrict avalsize; 	} */
 name|bsd_args
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
+name|__restrict
 name|val
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
+modifier|*
+name|__restrict
 name|valsize
 decl_stmt|;
 name|int
-name|size_val
-init|=
-sizeof|sizeof
-name|val
-decl_stmt|;
-name|int
+name|error
+decl_stmt|,
 name|optval
+decl_stmt|,
+name|size_val
 decl_stmt|;
 name|val
 operator|=
@@ -1555,7 +1555,7 @@ name|sg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|size_val
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1567,8 +1567,15 @@ name|sg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|socklen_t
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|size_val
+operator|=
+sizeof|sizeof
+argument_list|(
+name|val
 argument_list|)
 expr_stmt|;
 if|if
@@ -1623,10 +1630,6 @@ name|bsd_args
 operator|.
 name|avalsize
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
 name|valsize
 expr_stmt|;
 if|if
@@ -2857,7 +2860,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|accept_args
-comment|/* { 		int s; 		caddr_t name; 		int *anamelen; 	} */
+comment|/* { 		int	s; 		struct sockaddr * __restrict name; 		socklen_t * __restrict anamelen; 	} */
 name|bsd_args
 decl_stmt|;
 name|struct
@@ -2867,7 +2870,7 @@ name|c_args
 decl_stmt|;
 name|struct
 name|fcntl_args
-comment|/* { 		int fd; 		int cmd; 		long arg; 	} */
+comment|/* { 		int	fd; 		int	cmd; 		long	arg; 	} */
 name|f_args
 decl_stmt|;
 name|int
@@ -2905,12 +2908,16 @@ name|linux_args
 operator|.
 name|s
 expr_stmt|;
+comment|/* XXX: */
 name|bsd_args
 operator|.
 name|name
 operator|=
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
+name|__restrict
 operator|)
 name|linux_args
 operator|.
@@ -2924,6 +2931,7 @@ name|linux_args
 operator|.
 name|namelen
 expr_stmt|;
+comment|/* XXX */
 name|error
 operator|=
 name|oaccept
@@ -3089,7 +3097,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|getsockname_args
-comment|/* { 		int fdes; 		caddr_t asa; 		int *alen; 	} */
+comment|/* { 		int	fdes; 		struct sockaddr * __restrict asa; 		socklen_t * __restrict alen; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -3127,12 +3135,16 @@ name|linux_args
 operator|.
 name|s
 expr_stmt|;
+comment|/* XXX: */
 name|bsd_args
 operator|.
 name|asa
 operator|=
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
+name|__restrict
 operator|)
 name|linux_args
 operator|.
@@ -3146,6 +3158,7 @@ name|linux_args
 operator|.
 name|namelen
 expr_stmt|;
+comment|/* XXX */
 name|error
 operator|=
 name|ogetsockname
@@ -3934,7 +3947,7 @@ name|linux_args
 decl_stmt|;
 name|struct
 name|recvfrom_args
-comment|/* { 		int s; 		caddr_t buf; 		size_t len; 		int flags; 		caddr_t from; 		int *fromlenaddr; 	} */
+comment|/* { 		int	s; 		caddr_t	buf; 		size_t	len; 		int	flags; 		struct sockaddr * __restrict from; 		socklen_t * __restrict fromlenaddr; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -3999,10 +4012,17 @@ operator|.
 name|flags
 argument_list|)
 expr_stmt|;
+comment|/* XXX: */
 name|bsd_args
 operator|.
 name|from
 operator|=
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+name|__restrict
+operator|)
 name|linux_args
 operator|.
 name|from
@@ -4015,6 +4035,7 @@ name|linux_args
 operator|.
 name|fromlen
 expr_stmt|;
+comment|/* XXX */
 name|error
 operator|=
 name|orecvfrom
