@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.19 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3746,7 +3746,14 @@ argument|else inforce( tsize(t,d,s) );  	paramno =
 literal|0
 argument|; 	vfdalign( AL_INIT ); 	inoff =
 literal|0
-argument|; 	iclass = SNULL;  	}  doinit( p ) register NODE *p; {
+argument|; 	iclass = SNULL;  	}  fixinit(){
+comment|/* called from the grammar if we must punt during initialization */
+comment|/* stolen from endinit() */
+argument|pstk = instack; 	paramno =
+literal|0
+argument|; 	vfdalign( AL_INIT ); 	inoff =
+literal|0
+argument|; 	iclass = SNULL; 	}  doinit( p ) register NODE *p; {
 comment|/* take care of generating a value for the initializer p */
 comment|/* inoff has the current offset (last bit written) 		in the current word being generated */
 argument|register sz
