@@ -1594,14 +1594,6 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'d'
-case|:
-comment|/* debug */
-name|Debug
-operator|++
-expr_stmt|;
-break|break;
-case|case
 literal|'a'
 case|:
 comment|/* allow specific network addresses only */
@@ -1620,12 +1612,46 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+literal|'d'
+case|:
+comment|/* debug */
+name|Debug
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 comment|/* configuration file */
 name|ConfFile
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|nfunix
+operator|<
+name|MAXFUNIX
+condition|)
+name|funixn
+index|[
+name|nfunix
+operator|++
+index|]
+operator|=
+name|optarg
+expr_stmt|;
+else|else
+name|warnx
+argument_list|(
+literal|"out of descriptors, ignoring %s"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1668,32 +1694,6 @@ case|:
 comment|/* no network mode */
 name|SecureMode
 operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'l'
-case|:
-if|if
-condition|(
-name|nfunix
-operator|<
-name|MAXFUNIX
-condition|)
-name|funixn
-index|[
-name|nfunix
-operator|++
-index|]
-operator|=
-name|optarg
-expr_stmt|;
-else|else
-name|warnx
-argument_list|(
-literal|"out of descriptors, ignoring %s"
-argument_list|,
-name|optarg
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4064,7 +4064,6 @@ literal|'+'
 case|:
 if|if
 condition|(
-operator|(
 name|strcmp
 argument_list|(
 name|from
@@ -4077,7 +4076,6 @@ literal|1
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 continue|continue;
 break|break;
@@ -4086,7 +4084,6 @@ literal|'-'
 case|:
 if|if
 condition|(
-operator|(
 name|strcmp
 argument_list|(
 name|from
@@ -4099,7 +4096,6 @@ literal|1
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 continue|continue;
 break|break;
@@ -7626,7 +7622,6 @@ name|f
 operator|->
 name|f_program
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|" (%s)"
@@ -7636,7 +7631,6 @@ operator|->
 name|f_program
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -7833,7 +7827,7 @@ name|f_program
 operator|=
 name|strdup
 argument_list|(
-name|host
+name|prog
 argument_list|)
 expr_stmt|;
 comment|/* scan through the list of selectors */
