@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calendar.c	8.3 (Berkeley) %G%"
+literal|"@(#)calendar.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1573,6 +1573,8 @@ argument_list|(
 name|_PATH_CPP
 argument_list|,
 literal|"cpp"
+argument_list|,
+literal|"-P"
 argument_list|,
 literal|"-I."
 argument_list|,
