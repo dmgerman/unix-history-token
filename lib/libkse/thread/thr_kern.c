@@ -1516,6 +1516,13 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+name|__isthreaded
+condition|)
+name|_thr_signal_deinit
+argument_list|()
+expr_stmt|;
 name|_ksd_readandclear_tmbx
 argument_list|()
 expr_stmt|;
@@ -1526,9 +1533,6 @@ expr_stmt|;
 name|active_threads
 operator|=
 literal|0
-expr_stmt|;
-name|_thr_signal_deinit
-argument_list|()
 expr_stmt|;
 endif|#
 directive|endif

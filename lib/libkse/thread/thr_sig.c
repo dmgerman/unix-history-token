@@ -3808,10 +3808,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|sigset_t
 name|tmpmask
-decl_stmt|,
-name|oldmask
 decl_stmt|;
 name|int
 name|i
@@ -3833,8 +3839,7 @@ argument_list|,
 operator|&
 name|tmpmask
 argument_list|,
-operator|&
-name|oldmask
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Enter a loop to get the existing signal status: */
@@ -3899,7 +3904,9 @@ argument_list|(
 name|SIG_SETMASK
 argument_list|,
 operator|&
-name|oldmask
+name|curthread
+operator|->
+name|sigmask
 argument_list|,
 name|NULL
 argument_list|)
