@@ -5651,6 +5651,19 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|str
+operator|==
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"missing unreachable code"
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 name|strtoul
