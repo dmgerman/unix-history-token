@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: isp_pci.c,v 1.24.2.1 1999/07/03 00:00:22 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -367,6 +367,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_DISABLE_2200_SUPPORT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -390,17 +401,16 @@ name|isp_pci_reset1
 block|,
 name|isp_pci_dumpregs
 block|,
-name|NULL
+name|ISP2200_RISC_CODE
 block|,
-literal|0
+name|ISP2200_CODE_LENGTH
 block|,
 name|ISP2100_CODE_ORG
 block|,
-literal|0
+name|ISP2200_RISC_CODE
 block|,
 literal|0
 block|,
-comment|/* Irrelevant to the 2100 */
 literal|0
 block|}
 decl_stmt|;
@@ -1068,19 +1078,24 @@ ifndef|#
 directive|ifndef
 name|ISP_DISABLE_2100_SUPPORT
 case|case
-name|PCI_QLOGIC_ISP2200
-case|:
-name|x
-operator|=
-literal|"Qlogic ISP 2200 PCI FC-AL Adapter"
-expr_stmt|;
-break|break;
-case|case
 name|PCI_QLOGIC_ISP2100
 case|:
 name|x
 operator|=
 literal|"Qlogic ISP 2100 PCI FC-AL Adapter"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|ISP_DISABLE_2200_SUPPORT
+case|case
+name|PCI_QLOGIC_ISP2200
+case|:
+name|x
+operator|=
+literal|"Qlogic ISP 2200 PCI FC-AL Adapter"
 expr_stmt|;
 break|break;
 endif|#
@@ -1746,6 +1761,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|ISP_DISABLE_2200_SUPPORT
 if|if
 condition|(
 name|data
