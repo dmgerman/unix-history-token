@@ -472,6 +472,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|devstat_end_transaction_bio
+parameter_list|(
+name|struct
+name|devstat
+modifier|*
+name|ds
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

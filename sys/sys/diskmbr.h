@@ -1624,6 +1624,12 @@ end_function
 
 begin_struct_decl
 struct_decl|struct
+name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|buf
 struct_decl|;
 end_struct_decl
@@ -1631,6 +1637,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|buf_queue_head
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|bio_queue_head
 struct_decl|;
 end_struct_decl
 
@@ -1754,6 +1766,26 @@ name|ap
 operator|,
 expr|struct
 name|buf
+operator|*
+name|bp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|bioqdisksort
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|bio_queue_head
+operator|*
+name|ap
+operator|,
+expr|struct
+name|bio
 operator|*
 name|bp
 operator|)
