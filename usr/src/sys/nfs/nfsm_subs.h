@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfsm_subs.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfsm_subs.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -360,7 +360,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|{ struct nfsnode *np; nfsv2fh_t *fhp; \ 		nfsm_disect(fhp,nfsv2fh_t *,NFSX_FH); \ 		if (error = nfs_nget((d)->v_mount, fhp,&np)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = NFSTOV(np); \ 		nfsm_loadattr(v, (struct vattr *)0); \ 		(v)->v_type = np->n_vattr.va_type; \ 		}
+value|{ struct nfsnode *np; nfsv2fh_t *fhp; \ 		nfsm_disect(fhp,nfsv2fh_t *,NFSX_FH); \ 		if (error = nfs_nget((d)->v_mount, fhp,&np)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = NFSTOV(np); \ 		nfsm_loadattr(v, (struct vattr *)0); \ 		}
 end_define
 
 begin_define
@@ -502,6 +502,12 @@ define|\
 value|nfsmout: \ 		return(error)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -510,8 +516,37 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|{ \ 		if (error) \ 			nfs_rephead(0, xid, error, mrq,&mb,&bpos); \ 		else \ 			nfs_rephead((s), xid, error, mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		if (error) \ 			return(0); \ 		}
+value|{ \ 		*repstat = error; \ 		if (error) \ 			nfs_rephead(0, xid, error, mrq,&mb,&bpos); \ 		else \ 			nfs_rephead((s), xid, error, mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		if (error) \ 			return(0); \ 		}
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* lint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nfsm_reply
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|{ \ 		*repstat = error; \ 		if (error) \ 			nfs_rephead(0, xid, error, mrq,&mb,&bpos); \ 		else \ 			nfs_rephead((s), xid, error, mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		mrep = mreq; \ 		if (error) \ 			return(0); \ 		}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_define
 define|#
@@ -541,6 +576,14 @@ directive|define
 name|nfsm_clget
 define|\
 value|if (bp>= be) { \ 			MGET(mp, M_WAIT, MT_DATA); \ 			NFSMCLGET(mp, M_WAIT); \ 			mp->m_len = NFSMSIZ(mp); \ 			if (mp3 == NULL) \ 				mp3 = mp2 = mp; \ 			else { \ 				mp2->m_next = mp; \ 				mp2 = mp; \ 			} \ 			bp = mtod(mp, caddr_t); \ 			be = bp+mp->m_len; \ 		} \ 		p = (u_long *)bp
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_srvfillattr
+define|\
+value|fp->fa_type = vtonfs_type(vap->va_type); \ 	fp->fa_mode = vtonfs_mode(vap->va_type, vap->va_mode); \ 	fp->fa_nlink = txdr_unsigned(vap->va_nlink); \ 	fp->fa_uid = txdr_unsigned(vap->va_uid); \ 	fp->fa_gid = txdr_unsigned(vap->va_gid); \ 	fp->fa_size = txdr_unsigned(vap->va_size); \ 	fp->fa_blocksize = txdr_unsigned(vap->va_blocksize); \ 	fp->fa_rdev = txdr_unsigned(vap->va_rdev); \ 	fp->fa_blocks = txdr_unsigned(vap->va_bytes / vap->va_blocksize); \ 	fp->fa_fsid = txdr_unsigned(vap->va_fsid); \ 	fp->fa_fileid = txdr_unsigned(vap->va_fileid); \ 	fp->fa_atime.tv_sec = txdr_unsigned(vap->va_atime.tv_sec); \ 	fp->fa_atime.tv_usec = txdr_unsigned(vap->va_flags); \ 	txdr_time(&vap->va_mtime,&fp->fa_mtime); \ 	fp->fa_ctime.tv_sec = txdr_unsigned(vap->va_ctime.tv_sec); \ 	fp->fa_ctime.tv_usec = txdr_unsigned(vap->va_gen)
 end_define
 
 end_unit

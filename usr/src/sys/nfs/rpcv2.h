@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989 The Regents of the University of California.  *
 end_comment
 
 begin_comment
-comment|/*  * Definitions for Sun RPC Version 2, from  * "Remote Procedure Call Protocol Specification" in the manual  * "Networking on the Sun Workstation", Part #800-1324-03 Rev. B  */
+comment|/*  * Definitions for Sun RPC Version 2, from  * "RPC: Remote Procedure Call Protocol Specification" RFC1057  */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989 The Regents of the University of California.  *
 end_comment
 
 begin_comment
-comment|/*  * Macros used for conversion to/from xdr representation by nfs...  * These use the MACHINE DEPENDENT routines ntohl, htonl  */
+comment|/*  * Macros used for conversion to/from xdr representation by nfs...  * These use the MACHINE DEPENDENT routines ntohl, htonl  * As defined by "XDR: External Data Representation Standard" RFC1014  */
 end_comment
 
 begin_comment
