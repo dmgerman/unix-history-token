@@ -3,11 +3,15 @@ begin_comment
 comment|/* Readline.h -- the names of functions callable from within readline. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_READLINE_H_
-end_ifndef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -21,11 +25,15 @@ directive|include
 file|<readline/keymaps.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__FUNCTION_DEF
-end_ifndef
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -45,6 +53,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FUNCTION_DEF */
+end_comment
 
 begin_comment
 comment|/* The functions for manipulating the text of the line within readline. Most of these functions are bound to keys by default. */
@@ -190,6 +202,9 @@ argument_list|()
 decl_stmt|,
 name|rl_re_read_init_file
 argument_list|()
+decl_stmt|,
+name|rl_dump_functions
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -208,11 +223,14 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VI_MODE
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Things for vi mode. */
@@ -333,6 +351,9 @@ name|rl_vi_yank_to
 argument_list|()
 decl_stmt|,
 name|rl_vi_complete
+argument_list|()
+decl_stmt|,
+name|rl_vi_fetch_history
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -584,6 +605,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* List of characters which are used to quote a substring of the command    line, upon which completion is to be performed for the entire substring.    Within quoted substrings, rl_completer_word_break_characters are treated    as normal characters, unless they also appear in this list. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|rl_completer_quote_characters
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* List of characters that are word break characters, but should be left    in TEXT when it is passed to the completion function.  The shell uses    this to help determine what kind of completing to do. */
 end_comment
 
@@ -668,6 +701,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* If non-zero then this is the address of a function you want called    while Readline is waiting for character input.     */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Function
+modifier|*
+name|rl_event_hook
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Non-zero means that modified history lines are preceded    with an asterisk. */
 end_comment
 
@@ -675,6 +720,64 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_show_star
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* **************************************************************** */
+end_comment
+
+begin_comment
+comment|/*                                                                  */
+end_comment
+
+begin_comment
+comment|/*             Tilde Variables That Can be Externally Set           */
+end_comment
+
+begin_comment
+comment|/*                                                                  */
+end_comment
+
+begin_comment
+comment|/* **************************************************************** */
+end_comment
+
+begin_comment
+comment|/* If non-null, this contains the address of a function to call if the    standard meaning for expanding a tilde fails.  The function is called    with the text (sans tilde, as in "foo"), and returns a malloc()'ed string    which is the expansion, or a NULL pointer if there is no expansion. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Function
+modifier|*
+name|tilde_expansion_failure_hook
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* When non-null, this is a NULL terminated array of strings which    are duplicates for a tilde prefix.  Bash uses this to expand    `=~' and `:~'. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|tilde_additional_prefixes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* When non-null, this is a NULL terminated array of strings which match    the end of a username, instead of just "/".  Bash sets this to    `/' and `:'. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|tilde_additional_suffixes
 decl_stmt|;
 end_decl_stmt
 

@@ -4,35 +4,8 @@ comment|/* emacs_keymap.c -- the keymap for emacs_mode in readline (). */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1988,1989 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 1, or (at your option) any    later version.     Readline is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with Readline; see the file COPYING.  If not, write to the Free    Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1988, 1989, 1991 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     Readline is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BUFSIZ
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BUFSIZ */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"readline.h"
-end_include
 
 begin_comment
 comment|/* An array of function pointers, one for each possible key.    If the type byte is ISKMAP, then the pointer is the address of    a keymap. */

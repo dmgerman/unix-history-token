@@ -3,6 +3,10 @@ begin_comment
 comment|/* History.h -- the names of functions that you can call in history. */
 end_comment
 
+begin_comment
+comment|/* The structure used to store a history entry. */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
