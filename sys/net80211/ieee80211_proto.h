@@ -892,6 +892,26 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_TXOP_TO_US
+parameter_list|(
+name|_txop
+parameter_list|)
+value|((_txop)<<5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_US_TO_TXOP
+parameter_list|(
+name|_us
+parameter_list|)
+value|((_us)>>5)
+end_define
+
 begin_struct
 struct|struct
 name|chanAccParams
