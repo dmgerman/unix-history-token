@@ -1649,6 +1649,11 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 argument_list|)
 expr_stmt|;
+name|cnt
+operator|.
+name|v_wire_count
+operator|++
+expr_stmt|;
 block|}
 end_function
 
