@@ -95,6 +95,7 @@ begin_function
 name|int
 name|login_strinlist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -176,6 +177,7 @@ begin_function
 name|int
 name|login_str2inlist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -277,6 +279,7 @@ name|lt
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -470,6 +473,7 @@ name|char
 modifier|*
 name|grp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -673,6 +677,7 @@ operator|)
 operator|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 modifier|*

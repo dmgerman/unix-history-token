@@ -186,7 +186,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|tty_name
 parameter_list|)
 block|{
 name|int
@@ -257,7 +257,7 @@ argument|sizeof(lckname)
 argument_list|,
 argument|_PATH_UUCPLOCK LOCKFMT
 argument_list|,
-argument|ttyname
+argument|tty_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -502,7 +502,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|tty_name
 parameter_list|,
 name|pid_t
 name|pid
@@ -532,7 +532,7 @@ argument|sizeof(lckname)
 argument_list|,
 argument|_PATH_UUCPLOCK LOCKFMT
 argument_list|,
-argument|ttyname
+argument|tty_name
 argument_list|)
 empty_stmt|;
 if|if
@@ -576,6 +576,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 name|SEEK_SET
@@ -613,7 +616,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|tty_name
 parameter_list|)
 block|{
 name|char
@@ -638,7 +641,7 @@ argument|sizeof(tbuf)
 argument_list|,
 argument|_PATH_UUCPLOCK LOCKFMT
 argument_list|,
-argument|ttyname
+argument|tty_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -667,6 +670,7 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -819,6 +823,9 @@ name|fd
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|len
 argument_list|)
 operator|==
@@ -884,6 +891,9 @@ literal|'\0'
 expr_stmt|;
 name|pid
 operator|=
+operator|(
+name|pid_t
+operator|)
 name|strtol
 argument_list|(
 name|buf

@@ -144,6 +144,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -159,6 +160,7 @@ name|char
 modifier|*
 name|allocstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -233,6 +235,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -242,6 +245,8 @@ name|size_t
 name|sz
 parameter_list|)
 block|{
+specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -301,11 +306,13 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|arrayize
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -323,10 +330,12 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ptr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -646,6 +655,7 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|login_dbarray
@@ -861,10 +871,6 @@ name|lc_cap
 argument_list|,
 name|login_dbarray
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|name
 argument_list|)
 condition|)
@@ -960,10 +966,6 @@ name|lc_cap
 argument_list|,
 name|login_dbarray
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|name
 argument_list|)
 operator|!=
@@ -1311,10 +1313,6 @@ name|lc
 operator|->
 name|lc_cap
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 operator|&
@@ -1347,6 +1345,7 @@ comment|/*  * login_getcaplist()  * Given a login_cap entry, and a capability na
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1367,6 +1366,7 @@ modifier|*
 name|chars
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|lstring
@@ -1386,10 +1386,6 @@ condition|(
 operator|(
 name|lstring
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|login_getcapstr
 argument_list|(
 name|lc
@@ -1450,9 +1446,13 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-if|if
-condition|(
-operator|(
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 name|str
 operator|=
 name|login_getcapstr
@@ -1465,42 +1465,42 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|str
 operator|==
 name|NULL
 condition|)
-name|str
-operator|=
+return|return
 name|error
-expr_stmt|;
-else|else
-block|{
-name|char
-modifier|*
+return|;
 name|ptr
-init|=
-operator|(
+operator|=
+name|__DECONST
+argument_list|(
 name|char
 operator|*
-operator|)
+argument_list|,
 name|str
-decl_stmt|;
+argument_list|)
+expr_stmt|;
+comment|/* XXXX Yes, very dodgy */
 while|while
 condition|(
 operator|*
 name|ptr
 condition|)
 block|{
-name|int
 name|count
-init|=
+operator|=
 name|strcspn
 argument_list|(
 name|ptr
 argument_list|,
 literal|", \t"
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|ptr
 operator|+=
 name|count
@@ -1516,7 +1516,6 @@ operator|++
 operator|=
 literal|':'
 expr_stmt|;
-block|}
 block|}
 return|return
 name|str
@@ -1974,10 +1973,6 @@ name|lc
 operator|->
 name|lc_cap
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 operator|&
@@ -2293,10 +2288,6 @@ name|lc
 operator|->
 name|lc_cap
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 operator|&
@@ -2323,10 +2314,6 @@ name|lc
 operator|->
 name|lc_cap
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 operator|&
@@ -2506,10 +2493,6 @@ name|lc
 operator|->
 name|lc_cap
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 operator|&
@@ -2788,10 +2771,6 @@ name|lc
 operator|->
 name|lc_cap
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 literal|':'
@@ -2831,6 +2810,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2851,6 +2831,7 @@ literal|64
 index|]
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|defauthtypes
@@ -2888,8 +2869,13 @@ argument_list|,
 name|auth
 argument_list|)
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|realauth
+argument_list|)
 condition|)
 name|authtypes
 operator|=

@@ -15,12 +15,6 @@ directive|define
 name|_LIBUTIL_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -469,6 +463,7 @@ parameter_list|,
 name|int
 name|_tfd
 parameter_list|,
+specifier|const
 name|struct
 name|passwd
 modifier|*
@@ -488,6 +483,7 @@ name|passwd
 modifier|*
 name|pw_dup
 parameter_list|(
+specifier|const
 name|struct
 name|passwd
 modifier|*
@@ -510,11 +506,13 @@ begin_function_decl
 name|int
 name|pw_equal
 parameter_list|(
+specifier|const
 name|struct
 name|passwd
 modifier|*
 name|_pw1
 parameter_list|,
+specifier|const
 name|struct
 name|passwd
 modifier|*
@@ -554,6 +552,7 @@ name|char
 modifier|*
 name|pw_make
 parameter_list|(
+specifier|const
 name|struct
 name|passwd
 modifier|*

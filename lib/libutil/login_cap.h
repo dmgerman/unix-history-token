@@ -557,6 +557,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1083,6 +1084,7 @@ begin_function_decl
 name|int
 name|login_strinlist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1100,6 +1102,7 @@ begin_function_decl
 name|int
 name|login_str2inlist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*

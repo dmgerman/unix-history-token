@@ -105,13 +105,11 @@ begin_function
 name|void
 name|login
 parameter_list|(
-name|ut
-parameter_list|)
 name|struct
 name|utmp
 modifier|*
 name|ut
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ttyent

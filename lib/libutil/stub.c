@@ -29,6 +29,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * Stub out what's in -lcrypt.  */
 end_comment
@@ -40,6 +46,10 @@ name|weak
 name|crypt_set_format
 end_pragma
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|crypt_set_format
@@ -48,6 +58,7 @@ specifier|const
 name|char
 modifier|*
 name|f
+name|__unused
 parameter_list|)
 block|{
 if|if

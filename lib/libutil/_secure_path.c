@@ -153,6 +153,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|uid
 operator|!=
 operator|-
@@ -190,6 +193,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|gid
 operator|!=
 operator|-

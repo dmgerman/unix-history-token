@@ -203,9 +203,14 @@ name|s
 argument_list|,
 literal|'.'
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|end
 operator|-
 name|s
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
@@ -285,9 +290,14 @@ literal|1
 argument_list|)
 operator|)
 operator|<
+call|(
+name|size_t
+call|)
+argument_list|(
 name|end
 operator|-
 name|s
+argument_list|)
 condition|)
 block|{
 comment|/* Found -- shuffle the DISPLAY back. */
@@ -328,10 +338,11 @@ modifier|*
 name|disp
 parameter_list|)
 block|{
+name|size_t
+name|w
+decl_stmt|;
 name|int
 name|res
-decl_stmt|,
-name|w
 decl_stmt|;
 name|w
 operator|=

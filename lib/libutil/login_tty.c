@@ -87,11 +87,9 @@ begin_function
 name|int
 name|login_tty
 parameter_list|(
-name|fd
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void

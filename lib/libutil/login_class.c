@@ -1149,6 +1149,7 @@ operator|!
 name|paths
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 modifier|*

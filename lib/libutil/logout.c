@@ -119,13 +119,11 @@ begin_function
 name|int
 name|logout
 parameter_list|(
-name|line
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
