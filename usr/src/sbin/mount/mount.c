@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mount.c	4.8 (Berkeley) %G%"
+literal|"@(#)mount.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,6 +421,15 @@ operator|->
 name|fs_type
 argument_list|,
 name|FSTAB_RW
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|fsp
+operator|->
+name|fs_type
+argument_list|,
+name|FSTAB_RQ
 argument_list|)
 condition|)
 continue|continue;
