@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for SunOS binaries.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for SunOS binaries.    Copyright 1990, 1991, 1992, 1994, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -533,7 +533,7 @@ parameter_list|(
 name|mtype
 parameter_list|)
 define|\
-value|(((mtype) == M_SPARC&& bfd_lookup_arch (bfd_arch_sparc, 0) != NULL) \    || ((mtype) == M_SPARCLET \&& bfd_lookup_arch (bfd_arch_sparc, bfd_mach_sparc_sparclet) != NULL) \    || (((mtype) == M_UNKNOWN || (mtype) == M_68010 || (mtype) == M_68020) \&& bfd_lookup_arch (bfd_arch_m68k, 0) != NULL))
+value|(((mtype) == M_SPARC&& bfd_lookup_arch (bfd_arch_sparc, 0) != NULL) \    || ((mtype) == M_SPARCLET \&& bfd_lookup_arch (bfd_arch_sparc, bfd_mach_sparc_sparclet) != NULL) \    || ((mtype) == M_SPARCLITE_LE \&& bfd_lookup_arch (bfd_arch_sparc, bfd_mach_sparc_sparclet) != NULL) \    || (((mtype) == M_UNKNOWN || (mtype) == M_68010 || (mtype) == M_68020) \&& bfd_lookup_arch (bfd_arch_m68k, 0) != NULL))
 end_define
 
 begin_comment
@@ -545,6 +545,16 @@ include|#
 directive|include
 file|"aoutf1.h"
 end_include
+
+begin_comment
+comment|/* The SunOS 4.1.4 /usr/include/locale.h defines valid as a macro.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|valid
+end_undef
 
 begin_comment
 comment|/* SunOS shared library support.  We store a pointer to this structure    in obj_aout_dynamic_info (abfd).  */
@@ -5679,6 +5689,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|bfd_link_info
@@ -7191,6 +7202,7 @@ decl_stmt|;
 name|asection
 modifier|*
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|struct
@@ -7928,6 +7940,7 @@ decl_stmt|;
 name|asection
 modifier|*
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|struct
@@ -9838,10 +9851,12 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -11148,6 +11163,7 @@ decl_stmt|;
 name|bfd_byte
 modifier|*
 name|contents
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|boolean
 modifier|*
@@ -11179,6 +11195,9 @@ name|baserel
 decl_stmt|;
 name|boolean
 name|jmptbl
+decl_stmt|;
+name|boolean
+name|pcrel
 decl_stmt|;
 name|asection
 modifier|*
@@ -11216,6 +11235,22 @@ operator|->
 name|plt_offset
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|info
+operator|->
+name|shared
+operator|||
+operator|(
+name|h
+operator|->
+name|flags
+operator|&
+name|SUNOS_DEF_REGULAR
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|asection
@@ -11318,6 +11353,23 @@ name|RELOC_STD_BITS_JMPTABLE_BIG
 operator|)
 operator|)
 expr_stmt|;
+name|pcrel
+operator|=
+operator|(
+literal|0
+operator|!=
+operator|(
+name|srel
+operator|->
+name|r_type
+index|[
+literal|0
+index|]
+operator|&
+name|RELOC_STD_BITS_PCREL_BIG
+operator|)
+operator|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -11352,6 +11404,23 @@ literal|0
 index|]
 operator|&
 name|RELOC_STD_BITS_JMPTABLE_LITTLE
+operator|)
+operator|)
+expr_stmt|;
+name|pcrel
+operator|=
+operator|(
+literal|0
+operator|!=
+operator|(
+name|srel
+operator|->
+name|r_type
+index|[
+literal|0
+index|]
+operator|&
+name|RELOC_STD_BITS_PCREL_LITTLE
 operator|)
 operator|)
 expr_stmt|;
@@ -11440,6 +11509,31 @@ name|r_type
 operator|==
 name|RELOC_JMP_TBL
 expr_stmt|;
+name|pcrel
+operator|=
+operator|(
+name|r_type
+operator|==
+name|RELOC_DISP8
+operator|||
+name|r_type
+operator|==
+name|RELOC_DISP16
+operator|||
+name|r_type
+operator|==
+name|RELOC_DISP32
+operator|||
+name|r_type
+operator|==
+name|RELOC_WDISP30
+operator|||
+name|r_type
+operator|==
+name|RELOC_WDISP22
+operator|)
+expr_stmt|;
+comment|/* We don't consider the PC10 and PC22 types to be PC relative,          because they are pcrel_offset.  */
 block|}
 if|if
 condition|(
@@ -12740,6 +12834,7 @@ operator|)
 name|indx
 expr_stmt|;
 block|}
+comment|/* FIXME: We may have to change the addend for a PC relative          reloc.  */
 block|}
 else|else
 block|{
@@ -12885,6 +12980,53 @@ operator|(
 name|bfd_byte
 operator|)
 name|indx
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pcrel
+operator|&&
+name|h
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Adjust the addend for the change in address.  */
+name|PUT_WORD
+argument_list|(
+name|dynobj
+argument_list|,
+operator|(
+name|GET_WORD
+argument_list|(
+name|dynobj
+argument_list|,
+name|erel
+operator|->
+name|r_addend
+argument_list|)
+operator|-
+operator|(
+name|input_section
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|input_section
+operator|->
+name|output_offset
+operator|-
+name|input_section
+operator|->
+name|vma
+operator|)
+operator|)
+argument_list|,
+name|erel
+operator|->
+name|r_addend
+argument_list|)
 expr_stmt|;
 block|}
 block|}
