@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.44	83/01/08	*/
+comment|/*	ip_output.c	1.45	83/01/17	*/
 end_comment
 
 begin_include
@@ -382,14 +382,18 @@ name|rt_gateway
 expr_stmt|;
 name|gotif
 label|:
+ifndef|#
+directive|ifndef
+name|notdef
 comment|/* 	 * If source address not specified yet, use address 	 * of outgoing interface. 	 */
 if|if
 condition|(
+name|in_lnaof
+argument_list|(
 name|ip
 operator|->
 name|ip_src
-operator|.
-name|s_addr
+argument_list|)
 operator|==
 name|INADDR_ANY
 condition|)
@@ -415,7 +419,9 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-comment|/* 	 * Map broadcast address to hardware's broadcast 	 * address and verify user is allowed to send 	 * such a packet. 	 */
+endif|#
+directive|endif
+comment|/* 	 * Look for broadcast address and 	 * and verify user is allowed to send 	 * such a packet. 	 */
 if|if
 condition|(
 name|in_lnaof
@@ -426,11 +432,6 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -486,33 +487,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|sin
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifp
-operator|->
-name|if_broadaddr
-expr_stmt|;
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|dst
-operator|)
-operator|->
-name|sin_addr
-operator|=
-name|sin
-operator|->
-name|sin_addr
-expr_stmt|;
 block|}
 comment|/* 	 * If small enough for interface, can just send directly. 	 */
 if|if
