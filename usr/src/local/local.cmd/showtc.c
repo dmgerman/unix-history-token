@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)showtc.c	1.2	(Berkeley) %G%"
+literal|"@(#)showtc.c	1.3	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** show termcap entries ** ** where: **	-S	sort entries before display **	-b	show bare entries **	-d	look for duplicate names **	-f	following arg is FULL PATHNAME of termcap file **	-g	sort on generic names **	-n	-d and stop **	-s	don't print two char name at the front of every line **	-x	expand tc= capabilities **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Modified for 4.1c by Kevin Layer */
+comment|/* ** show termcap entries ** ** where: **	-S	sort entries before display **	-b	show bare entries **	-d	look for duplicate names **	-f	following arg is FULL PATHNAME of termcap file **	-g	sort on generic names **	-n	-d and stop **	-s	don't print two char name at the front of every line **	-x	expand tc= capabilities **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Kevin Layer: modified for 4.1c and misc changes. ** Kevin Layer: added the printing of terminal capabilities **	in `human' readable form (like that in "man 5 termcap"). */
 end_comment
 
 begin_include
@@ -107,6 +107,411 @@ name|tcNames
 index|[
 name|NOENTRIES
 index|]
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NOCAPS
+value|94
+end_define
+
+begin_struct
+struct|struct
+name|Caps
+block|{
+name|char
+modifier|*
+name|cap
+decl_stmt|;
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+block|}
+name|capList
+index|[
+name|NOCAPS
+index|]
+init|=
+block|{
+literal|"ae"
+block|,
+literal|"End alternate character set"
+block|,
+literal|"al"
+block|,
+literal|"Add new blank line"
+block|,
+literal|"am"
+block|,
+literal|"Has automatic margins"
+block|,
+literal|"as"
+block|,
+literal|"Start alternate character set"
+block|,
+literal|"bc"
+block|,
+literal|"Backspace if not ^H"
+block|,
+literal|"bs"
+block|,
+literal|"Can backspace with ^H"
+block|,
+literal|"bt"
+block|,
+literal|"Back tab"
+block|,
+literal|"bw"
+block|,
+literal|"Backspace wraps from col 0 to last col"
+block|,
+literal|"CC"
+block|,
+literal|"Command char in prototype if settable"
+block|,
+literal|"cd"
+block|,
+literal|"Clear to end of display"
+block|,
+literal|"ce"
+block|,
+literal|"Clear to end of line"
+block|,
+literal|"ch"
+block|,
+literal|"Like cm, but horizontal motion only"
+block|,
+literal|"cl"
+block|,
+literal|"Clear screen"
+block|,
+literal|"cm"
+block|,
+literal|"Cursor motion"
+block|,
+literal|"co"
+block|,
+literal|"Number of columns in a line"
+block|,
+literal|"cr"
+block|,
+literal|"Carriage return, (default ^M)"
+block|,
+literal|"cs"
+block|,
+literal|"Change scrolling region (vt100), like cm"
+block|,
+literal|"cv"
+block|,
+literal|"Like ch but vertical only."
+block|,
+literal|"da"
+block|,
+literal|"Display may be retained above"
+block|,
+literal|"dB"
+block|,
+literal|"Number of millisec of bs delay needed"
+block|,
+literal|"db"
+block|,
+literal|"Display may be retained below"
+block|,
+literal|"dC"
+block|,
+literal|"Number of millisec of cr delay needed"
+block|,
+literal|"dc"
+block|,
+literal|"Delete character"
+block|,
+literal|"dF"
+block|,
+literal|"Number of millisec of ff delay needed"
+block|,
+literal|"dl"
+block|,
+literal|"Delete line"
+block|,
+literal|"dm"
+block|,
+literal|"Start Delete mode"
+block|,
+literal|"dN"
+block|,
+literal|"Number of millisec of nl delay needed"
+block|,
+literal|"do"
+block|,
+literal|"Down one line"
+block|,
+literal|"dT"
+block|,
+literal|"Number of millisec of tab delay needed"
+block|,
+literal|"ed"
+block|,
+literal|"End delete mode"
+block|,
+literal|"ei"
+block|,
+literal|"End insert mode;give \":ei=:\" if ic"
+block|,
+literal|"eo"
+block|,
+literal|"Can erase overstrikes with a blank"
+block|,
+literal|"ff"
+block|,
+literal|"Hardcopy page eject (default ^L)"
+block|,
+literal|"fs"
+block|,
+literal|"From status line sequence"
+block|,
+literal|"hc"
+block|,
+literal|"Hardcopy terminal"
+block|,
+literal|"hd"
+block|,
+literal|"Half-line down (forward 1/2 lf)"
+block|,
+literal|"ho"
+block|,
+literal|"Home cursor (if no cm)"
+block|,
+literal|"hs"
+block|,
+literal|"Has 25th status line"
+block|,
+literal|"hu"
+block|,
+literal|"Half-line up (reverse 1/2 lf)"
+block|,
+literal|"hz"
+block|,
+literal|"Hazeltine; can't print ~'s"
+block|,
+literal|"ic"
+block|,
+literal|"Insert character"
+block|,
+literal|"if"
+block|,
+literal|"Name of file containing is"
+block|,
+literal|"im"
+block|,
+literal|"Start insert mode;give \":im=:\" if ic"
+block|,
+literal|"in"
+block|,
+literal|"Insert mode distinguishes nulls on display"
+block|,
+literal|"ip"
+block|,
+literal|"Insert pad after character inserted"
+block|,
+literal|"is"
+block|,
+literal|"Initialization string"
+block|,
+literal|"kb"
+block|,
+literal|"Sent by backspace key"
+block|,
+literal|"kd"
+block|,
+literal|"Sent down arrow key"
+block|,
+literal|"ke"
+block|,
+literal|"Out of \"keypad transmit\" mode"
+block|,
+literal|"kh"
+block|,
+literal|"Sent by home key"
+block|,
+literal|"kl"
+block|,
+literal|"Sent by left arrow key"
+block|,
+literal|"kn"
+block|,
+literal|"Number of \"other\" keys"
+block|,
+literal|"ko"
+block|,
+literal|"Tc entries for other non-function keys"
+block|,
+literal|"kr"
+block|,
+literal|"Sent by right arrow key"
+block|,
+literal|"ks"
+block|,
+literal|"Put in \"keypad transmit\" mode"
+block|,
+literal|"ku"
+block|,
+literal|"Sent by up arrow key"
+block|,
+literal|"li"
+block|,
+literal|"Number of lines on screen or page"
+block|,
+literal|"ll"
+block|,
+literal|"Last line, first column (if no cm)"
+block|,
+literal|"ma"
+block|,
+literal|"Arrow key map, used by vi V2 only"
+block|,
+literal|"mi"
+block|,
+literal|"Safe to move while in insert mode"
+block|,
+literal|"ml"
+block|,
+literal|"Memory lock on above cursor."
+block|,
+literal|"ms"
+block|,
+literal|"Ok to move while in standout/underline mode"
+block|,
+literal|"mu"
+block|,
+literal|"Memory unlock (turn off memory lock)."
+block|,
+literal|"nc"
+block|,
+literal|"No working CR (DM2500,H2000)"
+block|,
+literal|"nd"
+block|,
+literal|"Non-destructive space (cursor right)"
+block|,
+literal|"nl"
+block|,
+literal|"Newline character (default \\n)"
+block|,
+literal|"ns"
+block|,
+literal|"Is a CRT but doesn't scroll."
+block|,
+literal|"os"
+block|,
+literal|"Terminal overstrikes"
+block|,
+literal|"pc"
+block|,
+literal|"Pad character (rather than null)"
+block|,
+literal|"pt"
+block|,
+literal|"Has hardware tabs (may need to use is)"
+block|,
+literal|"se"
+block|,
+literal|"End stand out mode"
+block|,
+literal|"sf"
+block|,
+literal|"Scroll forwards"
+block|,
+literal|"sg"
+block|,
+literal|"Number of blank chars left by so/se"
+block|,
+literal|"so"
+block|,
+literal|"Begin stand out mode"
+block|,
+literal|"sr"
+block|,
+literal|"Scroll reverse (backwards)"
+block|,
+literal|"ta"
+block|,
+literal|"Tab (other than ^I or with padding)"
+block|,
+literal|"tc"
+block|,
+literal|"Entry of similar terminal - must be last"
+block|,
+literal|"te"
+block|,
+literal|"String to end programs that use cm"
+block|,
+literal|"ti"
+block|,
+literal|"String to begin programs that use cm"
+block|,
+literal|"ts"
+block|,
+literal|"To status line sequence"
+block|,
+literal|"uc"
+block|,
+literal|"Underscore one char and move past it"
+block|,
+literal|"ue"
+block|,
+literal|"End underscore mode"
+block|,
+literal|"ug"
+block|,
+literal|"Number of blank chars left by us or ue"
+block|,
+literal|"ul"
+block|,
+literal|"Underlines, though no overstrike"
+block|,
+literal|"up"
+block|,
+literal|"Upline (cursor up)"
+block|,
+literal|"us"
+block|,
+literal|"Start underscore mode"
+block|,
+literal|"vb"
+block|,
+literal|"Visible bell (may not move cursor)"
+block|,
+literal|"ve"
+block|,
+literal|"Sequence to end open/visual mode"
+block|,
+literal|"vs"
+block|,
+literal|"Sequence to start open/visual mode"
+block|,
+literal|"xb"
+block|,
+literal|"Beehive (f1=escape, f2=ctrl C)"
+block|,
+literal|"xn"
+block|,
+literal|"A newline is ignored after a wrap (Concept)"
+block|,
+literal|"xr"
+block|,
+literal|"Return acts like ce \\r \\n (Delta Data)"
+block|,
+literal|"xs"
+block|,
+literal|"Standout not erased by writing over it (HP 264?)"
+block|,
+literal|"xt"
+block|,
+literal|"Destructive tabs, magic so char (Teleray 1061)"
+block|}
 struct|;
 end_struct
 
@@ -1347,6 +1752,11 @@ name|name
 decl_stmt|;
 name|char
 modifier|*
+name|getdesc
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
 name|caps
 index|[
 literal|256
@@ -1622,23 +2032,37 @@ name|sflag
 condition|)
 name|printf
 argument_list|(
-literal|"	%s\n"
+literal|"%-45s %s\n"
+argument_list|,
+name|getdesc
+argument_list|(
+operator|*
+name|cp
+argument_list|)
 argument_list|,
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"%2.2s	%s\n"
+literal|"%2.2s  %-45s %s\n"
 argument_list|,
 name|name
+argument_list|,
+name|getdesc
+argument_list|(
+operator|*
+name|cp
+argument_list|)
 argument_list|,
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2222,6 +2646,71 @@ name|TcName
 operator|*
 operator|)
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|getdesc
+parameter_list|(
+name|key
+parameter_list|)
+name|char
+modifier|*
+name|key
+decl_stmt|;
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|NOCAPS
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|key
+argument_list|,
+name|capList
+index|[
+name|i
+index|]
+operator|.
+name|cap
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|capList
+index|[
+name|i
+index|]
+operator|.
+name|desc
+operator|)
+return|;
+return|return
+operator|(
+literal|"Unknown capability"
 operator|)
 return|;
 block|}
