@@ -396,7 +396,7 @@ name|sf_buf_alloc
 argument_list|(
 name|pp
 argument_list|,
-name|PCATCH
+name|SFB_CATCH
 argument_list|)
 expr_stmt|;
 if|if
