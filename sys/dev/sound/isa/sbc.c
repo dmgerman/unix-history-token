@@ -1455,12 +1455,24 @@ block|{
 case|case
 literal|1
 case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"SoundBlaster 1.0 (not supported)"
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
 name|s
 operator|=
-literal|"Soundblaster"
+literal|"SoundBlaster 2.0"
 expr_stmt|;
 break|break;
 case|case
@@ -1476,7 +1488,7 @@ operator|)
 condition|?
 literal|"ESS 488"
 else|:
-literal|"Soundblaster Pro"
+literal|"SoundBlaster Pro"
 expr_stmt|;
 break|break;
 case|case
@@ -1484,7 +1496,7 @@ literal|4
 case|:
 name|s
 operator|=
-literal|"Soundblaster 16"
+literal|"SoundBlaster 16"
 expr_stmt|;
 break|break;
 case|case
