@@ -11579,6 +11579,12 @@ name|vm_page_t
 name|mpte
 parameter_list|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|pmap_enter
 argument_list|(
 name|pmap
@@ -11592,6 +11598,12 @@ operator||
 name|VM_PROT_EXECUTE
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
