@@ -642,8 +642,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_COUNT
+name|PQ_HOLD
 value|(3 + 2*PQ_L2_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PQ_COUNT
+value|(4 + 2*PQ_L2_SIZE)
 end_define
 
 begin_else
