@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.26 1998/09/09 14:58:30 kato Exp $"
+literal|"$Id: main.c,v 1.27 1998/10/18 00:51:46 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,6 +476,16 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
+name|beVerbose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -v flag */
+end_comment
+
+begin_decl_stmt
+name|Boolean
 name|oldVars
 decl_stmt|;
 end_decl_stmt
@@ -640,13 +650,13 @@ name|REMOTE
 define|#
 directive|define
 name|OPTFLAGS
-value|"BD:I:L:PSV:d:ef:ij:km:nqrst"
+value|"BD:I:L:PSV:d:ef:ij:km:nqrstv"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTFLAGS
-value|"BD:I:PSV:d:ef:ij:km:nqrst"
+value|"BD:I:PSV:d:ef:ij:km:nqrstv"
 endif|#
 directive|endif
 name|rearg
@@ -1294,6 +1304,23 @@ argument_list|(
 name|MAKEFLAGS
 argument_list|,
 literal|"-t"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|beVerbose
+operator|=
+name|TRUE
+expr_stmt|;
+name|Var_Append
+argument_list|(
+name|MAKEFLAGS
+argument_list|,
+literal|"-v"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
