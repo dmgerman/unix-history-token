@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: ieee80211_radiotap.h,v 1.3 2003/11/16 09:02:42 dyoung Exp $ */
+comment|/* $NetBSD: ieee80211_radiotap.h,v 1.10 2005/01/04 00:34:58 dyoung Exp $ */
 end_comment
 
 begin_comment
@@ -27,11 +27,19 @@ begin_comment
 comment|/* A generic radio capture format is desirable. There is one for  * Linux, but it is neither rigidly defined (there were not even  * units given for some fields) nor easily extensible.  *  * I suggest the following extensible radio capture format. It is  * based on a bitmap indicating which fields are present.  *  * I am trying to describe precisely what the application programmer  * should expect in the following, and for that reason I tell the  * units and origin of each measurement (where it applies), or else I  * use sufficiently weaselly language ("is a monotonically nondecreasing  * function of...") that I cannot set false expectations for lawyerly  * readers.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__KERNEL__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -61,8 +69,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* defined(__KERNEL__) || defined(_KERNEL) */
 end_comment
+
+begin_comment
+comment|/* XXX tcpdump/libpcap do not tolerate variable-length headers,  * yet, so we pad every radiotap header to 64 bytes. Ugh.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RADIOTAP_HDRLEN
+value|64
+end_define
 
 begin_comment
 comment|/* The radio capture header precedes the 802.11 header. */
@@ -98,7 +117,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Name                                 Data type       Units  * ----                                 ---------       -----  *  * IEEE80211_RADIOTAP_TSFT              u_int64_t       microseconds  *  *      Value in microseconds of the MAC's 64-bit 802.11 Time  *      Synchronization Function timer when the first bit of the  *      MPDU arrived at the MAC. For received frames, only.  *  * IEEE80211_RADIOTAP_CHANNEL           2 x u_int16_t   MHz, bitmap  *  *      Tx/Rx frequency in MHz, followed by flags (see below).  *  * IEEE80211_RADIOTAP_FHSS              u_int16_t       see below  *  *      For frequency-hopping radios, the hop set (first byte)  *      and pattern (second byte).  *  * IEEE80211_RADIOTAP_RATE              u_int8_t        500kb/s  *  *      Tx/Rx data rate  *  * IEEE80211_RADIOTAP_DBM_ANTSIGNAL     int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF signal power at the antenna, decibel difference from  *      one milliwatt.  *  * IEEE80211_RADIOTAP_DBM_ANTNOISE      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF noise power at the antenna, decibel difference from one  *      milliwatt.  *  * IEEE80211_RADIOTAP_DB_ANTSIGNAL      u_int8_t        decibel (dB)  *  *      RF signal power at the antenna, decibel difference from an  *      arbitrary, fixed reference.  *  * IEEE80211_RADIOTAP_DB_ANTNOISE       u_int8_t        decibel (dB)  *  *      RF noise power at the antenna, decibel difference from an  *      arbitrary, fixed reference point.  *  * IEEE80211_RADIOTAP_BARKER_CODE_LOCK  u_int16_t       unitless  *  *      Quality of Barker code lock. Unitless. Monotonically  *      nondecreasing with "better" lock strength. Called "Signal  *      Quality" in datasheets.  (Is there a standard way to measure  *      this?)  *  * IEEE80211_RADIOTAP_TX_ATTENUATION    u_int16_t       unitless  *  *      Transmit power expressed as unitless distance from max  *      power set at factory calibration.  0 is max power.  *      Monotonically nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DB_TX_ATTENUATION u_int16_t       decibels (dB)  *  *      Transmit power expressed as decibel distance from max power  *      set at factory calibration.  0 is max power.  Monotonically  *      nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DBM_TX_POWER      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      Transmit power expressed as dBm (decibels from a 1 milliwatt  *      reference). This is the absolute power level measured at  *      the antenna port.  *  * IEEE80211_RADIOTAP_FLAGS             u_int8_t        bitmap  *  *      Properties of transmitted and received frames. See flags  *      defined below.  *  * IEEE80211_RADIOTAP_ANTENNA           u_int8_t        antenna index  *  *      Unitless indication of the Rx/Tx antenna for this packet.  *      The first antenna is antenna 0.  *  * IEEE80211_RADIOTAP_FCS           	u_int32_t       data  *  *	FCS from frame in network byte order.  */
+comment|/* Name                                 Data type       Units  * ----                                 ---------       -----  *  * IEEE80211_RADIOTAP_TSFT              u_int64_t       microseconds  *  *      Value in microseconds of the MAC's 64-bit 802.11 Time  *      Synchronization Function timer when the first bit of the  *      MPDU arrived at the MAC. For received frames, only.  *  * IEEE80211_RADIOTAP_CHANNEL           2 x u_int16_t   MHz, bitmap  *  *      Tx/Rx frequency in MHz, followed by flags (see below).  *  * IEEE80211_RADIOTAP_FHSS              u_int16_t       see below  *  *      For frequency-hopping radios, the hop set (first byte)  *      and pattern (second byte).  *  * IEEE80211_RADIOTAP_RATE              u_int8_t        500kb/s  *  *      Tx/Rx data rate  *  * IEEE80211_RADIOTAP_DBM_ANTSIGNAL     int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF signal power at the antenna, decibel difference from  *      one milliwatt.  *  * IEEE80211_RADIOTAP_DBM_ANTNOISE      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF noise power at the antenna, decibel difference from one  *      milliwatt.  *  * IEEE80211_RADIOTAP_DB_ANTSIGNAL      u_int8_t        decibel (dB)  *  *      RF signal power at the antenna, decibel difference from an  *      arbitrary, fixed reference.  *  * IEEE80211_RADIOTAP_DB_ANTNOISE       u_int8_t        decibel (dB)  *  *      RF noise power at the antenna, decibel difference from an  *      arbitrary, fixed reference point.  *  * IEEE80211_RADIOTAP_LOCK_QUALITY      u_int16_t       unitless  *  *      Quality of Barker code lock. Unitless. Monotonically  *      nondecreasing with "better" lock strength. Called "Signal  *      Quality" in datasheets.  (Is there a standard way to measure  *      this?)  *  * IEEE80211_RADIOTAP_TX_ATTENUATION    u_int16_t       unitless  *  *      Transmit power expressed as unitless distance from max  *      power set at factory calibration.  0 is max power.  *      Monotonically nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DB_TX_ATTENUATION u_int16_t       decibels (dB)  *  *      Transmit power expressed as decibel distance from max power  *      set at factory calibration.  0 is max power.  Monotonically  *      nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DBM_TX_POWER      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      Transmit power expressed as dBm (decibels from a 1 milliwatt  *      reference). This is the absolute power level measured at  *      the antenna port.  *  * IEEE80211_RADIOTAP_FLAGS             u_int8_t        bitmap  *  *      Properties of transmitted and received frames. See flags  *      defined below.  *  * IEEE80211_RADIOTAP_ANTENNA           u_int8_t        antenna index  *  *      Unitless indication of the Rx/Tx antenna for this packet.  *      The first antenna is antenna 0.  *  * IEEE80211_RADIOTAP_FCS           	u_int32_t       data  *  *	FCS from frame in network byte order.  */
 end_comment
 
 begin_enum
@@ -160,10 +179,6 @@ block|,
 name|IEEE80211_RADIOTAP_DB_ANTNOISE
 init|=
 literal|13
-block|,
-name|IEEE80211_RADIOTAP_FCS
-init|=
-literal|14
 block|,
 name|IEEE80211_RADIOTAP_EXT
 init|=
@@ -325,6 +340,28 @@ end_define
 
 begin_comment
 comment|/* sent/received 						 * with fragmentation 						 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RADIOTAP_F_FCS
+value|0x10
+end_define
+
+begin_comment
+comment|/* frame includes FCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RADIOTAP_F_DATAPAD
+value|0x20
+end_define
+
+begin_comment
+comment|/* frame has padding between 						 * 802.11 header and payload 						 * (to 32-bit boundary) 						 */
 end_comment
 
 begin_endif
