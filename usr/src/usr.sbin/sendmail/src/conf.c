@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.6 (Berkeley) %G%"
+literal|"@(#)conf.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2901,18 +2901,9 @@ name|void
 name|reapchild
 parameter_list|()
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WIFEXITED
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NeXT__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|HASWAITPID
 specifier|auto
 name|int
 name|status
