@@ -1126,16 +1126,13 @@ name|METEOR_YUV_422
 value|0x04000000
 define|#
 directive|define
-name|METEOR_YUV_411
-value|0x08000000
-define|#
-directive|define
-name|METEOR_YUV_811
-value|0x10000000
-define|#
-directive|define
 name|METEOR_OUTPUT_FMT_MASK
-value|0x1f0f0000
+value|0x040f0000
+define|#
+directive|define
+name|METEOR_WANT_TS
+value|0x08000000
+comment|/* time-stamp a frame */
 define|#
 directive|define
 name|METEOR_RGB

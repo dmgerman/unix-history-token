@@ -487,6 +487,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|METEORSTS
+value|_IOW('x', 20, unsigned char)
+end_define
+
+begin_comment
+comment|/* set time stamp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGTS
+value|_IOR('x', 20, unsigned char)
+end_define
+
+begin_comment
+comment|/* get time stamp */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|METEOR_STATUS_ID_MASK
 value|0xf000
 end_define
@@ -877,6 +899,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|METEOR_GEO_FIELD_MASK
+value|0x3000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|METEOR_GEO_YUV_422
 value|0x4000000
 end_define
@@ -895,9 +924,24 @@ end_define
 begin_define
 define|#
 directive|define
-name|METEOR_GEO_FIELD_MASK
-value|0x3000000
+name|METEOR_GEO_YUV_12
+value|0x10000000
 end_define
+
+begin_comment
+comment|/* YUV 12 format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_YUV_9
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* YUV 9 format */
+end_comment
 
 begin_comment
 comment|/* following structure is used to coordinate the synchronous */
