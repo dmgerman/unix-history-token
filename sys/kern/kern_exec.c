@@ -153,6 +153,23 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTRACE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ktrace.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
