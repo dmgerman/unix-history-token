@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.5 (Berkeley) %G%"
+literal|"@(#)stty.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1696,6 +1696,7 @@ operator|->
 name|cp
 operator|=
 operator|(
+operator|(
 operator|*
 name|argv
 operator|)
@@ -1704,10 +1705,10 @@ literal|1
 index|]
 operator|==
 literal|'?'
-block|)
-operator|?
+operator|)
+condition|?
 literal|0177
-operator|:
+else|:
 operator|(
 operator|*
 name|argv
@@ -1990,14 +1991,8 @@ name|cont
 label|:
 empty_stmt|;
 block|}
-end_function
-
-begin_label
 name|done
 label|:
-end_label
-
-begin_expr_stmt
 name|ioctl
 argument_list|(
 literal|1
@@ -2008,9 +2003,6 @@ operator|&
 name|mode
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ioctl
 argument_list|(
 literal|1
@@ -2021,9 +2013,6 @@ operator|&
 name|tc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ioctl
 argument_list|(
 literal|1
@@ -2034,9 +2023,6 @@ operator|&
 name|ltc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ioctl
 argument_list|(
 literal|1
@@ -2047,18 +2033,22 @@ operator|&
 name|lmode
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  eq
-operator|(
-name|string
-operator|)
+begin_macro
+name|eq
+argument_list|(
+argument|string
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|string
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
