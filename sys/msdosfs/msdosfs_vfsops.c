@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.30 1998/03/08 09:57:48 julian Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.31 1998/03/20 02:33:40 kato Exp $ */
 end_comment
 
 begin_comment
@@ -2475,6 +2475,11 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"mountmsdosfs(): bad signature\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -2691,6 +2696,11 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"mountmsdosfs(): bad bpb\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -2775,6 +2785,11 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"mountmsdosfs(): disk too big, sorry\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -2825,6 +2840,11 @@ block|{
 name|error
 operator|=
 name|EINVAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"mountmsdosfs(): bad FAT32 filesystem\n"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|error_exit
