@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -124,11 +124,29 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * The di_db fields may be overlaid with other information for  * file types that do not have associated disk storage. Block  * and character devices overlay the first data block with their  * dev_t value. Short symbolic links place their path in the  * di_db area.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|di_rdev
 value|di_db[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_shortlink
+value|di_db
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXSYMLINKLEN
+value|(NDADDR * sizeof(daddr_t))
 end_define
 
 begin_comment
