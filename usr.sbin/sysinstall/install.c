@@ -2383,10 +2383,6 @@ literal|"usage may apply, so be sure to read the package installation output!"
 argument_list|)
 condition|)
 block|{
-name|PkgInteractive
-operator|=
-name|TRUE
-expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2411,10 +2407,6 @@ literal|"from an FTP server which carries this package."
 argument_list|)
 expr_stmt|;
 block|}
-name|PkgInteractive
-operator|=
-name|FALSE
-expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;

@@ -612,11 +612,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|PkgInteractive
-condition|)
 name|dup2
 argument_list|(
 name|DebugFD
