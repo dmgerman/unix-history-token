@@ -775,6 +775,8 @@ operator|=
 name|ifnet_byindex
 argument_list|(
 name|ifn
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Only look at ether interfaces, exclude alteon nics 			 * because osf/1 doesn't know about most of them. 			 */

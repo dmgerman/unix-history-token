@@ -7971,6 +7971,8 @@ operator|=
 name|ifnet_byindex
 argument_list|(
 name|ifn
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
