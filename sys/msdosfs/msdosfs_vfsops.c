@@ -3510,7 +3510,43 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Check and validate (or perhaps invalidate?) the fsinfo structure?		XXX 	 */
+comment|/* 	 * Check and validate (or perhaps invalidate?) the fsinfo structure? 	 */
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_fsinfo
+operator|&&
+name|pmp
+operator|->
+name|pm_nxtfree
+operator|>
+name|pmp
+operator|->
+name|pm_maxcluster
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Next free cluster in FSInfo (%lu) exceeds maxcluster (%lu)\n"
+argument_list|,
+name|pmp
+operator|->
+name|pm_nxtfree
+argument_list|,
+name|pmp
+operator|->
+name|pm_maxcluster
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|error_exit
+goto|;
+block|}
 comment|/* 	 * Allocate memory for the bitmap of allocated clusters, and then 	 * fill it in. 	 */
 name|pmp
 operator|->
