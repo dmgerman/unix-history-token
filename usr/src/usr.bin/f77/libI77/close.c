@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)close.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)close.c	5.3	%G%  */
 end_comment
 
 begin_comment
@@ -360,7 +360,7 @@ name|t_runc
 argument_list|(
 argument|b
 argument_list|,
-argument|flag
+argument|flg
 argument_list|,
 argument|str
 argument_list|)
@@ -375,7 +375,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ioflag
-name|flag
+name|flg
 decl_stmt|;
 end_decl_stmt
 
@@ -450,7 +450,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-argument|flag
+argument|flg
 argument_list|,
 argument|errno
 argument_list|,
@@ -470,7 +470,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-argument|flag
+argument|flg
 argument_list|,
 argument|errno
 argument_list|,

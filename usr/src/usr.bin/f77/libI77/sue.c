@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sue.c	5.1	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sue.c	5.2	%G%  */
 end_comment
 
 begin_comment
@@ -279,7 +279,7 @@ name|c_sue
 parameter_list|(
 name|a
 parameter_list|,
-name|flag
+name|flg
 parameter_list|)
 name|cilist
 modifier|*
@@ -361,7 +361,7 @@ name|n
 operator|=
 name|fk_open
 argument_list|(
-name|flag
+name|flg
 argument_list|,
 name|SEQ
 argument_list|,
