@@ -1166,6 +1166,10 @@ break|break;
 case|case
 literal|'k'
 case|:
+name|f_humanval
+operator|=
+literal|0
+expr_stmt|;
 name|f_kblocks
 operator|=
 literal|1
