@@ -1741,13 +1741,6 @@ name|PCPU_GET
 argument_list|(
 name|curpcb
 argument_list|)
-operator|!=
-name|NULL
-operator|&&
-name|PCPU_GET
-argument_list|(
-name|curpcb
-argument_list|)
 operator|->
 name|pcb_onfault
 operator|!=
@@ -2445,13 +2438,6 @@ operator|->
 name|td_intr_nesting_level
 operator|==
 literal|0
-operator|&&
-name|PCPU_GET
-argument_list|(
-name|curpcb
-argument_list|)
-operator|!=
-name|NULL
 operator|&&
 name|PCPU_GET
 argument_list|(
