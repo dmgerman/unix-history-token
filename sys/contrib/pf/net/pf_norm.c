@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf_norm.c,v 1.80 2004/03/09 21:44:41 mcbride Exp $ */
+comment|/*	$OpenBSD: pf_norm.c,v 1.80.2.1 2004/04/30 21:46:33 brad Exp $ */
 end_comment
 
 begin_comment
@@ -7734,17 +7734,27 @@ comment|/* FALLTHROUGH */
 default|default:
 name|hlen
 operator|-=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 name|opt
 operator|+=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -8322,17 +8332,27 @@ comment|/* FALLTHROUGH */
 default|default:
 name|hlen
 operator|-=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 name|opt
 operator|+=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

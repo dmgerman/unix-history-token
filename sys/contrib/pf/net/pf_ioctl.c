@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf_ioctl.c,v 1.112 2004/03/22 04:54:18 mcbride Exp $ */
+comment|/*	$OpenBSD: pf_ioctl.c,v 1.112.2.1 2004/04/30 21:43:30 brad Exp $ */
 end_comment
 
 begin_comment
@@ -277,7 +277,7 @@ name|u_int32_t
 parameter_list|,
 name|u_int8_t
 parameter_list|,
-name|u_int8_t
+name|u_int32_t
 parameter_list|,
 name|u_int8_t
 parameter_list|,
@@ -1123,7 +1123,7 @@ parameter_list|,
 name|u_int8_t
 name|rule_action
 parameter_list|,
-name|u_int8_t
+name|u_int32_t
 name|rule_number
 parameter_list|,
 name|u_int8_t
