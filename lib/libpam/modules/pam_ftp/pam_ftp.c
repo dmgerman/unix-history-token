@@ -370,6 +370,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -398,9 +399,6 @@ modifier|*
 name|context
 decl_stmt|,
 modifier|*
-name|prompt
-decl_stmt|,
-modifier|*
 name|token
 decl_stmt|,
 modifier|*
@@ -410,6 +408,9 @@ specifier|const
 name|char
 modifier|*
 name|user
+decl_stmt|,
+modifier|*
+name|prompt
 decl_stmt|;
 name|pam_std_option
 argument_list|(
@@ -770,9 +771,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -821,9 +824,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -872,9 +877,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -923,9 +930,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -974,9 +983,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc

@@ -318,6 +318,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -371,6 +372,9 @@ name|user
 decl_stmt|,
 modifier|*
 name|pass
+decl_stmt|,
+modifier|*
+name|service
 decl_stmt|;
 name|char
 modifier|*
@@ -378,9 +382,6 @@ name|principal
 decl_stmt|,
 modifier|*
 name|princ_name
-decl_stmt|,
-modifier|*
-name|service
 decl_stmt|,
 modifier|*
 name|cache_name
@@ -2455,6 +2456,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -2720,9 +2722,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -2771,9 +2775,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -3277,10 +3283,6 @@ argument_list|,
 operator|&
 name|creds
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|pass
 argument_list|,
 operator|&
@@ -3477,7 +3479,9 @@ name|phost
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|services
 index|[
@@ -3867,6 +3871,7 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|void
 modifier|*
@@ -3874,6 +3879,7 @@ name|data
 parameter_list|,
 name|int
 name|pam_end_status
+name|__unused
 parameter_list|)
 block|{
 name|krb5_context
@@ -3984,6 +3990,7 @@ name|compat_princ_component
 parameter_list|(
 name|krb5_context
 name|context
+name|__unused
 parameter_list|,
 name|krb5_principal
 name|princ
@@ -4014,6 +4021,7 @@ name|compat_free_data_contents
 parameter_list|(
 name|krb5_context
 name|context
+name|__unused
 parameter_list|,
 name|krb5_data
 modifier|*

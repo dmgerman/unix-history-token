@@ -114,6 +114,16 @@ name|NOLOGIN
 value|"/var/run/nologin"
 end_define
 
+begin_decl_stmt
+specifier|static
+name|char
+name|nologin_def
+index|[]
+init|=
+name|NOLOGIN
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|PAM_EXTERN
 name|int
@@ -125,6 +135,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -232,9 +243,9 @@ name|lc
 argument_list|,
 literal|"nologin"
 argument_list|,
-name|NOLOGIN
+name|nologin_def
 argument_list|,
-name|NOLOGIN
+name|nologin_def
 argument_list|)
 expr_stmt|;
 name|login_close
@@ -414,9 +425,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -465,9 +478,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -516,9 +531,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -567,9 +584,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -618,9 +637,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc

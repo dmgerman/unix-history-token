@@ -64,6 +64,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -120,6 +121,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -176,6 +178,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -232,6 +235,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -288,6 +292,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -344,6 +349,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc

@@ -141,6 +141,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -170,8 +171,9 @@ name|retval
 decl_stmt|,
 name|i
 decl_stmt|;
+specifier|const
 name|char
-argument_list|*
+operator|*
 operator|(
 name|promptstr
 index|[]
@@ -182,13 +184,13 @@ literal|"%s\nPassword: "
 block|,
 literal|"%s\nPassword [echo on]: "
 block|}
-argument_list|;
+expr_stmt|;
 name|char
 name|challenge
 index|[
 name|OPIE_CHALLENGE_MAX
 index|]
-argument_list|;
+decl_stmt|;
 name|char
 name|prompt
 index|[
@@ -196,23 +198,23 @@ name|OPIE_CHALLENGE_MAX
 operator|+
 literal|22
 index|]
-argument_list|;
+decl_stmt|;
 name|char
 name|resp
 index|[
 name|OPIE_SECRET_MAX
 index|]
-argument_list|;
+decl_stmt|;
 specifier|const
 name|char
-operator|*
+modifier|*
 name|user
-argument_list|;
+decl_stmt|;
 specifier|const
 name|char
-operator|*
+modifier|*
 name|response
-argument_list|;
+decl_stmt|;
 name|pam_std_option
 argument_list|(
 operator|&
@@ -224,17 +226,18 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
-argument_list|;
+expr_stmt|;
 name|PAM_LOG
 argument_list|(
 literal|"Options processed"
 argument_list|)
-argument_list|;
+expr_stmt|;
 name|user
 operator|=
 name|NULL
-argument_list|; 	if
-operator|(
+expr_stmt|;
+if|if
+condition|(
 name|pam_test_option
 argument_list|(
 operator|&
@@ -244,7 +247,7 @@ name|PAM_OPT_AUTH_AS_SELF
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
+condition|)
 block|{
 if|if
 condition|(
@@ -270,11 +273,8 @@ operator|=
 name|pwd
 operator|->
 name|pw_name
-argument_list|;
+expr_stmt|;
 block|}
-end_function
-
-begin_else
 else|else
 block|{
 name|retval
@@ -307,9 +307,6 @@ name|retval
 argument_list|)
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
@@ -317,27 +314,12 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Don't call the OPIE atexit() handler when our program exits, 	 * since the module has been unloaded and we will SEGV. 	 */
-end_comment
-
-begin_expr_stmt
 name|opiedisableaeh
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * If the no_fake_prompts option was given, and the user 	 * doesn't have an OPIE key, just fail rather than present the 	 * user with a bogus OPIE challenge. 	 */
-end_comment
-
-begin_comment
 comment|/* XXX generates a const warning because of incorrect prototype */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|opiechallenge
@@ -371,13 +353,7 @@ argument_list|(
 name|PAM_AUTH_ERR
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* 	 * It doesn't make sense to use a password that has already been 	 * typed in, since we haven't presented the challenge to the user 	 * yet, so clear the stored password. 	 */
-end_comment
-
-begin_expr_stmt
 name|pam_set_item
 argument_list|(
 name|pamh
@@ -387,9 +363,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|i
@@ -479,13 +452,7 @@ name|PAM_OPT_ECHO_PASS
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|/* We have to copy the response, because opieverify mucks with it. */
-end_comment
-
-begin_expr_stmt
 name|strlcpy
 argument_list|(
 name|resp
@@ -498,13 +465,7 @@ name|resp
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Opieverify is supposed to return -1 only if an error occurs. 	 * But it returns -1 even if the response string isn't in the form 	 * it expects.  Thus we can't log an error and can only check for 	 * success or lack thereof. 	 */
-end_comment
-
-begin_expr_stmt
 name|retval
 operator|=
 name|opieverify
@@ -521,27 +482,27 @@ name|PAM_SUCCESS
 else|:
 name|PAM_AUTH_ERR
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PAM_RETURN
 argument_list|(
 name|retval
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_function
-unit|}  PAM_EXTERN
+name|PAM_EXTERN
 name|int
 name|pam_sm_setcred
 parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -590,9 +551,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -641,9 +604,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -692,9 +657,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -743,9 +710,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc

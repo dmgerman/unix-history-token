@@ -167,17 +167,81 @@ directive|include
 file|"pam_ssh.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|int
+name|auth_via_key
+parameter_list|(
+name|pam_handle_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|passwd
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|key_cleanup
+parameter_list|(
+name|pam_handle_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ssh_cleanup
+parameter_list|(
+name|pam_handle_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Generic cleanup function for SSH "Key" type.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|key_cleanup
 parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|void
 modifier|*
@@ -185,6 +249,7 @@ name|data
 parameter_list|,
 name|int
 name|error_status
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -204,12 +269,14 @@ comment|/*  * Generic PAM cleanup function for this module.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ssh_cleanup
 parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|void
 modifier|*
@@ -217,6 +284,7 @@ name|data
 parameter_list|,
 name|int
 name|error_status
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -236,6 +304,7 @@ comment|/*  * Authenticate a user's key by trying to decrypt it with the passwor
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|auth_via_key
 parameter_list|(
@@ -280,7 +349,7 @@ decl_stmt|;
 comment|/* PAM state */
 specifier|static
 name|int
-name|index
+name|indx
 init|=
 literal|0
 decl_stmt|;
@@ -390,7 +459,7 @@ name|data_name
 argument_list|,
 literal|"ssh_private_key_%d"
 argument_list|,
-name|index
+name|indx
 argument_list|)
 condition|)
 block|{
@@ -461,7 +530,7 @@ name|data_name
 argument_list|,
 literal|"ssh_key_comment_%d"
 argument_list|,
-name|index
+name|indx
 argument_list|)
 condition|)
 block|{
@@ -518,7 +587,7 @@ name|retval
 return|;
 block|}
 operator|++
-name|index
+name|indx
 expr_stmt|;
 return|return
 name|PAM_SUCCESS
@@ -537,6 +606,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -1102,9 +1172,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -1154,9 +1226,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -1205,9 +1279,11 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -1266,6 +1342,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
@@ -1327,7 +1404,7 @@ name|final
 decl_stmt|;
 comment|/* final return value */
 name|int
-name|index
+name|indx
 decl_stmt|;
 comment|/* for saved keys */
 name|Key
@@ -1337,7 +1414,7 @@ decl_stmt|;
 comment|/* user's private key */
 name|FILE
 modifier|*
-name|pipe
+name|lpipe
 decl_stmt|;
 comment|/* ssh-agent handle */
 name|struct
@@ -1636,7 +1713,7 @@ argument_list|,
 name|S_IRUSR
 argument_list|)
 expr_stmt|;
-name|pipe
+name|lpipe
 operator|=
 name|popen
 argument_list|(
@@ -1653,7 +1730,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pipe
+name|lpipe
 condition|)
 block|{
 name|syslog
@@ -1701,7 +1778,7 @@ argument_list|,
 sizeof|sizeof
 name|env_string
 argument_list|,
-name|pipe
+name|lpipe
 argument_list|)
 condition|)
 block|{
@@ -1772,7 +1849,7 @@ condition|)
 block|{
 name|pclose
 argument_list|(
-name|pipe
+name|lpipe
 argument_list|)
 expr_stmt|;
 if|if
@@ -1955,7 +2032,7 @@ name|retval
 operator|=
 name|pclose
 argument_list|(
-name|pipe
+name|lpipe
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2105,12 +2182,12 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|index
+name|indx
 operator|=
 literal|0
 init|;
 condition|;
-name|index
+name|indx
 operator|++
 control|)
 block|{
@@ -2124,7 +2201,7 @@ name|data_name
 argument_list|,
 literal|"ssh_private_key_%d"
 argument_list|,
-name|index
+name|indx
 argument_list|)
 condition|)
 block|{
@@ -2188,7 +2265,7 @@ name|data_name
 argument_list|,
 literal|"ssh_key_comment_%d"
 argument_list|,
-name|index
+name|indx
 argument_list|)
 condition|)
 block|{
@@ -2296,6 +2373,7 @@ name|pamh
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
