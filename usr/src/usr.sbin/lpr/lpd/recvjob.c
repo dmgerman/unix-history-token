@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.1 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,6 +239,51 @@ name|LO
 operator|=
 name|DEFLOCK
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* set up log file */
+if|if
+condition|(
+name|open
+argument_list|(
+name|LF
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_APPEND
+argument_list|,
+literal|0664
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
+argument_list|,
+name|LF
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_WRONLY
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|chdir
