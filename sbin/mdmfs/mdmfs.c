@@ -438,12 +438,12 @@ name|int
 name|main
 parameter_list|(
 name|int
-name|ac
+name|argc
 parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|av
+name|argv
 parameter_list|)
 block|{
 name|struct
@@ -563,9 +563,9 @@ name|ch
 operator|=
 name|getopt
 argument_list|(
-name|ac
+name|argc
 argument_list|,
-name|av
+name|argv
 argument_list|,
 literal|"a:b:c:Dd:e:F:f:hi:LMm:Nn:O:o:p:Ss:t:w:X"
 argument_list|)
@@ -910,17 +910,17 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|ac
+name|argc
 operator|-=
 name|optind
 expr_stmt|;
-name|av
+name|argv
 operator|+=
 name|optind
 expr_stmt|;
 if|if
 condition|(
-name|ac
+name|argc
 operator|<
 literal|2
 condition|)
@@ -930,7 +930,7 @@ expr_stmt|;
 comment|/* Derive 'unit' (global). */
 name|unitstr
 operator|=
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -1027,7 +1027,7 @@ expr_stmt|;
 block|}
 name|mtpoint
 operator|=
-name|av
+name|argv
 index|[
 literal|1
 index|]
@@ -2386,15 +2386,15 @@ block|{
 name|char
 modifier|*
 modifier|*
-name|av
+name|argv
 decl_stmt|,
 modifier|*
 modifier|*
-name|avp
+name|argvp
 decl_stmt|;
 comment|/* Result of splitting 'cmd'. */
 name|int
-name|ac
+name|argc
 decl_stmt|;
 name|char
 modifier|*
@@ -2476,10 +2476,10 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-comment|/* Split up 'cmd' into 'av' for use with execve. */
+comment|/* Split up 'cmd' into 'argv' for use with execve. */
 for|for
 control|(
-name|ac
+name|argc
 operator|=
 literal|1
 operator|,
@@ -2503,11 +2503,11 @@ condition|;
 name|p
 operator|++
 control|)
-name|ac
+name|argc
 operator|++
 expr_stmt|;
-comment|/* 'ac' generation loop. */
-name|av
+comment|/* 'argc' generation loop. */
+name|argv
 operator|=
 operator|(
 name|char
@@ -2519,11 +2519,11 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
-name|av
+name|argv
 argument_list|)
 operator|*
 operator|(
-name|ac
+name|argc
 operator|+
 literal|1
 operator|)
@@ -2531,7 +2531,7 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|av
+name|argv
 operator|!=
 name|NULL
 argument_list|)
@@ -2542,13 +2542,13 @@ name|p
 operator|=
 name|cmd
 operator|,
-name|avp
+name|argvp
 operator|=
-name|av
+name|argv
 init|;
 operator|(
 operator|*
-name|avp
+name|argvp
 operator|=
 name|strsep
 argument_list|(
@@ -2566,24 +2566,24 @@ if|if
 condition|(
 operator|*
 operator|*
-name|av
+name|argv
 operator|!=
 literal|'\0'
 condition|)
 if|if
 condition|(
 operator|++
-name|avp
+name|argvp
 operator|>=
 operator|&
-name|av
+name|argv
 index|[
-name|ac
+name|argc
 index|]
 condition|)
 block|{
 operator|*
-name|avp
+name|argvp
 operator|=
 name|NULL
 expr_stmt|;
@@ -2592,7 +2592,7 @@ block|}
 name|assert
 argument_list|(
 operator|*
-name|av
+name|argv
 argument_list|)
 expr_stmt|;
 comment|/* Make sure the above loop works as expected. */
@@ -2619,7 +2619,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|av
+name|argv
 index|[
 name|i
 index|]
@@ -2638,7 +2638,7 @@ name|stderr
 argument_list|,
 literal|" %s"
 argument_list|,
-name|av
+name|argv
 index|[
 name|i
 index|]
@@ -2842,19 +2842,19 @@ name|void
 operator|)
 name|execv
 argument_list|(
-name|av
+name|argv
 index|[
 literal|0
 index|]
 argument_list|,
-name|av
+name|argv
 argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
 literal|"exec: %s"
 argument_list|,
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -2885,7 +2885,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|av
+name|argv
 argument_list|)
 expr_stmt|;
 while|while
