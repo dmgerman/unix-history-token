@@ -226,6 +226,14 @@ name|pcic_chip
 modifier|*
 name|chip
 decl_stmt|;
+name|driver_intr_t
+modifier|*
+name|func_intr
+decl_stmt|;
+name|void
+modifier|*
+name|func_arg
+decl_stmt|;
 block|}
 struct|;
 end_struct
