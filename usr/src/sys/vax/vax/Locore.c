@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.2	%G%	*/
+comment|/*	Locore.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"../h/cmap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
 end_include
 
 begin_comment
@@ -404,7 +410,6 @@ end_macro
 
 begin_decl_stmt
 name|label_t
-modifier|*
 name|lp
 decl_stmt|;
 end_decl_stmt
@@ -428,7 +433,6 @@ end_macro
 
 begin_decl_stmt
 name|label_t
-modifier|*
 name|lp
 decl_stmt|;
 end_decl_stmt
@@ -526,33 +530,6 @@ end_comment
 
 begin_macro
 name|fubyte
-argument_list|(
-argument|base
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|caddr_t
-name|base
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|fuibyte
 argument_list|(
 argument|base
 argument_list|)
@@ -869,79 +846,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|udiv
-argument_list|(
-argument|i
-argument_list|,
-argument|j
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNNEEDED
-end_ifdef
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|urem
-argument_list|(
-argument|i
-argument_list|,
-argument|j
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|unsigned
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*VARARGS1*/
 end_comment
 
@@ -1140,6 +1044,26 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pte
+name|mcrmap
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pte
+name|bufmap
+index|[
+name|NBUF
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pte
 name|mmap
 index|[
 literal|1
@@ -1287,6 +1211,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|splx
 argument_list|(
@@ -1301,13 +1229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{
-return|return
-operator|(
-name|s
-operator|)
-return|;
-block|}
+block|{  }
 end_block
 
 begin_comment
@@ -1334,7 +1256,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|unsigned
 name|count
 decl_stmt|;
 end_decl_stmt
