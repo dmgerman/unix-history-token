@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pciconf.c,v 1.6 1998/09/15 08:21:13 gibbs Exp $"
+literal|"$Id: pciconf.c,v 1.7 1998/11/12 00:22:30 ken Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,13 +153,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|exitstatus
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -653,8 +654,8 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d@pci%d:%d:%d:\tclass=0x%06x card=0x%08lx "
-literal|"chip=0x%08lx rev=0x%02x hdr=0x%02x\n"
+literal|"%s%d@pci%d:%d:%d:\tclass=0x%06x card=0x%08x "
+literal|"chip=0x%08x rev=0x%02x hdr=0x%02x\n"
 argument_list|,
 operator|(
 name|p
@@ -684,6 +685,9 @@ operator|->
 name|pd_name
 operator|)
 condition|?
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|pd_unit
