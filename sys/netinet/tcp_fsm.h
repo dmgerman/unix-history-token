@@ -67,7 +67,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* have send and received syn */
+comment|/* have sent and received syn */
 end_comment
 
 begin_comment
