@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.c,v 1.24 1999/11/17 23:00:50 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.c,v 1.26 1999/11/28 22:49:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -203,6 +203,21 @@ block|{
 name|usb_device_request_t
 name|req
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+literal|"usbd_get_desc: type=%d, index=%d, len=%d\n"
+operator|,
+name|type
+operator|,
+name|index
+operator|,
+name|len
+operator|)
+argument_list|)
+expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -264,22 +279,16 @@ begin_function
 name|usbd_status
 name|usbd_get_config_desc
 parameter_list|(
-name|dev
-parameter_list|,
-name|conf
-parameter_list|,
-name|d
-parameter_list|)
 name|usbd_device_handle
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
-name|conf
-decl_stmt|;
+name|confidx
+parameter_list|,
 name|usb_config_descriptor_t
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|)
 block|{
 name|usbd_status
 name|err
@@ -289,9 +298,9 @@ argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"usbd_get_config_desc: conf=%d\n"
+literal|"usbd_get_config_desc: confidx=%d\n"
 operator|,
-name|conf
+name|confidx
 operator|)
 argument_list|)
 expr_stmt|;
@@ -303,7 +312,7 @@ name|dev
 argument_list|,
 name|UDESC_CONFIG
 argument_list|,
-name|conf
+name|confidx
 argument_list|,
 name|USB_CONFIG_DESCRIPTOR_SIZE
 argument_list|,
@@ -334,9 +343,14 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"usbd_get_config_desc: conf %d, bad desc %d\n"
+literal|"usbd_get_config_desc: confidx=%d, bad desc "
+literal|"len=%d type=%d\n"
 operator|,
-name|conf
+name|confidx
+operator|,
+name|d
+operator|->
+name|bLength
 operator|,
 name|d
 operator|->
