@@ -276,21 +276,18 @@ begin_comment
 comment|/* Used while handling SIGCHLD traps. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|getsigaction
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|sig_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Map a string to a signal number.  */
@@ -301,12 +298,10 @@ specifier|static
 name|int
 name|sigstring_to_signum
 parameter_list|(
-name|sig
-parameter_list|)
 name|char
 modifier|*
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -438,7 +433,9 @@ begin_function
 specifier|static
 name|void
 name|printsignals
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|n
@@ -508,18 +505,14 @@ begin_function
 name|int
 name|trapcmd
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -799,7 +792,9 @@ end_comment
 begin_function
 name|void
 name|clear_traps
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -883,11 +878,9 @@ begin_function
 name|void
 name|setsignal
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|action
@@ -1192,17 +1185,13 @@ specifier|static
 name|int
 name|getsigaction
 parameter_list|(
-name|signo
-parameter_list|,
-name|sigact
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|,
 name|sig_t
 modifier|*
 name|sigact
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sigaction
@@ -1255,11 +1244,9 @@ begin_function
 name|void
 name|ignoresig
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1365,15 +1352,9 @@ begin_macro
 unit|void
 name|onsig
 argument_list|(
-argument|signo
+argument|int signo
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|signo
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1508,7 +1489,9 @@ end_comment
 begin_function
 name|void
 name|dotrap
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1627,11 +1610,9 @@ begin_function
 name|void
 name|setinteractive
 parameter_list|(
-name|on
-parameter_list|)
 name|int
 name|on
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -1677,11 +1658,9 @@ begin_function
 name|void
 name|exitshell
 parameter_list|(
-name|status
-parameter_list|)
 name|int
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|jmploc

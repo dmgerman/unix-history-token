@@ -143,11 +143,9 @@ begin_function
 name|void
 name|chkmail
 parameter_list|(
-name|silent
-parameter_list|)
 name|int
 name|silent
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
