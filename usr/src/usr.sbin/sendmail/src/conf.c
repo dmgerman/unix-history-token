@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.15 (Berkeley) %G%"
+literal|"@(#)conf.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3017,6 +3017,21 @@ continue|continue;
 endif|#
 directive|endif
 comment|/* WNOHANG */
+ifdef|#
+directive|ifdef
+name|SYSTEM5
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reapchild
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.18 (Berkeley) %G%"
+literal|"@(#)main.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1985,6 +1985,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|q
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|q
 operator|!=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.15 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1449,6 +1449,17 @@ name|bslashmode
 condition|)
 block|{
 comment|/* kludge \! for naive users */
+if|if
+condition|(
+name|cmntcnt
+operator|>
+literal|0
+condition|)
+name|c
+operator|=
+name|NOCHAR
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|c

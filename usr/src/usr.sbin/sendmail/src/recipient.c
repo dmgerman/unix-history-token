@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.10 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,10 +119,6 @@ name|bool
 name|firstone
 decl_stmt|;
 comment|/* set on first address sent */
-name|bool
-name|selfref
-decl_stmt|;
-comment|/* set if this list includes ctladdr */
 name|char
 name|delimiter
 decl_stmt|;
@@ -241,10 +237,6 @@ expr_stmt|;
 name|firstone
 operator|=
 name|TRUE
-expr_stmt|;
-name|selfref
-operator|=
-name|FALSE
 expr_stmt|;
 name|al
 operator|=
@@ -408,9 +400,11 @@ argument_list|,
 name|a
 argument_list|)
 condition|)
-name|selfref
-operator|=
-name|TRUE
+name|ctladdr
+operator|->
+name|q_flags
+operator||=
+name|QSELFREF
 expr_stmt|;
 name|al
 operator|=
@@ -424,12 +418,19 @@ block|}
 comment|/* if this alias doesn't include itself, delete ctladdr */
 if|if
 condition|(
-operator|!
-name|selfref
-operator|&&
 name|ctladdr
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|ctladdr
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2631,6 +2632,11 @@ name|ret
 init|=
 name|errno
 decl_stmt|;
+name|clrevent
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"Cannot open %s"
@@ -2671,6 +2677,17 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|int
+name|ret
+init|=
+name|errno
+decl_stmt|;
+name|clrevent
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"Cannot fstat %s!"
@@ -2678,6 +2695,10 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
 name|ctladdr
 operator|->
 name|q_uid

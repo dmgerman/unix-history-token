@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.10 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.11 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.10 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.11 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1829,6 +1829,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|<
+literal|0
+operator|||
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -2275,6 +2279,33 @@ operator|<
 literal|100
 condition|)
 continue|continue;
+comment|/* save temporary failure messages for posterity */
+if|if
+condition|(
+name|SmtpReplyBuffer
+index|[
+literal|0
+index|]
+operator|==
+literal|'4'
+operator|&&
+name|SmtpError
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|SmtpError
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
 comment|/* reply code 421 is "Service Shutting Down" */
 if|if
 condition|(
@@ -2306,33 +2337,6 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* save temporary failure messages for posterity */
-if|if
-condition|(
-name|SmtpReplyBuffer
-index|[
-literal|0
-index|]
-operator|==
-literal|'4'
-operator|&&
-name|SmtpError
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|SmtpError
-argument_list|,
-name|SmtpReplyBuffer
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|r
