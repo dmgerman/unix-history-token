@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.3 1993/10/14 00:33:26 nate Exp $"
+literal|"$Id: util.c,v 1.4 1995/05/30 05:00:43 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1543,49 +1543,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_function
-name|void
-name|warn
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-name|char
-modifier|*
-name|a
-decl_stmt|,
-decl|*
-name|b
-decl_stmt|;
-end_function
-
-begin_comment
-comment|/* message strings juxtaposed in output */
-end_comment
-
-begin_block
-block|{
-name|WARN
-argument_list|(
-operator|(
-name|stderr
-operator|,
-literal|"%s: %s: warning: %s%s\n"
-operator|,
-name|progname
-operator|,
-name|ifname
-operator|,
-name|a
-operator|,
-name|b
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_function
 name|void

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trees.c,v 1.3 1993/10/14 00:33:11 nate Exp $"
+literal|"$Id: trees.c,v 1.4 1995/05/30 05:00:40 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5481,11 +5481,15 @@ operator|&&
 name|translate_eol
 condition|)
 block|{
-name|warn
+name|WARN
 argument_list|(
+operator|(
+name|stderr
+operator|,
 literal|"-l used on binary file"
-argument_list|,
+operator|,
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
