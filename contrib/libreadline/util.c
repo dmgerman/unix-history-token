@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* util.c -- readline utility functions */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -170,6 +174,18 @@ directive|include
 file|"readline.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rlprivate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -181,103 +197,6 @@ name|e
 parameter_list|)
 value|do { int t; t = s; s = e; e = t; } while (0)
 end_define
-
-begin_comment
-comment|/* Pseudo-globals imported from readline.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|readline_echoing_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|procenv_t
-name|readline_top_level
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rl_line_buffer_len
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Function
-modifier|*
-name|rl_last_func
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|_rl_defining_kbd_macro
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_rl_executing_macro
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Pseudo-global functions imported from other library files. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|_rl_replace_text
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|_rl_pop_executing_macro
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|_rl_set_the_line
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|_rl_init_argument
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|xrealloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* **************************************************************** */

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Readline.h -- the names of functions callable from within readline. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
+comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_if
@@ -1117,7 +1117,7 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* Not available unless readline is compiled -DPAREN_MATCHING. */
+comment|/* Bindable command used when inserting a matching close character. */
 specifier|extern
 name|int
 name|rl_insert_close
@@ -2053,6 +2053,57 @@ argument_list|)
 decl_stmt|;
 comment|/* Functions for manipulating keymaps. */
 specifier|extern
+name|Keymap
+name|rl_make_bare_keymap
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|Keymap
+name|rl_copy_keymap
+name|__P
+argument_list|(
+operator|(
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|Keymap
+name|rl_make_keymap
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|rl_discard_keymap
+name|__P
+argument_list|(
+operator|(
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|Keymap
+name|rl_get_keymap_by_name
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
 name|char
 modifier|*
 name|rl_get_keymap_name
@@ -2060,6 +2111,26 @@ name|__P
 argument_list|(
 operator|(
 name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|rl_set_keymap
+name|__P
+argument_list|(
+operator|(
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|Keymap
+name|rl_get_keymap
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2227,6 +2298,16 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
+name|rl_on_new_line_with_prompt
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
 name|rl_forced_update_display
 name|__P
 argument_list|(
@@ -2257,10 +2338,17 @@ argument_list|)
 decl_stmt|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__STDC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -2684,6 +2772,11 @@ name|char
 modifier|*
 name|rl_library_version
 decl_stmt|;
+comment|/* True if this is real GNU readline. */
+specifier|extern
+name|int
+name|rl_gnu_readline_p
+decl_stmt|;
 comment|/* The name of the calling program.  You should initialize this to    whatever was in argv[0].  It is used when parsing conditionals. */
 specifier|extern
 name|char
@@ -2796,6 +2889,16 @@ comment|/* If non-zero, readline will erase the entire line, including any promp
 specifier|extern
 name|int
 name|rl_erase_empty_line
+decl_stmt|;
+comment|/* If non-zero, the application has already printed the prompt (rl_prompt)    before calling readline, so readline should not output it the first time    redisplay is done. */
+specifier|extern
+name|int
+name|rl_already_prompted
+decl_stmt|;
+comment|/* A non-zero value means to read only this many characters rather than    up to a character bound to accept-line. */
+specifier|extern
+name|int
+name|rl_num_chars_to_read
 decl_stmt|;
 comment|/* Variables to control readline signal handling. */
 comment|/* If non-zero, readline will install its own signal handlers for    SIGINT, SIGTERM, SIGQUIT, SIGALRM, SIGTSTP, SIGTTIN, and SIGTTOU. */
@@ -2975,8 +3078,14 @@ specifier|extern
 name|char
 modifier|*
 name|savestring
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* XXX backwards compatibility */
 endif|#
 directive|endif
