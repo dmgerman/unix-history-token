@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.3 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,10 +480,23 @@ name|struct
 name|timeval
 name|curtime
 decl_stmt|;
+specifier|static
 name|struct
 name|timezone
 name|zone
 decl_stmt|;
+specifier|static
+name|int
+name|init
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|init
+condition|)
+block|{
 name|gettimeofday
 argument_list|(
 operator|&
@@ -493,6 +506,10 @@ operator|&
 name|zone
 argument_list|)
 expr_stmt|;
+name|init
+operator|++
+expr_stmt|;
+block|}
 name|copyt
 operator|=
 operator|*
