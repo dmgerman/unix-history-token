@@ -1431,6 +1431,12 @@ literal|"FreeBSD/NetBSD/386BSD"
 block|}
 block|,
 block|{
+literal|0xA7
+block|,
+literal|"NEXTSTEP"
+block|}
+block|,
+block|{
 literal|0xB7
 block|,
 literal|"BSDI BSD/386 filesystem"
