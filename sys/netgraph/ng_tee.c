@@ -1266,8 +1266,10 @@ comment|/* Duplicate packet and meta info if requried */
 if|if
 condition|(
 name|dup
-operator|!=
-name|NULL
+operator|&&
+name|dup
+operator|->
+name|hook
 condition|)
 block|{
 name|struct
@@ -1416,6 +1418,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Deliver frame out destination hook */
+if|if
+condition|(
+name|dest
+operator|->
+name|hook
+operator|!=
+name|NULL
+condition|)
+block|{
 name|dest
 operator|->
 name|stats
@@ -1435,6 +1446,7 @@ operator|.
 name|outFrames
 operator|++
 expr_stmt|;
+block|}
 name|NG_SEND_DATA
 argument_list|(
 name|error
