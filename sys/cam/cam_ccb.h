@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Data structures and definitions for CAM Control Blocks (CCBs).  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_ccb.h,v 1.4 1999/03/05 23:13:20 gibbs Exp $  */
+comment|/*  * Data structures and definitions for CAM Control Blocks (CCBs).  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_ccb.h,v 1.5 1999/05/06 20:15:57 ken Exp $  */
 end_comment
 
 begin_ifndef
@@ -26,6 +26,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_ifndef
@@ -430,6 +436,16 @@ init|=
 literal|0x0a
 block|,
 comment|/* Turn on debugging for a bus, target or lun */
+name|XPT_PATH_STATS
+init|=
+literal|0x0b
+block|,
+comment|/* Path statistics (error counts, etc.) */
+name|XPT_GDEV_STATS
+init|=
+literal|0x0c
+block|,
+comment|/* Device statistics (error counts, etc.) */
 comment|/* SCSI Control Functions: 0x10->0x1F */
 name|XPT_ABORT
 init|=
@@ -843,6 +859,7 @@ name|u_int8_t
 name|pd_type
 decl_stmt|;
 comment|/* returned peripheral device type */
+comment|/*  * GARBAGE COLLECT  * Moved to ccb_getdevstats but left here for binary compatibility.  * Remove in next rev of CAM version.  */
 name|int
 name|dev_openings
 decl_stmt|;
@@ -870,6 +887,47 @@ comment|/* 				 * Boundary conditions for number of 				 * tagged operations 			
 name|int
 name|mintags
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Device Statistics CCB */
+end_comment
+
+begin_struct
+struct|struct
+name|ccb_getdevstats
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|int
+name|dev_openings
+decl_stmt|;
+comment|/* Space left for more work on device*/
+name|int
+name|dev_active
+decl_stmt|;
+comment|/* Transactions running on the device */
+name|int
+name|devq_openings
+decl_stmt|;
+comment|/* Space left for more queued work */
+name|int
+name|devq_queued
+decl_stmt|;
+comment|/* Transactions queued to be sent */
+name|int
+name|held
+decl_stmt|;
+comment|/* 				 * CCBs held by peripheral drivers 				 * for this device 				 */
+name|struct
+name|timeval
+name|last_reset
+decl_stmt|;
+comment|/* Time of last bus reset/loop init */
 block|}
 struct|;
 end_struct
@@ -1660,6 +1718,27 @@ name|u_int32_t
 name|base_transfer_speed
 decl_stmt|;
 comment|/* Base bus speed in KB/sec */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Path Statistics CCB */
+end_comment
+
+begin_struct
+struct|struct
+name|ccb_pathstats
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|struct
+name|timeval
+name|last_reset
+decl_stmt|;
+comment|/* Time of last bus reset/loop init */
 block|}
 struct|;
 end_struct
@@ -2568,6 +2647,14 @@ decl_stmt|;
 name|struct
 name|ccb_setdev
 name|csd
+decl_stmt|;
+name|struct
+name|ccb_pathstats
+name|cpis
+decl_stmt|;
+name|struct
+name|ccb_getdevstats
+name|cgds
 decl_stmt|;
 name|struct
 name|ccb_dev_match
