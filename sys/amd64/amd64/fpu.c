@@ -1547,6 +1547,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|flags
+condition|)
+name|printf
+argument_list|(
+literal|"flags 0x%x "
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|npx_irq13
 condition|)
 block|{
