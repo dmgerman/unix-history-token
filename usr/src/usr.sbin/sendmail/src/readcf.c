@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.10	%G%"
+literal|"@(#)readcf.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,7 +1115,7 @@ name|M_NHDR
 block|,
 literal|'l'
 block|,
-name|M_NOHOST
+name|M_LOCAL
 block|,
 literal|'s'
 block|,
@@ -1152,10 +1152,6 @@ block|,
 literal|'A'
 block|,
 name|M_ARPAFMT
-block|,
-literal|'L'
-block|,
-name|M_FINAL
 block|,
 literal|0
 block|,

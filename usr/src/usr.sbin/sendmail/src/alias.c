@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.16	%G%	(with DBM)"
+literal|"@(#)alias.c	3.17	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.16	%G%	(without DBM)"
+literal|"@(#)alias.c	3.17	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -951,7 +951,7 @@ name|al
 operator|.
 name|q_mailer
 operator|!=
-name|M_LOCAL
+name|MN_LOCAL
 condition|)
 block|{
 name|syserr
@@ -1126,7 +1126,7 @@ name|user
 operator|->
 name|q_mailer
 operator|!=
-name|M_LOCAL
+name|MN_LOCAL
 operator|||
 name|bitset
 argument_list|(

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.4	%G%"
+literal|"@(#)recipient.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,7 +285,7 @@ name|a
 operator|->
 name|q_mailer
 operator|==
-name|M_LOCAL
+name|MN_LOCAL
 condition|)
 block|{
 if|if
@@ -304,13 +304,13 @@ name|a
 operator|->
 name|q_mailer
 operator|=
-name|M_PROG
+name|MN_PROG
 expr_stmt|;
 name|m
 operator|=
 name|Mailer
 index|[
-name|M_PROG
+name|MN_PROG
 index|]
 expr_stmt|;
 name|a
@@ -449,7 +449,7 @@ name|a
 operator|->
 name|q_mailer
 operator|==
-name|M_LOCAL
+name|MN_LOCAL
 condition|)
 block|{
 if|if
@@ -531,7 +531,7 @@ name|a
 operator|->
 name|q_mailer
 operator|==
-name|M_LOCAL
+name|MN_LOCAL
 condition|)
 block|{
 name|char

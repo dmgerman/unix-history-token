@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.25	%G%"
+literal|"@(#)deliver.c	3.26	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,7 +732,7 @@ name|m
 operator|==
 name|Mailer
 index|[
-name|M_LOCAL
+name|MN_LOCAL
 index|]
 condition|)
 block|{
@@ -1727,7 +1727,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|M_FINAL
+name|M_LOCAL
 argument_list|,
 name|m
 operator|->

@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.20	%G%"
+literal|"@(#)conf.c	3.21	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,13 +122,13 @@ literal|"received-date"
 block|,
 name|H_CHECK
 block|,
-name|M_FINAL
+name|M_LOCAL
 block|,
 literal|"received-from"
 block|,
 name|H_CHECK
 block|,
-name|M_FINAL
+name|M_LOCAL
 block|,
 literal|"precedence"
 block|,

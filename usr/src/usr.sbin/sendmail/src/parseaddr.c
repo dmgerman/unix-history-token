@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.18	%G%"
+literal|"@(#)parseaddr.c	3.19	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2545,7 +2545,7 @@ condition|(
 operator|!
 name|bitset
 argument_list|(
-name|M_NOHOST
+name|M_LOCAL
 argument_list|,
 name|m
 operator|->
@@ -2729,7 +2729,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|M_NOHOST
+name|M_LOCAL
 argument_list|,
 name|Mailer
 index|[
