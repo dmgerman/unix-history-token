@@ -762,12 +762,27 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"pccard: delete failed: %d\n"
+literal|"pccard: delete of %s failed: %d\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|kids
+index|[
+name|i
+index|]
+argument_list|)
 argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|kids
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 comment|/* Power off the slot 1/2 second after removal of the card */
 name|slt
 operator|->
