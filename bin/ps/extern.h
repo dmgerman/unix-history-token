@@ -43,11 +43,17 @@ name|eval
 decl_stmt|,
 name|fscale
 decl_stmt|,
-name|mempages
-decl_stmt|,
 name|nlistread
 decl_stmt|,
 name|rawcpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|mempages
 decl_stmt|;
 end_decl_stmt
 

@@ -89,7 +89,8 @@ comment|/* if nlist already read. */
 end_comment
 
 begin_decl_stmt
-name|int
+name|unsigned
+name|long
 name|mempages
 decl_stmt|;
 end_decl_stmt
