@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	4.17	83/03/12	*/
+comment|/*	route.c	4.18	83/03/15	*/
 end_comment
 
 begin_include
@@ -1209,6 +1209,39 @@ name|struct
 name|rtentry
 name|route
 decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+if|if
+condition|(
+name|flags
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|cmd
+operator|=
+operator|(
+name|int
+operator|)
+name|SIOCDELRT
+expr_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cmd
+operator|=
+operator|(
+name|int
+operator|)
+name|SIOCADDRT
+expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 operator|(
@@ -1248,10 +1281,7 @@ name|void
 operator|)
 name|rtrequest
 argument_list|(
-operator|(
-name|int
-operator|)
-name|SIOCADDRT
+name|cmd
 argument_list|,
 operator|&
 name|route

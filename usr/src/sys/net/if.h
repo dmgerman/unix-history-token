@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.16	82/10/31	*/
+comment|/*	if.h	4.17	83/03/15	*/
 end_comment
 
 begin_comment
@@ -297,6 +297,95 @@ end_define
 begin_comment
 comment|/* granularity is 1 second */
 end_comment
+
+begin_comment
+comment|/*  * Interface request structure used by socket  * ioctl's SIOCSIFxxxx (set interface parameter)  * and SIOCGIFxxxx (get parameter).  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifreq
+block|{
+name|char
+name|ifr_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* name of interface (e.g. "ec0") */
+union|union
+block|{
+name|struct
+name|sockaddr
+name|ifru_addr
+decl_stmt|;
+name|struct
+name|sockaddr
+name|ifru_dstaddr
+decl_stmt|;
+name|short
+name|ifru_flags
+decl_stmt|;
+block|}
+name|ifr_ifru
+union|;
+define|#
+directive|define
+name|ifr_addr
+value|ifr_ifru.ifru_addr
+comment|/* address */
+define|#
+directive|define
+name|ifr_dstaddr
+value|ifr_ifru.ifru_dstaddr
+comment|/* other end of p-to-p link */
+define|#
+directive|define
+name|ifr_flags
+value|ifr_ifru.ifru_flags
+comment|/* flags */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure used in SIOCGIFCONF request.  * Used to retrieve interface configuration  * for machine (useful for programs which  * must know all networks accessible).  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifconf
+block|{
+name|int
+name|ifc_len
+decl_stmt|;
+comment|/* size of associated buffer */
+union|union
+block|{
+name|caddr_t
+name|ifcu_buf
+decl_stmt|;
+name|struct
+name|ifreq
+modifier|*
+name|ifcu_req
+decl_stmt|;
+block|}
+name|ifc_ifcu
+union|;
+define|#
+directive|define
+name|ifc_buf
+value|ifc_ifcu.ifcu_buf
+comment|/* buffer address */
+define|#
+directive|define
+name|ifc_req
+value|ifc_ifcu.ifcu_req
+comment|/* array of structures returned */
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
