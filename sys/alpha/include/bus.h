@@ -33,14 +33,14 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|u_int64_t
 name|bus_addr_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|u_int64_t
 name|bus_size_t
 typedef|;
 end_typedef
@@ -100,18 +100,22 @@ name|BUS_SPACE_MAXADDR_32BIT
 value|0xFFFFFFFF
 end_define
 
+begin_comment
+comment|/* The largest address space known so far is 40 bits */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BUS_SPACE_MAXADDR
-value|0xFFFFFFFF
+value|0xFFFFFFFFFUL
 end_define
 
 begin_define
 define|#
 directive|define
 name|BUS_SPACE_UNRESTRICTED
-value|(~0)
+value|(~0UL)
 end_define
 
 begin_struct_decl
