@@ -463,12 +463,6 @@ modifier|*
 name|ports
 decl_stmt|;
 comment|/* pointer to array of port descriptors */
-name|struct
-name|tty
-modifier|*
-name|ttys
-decl_stmt|;
-comment|/* pointer to array of TTY structures */
 specifier|volatile
 name|struct
 name|global_data
