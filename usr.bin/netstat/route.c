@@ -117,6 +117,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -172,15 +178,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -266,6 +263,18 @@ block|{
 name|RTF_REJECT
 block|,
 literal|'R'
+block|}
+block|,
+block|{
+name|RTF_PROTO2
+block|,
+literal|'2'
+block|}
+block|,
+block|{
+name|RTF_PROTO1
+block|,
+literal|'1'
 block|}
 block|,
 block|{
@@ -356,20 +365,18 @@ begin_comment
 comment|/*  * Print routing tables.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|routepr
-argument_list|(
-argument|hostaddr
-argument_list|,
-argument|netaddr
-argument_list|,
-argument|hashsizeaddr
-argument_list|,
-argument|treeaddr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hostaddr
+parameter_list|,
+name|netaddr
+parameter_list|,
+name|hashsizeaddr
+parameter_list|,
+name|treeaddr
+parameter_list|)
 name|off_t
 name|hostaddr
 decl_stmt|,
@@ -379,9 +386,6 @@ name|hashsizeaddr
 decl_stmt|,
 name|treeaddr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|mbuf
@@ -424,6 +428,21 @@ name|doinghost
 init|=
 literal|1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|treeaddr
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not find routing tables\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"Routing tables\n"
@@ -442,7 +461,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-16.16s %-18.18s %-6.6s  %6.6s%8.8s  %-5.5s %-6.6s %-6.6s\n"
+literal|"%-16.16s %-18.18s %-6.6s  %6.6s%8.8s  %-5.5s"
 argument_list|,
 literal|"Destination"
 argument_list|,
@@ -455,16 +474,48 @@ argument_list|,
 literal|"Use"
 argument_list|,
 literal|"Iface"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|aflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%-6.6s %-6.6s\n"
 argument_list|,
 literal|"MTU"
 argument_list|,
 literal|"Rtt"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|treeaddr
-condition|)
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\n    %8s %8s %8s %8s %8s %8s %8s %8s\n"
+argument_list|,
+literal|"MTU"
+argument_list|,
+literal|"Hopcount"
+argument_list|,
+literal|"Expire"
+argument_list|,
+literal|"recvpipe"
+argument_list|,
+literal|"sendpipe"
+argument_list|,
+literal|"ssthresh"
+argument_list|,
+literal|"RTT"
+argument_list|,
+literal|"RTT var."
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|treestuff
 argument_list|(
@@ -472,7 +523,7 @@ name|treeaddr
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_union
 specifier|static
@@ -1991,6 +2042,363 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|aflag
+condition|)
+block|{
+comment|/* 	   * MTU 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+condition|)
+name|printf
+argument_list|(
+literal|"\n    %7d%c"
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_MTU
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n    %-7s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Hop count 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_hopcount
+condition|)
+name|printf
+argument_list|(
+literal|" %7d%c"
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_hopcount
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_HOPCOUNT
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %-6s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Expiration time 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_expire
+condition|)
+name|printf
+argument_list|(
+literal|" %7d%c"
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_expire
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_EXPIRE
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %-7s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Receive pipe size (bytes) 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_recvpipe
+condition|)
+name|printf
+argument_list|(
+literal|" %7d%c"
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_recvpipe
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_RPIPE
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %-7s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Send pipe size (bytes) 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_sendpipe
+condition|)
+name|printf
+argument_list|(
+literal|" %7d%c"
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_sendpipe
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_SPIPE
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %-7s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Slow-start threshold (bytes) 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_ssthresh
+condition|)
+name|printf
+argument_list|(
+literal|" %7d%c"
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_ssthresh
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_SSTHRESH
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %-7s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Round-trip time (seconds) 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_rtt
+condition|)
+name|printf
+argument_list|(
+literal|" %7.4f%c"
+argument_list|,
+operator|(
+literal|1.0
+operator|*
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_rtt
+operator|)
+operator|/
+name|RTM_RTTUNIT
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_RTT
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %-7s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Round-trip time variance (seconds) 	   */
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_rttvar
+condition|)
+name|printf
+argument_list|(
+literal|" %7.4f%c"
+argument_list|,
+operator|(
+literal|1.0
+operator|*
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_rttvar
+operator|)
+operator|/
+name|RTM_RTTUNIT
+argument_list|,
+operator|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
+operator|&
+name|RTV_RTTVAR
+operator|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %-7s "
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* no -a flag */
+if|if
+condition|(
 name|rt
 operator|->
 name|rt_rmx
@@ -2049,6 +2457,7 @@ argument_list|,
 literal|"-"
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 name|rt
