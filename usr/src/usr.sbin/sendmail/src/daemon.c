@@ -3073,13 +3073,10 @@ condition|(
 name|UseNameServer
 condition|)
 block|{
-specifier|extern
-name|char
-name|MsgBuf
-index|[]
-decl_stmt|;
-name|message
+name|sprintf
 argument_list|(
+name|hbuf
+argument_list|,
 literal|"%s: Name server timeout"
 argument_list|,
 name|shortenstring
@@ -3088,6 +3085,13 @@ name|name
 argument_list|,
 literal|33
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"%s"
+argument_list|,
+name|hbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -3104,9 +3108,7 @@ name|e_message
 operator|=
 name|newstr
 argument_list|(
-name|MsgBuf
-operator|+
-literal|4
+name|hbuf
 argument_list|)
 expr_stmt|;
 block|}
