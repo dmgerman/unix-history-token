@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rune.h>
 end_include
 
@@ -179,6 +185,9 @@ decl_stmt|,
 name|saverr
 decl_stmt|,
 name|chains
+decl_stmt|;
+name|uint32_t
+name|u32
 decl_stmt|;
 name|char
 name|strbuf
@@ -439,11 +448,12 @@ if|if
 condition|(
 name|fread
 argument_list|(
-name|strbuf
+operator|&
+name|u32
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|strbuf
+name|u32
 argument_list|)
 argument_list|,
 literal|1
@@ -481,9 +491,12 @@ condition|(
 operator|(
 name|chains
 operator|=
-name|atoi
+operator|(
+name|int
+operator|)
+name|ntohl
 argument_list|(
-name|strbuf
+name|u32
 argument_list|)
 operator|)
 operator|<
