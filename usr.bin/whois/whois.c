@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: whois.c,v 1.2.2.3 1998/02/19 19:10:26 wollman Exp $"
+literal|"$Id: whois.c,v 1.2.2.4 1998/02/19 21:49:20 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,14 @@ begin_define
 define|#
 directive|define
 name|DNICHOST
-value|"nic.ddn.mil"
+value|"whois.nic.mil"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNICHOST
+value|"whois.nic.gov"
 end_define
 
 begin_define
@@ -160,6 +167,13 @@ define|#
 directive|define
 name|PNICHOST
 value|"whois.apnic.net"
+end_define
+
+begin_define
+define|#
+directive|define
+name|RUNICHOST
+value|"whois.ripn.net"
 end_define
 
 begin_define
@@ -260,7 +274,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adh:pr"
+literal|"adgh:prR"
 argument_list|)
 operator|)
 operator|!=
@@ -292,6 +306,14 @@ name|DNICHOST
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+name|host
+operator|=
+name|GNICHOST
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 name|host
@@ -313,6 +335,14 @@ case|:
 name|host
 operator|=
 name|RNICHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|host
+operator|=
+name|RUNICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -626,14 +656,11 @@ name|void
 name|usage
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-adpr] [-h hostname] name ...\n"
+literal|"usage: whois [-adgprR] [-h hostname] name ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
