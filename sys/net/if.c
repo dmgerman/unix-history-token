@@ -3026,11 +3026,9 @@ operator|->
 name|ifa_dstaddr
 argument_list|)
 condition|)
-return|return
-operator|(
-name|ifa
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 else|else
 block|{
