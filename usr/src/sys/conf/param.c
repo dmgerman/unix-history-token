@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.2	81/04/02	*/
+comment|/*	param.c	4.3	81/04/28	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../h/cmap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/port.h"
 end_include
 
 begin_comment
@@ -175,6 +181,16 @@ operator|+
 literal|16
 operator|*
 name|MAXUSERS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nport
+init|=
+name|NPROC
+operator|/
+literal|2
 decl_stmt|;
 end_decl_stmt
 
