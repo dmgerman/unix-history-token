@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"bucomm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"budemang.h"
 end_include
 
 begin_include
@@ -53,6 +59,18 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"elf-bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"elf/common.h"
 end_include
 
 begin_comment
@@ -105,6 +123,97 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|extended_symbol_info
+block|{
+name|symbol_info
+modifier|*
+name|sinfo
+decl_stmt|;
+name|bfd_vma
+name|ssize
+decl_stmt|;
+name|elf_symbol_type
+modifier|*
+name|elfinfo
+decl_stmt|;
+comment|/* FIXME: We should add more fields for Type, Line, Section.  */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SYM_NAME
+parameter_list|(
+name|sym
+parameter_list|)
+value|(sym->sinfo->name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_VALUE
+parameter_list|(
+name|sym
+parameter_list|)
+value|(sym->sinfo->value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_TYPE
+parameter_list|(
+name|sym
+parameter_list|)
+value|(sym->sinfo->type)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_STAB_NAME
+parameter_list|(
+name|sym
+parameter_list|)
+value|(sym->sinfo->stab_name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_STAB_DESC
+parameter_list|(
+name|sym
+parameter_list|)
+value|(sym->sinfo->stab_desc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_STAB_OTHER
+parameter_list|(
+name|sym
+parameter_list|)
+value|(sym->sinfo->stab_other)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_SIZE
+parameter_list|(
+name|sym
+parameter_list|)
+define|\
+value|(sym->elfinfo ? sym->elfinfo->internal_elf_sym.st_size: sym->ssize)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -173,7 +282,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -188,11 +296,9 @@ argument_list|(
 operator|(
 name|bfd
 operator|*
-name|file
 operator|,
 name|bfd
 operator|*
-name|archive
 operator|)
 argument_list|)
 decl_stmt|;
@@ -335,6 +441,9 @@ operator|,
 name|asymbol
 operator|*
 operator|,
+name|bfd_vma
+name|ssize
+operator|,
 name|bfd
 operator|*
 operator|)
@@ -351,7 +460,6 @@ argument_list|(
 operator|(
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -476,7 +584,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -491,7 +598,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -506,7 +612,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -521,7 +626,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -536,7 +640,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -551,7 +654,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -566,12 +668,10 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|archive
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -586,12 +686,10 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|archive
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -606,12 +704,10 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|archive
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 decl_stmt|;
@@ -626,11 +722,9 @@ argument_list|(
 operator|(
 name|bfd
 operator|*
-name|archive_bfd
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -645,11 +739,9 @@ argument_list|(
 operator|(
 name|bfd
 operator|*
-name|archive_bfd
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -664,11 +756,9 @@ argument_list|(
 operator|(
 name|bfd
 operator|*
-name|archive_bfd
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -697,13 +787,12 @@ name|print_symbol_info_bsd
 name|PARAMS
 argument_list|(
 operator|(
-name|symbol_info
+expr|struct
+name|extended_symbol_info
 operator|*
-name|info
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -716,13 +805,12 @@ name|print_symbol_info_sysv
 name|PARAMS
 argument_list|(
 operator|(
-name|symbol_info
+expr|struct
+name|extended_symbol_info
 operator|*
-name|info
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -735,13 +823,12 @@ name|print_symbol_info_posix
 name|PARAMS
 argument_list|(
 operator|(
-name|symbol_info
+expr|struct
+name|extended_symbol_info
 operator|*
-name|info
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -766,6 +853,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|get_symbol_type
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Support for different output formats.  */
 end_comment
@@ -784,7 +887,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 expr_stmt|;
@@ -798,7 +900,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 expr_stmt|;
@@ -812,12 +913,10 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|archive
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
-name|filename
 operator|)
 argument_list|)
 expr_stmt|;
@@ -831,11 +930,9 @@ argument_list|(
 operator|(
 name|bfd
 operator|*
-name|archive_bfd
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 expr_stmt|;
@@ -847,13 +944,12 @@ argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|symbol_info
+expr|struct
+name|extended_symbol_info
 operator|*
-name|info
 operator|,
 name|bfd
 operator|*
-name|abfd
 operator|)
 argument_list|)
 expr_stmt|;
@@ -986,7 +1082,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print external symbols only */
+comment|/* Print external symbols only.  */
 end_comment
 
 begin_decl_stmt
@@ -999,7 +1095,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Print defined symbols only */
+comment|/* Print defined symbols only.  */
 end_comment
 
 begin_decl_stmt
@@ -1012,7 +1108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* don't sort; print syms in order found */
+comment|/* Don't sort; print syms in order found.  */
 end_comment
 
 begin_decl_stmt
@@ -1025,7 +1121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print debugger-only symbols too */
+comment|/* Print debugger-only symbols too.  */
 end_comment
 
 begin_decl_stmt
@@ -1038,7 +1134,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* describe __.SYMDEF data in archive files.  */
+comment|/* Describe __.SYMDEF data in archive files.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|print_size
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print size of defined symbols.  */
 end_comment
 
 begin_decl_stmt
@@ -1051,7 +1160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sort in downward(alpha or numeric) order */
+comment|/* Sort in downward(alpha or numeric) order.  */
 end_comment
 
 begin_decl_stmt
@@ -1064,7 +1173,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sort in numeric rather than alpha order */
+comment|/* Sort in numeric rather than alpha order.  */
 end_comment
 
 begin_decl_stmt
@@ -1077,7 +1186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sort by size of symbol */
+comment|/* Sort by size of symbol.  */
 end_comment
 
 begin_decl_stmt
@@ -1090,7 +1199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print undefined symbols only */
+comment|/* Print undefined symbols only.  */
 end_comment
 
 begin_decl_stmt
@@ -1103,7 +1212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print dynamic symbols.  */
+comment|/* Print dynamic symbols.  */
 end_comment
 
 begin_decl_stmt
@@ -1116,7 +1225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* show the version number */
+comment|/* Show the version number.  */
 end_comment
 
 begin_decl_stmt
@@ -1129,7 +1238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* show statistics */
+comment|/* Show statistics.  */
 end_comment
 
 begin_decl_stmt
@@ -1142,7 +1251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print line numbers for symbols */
+comment|/* Print line numbers for symbols.  */
 end_comment
 
 begin_comment
@@ -1497,6 +1606,16 @@ literal|'o'
 block|}
 block|,
 block|{
+literal|"print-size"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+literal|'S'
+block|}
+block|,
+block|{
 literal|"radix"
 block|,
 name|required_argument
@@ -1599,7 +1718,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Some error-reporting functions */
+comment|/* Some error-reporting functions.  */
 end_comment
 
 begin_function
@@ -1647,7 +1766,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|" The options are:\n\   -a, --debug-syms       Display debugger-only symbols\n\   -A, --print-file-name  Print name of the input file before every symbol\n\   -B                     Same as --format=bsd\n\   -C, --demangle[=STYLE] Decode low-level symbol names into user-level names\n\                           The STYLE, if specified, can be `auto' (the default),\n\                           `gnu', 'lucid', 'arm', 'hp', 'edg' or 'gnu-new-abi'\n\       --no-demangle      Do not demangle low-level symbol names\n\   -D, --dynamic          Display dynamic symbols instead of normal symbols\n\       --defined-only     Display only defined symbols\n\   -e                     (ignored)\n\   -f, --format=FORMAT    Use the output format FORMAT.  FORMAT can be `bsd',\n\                            `sysv' or `posix'.  The default is `bsd'\n\   -g, --extern-only      Display only external symbols\n\   -l, --line-numbers     Use debugging information to find a filename and\n\                            line number for each symbol\n\   -n, --numeric-sort     Sort symbols numerically by address\n\   -o                     Same as -A\n\   -p, --no-sort          Do not sort the symbols\n\   -P, --portability      Same as --format=posix\n\   -r, --reverse-sort     Reverse the sense of the sort\n\   -s, --print-armap      Include index for symbols from archive members\n\       --size-sort        Sort symbols by size\n\   -t, --radix=RADIX      Use RADIX for printing symbol values\n\       --target=BFDNAME   Specify the target object format as BFDNAME\n\   -u, --undefined-only   Display only undefined symbols\n\   -X 32_64               (ignored)\n\   -h, --help             Display this information\n\   -V, --version          Display this program's version number\n\ \n"
+literal|" The options are:\n\   -a, --debug-syms       Display debugger-only symbols\n\   -A, --print-file-name  Print name of the input file before every symbol\n\   -B                     Same as --format=bsd\n\   -C, --demangle[=STYLE] Decode low-level symbol names into user-level names\n\                           The STYLE, if specified, can be `auto' (the default),\n\                           `gnu', 'lucid', 'arm', 'hp', 'edg' or 'gnu-new-abi'\n\       --no-demangle      Do not demangle low-level symbol names\n\   -D, --dynamic          Display dynamic symbols instead of normal symbols\n\       --defined-only     Display only defined symbols\n\   -e                     (ignored)\n\   -f, --format=FORMAT    Use the output format FORMAT.  FORMAT can be `bsd',\n\                            `sysv' or `posix'.  The default is `bsd'\n\   -g, --extern-only      Display only external symbols\n\   -l, --line-numbers     Use debugging information to find a filename and\n\                            line number for each symbol\n\   -n, --numeric-sort     Sort symbols numerically by address\n\   -o                     Same as -A\n\   -p, --no-sort          Do not sort the symbols\n\   -P, --portability      Same as --format=posix\n\   -r, --reverse-sort     Reverse the sense of the sort\n\   -S, --print-size       Print size of defined symbols\n\   -s, --print-armap      Include index for symbols from archive members\n\       --size-sort        Sort symbols by size\n\   -t, --radix=RADIX      Use RADIX for printing symbol values\n\       --target=BFDNAME   Specify the target object format as BFDNAME\n\   -u, --undefined-only   Display only undefined symbols\n\   -X 32_64               (ignored)\n\   -h, --help             Display this information\n\   -V, --version          Display this program's version number\n\ \n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1944,6 +2063,13 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|setlocale
+argument_list|(
+name|LC_COLLATE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|bindtextdomain
@@ -1992,7 +2118,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aABCDef:gHhlnopPrst:uvVvX:"
+literal|"aABCDef:gHhlnopPrSst:uvVvX:"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2180,6 +2306,14 @@ case|case
 literal|'s'
 case|:
 name|print_armap
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|print_size
 operator|=
 literal|1
 expr_stmt|;
@@ -2392,6 +2526,140 @@ end_escape
 
 begin_function
 specifier|static
+specifier|const
+name|char
+modifier|*
+name|get_symbol_type
+parameter_list|(
+name|type
+parameter_list|)
+name|unsigned
+name|int
+name|type
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|buff
+index|[
+literal|32
+index|]
+decl_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|STT_NOTYPE
+case|:
+return|return
+literal|"NOTYPE"
+return|;
+case|case
+name|STT_OBJECT
+case|:
+return|return
+literal|"OBJECT"
+return|;
+case|case
+name|STT_FUNC
+case|:
+return|return
+literal|"FUNC"
+return|;
+case|case
+name|STT_SECTION
+case|:
+return|return
+literal|"SECTION"
+return|;
+case|case
+name|STT_FILE
+case|:
+return|return
+literal|"FILE"
+return|;
+case|case
+name|STT_COMMON
+case|:
+return|return
+literal|"COMMON"
+return|;
+case|case
+name|STT_TLS
+case|:
+return|return
+literal|"TLS"
+return|;
+default|default:
+if|if
+condition|(
+name|type
+operator|>=
+name|STT_LOPROC
+operator|&&
+name|type
+operator|<=
+name|STT_HIPROC
+condition|)
+name|sprintf
+argument_list|(
+name|buff
+argument_list|,
+name|_
+argument_list|(
+literal|"<processor specific>: %d"
+argument_list|)
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|type
+operator|>=
+name|STT_LOOS
+operator|&&
+name|type
+operator|<=
+name|STT_HIOS
+condition|)
+name|sprintf
+argument_list|(
+name|buff
+argument_list|,
+name|_
+argument_list|(
+literal|"<OS specific>: %d"
+argument_list|)
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|buff
+argument_list|,
+name|_
+argument_list|(
+literal|"<unknown>: %d"
+argument_list|)
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+name|buff
+return|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|display_archive
 parameter_list|(
@@ -2498,6 +2766,32 @@ name|matching
 argument_list|)
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|30
+index|]
+decl_stmt|;
+name|bfd_sprintf_vma
+argument_list|(
+name|arfile
+argument_list|,
+name|buf
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|print_width
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|format
@@ -2685,6 +2979,32 @@ name|matching
 argument_list|)
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|30
+index|]
+decl_stmt|;
+name|bfd_sprintf_vma
+argument_list|(
+name|file
+argument_list|,
+name|buf
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|print_width
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|format
@@ -3101,45 +3421,75 @@ argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|yn
+operator|==
+name|NULL
+condition|)
 return|return
-operator|(
-operator|(
+name|xn
+operator|!=
+name|NULL
+return|;
+if|if
+condition|(
 name|xn
 operator|==
 name|NULL
-operator|)
-condition|?
-operator|(
-operator|(
-name|yn
-operator|==
-name|NULL
-operator|)
-condition|?
-literal|0
-else|:
+condition|)
+return|return
 operator|-
 literal|1
-operator|)
-else|:
-operator|(
-operator|(
+return|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRCOLL
+comment|/* Solaris 2.5 has a bug in strcoll.      strcoll returns invalid values when confronted with empty strings.  */
+if|if
+condition|(
+operator|*
 name|yn
 operator|==
-name|NULL
-operator|)
-condition|?
+literal|'\0'
+condition|)
+return|return
+operator|*
+name|xn
+operator|!=
+literal|'\0'
+return|;
+if|if
+condition|(
+operator|*
+name|xn
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|-
 literal|1
-else|:
+return|;
+return|return
+name|strcoll
+argument_list|(
+name|xn
+argument_list|,
+name|yn
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
 name|strcmp
 argument_list|(
 name|xn
 argument_list|,
 name|yn
 argument_list|)
-operator|)
-operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3665,7 +4015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Sort the symbols by size.  We guess the size by assuming that the    difference between the address of a symbol and the address of the    next higher symbol is the size.  FIXME: ELF actually stores a size    with each symbol.  We should use it.  */
+comment|/* Sort the symbols by size.  ELF provides a size but for other formats    we have to make a guess by assuming that the difference between the    address of a symbol and the address of the next higher symbol is the    size.  */
 end_comment
 
 begin_function
@@ -3919,6 +4269,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bfd_get_flavour
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|bfd_target_elf_flavour
+condition|)
+name|sz
+operator|=
+operator|(
+operator|(
+name|elf_symbol_type
+operator|*
+operator|)
+name|sym
+operator|)
+operator|->
+name|internal_elf_sym
+operator|.
+name|st_size
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|bfd_is_com_section
 argument_list|(
 name|sec
@@ -4101,12 +4475,6 @@ name|size_sym
 modifier|*
 name|symsizes
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|30
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4193,26 +4561,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bfd_sprintf_vma
-argument_list|(
-name|abfd
-argument_list|,
-name|buf
-argument_list|,
-operator|(
-name|bfd_vma
-operator|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|print_width
-operator|=
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 comment|/* Discard the symbols we don't want to print.      It's OK to do this in place; we'll free the storage anyway      (after printing).  */
 name|symcount
 operator|=
@@ -4728,39 +5076,14 @@ block|{
 name|char
 modifier|*
 name|res
-decl_stmt|;
-comment|/* In this mode, give a user-level view of the symbol name 	 even if it's not mangled; strip off any leading 	 underscore.  */
-if|if
-condition|(
-name|bfd_get_symbol_leading_char
+init|=
+name|demangle
 argument_list|(
 name|abfd
-argument_list|)
-operator|==
-name|name
-index|[
-literal|0
-index|]
-condition|)
-name|name
-operator|++
-expr_stmt|;
-name|res
-operator|=
-name|cplus_demangle
-argument_list|(
-name|name
 argument_list|,
-name|DMGL_ANSI
-operator||
-name|DMGL_PARAMS
+name|name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
-condition|)
-block|{
+decl_stmt|;
 name|printf
 argument_list|(
 name|format
@@ -4774,7 +5097,6 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 name|printf
 argument_list|(
@@ -4926,6 +5248,11 @@ name|abfd
 argument_list|,
 name|sym
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|,
 name|archive_bfd
 argument_list|)
 expr_stmt|;
@@ -5030,6 +5357,9 @@ name|asymbol
 modifier|*
 name|sym
 decl_stmt|;
+name|bfd_vma
+name|ssize
+decl_stmt|;
 name|sym
 operator|=
 name|bfd_minisymbol_to_symbol
@@ -5059,10 +5389,24 @@ name|abfd
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Set the symbol value so that we actually display the symbol          size.  */
-name|sym
+comment|/* For elf we have already computed the correct symbol size.  */
+if|if
+condition|(
+name|bfd_get_flavour
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|bfd_target_elf_flavour
+condition|)
+name|ssize
+operator|=
+name|from
 operator|->
-name|value
+name|size
+expr_stmt|;
+else|else
+name|ssize
 operator|=
 name|from
 operator|->
@@ -5084,6 +5428,8 @@ name|abfd
 argument_list|,
 name|sym
 argument_list|,
+name|ssize
+argument_list|,
 name|archive_bfd
 argument_list|)
 expr_stmt|;
@@ -5104,6 +5450,8 @@ name|abfd
 parameter_list|,
 name|sym
 parameter_list|,
+name|ssize
+parameter_list|,
 name|archive_bfd
 parameter_list|)
 name|bfd
@@ -5113,6 +5461,9 @@ decl_stmt|;
 name|asymbol
 modifier|*
 name|sym
+decl_stmt|;
+name|bfd_vma
+name|ssize
 decl_stmt|;
 name|bfd
 modifier|*
@@ -5169,6 +5520,10 @@ block|{
 name|symbol_info
 name|syminfo
 decl_stmt|;
+name|struct
+name|extended_symbol_info
+name|info
+decl_stmt|;
 name|bfd_get_symbol_info
 argument_list|(
 name|abfd
@@ -5179,6 +5534,45 @@ operator|&
 name|syminfo
 argument_list|)
 expr_stmt|;
+name|info
+operator|.
+name|sinfo
+operator|=
+operator|&
+name|syminfo
+expr_stmt|;
+name|info
+operator|.
+name|ssize
+operator|=
+name|ssize
+expr_stmt|;
+if|if
+condition|(
+name|bfd_get_flavour
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|bfd_target_elf_flavour
+condition|)
+name|info
+operator|.
+name|elfinfo
+operator|=
+operator|(
+name|elf_symbol_type
+operator|*
+operator|)
+name|sym
+expr_stmt|;
+else|else
+name|info
+operator|.
+name|elfinfo
+operator|=
+name|NULL
+expr_stmt|;
 call|(
 modifier|*
 name|format
@@ -5187,7 +5581,7 @@ name|print_symbol_info
 call|)
 argument_list|(
 operator|&
-name|syminfo
+name|info
 argument_list|,
 name|abfd
 argument_list|)
@@ -5836,11 +6230,26 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|print_width
+operator|==
+literal|8
+condition|)
 name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Name                  Value   Class        Type         Size   Line  Section\n\n"
+literal|"\ Name                  Value   Class        Type         Size     Line  Section\n\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"\ Name                  Value           Class        Type         Size             Line  Section\n\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5960,7 +6369,7 @@ modifier|*
 name|archive
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -5994,7 +6403,7 @@ name|char
 modifier|*
 name|archive
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -6029,11 +6438,26 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|print_width
+operator|==
+literal|8
+condition|)
 name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Name                  Value   Class        Type         Size   Line  Section\n\n"
+literal|"\ Name                  Value   Class        Type         Size     Line  Section\n\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"\ Name                  Value           Class        Type         Size             Line  Section\n\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6053,7 +6477,7 @@ name|char
 modifier|*
 name|archive
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -6403,7 +6827,8 @@ name|info
 parameter_list|,
 name|abfd
 parameter_list|)
-name|symbol_info
+name|struct
+name|extended_symbol_info
 modifier|*
 name|info
 decl_stmt|;
@@ -6416,9 +6841,10 @@ if|if
 condition|(
 name|bfd_is_undefined_symclass
 argument_list|(
+name|SYM_TYPE
+argument_list|(
 name|info
-operator|->
-name|type
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -6440,29 +6866,60 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|print_value
 argument_list|(
 name|abfd
 argument_list|,
-name|info
-operator|->
-name|value
-argument_list|)
-expr_stmt|;
-name|printf
+name|SYM_VALUE
 argument_list|(
-literal|" %c"
-argument_list|,
 name|info
-operator|->
-name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|print_size
+operator|&&
+name|SYM_SIZE
+argument_list|(
 name|info
-operator|->
-name|type
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+name|print_value
+argument_list|(
+name|abfd
+argument_list|,
+name|SYM_SIZE
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|" %c"
+argument_list|,
+name|SYM_TYPE
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SYM_TYPE
+argument_list|(
+name|info
+argument_list|)
 operator|==
 literal|'-'
 condition|)
@@ -6477,9 +6934,10 @@ name|printf
 argument_list|(
 name|other_format
 argument_list|,
+name|SYM_STAB_OTHER
+argument_list|(
 name|info
-operator|->
-name|stab_other
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6491,18 +6949,20 @@ name|printf
 argument_list|(
 name|desc_format
 argument_list|,
+name|SYM_STAB_DESC
+argument_list|(
 name|info
-operator|->
-name|stab_desc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|" %5s"
 argument_list|,
+name|SYM_STAB_NAME
+argument_list|(
 name|info
-operator|->
-name|stab_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6510,9 +6970,10 @@ name|print_symname
 argument_list|(
 literal|" %s"
 argument_list|,
+name|SYM_NAME
+argument_list|(
 name|info
-operator|->
-name|name
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -6529,7 +6990,8 @@ name|info
 parameter_list|,
 name|abfd
 parameter_list|)
-name|symbol_info
+name|struct
+name|extended_symbol_info
 modifier|*
 name|info
 decl_stmt|;
@@ -6542,54 +7004,70 @@ name|print_symname
 argument_list|(
 literal|"%-20s|"
 argument_list|,
+name|SYM_NAME
+argument_list|(
 name|info
-operator|->
-name|name
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* Name */
 if|if
 condition|(
 name|bfd_is_undefined_symclass
 argument_list|(
+name|SYM_TYPE
+argument_list|(
 name|info
-operator|->
-name|type
 argument_list|)
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|print_width
+operator|==
+literal|8
 condition|)
 name|printf
 argument_list|(
 literal|"        "
 argument_list|)
 expr_stmt|;
-comment|/* Value */
+else|else
+name|printf
+argument_list|(
+literal|"                "
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|print_value
 argument_list|(
 name|abfd
 argument_list|,
+name|SYM_VALUE
+argument_list|(
 name|info
-operator|->
-name|value
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"|   %c  |"
 argument_list|,
+name|SYM_TYPE
+argument_list|(
 name|info
-operator|->
-name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Class */
 if|if
 condition|(
+name|SYM_TYPE
+argument_list|(
 name|info
-operator|->
-name|type
+argument_list|)
 operator|==
 literal|'-'
 condition|)
@@ -6599,9 +7077,10 @@ name|printf
 argument_list|(
 literal|"%18s|  "
 argument_list|,
+name|SYM_STAB_NAME
+argument_list|(
 name|info
-operator|->
-name|stab_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* (C) Type */
@@ -6609,9 +7088,10 @@ name|printf
 argument_list|(
 name|desc_format
 argument_list|,
+name|SYM_STAB_DESC
+argument_list|(
 name|info
-operator|->
-name|stab_desc
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Size */
@@ -6623,12 +7103,104 @@ expr_stmt|;
 comment|/* Line, Section */
 block|}
 else|else
+block|{
+comment|/* Type, Size, Line, Section */
+if|if
+condition|(
+name|info
+operator|->
+name|elfinfo
+condition|)
 name|printf
 argument_list|(
-literal|"                  |      |     |"
+literal|"%18s|"
+argument_list|,
+name|get_symbol_type
+argument_list|(
+name|ELF_ST_TYPE
+argument_list|(
+name|info
+operator|->
+name|elfinfo
+operator|->
+name|internal_elf_sym
+operator|.
+name|st_info
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Type, Size, Line, Section */
+else|else
+name|printf
+argument_list|(
+literal|"                  |"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SYM_SIZE
+argument_list|(
+name|info
+argument_list|)
+condition|)
+name|print_value
+argument_list|(
+name|abfd
+argument_list|,
+name|SYM_SIZE
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|print_width
+operator|==
+literal|8
+condition|)
+name|printf
+argument_list|(
+literal|"        "
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"                "
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|info
+operator|->
+name|elfinfo
+condition|)
+name|printf
+argument_list|(
+literal|"|     |%s"
+argument_list|,
+name|info
+operator|->
+name|elfinfo
+operator|->
+name|symbol
+operator|.
+name|section
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"|     |"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6641,7 +7213,8 @@ name|info
 parameter_list|,
 name|abfd
 parameter_list|)
-name|symbol_info
+name|struct
+name|extended_symbol_info
 modifier|*
 name|info
 decl_stmt|;
@@ -6654,9 +7227,10 @@ name|print_symname
 argument_list|(
 literal|"%s "
 argument_list|,
+name|SYM_NAME
+argument_list|(
 name|info
-operator|->
-name|name
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -6665,18 +7239,20 @@ name|printf
 argument_list|(
 literal|"%c "
 argument_list|,
+name|SYM_TYPE
+argument_list|(
 name|info
-operator|->
-name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|bfd_is_undefined_symclass
 argument_list|(
+name|SYM_TYPE
+argument_list|(
 name|info
-operator|->
-name|type
+argument_list|)
 argument_list|)
 condition|)
 name|printf
@@ -6685,16 +7261,40 @@ literal|"        "
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|print_value
 argument_list|(
 name|abfd
 argument_list|,
+name|SYM_VALUE
+argument_list|(
 name|info
-operator|->
-name|value
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* POSIX.2 wants the symbol size printed here, when applicable;      BFD currently doesn't provide it, so we take the easy way out by      considering it to never be applicable.  */
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SYM_SIZE
+argument_list|(
+name|info
+argument_list|)
+condition|)
+name|print_value
+argument_list|(
+name|abfd
+argument_list|,
+name|SYM_SIZE
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
