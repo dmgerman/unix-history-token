@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -217,7 +217,6 @@ name|cuserid
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|)
@@ -744,7 +743,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|pid_t
+name|int
 name|tcsetpgrp
 name|__P
 argument_list|(
@@ -1136,7 +1135,7 @@ name|__P
 argument_list|(
 operator|(
 specifier|const
-name|mode_t
+name|void
 operator|*
 operator|,
 name|mode_t
@@ -1475,7 +1474,6 @@ name|rresvport
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|int
 operator|*
 operator|)
@@ -1642,7 +1640,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|mode_t
+name|void
+modifier|*
 name|setmode
 name|__P
 argument_list|(
