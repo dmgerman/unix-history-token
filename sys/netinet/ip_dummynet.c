@@ -23,7 +23,7 @@ value|x
 end_define
 
 begin_comment
-comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * Most important Changes:  *  * 000601: WF2Q+ support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
+comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by splimp()/splx()  *    pairs. One would think that splnet() is enough as for most of  *    the netinet code, but it is not so because when used with  *    bridging, dummynet is invoked at splimp().  *  * Most important Changes:  *  * 010122: Fixed spl protection.  * 000601: WF2Q+ support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
 
 begin_include
@@ -3161,10 +3161,10 @@ expr_stmt|;
 comment|/* delay line */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* avoid network interrupts... */
+comment|/* see note on top, splnet() is not enough */
 name|curr_time
 operator|++
 expr_stmt|;
@@ -4865,7 +4865,6 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* XXX might be unnecessary, we are already at splnet() */
 name|pipe_nr
 operator|&=
 literal|0xffff
@@ -5961,7 +5960,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* remove all references to pipes ...*/
@@ -7334,7 +7333,7 @@ return|;
 block|}
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|x
@@ -7608,7 +7607,7 @@ return|;
 block|}
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|x
@@ -8107,7 +8106,7 @@ return|;
 comment|/* not found */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* unlink from list of pipes */
@@ -8343,7 +8342,7 @@ return|;
 comment|/* not found */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
@@ -8730,10 +8729,9 @@ literal|0
 decl_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* to avoid thing change while we work! */
 comment|/*      * compute size of data structures: list of pipes and flow_sets.      */
 for|for
 control|(
@@ -9375,7 +9373,7 @@ name|MOD_LOAD
 case|:
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|old_dn_ctl_ptr
@@ -9396,7 +9394,7 @@ name|MOD_UNLOAD
 case|:
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|ip_dn_ctl_ptr
