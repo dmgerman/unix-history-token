@@ -2054,7 +2054,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"code segment		= base 0x%lx, limit 0x%x, type 0x%x\n"
+literal|"code segment		= base 0x%lx, limit 0x%lx, type 0x%x\n"
 argument_list|,
 name|softseg
 operator|.
