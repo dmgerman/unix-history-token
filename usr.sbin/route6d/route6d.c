@@ -12675,7 +12675,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	if (flags& f) { \ 		if (buf[0]) \ 			strlcat(buf, ",", sizeof(buf)); \ 		strlcat(buf, s, sizeof(buf)); \ 	} \ } while (0)
+value|do { \ 	if (flags& (f)) { \ 		if (buf[0]) \ 			strlcat(buf, ",", sizeof(buf)); \ 		strlcat(buf, (s), sizeof(buf)); \ 	} \ } while (0)
 name|IFFLAG
 argument_list|(
 literal|"UP"
