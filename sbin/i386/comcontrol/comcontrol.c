@@ -103,17 +103,9 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|argc
 operator|<
 literal|2
-operator|)
-operator|||
-operator|(
-name|argc
-operator|>
-literal|5
-operator|)
 condition|)
 name|usage
 argument_list|(
