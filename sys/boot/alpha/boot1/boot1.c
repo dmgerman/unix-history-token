@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -453,6 +459,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|devclose
 parameter_list|()
@@ -477,6 +484,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|getfilename
 parameter_list|(
@@ -588,6 +596,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|loadfile
 parameter_list|(
