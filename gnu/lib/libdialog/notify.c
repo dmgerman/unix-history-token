@@ -73,7 +73,7 @@ argument_list|(
 literal|"Press enter to continue"
 argument_list|)
 expr_stmt|;
-name|dialog_msgbox
+name|dialog_mesgbox
 argument_list|(
 literal|"Message"
 argument_list|,
