@@ -154,15 +154,9 @@ name|hose
 index|]
 operator|)
 operator|+
-operator|(
-name|tsunami_num_pchips
-operator|-
 literal|1
 operator|)
-operator|)
 return|;
-comment|/* XXX */
-comment|/*  	 * XXX (tsunami_num_pchips - 1) is a just a guess! 	 * 	 * I assume that a ppb in a ds10 will get bus 1 	 * if it is assigned bus 2, then replace  	 * (tsunami_num_pchips - 1) with 1. 	 */
 block|}
 end_function
 
