@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.2 (Berkeley) %G%"
+literal|"@(#)tape.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,13 +28,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"dump.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|"dump.h"
 end_include
 
 begin_expr_stmt
@@ -90,17 +90,38 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|tenths
+name|read
+argument_list|()
+decl_stmt|,
+name|write
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* length of tape used per block written */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RDUMP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|RDUMP
+end_endif
 
 begin_comment
-comment|/*  * Concurrent dump mods (Caltech) - disk block reading and tape writing  * are exported to several slave processes.  While one slave writes the  * tape, the others read disk blocks; they pass control of the tape in  * a ring via flock().	The parent process traverses the filesystem and  * sends spclrec()'s and lists of daddr's to each slave via pipes.  *  * from "@(#)dumptape.c 2.1 (Berkeley+Caltech mods) 4/7/85";  */
+comment|/*  * Concurrent dump mods (Caltech) - disk block reading and tape writing  * are exported to several slave processes.  While one slave writes the  * tape, the others read disk blocks; they pass control of the tape in  * a ring via flock().	The parent process traverses the filesystem and  * sends spclrec()'s and lists of daddr's to the slaves via pipes.  */
 end_comment
 
 begin_struct
@@ -139,15 +160,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|slavepid
-index|[
-name|SLAVES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|slavefd
 index|[
 name|SLAVES
@@ -156,7 +168,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pipes from master to each slave */
+comment|/* pipes from master to each slave */
+end_comment
+
+begin_decl_stmt
+name|int
+name|slavepid
+index|[
+name|SLAVES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used by killall() */
 end_comment
 
 begin_decl_stmt
@@ -166,7 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Current slave number */
+comment|/* next slave to be instructed */
 end_comment
 
 begin_decl_stmt
@@ -176,30 +201,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pid of master, for sending error signals */
+comment|/* pid of master, for sending error signals */
 end_comment
 
 begin_decl_stmt
 name|int
-name|trace
-init|=
-literal|0
+name|tenths
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Protocol trace; easily patchable with adb */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tmsg
-value|if (trace) msg
-end_define
-
-begin_comment
-comment|/* /* Allocate tape buffer contiguous with the array of instruction  * packets, so flusht() can write them together with one write().  * Align tape buffer on page boundary to speed up tape write().  */
+comment|/* length of tape used per block written */
 end_comment
 
 begin_macro
@@ -223,7 +235,17 @@ name|ntrec
 operator|*
 name|TP_BSIZE
 expr_stmt|;
-comment|/* 	 * 92185 NEEDS 0.4"; 92181 NEEDS 0.8" to start/stop (see TU80 manual) 	 */
+name|reqsiz
+operator|=
+name|ntrec
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|req
+argument_list|)
+expr_stmt|;
+comment|/* 	 * CDC 92181's and 92185's make 0.8" gaps in 1600-bpi start/stop mode 	 * (see DEC TU80 User's Guide).  The shorter gaps of 6250-bpi require 	 * repositioning after stopping, i.e, streaming mode, where the gap is 	 * variable, 0.30" to 0.45".  The gap is maximal when the tape stops. 	 */
 name|tenths
 operator|=
 name|writesize
@@ -239,21 +261,12 @@ name|density
 operator|==
 literal|625
 condition|?
-literal|4
+literal|5
 else|:
 literal|8
 operator|)
 expr_stmt|;
-name|reqsiz
-operator|=
-name|ntrec
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|req
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Allocate tape buffer contiguous with the array of instruction 	 * packets, so flusht() can write them together with one write(). 	 * Align tape buffer on page boundary to speed up tape write(). 	 */
 name|req
 operator|=
 operator|(
@@ -318,17 +331,9 @@ name|req
 operator|*
 operator|)
 name|tblock
-expr_stmt|;
-name|req
-operator|=
-operator|&
-name|req
-index|[
 operator|-
 name|ntrec
-index|]
 expr_stmt|;
-comment|/* Cmd packets go in front of tape buffer */
 return|return
 operator|(
 literal|1
@@ -336,10 +341,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Make copy of spclrec, to later send to tape writer.  */
-end_comment
 
 begin_macro
 name|taprec
@@ -357,13 +358,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|tmsg
-argument_list|(
-literal|"taprec %d\n"
-argument_list|,
-name|trecno
-argument_list|)
-expr_stmt|;
 name|req
 index|[
 name|trecno
@@ -450,13 +444,11 @@ end_decl_stmt
 begin_block
 block|{
 name|int
+name|avail
+decl_stmt|,
 name|tpblks
 decl_stmt|,
 name|dblkno
-decl_stmt|;
-specifier|register
-name|int
-name|avail
 decl_stmt|;
 name|dblkno
 operator|=
@@ -491,13 +483,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|tmsg
-argument_list|(
-literal|"dmpblk %d\n"
-argument_list|,
-name|avail
-argument_list|)
-expr_stmt|;
 name|req
 index|[
 name|trecno
@@ -516,6 +501,10 @@ name|count
 operator|=
 name|avail
 expr_stmt|;
+name|trecno
+operator|+=
+name|avail
+expr_stmt|;
 name|spcl
 operator|.
 name|c_tapea
@@ -524,11 +513,7 @@ name|avail
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|trecno
-operator|+=
-name|avail
-operator|)
 operator|>=
 name|ntrec
 condition|)
@@ -592,7 +577,11 @@ comment|/* NOTREACHED */
 block|}
 name|msg
 argument_list|(
-literal|"Tape write error on tape %d\n"
+literal|"Tape write error %d feet into tape %d\n"
+argument_list|,
+name|asize
+operator|/
+literal|120L
 argument_list|,
 name|tapeno
 argument_list|)
@@ -646,30 +635,49 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|sigpipe
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|msg
+argument_list|(
+literal|"Broken pipe\n"
+argument_list|)
+expr_stmt|;
+name|dumpabort
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|RDUMP
 end_ifdef
 
+begin_comment
+comment|/*  * compatibility routine  */
+end_comment
+
 begin_macro
 name|tflush
 argument_list|(
-argument|cnt
+argument|i
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|cnt
+name|i
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -703,8 +711,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|sig
-decl_stmt|,
 name|siz
 init|=
 operator|(
@@ -719,29 +725,12 @@ operator|*
 operator|)
 name|req
 decl_stmt|;
-name|tmsg
-argument_list|(
-literal|"flusht %d\n"
-argument_list|,
-name|siz
-argument_list|)
-expr_stmt|;
-name|sig
-operator|=
-name|sigblock
-argument_list|(
-literal|1
-operator|<<
-name|SIGINT
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Don't abort pipe write */
 if|if
 condition|(
-name|write
+name|atomic
 argument_list|(
+name|write
+argument_list|,
 name|slavefd
 index|[
 name|rotor
@@ -757,18 +746,13 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"  DUMP: pipe error in command to slave"
+literal|"  DUMP: error writing command pipe"
 argument_list|)
 expr_stmt|;
 name|dumpabort
 argument_list|()
 expr_stmt|;
 block|}
-name|sigsetmask
-argument_list|(
-name|sig
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -887,6 +871,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RDUMP
+if|if
+condition|(
+name|host
+condition|)
+block|{
 name|rmtclose
 argument_list|()
 expr_stmt|;
@@ -909,8 +898,11 @@ expr_stmt|;
 name|rmtclose
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
+return|return;
+block|}
+endif|#
+directive|endif
+endif|RDUMP
 name|close
 argument_list|(
 name|to
@@ -941,9 +933,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|RDUMP
 block|}
 end_block
 
@@ -993,9 +982,12 @@ argument_list|(
 literal|"Do you want to abort?"
 argument_list|)
 condition|)
+block|{
 name|dumpabort
 argument_list|()
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 block|}
 end_block
 
@@ -1028,6 +1020,13 @@ modifier|*
 name|interrupt
 function_decl|)
 parameter_list|()
+init|=
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
 function_decl|;
 name|parentpid
 operator|=
@@ -1036,15 +1035,14 @@ argument_list|()
 expr_stmt|;
 name|restore_check_point
 label|:
-name|interrupt
-operator|=
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|SIG_IGN
+name|interrupt
 argument_list|)
 expr_stmt|;
+comment|/* 	 *	All signals are inherited... 	 */
 name|childpid
 operator|=
 name|fork
@@ -1078,6 +1076,13 @@ literal|0
 condition|)
 block|{
 comment|/* 		 *	PARENT: 		 *	save the context by waiting 		 *	until the child doing all of the work returns. 		 *	don't catch the interrupt 		 */
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TDEBUG
@@ -1278,13 +1283,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|interrupt
-argument_list|)
-expr_stmt|;
+endif|TDEBUG
 ifdef|#
 directive|ifdef
 name|RDUMP
@@ -1293,18 +1292,34 @@ condition|(
 operator|(
 name|to
 operator|=
+operator|(
+name|host
+condition|?
 name|rmtopen
 argument_list|(
 name|tape
 argument_list|,
 literal|2
 argument_list|)
+else|:
+name|pipeout
+condition|?
+literal|1
+else|:
+name|creat
+argument_list|(
+name|tape
+argument_list|,
+literal|0666
+argument_list|)
+operator|)
 operator|)
 operator|<
 literal|0
 condition|)
 else|#
 directive|else
+else|RDUMP
 while|while
 condition|(
 operator|(
@@ -1409,9 +1424,10 @@ name|kill
 argument_list|(
 name|master
 argument_list|,
-name|SIGPIPE
+name|SIGTERM
 argument_list|)
 expr_stmt|;
+comment|/* Signals master to call dumpabort */
 else|else
 block|{
 name|killall
@@ -1465,7 +1481,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * prefer pipe(), but flock() barfs on them  */
+comment|/*  * could use pipe() for this if flock() worked on pipes  */
 end_comment
 
 begin_macro
@@ -1609,20 +1625,27 @@ argument_list|()
 expr_stmt|;
 name|signal
 argument_list|(
-name|SIGPIPE
+name|SIGTERM
 argument_list|,
 name|dumpabort
 argument_list|)
 expr_stmt|;
-comment|/* Slave quit/died/killed -> abort */
+comment|/* Slave sends SIGTERM on dumpabort() */
 name|signal
 argument_list|(
-name|SIGIOT
+name|SIGPIPE
+argument_list|,
+name|sigpipe
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGUSR1
 argument_list|,
 name|tperror
 argument_list|)
 expr_stmt|;
-comment|/* SIGIOT -> restart from checkpoint */
+comment|/* Slave sends SIGUSR1 on tape errors */
 name|lockfile
 argument_list|(
 name|first
@@ -1819,18 +1842,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-comment|/* Master handles these */
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
+comment|/* Master handles this */
 name|doslave
 argument_list|(
-name|i
-argument_list|,
 name|cmd
 index|[
 literal|0
@@ -1957,56 +1971,41 @@ begin_comment
 comment|/*  * Synchronization - each process has a lockfile, and shares file  * descriptors to the following process's lockfile.  When our write  * completes, we release our lock on the following process's lock-  * file, allowing the following process to lock it and proceed. We  * get the lock back for the next cycle by swapping descriptors.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|doslave
 argument_list|(
-argument|mynum
-argument_list|,
-argument|cmd
-argument_list|,
-argument|prev
-argument_list|,
-argument|next
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|mynum
-decl_stmt|,
 name|cmd
-decl_stmt|,
+argument_list|,
+name|prev
+argument_list|,
+name|next
+argument_list|)
+specifier|register
+name|int
+name|cmd
+operator|,
 name|prev
 index|[
 literal|2
 index|]
-decl_stmt|,
+operator|,
 name|next
 index|[
 literal|2
 index|]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
 specifier|register
 name|int
+name|nread
+decl_stmt|,
 name|toggle
 init|=
 literal|0
-decl_stmt|,
-name|firstdone
-init|=
-name|mynum
 decl_stmt|;
-name|tmsg
-argument_list|(
-literal|"slave %d\n"
-argument_list|,
-name|mynum
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|fi
@@ -2034,33 +2033,29 @@ argument_list|(
 literal|"  DUMP: slave couldn't reopen disk"
 argument_list|)
 expr_stmt|;
-name|kill
-argument_list|(
-name|master
-argument_list|,
-name|SIGPIPE
-argument_list|)
-expr_stmt|;
-comment|/* dumpabort */
-name|Exit
-argument_list|(
-name|X_ABORT
-argument_list|)
+name|dumpabort
+argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Get list of blocks to dump 	 */
+comment|/* 	 * Get list of blocks to dump, read the blocks into tape buffer 	 */
 while|while
 condition|(
-name|readpipe
+operator|(
+name|nread
+operator|=
+name|atomic
 argument_list|(
+name|read
+argument_list|,
 name|cmd
 argument_list|,
 name|req
 argument_list|,
 name|reqsiz
 argument_list|)
-operator|>
-literal|0
+operator|)
+operator|==
+name|reqsiz
 condition|)
 block|{
 specifier|register
@@ -2101,17 +2096,6 @@ operator|->
 name|dblk
 condition|)
 block|{
-name|tmsg
-argument_list|(
-literal|"%d READS %d\n"
-argument_list|,
-name|mynum
-argument_list|,
-name|p
-operator|->
-name|count
-argument_list|)
-expr_stmt|;
 name|bread
 argument_list|(
 name|p
@@ -2133,17 +2117,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|tmsg
-argument_list|(
-literal|"%d PIPEIN %d\n"
-argument_list|,
-name|mynum
-argument_list|,
-name|p
-operator|->
-name|count
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2152,8 +2125,10 @@ name|count
 operator|!=
 literal|1
 operator|||
-name|readpipe
+name|atomic
 argument_list|(
+name|read
+argument_list|,
 name|cmd
 argument_list|,
 name|tblock
@@ -2163,8 +2138,8 @@ index|]
 argument_list|,
 name|TP_BSIZE
 argument_list|)
-operator|<=
-literal|0
+operator|!=
+name|TP_BSIZE
 condition|)
 block|{
 name|msg
@@ -2189,64 +2164,14 @@ name|LOCK_EX
 argument_list|)
 expr_stmt|;
 comment|/* Wait our turn */
-name|tmsg
-argument_list|(
-literal|"%d WRITE\n"
-argument_list|,
-name|mynum
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RDUMP
-ifndef|#
-directive|ifndef
-name|sun
-comment|/* Defer checking first write until next one is started */
-name|rmtwrite0
-argument_list|(
-name|writesize
-argument_list|)
-expr_stmt|;
-name|rmtwrite1
-argument_list|(
-name|tblock
-index|[
-literal|0
-index|]
-argument_list|,
-name|writesize
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|firstdone
-operator|==
-literal|0
-condition|)
-name|firstdone
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|rmtwrite2
-argument_list|()
-operator|!=
-name|writesize
-condition|)
-block|{
-name|rmtwrite2
-argument_list|()
-expr_stmt|;
-comment|/* Don't care if another err */
-else|#
-directive|else
-comment|/* Asynchronous writes can hang Suns; do it synchronously */
-if|if
-condition|(
+operator|(
+name|host
+condition|?
 name|rmtwrite
 argument_list|(
 name|tblock
@@ -2256,16 +2181,26 @@ index|]
 argument_list|,
 name|writesize
 argument_list|)
+else|:
+name|write
+argument_list|(
+name|to
+argument_list|,
+name|tblock
+index|[
+literal|0
+index|]
+argument_list|,
+name|writesize
+argument_list|)
+operator|)
 operator|!=
 name|writesize
 condition|)
 block|{
-endif|#
-directive|endif
-endif|sun
 else|#
 directive|else
-comment|/* Local tape drive */
+else|RDUMP
 if|if
 condition|(
 name|write
@@ -2283,11 +2218,6 @@ operator|!=
 name|writesize
 condition|)
 block|{
-name|perror
-argument_list|(
-name|tape
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 endif|RDUMP
@@ -2295,10 +2225,9 @@ name|kill
 argument_list|(
 name|master
 argument_list|,
-name|SIGIOT
+name|SIGUSR1
 argument_list|)
 expr_stmt|;
-comment|/* restart from checkpoint */
 for|for
 control|(
 init|;
@@ -2327,172 +2256,100 @@ expr_stmt|;
 comment|/* Next slave's turn */
 block|}
 comment|/* Also jolts him awake */
-ifdef|#
-directive|ifdef
-name|RDUMP
-comment|/* One more time around, to check last write */
-ifndef|#
-directive|ifndef
-name|sun
-name|flock
-argument_list|(
-name|prev
-index|[
-name|toggle
-index|]
-argument_list|,
-name|LOCK_EX
-argument_list|)
-expr_stmt|;
-name|tmsg
-argument_list|(
-literal|"%d LAST\n"
-argument_list|,
-name|mynum
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|firstdone
-operator|<
-literal|0
-operator|&&
-name|rmtwrite2
-argument_list|()
+name|nread
 operator|!=
-name|writesize
-condition|)
-block|{
-name|kill
-argument_list|(
-name|master
-argument_list|,
-name|SIGIOT
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-name|sigpause
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|toggle
-operator|^=
-literal|1
-expr_stmt|;
-name|flock
-argument_list|(
-name|next
-index|[
-name|toggle
-index|]
-argument_list|,
-name|LOCK_UN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|sun
-endif|#
-directive|endif
-endif|RDUMP
-block|}
-comment|/*  * Since a read from a pipe may not return all we asked for  * we must loop until we get all we need  */
-name|readpipe
-argument_list|(
-argument|fd
-argument_list|,
-argument|buf
-argument_list|,
-argument|cnt
-argument_list|)
-name|int
-name|fd
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|int
-name|cnt
-decl_stmt|;
-block|{
-name|int
-name|rd
-decl_stmt|,
-name|got
-decl_stmt|;
-for|for
-control|(
-name|rd
-operator|=
-name|cnt
-init|;
-name|rd
-operator|>
-literal|0
-condition|;
-name|rd
-operator|-=
-name|got
-control|)
-block|{
-name|got
-operator|=
-name|read
-argument_list|(
-name|fd
-argument_list|,
-name|buf
-argument_list|,
-name|rd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|got
-operator|<=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|rd
-operator|==
-name|cnt
-operator|&&
-name|got
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Normal EOF */
-name|msg
+name|perror
 argument_list|(
-literal|"short pipe read"
+literal|"  DUMP: error reading command pipe"
 argument_list|)
 expr_stmt|;
 name|dumpabort
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+comment|/*  * Since a read from a pipe may not return all we asked for,  * or a write may not write all we ask if we get a signal,  * loop until the count is satisfied (or error).  */
+name|atomic
+argument_list|(
+argument|func
+argument_list|,
+argument|fd
+argument_list|,
+argument|buf
+argument_list|,
+argument|count
+argument_list|)
+name|int
+argument_list|(
+operator|*
+name|func
+argument_list|)
+argument_list|()
+decl_stmt|,
+name|fd
+decl_stmt|,
+name|count
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+block|{
+name|int
+name|got
+decl_stmt|,
+name|need
+init|=
+name|count
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|got
+operator|=
+call|(
+modifier|*
+name|func
+call|)
+argument_list|(
+name|fd
+argument_list|,
+name|buf
+argument_list|,
+name|need
+argument_list|)
+operator|)
+operator|>
+literal|0
+operator|&&
+operator|(
+name|need
+operator|-=
+name|got
+operator|)
+operator|>
+literal|0
+condition|)
 name|buf
 operator|+=
 name|got
 expr_stmt|;
-block|}
 return|return
 operator|(
-name|cnt
+name|got
+operator|<
+literal|0
+condition|?
+name|got
+else|:
+name|count
+operator|-
+name|need
 operator|)
 return|;
 block|}
