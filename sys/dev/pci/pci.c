@@ -8504,6 +8504,16 @@ operator|!=
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|PCI_POWERSTATE_D0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"pci%d:%d:%d: setting power state D0\n"
@@ -8534,6 +8544,7 @@ argument_list|,
 name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -8912,13 +8923,16 @@ operator|!=
 name|PCIC_MEMORY
 condition|)
 block|{
-name|pci_set_powerstate
+if|if
+condition|(
+name|pci_get_powerstate
 argument_list|(
 name|dev
-argument_list|,
-name|PCI_POWERSTATE_D3
 argument_list|)
-expr_stmt|;
+operator|!=
+name|PCI_POWERSTATE_D3
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"pci%d:%d:%d: setting power state D3\n"
@@ -8942,6 +8956,14 @@ operator|.
 name|func
 argument_list|)
 expr_stmt|;
+name|pci_set_powerstate
+argument_list|(
+name|dev
+argument_list|,
+name|PCI_POWERSTATE_D3
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
