@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.27 (Berkeley) %G%"
+literal|"@(#)df.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,26 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
+name|getbsize
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
 name|getmntpt
 name|__P
 argument_list|(
@@ -184,8 +204,6 @@ begin_decl_stmt
 name|int
 name|iflag
 decl_stmt|,
-name|kflag
-decl_stmt|,
 name|nflag
 decl_stmt|;
 end_decl_stmt
@@ -210,8 +228,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|struct
@@ -276,9 +294,16 @@ break|break;
 case|case
 literal|'k'
 case|:
-name|kflag
-operator|=
-literal|1
+comment|/* Delete before 4.4BSD. */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"df: -k no longer supported\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -848,16 +873,25 @@ name|long
 name|maxwidth
 decl_stmt|;
 block|{
+specifier|static
+name|int
+name|blocksize
+decl_stmt|,
+name|headerlen
+decl_stmt|,
+name|timesthrough
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|header
+decl_stmt|;
 name|long
 name|used
 decl_stmt|,
 name|availblks
 decl_stmt|,
 name|inodes
-decl_stmt|;
-specifier|static
-name|int
-name|timesthrough
 decl_stmt|;
 if|if
 condition|(
@@ -877,9 +911,25 @@ operator|==
 literal|1
 condition|)
 block|{
+name|header
+operator|=
+name|getbsize
+argument_list|(
+literal|"df"
+argument_list|,
+operator|&
+name|headerlen
+argument_list|,
+operator|&
+name|blocksize
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%-*.*s%s    Used   Avail Capacity"
+literal|"%-*.*s %s    Used   Avail Capacity"
 argument_list|,
 name|maxwidth
 argument_list|,
@@ -887,28 +937,33 @@ name|maxwidth
 argument_list|,
 literal|"Filesystem"
 argument_list|,
-name|kflag
-condition|?
-literal|"1024-blocks"
-else|:
-literal|" 512-blocks"
+name|header
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|iflag
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" iused   ifree  %%iused"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"  Mounted on\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%-*.*s"
@@ -940,9 +995,14 @@ name|f_bavail
 operator|+
 name|used
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"   %8ld%8ld%8ld"
+literal|" %*ld%8ld%8ld"
+argument_list|,
+name|headerlen
 argument_list|,
 name|sfsp
 operator|->
@@ -952,13 +1012,7 @@ name|sfsp
 operator|->
 name|f_bsize
 operator|/
-operator|(
-name|kflag
-condition|?
-literal|1024
-else|:
-literal|512
-operator|)
+name|blocksize
 argument_list|,
 name|used
 operator|*
@@ -966,13 +1020,7 @@ name|sfsp
 operator|->
 name|f_bsize
 operator|/
-operator|(
-name|kflag
-condition|?
-literal|1024
-else|:
-literal|512
-operator|)
+name|blocksize
 argument_list|,
 name|sfsp
 operator|->
@@ -982,15 +1030,12 @@ name|sfsp
 operator|->
 name|f_bsize
 operator|/
-operator|(
-name|kflag
-condition|?
-literal|1024
-else|:
-literal|512
-operator|)
+name|blocksize
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%6.0f%%"
@@ -1033,6 +1078,9 @@ name|sfsp
 operator|->
 name|f_ffree
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%8ld%8ld%6.0f%% "
@@ -1064,11 +1112,17 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"  "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"  %s\n"
@@ -1150,10 +1204,6 @@ name|long
 name|maxwidth
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|struct
 name|statfs
 name|statfsbuf
@@ -1198,6 +1248,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1534,6 +1587,9 @@ operator|!=
 name|EIO
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\nread error off = %ld\n"
@@ -1541,13 +1597,19 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"count = %d; errno = %d\n"
+literal|"count = %d: %s\n"
 argument_list|,
 name|n
 argument_list|,
+name|strerror
+argument_list|(
 name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1577,7 +1639,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-ikn] [file | file_system ...]\n"
+literal|"usage: df [-in] [file | file_system ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

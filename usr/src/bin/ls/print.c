@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.31 (Berkeley) %G%"
+literal|"@(#)print.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,16 +348,12 @@ name|printf
 argument_list|(
 literal|"total %lu\n"
 argument_list|,
-name|f_kblocks
-condition|?
 name|howmany
 argument_list|(
 name|btotal
 argument_list|,
-literal|2
+name|blocksize
 argument_list|)
-else|:
-name|btotal
 argument_list|)
 expr_stmt|;
 for|for
@@ -416,20 +412,14 @@ name|printf
 argument_list|(
 literal|"%4ld "
 argument_list|,
-name|f_kblocks
-condition|?
 name|howmany
 argument_list|(
 name|sp
 operator|->
 name|st_blocks
 argument_list|,
-literal|2
+name|blocksize
 argument_list|)
-else|:
-name|sp
-operator|->
-name|st_blocks
 argument_list|)
 expr_stmt|;
 operator|(
@@ -924,16 +914,12 @@ name|printf
 argument_list|(
 literal|"total %lu\n"
 argument_list|,
-name|f_kblocks
-condition|?
 name|howmany
 argument_list|(
 name|btotal
 argument_list|,
-literal|2
+name|blocksize
 argument_list|)
-else|:
-name|btotal
 argument_list|)
 expr_stmt|;
 for|for
@@ -1107,20 +1093,14 @@ name|printf
 argument_list|(
 literal|"%4ld "
 argument_list|,
-name|f_kblocks
-condition|?
 name|howmany
 argument_list|(
 name|sp
 operator|->
 name|st_blocks
 argument_list|,
-literal|2
+name|blocksize
 argument_list|)
-else|:
-name|sp
-operator|->
-name|st_blocks
 argument_list|)
 expr_stmt|;
 name|chcnt

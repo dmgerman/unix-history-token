@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  *  * %sccs.include.redist.c%  *  *	@(#)ls.h	5.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  *  * %sccs.include.redist.c%  *  *	@(#)ls.h	5.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -20,6 +20,17 @@ directive|define
 name|NO_PRINT
 value|1
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|blocksize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* block size units */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -63,17 +74,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* print inode */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|f_kblocks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print size in kilobytes */
 end_comment
 
 begin_decl_stmt

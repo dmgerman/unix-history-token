@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.59 (Berkeley) %G%"
+literal|"@(#)ls.c	5.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,6 +141,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|getbsize
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|mastercmp
 name|__P
@@ -233,6 +253,16 @@ begin_comment
 comment|/* default terminal width */
 end_comment
 
+begin_decl_stmt
+name|int
+name|blocksize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* block size units */
+end_comment
+
 begin_comment
 comment|/* flags */
 end_comment
@@ -285,16 +315,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* print inode */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_kblocks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print size in kilobytes */
 end_comment
 
 begin_decl_stmt
@@ -489,6 +509,8 @@ name|int
 name|ch
 decl_stmt|,
 name|fts_options
+decl_stmt|,
+name|notused
 decl_stmt|;
 name|char
 modifier|*
@@ -758,9 +780,16 @@ break|break;
 case|case
 literal|'k'
 case|:
-name|f_kblocks
-operator|=
-literal|1
+comment|/* Delete before 4.4BSD. */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ls: -k no longer supported\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -866,6 +895,33 @@ name|fts_options
 operator||=
 name|FTS_COMFOLLOW
 expr_stmt|;
+comment|/* If -l or -s, figure out block size. */
+if|if
+condition|(
+name|f_longform
+operator|||
+name|f_size
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|getbsize
+argument_list|(
+literal|"ls"
+argument_list|,
+operator|&
+name|notused
+argument_list|,
+operator|&
+name|blocksize
+argument_list|)
+expr_stmt|;
+name|blocksize
+operator|/=
+literal|512
+expr_stmt|;
+block|}
 comment|/* Select a sort function. */
 if|if
 condition|(
