@@ -2981,7 +2981,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|mtx
+name|pcn_mtx
 argument_list|)
 operator|!=
 literal|0
