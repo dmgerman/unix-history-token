@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chgrp.c	5.7 (Berkeley) %G%"
+literal|"@(#)chgrp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,12 +542,6 @@ name|argv
 index|[
 name|c
 index|]
-argument_list|,
-name|stbuf
-operator|.
-name|st_uid
-argument_list|,
-name|gid
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -642,10 +636,6 @@ begin_macro
 name|chownr
 argument_list|(
 argument|dir
-argument_list|,
-argument|uid
-argument_list|,
-argument|gid
 argument_list|)
 end_macro
 
@@ -887,12 +877,6 @@ argument_list|(
 name|dp
 operator|->
 name|d_name
-argument_list|,
-name|st
-operator|.
-name|st_uid
-argument_list|,
-name|gid
 argument_list|)
 expr_stmt|;
 if|if
