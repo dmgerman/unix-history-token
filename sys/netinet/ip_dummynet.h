@@ -621,7 +621,7 @@ comment|/*      * When the tx clock come from an interface (if_name[0] != '\0'),
 name|char
 name|if_name
 index|[
-literal|16
+name|IFNAMSIZ
 index|]
 decl_stmt|;
 name|struct
