@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)talkd.c	5.5 (Berkeley) %G%"
+literal|"@(#)talkd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -400,6 +400,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|mp
 operator|->
