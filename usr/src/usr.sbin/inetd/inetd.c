@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  * connection-oriented services are invoked each time a  * connection is made, by creating a process.  This process  * is passed the connection as file descriptor 0 and is  * expected to do a getpeername to find out the source host  * and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.   *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must being with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	server program			full path name  *	server program arguments	maximum of MAXARGS (5)  *  * Comment lines are indicated by a `#' in column 1.  */
+comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  * connection-oriented services are invoked each time a  * connection is made, by creating a process.  This process  * is passed the connection as file descriptor 0 and is  * expected to do a getpeername to find out the source host  * and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.   *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must being with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (5)  *  * Comment lines are indicated by a `#' in column 1.  */
 end_comment
 
 begin_include
@@ -100,6 +100,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_decl_stmt
@@ -188,6 +194,11 @@ decl_stmt|;
 comment|/* looked at during merge */
 name|char
 modifier|*
+name|se_user
+decl_stmt|;
+comment|/* user name to run as */
+name|char
+modifier|*
 name|se_server
 decl_stmt|;
 comment|/* server program */
@@ -258,6 +269,12 @@ name|struct
 name|servtab
 modifier|*
 name|sep
+decl_stmt|;
+specifier|register
+name|struct
+name|passwd
+modifier|*
+name|pwd
 decl_stmt|;
 name|char
 modifier|*
@@ -830,6 +847,70 @@ control|)
 name|close
 argument_list|(
 name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pwd
+operator|=
+name|getpwnam
+argument_list|(
+name|sep
+operator|->
+name|se_user
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"getpwnam: %s: No such user"
+argument_list|,
+name|sep
+operator|->
+name|se_user
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|pwd
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
+name|initgroups
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|,
+name|pwd
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|pwd
+operator|->
+name|pw_uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2072,6 +2153,19 @@ literal|"wait"
 argument_list|)
 operator|==
 literal|0
+expr_stmt|;
+name|sep
+operator|->
+name|se_user
+operator|=
+name|strdup
+argument_list|(
+name|skip
+argument_list|(
+operator|&
+name|cp
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|sep
 operator|->
