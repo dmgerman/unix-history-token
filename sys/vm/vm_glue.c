@@ -1049,12 +1049,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|mtx_assert
+name|PROC_LOCK_ASSERT
 argument_list|(
-operator|&
 name|p
-operator|->
-name|p_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1199,6 +1196,8 @@ operator|&
 name|Giant
 argument_list|,
 name|MA_OWNED
+operator||
+name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
 name|loop
@@ -1215,6 +1214,12 @@ goto|goto
 name|loop
 goto|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|pp
 operator|=
 name|NULL
@@ -1354,6 +1359,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
@@ -1378,6 +1389,12 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We would like to bring someone in. (only if there is space). 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1811,12 +1828,6 @@ name|vm_map
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If the process has been asleep for awhile and had 			 * most of its pages taken away already, swap it out. 			 */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1842,12 +1853,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|swapout
 argument_list|(
 name|p
@@ -1865,13 +1870,6 @@ goto|goto
 name|retry
 goto|;
 block|}
-else|else
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|sx_sunlock
@@ -1948,12 +1946,6 @@ operator|->
 name|p_vmspace
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1991,12 +1983,6 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
 expr_stmt|;
 name|pmap_swapout_proc
 argument_list|(
