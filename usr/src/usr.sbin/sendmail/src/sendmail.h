@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.52.1.1	%G%"
+literal|"@(#)sendmail.h	3.53	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,6 +240,11 @@ modifier|*
 name|q_home
 decl_stmt|;
 comment|/* home dir (local mailer only) */
+name|char
+modifier|*
+name|q_fullname
+decl_stmt|;
+comment|/* full name if known */
 name|char
 modifier|*
 name|q_fullname

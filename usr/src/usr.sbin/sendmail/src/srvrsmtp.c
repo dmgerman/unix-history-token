@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.8.1.1	%G%"
+literal|"@(#)srvrsmtp.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,29 +759,6 @@ case|case
 name|CMDVRFY
 case|:
 comment|/* vrfy -- verify address */
-name|a
-operator|=
-name|sendto
-argument_list|(
-name|p
-argument_list|,
-literal|1
-argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|QPSEUDO
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Errors
-operator|==
-literal|0
-condition|)
 name|paddrtree
 argument_list|(
 name|a

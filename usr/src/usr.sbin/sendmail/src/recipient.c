@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.28.1.1	%G%"
+literal|"@(#)recipient.c	3.29	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1296,6 +1296,12 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+name|char
+name|nbuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1365,6 +1371,37 @@ operator|->
 name|q_flags
 operator||=
 name|QGOODUID
+expr_stmt|;
+name|buildfname
+argument_list|(
+name|pw
+operator|->
+name|pw_gecos
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|nbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nbuf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|a
+operator|->
+name|q_fullname
+operator|=
+name|newstr
+argument_list|(
+name|nbuf
+argument_list|)
 expr_stmt|;
 name|fullname
 argument_list|(
