@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_divert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/igmp_var.h>
 end_include
 

@@ -188,13 +188,29 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Packets processed by dummynet have an mbuf tag associated with  * them that carries their dummynet state.  This is used within  * the dummynet code as well as outside when checking for special  * processing requirements.  */
+comment|/*  * struct dn_pkt identifies a packet in the dummynet queue, but  * is also used to tag packets passed back to the various destinations  * (ip_input(), ip_output(), bdg_forward()  and so on).  * As such the first part of the structure must be a struct m_hdr,  * followed by dummynet-specific parameters. The m_hdr must be  * initialized with  *   mh_type	= MT_TAG;  *   mh_flags	= PACKET_TYPE_DUMMYNET;  *   mh_next	=<pointer to the actual mbuf>  *  * mh_nextpkt, mh_data are free for dummynet use (mh_nextpkt is used to  * build a linked list of packets in a dummynet queue).  */
 end_comment
 
 begin_struct
 struct|struct
-name|dn_pkt_tag
+name|dn_pkt
 block|{
+name|struct
+name|m_hdr
+name|hdr
+decl_stmt|;
+define|#
+directive|define
+name|DN_NEXT
+parameter_list|(
+name|x
+parameter_list|)
+value|(struct dn_pkt *)(x)->hdr.mh_nextpkt
+define|#
+directive|define
+name|dn_m
+value|hdr.mh_next
+comment|/* packet to be forwarded */
 name|struct
 name|ip_fw
 modifier|*
@@ -284,7 +300,7 @@ name|ipfw_flow_id
 name|id
 decl_stmt|;
 name|struct
-name|mbuf
+name|dn_pkt
 modifier|*
 name|head
 decl_stmt|,
@@ -576,7 +592,7 @@ name|delay
 decl_stmt|;
 comment|/* really, ticks	*/
 name|struct
-name|mbuf
+name|dn_pkt
 modifier|*
 name|head
 decl_stmt|,
@@ -732,57 +748,6 @@ directive|define
 name|DUMMYNET_LOADED
 value|(ip_dn_io_ptr != NULL)
 end_define
-
-begin_comment
-comment|/*  * Return the IPFW rule associated with the dummynet tag; if any.  */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|ip_fw
-operator|*
-name|ip_dn_find_rule
-argument_list|(
-argument|struct mbuf *m
-argument_list|)
-block|{ 	struct
-name|m_tag
-operator|*
-name|mtag
-operator|=
-name|m_tag_find
-argument_list|(
-name|m
-argument_list|,
-name|PACKET_TAG_DUMMYNET
-argument_list|,
-name|NULL
-argument_list|)
-block|;
-return|return
-name|mtag
-condition|?
-operator|(
-operator|(
-expr|struct
-name|dn_pkt_tag
-operator|*
-operator|)
-operator|(
-name|mtag
-operator|+
-literal|1
-operator|)
-operator|)
-operator|->
-name|rule
-else|:
-name|NULL
-return|;
-block|}
-end_expr_stmt
 
 begin_endif
 endif|#

@@ -890,6 +890,10 @@ name|ipfw_flow_id
 name|f_id
 decl_stmt|;
 comment|/* grabbed from IP header	*/
+name|u_int16_t
+name|divert_rule
+decl_stmt|;
+comment|/* divert cookie		*/
 name|u_int32_t
 name|retval
 decl_stmt|;

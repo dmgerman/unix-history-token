@@ -3837,28 +3837,67 @@ name|DDB
 argument_list|(
 argument|quad_t ticks; ticks = rdtsc();
 argument_list|)
-comment|/* did we match a firewall rule ? */
 name|args
 operator|.
 name|rule
 operator|=
-name|ip_dn_find_rule
-argument_list|(
-name|m0
-argument_list|)
+name|NULL
 expr_stmt|;
+comment|/* did we match a firewall rule ? */
+comment|/* Fetch state from dummynet tag, ignore others */
+for|for
+control|(
+init|;
+name|m0
+operator|->
+name|m_type
+operator|==
+name|MT_TAG
+condition|;
+name|m0
+operator|=
+name|m0
+operator|->
+name|m_next
+control|)
 if|if
 condition|(
+name|m0
+operator|->
+name|_m_tag_id
+operator|==
+name|PACKET_TAG_DUMMYNET
+condition|)
+block|{
 name|args
 operator|.
 name|rule
-condition|)
+operator|=
+operator|(
+operator|(
+expr|struct
+name|dn_pkt
+operator|*
+operator|)
+name|m0
+operator|)
+operator|->
+name|rule
+expr_stmt|;
 name|shared
 operator|=
 literal|0
 expr_stmt|;
 comment|/* For sure this is our own mbuf. */
-else|else
+block|}
+if|if
+condition|(
+name|args
+operator|.
+name|rule
+operator|==
+name|NULL
+condition|)
 name|bdg_thru
 operator|++
 expr_stmt|;
@@ -4288,6 +4327,13 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* this is an input packet		*/
+name|args
+operator|.
+name|divert_rule
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we do not support divert yet		*/
 name|args
 operator|.
 name|next_hop
