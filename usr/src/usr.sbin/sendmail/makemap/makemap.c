@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.8 (Berkeley) %G%"
+literal|"@(#)makemap.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,7 +159,7 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|size_t
 name|size
 decl_stmt|;
 block|}
