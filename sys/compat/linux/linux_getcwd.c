@@ -484,6 +484,12 @@ name|cn_consume
 operator|=
 literal|0
 expr_stmt|;
+name|cn
+operator|.
+name|cn_lkflags
+operator|=
+name|LK_EXCLUSIVE
+expr_stmt|;
 comment|/* 	 * At this point, lvp is locked and will be unlocked by the lookup. 	 * On successful return, *uvpp will be locked 	 */
 ifdef|#
 directive|ifdef
