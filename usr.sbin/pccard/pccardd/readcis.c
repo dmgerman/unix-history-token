@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: readcis.c,v 1.12 1998/03/20 04:49:19 hosokawa Exp $"
+literal|"$Id: readcis.c,v 1.6.2.5 1998/04/20 05:41:30 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -961,14 +961,6 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|0xff
-condition|)
-return|return;
 name|strncpy
 argument_list|(
 name|cp
@@ -989,14 +981,6 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|0xff
-condition|)
-return|return;
 name|strncpy
 argument_list|(
 name|cp
@@ -1017,14 +1001,6 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|0xff
-condition|)
-return|return;
 name|strncpy
 argument_list|(
 name|cp
@@ -1045,14 +1021,6 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|0xff
-condition|)
-return|return;
 name|strncpy
 argument_list|(
 name|cp
