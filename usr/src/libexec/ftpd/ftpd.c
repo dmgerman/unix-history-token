@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.9 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3167,10 +3167,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*VARARGS2*/
-end_comment
-
 begin_macro
 name|reply
 argument_list|(
@@ -3178,7 +3174,15 @@ argument|n
 argument_list|,
 argument|s
 argument_list|,
-argument|args
+argument|p0
+argument_list|,
+argument|p1
+argument_list|,
+argument|p2
+argument_list|,
+argument|p3
+argument_list|,
+argument|p4
 argument_list|)
 end_macro
 
@@ -3204,14 +3208,19 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|_doprnt
+name|printf
 argument_list|(
 name|s
 argument_list|,
-operator|&
-name|args
+name|p0
 argument_list|,
-name|stdout
+name|p1
+argument_list|,
+name|p2
+argument_list|,
+name|p3
+argument_list|,
+name|p4
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3247,17 +3256,20 @@ name|LOG_DEBUG
 argument_list|,
 name|s
 argument_list|,
-operator|&
-name|args
+name|p0
+argument_list|,
+name|p1
+argument_list|,
+name|p2
+argument_list|,
+name|p3
+argument_list|,
+name|p4
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/*VARARGS2*/
-end_comment
 
 begin_macro
 name|lreply
@@ -3266,7 +3278,15 @@ argument|n
 argument_list|,
 argument|s
 argument_list|,
-argument|args
+argument|p0
+argument_list|,
+argument|p1
+argument_list|,
+argument|p2
+argument_list|,
+argument|p3
+argument_list|,
+argument|p4
 argument_list|)
 end_macro
 
@@ -3292,14 +3312,19 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|_doprnt
+name|printf
 argument_list|(
 name|s
 argument_list|,
-operator|&
-name|args
+name|p0
 argument_list|,
-name|stdout
+name|p1
+argument_list|,
+name|p2
+argument_list|,
+name|p3
+argument_list|,
+name|p4
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3335,8 +3360,15 @@ name|LOG_DEBUG
 argument_list|,
 name|s
 argument_list|,
-operator|&
-name|args
+name|p0
+argument_list|,
+name|p1
+argument_list|,
+name|p2
+argument_list|,
+name|p3
+argument_list|,
+name|p4
 argument_list|)
 expr_stmt|;
 block|}
