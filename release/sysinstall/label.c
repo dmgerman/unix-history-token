@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.52 1996/07/12 15:24:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.53 1996/07/14 01:54:39 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1342,7 +1342,7 @@ name|i
 decl_stmt|;
 name|WINDOW
 modifier|*
-name|w
+name|save
 init|=
 name|savescr
 argument_list|()
@@ -1364,6 +1364,9 @@ block|,
 literal|"A swap partition."
 block|,     }
 decl_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|i
 operator|=
 name|dialog_menu
@@ -1394,7 +1397,7 @@ argument_list|)
 expr_stmt|;
 name|restorescr
 argument_list|(
-name|w
+name|save
 argument_list|)
 expr_stmt|;
 if|if
@@ -2348,10 +2351,6 @@ modifier|*
 modifier|*
 name|devs
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|w
-decl_stmt|;
 name|devs
 operator|=
 name|deviceFind
@@ -2391,11 +2390,6 @@ name|record_label_chunks
 argument_list|(
 name|devs
 argument_list|)
-expr_stmt|;
-name|w
-operator|=
-name|savescr
-argument_list|()
 expr_stmt|;
 name|dialog_clear
 argument_list|()
@@ -2487,6 +2481,13 @@ condition|)
 block|{
 name|int
 name|i
+decl_stmt|;
+specifier|static
+name|char
+name|_msg
+index|[
+literal|40
+index|]
 decl_stmt|;
 case|case
 literal|'\014'
@@ -2636,13 +2637,10 @@ name|sz
 operator|<=
 name|FS_MIN_SIZE
 condition|)
-block|{
 name|msg
 operator|=
 literal|"Not enough free space to create a new partition in the slice"
 expr_stmt|;
-break|break;
-block|}
 else|else
 block|{
 name|struct
@@ -2668,6 +2666,43 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|Chunk
+modifier|*
+name|rootdev
+decl_stmt|,
+modifier|*
+name|swapdev
+decl_stmt|,
+modifier|*
+name|usrdev
+decl_stmt|,
+modifier|*
+name|vardev
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|checkLabels
+argument_list|(
+operator|&
+name|rootdev
+argument_list|,
+operator|&
+name|swapdev
+argument_list|,
+operator|&
+name|usrdev
+argument_list|,
+operator|&
+name|vardev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rootdev
+condition|)
+block|{
 name|cp
 operator|=
 name|variable_get
@@ -2754,6 +2789,13 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|swapdev
+condition|)
+block|{
 name|cp
 operator|=
 name|variable_get
@@ -2893,6 +2935,13 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|vardev
+condition|)
+block|{
 name|cp
 operator|=
 name|variable_get
@@ -2991,6 +3040,13 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|usrdev
+condition|)
+block|{
 name|cp
 operator|=
 name|variable_get
@@ -3091,14 +3147,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* At this point, we're reasonably "labelled" */
-name|variable_set2
-argument_list|(
-name|DISK_LABELLED
-argument_list|,
-literal|"yes"
-argument_list|)
-expr_stmt|;
 name|tmp
 operator|->
 name|private_data
@@ -3123,6 +3171,15 @@ expr_stmt|;
 name|record_label_chunks
 argument_list|(
 name|devs
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* At this point, we're reasonably "labelled" */
+name|variable_set2
+argument_list|(
+name|DISK_LABELLED
+argument_list|,
+literal|"yes"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4296,20 +4353,26 @@ default|default:
 name|beep
 argument_list|()
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|_msg
+argument_list|,
+literal|"Invalid key %d - Type F1 or ? for help"
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
 name|msg
 operator|=
-literal|"Type F1 or ? for help"
+name|_msg
 expr_stmt|;
 break|break;
 block|}
 block|}
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function

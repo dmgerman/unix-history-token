@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.54 1996/07/05 08:35:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.55 1996/07/09 03:07:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -182,44 +182,64 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|(
 operator|!
 name|d
 operator|->
 name|bios_cyl
-operator|||
+operator|&&
+operator|!
+name|d
+operator|->
+name|bios_hd
+operator|&&
+operator|!
+name|d
+operator|->
+name|bios_sect
+condition|)
+block|{
+name|All_FreeBSD
+argument_list|(
+name|d
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|bios_hd
+operator|=
+name|d
+operator|->
+name|bios_sect
+operator|=
+name|d
+operator|->
+name|bios_cyl
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|d
 operator|->
 name|bios_cyl
 operator|>
 literal|65536
-operator|)
-operator|||
-operator|(
-operator|!
-name|d
-operator|->
-name|bios_hd
 operator|||
 name|d
 operator|->
 name|bios_hd
 operator|>
 literal|256
-operator|)
-operator|||
-operator|(
-operator|!
-name|d
-operator|->
-name|bios_sect
 operator|||
 name|d
 operator|->
 name|bios_sect
 operator|>=
 literal|64
-operator|)
 condition|)
 block|{
 name|int
@@ -230,11 +250,23 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  The current geometry for %s is incorrect.  Using\n"
+literal|"WARNING:  A geometry of %d/%d/%d for %s is incorrect.  Using\n"
 literal|"a default geometry of 64 heads and 32 sectors.  If this geometry\n"
 literal|"is incorrect or you are unsure as to whether or not it's correct,\n"
 literal|"please consult the Hardware Guide in the Documentation submenu\n"
 literal|"or use the (G)eometry command to change it now."
+argument_list|,
+name|d
+operator|->
+name|bios_cyl
+argument_list|,
+name|d
+operator|->
+name|bios_hd
+argument_list|,
+name|d
+operator|->
+name|bios_sect
 argument_list|,
 name|d
 operator|->
@@ -253,13 +285,11 @@ name|bios_sect
 operator|=
 literal|32
 expr_stmt|;
-name|sz
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
+operator|=
+name|sz
 operator|=
 literal|0
 init|;
@@ -295,7 +325,7 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Couldn't set geometry!  You'll have to do it by hand."
+literal|"Couldn't calculate disk size!  You'll have to set the geometry by hand."
 argument_list|)
 expr_stmt|;
 block|}

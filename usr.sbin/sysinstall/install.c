@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.114 1996/07/13 05:13:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.115 1996/07/16 17:11:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -115,7 +115,6 @@ function_decl|;
 end_function_decl
 
 begin_function
-specifier|static
 name|Boolean
 name|checkLabels
 parameter_list|(
@@ -133,6 +132,11 @@ name|Chunk
 modifier|*
 modifier|*
 name|udev
+parameter_list|,
+name|Chunk
+modifier|*
+modifier|*
+name|vdev
 parameter_list|)
 block|{
 name|Device
@@ -162,6 +166,9 @@ name|swapdev
 decl_stmt|,
 modifier|*
 name|usrdev
+decl_stmt|,
+modifier|*
+name|vardev
 decl_stmt|;
 name|int
 name|i
@@ -179,15 +186,20 @@ operator|=
 operator|*
 name|udev
 operator|=
+operator|*
+name|vdev
+operator|=
 name|rootdev
 operator|=
 name|swapdev
 operator|=
 name|usrdev
 operator|=
+name|vardev
+operator|=
 name|NULL
 expr_stmt|;
-comment|/* We don't need to worry about root/usr/swap if we already have it */
+comment|/* We don't need to worry about root/usr/swap if we're already multiuser */
 if|if
 condition|(
 operator|!
@@ -435,6 +447,63 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|(
+operator|(
+name|PartInfo
+operator|*
+operator|)
+name|c2
+operator|->
+name|private_data
+operator|)
+operator|->
+name|mountpoint
+argument_list|,
+literal|"/var"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|vardev
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"WARNING:  You have more than one /var filesystem.\n"
+literal|"Using the first one found."
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+else|else
+block|{
+name|vardev
+operator|=
+name|c2
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Found vardev at %s!\n"
+argument_list|,
+name|vardev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -608,6 +677,11 @@ name|udev
 operator|=
 name|usrdev
 expr_stmt|;
+operator|*
+name|vdev
+operator|=
+name|vardev
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -654,6 +728,22 @@ literal|"WARNING:  No /usr filesystem found.  This is not technically\n"
 literal|"an error if your root filesystem is big enough (or you later\n"
 literal|"intend to mount your /usr filesystem over NFS), but it may otherwise\n"
 literal|"cause you trouble if you're not exactly sure what you are doing!"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|vardev
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"WARNING:  No /var filesystem found.  This is not technically\n"
+literal|"an error if your root filesystem is big enough (or you later\n"
+literal|"intend to link /var to someplace else), but it may otherwise\n"
+literal|"cause your root filesystem to fill up if you receive lots of mail\n"
+literal|"or edit large temporary files."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2526,6 +2616,9 @@ name|swapdev
 decl_stmt|,
 modifier|*
 name|usrdev
+decl_stmt|,
+modifier|*
+name|vardev
 decl_stmt|;
 name|Device
 modifier|*
@@ -2583,6 +2676,9 @@ name|swapdev
 argument_list|,
 operator|&
 name|usrdev
+argument_list|,
+operator|&
+name|vardev
 argument_list|)
 condition|)
 return|return
