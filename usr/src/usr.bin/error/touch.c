@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.6 (Berkeley) %G%"
+literal|"@(#)touch.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -56,6 +62,18 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -3099,12 +3117,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 switch|switch
 condition|(
@@ -3153,7 +3169,7 @@ expr_stmt|;
 block|}
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_macro
 name|errorprint
