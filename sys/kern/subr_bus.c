@@ -7625,8 +7625,6 @@ condition|)
 return|return;
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|printf
@@ -7678,8 +7676,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|printf
@@ -7705,8 +7701,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|printf
