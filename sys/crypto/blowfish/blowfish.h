@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: blowfish.h,v 1.10 2000/09/18 21:21:20 itojun Exp $	*/
+comment|/*	$KAME: blowfish.h,v 1.12 2002/02/27 01:33:59 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -109,11 +109,47 @@ operator|*
 operator|,
 name|BF_KEY
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
+name|void
+name|BF_decrypt
+name|__P
+argument_list|(
+operator|(
+name|BF_LONG
+operator|*
+operator|,
+name|BF_KEY
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+name|void
+name|BF_cbc_encrypt
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|long
+parameter_list|,
+specifier|const
+name|BF_KEY
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

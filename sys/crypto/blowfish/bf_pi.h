@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: bf_pi.h,v 1.3 2000/03/27 04:36:26 sumikawa Exp $	*/
+comment|/*	$KAME: bf_pi.h,v 1.4 2001/09/10 04:03:56 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -17,6 +17,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|BF_KEY
 name|bf_init
 init|=

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: bf_skey.c,v 1.5 2000/11/06 13:58:08 itojun Exp $	*/
+comment|/*	$KAME: bf_skey.c,v 1.7 2002/02/27 01:33:59 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -105,6 +105,7 @@ operator|)
 name|key
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -305,8 +306,6 @@ argument_list|(
 name|in
 argument_list|,
 name|key
-argument_list|,
-name|BF_ENCRYPT
 argument_list|)
 expr_stmt|;
 name|p
@@ -360,8 +359,6 @@ argument_list|(
 name|in
 argument_list|,
 name|key
-argument_list|,
-name|BF_ENCRYPT
 argument_list|)
 expr_stmt|;
 name|p

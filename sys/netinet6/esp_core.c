@@ -2463,8 +2463,6 @@ operator|)
 name|sav
 operator|->
 name|sched
-argument_list|,
-name|BF_DECRYPT
 argument_list|)
 expr_stmt|;
 name|t
@@ -2600,8 +2598,6 @@ operator|)
 name|sav
 operator|->
 name|sched
-argument_list|,
-name|BF_ENCRYPT
 argument_list|)
 expr_stmt|;
 name|t
