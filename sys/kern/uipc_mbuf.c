@@ -2902,7 +2902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy an entire packet, including header (which must be present).  * An optimization of the common case `m_copym(m, 0, M_COPYALL, how)'.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
+comment|/*  * Copy an entire packet, including header (which must be present).  * An optimization of the common case `m_copym(m, 0, M_COPYALL, how)'.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  * Preserve alignment of the first mbuf so if the creator has left  * some room at the beginning (e.g. for inserting protocol headers)  * the copies also have the room available.  */
 end_comment
 
 begin_function
@@ -3209,6 +3209,24 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|n
+operator|->
+name|m_data
+operator|=
+name|n
+operator|->
+name|m_pktdat
+operator|+
+operator|(
+name|m
+operator|->
+name|m_data
+operator|-
+name|m
+operator|->
+name|m_pktdat
+operator|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|mtod
