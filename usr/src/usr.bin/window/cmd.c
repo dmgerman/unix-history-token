@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	1.4 83/07/22"
+literal|"@(#)cmd.c	1.5 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,6 +346,13 @@ operator|->
 name|ww_refresh
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|dostat
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
