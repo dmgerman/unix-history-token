@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.6 */
+comment|/* %G% (Berkeley) @(#)curses.h	1.7 */
 end_comment
 
 begin_ifndef
@@ -582,6 +582,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|delch
+parameter_list|()
+value|VOID(wdelch(stdscr))
+end_define
+
+begin_define
+define|#
+directive|define
 name|standout
 parameter_list|()
 value|VOID(wstandout(stdscr))
@@ -676,6 +684,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|mvwdelch
+parameter_list|(
+name|win
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+value|VOID(wmove(win,y,x) == ERR ? ERR : wdelch(win))
+end_define
+
+begin_define
+define|#
+directive|define
 name|mvwinsch
 parameter_list|(
 name|win
@@ -751,6 +773,18 @@ parameter_list|,
 name|x
 parameter_list|)
 value|mvwinch(stdscr,y,x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mvdelch
+parameter_list|(
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+value|mvwdelch(stdscr,y,x)
 end_define
 
 begin_define
