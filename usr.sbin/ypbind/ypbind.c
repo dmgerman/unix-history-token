@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.27 1998/01/19 23:31:38 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.28 1999/02/10 20:04:22 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1184,7 +1184,7 @@ expr_stmt|;
 comment|/* Success */
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|&
@@ -1429,7 +1429,7 @@ name|s_addr
 operator|=
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|argp
@@ -4672,7 +4672,7 @@ name|YPBIND_SUCC_VAL
 expr_stmt|;
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|&
