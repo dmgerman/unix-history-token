@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.184 1998/10/31 15:31:22 peter Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.185 1998/11/18 09:00:47 dg Exp $  */
 end_comment
 
 begin_comment
@@ -2244,6 +2244,7 @@ name|b_vp
 operator|)
 operator|&&
 operator|(
+operator|(
 name|vp
 operator|->
 name|v_type
@@ -2278,6 +2279,7 @@ operator|->
 name|mnt_flag
 operator|&
 name|MNT_SOFTDEP
+operator|)
 operator|)
 operator|)
 condition|)
@@ -7878,7 +7880,7 @@ name|objoff
 condition|)
 name|panic
 argument_list|(
-literal|"allocbuf: page changed offset??!!!?"
+literal|"allocbuf: page changed offset?!!!?"
 argument_list|)
 expr_stmt|;
 endif|#
