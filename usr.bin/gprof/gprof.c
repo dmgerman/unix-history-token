@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)gprof.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)gprof.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,17 +70,14 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"gprof.h"
+file|<err.h>
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|whoami
-init|=
-literal|"gprof"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"gprof.h"
+end_include
 
 begin_comment
 comment|/*      *	things which get -E excluded by default.      */
@@ -237,16 +248,11 @@ name|TRUE
 expr_stmt|;
 else|#
 directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"gprof: -c isn't supported on this architecture yet\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-c isn't supported on this architecture yet"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -292,9 +298,7 @@ directive|else
 else|not DEBUG
 name|printf
 argument_list|(
-literal|"%s: -d ignored\n"
-argument_list|,
-name|whoami
+literal|"gprof: -d ignored\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -746,13 +750,9 @@ name|xbuf
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: bad format\n"
-argument_list|,
-name|whoami
+literal|"%s: bad format"
 argument_list|,
 name|a_outname
 argument_list|)
@@ -907,13 +907,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: no string table (old format?)\n"
-argument_list|,
-name|whoami
+literal|"%s: no string table (old format?)"
 argument_list|,
 name|a_outname
 argument_list|)
@@ -938,13 +934,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: no room for %d bytes of string table\n"
-argument_list|,
-name|whoami
+literal|"%s: no room for %d bytes of string table"
 argument_list|,
 name|a_outname
 argument_list|,
@@ -981,13 +973,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: error reading string table\n"
-argument_list|,
-name|whoami
+literal|"%s: error reading string table"
 argument_list|,
 name|a_outname
 argument_list|)
@@ -1109,13 +1097,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: no symbols\n"
-argument_list|,
-name|whoami
+literal|"%s: no symbols"
 argument_list|,
 name|a_outname
 argument_list|)
@@ -1153,13 +1137,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: No room for %d bytes of symbol table\n"
-argument_list|,
-name|whoami
+literal|"no room for %d bytes of symbol table"
 argument_list|,
 name|askfor
 operator|*
@@ -1391,24 +1371,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ran out room for %d bytes of text space:  "
-argument_list|,
-name|whoami
+literal|"ran out room for %d bytes of text space: can't do -c"
 argument_list|,
 name|xbuf
 operator|.
 name|a_text
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"can't do -c\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1448,20 +1417,9 @@ operator|.
 name|a_text
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: couldn't read text space:  "
-argument_list|,
-name|whoami
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"can't do -c\n"
+literal|"couldn't read text space: can't do -c"
 argument_list|)
 expr_stmt|;
 name|free
@@ -1689,11 +1647,9 @@ name|ncnt
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: incompatible with first gmon file\n"
+literal|"%s: incompatible with first gmon file"
 argument_list|,
 name|filename
 argument_list|)
@@ -2437,13 +2393,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: No room for %d sample pc's\n"
-argument_list|,
-name|whoami
+literal|"no room for %d sample pc's"
 argument_list|,
 name|sampbytes
 operator|/
@@ -2510,13 +2462,9 @@ operator|!=
 name|nsamples
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unexpected EOF after reading %d/%d samples\n"
-argument_list|,
-name|whoami
+literal|"unexpected EOF after reading %d/%d samples"
 argument_list|,
 operator|--
 name|i
