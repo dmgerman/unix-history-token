@@ -375,72 +375,73 @@ comment|/* Mach page table entry */
 end_comment
 
 begin_comment
-comment|/*  * One page directory, shared between  * kernel and user modes.  */
+comment|/*  * NKPDE controls the virtual space of the kernel, what ever is left is  * given to the user (NUPDE)  *  * XXX NKPDE should be 8, but until locore.s is fixed it needs to be 3  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|I386_PAGE_SIZE
-value|NBPG
-end_define
-
-begin_define
-define|#
-directive|define
-name|I386_PDR_SIZE
-value|NBPDR
-end_define
-
-begin_define
-define|#
-directive|define
-name|I386_KPDES
-value|8
+name|NKPDE
+value|3
 end_define
 
 begin_comment
-comment|/* KPT page directory size */
+comment|/* number of kernel pde's */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|I386_UPDES
-value|NBPDR/sizeof(struct pde)-8
+name|NUPDE
+value|(NPTEPG-NKPDE)
 end_define
 
 begin_comment
-comment|/* UPT page directory size */
+comment|/* number of user pde's */
+end_comment
+
+begin_comment
+comment|/*  * The *PTDI values control the layout of virtual memory  *  * XXX This works for now, but I am not real happy with it, I'll fix it  * right after I fix locore.s and the magic 28K hole  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UPTDI
-value|0x3f6
+name|LASTPTDI
+value|(NPTEPG-1)
 end_define
 
 begin_comment
-comment|/* ptd entry for u./kernel&user stack */
+comment|/* reserved for the future (unused) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTDPTDI
-value|0x3f7
+name|APTDPTDI
+value|(LASTPTDI-1)
 end_define
 
 begin_comment
-comment|/* ptd entry that points to ptd! */
+comment|/* alt ptd entry that points to APTD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSVDPTDI
+value|(APTDPTDI-3)
+end_define
+
+begin_comment
+comment|/* reserved for the near future */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|KPTDI_FIRST
-value|0x3f8
+value|(RSVDPTDI-NKPDE)
 end_define
 
 begin_comment
@@ -450,12 +451,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KPTDI_LAST
-value|0x3fA
+name|PTDPTDI
+value|(KPTDI_FIRST-1)
 end_define
 
 begin_comment
-comment|/* last of kernel virtual pde's */
+comment|/* ptd entry that points to ptd! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPTDI
+value|(PTDPTDI-1)
+end_define
+
+begin_comment
+comment|/* ptd entry for u./kernel&user stack */
 end_comment
 
 begin_comment
