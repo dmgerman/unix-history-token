@@ -321,12 +321,14 @@ specifier|static
 name|int
 name|broadcast_channel
 init|=
-literal|31
+literal|0xc0
+operator||
+literal|0x1f
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XXX */
+comment|/*  tag | channel(XXX) */
 end_comment
 
 begin_decl_stmt
