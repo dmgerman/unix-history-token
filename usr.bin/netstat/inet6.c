@@ -2060,11 +2060,11 @@ literal|"multicast listener done"
 block|,
 literal|"router solicitation"
 block|,
-literal|"router advertisment"
+literal|"router advertisement"
 block|,
 literal|"neighbor solicitation"
 block|,
-literal|"neighbor advertisment"
+literal|"neighbor advertisement"
 block|,
 literal|"redirect"
 block|,
@@ -2571,7 +2571,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\tHistgram of error messages to be generated:\n"
+literal|"\tHistogram of error messages to be generated:\n"
 argument_list|)
 expr_stmt|;
 name|p_5
