@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	5.8 (Berkeley) %G%"
+literal|"@(#)genassym.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sys/cmap.h"
 end_include
 
@@ -73,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sys/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sys/mbuf.h"
 end_include
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|"sys/msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/resourcevar.h"
 end_include
 
 begin_include
@@ -194,6 +200,18 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
+name|struct
+name|vmspace
+modifier|*
+name|vms
+init|=
+operator|(
+expr|struct
+name|vmspace
+operator|*
+operator|)
+literal|0
+decl_stmt|;
 name|vm_map_t
 name|map
 init|=
@@ -235,16 +253,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_PROCP %d\n"
-argument_list|,
-operator|&
-name|up
-operator|->
-name|u_procp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tUDOT_SZ %d\n"
 argument_list|,
 sizeof|sizeof
@@ -276,32 +284,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_MAP %d\n"
+literal|"#define\tP_VMSPACE %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPMAP %d\n"
+literal|"#define\tVM_PMAP %d\n"
 argument_list|,
 operator|&
-name|map
+name|vms
 operator|->
-name|pmap
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPM_STCHG %d\n"
-argument_list|,
-operator|&
-name|pmap
-operator|->
-name|pm_pdchanged
+name|vm_pmap
 argument_list|)
 expr_stmt|;
 name|printf
@@ -906,32 +904,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_PROCP %d\n"
-argument_list|,
-operator|&
-name|up
-operator|->
-name|u_procp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tU_RU %d\n"
-argument_list|,
-operator|&
-name|up
-operator|->
-name|u_ru
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tU_PROF %d\n"
 argument_list|,
 operator|&
 name|up
 operator|->
-name|u_prof
+name|u_stats
+operator|.
+name|p_prof
 argument_list|)
 expr_stmt|;
 name|printf
@@ -941,7 +921,9 @@ argument_list|,
 operator|&
 name|up
 operator|->
-name|u_prof
+name|u_stats
+operator|.
+name|p_prof
 operator|.
 name|pr_scale
 argument_list|)
@@ -952,7 +934,7 @@ literal|"#define\tPR_BASE %d\n"
 argument_list|,
 operator|&
 name|uprof
-operator|.
+operator|->
 name|pr_base
 argument_list|)
 expr_stmt|;
@@ -962,7 +944,7 @@ literal|"#define\tPR_SIZE %d\n"
 argument_list|,
 operator|&
 name|uprof
-operator|.
+operator|->
 name|pr_size
 argument_list|)
 expr_stmt|;
@@ -972,7 +954,7 @@ literal|"#define\tPR_OFF %d\n"
 argument_list|,
 operator|&
 name|uprof
-operator|.
+operator|->
 name|pr_off
 argument_list|)
 expr_stmt|;
@@ -982,7 +964,7 @@ literal|"#define\tPR_SCALE %d\n"
 argument_list|,
 operator|&
 name|uprof
-operator|.
+operator|->
 name|pr_scale
 argument_list|)
 expr_stmt|;
@@ -1004,6 +986,16 @@ operator|&
 name|pcb
 operator|->
 name|pcb_flags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_SAVEFPU %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_savefpu
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1032,16 +1024,6 @@ argument_list|(
 literal|"#define\tFP_USESEMC %d\n"
 argument_list|,
 name|FP_USESEMC
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_SAVEFPU %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_savefpu
 argument_list|)
 expr_stmt|;
 name|printf
