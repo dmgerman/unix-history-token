@@ -1021,6 +1021,10 @@ define|#
 directive|define
 name|DSA_R_DATA_TOO_LARGE_FOR_KEY_SIZE
 value|100
+define|#
+directive|define
+name|DSA_R_MISSING_PARAMETERS
+value|101
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -1965,7 +1965,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 name|rec
 operator|->
@@ -2007,7 +2007,6 @@ name|cipher
 argument_list|)
 expr_stmt|;
 comment|/* COMPRESS */
-comment|/* This should be using (bs-1) and bs instead of 7 and 8 */
 if|if
 condition|(
 operator|(
@@ -2059,6 +2058,48 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|send
+condition|)
+block|{
+if|if
+condition|(
+name|l
+operator|==
+literal|0
+operator|||
+name|l
+operator|%
+name|bs
+operator|!=
+literal|0
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_ENC
+argument_list|,
+name|SSL_R_BLOCK_CIPHER_PAD_IS_WRONG
+argument_list|)
+expr_stmt|;
+name|ssl3_send_alert
+argument_list|(
+name|s
+argument_list|,
+name|SSL3_AL_FATAL
+argument_list|,
+name|SSL_AD_DECRYPT_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
 name|EVP_Cipher
 argument_list|(
 name|ds
@@ -2099,6 +2140,7 @@ index|]
 operator|+
 literal|1
 expr_stmt|;
+comment|/* SSL 3.0 bounds the number of padding bytes by the block size; 			 * padding bytes (except that last) are arbitrary */
 if|if
 condition|(
 name|i

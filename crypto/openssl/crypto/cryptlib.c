@@ -848,12 +848,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|--
-operator|(
 name|pointer
 operator|->
 name|references
-operator|)
 operator|<=
 literal|0
 condition|)
@@ -1581,6 +1578,8 @@ decl_stmt|;
 if|if
 condition|(
 name|pointer
+operator|&&
+name|dynlock_lock_callback
 condition|)
 block|{
 name|dynlock_lock_callback
@@ -1713,11 +1712,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|*
-name|pointer
-operator|=
-name|ret
-expr_stmt|;
 block|}
 else|else
 block|{

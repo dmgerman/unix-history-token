@@ -641,6 +641,10 @@ define|#
 directive|define
 name|RFILE
 value|".rnd"
+define|#
+directive|define
+name|DEFAULT_HOME
+value|"C:"
 else|#
 directive|else
 comment|/* The non-microsoft world world */

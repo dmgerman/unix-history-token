@@ -1683,6 +1683,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|"-passin arg    input file pass phrase source\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|"-rand file%cfile%c...\n"
 argument_list|,
 name|LIST_SEPARATOR_CHAR

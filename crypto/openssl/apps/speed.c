@@ -137,6 +137,16 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
 begin_define
@@ -229,6 +239,12 @@ operator|!
 name|defined
 argument_list|(
 name|MPE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
 argument_list|)
 end_if
 

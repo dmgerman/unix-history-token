@@ -113,7 +113,7 @@ parameter_list|,
 name|int
 name|sep
 parameter_list|,
-name|char
+name|int
 name|binout
 parameter_list|,
 name|EVP_PKEY
@@ -251,7 +251,7 @@ name|randfile
 init|=
 name|NULL
 decl_stmt|;
-name|char
+name|int
 name|out_bin
 init|=
 operator|-
@@ -1556,7 +1556,7 @@ parameter_list|,
 name|int
 name|sep
 parameter_list|,
-name|char
+name|int
 name|binout
 parameter_list|,
 name|EVP_PKEY

@@ -186,18 +186,33 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* This should be set to 1 only when ssleay_rand_add() is called inside    an already locked state, so it doesn't try to lock and thereby cause    a hang.  And it should always be reset back to 0 before unlocking. */
-end_comment
-
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
-name|add_do_not_lock
+name|crypto_lock_rand
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* may be set only when a thread                                            * holds CRYPTO_LOCK_RAND                                            * (to prevent double locking) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|locking_thread
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* valid iff crypto_lock_rand is set */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -457,11 +472,26 @@ decl_stmt|;
 name|MD_CTX
 name|m
 decl_stmt|;
+name|int
+name|do_not_lock
+decl_stmt|;
 comment|/* 	 * (Based on the rand(3) manpage) 	 * 	 * The input is chopped up into units of 20 bytes (or less for 	 * the last block).  Each of these blocks is run through the hash 	 * function as follows:  The data passed to the hash function 	 * is the current 'md', the same number of bytes from the 'state' 	 * (the location determined by in incremented looping index) as 	 * the current 'block', the new key data 'block', and 'count' 	 * (which is incremented after each use). 	 * The result of this is kept in 'md' and also xored into the 	 * 'state' at the same locations that were used as input into the          * hash function. 	 */
+comment|/* check if we already have the lock */
+name|do_not_lock
+operator|=
+name|crypto_lock_rand
+operator|&&
+operator|(
+name|locking_thread
+operator|==
+name|CRYPTO_thread_id
+argument_list|()
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_lock
 argument_list|(
@@ -567,7 +597,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_unlock
 argument_list|(
@@ -811,7 +841,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_lock
 argument_list|(
@@ -859,7 +889,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_unlock
 argument_list|(
@@ -956,6 +986,9 @@ decl_stmt|,
 name|st_idx
 decl_stmt|;
 name|int
+name|num_ceil
+decl_stmt|;
+name|int
 name|ok
 decl_stmt|;
 name|long
@@ -1034,29 +1067,70 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * (Based on the rand(3) manpage:) 	 * 	 * For each group of 10 bytes (or less), we do the following: 	 * 	 * Input into the hash function the top 10 bytes from the 	 * local 'md' (which is initialized from the global 'md' 	 * before any bytes are generated), the bytes that are 	 * to be overwritten by the random bytes, and bytes from the 	 * 'state' (incrementing looping index).  From this digest output 	 * (which is kept in 'md'), the top (up to) 10 bytes are 	 * returned to the caller and the bottom (up to) 10 bytes are xored 	 * into the 'state'. 	 * Finally, after we have finished 'num' random bytes for the 	 * caller, 'count' (which is incremented) and the local and global 'md' 	 * are fed into the hash function and the results are kept in the 	 * global 'md'. 	 */
 if|if
 condition|(
-operator|!
-name|initialized
+name|num
+operator|<=
+literal|0
 condition|)
-name|RAND_poll
-argument_list|()
+return|return
+literal|1
+return|;
+comment|/* round upwards to multiple of MD_DIGEST_LENGTH/2 */
+name|num_ceil
+operator|=
+operator|(
+literal|1
+operator|+
+operator|(
+name|num
+operator|-
+literal|1
+operator|)
+operator|/
+operator|(
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
+operator|)
+operator|)
+operator|*
+operator|(
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
+operator|)
 expr_stmt|;
+comment|/* 	 * (Based on the rand(3) manpage:) 	 * 	 * For each group of 10 bytes (or less), we do the following: 	 * 	 * Input into the hash function the local 'md' (which is initialized from 	 * the global 'md' before any bytes are generated), the bytes that are to 	 * be overwritten by the random bytes, and bytes from the 'state' 	 * (incrementing looping index). From this digest output (which is kept 	 * in 'md'), the top (up to) 10 bytes are returned to the caller and the 	 * bottom 10 bytes are xored into the 'state'. 	 *  	 * Finally, after we have finished 'num' random bytes for the 	 * caller, 'count' (which is incremented) and the local and global 'md' 	 * are fed into the hash function and the results are kept in the 	 * global 'md'. 	 */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
-name|add_do_not_lock
+comment|/* prevent ssleay_rand_bytes() from trying to obtain the lock again */
+name|crypto_lock_rand
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Since we call ssleay_rand_add while in 				   this locked state. */
+name|locking_thread
+operator|=
+name|CRYPTO_thread_id
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|initialized
+condition|)
+block|{
+name|RAND_poll
+argument_list|()
+expr_stmt|;
 name|initialized
 operator|=
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1101,7 +1175,7 @@ condition|(
 name|do_stir_pool
 condition|)
 block|{
-comment|/* Our output function chains only half of 'md', so we better 		 * make sure that the required entropy gets 'evenly distributed' 		 * through 'state', our randomness pool.  The input function 		 * (ssleay_rand_add) chains all of 'md', which makes it more 		 * suitable for this purpose. 		 */
+comment|/* In the output function only half of 'md' remains secret, 		 * so we better make sure that the required entropy gets 		 * 'evenly distributed' through 'state', our randomness pool. 		 * The input function (ssleay_rand_add) chains all of 'md', 		 * which makes it more suitable for this purpose. 		 */
 name|int
 name|n
 init|=
@@ -1194,7 +1268,7 @@ argument_list|)
 expr_stmt|;
 name|state_index
 operator|+=
-name|num
+name|num_ceil
 expr_stmt|;
 if|if
 condition|(
@@ -1206,7 +1280,7 @@ name|state_index
 operator|%=
 name|state_num
 expr_stmt|;
-comment|/* state[st_idx], ..., state[(st_idx + num - 1) % st_num] 	 * are now ours (but other threads may use them too) */
+comment|/* state[st_idx], ..., state[(st_idx + num_ceil - 1) % st_num] 	 * are now ours (but other threads may use them too) */
 name|md_count
 index|[
 literal|0
@@ -1214,11 +1288,15 @@ index|]
 operator|+=
 literal|1
 expr_stmt|;
-name|add_do_not_lock
+comment|/* before unlocking, we must clear 'crypto_lock_rand' */
+name|crypto_lock_rand
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If this would ever be forgotten, we can 				   expect any evil god to eat our souls. */
+name|locking_thread
+operator|=
+literal|0
+expr_stmt|;
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_RAND
@@ -1231,6 +1309,7 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* num_ceil -= MD_DIGEST_LENGTH/2 */
 name|j
 operator|=
 operator|(
@@ -1295,19 +1374,9 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-operator|&
-operator|(
 name|local_md
-index|[
-name|MD_DIGEST_LENGTH
-operator|/
-literal|2
-index|]
-operator|)
 argument_list|,
 name|MD_DIGEST_LENGTH
-operator|/
-literal|2
 argument_list|)
 expr_stmt|;
 name|MD_Update
@@ -1355,7 +1424,9 @@ operator|=
 operator|(
 name|st_idx
 operator|+
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 operator|)
 operator|-
 name|st_num
@@ -1380,7 +1451,9 @@ name|st_idx
 index|]
 operator|)
 argument_list|,
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 operator|-
 name|k
 argument_list|)
@@ -1416,7 +1489,9 @@ name|st_idx
 index|]
 operator|)
 argument_list|,
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 name|MD_Final
@@ -1435,7 +1510,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 condition|;
 name|i
 operator|++
@@ -1453,6 +1530,22 @@ name|i
 index|]
 expr_stmt|;
 comment|/* may compete with other threads */
+if|if
+condition|(
+name|st_idx
+operator|>=
+name|st_num
+condition|)
+name|st_idx
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+name|j
+condition|)
 operator|*
 operator|(
 name|buf
@@ -1467,16 +1560,6 @@ name|MD_DIGEST_LENGTH
 operator|/
 literal|2
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|st_idx
-operator|>=
-name|st_num
-condition|)
-name|st_idx
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
@@ -1617,6 +1700,10 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|unsigned
+name|long
+name|err
+decl_stmt|;
 name|ret
 operator|=
 name|RAND_bytes
@@ -1633,12 +1720,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|long
 name|err
-init|=
+operator|=
 name|ERR_peek_error
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ERR_GET_LIB
@@ -1681,34 +1767,84 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|do_not_lock
+decl_stmt|;
+comment|/* check if we already have the lock 	 * (could happen if a RAND_poll() implementation calls RAND_status()) */
+name|do_not_lock
+operator|=
+name|crypto_lock_rand
+operator|&&
+operator|(
+name|locking_thread
+operator|==
+name|CRYPTO_thread_id
+argument_list|()
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|initialized
+name|do_not_lock
 condition|)
-name|RAND_poll
-argument_list|()
-expr_stmt|;
+block|{
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
+comment|/* prevent ssleay_rand_bytes() from trying to obtain the lock again */
+name|crypto_lock_rand
+operator|=
+literal|1
+expr_stmt|;
+name|locking_thread
+operator|=
+name|CRYPTO_thread_id
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|initialized
+condition|)
+block|{
+name|RAND_poll
+argument_list|()
+expr_stmt|;
 name|initialized
 operator|=
 literal|1
 expr_stmt|;
+block|}
 name|ret
 operator|=
 name|entropy
 operator|>=
 name|ENTROPY_NEEDED
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|do_not_lock
+condition|)
+block|{
+comment|/* before unlocking, we must clear 'crypto_lock_rand' */
+name|crypto_lock_rand
+operator|=
+literal|0
+expr_stmt|;
+name|locking_thread
+operator|=
+literal|0
+expr_stmt|;
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
