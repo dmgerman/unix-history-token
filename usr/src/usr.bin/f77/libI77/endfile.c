@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_endfile[] = "@(#)endfile.c	1.4";  *  * endfile  */
+comment|/* char id_endfile[] = "@(#)endfile.c	1.5";  *  * endfile  */
 end_comment
 
 begin_include
@@ -271,7 +271,7 @@ expr_stmt|;
 if|if
 condition|(
 name|loc
-operator|==
+operator|>=
 name|len
 condition|)
 return|return
