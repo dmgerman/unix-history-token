@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_subr.c	6.1	83/07/29	*/
+comment|/*	ffs_subr.c	6.2	84/02/07	*/
 end_comment
 
 begin_ifdef
@@ -336,6 +336,22 @@ operator|->
 name|i_count
 operator|==
 literal|0
+operator|||
+operator|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+operator|(
+name|IACC
+operator||
+name|IUPD
+operator||
+name|ICHG
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 continue|continue;
 name|ip
