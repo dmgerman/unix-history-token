@@ -2048,7 +2048,7 @@ index|[
 name|PNAMELEN
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|plstack
 index|[
