@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.111 (Berkeley) %G%"
+literal|"@(#)main.c	8.112 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1520,6 +1520,16 @@ index|]
 argument_list|)
 expr_stmt|;
 end_for
+
+begin_expr_stmt
+name|environ
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* and prime the child environment */
