@@ -119,6 +119,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_class
+name|uart_sa1110_class
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|device_method_t
 name|uart_sa1110_methods
