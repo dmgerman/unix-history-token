@@ -761,7 +761,7 @@ argument_list|(
 name|lbuf
 argument_list|)
 argument_list|,
-literal|"        (%s) at %d:%02d ..."
+literal|"        (%s) at %d:%02d %s..."
 argument_list|,
 name|ttyname
 argument_list|(
@@ -775,6 +775,10 @@ argument_list|,
 name|lt
 operator|->
 name|tm_min
+argument_list|,
+name|lt
+operator|->
+name|tm_zone
 argument_list|)
 expr_stmt|;
 operator|(
