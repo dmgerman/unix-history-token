@@ -4,11 +4,11 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.a
 end_comment
 
 begin_comment
-comment|/* $Revision: 1.8 $ */
+comment|/* $Revision: 1.9 $ */
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *	$Id: st.c,v 1.8 1993/09/07 15:58:00 rgrimes Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *	$Id: st.c,v 1.9 1993/09/20 06:27:06 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -1965,6 +1965,13 @@ name|errno
 operator|)
 return|;
 block|}
+name|st_test_ready
+argument_list|(
+name|unit
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|st
