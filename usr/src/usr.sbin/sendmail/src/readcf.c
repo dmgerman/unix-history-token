@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.29 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,6 +1146,27 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'|'
+condition|)
+name|f
+operator|=
+name|popen
+argument_list|(
+name|filename
+operator|+
+literal|1
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+else|else
 name|f
 operator|=
 name|fopen
@@ -1327,6 +1348,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'|'
+condition|)
+operator|(
+name|void
+operator|)
+name|pclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
