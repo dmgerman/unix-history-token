@@ -359,7 +359,7 @@ name|dc_data
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d on %s"
+literal|"%s%d at isa?"
 argument_list|,
 name|dc
 operator|->
@@ -368,10 +368,6 @@ argument_list|,
 name|dc
 operator|->
 name|dc_unit
-argument_list|,
-name|dc
-operator|->
-name|dc_parent
 argument_list|)
 expr_stmt|;
 if|if
