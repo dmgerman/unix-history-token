@@ -1466,6 +1466,8 @@ argument_list|(
 name|flags
 argument_list|)
 argument_list|,
+name|flags
+argument_list|,
 name|cookiep
 argument_list|,
 operator|&
