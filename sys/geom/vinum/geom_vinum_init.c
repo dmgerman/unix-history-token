@@ -1335,6 +1335,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|gv_save_config_all
+argument_list|(
+name|p
+operator|->
+name|vinumconf
+argument_list|)
+expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
