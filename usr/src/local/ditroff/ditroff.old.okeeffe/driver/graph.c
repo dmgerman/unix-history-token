@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* graph.c	1.1	83/07/01  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
+comment|/* graph.c	1.2	83/07/05  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -91,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|pi
-value|3.141592653589793238462643
+value|3.14159265358979324
 end_define
 
 begin_define
@@ -180,18 +186,6 @@ end_decl_stmt
 begin_comment
 comment|/* type of line (SOLID, DOTTED, DASHED...) */
 end_comment
-
-begin_decl_stmt
-name|int
-name|lastx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|lasty
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|drawline
@@ -284,28 +278,222 @@ comment|/* new postion is the right of the circle */
 block|}
 end_block
 
+begin_comment
+comment|/*******************************************************************************  *  * Routine:	drawellip (horizontal_diameter, vertical_diameter)  *  *	This routine draws regular ellipses given the major diagonals.  *	It does so by drawing many small lines, every one pixels.  *  *	The ellipse formula:  ((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1  *	is used, converting to y = f(x) and duplicating the lines about  *	the vertical axis.  *  * Results:	The current position is at the rightmost point of the ellipse  *  ******************************************************************************/
+end_comment
+
 begin_expr_stmt
 name|drawellip
 argument_list|(
-name|h
+name|hd
 argument_list|,
-name|v
+name|vd
 argument_list|)
 specifier|register
 name|int
-name|h
+name|hd
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|register
 name|int
-name|v
+name|vd
 decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{ }
+block|{
+specifier|register
+name|int
+name|bx
+decl_stmt|;
+comment|/* multiplicative x factor */
+specifier|register
+name|int
+name|x
+decl_stmt|;
+comment|/* x position drawing to */
+specifier|register
+name|int
+name|yk
+decl_stmt|;
+comment|/* the square-root term */
+specifier|register
+name|int
+name|y
+decl_stmt|;
+comment|/* y position drawing to */
+name|double
+name|k1
+decl_stmt|;
+comment|/* k? are constants depending on parameters */
+name|int
+name|k2
+decl_stmt|,
+name|oldy1
+decl_stmt|,
+name|oldy2
+decl_stmt|;
+comment|/* oldy? are last y points drawn to */
+name|hd
+operator|=
+literal|2
+operator|*
+operator|(
+operator|(
+name|hd
+operator|+
+literal|1
+operator|)
+operator|/
+literal|2
+operator|)
+expr_stmt|;
+comment|/* don't accept odd diagonals */
+name|bx
+operator|=
+literal|4
+operator|*
+operator|(
+name|hpos
+operator|+
+name|hd
+operator|)
+expr_stmt|;
+name|x
+operator|=
+name|hpos
+expr_stmt|;
+name|k1
+operator|=
+name|vd
+operator|/
+operator|(
+literal|2.0
+operator|*
+name|hd
+operator|)
+expr_stmt|;
+name|k2
+operator|=
+name|hd
+operator|*
+name|hd
+operator|-
+literal|4
+operator|*
+operator|(
+name|hpos
+operator|+
+name|hd
+operator|/
+literal|2
+operator|)
+operator|*
+operator|(
+name|hpos
+operator|+
+name|hd
+operator|/
+literal|2
+operator|)
+expr_stmt|;
+name|oldy1
+operator|=
+name|vpos
+expr_stmt|;
+name|oldy2
+operator|=
+name|vpos
+expr_stmt|;
+name|hmot
+argument_list|(
+name|hd
+argument_list|)
+expr_stmt|;
+comment|/* end position is the right-hand side of the ellipse */
+do|do
+block|{
+name|yk
+operator|=
+name|k1
+operator|*
+name|sqrt
+argument_list|(
+call|(
+name|double
+call|)
+argument_list|(
+name|k2
+operator|+
+operator|(
+name|bx
+operator|-=
+literal|8
+operator|)
+operator|*
+operator|(
+name|x
+operator|+=
+literal|2
+operator|)
+argument_list|)
+argument_list|)
+operator|+
+literal|0.5
+expr_stmt|;
+name|HGtline
+argument_list|(
+name|x
+operator|-
+literal|1
+argument_list|,
+name|oldy1
+argument_list|,
+name|x
+argument_list|,
+name|y
+operator|=
+name|vpos
+operator|+
+name|yk
+argument_list|)
+expr_stmt|;
+comment|/* top half of ellipse */
+name|oldy1
+operator|=
+name|y
+expr_stmt|;
+name|HGtline
+argument_list|(
+name|x
+operator|-
+literal|1
+argument_list|,
+name|oldy2
+argument_list|,
+name|x
+argument_list|,
+name|y
+operator|=
+name|vpos
+operator|-
+name|yk
+argument_list|)
+expr_stmt|;
+comment|/* bottom half of ellipse */
+name|oldy2
+operator|=
+name|y
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|hd
+condition|)
+do|;
+block|}
 end_block
 
 begin_expr_stmt
@@ -353,8 +541,23 @@ name|double
 name|angle
 decl_stmt|;
 comment|/* figure angle from the three points...*/
+comment|/* and convert (and round) to degrees */
 name|angle
 operator|=
+operator|(
+name|atan2
+argument_list|(
+operator|(
+name|double
+operator|)
+name|pdh
+argument_list|,
+operator|(
+name|double
+operator|)
+name|pdv
+argument_list|)
+operator|-
 name|atan2
 argument_list|(
 operator|(
@@ -369,31 +572,24 @@ operator|)
 operator|-
 name|cdv
 argument_list|)
-operator|-
-name|atan2
-argument_list|(
-operator|(
-name|double
 operator|)
-name|pdh
-argument_list|,
-operator|(
-name|double
-operator|)
-name|pdv
-argument_list|)
+operator|*
+literal|180.0
+operator|/
+name|pi
 expr_stmt|;
-if|if
-condition|(
+comment|/* "normalize" and round */
+name|angle
+operator|+=
+operator|(
 name|angle
 operator|<
 literal|0.0
-condition|)
-name|angle
-operator|+=
-literal|2
-operator|*
-name|pi
+operator|)
+condition|?
+literal|360.5
+else|:
+literal|0.5
 expr_stmt|;
 name|HGArc
 argument_list|(
@@ -406,22 +602,13 @@ operator|+
 name|cdv
 argument_list|,
 name|hpos
-operator|+
-name|cdh
-operator|+
-name|pdh
 argument_list|,
 name|vpos
-operator|+
-name|cdv
-operator|+
-name|pdv
 argument_list|,
+operator|(
+name|int
+operator|)
 name|angle
-operator|*
-literal|180.0
-operator|/
-name|pi
 argument_list|)
 expr_stmt|;
 name|hmot
@@ -479,7 +666,7 @@ specifier|register
 name|int
 name|i
 init|=
-literal|1
+literal|2
 decl_stmt|;
 specifier|register
 name|char
@@ -510,6 +697,28 @@ name|ptr
 operator|++
 expr_stmt|;
 comment|/* skip any leading spaces */
+name|x
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|float
+operator|)
+name|hpos
+expr_stmt|;
+comment|/* the curve starts at the */
+name|y
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|float
+operator|)
+name|vpos
+expr_stmt|;
+comment|/* current position */
 while|while
 condition|(
 operator|*
@@ -521,10 +730,13 @@ block|{
 comment|/* curve commands end with a "cr" */
 name|hmot
 argument_list|(
-call|(
-name|int
-call|)
+name|atoi
 argument_list|(
+name|ptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* convert to curve points */
 name|x
 index|[
 name|i
@@ -533,14 +745,9 @@ operator|=
 operator|(
 name|float
 operator|)
-name|atoi
-argument_list|(
-name|ptr
-argument_list|)
-argument_list|)
-argument_list|)
+name|hpos
 expr_stmt|;
-comment|/* convert text */
+comment|/* and remember them */
 while|while
 condition|(
 name|isdigit
@@ -551,7 +758,7 @@ name|ptr
 argument_list|)
 condition|)
 empty_stmt|;
-comment|/* to curve points */
+comment|/* skip number*/
 while|while
 condition|(
 operator|*
@@ -561,12 +768,15 @@ operator|==
 literal|' '
 condition|)
 empty_stmt|;
+comment|/* skip spaces 'tween numbers */
 name|vmot
 argument_list|(
-call|(
-name|int
-call|)
+name|atoi
 argument_list|(
+name|ptr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|y
 index|[
 name|i
@@ -575,12 +785,7 @@ operator|=
 operator|(
 name|float
 operator|)
-name|atoi
-argument_list|(
-name|ptr
-argument_list|)
-argument_list|)
-argument_list|)
+name|vpos
 expr_stmt|;
 while|while
 condition|(
@@ -689,6 +894,7 @@ name|x
 argument_list|,
 name|y
 argument_list|,
+operator|--
 name|i
 argument_list|)
 expr_stmt|;
@@ -1007,7 +1213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This routine plots an arc centered about 'center' counter clockwise for  * the point 'cpoint' through 'angle' degrees.  If angle is 0, a full circle  * is drawn.  */
+comment|/* This routine plots an arc centered about (cx, cy) counter clockwise for  * the point (px, py) through 'angle' degrees.  If angle is 0, a full circle  * is drawn.  */
 end_comment
 
 begin_block
@@ -1049,14 +1255,6 @@ name|ys
 operator|=
 name|py
 operator|-
-name|cy
-expr_stmt|;
-name|lastx
-operator|=
-name|cx
-expr_stmt|;
-name|lasty
-operator|=
 name|cy
 expr_stmt|;
 comment|/* calculate drawing parameters */
@@ -1207,14 +1405,6 @@ argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
-expr_stmt|;
-name|lastx
-operator|=
-name|nx
-expr_stmt|;
-name|lasty
-operator|=
-name|ny
 expr_stmt|;
 block|}
 comment|/* end for */
@@ -3111,7 +3301,7 @@ name|int
 operator|)
 name|x
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 name|ly
@@ -3121,7 +3311,7 @@ name|int
 operator|)
 name|y
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 comment|/* Solve for derivatives of the curve at each point                * separately for x and y (parametric). 	      */
@@ -3142,7 +3332,7 @@ condition|(
 operator|(
 name|x
 index|[
-literal|0
+literal|1
 index|]
 operator|==
 name|x
@@ -3154,7 +3344,7 @@ operator|&&
 operator|(
 name|y
 index|[
-literal|0
+literal|1
 index|]
 operator|==
 name|y
