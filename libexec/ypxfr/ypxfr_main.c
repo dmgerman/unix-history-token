@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ypxfr_main.c,v 1.17 1996/06/03 03:11:39 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ypxfr_main.c,v 1.18 1996/10/20 19:44:45 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -125,7 +125,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypxfr_main.c,v 1.17 1996/06/03 03:11:39 wpaul Exp $"
+literal|"$Id: ypxfr_main.c,v 1.18 1996/10/20 19:44:45 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,6 +673,9 @@ name|DBT
 name|key
 decl_stmt|,
 name|data
+decl_stmt|;
+name|int
+name|remoteport
 decl_stmt|;
 name|debug
 operator|=
@@ -1292,6 +1295,42 @@ name|ypxfr_source_host
 operator|=
 name|ypxfr_master
 expr_stmt|;
+comment|/* 	 * Don't talk to ypservs on unprivileged ports. 	 */
+name|remoteport
+operator|=
+name|getrpcport
+argument_list|(
+name|ypxfr_source_host
+argument_list|,
+name|YPPROG
+argument_list|,
+name|YPVERS
+argument_list|,
+name|IPPROTO_UDP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|remoteport
+operator|>=
+name|IPPORT_RESERVED
+condition|)
+block|{
+name|yp_error
+argument_list|(
+literal|"ypserv on %s not running on reserved port"
+argument_list|,
+name|ypxfr_source_host
+argument_list|)
+expr_stmt|;
+name|ypxfr_exit
+argument_list|(
+name|YPXFR_REFUSED
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1485,9 +1524,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|remoteport
+operator|=
 name|getrpcport
 argument_list|(
-name|ypxfr_master
+name|ypxfr_source_host
 argument_list|,
 name|YPXFRD_FREEBSD_PROG
 argument_list|,
@@ -1495,15 +1537,39 @@ name|YPXFRD_FREEBSD_VERS
 argument_list|,
 name|IPPROTO_TCP
 argument_list|)
+operator|)
 condition|)
 block|{
+comment|/* Don't talk to rpc.ypxfrds on unprovileged ports. */
+if|if
+condition|(
+name|remoteport
+operator|>=
+name|IPPORT_RESERVED
+condition|)
+block|{
+name|yp_error
+argument_list|(
+literal|"rpc.ypxfrd on %s not using privileged port"
+argument_list|,
+name|ypxfr_source_host
+argument_list|)
+expr_stmt|;
+name|ypxfr_exit
+argument_list|(
+name|YPXFR_REFUSED
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Try to send using ypxfrd. If it fails, use old method. */
 if|if
 condition|(
 operator|!
 name|ypxfrd_get_map
 argument_list|(
-name|ypxfr_master
+name|ypxfr_source_host
 argument_list|,
 name|ypxfr_mapname
 argument_list|,
