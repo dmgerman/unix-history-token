@@ -2391,10 +2391,17 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|key
+operator|==
+name|ESC
+condition|?
 operator|-
 literal|1
+else|:
+literal|0
+operator|)
 return|;
-comment|/* ESC pressed */
 block|}
 end_function
 
