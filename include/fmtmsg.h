@@ -27,7 +27,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* hardware. */
+comment|/* ...hardware. */
 end_comment
 
 begin_define
@@ -38,7 +38,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* software. */
+comment|/* ...software. */
 end_comment
 
 begin_define
@@ -49,7 +49,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* fireware. */
+comment|/* ...fireware. */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* application. */
+comment|/* ...application. */
 end_comment
 
 begin_define
@@ -75,7 +75,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* utility. */
+comment|/* ...utility. */
 end_comment
 
 begin_define
@@ -86,7 +86,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* operating system. */
+comment|/* ...operating system. */
 end_comment
 
 begin_comment
@@ -101,7 +101,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* standard error. */
+comment|/* ...standard error. */
 end_comment
 
 begin_define
@@ -112,7 +112,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* system console. */
+comment|/* ...system console. */
 end_comment
 
 begin_define
@@ -323,7 +323,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FMTMSG_H_ */
+comment|/* !_FMTMSG_H_ */
 end_comment
 
 end_unit
