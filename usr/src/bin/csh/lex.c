@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.12 (Berkeley) %G%"
+literal|"@(#)lex.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -353,8 +359,7 @@ name|c
 decl_stmt|;
 name|lineloc
 operator|=
-name|btell
-argument_list|()
+name|fseekp
 expr_stmt|;
 name|hp
 operator|->
@@ -5513,7 +5518,7 @@ name|unreadc
 parameter_list|(
 name|c
 parameter_list|)
-name|Char
+name|int
 name|c
 decl_stmt|;
 block|{
@@ -6801,34 +6806,6 @@ directive|endif
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* any similarity to bell telephone is purely accidental */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|btell
-end_ifndef
-
-begin_function
-name|off_t
-name|btell
-parameter_list|()
-block|{
-return|return
-operator|(
-name|fseekp
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void

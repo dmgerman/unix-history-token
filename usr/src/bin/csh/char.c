@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)char.c	5.5 (Berkeley) %G%"
+literal|"@(#)char.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.char.h"
+file|"char.h"
 end_include
 
 begin_decl_stmt

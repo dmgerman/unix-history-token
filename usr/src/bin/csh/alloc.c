@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alloc.c	5.6 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
 end_include
 
 begin_decl_stmt

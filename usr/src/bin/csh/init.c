@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.8 (Berkeley) %G%"
+literal|"@(#)init.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sh.local.h"
+file|"local.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_define
@@ -246,9 +252,6 @@ literal|1
 block|,
 literal|1
 block|,
-ifdef|#
-directive|ifdef
-name|VFORK
 literal|"hashstat"
 block|,
 name|hashstat
@@ -257,8 +260,6 @@ literal|0
 block|,
 literal|0
 block|,
-endif|#
-directive|endif
 literal|"history"
 block|,
 name|dohist

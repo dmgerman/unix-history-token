@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.12 (Berkeley) %G%"
+literal|"@(#)exec.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -151,12 +157,6 @@ begin_comment
 comment|/* bit set */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VFORK
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -165,11 +165,6 @@ decl_stmt|,
 name|misses
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Dummy search path for just absolute search when no path */
@@ -369,15 +364,10 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vexpath
 operator|=
 name|expath
 expr_stmt|;
-endif|#
-directive|endif
 name|v
 operator|=
 name|adrof
@@ -633,15 +623,10 @@ name|av
 argument_list|)
 expr_stmt|;
 comment|/* / command name for postpending */
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vsav
 operator|=
 name|sav
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|havhash
@@ -658,14 +643,9 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|hits
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 do|do
 block|{
 comment|/* 	 * Try to save time by looking at the hash table for where this command 	 * could be.  If we are doing delayed hashing, then we put the names in 	 * one at a time, as the user enters them.  This is kinda like Korn 	 * Shell's "tracked aliases". 	 */
@@ -753,15 +733,10 @@ argument_list|,
 name|sav
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vdp
 operator|=
 name|dp
 expr_stmt|;
-endif|#
-directive|endif
 name|texec
 argument_list|(
 name|dp
@@ -769,15 +744,10 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vdp
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|xfree
 argument_list|(
 operator|(
@@ -787,14 +757,9 @@ name|dp
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|VFORK
 name|misses
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 name|cont
 label|:
 name|pv
@@ -810,23 +775,13 @@ operator|*
 name|pv
 condition|)
 do|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|hits
 operator|--
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vsav
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|xfree
 argument_list|(
 operator|(
@@ -861,15 +816,10 @@ name|expath
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vexpath
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|xfree
 argument_list|(
 operator|(
@@ -996,15 +946,10 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vt
 operator|=
 name|t
 expr_stmt|;
-endif|#
-directive|endif
 name|errno
 operator|=
 literal|0
@@ -1020,15 +965,10 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vt
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|blkfree
 argument_list|(
 operator|(
@@ -1285,15 +1225,10 @@ operator|)
 name|st
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vt
 operator|=
 name|t
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -1304,15 +1239,10 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vt
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|blkfree
 argument_list|(
 operator|(
@@ -1377,15 +1307,10 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 name|Vexpath
 operator|=
 name|expath
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 block|}
@@ -1770,12 +1695,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VFORK
-end_ifdef
-
 begin_function
 name|void
 name|hashstat
@@ -1808,11 +1727,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Hash a command name.  */

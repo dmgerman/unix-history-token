@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.16 (Berkeley) %G%"
+literal|"@(#)proc.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sh.dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sh.proc.h"
+file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_include
@@ -157,10 +163,19 @@ begin_comment
 comment|/*  * pchild - called at interrupt level by the SIGCHLD signal  *	indicating that at least one child has terminated or stopped  *	thus at least one wait system call will definitely return a  *	childs status.  Top level routines (like pwait) must be sure  *	to mask interrupts when playing with the proclist data structures!  */
 end_comment
 
+begin_comment
+comment|/* ARGUSED */
+end_comment
+
 begin_function
 name|void
 name|pchild
-parameter_list|()
+parameter_list|(
+name|notused
+parameter_list|)
+name|int
+name|notused
+decl_stmt|;
 block|{
 specifier|register
 name|struct

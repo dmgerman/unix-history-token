@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.8 (Berkeley) %G%"
+literal|"@(#)misc.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_function_decl
@@ -161,7 +167,7 @@ if|if
 condition|(
 name|s
 operator|==
-literal|0
+name|NULL
 condition|)
 name|s
 operator|=

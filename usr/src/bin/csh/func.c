@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.15 (Berkeley) %G%"
+literal|"@(#)func.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -1158,17 +1164,9 @@ operator|-
 literal|1
 operator|)
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1250,8 +1248,7 @@ name|wp
 operator|->
 name|w_end
 operator|=
-name|btell
-argument_list|()
+name|fseekp
 expr_stmt|;
 block|}
 else|else
@@ -1721,8 +1718,7 @@ name|nwp
 operator|->
 name|w_start
 operator|=
-name|btell
-argument_list|()
+name|fseekp
 expr_stmt|;
 name|nwp
 operator|->
@@ -1985,8 +1981,7 @@ name|whyles
 operator|->
 name|w_end
 operator|=
-name|btell
-argument_list|()
+name|fseekp
 expr_stmt|;
 block|}
 end_function
@@ -2012,8 +2007,7 @@ name|whyles
 operator|->
 name|w_end
 operator|=
-name|btell
-argument_list|()
+name|fseekp
 expr_stmt|;
 name|doagain
 argument_list|()
@@ -3357,8 +3351,7 @@ name|whyles
 operator|->
 name|w_end
 operator|=
-name|btell
-argument_list|()
+name|fseekp
 operator|-
 literal|1
 expr_stmt|;
@@ -3385,8 +3378,7 @@ block|{
 name|long
 name|o
 init|=
-name|btell
-argument_list|()
+name|fseekp
 decl_stmt|;
 while|while
 condition|(

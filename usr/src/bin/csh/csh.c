@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.22 (Berkeley) %G%"
+literal|"@(#)csh.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sh.dir.h"
+file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -79,7 +85,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * C Shell  *  * Bill Joy, UC Berkeley, California, USA  * October 1978, May 1980  *  * Jim Kulp, IIASA, Laxenburg, Austria  * April 1980  */
+comment|/*  * C Shell  *  * Bill Joy, UC Berkeley, California, USA  * October 1978, May 1980  *  * Jim Kulp, IIASA, Laxenburg, Austria  * April 1980  *  * Christos Zoulas, Cornell University  * June, 1991  */
 end_comment
 
 begin_decl_stmt
@@ -3238,10 +3244,19 @@ begin_comment
 comment|/*  * Catch an interrupt, e.g. during lexical input.  * If we are an interactive shell, we reset the interrupt catch  * immediately.  In any case we drain the shell output,  * and finally go through the normal error mechanism, which  * gets a chance to make the shell go away.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|void
 name|pintr
-parameter_list|()
+parameter_list|(
+name|notused
+parameter_list|)
+name|int
+name|notused
+decl_stmt|;
 block|{
 name|pintr1
 argument_list|(
@@ -3789,6 +3804,10 @@ else|:
 operator|-
 literal|1
 operator|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Made it! 	 */

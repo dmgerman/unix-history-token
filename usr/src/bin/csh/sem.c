@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.12 (Berkeley) %G%"
+literal|"@(#)sem.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,26 +31,26 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sh.h"
+file|"csh.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sh.dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sh.proc.h"
+file|"proc.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VFORK
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 begin_function_decl
 specifier|static
@@ -59,11 +59,6 @@ name|vffree
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -80,14 +75,6 @@ name|chkclob
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * C shell  */
-end_comment
-
-begin_comment
-comment|/*VARARGS 1*/
-end_comment
 
 begin_function
 name|void
@@ -145,16 +132,10 @@ specifier|static
 name|sigmask_t
 name|csigmask
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VFORK
 specifier|static
 name|sigmask_t
 name|ocsigmask
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* VFORK */
 specifier|static
 name|int
 name|onosigchld
@@ -679,9 +660,6 @@ operator|==
 name|doeval
 operator|)
 condition|)
-ifdef|#
-directive|ifdef
-name|VFORK
 if|if
 condition|(
 name|t
@@ -702,8 +680,6 @@ operator|)
 operator|||
 name|bifunc
 condition|)
-endif|#
-directive|endif
 block|{
 name|forked
 operator|++
@@ -766,9 +742,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|VFORK
 else|else
 block|{
 name|int
@@ -1310,9 +1283,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* VFORK */
 if|if
 condition|(
 name|pid
@@ -1877,12 +1847,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VFORK
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -1942,11 +1906,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Perform io redirection.  * We may or maynot be forked here.  */
