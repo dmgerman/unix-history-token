@@ -716,10 +716,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|extern
-name|int
-name|optreset
-decl_stmt|;
 comment|/* Reset getopt for ls_main() */
 name|optreset
 operator|=
