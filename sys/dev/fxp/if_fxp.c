@@ -6452,7 +6452,10 @@ name|tx_cb
 operator|->
 name|cb_command
 argument_list|,
+name|htole16
+argument_list|(
 name|FXP_CB_COMMAND_S
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
@@ -6467,8 +6470,11 @@ name|tx_cb
 operator|->
 name|cb_command
 operator|&=
+name|htole16
+argument_list|(
 operator|~
 name|FXP_CB_COMMAND_S
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -7313,9 +7319,9 @@ argument_list|(
 name|rfa
 operator|->
 name|actual_size
+argument_list|)
 operator|&
 literal|0x3fff
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10737,7 +10743,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|6
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|nmcasts
@@ -10753,7 +10759,7 @@ name|htole16
 argument_list|(
 name|nmcasts
 operator|*
-literal|6
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 return|return
