@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.22	%G%"
+literal|"@(#)recipient.c	3.23	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,10 @@ modifier|*
 name|al
 decl_stmt|;
 comment|/* list of addresses to send to */
+name|bool
+name|firstone
+decl_stmt|;
+comment|/* set on first address sent */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -111,6 +115,10 @@ endif|#
 directive|endif
 endif|DEBUG
 name|more
+operator|=
+name|TRUE
+expr_stmt|;
+name|firstone
 operator|=
 name|TRUE
 expr_stmt|;
@@ -245,9 +253,41 @@ name|q_alias
 operator|=
 name|ctladdr
 expr_stmt|;
+if|if
+condition|(
+name|ctladdr
+operator|==
+name|NULL
+operator|||
+operator|(
+name|firstone
+operator|&&
+operator|!
+name|more
+operator|&&
+name|bitset
+argument_list|(
+name|QPRIMARY
+argument_list|,
+name|ctladdr
+operator|->
+name|q_flags
+argument_list|)
+operator|)
+condition|)
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QPRIMARY
+expr_stmt|;
 name|al
 operator|=
 name|a
+expr_stmt|;
+name|firstone
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 comment|/* arrange to send to everyone on the local send list */
@@ -527,6 +567,18 @@ argument_list|,
 literal|"duplicate suppressed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QPRIMARY
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
 name|q
 operator|->
 name|q_flags

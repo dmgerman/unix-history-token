@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.43	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.44	%G% */
 end_comment
 
 begin_ifdef
@@ -307,6 +307,17 @@ end_define
 
 begin_comment
 comment|/* the q_uid q_gid fields are good */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QPRIMARY
+value|000010
+end_define
+
+begin_comment
+comment|/* set from argv */
 end_comment
 
 begin_comment
