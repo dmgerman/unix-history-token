@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.20 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.21 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.20 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.21 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -798,7 +798,7 @@ name|NULL
 condition|)
 name|setproctitle
 argument_list|(
-literal|"%s: %s"
+literal|"%s: %.80s"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -808,7 +808,7 @@ expr_stmt|;
 else|else
 name|setproctitle
 argument_list|(
-literal|"%s %s: %s"
+literal|"%s %s: %.80s"
 argument_list|,
 name|e
 operator|->
@@ -1205,7 +1205,7 @@ literal|0
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s %s: %s"
+literal|"%s %s: %.80s"
 argument_list|,
 name|e
 operator|->
