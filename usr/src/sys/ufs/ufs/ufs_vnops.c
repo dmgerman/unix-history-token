@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.108 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.109 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7028,6 +7028,8 @@ operator|&
 name|bp
 operator|->
 name|b_blkno
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
