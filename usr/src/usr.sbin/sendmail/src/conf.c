@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	5.13 (Berkeley) %G%"
+literal|"@(#)conf.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,7 +351,7 @@ literal|1800
 expr_stmt|;
 name|WkTimeFact
 operator|=
-literal|600
+literal|9000
 expr_stmt|;
 name|FileMode
 operator|=
