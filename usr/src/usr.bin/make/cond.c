@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cond.c	5.3 (Berkeley) %G%"
+literal|"@(#)cond.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,12 +31,6 @@ end_comment
 begin_comment
 comment|/*-  * cond.c --  *	Functions to handle conditionals in a makefile.  *  * Interface:  *	Cond_Eval 	Evaluate the conditional in the passed line.  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
 
 begin_include
 include|#
