@@ -21,17 +21,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -44,6 +33,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -51,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include
@@ -98,6 +107,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -111,19 +132,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* archive name */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tname
-init|=
-literal|"temporary file"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temporary file "name" */
 end_comment
 
 begin_function_decl
@@ -296,12 +304,10 @@ begin_function
 name|void
 name|error
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|err
 argument_list|(
