@@ -8,10 +8,11 @@ end_expr_stmt
 
 begin_for
 for|for 4.2
+comment|/*-  * %sccs.include.proprietary.c%  */
 ifndef|#
 directive|ifndef
 name|lint
-for|static char sccsid[] = "@(#)rio.c	1.2 (Berkeley) %G%"
+for|static char sccsid[] = "@(#)rio.c	1.3 (Berkeley) %G%"
 empty_stmt|;
 end_for
 
@@ -19,6 +20,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
