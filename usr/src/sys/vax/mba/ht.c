@@ -2407,6 +2407,9 @@ condition|)
 block|{
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|bp
 operator|->
 name|b_command
