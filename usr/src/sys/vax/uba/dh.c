@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.27	81/03/06	*/
+comment|/*	dh.c	4.28	81/03/07	*/
 end_comment
 
 begin_include
@@ -94,7 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ubavar.h"
 end_include
 
 begin_include
@@ -143,7 +149,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|dhinfo
 index|[
@@ -201,7 +207,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|dminfo
 index|[
@@ -1074,7 +1080,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1192,7 +1198,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1249,7 +1255,7 @@ name|addr
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1838,7 +1844,7 @@ name|tp0
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -2548,7 +2554,7 @@ name|sbar
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3282,7 +3288,7 @@ name|tp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3580,7 +3586,7 @@ name|addr
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3790,7 +3796,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3954,7 +3960,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
