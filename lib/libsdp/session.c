@@ -473,7 +473,10 @@ name|void
 modifier|*
 name|sdp_open_local
 parameter_list|(
-name|void
+name|char
+specifier|const
+modifier|*
+name|control
 parameter_list|)
 block|{
 name|sdp_session_p
@@ -539,6 +542,16 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|if
+condition|(
+name|control
+operator|==
+name|NULL
+condition|)
+name|control
+operator|=
+name|SDP_LOCAL_PATH
+expr_stmt|;
 name|sa
 operator|.
 name|sun_len
@@ -560,7 +573,7 @@ name|sa
 operator|.
 name|sun_path
 argument_list|,
-name|SDP_LOCAL_PATH
+name|control
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1612,7 +1612,10 @@ name|void
 modifier|*
 name|sdp_open_local
 parameter_list|(
-name|void
+name|char
+specifier|const
+modifier|*
+name|control
 parameter_list|)
 function_decl|;
 end_function_decl

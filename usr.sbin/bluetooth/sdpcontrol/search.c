@@ -45,7 +45,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|attrs
 index|[]
 init|=
@@ -116,7 +116,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|buffer
 index|[
 name|NRECS
@@ -161,18 +161,18 @@ specifier|static
 name|void
 name|print_service_class_id_list
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|start
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|end
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|type
 decl_stmt|,
 name|len
@@ -350,7 +350,7 @@ literal|"\t%#8.8x-%4.4x-%4.4x-%4.4x-%4.4x%8.8x\n"
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -363,7 +363,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -376,7 +376,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -389,7 +389,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -402,7 +402,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -415,7 +415,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -461,12 +461,12 @@ specifier|static
 name|void
 name|print_protocol_descriptor
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|start
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|end
@@ -492,7 +492,7 @@ decl_stmt|;
 block|}
 name|value
 union|;
-name|u_int32_t
+name|uint32_t
 name|type
 decl_stmt|,
 name|len
@@ -588,7 +588,7 @@ literal|"\t%#8.8x-%4.4x-%4.4x-%4.4x-%4.4x%8.8x\n"
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -603,7 +603,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -618,7 +618,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -633,7 +633,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -648,7 +648,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -663,7 +663,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -884,7 +884,7 @@ literal|"u/int/uuid128 %#8.8x-%4.4x-%4.4x-%4.4x-%4.4x%8.8x\n"
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -899,7 +899,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -914,7 +914,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -929,7 +929,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -944,7 +944,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -959,7 +959,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -1239,18 +1239,18 @@ specifier|static
 name|void
 name|print_protocol_descriptor_list
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|start
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|end
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|type
 decl_stmt|,
 name|len
@@ -1436,18 +1436,18 @@ specifier|static
 name|void
 name|print_bluetooth_profile_descriptor_list
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|start
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|end
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|type
 decl_stmt|,
 name|len
@@ -1688,7 +1688,7 @@ literal|"\t%#8.8x-%4.4x-%4.4x-%4.4x-%4.4x%8.8x "
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -1701,7 +1701,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1714,7 +1714,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1727,7 +1727,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1740,7 +1740,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1753,7 +1753,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -1883,7 +1883,7 @@ name|type
 decl_stmt|,
 name|value
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|service
 decl_stmt|;
 comment|/* Parse command line arguments */
@@ -2128,7 +2128,7 @@ else|else
 name|service
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;

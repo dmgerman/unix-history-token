@@ -74,6 +74,12 @@ name|do_sdp_command
 parameter_list|(
 name|bdaddr_p
 parameter_list|,
+name|char
+specifier|const
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 name|int
 parameter_list|,
 name|char
@@ -140,8 +146,17 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|char
+specifier|const
+modifier|*
+name|control
+init|=
+name|SDP_LOCAL_PATH
+decl_stmt|;
 name|int
 name|n
+decl_stmt|,
+name|local
 decl_stmt|;
 name|bdaddr_t
 name|bdaddr
@@ -171,7 +186,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:h"
+literal|"a:c:lh"
 argument_list|)
 operator|)
 operator|!=
@@ -187,6 +202,7 @@ block|{
 case|case
 literal|'a'
 case|:
+comment|/* bdaddr */
 if|if
 condition|(
 operator|!
@@ -251,6 +267,24 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'c'
+case|:
+comment|/* control socket */
+name|control
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+comment|/* local sdpd */
+name|local
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 default|default:
@@ -285,6 +319,10 @@ argument_list|(
 operator|&
 name|bdaddr
 argument_list|,
+name|control
+argument_list|,
+name|local
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -305,6 +343,14 @@ name|do_sdp_command
 parameter_list|(
 name|bdaddr_p
 name|bdaddr
+parameter_list|,
+name|char
+specifier|const
+modifier|*
+name|control
+parameter_list|,
+name|int
+name|local
 parameter_list|,
 name|int
 name|argc
@@ -449,6 +495,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|local
+condition|)
+block|{
+if|if
+condition|(
 name|memcmp
 argument_list|(
 name|bdaddr
@@ -467,9 +519,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|xs
 operator|=
 name|sdp_open
@@ -478,7 +527,19 @@ name|NG_HCI_BDADDR_ANY
 argument_list|,
 name|bdaddr
 argument_list|)
-operator|)
+expr_stmt|;
+block|}
+else|else
+name|xs
+operator|=
+name|sdp_open_local
+argument_list|(
+name|control
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xs
 operator|==
 name|NULL
 condition|)
@@ -799,11 +860,22 @@ parameter_list|)
 block|{
 name|fprintf
 argument_list|(
-name|stdout
+name|stderr
 argument_list|,
-literal|"Usage: sdpcontrol -a BD_ADDR [-h] "
+literal|"Usage: sdpcontrol options command\n"
 expr|\
-literal|"cmd [p1] [..]]\n"
+literal|"Where options are:\n"
+literal|"	-a bdaddr	specify bdaddr\n"
+expr|\
+literal|"	-c path		path to the control socket (default is %s)\n"
+expr|\
+literal|"	-h		display usage and quit\n"
+expr|\
+literal|"	-l		connect to the local SDP server via control socket\n"
+expr|\
+literal|"	command		one of the supported commands\n"
+argument_list|,
+name|SDP_LOCAL_PATH
 argument_list|)
 expr_stmt|;
 name|exit
