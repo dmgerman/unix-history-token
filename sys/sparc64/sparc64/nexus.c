@@ -1080,6 +1080,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|free
 argument_list|(
 name|name
@@ -1087,6 +1088,14 @@ argument_list|,
 name|M_OFWPROP
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|type
+argument_list|,
+name|M_OFWPROP
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|device_set_desc
 argument_list|(
