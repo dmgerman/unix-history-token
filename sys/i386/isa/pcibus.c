@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pci_cfgreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pci_if.h"
 end_include
 
