@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RANDOM.c 1.3 %G%"
+literal|"@(#)RANDOM.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,22 +32,41 @@ name|double
 name|RANDOM
 parameter_list|()
 block|{
-comment|/* 	 * div by maxint to get 0..1 	 */
-name|_seed
-operator|=
-name|RAND
-argument_list|(
-name|_seed
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|(
 name|double
-operator|)
+name|d
+decl_stmt|;
+name|long
+name|l
+decl_stmt|;
+comment|/* 	 * calculate (1103515245 * seed) mod 2^31-1 	 */
+name|d
+operator|=
+literal|1103515245.0
+operator|*
 name|_seed
 operator|/
-literal|0x7fffffff
+literal|2147483647.0
+expr_stmt|;
+name|l
+operator|=
+name|d
+expr_stmt|;
+name|d
+operator|=
+name|d
+operator|-
+name|l
+expr_stmt|;
+name|_seed
+operator|=
+name|d
+operator|*
+literal|2147483647.0
+expr_stmt|;
+comment|/* 	 * want a value in the range 0..1 	 */
+return|return
+operator|(
+name|d
 operator|)
 return|;
 block|}
