@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2001 Michael Smith  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  * Common Interface for SCSI-3 Support driver.  *  * CISS claims to provide a common interface between a generic SCSI  * transport and an intelligent host adapter.  *  * This driver supports CISS as defined in the document "CISS Command  * Interface for SCSI-3 Support Open Specification", Version 1.04,  * Valence Number 1, dated 20001127, produced by Compaq Computer  * Corporation.  This document appears to be a hastily and somewhat  * arbitrarlily cut-down version of a larger (and probably even more  * chaotic and inconsistent) Compaq internal document.  Various  * details were also gleaned from Compaq's "cciss" driver for Linux.  *  * We provide a shim layer between the CISS interface and CAM,  * offloading most of the queueing and being-a-disk chores onto CAM.  * Entry to the driver is via the PCI bus attachment (ciss_probe,  * ciss_attach, etc) and via the CAM interface (ciss_cam_action,  * ciss_cam_poll).  The Compaq CISS adapters are, however, poor SCSI  * citizens and we have to fake up some responses to get reasonable  * behaviour out of them.  In addition, the CISS command set is by no  * means adequate to support the functionality of a RAID controller,  * and thus the supported Compaq adapters utilise portions of the  * control protocol from earlier Compaq adapter families.  *  * Note that we only support the "simple" transport layer over PCI.  * This interface (ab)uses the I2O register set (specifically the post  * queues) to exchange commands with the adapter.  Other interfaces  * are available, but we aren't supposed to know about them, and it is  * dubious whether they would provide major performance improvements  * except under extreme load.  *   * Currently the only supported CISS adapters are the Compaq Smart  * Array 5* series (5300, 5i, 532).  Even with only three adapters,  * Compaq still manage to have interface variations.  *  *  * Thanks must go to Fred Harris and Darryl DeVinney at Compaq, as  * well as Paul Saab at Yahoo! for their assistance in making this  * driver happen.  */
+comment|/*  * Common Interface for SCSI-3 Support driver.  *  * CISS claims to provide a common interface between a generic SCSI  * transport and an intelligent host adapter.  *  * This driver supports CISS as defined in the document "CISS Command  * Interface for SCSI-3 Support Open Specification", Version 1.04,  * Valence Number 1, dated 20001127, produced by Compaq Computer  * Corporation.  This document appears to be a hastily and somewhat  * arbitrarlily cut-down version of a larger (and probably even more  * chaotic and inconsistent) Compaq internal document.  Various  * details were also gleaned from Compaq's "cciss" driver for Linux.  *  * We provide a shim layer between the CISS interface and CAM,  * offloading most of the queueing and being-a-disk chores onto CAM.  * Entry to the driver is via the PCI bus attachment (ciss_probe,  * ciss_attach, etc) and via the CAM interface (ciss_cam_action,  * ciss_cam_poll).  The Compaq CISS adapters are, however, poor SCSI  * citizens and we have to fake up some responses to get reasonable  * behaviour out of them.  In addition, the CISS command set is by no  * means adequate to support the functionality of a RAID controller,  * and thus the supported Compaq adapters utilise portions of the  * control protocol from earlier Compaq adapter families.  *  * Note that we only support the "simple" transport layer over PCI.  * This interface (ab)uses the I2O register set (specifically the post  * queues) to exchange commands with the adapter.  Other interfaces  * are available, but we aren't supposed to know about them, and it is  * dubious whether they would provide major performance improvements  * except under extreme load.  *  * Currently the only supported CISS adapters are the Compaq Smart  * Array 5* series (5300, 5i, 532).  Even with only three adapters,  * Compaq still manage to have interface variations.  *  *  * Thanks must go to Fred Harris and Darryl DeVinney at Compaq, as  * well as Paul Saab at Yahoo! for their assistance in making this  * driver happen.  */
 end_comment
 
 begin_include
@@ -2766,7 +2766,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*      * Allocate the parent bus DMA tag appropriate for our PCI      * interface.      *       * Note that "simple" adapters can only address within a 32-bit      * span.      */
+comment|/*      * Allocate the parent bus DMA tag appropriate for our PCI      * interface.      *      * Note that "simple" adapters can only address within a 32-bit      * span.      */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -5582,7 +5582,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Set the drive's summary status based on the returned status.      *      * XXX testing shows that a failed JBOD drive comes back at next       * boot in "queued for expansion" mode.  WTF?      */
+comment|/*      * Set the drive's summary status based on the returned status.      *      * XXX testing shows that a failed JBOD drive comes back at next      * boot in "queued for expansion" mode.  WTF?      */
 name|ld
 operator|->
 name|cl_status
@@ -10439,7 +10439,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/*      * Handle requests for volumes that don't exist.  A selection timeout      * is slightly better than an illegal request.  Other errors might be       * better.      */
+comment|/*      * Handle requests for volumes that don't exist.  A selection timeout      * is slightly better than an illegal request.  Other errors might be      * better.      */
 if|if
 condition|(
 name|sc
@@ -11616,7 +11616,7 @@ name|cr_tag
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Get a databuffer if we don't already have one, note that the      * adapter command wants a larger buffer than the actual      * structure.      */
+comment|/*      * Get a databuffer if we don't already have one, note that the      * adapter command wants a larger buffer than the actual      * structure.      */
 if|if
 condition|(
 name|cr
@@ -12050,7 +12050,7 @@ name|CISS_FLAG_NOTIFY_OK
 expr_stmt|;
 return|return;
 block|}
-comment|/*       * If the adapter gave us a text message, print it.      */
+comment|/*      * If the adapter gave us a text message, print it.      */
 if|if
 condition|(
 name|cn
@@ -13359,7 +13359,7 @@ name|ciss_notify
 modifier|*
 name|cn
 parameter_list|)
-block|{   }
+block|{  }
 end_function
 
 begin_comment

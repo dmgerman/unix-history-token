@@ -1286,7 +1286,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * CISS config table, which describes the controller's   * supported interface(s) and capabilities.  *  * This is mapped directly via PCI.  */
+comment|/*  * CISS config table, which describes the controller's  * supported interface(s) and capabilities.  *  * This is mapped directly via PCI.  */
 end_comment
 
 begin_struct
@@ -1528,7 +1528,7 @@ comment|/* number of entries in a BIG_MAP */
 end_comment
 
 begin_comment
-comment|/*  * BMIC CDB  *  * Note that the phys_drive/res1 field is nominally the 32-bit  * "block number" field, but the only BMIC command(s) of interest  * implemented overload the MSB (note big-endian format here)   * to be the physical drive ID, so we define accordingly.  */
+comment|/*  * BMIC CDB  *  * Note that the phys_drive/res1 field is nominally the 32-bit  * "block number" field, but the only BMIC command(s) of interest  * implemented overload the MSB (note big-endian format here)  * to be the physical drive ID, so we define accordingly.  */
 end_comment
 
 begin_struct
