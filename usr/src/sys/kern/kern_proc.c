@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.12	81/04/28	*/
+comment|/*	kern_proc.c	4.13	81/11/08	*/
 end_comment
 
 begin_include
@@ -1696,6 +1696,16 @@ condition|;
 name|fp
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FSOCKET
+condition|)
+continue|continue;
 if|if
 condition|(
 name|fp
@@ -1724,7 +1734,8 @@ name|bad
 goto|;
 block|}
 block|}
-comment|/* 	 * find text and data sizes 	 * try them out for possible 	 * exceed of max sizes 	 */
+block|}
+comment|/* 	 * Compute text and data sizes and make sure not too large. 	 */
 name|ts
 operator|=
 name|clrnd
@@ -1787,6 +1798,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 	 * Make sure enough space to start process. 	 */
 name|u
 operator|.
 name|u_cdmap
@@ -2110,20 +2122,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|MELB
-if|if
-condition|(
-name|u
-operator|.
-name|u_uid
-operator|!=
-literal|0
-condition|)
-endif|#
-directive|endif
-block|{
 name|u
 operator|.
 name|u_uid
@@ -2138,7 +2136,6 @@ name|p_uid
 operator|=
 name|uid
 expr_stmt|;
-block|}
 name|u
 operator|.
 name|u_gid
@@ -2334,7 +2331,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 	for(rp =&u.u_ar0[0]; rp<&u.u_ar0[16];) 		*rp++ = 0; */
+comment|/* 	for (rp =&u.u_ar0[0]; rp<&u.u_ar0[16];) 		*rp++ = 0; */
 name|u
 operator|.
 name|u_ar0
@@ -2439,7 +2436,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * exit system call:  * pass back caller's arg  */
+comment|/*  * Exit system call: pass back caller's arg  */
 end_comment
 
 begin_macro
@@ -2755,7 +2752,7 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-name|plock
+name|ilock
 argument_list|(
 name|u
 operator|.
@@ -2776,7 +2773,7 @@ operator|.
 name|u_rdir
 condition|)
 block|{
-name|plock
+name|ilock
 argument_list|(
 name|u
 operator|.
@@ -2822,7 +2819,6 @@ expr_stmt|;
 name|multprog
 operator|--
 expr_stmt|;
-comment|/*	spl7();			/* clock will get mad because of overlaying */
 name|p
 operator|->
 name|p_stat

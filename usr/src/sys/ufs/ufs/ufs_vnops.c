@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	4.11	81/08/12	*/
+comment|/*	ufs_vnops.c	4.12	81/11/08	*/
 end_comment
 
 begin_include
@@ -153,38 +153,16 @@ name|fp
 operator|->
 name|f_flag
 operator|&
-name|FPORT
+name|FSOCKET
 condition|)
-block|{
-name|ptstat
+name|sostat
 argument_list|(
 name|fp
+operator|->
+name|f_socket
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-ifdef|#
-directive|ifdef
-name|BBNNET
-if|if
-condition|(
-name|fp
-operator|->
-name|f_flag
-operator|&
-name|FNET
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
+else|else
 name|stat1
 argument_list|(
 name|fp
@@ -200,7 +178,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * the stat system call.  */
+comment|/*  * Stat system call.  */
 end_comment
 
 begin_macro
@@ -335,7 +313,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * first copy from inode table 	 */
+comment|/* 	 * First copy from inode table 	 */
 name|ds
 operator|.
 name|st_dev
@@ -405,7 +383,7 @@ name|ip
 operator|->
 name|i_size
 expr_stmt|;
-comment|/* 	 * next the dates in the disk 	 */
+comment|/* 	 * Next the dates in the disk 	 */
 name|bp
 operator|=
 name|bread
@@ -501,7 +479,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * the dup system call.  */
+comment|/*  * Dup system call.  */
 end_comment
 
 begin_macro
@@ -629,24 +607,6 @@ name|EBADF
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|u
-operator|.
-name|u_vrpages
-index|[
-name|i
-index|]
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|ETXTBSY
-expr_stmt|;
-return|return;
-block|}
 name|u
 operator|.
 name|u_r
@@ -705,7 +665,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * the mount system call.  */
+comment|/*  * Mount system call.  */
 end_comment
 
 begin_macro
@@ -833,14 +793,10 @@ name|ip
 operator|->
 name|i_mode
 operator|&
-operator|(
-name|IFBLK
-operator|&
-name|IFCHR
-operator|)
+name|IFMT
 operator|)
 operator|!=
-literal|0
+name|IFDIR
 condition|)
 goto|goto
 name|out
@@ -1107,7 +1063,7 @@ name|i_flag
 operator||=
 name|IMOUNT
 expr_stmt|;
-name|prele
+name|irele
 argument_list|(
 name|ip
 argument_list|)
@@ -1328,7 +1284,7 @@ operator|&=
 operator|~
 name|IMOUNT
 expr_stmt|;
-name|plock
+name|ilock
 argument_list|(
 name|ip
 argument_list|)
