@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: ethernet.c,v 1.1.2.1 1999/05/27 17:35:47 mellon Exp $ Copyright (c) 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: ethernet.c,v 1.1.2.2 1999/11/11 16:10:41 mellon Exp $ Copyright (c) 1996 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,15 +251,13 @@ argument_list|,
 operator|&
 name|eh
 argument_list|,
-sizeof|sizeof
-name|eh
+name|ETHER_HEADER_SIZE
 argument_list|)
 expr_stmt|;
 operator|*
 name|bufix
 operator|+=
-sizeof|sizeof
-name|eh
+name|ETHER_HEADER_SIZE
 expr_stmt|;
 block|}
 end_function
@@ -327,8 +325,7 @@ name|buf
 operator|+
 name|bufix
 argument_list|,
-sizeof|sizeof
-name|eh
+name|ETHER_HEADER_SIZE
 argument_list|)
 expr_stmt|;
 ifdef|#
