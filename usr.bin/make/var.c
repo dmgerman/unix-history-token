@@ -2927,6 +2927,7 @@ argument_list|(
 name|MAKE_BSIZE
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Skip to the end character or a colon, whichever comes first, 	 * replacing embedded variables as we go. 	 */
 name|startc
 operator|=
 name|str
@@ -2946,15 +2947,14 @@ name|CLOSE_PAREN
 else|:
 name|CLOSE_BRACE
 expr_stmt|;
-comment|/* 	 * Skip to the end character or a colon, whichever comes first, 	 * replacing embedded variables as we go. 	 */
-for|for
-control|(
 name|tstr
 operator|=
 name|str
 operator|+
 literal|2
-init|;
+expr_stmt|;
+while|while
+condition|(
 operator|*
 name|tstr
 operator|!=
@@ -2969,10 +2969,8 @@ operator|*
 name|tstr
 operator|!=
 literal|':'
-condition|;
-name|tstr
-operator|++
-control|)
+condition|)
+block|{
 if|if
 condition|(
 operator|*
@@ -2990,7 +2988,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|rval
-init|=
+decl_stmt|;
+name|rval
+operator|=
 name|Var_Parse
 argument_list|(
 name|tstr
@@ -3005,7 +3005,7 @@ argument_list|,
 operator|&
 name|rfree
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|rval
@@ -3019,7 +3019,6 @@ literal|"Error expanding embedded variable."
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|rval
@@ -3052,6 +3051,7 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|Buf_AddByte
 argument_list|(
 name|buf
@@ -3063,6 +3063,11 @@ operator|*
 name|tstr
 argument_list|)
 expr_stmt|;
+block|}
+name|tstr
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
