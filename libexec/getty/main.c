@@ -354,8 +354,8 @@ name|char
 name|name
 index|[
 name|MAXLOGNAME
-operator|+
-literal|1
+operator|*
+literal|3
 index|]
 decl_stmt|;
 end_decl_stmt
