@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc_compare.c	5.2 (Berkeley) %G%"
+literal|"@(#)proc_compare.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,39 @@ parameter_list|)
 value|(((p)->p_stat == SRUN) || ((p)->p_stat == SIDL))
 end_define
 
+begin_define
+define|#
+directive|define
+name|TESTAB
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)<<1 | (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONLYA
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONLYB
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOTH
+value|0x11
+end_define
+
 begin_expr_stmt
 name|proc_compare
 argument_list|(
@@ -94,21 +127,22 @@ return|;
 comment|/* 	 * see if at least one of them is runnable 	 */
 switch|switch
 condition|(
+name|TESTAB
+argument_list|(
 name|isrun
 argument_list|(
 name|p1
 argument_list|)
-operator|<<
-literal|1
-operator||
+argument_list|,
 name|isrun
 argument_list|(
 name|p2
 argument_list|)
+argument_list|)
 condition|)
 block|{
 case|case
-literal|0x01
+name|ONLYA
 case|:
 return|return
 operator|(
@@ -116,7 +150,7 @@ literal|1
 operator|)
 return|;
 case|case
-literal|0x10
+name|ONLYB
 case|:
 return|return
 operator|(
@@ -124,7 +158,7 @@ literal|0
 operator|)
 return|;
 case|case
-literal|0x11
+name|BOTH
 case|:
 comment|/* 		 * tie - favor one with highest recent cpu utilization 		 */
 if|if
@@ -157,6 +191,57 @@ operator|(
 literal|0
 operator|)
 return|;
+return|return
+operator|(
+name|p2
+operator|->
+name|p_pid
+operator|>
+name|p1
+operator|->
+name|p_pid
+operator|)
+return|;
+comment|/* tie - return highest pid */
+block|}
+comment|/* 	 * weed out zombies 	 */
+switch|switch
+condition|(
+name|TESTAB
+argument_list|(
+name|p1
+operator|->
+name|p_stat
+operator|==
+name|SZOMB
+argument_list|,
+name|p2
+operator|->
+name|p_stat
+operator|==
+name|SZOMB
+argument_list|)
+condition|)
+block|{
+case|case
+name|ONLYA
+case|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|ONLYB
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|BOTH
+case|:
 return|return
 operator|(
 name|p2
