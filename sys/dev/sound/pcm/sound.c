@@ -15,12 +15,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
-
 begin_decl_stmt
 specifier|static
 name|dev_t
@@ -241,12 +235,6 @@ name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|snd_unit
@@ -264,17 +252,6 @@ name|snd_unit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
 
 begin_function
 specifier|static
@@ -315,6 +292,10 @@ condition|(
 name|pcm_devclass
 operator|==
 name|NULL
+operator|||
+name|devfs_present
+operator|==
+literal|0
 condition|)
 return|return;
 if|if
@@ -604,11 +585,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|pcm_addchan
@@ -878,9 +854,6 @@ operator|->
 name|chancount
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
 if|if
 condition|(
 name|d
@@ -896,8 +869,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -2050,16 +2021,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|pcm_makelinks
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
