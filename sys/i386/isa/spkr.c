@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker on 80386  *  * v1.1 by Eric S. Raymond (esr@snark.thyrsus.com) Feb 1990  *      modified for 386bsd by Andrew A. Chernov<ache@astral.msk.su>  *      386bsd only clean version, all SYSV stuff removed  *      use hz value from param.c  */
+comment|/*  * spkr.c -- device driver for console speaker on 80386  *  * v1.1 by Eric S. Raymond (esr@snark.thyrsus.com) Feb 1990  *      modified for 386bsd by Andrew A. Chernov<ache@astral.msk.su>  *      386bsd only clean version, all SYSV stuff removed  *      use hz value from param.c  *  *	$Id$  */
 end_comment
 
 begin_include
