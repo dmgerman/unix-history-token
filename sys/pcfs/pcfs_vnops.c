@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vnops.c,v 1.5 1994/03/15 20:28:54 ache Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vnops.c,v 1.6 1994/05/25 08:33:15 swallace Exp $  */
 end_comment
 
 begin_include
@@ -1913,13 +1913,6 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-comment|/*  *  If we have read everything from this block or  *  have read to end of file then we are done with  *  this block.  Mark it to say the buffer can be reused if  *  need be.  */
-if|#
-directive|if
-literal|0
-block|if (n + on == pmp->pm_bpcluster  || 		    uio->uio_offset == dep->de_FileSize) 			bp->b_flags |= B_AGE;
-endif|#
-directive|endif
 name|brelse
 argument_list|(
 name|bp
@@ -2536,12 +2529,6 @@ operator|->
 name|pm_bpcluster
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_AGE
-expr_stmt|;
 name|bawrite
 argument_list|(
 name|bp
@@ -5957,13 +5944,6 @@ name|uio
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *  If we have read everything from this block or  *  have read to end of file then we are done with  *  this block.  Mark it to say the buffer can be reused if  *  need be.  */
-if|#
-directive|if
-literal|0
-block|if (n + on == pmp->pm_bpcluster  || 		    (uio->uio_offset-bias) == dep->de_FileSize) 			bp->b_flags |= B_AGE;
-endif|#
-directive|endif
 name|brelse
 argument_list|(
 name|bp

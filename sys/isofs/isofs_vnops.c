@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_vnops.c,v 1.4 1993/12/19 00:51:08 wollman Exp $  */
+comment|/*  *	$Id: isofs_vnops.c,v 1.5 1994/03/25 22:26:22 davidg Exp $  */
 end_comment
 
 begin_include
@@ -847,30 +847,6 @@ name|n
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|+
-name|on
-operator|==
-name|imp
-operator|->
-name|im_bsize
-operator|||
-name|uio
-operator|->
-name|uio_offset
-operator|==
-name|ip
-operator|->
-name|i_size
-condition|)
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_AGE
 expr_stmt|;
 name|brelse
 argument_list|(
