@@ -252,7 +252,11 @@ literal|"WARNING:  A geometry of %d/%d/%d for %s is incorrect.  Using\n"
 literal|"a more likely geometry.  If this geometry is incorrect or you\n"
 literal|"are unsure as to whether or not it's correct, please consult\n"
 literal|"the Hardware Guide in the Documentation submenu or use the\n"
-literal|" (G)eometry command to change it now."
+literal|"(G)eometry command to change it now.\n\n"
+literal|"Remember: you need to enter whatever your BIOS thinks the\n"
+literal|"geometry were!  For IDE, that's what you have told in the BIOS\n"
+literal|"setup, for SCSI, it's the translation mode your controller is\n"
+literal|"using.  Do NOT use a ``physical geometry''."
 argument_list|,
 name|d
 operator|->
@@ -1036,6 +1040,8 @@ literal|"You will run into serious trouble with ST-506 and ESDI drives\n"
 literal|"and possibly some IDE drives (e.g. drives running under the\n"
 literal|"control of sort of disk manager).  SCSI drives are considerably\n"
 literal|"less at risk.\n\n"
+literal|"If, on the other hand, your goal is a dedicated FreeBSD machine\n"
+literal|"and nothing else, this option is for you.\n\n"
 literal|"Do you insist on dedicating the entire disk this way?"
 argument_list|)
 expr_stmt|;
