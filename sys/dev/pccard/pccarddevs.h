@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.38 2002/11/28 00:57:47 non Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.40 2003/01/17 18:39:49 shiba Exp   */
 end_comment
 
 begin_comment
@@ -1217,6 +1217,27 @@ end_define
 begin_comment
 comment|/* Allied Telesis K.K. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ALLIEDTELESIS_WR211PCM
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ALLIEDTELESIS_WR211PCM
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ALLIEDTELESIS_WR211PCM
+value|"Allied Telesis WR211PCM"
+end_define
 
 begin_define
 define|#
