@@ -628,7 +628,7 @@ operator|++
 control|)
 block|{
 comment|/* each drive name */
-name|strcat
+name|strlcat
 argument_list|(
 name|buffer
 argument_list|,
@@ -636,13 +636,23 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
 name|buffer
 argument_list|,
 literal|" "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
