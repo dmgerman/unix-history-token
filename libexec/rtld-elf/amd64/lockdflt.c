@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|CACHE_LINE_SIZE
-value|32
+value|64
 end_define
 
 begin_define
