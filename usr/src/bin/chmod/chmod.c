@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.2 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -587,20 +587,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|chmod
-argument_list|(
-name|dp
-operator|->
-name|d_name
-argument_list|,
-name|newmode
-argument_list|(
-name|st
-operator|.
-name|st_mode
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|st
@@ -615,7 +601,27 @@ name|dp
 operator|->
 name|d_name
 argument_list|,
-name|mode
+name|newmode
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|chmod
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|newmode
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
