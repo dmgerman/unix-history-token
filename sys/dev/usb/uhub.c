@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.48 2000/12/29 01:24:56 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.49 2001/01/21 19:00:06 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2677,8 +2677,6 @@ argument_list|(
 name|sc
 operator|->
 name|sc_hub
-operator|->
-name|bus
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.62 2001/01/21 02:39:53 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.63 2001/01/21 19:00:06 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -944,7 +944,7 @@ begin_function_decl
 name|void
 name|usb_needs_explore
 parameter_list|(
-name|usbd_bus_handle
+name|usbd_device_handle
 parameter_list|)
 function_decl|;
 end_function_decl

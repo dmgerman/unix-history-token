@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.47 2001/01/21 02:39:53 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.48 2001/01/21 19:00:06 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -980,6 +980,56 @@ name|usbd_status
 name|usbd_reload_device_desc
 parameter_list|(
 name|usbd_device_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * The usb_task structs form a queue of things to run in the USB event  * thread.  Normally this is just device discovery when a connect/disconnect  * has been detected.  But it may also be used by drivers that need to  * perform (short) tasks that must have a process context.  */
+end_comment
+
+begin_struct
+struct|struct
+name|usb_task
+block|{
+name|SIMPLEQ_ENTRY
+argument_list|(
+argument|usb_task
+argument_list|)
+name|next
+expr_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|fun
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+name|char
+name|onqueue
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|usb_add_task
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|,
+name|struct
+name|usb_task
+modifier|*
+name|task
 parameter_list|)
 function_decl|;
 end_function_decl
