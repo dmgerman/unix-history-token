@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.30 1994/11/17 23:36:49 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.31 1994/11/19 00:09:00 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -488,7 +488,7 @@ name|strcat
 argument_list|(
 name|p
 argument_list|,
-literal|"\nDo you wish to abort the installation?"
+literal|"\nDo you wish to abort the installation?\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -507,9 +507,14 @@ operator|-
 literal|1
 argument_list|)
 condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|Abort
 argument_list|()
 expr_stmt|;
+block|}
 else|else
 name|dialog_clear
 argument_list|()
@@ -533,7 +538,7 @@ name|dialog_yesno
 argument_list|(
 literal|"Exit sysinstall"
 argument_list|,
-literal|"Are you sure you want to quit?"
+literal|"\nAre you sure you want to quit?\n"
 argument_list|,
 operator|-
 literal|1

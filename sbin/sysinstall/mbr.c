@@ -675,7 +675,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-comment|/*      * If installing to the whole disk      * then clobber any existing bootcode.      */
+comment|/*      * Must replace any old bootcode that was read      * from disk with our bootblocks.      */
 name|TellEm
 argument_list|(
 literal|"Loading MBR code from %s"
@@ -1073,7 +1073,7 @@ name|dp
 operator|->
 name|dp_typ
 operator|=
-name|DOSPTYP_386BSD
+name|MBR_PTYPE_FreeBSD
 expr_stmt|;
 name|dp
 operator|->
@@ -1449,7 +1449,7 @@ argument_list|)
 expr_stmt|;
 name|key
 operator|=
-name|line_edit
+name|edit_line
 argument_list|(
 name|window
 argument_list|,
@@ -1472,6 +1472,13 @@ index|[
 name|cur_field
 index|]
 operator|.
+name|field
+argument_list|,
+name|field
+index|[
+name|cur_field
+index|]
+operator|.
 name|width
 argument_list|,
 name|field
@@ -1480,17 +1487,6 @@ name|cur_field
 index|]
 operator|.
 name|maxlen
-argument_list|,
-name|item_selected_attr
-argument_list|,
-literal|1
-argument_list|,
-name|field
-index|[
-name|cur_field
-index|]
-operator|.
-name|field
 argument_list|)
 expr_stmt|;
 name|next
@@ -1627,9 +1623,9 @@ directive|ifdef
 name|0
 name|dialog_msgbox
 argument_list|(
-literal|"BIOS disk geometry values"
+literal|"\nBIOS disk geometry values"
 argument_list|,
-literal|"In order to setup the boot area of the disk it is necessary to know the BIOS values for the disk geometry i.e. the number of cylinders, heads and sectors. These values may be different form the real geometry of the disk, depending on whether or not your system uses geometry translation. At this stage it is the entries from the BIOS that are needed. If you do not know these they can be found by rebooting the machine and entering th BIOS setup routine. See you BIOS manual for details"
+literal|"In order to setup the boot area of the disk it is necessary to know the BIOS values for the disk geometry i.e. the number of cylinders, heads and sectors. These values may be different form the real geometry of the disk, depending on whether or not your system uses geometry translation. At this stage it is the entries from the BIOS that are needed. If you do not know these they can be found by rebooting the machine and entering th BIOS setup routine. See you BIOS manual for details.\n"
 argument_list|,
 argument|-
 literal|1
@@ -1733,7 +1729,7 @@ name|dialog_yesno
 argument_list|(
 name|TITLE
 argument_list|,
-literal|"Are you sure you wish to proceed ?"
+literal|"\nAre you sure you wish to proceed ?\n"
 argument_list|,
 operator|-
 literal|1
@@ -1743,6 +1739,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|dedicated_mbr
@@ -1768,7 +1767,7 @@ name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"\n\nCouldn't create new master boot record.\n\n%s"
+literal|"\nCouldn't create new master boot record.\n\n%s"
 argument_list|,
 name|errmsg
 argument_list|)
@@ -1791,7 +1790,7 @@ name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"Do you wish to dedicate the whole disk to FreeBSD?\n\nDoing so will overwrite any existing data on the disk."
+literal|"\nDo you wish to dedicate the whole disk to FreeBSD?\n\nDoing so will overwrite any existing data on the disk.\n"
 argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
@@ -1838,7 +1837,7 @@ name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"\n\nCouldn't dedicate disk to FreeBSD.\n\n %s"
+literal|"\nCouldn't dedicate disk to FreeBSD.\n\n %s"
 argument_list|,
 name|errmsg
 argument_list|)
@@ -1850,7 +1849,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Fill in fields with mbr data */
 if|if
 condition|(
 operator|!
@@ -2281,9 +2279,22 @@ name|field
 argument_list|)
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|mbr_field
+index|[
+name|cur_field
+index|]
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|F_EDIT
+case|:
 name|key
 operator|=
-name|line_edit
+name|edit_line
 argument_list|(
 name|window
 argument_list|,
@@ -2306,6 +2317,13 @@ index|[
 name|cur_field
 index|]
 operator|.
+name|field
+argument_list|,
+name|mbr_field
+index|[
+name|cur_field
+index|]
+operator|.
 name|width
 argument_list|,
 name|mbr_field
@@ -2314,17 +2332,6 @@ name|cur_field
 index|]
 operator|.
 name|maxlen
-argument_list|,
-name|item_selected_attr
-argument_list|,
-literal|1
-argument_list|,
-name|mbr_field
-index|[
-name|cur_field
-index|]
-operator|.
-name|field
 argument_list|)
 expr_stmt|;
 comment|/* Propagate changes to MBR */
@@ -2570,12 +2577,19 @@ name|cur_field
 operator|=
 name|next
 expr_stmt|;
+break|break;
+case|case
+name|F_TITLE
+case|:
+default|default:
+break|break;
+block|}
 block|}
 name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"Writing a new master boot record can erase the current disk contents.\n\n Are you sure you want to write the new MBR?"
+literal|"\nWriting a new master boot record can erase the current disk contents.\n\n                Are you sure you want to write the new MBR?\n"
 argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
@@ -2640,7 +2654,7 @@ name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"The following error occured while trying to write the new MBR\n\n%s"
+literal|"\nThe following error occured while trying to write the new MBR.\n\n%s"
 argument_list|,
 name|errmsg
 argument_list|)
@@ -2652,6 +2666,87 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+comment|/* Find first FreeBSD partition, as kernel would upon boot */
+name|disk_list
+index|[
+name|disk
+index|]
+operator|.
+name|inst_part
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NDOSPART
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|mbr
+operator|->
+name|dospart
+index|[
+name|i
+index|]
+operator|.
+name|dp_typ
+operator|==
+name|MBR_PTYPE_FreeBSD
+condition|)
+block|{
+name|disk_list
+index|[
+name|disk
+index|]
+operator|.
+name|inst_part
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|disk_list
+index|[
+name|disk
+index|]
+operator|.
+name|inst_part
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|errmsg
+argument_list|,
+literal|"\nThere is no space allocated to FreeBSD on %s\n"
+argument_list|,
+name|diskname
+argument_list|(
+name|disk
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|delwin
 argument_list|(
