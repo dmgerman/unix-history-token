@@ -172,7 +172,7 @@ name|irq_handle
 decl_stmt|;
 comment|/* Handle for irq handler */
 name|u_char
-name|gone
+name|sc_gone
 decl_stmt|;
 comment|/* 1 = Card bailed out		*/
 name|int
