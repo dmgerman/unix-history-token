@@ -169,12 +169,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|eval
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -212,6 +206,10 @@ name|bytecnt
 init|=
 operator|-
 literal|1
+decl_stmt|,
+name|eval
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
