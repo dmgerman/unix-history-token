@@ -3723,13 +3723,10 @@ name|maxfrags
 operator|<
 literal|2
 condition|)
-block|{
-name|ret
+name|maxfrags
 operator|=
-name|EINVAL
+literal|2
 expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 name|maxfrags
