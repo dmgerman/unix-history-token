@@ -2766,7 +2766,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|AD_SUBSYSID_62022
 case|:
@@ -2782,7 +2781,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|AD_SUBSYSID_62044_REV0
 case|:
@@ -2801,7 +2799,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|AD_SUBSYSID_62020
 case|:
@@ -2817,7 +2814,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|AD_SUBSYSID_69011
 case|:
@@ -2833,7 +2829,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 default|default:
 name|device_set_desc
 argument_list|(
