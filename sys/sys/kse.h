@@ -232,6 +232,17 @@ value|0x01
 end_define
 
 begin_comment
+comment|/* Flags for kse_switchin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSE_SWITCHIN_SETTMBX
+value|0x01
+end_define
+
+begin_comment
 comment|/* Commands for kse_thr_interrupt */
 end_comment
 
@@ -332,13 +343,12 @@ begin_function_decl
 name|int
 name|kse_switchin
 parameter_list|(
-name|mcontext_t
+name|struct
+name|kse_thr_mailbox
 modifier|*
 parameter_list|,
-name|long
-parameter_list|,
-name|long
-modifier|*
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
