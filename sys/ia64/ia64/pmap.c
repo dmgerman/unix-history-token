@@ -1925,6 +1925,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|PCPU_SET
+argument_list|(
+name|current_pmap
+argument_list|,
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* 	 * Region 5 is mapped via the vhpt. 	 */
 end_comment
