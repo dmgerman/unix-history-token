@@ -1537,6 +1537,11 @@ begin_struct
 struct|struct
 name|CARDTYPE
 block|{
+name|unsigned
+name|int
+name|card_id
+decl_stmt|;
+comment|/* card id (from #define's) */
 name|char
 modifier|*
 name|name
@@ -1861,6 +1866,21 @@ define|#
 directive|define
 name|METEOR_SECAM
 value|0x00000400
+define|#
+directive|define
+name|BROOKTREE_NTSC
+value|0x00000100
+comment|/* used in video open() and */
+define|#
+directive|define
+name|BROOKTREE_PAL
+value|0x00000200
+comment|/* in the kernel config */
+define|#
+directive|define
+name|BROOKTREE_SECAM
+value|0x00000400
+comment|/* file */
 define|#
 directive|define
 name|METEOR_AUTOMODE
