@@ -368,6 +368,10 @@ name|n
 operator|=
 name|len
 expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|n
