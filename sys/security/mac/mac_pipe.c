@@ -9079,13 +9079,6 @@ argument_list|,
 name|newlabel
 argument_list|)
 expr_stmt|;
-name|mac_cred_mmapped_drop_perms
-argument_list|(
-name|curthread
-argument_list|,
-name|cred
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -12066,7 +12059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  *  * XXX: Needs to be re-written for proc locking.  */
+comment|/*  * MPSAFE  */
 end_comment
 
 begin_function
@@ -12228,11 +12221,6 @@ argument_list|,
 name|oldcred
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|mac_relabel_cred
 argument_list|(
 name|newcred
@@ -12241,22 +12229,36 @@ operator|&
 name|intlabel
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_ucred
 operator|=
 name|newcred
 expr_stmt|;
+comment|/* 	 * Grab additional reference for use while revoking mmaps, prior 	 * to releasing the proc lock and sharing the cred. 	 */
+name|crhold
+argument_list|(
+name|newcred
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mac_cred_mmapped_drop_perms
+argument_list|(
+name|td
+argument_list|,
+name|newcred
+argument_list|)
+expr_stmt|;
+name|crfree
+argument_list|(
+name|newcred
+argument_list|)
+expr_stmt|;
+comment|/* Free revocation reference. */
 name|crfree
 argument_list|(
 name|oldcred
