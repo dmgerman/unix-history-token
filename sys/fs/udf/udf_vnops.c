@@ -1926,7 +1926,7 @@ name|printf
 argument_list|(
 literal|"%s called\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4056,7 +4056,7 @@ name|printf
 argument_list|(
 literal|"%s called\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
