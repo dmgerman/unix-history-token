@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rxreg.h	4.2	83/02/21	*/
+comment|/*	rxreg.h	4.3	83/02/21	*/
 end_comment
 
 begin_comment
@@ -304,6 +304,51 @@ define|\
 value|"\20\14RXES_NXM\13RXES_WCOF\11RXES_DRV1\10RXES_RDY\7RXES_DDMK\6RXES_DDEN\5\ RXES_DNER\4RXES_ACLO\3RXES_ID\1RXES_CRC"
 end_define
 
+begin_comment
+comment|/*   * Ioctl commands, move to dkio.h later  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RXIOC_FORMAT
+value|(('d'<<8)|1)
+end_define
+
+begin_comment
+comment|/* format the disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RXIOC_WDDS
+value|(('d'<<8)|2)
+end_define
+
+begin_comment
+comment|/* write `deleted data' mark */
+end_comment
+
+begin_comment
+comment|/* on next sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RXIOC_RDDSMK
+value|(('d'<<8)|3)
+end_define
+
+begin_comment
+comment|/* did last read sector contain */
+end_comment
+
+begin_comment
+comment|/* `deleted data'?*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -379,6 +424,12 @@ literal|"Preamble, but no ID mark"
 block|}
 block|,
 block|{
+literal|0140
+block|,
+literal|"Header CRC error"
+block|}
+block|,
+block|{
 literal|0150
 block|,
 literal|"Track addr wrong in header"
@@ -399,7 +450,7 @@ block|,
 block|{
 literal|0200
 block|,
-literal|"CRC error"
+literal|"Data CRC error"
 block|}
 block|,
 block|{
