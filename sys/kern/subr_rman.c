@@ -2205,17 +2205,6 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-name|struct
-name|rman
-modifier|*
-name|rm
-decl_stmt|;
-name|rm
-operator|=
-name|r
-operator|->
-name|r_rm
-expr_stmt|;
 name|r
 operator|->
 name|r_flags

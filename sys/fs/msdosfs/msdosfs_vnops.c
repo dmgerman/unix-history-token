@@ -4011,24 +4011,6 @@ name|fddep
 decl_stmt|;
 comment|/* from file's parent directory	 */
 name|struct
-name|denode
-modifier|*
-name|fdep
-decl_stmt|;
-comment|/* from file or directory	 */
-name|struct
-name|denode
-modifier|*
-name|tddep
-decl_stmt|;
-comment|/* to file's parent directory	 */
-name|struct
-name|denode
-modifier|*
-name|tdep
-decl_stmt|;
-comment|/* to file or directory		 */
-name|struct
 name|msdosfsmount
 modifier|*
 name|pmp
@@ -4051,35 +4033,6 @@ name|ap
 operator|->
 name|a_fdvp
 argument_list|)
-expr_stmt|;
-name|fdep
-operator|=
-name|VTODE
-argument_list|(
-name|ap
-operator|->
-name|a_fvp
-argument_list|)
-expr_stmt|;
-name|tddep
-operator|=
-name|VTODE
-argument_list|(
-name|ap
-operator|->
-name|a_tdvp
-argument_list|)
-expr_stmt|;
-name|tdep
-operator|=
-name|tvp
-condition|?
-name|VTODE
-argument_list|(
-name|tvp
-argument_list|)
-else|:
-name|NULL
 expr_stmt|;
 name|pmp
 operator|=

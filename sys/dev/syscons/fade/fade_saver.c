@@ -69,13 +69,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|blanked
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -111,10 +104,6 @@ condition|(
 name|blank
 condition|)
 block|{
-name|blanked
-operator|=
-name|TRUE
-expr_stmt|;
 if|if
 condition|(
 name|ISPALAVAIL
@@ -287,10 +276,6 @@ name|V_DISPLAY_ON
 operator|)
 expr_stmt|;
 block|}
-name|blanked
-operator|=
-name|FALSE
-expr_stmt|;
 block|}
 return|return
 literal|0
@@ -340,10 +325,6 @@ condition|)
 return|return
 name|ENODEV
 return|;
-name|blanked
-operator|=
-name|FALSE
-expr_stmt|;
 return|return
 literal|0
 return|;

@@ -1004,11 +1004,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 if|if
 condition|(
 name|ithread
@@ -1025,12 +1020,6 @@ operator|=
 name|ithread
 operator|->
 name|it_td
-expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
 expr_stmt|;
 name|mtx_lock
 argument_list|(

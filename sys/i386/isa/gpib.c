@@ -4221,9 +4221,6 @@ name|int
 name|counter
 decl_stmt|;
 name|int
-name|fifopos
-decl_stmt|;
-name|int
 name|sleeptime
 decl_stmt|;
 name|sleeptime
@@ -4231,10 +4228,6 @@ operator|=
 name|SLEEP_MIN
 expr_stmt|;
 name|counter
-operator|=
-literal|0
-expr_stmt|;
-name|fifopos
 operator|=
 literal|0
 expr_stmt|;
@@ -4410,9 +4403,6 @@ name|status
 decl_stmt|;
 name|int
 name|counter
-decl_stmt|;
-name|int
-name|fifopos
 decl_stmt|;
 name|int
 name|sleeptime
@@ -4642,19 +4632,11 @@ name|gts
 argument_list|)
 expr_stmt|;
 comment|/* Set to Standby (Controller) */
-name|fifopos
-operator|=
-literal|0
-expr_stmt|;
 name|sleeptime
 operator|=
 name|SLEEP_MIN
 expr_stmt|;
 name|counter
-operator|=
-literal|0
-expr_stmt|;
-name|fifopos
 operator|=
 literal|0
 expr_stmt|;
@@ -5486,9 +5468,6 @@ decl_stmt|;
 name|int
 name|counter
 decl_stmt|;
-name|int
-name|fifopos
-decl_stmt|;
 name|unsigned
 name|inword
 decl_stmt|;
@@ -5695,10 +5674,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Set to Standby (Controller) */
 name|counter
-operator|=
-literal|0
-expr_stmt|;
-name|fifopos
 operator|=
 literal|0
 expr_stmt|;

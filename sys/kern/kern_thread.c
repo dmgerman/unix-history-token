@@ -7922,11 +7922,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -7936,12 +7931,6 @@ operator|=
 name|td
 operator|->
 name|td_proc
-expr_stmt|;
-name|kg
-operator|=
-name|td
-operator|->
-name|td_ksegrp
 expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
