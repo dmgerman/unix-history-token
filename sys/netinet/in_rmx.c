@@ -244,13 +244,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-define|#
-directive|define
-name|satosin
-parameter_list|(
-name|sa
-parameter_list|)
-value|((struct sockaddr_in *)sa)
 if|if
 condition|(
 name|satosin
@@ -278,9 +271,6 @@ name|rt_flags
 operator||=
 name|RTF_LOCAL
 expr_stmt|;
-undef|#
-directive|undef
-name|satosin
 block|}
 block|}
 if|if
