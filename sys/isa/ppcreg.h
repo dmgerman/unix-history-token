@@ -101,6 +101,24 @@ value|10
 end_define
 
 begin_comment
+comment|/*  * Parallel Port Chipset Type. SMC versus GENERIC (others)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_TYPE_SMCLIKE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_TYPE_GENERIC
+value|1
+end_define
+
+begin_comment
 comment|/*  * Generic structure to hold parallel port chipset info.  */
 end_comment
 
@@ -112,8 +130,13 @@ name|int
 name|ppc_unit
 decl_stmt|;
 name|int
+name|ppc_model
+decl_stmt|;
+comment|/* chipset model if detected */
+name|int
 name|ppc_type
 decl_stmt|;
+comment|/* generic or smclike chipset type */
 name|int
 name|ppc_mode
 decl_stmt|;
@@ -218,38 +241,60 @@ name|short
 name|ppc_rthr
 decl_stmt|;
 comment|/* readIntrThresold */
-define|#
-directive|define
-name|ppc_base
-value|ppc_link.base
-define|#
-directive|define
-name|ppc_epp
-value|ppc_link.epp_protocol
-define|#
-directive|define
-name|ppc_irq
-value|ppc_link.id_irq
-define|#
-directive|define
-name|ppc_subm
-value|ppc_link.submicroseq
-define|#
-directive|define
+name|char
+modifier|*
 name|ppc_ptr
-value|ppc_link.ptr
-define|#
-directive|define
+decl_stmt|;
+comment|/* microseq current pointer */
+name|int
 name|ppc_accum
-value|ppc_link.accum
+decl_stmt|;
+comment|/* microseq accumulator */
+name|int
+name|ppc_base
+decl_stmt|;
+comment|/* parallel port base address */
+name|int
+name|ppc_epp
+decl_stmt|;
+comment|/* EPP mode (1.7 or 1.9) */
+name|int
+name|ppc_irq
+decl_stmt|;
 name|unsigned
 name|char
 name|ppc_flags
 decl_stmt|;
-name|struct
-name|ppb_link
-name|ppc_link
+name|device_t
+name|ppbus
 decl_stmt|;
+comment|/* parallel port chipset corresponding ppbus */
+name|int
+name|rid_irq
+decl_stmt|,
+name|rid_drq
+decl_stmt|,
+name|rid_ioport
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res_irq
+decl_stmt|,
+modifier|*
+name|res_drq
+decl_stmt|,
+modifier|*
+name|res_ioport
+decl_stmt|;
+name|void
+modifier|*
+name|intr_cookie
+decl_stmt|;
+name|int
+name|ppc_registered
+decl_stmt|;
+comment|/* 1 if ppcintr() is the registered interrupt */
 block|}
 struct|;
 end_struct

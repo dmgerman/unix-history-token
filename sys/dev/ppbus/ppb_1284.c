@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -43,6 +49,28 @@ directive|include
 file|<dev/ppbus/ppb_1284.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ppbus_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ppbus/ppbio.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|DEVTOSOFTC
+parameter_list|(
+name|dev
+parameter_list|)
+value|((struct ppb_data *)device_get_softc(dev))
+end_define
+
 begin_comment
 comment|/*  * do_1284_wait()  *  * Wait for the peripherial up to 40ms  */
 end_comment
@@ -52,10 +80,8 @@ specifier|static
 name|int
 name|do_1284_wait
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|char
 name|mask
@@ -66,9 +92,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|ppb_poll_device
+name|ppb_poll_bus
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 literal|4
 argument_list|,
@@ -90,10 +116,8 @@ specifier|static
 name|int
 name|do_peripheral_wait
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|char
 name|mask
@@ -104,9 +128,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|ppb_poll_device
+name|ppb_poll_bus
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 literal|100
 argument_list|,
@@ -142,25 +166,29 @@ specifier|static
 name|int
 name|ppb_1284_reset_error
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|state
 parameter_list|)
 block|{
-name|dev
-operator|->
+name|struct
+name|ppb_data
+modifier|*
+name|ppb
+init|=
+name|DEVTOSOFTC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
 name|ppb
 operator|->
 name|error
 operator|=
 name|PPB_NO_ERROR
 expr_stmt|;
-name|dev
-operator|->
 name|ppb
 operator|->
 name|state
@@ -184,17 +212,16 @@ specifier|static
 name|int
 name|ppb_1284_get_state
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|)
 block|{
 return|return
 operator|(
-name|dev
-operator|->
-name|ppb
+name|DEVTOSOFTC
+argument_list|(
+name|bus
+argument_list|)
 operator|->
 name|state
 operator|)
@@ -211,21 +238,27 @@ specifier|static
 name|int
 name|ppb_1284_set_state
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|state
 parameter_list|)
 block|{
+name|struct
+name|ppb_data
+modifier|*
+name|ppb
+init|=
+name|DEVTOSOFTC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
 comment|/* call ppb_1284_reset_error() if you absolutly want to change 	 * the state from PPB_ERROR to another */
 if|if
 condition|(
 operator|(
-name|dev
-operator|->
 name|ppb
 operator|->
 name|state
@@ -234,8 +267,6 @@ name|PPB_ERROR
 operator|)
 operator|&&
 operator|(
-name|dev
-operator|->
 name|ppb
 operator|->
 name|error
@@ -244,16 +275,12 @@ name|PPB_NO_ERROR
 operator|)
 condition|)
 block|{
-name|dev
-operator|->
 name|ppb
 operator|->
 name|state
 operator|=
 name|state
 expr_stmt|;
-name|dev
-operator|->
 name|ppb
 operator|->
 name|error
@@ -274,10 +301,8 @@ specifier|static
 name|int
 name|ppb_1284_set_error
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|error
@@ -286,12 +311,20 @@ name|int
 name|event
 parameter_list|)
 block|{
+name|struct
+name|ppb_data
+modifier|*
+name|ppb
+init|=
+name|DEVTOSOFTC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
 comment|/* do not accumulate errors */
 if|if
 condition|(
 operator|(
-name|dev
-operator|->
 name|ppb
 operator|->
 name|error
@@ -300,8 +333,6 @@ name|PPB_NO_ERROR
 operator|)
 operator|&&
 operator|(
-name|dev
-operator|->
 name|ppb
 operator|->
 name|state
@@ -310,16 +341,12 @@ name|PPB_ERROR
 operator|)
 condition|)
 block|{
-name|dev
-operator|->
 name|ppb
 operator|->
 name|error
 operator|=
 name|error
 expr_stmt|;
-name|dev
-operator|->
 name|ppb
 operator|->
 name|state
@@ -338,7 +365,7 @@ name|error
 argument_list|,
 name|ppb_rstr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|&
 literal|0xff
@@ -499,10 +526,8 @@ begin_function
 name|int
 name|ppb_peripheral_negociate
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|mode
@@ -525,14 +550,14 @@ name|r
 decl_stmt|;
 name|ppb_set_mode
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_COMPATIBLE
 argument_list|)
 expr_stmt|;
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_PERIPHERAL_NEGOCIATION
 argument_list|)
@@ -560,7 +585,7 @@ operator|&&
 operator|(
 name|ppb_rstr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|&
 name|nBUSY
@@ -578,7 +603,7 @@ operator|!
 operator|(
 name|ppb_rstr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|&
 name|SELECT
@@ -601,7 +626,7 @@ name|r
 operator|=
 name|ppb_rdtr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 comment|/* nibble mode is not supported */
@@ -626,7 +651,7 @@ block|{
 comment|/* Event 5 - restore direction bit, no data avail */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|STROBE
@@ -648,7 +673,7 @@ expr_stmt|;
 comment|/* Event 6 */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -681,7 +706,7 @@ endif|#
 directive|endif
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_MODE_UNSUPPORTED
 argument_list|,
@@ -700,7 +725,7 @@ else|else
 block|{
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_PERIPHERAL_IDLE
 argument_list|)
@@ -715,7 +740,7 @@ name|BYTE_1284_NORMAL
 case|:
 name|ppb_set_mode
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_BYTE
 argument_list|)
@@ -742,7 +767,7 @@ block|{
 comment|/* Event 5 - mode not supported */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|SELECTIN
 argument_list|)
@@ -755,7 +780,7 @@ expr_stmt|;
 comment|/* Event 6 */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|SELECTIN
@@ -771,7 +796,7 @@ argument_list|)
 expr_stmt|;
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_MODE_UNSUPPORTED
 argument_list|,
@@ -805,7 +830,7 @@ name|error
 label|:
 name|ppb_peripheral_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_WAIT
 argument_list|)
@@ -826,10 +851,8 @@ begin_function
 name|int
 name|ppb_peripheral_terminate
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|how
@@ -852,7 +875,7 @@ endif|#
 directive|endif
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_PERIPHERAL_TERMINATION
 argument_list|)
@@ -865,7 +888,7 @@ name|error
 operator|=
 name|do_peripheral_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|SELECT
 operator||
@@ -878,7 +901,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -892,7 +915,7 @@ block|}
 comment|/* Event 24 */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -916,7 +939,7 @@ name|error
 operator|=
 name|do_peripheral_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nBUSY
 argument_list|,
@@ -927,7 +950,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -941,7 +964,7 @@ block|}
 comment|/* Event 26 */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|SELECTIN
@@ -965,7 +988,7 @@ expr_stmt|;
 comment|/* Event 27 */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|SELECTIN
@@ -989,7 +1012,7 @@ name|error
 operator|=
 name|do_peripheral_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nBUSY
 argument_list|,
@@ -1000,7 +1023,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -1015,14 +1038,14 @@ name|error
 label|:
 name|ppb_set_mode
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_COMPATIBLE
 argument_list|)
 expr_stmt|;
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_FORWARD_IDLE
 argument_list|)
@@ -1044,10 +1067,8 @@ specifier|static
 name|int
 name|byte_peripheral_outbyte
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|char
 modifier|*
@@ -1070,7 +1091,7 @@ name|error
 operator|=
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nBUSY
 argument_list|,
@@ -1081,7 +1102,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -1099,7 +1120,7 @@ operator|!
 operator|(
 name|ppb_rstr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|&
 name|SELECT
@@ -1108,7 +1129,7 @@ condition|)
 block|{
 name|ppb_peripheral_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_WAIT
 argument_list|)
@@ -1130,7 +1151,7 @@ endif|#
 directive|endif
 name|ppb_wdtr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|*
 name|buffer
@@ -1139,7 +1160,7 @@ expr_stmt|;
 comment|/* Event 9 */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|AUTOFEED
@@ -1163,7 +1184,7 @@ name|error
 operator|=
 name|do_peripheral_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nBUSY
 argument_list|,
@@ -1174,7 +1195,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -1194,7 +1215,7 @@ condition|)
 block|{
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|AUTOFEED
@@ -1215,7 +1236,7 @@ else|else
 block|{
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -1236,7 +1257,7 @@ if|#
 directive|if
 literal|0
 comment|/* Event 16 - wait strobe */
-block|if ((error = do_peripheral_wait(dev, nACK | nBUSY, 0))) { 		ppb_1284_set_error(dev, PPB_TIMEOUT, 16); 		goto error; 	}
+block|if ((error = do_peripheral_wait(bus, nACK | nBUSY, 0))) { 		ppb_1284_set_error(bus, PPB_TIMEOUT, 16); 		goto error; 	}
 endif|#
 directive|endif
 comment|/* check termination */
@@ -1246,7 +1267,7 @@ operator|!
 operator|(
 name|ppb_rstr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|&
 name|SELECT
@@ -1255,7 +1276,7 @@ condition|)
 block|{
 name|ppb_peripheral_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_WAIT
 argument_list|)
@@ -1282,10 +1303,8 @@ begin_function
 name|int
 name|byte_peripheral_write
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|char
 modifier|*
@@ -1311,7 +1330,7 @@ name|r
 decl_stmt|;
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_PERIPHERAL_TRANSFER
 argument_list|)
@@ -1336,12 +1355,12 @@ name|r
 operator|=
 name|ppb_rctr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|r
 operator|&
@@ -1362,9 +1381,9 @@ directive|endif
 comment|/* Event 7 */
 name|error
 operator|=
-name|ppb_poll_device
+name|ppb_poll_bus
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_FOREVER
 argument_list|,
@@ -1403,7 +1422,7 @@ name|error
 operator|=
 name|byte_peripheral_outbyte
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|buffer
 operator|+
@@ -1432,7 +1451,7 @@ name|error
 condition|)
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_PERIPHERAL_IDLE
 argument_list|)
@@ -1458,10 +1477,8 @@ begin_function
 name|int
 name|byte_1284_inbyte
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|char
 modifier|*
@@ -1476,7 +1493,7 @@ decl_stmt|;
 comment|/* Event 7 - ready to take data (nAUTO low) */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|PCD
@@ -1502,7 +1519,7 @@ name|error
 operator|=
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 argument_list|,
@@ -1513,7 +1530,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -1530,13 +1547,13 @@ name|buffer
 operator|=
 name|ppb_rdtr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 comment|/* Event 10 - data received, can't accept more */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -1560,7 +1577,7 @@ name|error
 operator|=
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 argument_list|,
@@ -1571,7 +1588,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -1585,7 +1602,7 @@ block|}
 comment|/* Event 16 - strobe */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -1608,7 +1625,7 @@ argument_list|)
 expr_stmt|;
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -1642,10 +1659,8 @@ begin_function
 name|int
 name|nibble_1284_inbyte
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|char
 modifier|*
@@ -1680,7 +1695,7 @@ block|{
 comment|/* Event 7 - ready to take data (nAUTO low) */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -1705,7 +1720,7 @@ name|error
 operator|=
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 argument_list|,
@@ -1716,7 +1731,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -1735,13 +1750,13 @@ index|]
 operator|=
 name|ppb_rstr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 comment|/* Event 10 - ack, nibble received */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nINIT
 operator|&
@@ -1763,7 +1778,7 @@ name|error
 operator|=
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 argument_list|,
@@ -1774,7 +1789,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -1835,10 +1850,8 @@ begin_function
 name|int
 name|spp_1284_read
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|mode
@@ -1883,7 +1896,7 @@ name|state
 operator|=
 name|ppb_1284_get_state
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1901,7 +1914,7 @@ name|error
 operator|=
 name|ppb_1284_negociate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|mode
 argument_list|,
@@ -1926,7 +1939,7 @@ break|break;
 default|default:
 name|ppb_1284_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 if|if
@@ -1936,7 +1949,7 @@ name|error
 operator|=
 name|ppb_1284_negociate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|mode
 argument_list|,
@@ -1963,7 +1976,7 @@ operator|!
 operator|(
 name|ppb_rstr
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|&
 operator|(
@@ -1974,7 +1987,7 @@ condition|)
 block|{
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_REVERSE_TRANSFER
 argument_list|)
@@ -2002,7 +2015,7 @@ if|if
 condition|(
 name|nibble_1284_inbyte
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|buffer
 operator|+
@@ -2020,7 +2033,7 @@ if|if
 condition|(
 name|byte_1284_inbyte
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|buffer
 operator|+
@@ -2053,7 +2066,7 @@ name|error
 condition|)
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_REVERSE_IDLE
 argument_list|)
@@ -2071,7 +2084,7 @@ name|error
 condition|)
 name|ppb_1284_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 return|return
@@ -2090,10 +2103,8 @@ begin_function
 name|int
 name|ppb_1284_read_id
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|mode
@@ -2141,7 +2152,7 @@ name|error
 operator|=
 name|ppb_1284_negociate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_NIBBLE
 argument_list|,
@@ -2158,7 +2169,7 @@ name|error
 operator|=
 name|spp_1284_read
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_NIBBLE
 argument_list|,
@@ -2180,7 +2191,7 @@ name|error
 operator|=
 name|ppb_1284_negociate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_BYTE
 argument_list|,
@@ -2197,7 +2208,7 @@ name|error
 operator|=
 name|spp_1284_read
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_BYTE
 argument_list|,
@@ -2222,7 +2233,7 @@ expr_stmt|;
 block|}
 name|ppb_1284_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 return|return
@@ -2241,10 +2252,8 @@ begin_function
 name|int
 name|ppb_1284_read
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|mode
@@ -2281,7 +2290,7 @@ name|error
 operator|=
 name|spp_1284_read
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|mode
 argument_list|,
@@ -2316,10 +2325,8 @@ begin_function
 name|int
 name|ppb_1284_negociate
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|,
 name|int
 name|mode
@@ -2348,14 +2355,14 @@ if|if
 condition|(
 name|ppb_1284_get_state
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|>=
 name|PPB_PERIPHERAL_NEGOCIATION
 condition|)
 name|ppb_peripheral_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_WAIT
 argument_list|)
@@ -2364,14 +2371,14 @@ if|if
 condition|(
 name|ppb_1284_get_state
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 operator|!=
 name|PPB_FORWARD_IDLE
 condition|)
 name|ppb_1284_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2389,7 +2396,7 @@ directive|endif
 comment|/* ensure the host is in compatible mode */
 name|ppb_set_mode
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_COMPATIBLE
 argument_list|)
@@ -2397,7 +2404,7 @@ expr_stmt|;
 comment|/* reset error to catch the actual negociation error */
 name|ppb_1284_reset_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_FORWARD_IDLE
 argument_list|)
@@ -2415,7 +2422,7 @@ expr_stmt|;
 comment|/* default state */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -2439,7 +2446,7 @@ expr_stmt|;
 comment|/* enter negociation phase */
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_NEGOCIATION
 argument_list|)
@@ -2447,7 +2454,7 @@ expr_stmt|;
 comment|/* Event 0 - put the exten. value on the data lines */
 name|ppb_wdtr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|request_mode
 argument_list|)
@@ -2458,7 +2465,7 @@ name|PERIPH_1284
 comment|/* request remote host attention */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -2481,7 +2488,7 @@ argument_list|)
 expr_stmt|;
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -2510,7 +2517,7 @@ comment|/* !PERIPH_1284 */
 comment|/* Event 1 - enter IEEE1284 mode */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -2532,9 +2539,9 @@ name|PERIPH_1284
 comment|/* ignore the PError line, wait a bit more, remote host's  	 * interrupts don't respond fast enough */
 if|if
 condition|(
-name|ppb_poll_device
+name|ppb_poll_bus
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 literal|40
 argument_list|,
@@ -2556,7 +2563,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_NOT_IEEE1284
 argument_list|,
@@ -2578,7 +2585,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 operator||
@@ -2598,7 +2605,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_NOT_IEEE1284
 argument_list|,
@@ -2619,7 +2626,7 @@ comment|/* !PERIPH_1284 */
 comment|/* Event 3 - latch the ext. value to the peripheral */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -2641,7 +2648,7 @@ expr_stmt|;
 comment|/* Event 4 - IEEE1284 device recognized */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nINIT
 operator|&
@@ -2660,7 +2667,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 argument_list|,
@@ -2670,7 +2677,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -2696,7 +2703,7 @@ block|{
 comment|/* XXX not fully supported yet */
 name|ppb_1284_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 return|return
@@ -2716,7 +2723,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 operator||
@@ -2728,7 +2735,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_MODE_UNSUPPORTED
 argument_list|,
@@ -2750,7 +2757,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 operator||
@@ -2764,7 +2771,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_MODE_UNSUPPORTED
 argument_list|,
@@ -2794,7 +2801,7 @@ case|:
 comment|/* enter reverse idle phase */
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_REVERSE_IDLE
 argument_list|)
@@ -2806,14 +2813,14 @@ case|:
 comment|/* negociation ok, now setup the communication */
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_SETUP
 argument_list|)
 expr_stmt|;
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -2837,7 +2844,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 operator||
@@ -2855,7 +2862,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -2876,7 +2883,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 operator||
@@ -2898,7 +2905,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -2919,7 +2926,7 @@ comment|/* !PERIPH_1284 */
 comment|/* ok, the host enters the ForwardIdle state */
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_ECP_FORWARD_IDLE
 argument_list|)
@@ -2930,7 +2937,7 @@ name|PPB_EPP
 case|:
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_EPP_IDLE
 argument_list|)
@@ -2949,7 +2956,7 @@ expr_stmt|;
 block|}
 name|ppb_set_mode
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|mode
 argument_list|)
@@ -2963,7 +2970,7 @@ name|error
 label|:
 name|ppb_1284_terminate
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 return|return
@@ -2982,10 +2989,8 @@ begin_function
 name|int
 name|ppb_1284_terminate
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
+name|device_t
+name|bus
 parameter_list|)
 block|{
 ifdef|#
@@ -3001,7 +3006,7 @@ directive|endif
 comment|/* do not reset error here to keep the error that 	 * may occured before the ppb_1284_terminate() call */
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TERMINATION
 argument_list|)
@@ -3012,7 +3017,7 @@ name|PERIPH_1284
 comment|/* request remote host attention */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -3039,7 +3044,7 @@ comment|/* PERIPH_1284 */
 comment|/* Event 22 - set nSelectin low and nAutoFeed high */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -3060,7 +3065,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 operator||
@@ -3074,7 +3079,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -3088,7 +3093,7 @@ block|}
 comment|/* Event 25 - set nAutoFd low */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -3108,7 +3113,7 @@ if|if
 condition|(
 name|do_1284_wait
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|nACK
 argument_list|,
@@ -3118,7 +3123,7 @@ condition|)
 block|{
 name|ppb_1284_set_error
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_TIMEOUT
 argument_list|,
@@ -3129,7 +3134,7 @@ block|}
 comment|/* Event 28 - end termination, return to idle phase */
 name|ppb_wctr
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 operator|(
 name|nINIT
@@ -3150,14 +3155,14 @@ label|:
 comment|/* return to compatible mode */
 name|ppb_set_mode
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_COMPATIBLE
 argument_list|)
 expr_stmt|;
 name|ppb_1284_set_state
 argument_list|(
-name|dev
+name|bus
 argument_list|,
 name|PPB_FORWARD_IDLE
 argument_list|)

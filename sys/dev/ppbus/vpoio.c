@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 1998, 1999 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_ifdef
@@ -19,6 +19,18 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -70,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ppbus/ppbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ppbus/ppbconf.h>
 end_include
 
@@ -83,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ppbus/vpoio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ppbus_if.h"
 end_include
 
 begin_comment
@@ -1147,12 +1171,23 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1167,7 +1202,8 @@ return|return
 operator|(
 name|ppb_release_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1195,6 +1231,16 @@ name|int
 name|how
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1208,7 +1254,8 @@ name|error
 operator|=
 name|ppb_request_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1238,15 +1285,13 @@ if|if
 condition|(
 name|PPB_IN_EPP_MODE
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|)
 condition|)
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1260,7 +1305,8 @@ expr_stmt|;
 else|else
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1294,6 +1340,16 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -1360,7 +1416,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1390,12 +1447,23 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1429,6 +1497,16 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -1442,7 +1520,8 @@ name|error
 operator|=
 name|ppb_request_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1458,7 +1537,8 @@ operator|)
 return|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1473,15 +1553,13 @@ if|if
 condition|(
 name|PPB_IN_EPP_MODE
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|)
 condition|)
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1495,7 +1573,8 @@ expr_stmt|;
 else|else
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1508,7 +1587,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1528,17 +1608,15 @@ block|{
 comment|/* try spp mode (maybe twice or because previous mode was PS2) 		 * NIBBLE mode will be restored on next transfers if detection 		 * succeed 		 */
 name|ppb_set_mode
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|PPB_NIBBLE
 argument_list|)
 expr_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1551,7 +1629,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1584,7 +1663,8 @@ expr_stmt|;
 comment|/* disconnect and release the bus */
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1608,7 +1688,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1622,7 +1703,8 @@ expr_stmt|;
 comment|/* ensure we are disconnected or daisy chained peripheral  	 * may cause serious problem to the disk */
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1657,7 +1739,8 @@ goto|;
 block|}
 name|ppb_release_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1672,7 +1755,8 @@ name|error
 label|:
 name|ppb_release_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1708,6 +1792,16 @@ name|int
 name|size
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -1715,7 +1809,8 @@ literal|0
 decl_stmt|;
 name|ppb_MS_exec
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1748,15 +1843,12 @@ if|#
 directive|if
 literal|0
 comment|/* XXX EPP 1.9 not implemented with microsequences */
-block|else {  			ppb_reset_epp_timeout(&vpo->vpo_dev); 			ppb_wctr(&vpo->vpo_dev, 				H_AUTO | H_SELIN | H_INIT | H_STROBE);  			if (((long) buffer | size)& 0x03) 				ppb_outsb_epp(&vpo->vpo_dev, 						buffer, size); 			else 				ppb_outsl_epp(&vpo->vpo_dev, 						buffer, size/4);  			if ((ppb_rstr(&vpo->vpo_dev)& TIMEOUT)) { 				error = VP0_EPPDATA_TIMEOUT; 				goto error; 			}  			ppb_wctr(&vpo->vpo_dev, 				H_AUTO | H_nSELIN | H_INIT | H_STROBE); 		}
+block|else {  			ppb_reset_epp_timeout(ppbus); 			ppb_wctr(ppbus, H_AUTO | H_SELIN | H_INIT | H_STROBE);  			if (((long) buffer | size)& 0x03) 				ppb_outsb_epp(ppbus, 						buffer, size); 			else 				ppb_outsl_epp(ppbus, 						buffer, size/4);  			if ((ppb_rstr(ppbus)& TIMEOUT)) { 				error = VP0_EPPDATA_TIMEOUT; 				goto error; 			}  			ppb_wctr(ppbus, H_AUTO | H_nSELIN | H_INIT | H_STROBE); 		}
 endif|#
 directive|endif
 name|ppb_ecp_sync
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|)
 expr_stmt|;
 return|return
@@ -1789,6 +1881,16 @@ name|int
 name|size
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -1796,7 +1898,8 @@ literal|0
 decl_stmt|;
 name|ppb_MS_exec
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -1829,15 +1932,12 @@ if|#
 directive|if
 literal|0
 comment|/* XXX EPP 1.9 not implemented with microsequences */
-block|else {  			ppb_reset_epp_timeout(&vpo->vpo_dev); 			ppb_wctr(&vpo->vpo_dev, PCD | 				H_AUTO | H_SELIN | H_INIT | H_STROBE);  			if (((long) buffer | size)& 0x03) 				ppb_insb_epp(&vpo->vpo_dev, 						buffer, size); 			else 				ppb_insl_epp(&vpo->vpo_dev, 						buffer, size/4);  			if ((ppb_rstr(&vpo->vpo_dev)& TIMEOUT)) { 				error = VP0_EPPDATA_TIMEOUT; 				goto error; 			}  			ppb_wctr(&vpo->vpo_dev, PCD | 				H_AUTO | H_nSELIN | H_INIT | H_STROBE); 		}
+block|else {  			ppb_reset_epp_timeout(ppbus); 			ppb_wctr(ppbus, PCD | 				H_AUTO | H_SELIN | H_INIT | H_STROBE);  			if (((long) buffer | size)& 0x03) 				ppb_insb_epp(ppbus, 						buffer, size); 			else 				ppb_insl_epp(ppbus, 						buffer, size/4);  			if ((ppb_rstr(ppbus)& TIMEOUT)) { 				error = VP0_EPPDATA_TIMEOUT; 				goto error; 			}  			ppb_wctr(ppbus, PCD | 				H_AUTO | H_nSELIN | H_INIT | H_STROBE); 		}
 endif|#
 directive|endif
 name|ppb_ecp_sync
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|)
 expr_stmt|;
 return|return
@@ -1865,6 +1965,16 @@ name|int
 name|target
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -1984,7 +2094,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_microseq
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2030,6 +2141,16 @@ name|int
 name|tmo
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 specifier|register
 name|int
 name|k
@@ -2042,7 +2163,7 @@ if|#
 directive|if
 literal|0
 comment|/* broken */
-block|if (ppb_poll_device(&vpo->vpo_dev, 150, nBUSY, nBUSY, PPB_INTR)) 		return (0);  	return (ppb_rstr(&vpo->vpo_dev)& 0xf0);
+block|if (ppb_poll_device(ppbus, 150, nBUSY, nBUSY, PPB_INTR)) 		return (0);  	return (ppb_rstr(ppbus)& 0xf0);
 endif|#
 directive|endif
 comment|/* XXX should be ported to microseq */
@@ -2059,10 +2180,7 @@ name|r
 operator|=
 name|ppb_rstr
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|)
 operator|)
 operator|&
@@ -2105,15 +2223,11 @@ comment|/*  * vpoio_probe()  *  * Low level probe of vpo device  *  */
 end_comment
 
 begin_function
-name|struct
-name|ppb_device
-modifier|*
+name|int
 name|vpoio_probe
 parameter_list|(
-name|struct
-name|ppb_data
-modifier|*
-name|ppb
+name|device_t
+name|dev
 parameter_list|,
 name|struct
 name|vpoio_data
@@ -2121,32 +2235,15 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 comment|/* ppbus dependent initialisation */
 name|vpo
 operator|->
 name|vpo_dev
-operator|.
-name|id_unit
 operator|=
-name|vpo
-operator|->
-name|vpo_unit
-expr_stmt|;
-name|vpo
-operator|->
-name|vpo_dev
-operator|.
-name|name
-operator|=
-literal|"vpo"
-expr_stmt|;
-name|vpo
-operator|->
-name|vpo_dev
-operator|.
-name|ppb
-operator|=
-name|ppb
+name|dev
 expr_stmt|;
 comment|/* 	 * Initialize microsequence code 	 */
 name|INIT_TRIG_MICROSEQ
@@ -2154,24 +2251,25 @@ expr_stmt|;
 comment|/* now, try to initialise the drive */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|vpoio_detect
 argument_list|(
 name|vpo
 argument_list|)
+operator|)
 condition|)
 block|{
 return|return
 operator|(
-name|NULL
+name|error
 operator|)
 return|;
 block|}
 return|return
 operator|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+literal|0
 operator|)
 return|;
 block|}
@@ -2191,31 +2289,19 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|int
 name|epp
 decl_stmt|;
-comment|/* 	 * Report ourselves 	 */
-name|printf
-argument_list|(
-literal|"vpo%d:<Iomega VPI0 Parallel to SCSI interface> on ppbus %d\n"
-argument_list|,
-name|vpo
-operator|->
-name|vpo_dev
-operator|.
-name|id_unit
-argument_list|,
-name|vpo
-operator|->
-name|vpo_dev
-operator|.
-name|ppb
-operator|->
-name|ppb_link
-operator|->
-name|adapter_unit
-argument_list|)
-expr_stmt|;
 name|vpo
 operator|->
 name|vpo_nibble_inbyte_msq
@@ -2246,7 +2332,7 @@ name|vpo_nibble_inbyte_msq
 condition|)
 return|return
 operator|(
-literal|0
+name|ENXIO
 operator|)
 return|;
 name|bcopy
@@ -2279,7 +2365,8 @@ expr_stmt|;
 comment|/* 	 * Initialize mode dependent in/out microsequences 	 */
 name|ppb_request_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2292,10 +2379,7 @@ if|if
 condition|(
 name|ppb_set_mode
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|PPB_NIBBLE
 argument_list|)
@@ -2306,7 +2390,8 @@ condition|)
 block|{
 name|ppb_MS_GET_init
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2318,7 +2403,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_PUT_init
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2332,10 +2418,7 @@ if|if
 condition|(
 name|ppb_set_mode
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|PPB_PS2
 argument_list|)
@@ -2346,7 +2429,8 @@ condition|)
 block|{
 name|ppb_MS_GET_init
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2356,7 +2440,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_PUT_init
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2369,10 +2454,7 @@ name|epp
 operator|=
 name|ppb_get_epp_protocol
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|)
 expr_stmt|;
 comment|/* enter EPP mode to configure submsq */
@@ -2380,10 +2462,7 @@ if|if
 condition|(
 name|ppb_set_mode
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|PPB_EPP
 argument_list|)
@@ -2406,7 +2485,8 @@ name|EPP_1_7
 case|:
 name|ppb_MS_GET_init
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2416,7 +2496,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_MS_PUT_init
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2442,10 +2523,7 @@ if|if
 condition|(
 name|ppb_set_mode
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|PPB_EPP
 argument_list|)
@@ -2502,10 +2580,7 @@ if|if
 condition|(
 name|ppb_set_mode
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|PPB_PS2
 argument_list|)
@@ -2527,10 +2602,7 @@ if|if
 condition|(
 name|ppb_set_mode
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|PPB_NIBBLE
 argument_list|)
@@ -2560,7 +2632,8 @@ argument_list|)
 expr_stmt|;
 name|ppb_release_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2577,13 +2650,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENXIO
 operator|)
 return|;
 block|}
 name|ppb_release_bus
 argument_list|(
-operator|&
+name|ppbus
+argument_list|,
 name|vpo
 operator|->
 name|vpo_dev
@@ -2591,7 +2665,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -2720,6 +2794,16 @@ modifier|*
 name|ret
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 specifier|register
 name|char
 name|r
@@ -2803,10 +2887,7 @@ goto|;
 comment|/* 	 * Send the command ... 	 * 	 * set H_SELIN low for vpoio_wait(). 	 */
 name|ppb_wctr
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|,
 name|H_AUTO
 operator||
@@ -2950,10 +3031,7 @@ if|if
 condition|(
 name|PPB_IN_EPP_MODE
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
+name|ppbus
 argument_list|)
 operator|||
 name|r

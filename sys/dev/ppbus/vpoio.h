@@ -156,8 +156,7 @@ name|ppb_microseq
 modifier|*
 name|vpo_nibble_inbyte_msq
 decl_stmt|;
-name|struct
-name|ppb_device
+name|device_t
 name|vpo_dev
 decl_stmt|;
 block|}
@@ -177,15 +176,11 @@ value|((vpo)->vpo_unit = unit)
 end_define
 
 begin_function_decl
-name|struct
-name|ppb_device
-modifier|*
+name|int
 name|vpoio_probe
 parameter_list|(
-name|struct
-name|ppb_data
-modifier|*
-name|ppb
+name|device_t
+name|dev
 parameter_list|,
 name|struct
 name|vpoio_data
@@ -264,15 +259,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|ppb_device
-modifier|*
+name|int
 name|imm_probe
 parameter_list|(
-name|struct
-name|ppb_data
-modifier|*
-name|ppb
+name|device_t
+name|dev
 parameter_list|,
 name|struct
 name|vpoio_data

@@ -829,11 +829,13 @@ define|#
 directive|define
 name|ppb_MS_GET_init
 parameter_list|(
+name|bus
+parameter_list|,
 name|dev
 parameter_list|,
 name|body
 parameter_list|)
-value|ppb_MS_init(dev, body, MS_OP_GET)
+value|ppb_MS_init(bus, dev, body, MS_OP_GET)
 end_define
 
 begin_define
@@ -841,11 +843,13 @@ define|#
 directive|define
 name|ppb_MS_PUT_init
 parameter_list|(
+name|bus
+parameter_list|,
 name|dev
 parameter_list|,
 name|body
 parameter_list|)
-value|ppb_MS_init(dev, body, MS_OP_PUT)
+value|ppb_MS_init(bus, dev, body, MS_OP_PUT)
 end_define
 
 begin_function_decl
@@ -853,9 +857,10 @@ specifier|extern
 name|int
 name|ppb_MS_init
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
+name|device_t
+parameter_list|,
+comment|/* ppbus bus */
+name|device_t
 parameter_list|,
 comment|/* ppbus device */
 name|struct
@@ -893,9 +898,10 @@ specifier|extern
 name|int
 name|ppb_MS_exec
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
+name|device_t
+parameter_list|,
+comment|/* ppbus bus */
+name|device_t
 parameter_list|,
 comment|/* ppbus device */
 name|int
@@ -925,9 +931,10 @@ specifier|extern
 name|int
 name|ppb_MS_loop
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
+name|device_t
+parameter_list|,
+comment|/* ppbus bus */
+name|device_t
 parameter_list|,
 comment|/* ppbus device */
 name|struct
@@ -960,9 +967,10 @@ specifier|extern
 name|int
 name|ppb_MS_microseq
 parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
+name|device_t
+parameter_list|,
+comment|/* ppbus bus */
+name|device_t
 parameter_list|,
 comment|/* ppbus device */
 name|struct
