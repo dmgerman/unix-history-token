@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -65,19 +71,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -90,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -465,7 +471,6 @@ comment|/* The most local ones we can have */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|nJobs
 decl_stmt|;
@@ -476,7 +481,6 @@ comment|/* The number of children currently running */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|nLocal
 decl_stmt|;
@@ -487,7 +491,6 @@ comment|/* The number of local children */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|Lst
 name|jobs
 decl_stmt|;
@@ -498,7 +501,6 @@ comment|/* The structures that describe them */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|Boolean
 name|jobFull
 decl_stmt|;
@@ -531,7 +533,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|GNode
 modifier|*
 name|lastNode
@@ -543,7 +544,6 @@ comment|/* The node for which output was most recently 				 * produced. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|targFmt
@@ -570,7 +570,6 @@ comment|/*  * When JobStart attempts to run a job remotely but can't, and isn't 
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|Lst
 name|stoppedJobs
 decl_stmt|;
@@ -666,10 +665,9 @@ name|JobCondPassSig
 name|__P
 argument_list|(
 operator|(
-name|Job
-operator|*
+name|ClientData
 operator|,
-name|int
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -695,10 +693,9 @@ name|JobCmpPid
 name|__P
 argument_list|(
 operator|(
-name|Job
-operator|*
+name|ClientData
 operator|,
-name|int
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -711,11 +708,9 @@ name|JobPrintCommand
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|ClientData
 operator|,
-name|Job
-operator|*
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -728,11 +723,9 @@ name|JobSaveCommand
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|ClientData
 operator|,
-name|GNode
-operator|*
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -877,20 +870,39 @@ specifier|static
 name|int
 name|JobCondPassSig
 parameter_list|(
-name|job
+name|jobp
 parameter_list|,
-name|signo
+name|signop
 parameter_list|)
-name|Job
-modifier|*
-name|job
+name|ClientData
+name|jobp
 decl_stmt|;
 comment|/* Job to biff */
-name|int
-name|signo
+name|ClientData
+name|signop
 decl_stmt|;
 comment|/* Signal to send it */
 block|{
+name|Job
+modifier|*
+name|job
+init|=
+operator|(
+name|Job
+operator|*
+operator|)
+name|jobp
+decl_stmt|;
+name|int
+name|signo
+init|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|signop
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|RMT_WANTS_SIGNALS
@@ -975,6 +987,9 @@ name|JobCondPassSig
 argument_list|,
 operator|(
 name|ClientData
+operator|)
+operator|(
+name|long
 operator|)
 name|signo
 argument_list|)
@@ -1078,6 +1093,10 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
+name|signo
+operator|=
+name|SIGCONT
+expr_stmt|;
 name|Lst_ForEach
 argument_list|(
 name|jobs
@@ -1087,7 +1106,8 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
-name|SIGCONT
+operator|&
+name|signo
 argument_list|)
 expr_stmt|;
 name|sigsetmask
@@ -1118,21 +1138,31 @@ name|job
 parameter_list|,
 name|pid
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-comment|/* process id desired */
-name|Job
-modifier|*
+name|ClientData
 name|job
 decl_stmt|;
 comment|/* job to examine */
+name|ClientData
+name|pid
+decl_stmt|;
+comment|/* process id desired */
 block|{
 return|return
 operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|pid
 operator|-
+operator|(
+operator|(
+name|Job
+operator|*
+operator|)
 name|job
+operator|)
 operator|->
 name|pid
 operator|)
@@ -1149,18 +1179,16 @@ specifier|static
 name|int
 name|JobPrintCommand
 parameter_list|(
-name|cmd
+name|cmdp
 parameter_list|,
-name|job
+name|jobp
 parameter_list|)
-name|char
-modifier|*
-name|cmd
+name|ClientData
+name|cmdp
 decl_stmt|;
 comment|/* command string to print */
-name|Job
-modifier|*
-name|job
+name|ClientData
+name|jobp
 decl_stmt|;
 comment|/* job for which to print it */
 block|{
@@ -1194,6 +1222,26 @@ name|LstNode
 name|cmdNode
 decl_stmt|;
 comment|/* Node for replacing the command */
+name|char
+modifier|*
+name|cmd
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|cmdp
+decl_stmt|;
+name|Job
+modifier|*
+name|job
+init|=
+operator|(
+name|Job
+operator|*
+operator|)
+name|jobp
+decl_stmt|;
 name|noSpecials
 operator|=
 operator|(
@@ -1701,23 +1749,32 @@ name|cmd
 parameter_list|,
 name|gn
 parameter_list|)
-name|char
-modifier|*
+name|ClientData
 name|cmd
 decl_stmt|;
-name|GNode
-modifier|*
+name|ClientData
 name|gn
 decl_stmt|;
 block|{
 name|cmd
 operator|=
+operator|(
+name|ClientData
+operator|)
 name|Var_Subst
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|cmd
 argument_list|,
+operator|(
+name|GNode
+operator|*
+operator|)
 name|gn
 argument_list|,
 name|FALSE
@@ -1732,9 +1789,6 @@ name|postCommands
 operator|->
 name|commands
 argument_list|,
-operator|(
-name|ClientData
-operator|)
 name|cmd
 argument_list|)
 expr_stmt|;
@@ -3012,7 +3066,6 @@ unit|)
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,
@@ -3073,6 +3126,10 @@ name|commands
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|p1
+decl_stmt|;
 comment|/* 	     * Make only looks for a .DEFAULT if the node was never the 	     * target of an operator, so that's what we do too. If 	     * a .DEFAULT was given, we substitute its commands for gn's 	     * commands and set the IMPSRC variable to be the target's name 	     * The DEFAULT node acts like a transformation rule, in that 	     * gn also inherits any attributes or sources attached to 	     * .DEFAULT itself. 	     */
 name|Make_HandleUse
 argument_list|(
@@ -3090,9 +3147,21 @@ argument_list|(
 name|TARGET
 argument_list|,
 name|gn
+argument_list|,
+operator|&
+name|p1
 argument_list|)
 argument_list|,
 name|gn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p1
+condition|)
+name|free
+argument_list|(
+name|p1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4557,7 +4626,7 @@ modifier|*
 name|gn
 decl_stmt|;
 comment|/* target to create */
-name|short
+name|int
 name|flags
 decl_stmt|;
 comment|/* flags for the job to override normal ones. 			       * e.g. JOB_SPECIAL or JOB_IGNDOTS */
@@ -6502,6 +6571,7 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
+operator|&
 name|pid
 argument_list|,
 name|JobCmpPid
@@ -6539,6 +6609,7 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
+operator|&
 name|pid
 argument_list|,
 name|JobCmpPid
@@ -7651,6 +7722,8 @@ name|line
 argument_list|,
 operator|&
 name|wordCount
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|memset
@@ -8334,10 +8407,6 @@ modifier|*
 name|interrupt
 decl_stmt|;
 comment|/* the node describing the .INTERRUPT target */
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|aborting
 operator|=
 name|ABORT_INTERRUPT
@@ -8416,20 +8485,30 @@ operator|->
 name|path
 operator|)
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 if|if
 condition|(
 operator|!
-name|stat
+name|noExecute
+operator|&&
+name|lstat
 argument_list|(
 name|file
 argument_list|,
 operator|&
-name|sb
+name|st
 argument_list|)
+operator|!=
+operator|-
+literal|1
 operator|&&
-name|S_ISREG
+operator|!
+name|S_ISDIR
 argument_list|(
-name|sb
+name|st
 operator|.
 name|st_mode
 argument_list|)
@@ -8438,8 +8517,9 @@ name|unlink
 argument_list|(
 name|file
 argument_list|)
-operator|==
-literal|0
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|Error

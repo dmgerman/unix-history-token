@@ -175,6 +175,17 @@ operator|->
 name|firstPtr
 expr_stmt|;
 block|}
+else|else
+block|{
+name|list1
+operator|->
+name|firstPtr
+operator|=
+name|list2
+operator|->
+name|firstPtr
+expr_stmt|;
+block|}
 name|list1
 operator|->
 name|lastPtr

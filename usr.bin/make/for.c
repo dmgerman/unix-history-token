@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1992, The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -117,9 +117,10 @@ begin_comment
 comment|/*  * State of a for loop.  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|For
+name|_For
 block|{
 name|Buffer
 name|buf
@@ -135,8 +136,9 @@ name|lst
 decl_stmt|;
 comment|/* List of variables	*/
 block|}
-struct|;
-end_struct
+name|For
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
@@ -145,12 +147,9 @@ name|ForExec
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|ClientData
 operator|,
-expr|struct
-name|For
-operator|*
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -218,6 +217,10 @@ name|ptr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -253,6 +256,10 @@ operator|||
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ptr
 index|[
 literal|3
@@ -274,6 +281,10 @@ name|ptr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -301,6 +312,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -370,6 +385,10 @@ name|ptr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -397,6 +416,10 @@ operator|||
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ptr
 index|[
 literal|2
@@ -433,6 +456,10 @@ name|ptr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -485,6 +512,10 @@ name|ptr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -509,6 +540,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -531,6 +566,10 @@ name|ptr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -625,6 +664,10 @@ name|ptr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -649,6 +692,10 @@ operator|&&
 operator|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ptr
 index|[
 literal|6
@@ -718,6 +765,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ptr
 index|[
 literal|3
@@ -804,20 +855,37 @@ specifier|static
 name|int
 name|ForExec
 parameter_list|(
-name|name
+name|namep
 parameter_list|,
-name|arg
+name|argp
 parameter_list|)
+name|ClientData
+name|namep
+decl_stmt|;
+name|ClientData
+name|argp
+decl_stmt|;
+block|{
 name|char
 modifier|*
 name|name
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|namep
 decl_stmt|;
-name|struct
 name|For
 modifier|*
 name|arg
+init|=
+operator|(
+name|For
+operator|*
+operator|)
+name|argp
 decl_stmt|;
-block|{
 name|int
 name|len
 decl_stmt|;
@@ -910,7 +978,6 @@ name|void
 name|For_Run
 parameter_list|()
 block|{
-name|struct
 name|For
 name|arg
 decl_stmt|;
@@ -990,6 +1057,18 @@ name|arg
 operator|.
 name|lst
 argument_list|,
+operator|(
+name|void
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|)
+argument_list|)
+operator|)
 name|free
 argument_list|)
 expr_stmt|;
