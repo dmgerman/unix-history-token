@@ -289,6 +289,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|warn
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Display the current state of the queue. Format = 1 if long format.  */
 end_comment
@@ -1365,6 +1378,7 @@ comment|/*  * Print a warning message if there is no daemon present.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|warn
 parameter_list|()
