@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)make.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)make.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -434,6 +434,17 @@ end_define
 
 begin_comment
 comment|/* The node is exempt from normal 'main 				     * target' processing in parse.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OP_PHONY
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Not a file target; run always */
 end_comment
 
 begin_comment

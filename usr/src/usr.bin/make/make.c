@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)make.c	8.2 (Berkeley) %G%"
+literal|"@(#)make.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +291,8 @@ operator||
 name|OP_USE
 operator||
 name|OP_EXEC
+operator||
+name|OP_PHONY
 operator|)
 operator|)
 operator|==
@@ -346,6 +348,33 @@ block|}
 block|}
 block|}
 comment|/*      * A target is remade in one of the following circumstances:      *	its modification time is smaller than that of its youngest child      *	    and it would actually be run (has commands or type OP_NOP)      *	it's the object of a force operator      *	it has no children, was on the lhs of an operator and doesn't exist      *	    already.      *      * Libraries are only considered out-of-date if the archive module says      * they are.      *      * These weird rules are brought to you by Backward-Compatability and      * the strange people who wrote 'Make'.      */
+if|if
+condition|(
+name|gn
+operator|->
+name|type
+operator|&
+name|OP_PHONY
+condition|)
+block|{
+comment|/* 	 * A PHONY node is always out of date 	 */
+if|if
+condition|(
+name|DEBUG
+argument_list|(
+name|MAKE
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"phony..."
+argument_list|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 name|gn
