@@ -2985,24 +2985,6 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|PC98
-name|outb
-argument_list|(
-literal|0x432
-argument_list|,
-operator|(
-name|du
-operator|->
-name|dk_unit
-operator|)
-operator|%
-literal|2
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|ATAPI
 comment|/* 	 * Probe all free IDE units, searching for ATAPI drives. 	 */
 ifdef|#
