@@ -67,6 +67,17 @@ literal|"@(#)printf.c	8.1 (Berkeley) 7/20/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -377,10 +388,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|static
 name|char
 modifier|*
