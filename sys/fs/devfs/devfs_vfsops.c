@@ -443,10 +443,11 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
-name|flags
-operator||=
-name|FORCECLOSE
-expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* There is 1 extra root vnode reference from devfs_mount(). */
 name|error
 operator|=
