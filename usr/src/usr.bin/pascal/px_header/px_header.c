@@ -1,5 +1,52 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)px_header.c	5.1 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
+begin_comment
 comment|/*  * pxheader - program to sit in front of interpreter code to make shell mods  *	      unnecessary to make Pascal obj's look like real programs.  *  * This program lives in /usr/lib/px_header  * Bill Joy UCB February 6, 1978  */
 end_comment
 
@@ -9,7 +56,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)px_header.c 1.5 %G%"
+literal|"@(#)px_header.c 5.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
