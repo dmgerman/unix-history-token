@@ -1101,6 +1101,22 @@ return|return
 name|EIO
 return|;
 block|}
+comment|/* XXX 	 * Clear the bus reset event flag to start transactions even when 	 * interrupt is disabled during the boot process. 	 */
+if|#
+directive|if
+literal|0
+block|DELAY(100);
+endif|#
+directive|endif
+name|fwohci_intr
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
