@@ -319,11 +319,23 @@ end_struct
 begin_define
 define|#
 directive|define
+name|ISO88025_MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)<(b))?(a):(b))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDL_ISO88025
 parameter_list|(
 name|s
 parameter_list|)
-value|((struct iso88025_sockaddr_dl_data *)	\ 				 ((s)->sdl_data + min((s)->sdl_nlen +	\ 				  (s)->sdl_alen + (s)->sdl_slen, 12)))
+value|((struct iso88025_sockaddr_dl_data *)	\ 				 ((s)->sdl_data + \ 				  ISO88025_MIN((s)->sdl_nlen + (s)->sdl_alen + \ 					       (s)->sdl_slen, 12)))
 end_define
 
 begin_comment
