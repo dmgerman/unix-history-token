@@ -846,16 +846,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|pmap_page_is_mapped
-parameter_list|(
-name|m
-parameter_list|)
-value|(!TAILQ_EMPTY(&(m)->md.pv_list))
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -1025,6 +1015,16 @@ name|virtual_end
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|pmap_page_is_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(!TAILQ_EMPTY(&(m)->md.pv_list))
+end_define
+
 begin_function_decl
 name|void
 name|pmap_bootstrap
@@ -1093,19 +1093,6 @@ name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|pt_entry_t
-modifier|*
-name|pmap_pte_quick
-argument_list|(
-name|pmap_t
-argument_list|,
-name|vm_offset_t
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|void

@@ -1120,16 +1120,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|pmap_page_is_mapped
-parameter_list|(
-name|m
-parameter_list|)
-value|(!TAILQ_EMPTY(&(m)->md.pv_list))
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -1324,6 +1314,16 @@ name|vm_offset_t
 name|virtual_end
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|pmap_page_is_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(!TAILQ_EMPTY(&(m)->md.pv_list))
+end_define
 
 begin_function_decl
 name|void
