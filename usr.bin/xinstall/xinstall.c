@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.14 1996/09/24 17:29:42 bde Exp $"
+literal|"$Id: xinstall.c,v 1.16 1996/09/29 06:29:54 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,9 +183,9 @@ name|debug
 decl_stmt|,
 name|docompare
 decl_stmt|,
-name|dodir
-decl_stmt|,
 name|docopy
+decl_stmt|,
+name|dodir
 decl_stmt|,
 name|dopreserve
 decl_stmt|,
@@ -3192,7 +3192,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ usage: install [-CcDpSs] [-f flags] [-g group] [-m mode] [-o owner] file1 file2\n\        install [-CcDpSs] [-f flags] [-g group] [-m mode] [-o owner] file1 ... fileN directory\n\        install  -d       [-g group] [-m mode] [-o owner] directory ...\n"
+literal|"\ usage: install [-CcDps] [-f flags] [-g group] [-m mode] [-o owner] file1 file2\n\     install [-CcDps] [-f flags] [-g group] [-m mode] [-o owner] f1 ... fN dir\n\     install  -d       [-g group] [-m mode] [-o owner] directory ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
