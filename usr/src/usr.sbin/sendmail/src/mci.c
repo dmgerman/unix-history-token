@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.9 (Berkeley) %G%"
+literal|"@(#)mci.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -945,6 +945,34 @@ operator|=
 name|MCIS_CLOSED
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|==
+name|MCIS_CLOSED
+condition|)
+block|{
+comment|/* copy out any mailer flags needed in connection state */
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_7BITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_7BIT
+expr_stmt|;
 block|}
 return|return
 name|mci

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.37 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.38 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.37 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.38 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +206,9 @@ name|p
 decl_stmt|;
 name|MAILER
 name|nullmailer
+decl_stmt|;
+name|MCI
+name|mcibuf
 decl_stmt|;
 name|char
 name|buf
@@ -659,6 +662,27 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|mcibuf
+argument_list|,
+sizeof|sizeof
+name|mcibuf
+argument_list|)
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_out
+operator|=
+name|dfp
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_mailer
+operator|=
+name|FileMailer
+expr_stmt|;
 call|(
 modifier|*
 name|e
@@ -666,9 +690,8 @@ operator|->
 name|e_putbody
 call|)
 argument_list|(
-name|dfp
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|,
@@ -1256,6 +1279,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|bzero
+argument_list|(
+operator|&
+name|mcibuf
+argument_list|,
+sizeof|sizeof
+name|mcibuf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mcibuf
+operator|.
+name|mci_mailer
+operator|=
+operator|&
+name|nullmailer
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mcibuf
+operator|.
+name|mci_out
+operator|=
+name|tfp
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|define
 argument_list|(
 literal|'g'
@@ -1555,12 +1609,10 @@ name|h
 operator|->
 name|h_value
 argument_list|,
-name|tfp
-argument_list|,
 name|oldstyle
 argument_list|,
 operator|&
-name|nullmailer
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)

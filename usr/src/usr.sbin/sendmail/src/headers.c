@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.22 (Berkeley) %G%"
+literal|"@(#)headers.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3337,7 +3337,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		fp -- file to put it on. **		m -- mailer to use. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -3370,26 +3370,16 @@ end_endif
 begin_expr_stmt
 name|putheader
 argument_list|(
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|,
 name|e
 argument_list|)
 specifier|register
-name|FILE
+name|MCI
 operator|*
-name|fp
+name|mci
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|MAILER
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -3436,7 +3426,9 @@ name|printf
 argument_list|(
 literal|"--- putheader, mailer = %s ---\n"
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_name
 argument_list|)
@@ -3517,7 +3509,9 @@ name|h
 operator|->
 name|h_mflags
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -3708,11 +3702,9 @@ name|h
 argument_list|,
 name|p
 argument_list|,
-name|fp
-argument_list|,
 name|oldstyle
 argument_list|,
-name|m
+name|mci
 argument_list|,
 name|e
 argument_list|)
@@ -3780,9 +3772,7 @@ name|putline
 argument_list|(
 name|obuf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|p
@@ -3812,9 +3802,7 @@ name|putline
 argument_list|(
 name|obuf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -3826,69 +3814,46 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. **		e -- the envelope containing the message. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- TRUE if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|commaize
-argument_list|(
+parameter_list|(
 name|h
-argument_list|,
+parameter_list|,
 name|p
-argument_list|,
-name|fp
-argument_list|,
+parameter_list|,
 name|oldstyle
-argument_list|,
-name|m
-argument_list|,
+parameter_list|,
+name|mci
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|HDR
-operator|*
+modifier|*
 name|h
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|oldstyle
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
-name|MAILER
+name|MCI
 modifier|*
-name|m
+name|mci
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -4224,7 +4189,9 @@ name|remotename
 argument_list|(
 name|name
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 argument_list|,
 name|flags
 argument_list|,
@@ -4290,9 +4257,7 @@ name|putline
 argument_list|(
 name|obuf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|obp
@@ -4400,13 +4365,11 @@ name|putline
 argument_list|(
 name|obuf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

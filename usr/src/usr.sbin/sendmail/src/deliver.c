@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.64 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5466,10 +5466,6 @@ comment|/* 		**  Format and send message. 		*/
 name|putfromline
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|)
@@ -5482,10 +5478,6 @@ name|e_puthdr
 call|)
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|)
@@ -5495,10 +5487,6 @@ argument_list|(
 literal|"\n"
 argument_list|,
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 call|(
@@ -5509,10 +5497,6 @@ name|e_putbody
 call|)
 argument_list|(
 name|mci
-operator|->
-name|mci_out
-argument_list|,
-name|m
 argument_list|,
 name|e
 argument_list|,
@@ -7921,32 +7905,22 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	then passes the rest of the message through.  If we have **	managed to extract a date already, use that; otherwise, **	use the current date/time. ** **	One of the ugliest hacks seen by human eyes is contained herein: **	UUCP wants those stupid "remote from<host>" lines.  Why oh why **	does a well-meaning programmer such as myself have to deal with **	this kind of antique garbage???? ** **	Parameters: **		fp -- the file to output to. **		m -- the mailer describing this entry. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
+comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	then passes the rest of the message through.  If we have **	managed to extract a date already, use that; otherwise, **	use the current date/time. ** **	One of the ugliest hacks seen by human eyes is contained herein: **	UUCP wants those stupid "remote from<host>" lines.  Why oh why **	does a well-meaning programmer such as myself have to deal with **	this kind of antique garbage???? ** **	Parameters: **		mci -- the connection information. **		e -- the envelope. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
 end_comment
 
 begin_expr_stmt
 name|putfromline
 argument_list|(
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|,
 name|e
 argument_list|)
 specifier|register
-name|FILE
+name|MCI
 operator|*
-name|fp
+name|mci
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|MAILER
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|ENVELOPE
@@ -7980,7 +7954,9 @@ name|bitnset
 argument_list|(
 name|M_NHDR
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -7995,7 +7971,9 @@ name|bitnset
 argument_list|(
 name|M_UGLYUUCP
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -8110,9 +8088,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -8122,35 +8098,24 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		fp -- file to output onto. **		m -- a mailer descriptor to control output format. **		e -- the envelope to put out. **		separator -- if non-NULL, a message separator that must **			not be permitted in the resulting message. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
+comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		mci -- the connection information. **		e -- the envelope to put out. **		separator -- if non-NULL, a message separator that must **			not be permitted in the resulting message. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|putbody
 argument_list|(
-argument|fp
+name|mci
 argument_list|,
-argument|m
+name|e
 argument_list|,
-argument|e
-argument_list|,
-argument|separator
+name|separator
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MAILER
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
+specifier|register
+name|MCI
+operator|*
+name|mci
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|register
@@ -8240,9 +8205,7 @@ name|putline
 argument_list|(
 literal|"<<< No Message Collected>>>"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -8267,7 +8230,9 @@ condition|(
 operator|!
 name|ferror
 argument_list|(
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 operator|&&
 name|fgets
@@ -8298,7 +8263,9 @@ name|bitnset
 argument_list|(
 name|M_ESCFROM
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -8321,7 +8288,9 @@ name|putc
 argument_list|(
 literal|'>'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -8378,7 +8347,9 @@ name|putc
 argument_list|(
 literal|' '
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 block|}
@@ -8386,9 +8357,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -8424,7 +8393,9 @@ name|bitnset
 argument_list|(
 name|M_BLANKEND
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -8447,9 +8418,7 @@ name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8457,14 +8426,18 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ferror
 argument_list|(
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 operator|&&
 name|errno
@@ -8612,6 +8585,9 @@ comment|/* child -- actually write to file */
 name|struct
 name|stat
 name|stb
+decl_stmt|;
+name|MCI
+name|mcibuf
 decl_stmt|;
 operator|(
 name|void
@@ -8945,11 +8921,48 @@ name|EX_CANTCREAT
 argument_list|)
 expr_stmt|;
 block|}
-name|putfromline
+name|bzero
 argument_list|(
+operator|&
+name|mcibuf
+argument_list|,
+sizeof|sizeof
+name|mcibuf
+argument_list|)
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_mailer
+operator|=
+name|FileMailer
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_out
+operator|=
 name|f
+expr_stmt|;
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_7BITS
 argument_list|,
 name|FileMailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|mcibuf
+operator|.
+name|mci_flags
+operator||=
+name|MCIF_7BIT
+expr_stmt|;
+name|putfromline
+argument_list|(
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)
@@ -8961,9 +8974,8 @@ operator|->
 name|e_puthdr
 call|)
 argument_list|(
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)
@@ -8972,9 +8984,8 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|)
 expr_stmt|;
 call|(
@@ -8984,9 +8995,8 @@ operator|->
 name|e_putbody
 call|)
 argument_list|(
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|,
@@ -8997,9 +9007,8 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|f
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|)
 expr_stmt|;
 if|if

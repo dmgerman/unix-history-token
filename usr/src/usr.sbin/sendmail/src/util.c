@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.28 (Berkeley) %G%"
+literal|"@(#)util.c	8.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2552,7 +2552,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		fp -- file to put it onto. **		m -- the mailer used to control output. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
+comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		mci -- the mailer connection information. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
 end_comment
 
 begin_expr_stmt
@@ -2560,9 +2560,7 @@ name|putline
 argument_list|(
 name|l
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 specifier|register
 name|char
@@ -2572,16 +2570,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|FILE
+specifier|register
+name|MCI
 modifier|*
-name|fp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MAILER
-modifier|*
-name|m
+name|mci
 decl_stmt|;
 end_decl_stmt
 
@@ -2599,13 +2591,13 @@ decl_stmt|;
 comment|/* strip out 0200 bits -- these can look like TELNET protocol */
 if|if
 condition|(
-name|bitnset
+name|bitset
 argument_list|(
-name|M_7BITS
+name|MCIF_7BIT
 argument_list|,
-name|m
+name|mci
 operator|->
-name|m_flags
+name|mci_flags
 argument_list|)
 condition|)
 block|{
@@ -2693,7 +2685,9 @@ expr_stmt|;
 comment|/* check for line overflow */
 while|while
 condition|(
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_linelimit
 operator|>
@@ -2705,7 +2699,9 @@ operator|-
 name|l
 operator|)
 operator|>
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_linelimit
 condition|)
@@ -2718,7 +2714,9 @@ init|=
 operator|&
 name|l
 index|[
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_linelimit
 operator|-
@@ -2748,7 +2746,9 @@ name|bitnset
 argument_list|(
 name|M_XDOT
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -2761,7 +2761,9 @@ name|putc
 argument_list|(
 literal|'.'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2785,7 +2787,9 @@ name|fputs
 argument_list|(
 name|l
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2795,16 +2799,22 @@ name|putc
 argument_list|(
 literal|'!'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_eol
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2849,7 +2859,9 @@ name|bitnset
 argument_list|(
 name|M_XDOT
 argument_list|,
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
@@ -2862,7 +2874,9 @@ name|putc
 argument_list|(
 literal|'.'
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2919,16 +2933,22 @@ argument_list|(
 operator|*
 name|l
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-name|m
+name|mci
+operator|->
+name|mci_mailer
 operator|->
 name|m_eol
 argument_list|,
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if

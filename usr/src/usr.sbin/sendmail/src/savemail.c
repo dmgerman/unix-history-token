@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.24 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,14 @@ name|q
 init|=
 name|NULL
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|MCI
+name|mcibuf
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -204,11 +212,6 @@ modifier|*
 name|getpwnam
 parameter_list|()
 function_decl|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -1205,11 +1208,48 @@ name|ESM_PANIC
 expr_stmt|;
 break|break;
 block|}
-name|putfromline
+name|bzero
 argument_list|(
+operator|&
+name|mcibuf
+argument_list|,
+sizeof|sizeof
+name|mcibuf
+argument_list|)
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_out
+operator|=
 name|fp
+expr_stmt|;
+name|mcibuf
+operator|.
+name|mci_mailer
+operator|=
+name|FileMailer
+expr_stmt|;
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_7BITS
 argument_list|,
 name|FileMailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|mcibuf
+operator|.
+name|mci_flags
+operator||=
+name|MCIF_7BIT
+expr_stmt|;
+name|putfromline
+argument_list|(
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)
@@ -1221,9 +1261,8 @@ operator|->
 name|e_puthdr
 call|)
 argument_list|(
-name|fp
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|)
@@ -1232,9 +1271,8 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|fp
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|)
 expr_stmt|;
 call|(
@@ -1244,9 +1282,8 @@ operator|->
 name|e_putbody
 call|)
 argument_list|(
-name|fp
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|,
 name|e
 argument_list|,
@@ -1257,9 +1294,8 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|fp
-argument_list|,
-name|FileMailer
+operator|&
+name|mcibuf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2187,33 +2223,22 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		fp -- the output file. **		m -- the mailer to output to. **		e -- the envelope we are working in. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
+comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		mci -- the mailer connection information. **		e -- the envelope we are working in. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
 end_comment
 
 begin_expr_stmt
 unit|errbody
 operator|(
-name|fp
-operator|,
-name|m
+name|mci
 operator|,
 name|e
 operator|)
 specifier|register
-name|FILE
+name|MCI
 operator|*
-name|fp
+name|mci
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|struct
-name|mailer
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -2266,9 +2291,7 @@ name|putline
 argument_list|(
 literal|"   ----- Original message lost -----\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2287,18 +2310,14 @@ name|putline
 argument_list|(
 literal|"This is a MIME-encapsulated message"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2319,18 +2338,14 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -2392,45 +2407,35 @@ name|putline
 argument_list|(
 literal|"    **********************************************"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|"    **      THIS IS A WARNING MESSAGE ONLY      **"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|"    **  YOU DO NOT NEED TO RESEND YOUR MESSAGE  **"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|"    **********************************************"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -2458,9 +2463,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|expand
@@ -2487,18 +2490,14 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Output error message header (if specified and available). 	*/
@@ -2570,9 +2569,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -2588,9 +2585,7 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -2619,18 +2614,14 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -2684,9 +2675,7 @@ name|putline
 argument_list|(
 literal|"   ----- The following addresses had delivery problems -----"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|printheader
@@ -2733,9 +2722,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -2776,9 +2763,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -2793,9 +2778,7 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Output transcript of errors 	*/
@@ -2845,9 +2828,7 @@ name|putline
 argument_list|(
 literal|"   ----- Transcript of session is unavailable -----\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -2857,9 +2838,7 @@ name|putline
 argument_list|(
 literal|"   ----- Transcript of session follows -----\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -2898,9 +2877,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2933,9 +2910,7 @@ name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -2957,9 +2932,7 @@ name|putline
 argument_list|(
 literal|"   ----- Original message follows -----\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 else|else
@@ -2967,9 +2940,7 @@ name|putline
 argument_list|(
 literal|"   ----- Message header follows -----\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2977,7 +2948,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|fp
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -2993,9 +2966,7 @@ name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3016,35 +2987,27 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|"Content-Type: message/rfc822"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
 name|putheader
 argument_list|(
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|,
 name|e
 operator|->
@@ -3055,9 +3018,7 @@ name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -3066,9 +3027,7 @@ name|SendBody
 condition|)
 name|putbody
 argument_list|(
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|,
 name|e
 operator|->
@@ -3084,9 +3043,7 @@ name|putline
 argument_list|(
 literal|"   ----- Message body suppressed -----"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -3096,9 +3053,7 @@ name|putline
 argument_list|(
 literal|"  ----- No message was collected -----\n"
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -3115,9 +3070,7 @@ name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3138,9 +3091,7 @@ name|putline
 argument_list|(
 name|buf
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
@@ -3148,9 +3099,7 @@ name|putline
 argument_list|(
 literal|""
 argument_list|,
-name|fp
-argument_list|,
-name|m
+name|mci
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Cleanup and exit 	*/
