@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.10	82/01/30	*/
+comment|/*	proc.h	4.11	82/07/16	*/
 end_comment
 
 begin_comment
@@ -178,6 +178,38 @@ modifier|*
 name|p_pptr
 decl_stmt|;
 comment|/* pointer to process structure of parent */
+name|struct
+name|proc
+modifier|*
+name|p_cptr
+decl_stmt|;
+comment|/* pointer to youngest living child */
+name|struct
+name|proc
+modifier|*
+name|p_osptr
+decl_stmt|;
+comment|/* pointer to older sibling processes */
+name|struct
+name|proc
+modifier|*
+name|p_ysptr
+decl_stmt|;
+comment|/* pointer to younger siblings */
+name|struct
+name|quota
+modifier|*
+name|p_quota
+decl_stmt|;
+comment|/* quotas for this process (MUSH) */
+name|mmsgbuf
+name|p_mb
+decl_stmt|;
+comment|/* pending message */
+name|int
+name|p_msgflgs
+decl_stmt|;
+comment|/* message flags */
 block|}
 struct|;
 end_struct
@@ -382,7 +414,7 @@ begin_define
 define|#
 directive|define
 name|SLOAD
-value|0x000001
+value|0x0000001
 end_define
 
 begin_comment
@@ -393,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|SSYS
-value|0x000002
+value|0x0000002
 end_define
 
 begin_comment
@@ -404,7 +436,7 @@ begin_define
 define|#
 directive|define
 name|SLOCK
-value|0x000004
+value|0x0000004
 end_define
 
 begin_comment
@@ -415,7 +447,7 @@ begin_define
 define|#
 directive|define
 name|SSWAP
-value|0x000008
+value|0x0000008
 end_define
 
 begin_comment
@@ -426,7 +458,7 @@ begin_define
 define|#
 directive|define
 name|STRC
-value|0x000010
+value|0x0000010
 end_define
 
 begin_comment
@@ -437,7 +469,7 @@ begin_define
 define|#
 directive|define
 name|SWTED
-value|0x000020
+value|0x0000020
 end_define
 
 begin_comment
@@ -448,7 +480,7 @@ begin_define
 define|#
 directive|define
 name|SULOCK
-value|0x000040
+value|0x0000040
 end_define
 
 begin_comment
@@ -459,7 +491,7 @@ begin_define
 define|#
 directive|define
 name|SPAGE
-value|0x000080
+value|0x0000080
 end_define
 
 begin_comment
@@ -470,7 +502,7 @@ begin_define
 define|#
 directive|define
 name|SKEEP
-value|0x000100
+value|0x0000100
 end_define
 
 begin_comment
@@ -481,7 +513,7 @@ begin_define
 define|#
 directive|define
 name|SDLYU
-value|0x000200
+value|0x0000200
 end_define
 
 begin_comment
@@ -492,7 +524,7 @@ begin_define
 define|#
 directive|define
 name|SWEXIT
-value|0x000400
+value|0x0000400
 end_define
 
 begin_comment
@@ -503,7 +535,7 @@ begin_define
 define|#
 directive|define
 name|SPHYSIO
-value|0x000800
+value|0x0000800
 end_define
 
 begin_comment
@@ -514,7 +546,7 @@ begin_define
 define|#
 directive|define
 name|SVFORK
-value|0x001000
+value|0x0001000
 end_define
 
 begin_comment
@@ -525,7 +557,7 @@ begin_define
 define|#
 directive|define
 name|SVFDONE
-value|0x002000
+value|0x0002000
 end_define
 
 begin_comment
@@ -536,7 +568,7 @@ begin_define
 define|#
 directive|define
 name|SNOVM
-value|0x004000
+value|0x0004000
 end_define
 
 begin_comment
@@ -547,7 +579,7 @@ begin_define
 define|#
 directive|define
 name|SPAGI
-value|0x008000
+value|0x0008000
 end_define
 
 begin_comment
@@ -558,7 +590,7 @@ begin_define
 define|#
 directive|define
 name|SSEQL
-value|0x010000
+value|0x0010000
 end_define
 
 begin_comment
@@ -569,7 +601,7 @@ begin_define
 define|#
 directive|define
 name|SUANOM
-value|0x020000
+value|0x0020000
 end_define
 
 begin_comment
@@ -580,7 +612,7 @@ begin_define
 define|#
 directive|define
 name|STIMO
-value|0x040000
+value|0x0040000
 end_define
 
 begin_comment
@@ -595,7 +627,7 @@ begin_define
 define|#
 directive|define
 name|SNUSIG
-value|0x100000
+value|0x0100000
 end_define
 
 begin_comment
@@ -606,7 +638,7 @@ begin_define
 define|#
 directive|define
 name|SOWEUPC
-value|0x200000
+value|0x0200000
 end_define
 
 begin_comment
@@ -617,11 +649,22 @@ begin_define
 define|#
 directive|define
 name|SSEL
-value|0x400000
+value|0x0400000
 end_define
 
 begin_comment
 comment|/* selecting; wakeup/waiting danger */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLOGIN
+value|0x0800000
+end_define
+
+begin_comment
+comment|/* a login process (legit child of init) */
 end_comment
 
 begin_comment
