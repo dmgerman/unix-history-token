@@ -151,27 +151,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|500028
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
