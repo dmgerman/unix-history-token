@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_include
@@ -40,17 +40,14 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_comment
-comment|/*  *	This routine initializes the current and standard screen.  *  */
+comment|/*  * initscr --  *	Initialize the current and standard screen.  */
 end_comment
 
 begin_function
@@ -59,23 +56,17 @@ modifier|*
 name|initscr
 parameter_list|()
 block|{
-name|reg
+specifier|register
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-name|void
-name|tstp
-parameter_list|()
-function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"INITSCR()\n"
+literal|"initscr\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -84,11 +75,22 @@ if|if
 condition|(
 name|My_term
 condition|)
+block|{
+if|if
+condition|(
 name|setterm
 argument_list|(
 name|Def_term
 argument_list|)
-expr_stmt|;
+operator|==
+name|ERR
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 else|else
 block|{
 name|gettmode
@@ -111,19 +113,26 @@ name|sp
 operator|=
 name|Def_term
 expr_stmt|;
+if|if
+condition|(
 name|setterm
 argument_list|(
 name|sp
 argument_list|)
-expr_stmt|;
+operator|==
+name|ERR
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"INITSCR: term = %s\n"
+literal|"initscr: term = %s\n"
 argument_list|,
 name|sp
 argument_list|)
@@ -131,19 +140,27 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|_puts
+name|tputs
 argument_list|(
 name|TI
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
-name|_puts
+name|tputs
 argument_list|(
 name|VS
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -151,8 +168,6 @@ argument_list|,
 name|tstp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|curscr
@@ -163,11 +178,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"INITSCR: curscr = 0%o\n"
+literal|"initscr: curscr = 0%o\n"
 argument_list|,
 name|curscr
 argument_list|)
@@ -183,11 +196,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"LINES = %d, COLS = %d\n"
+literal|"initscr: LINES = %d, COLS = %d\n"
 argument_list|,
 name|LINES
 argument_list|,
@@ -216,13 +227,15 @@ operator|==
 name|ERR
 condition|)
 return|return
-name|ERR
+operator|(
+name|NULL
+operator|)
 return|;
 name|clearok
 argument_list|(
 name|curscr
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 name|curscr
@@ -242,11 +255,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"INITSCR: stdscr = 0%o\n"
+literal|"initscr: stdscr = 0%o\n"
 argument_list|,
 name|stdscr
 argument_list|)
@@ -259,6 +270,8 @@ name|stdscr
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
 name|stdscr
 operator|=
 name|newwin
@@ -271,9 +284,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-return|return
-name|stdscr
+operator|)
 return|;
 block|}
 end_function
