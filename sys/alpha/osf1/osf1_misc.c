@@ -1710,7 +1710,7 @@ decl_stmt|;
 block|{
 name|struct
 name|__getrlimit_args
-comment|/* { 		syscallarg(u_int) which; 		syscallarg(struct orlimit *) rlp; 	} */
+comment|/* { 		syscallarg(u_int) which; 		syscallarg(struct rlimit *) rlp; 	} */
 name|a
 decl_stmt|;
 if|if
@@ -1793,7 +1793,7 @@ argument_list|)
 operator|=
 operator|(
 expr|struct
-name|orlimit
+name|rlimit
 operator|*
 operator|)
 name|SCARG
@@ -1836,7 +1836,7 @@ decl_stmt|;
 block|{
 name|struct
 name|__setrlimit_args
-comment|/* { 		syscallarg(u_int) which; 		syscallarg(struct orlimit *) rlp; 	} */
+comment|/* { 		syscallarg(u_int) which; 		syscallarg(struct rlimit *) rlp; 	} */
 name|a
 decl_stmt|;
 if|if
@@ -1919,7 +1919,7 @@ argument_list|)
 operator|=
 operator|(
 expr|struct
-name|orlimit
+name|rlimit
 operator|*
 operator|)
 name|SCARG
