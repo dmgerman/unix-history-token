@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.31 (Berkeley) %G%"
+literal|"@(#)conf.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +369,14 @@ expr_stmt|;
 name|MaxHopCount
 operator|=
 name|MAXHOP
+expr_stmt|;
+name|SendMode
+operator|=
+name|SM_FORK
+expr_stmt|;
+name|ErrorMode
+operator|=
+name|EM_PRINT
 expr_stmt|;
 name|setdefuser
 argument_list|()

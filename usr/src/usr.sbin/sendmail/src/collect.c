@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.9 (Berkeley) %G%"
+literal|"@(#)collect.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,15 @@ specifier|register
 name|FILE
 modifier|*
 name|tf
+decl_stmt|;
+name|bool
+name|ignrdot
+init|=
+name|smtpmode
+condition|?
+name|FALSE
+else|:
+name|IgnrDot
 decl_stmt|;
 name|char
 name|buf
@@ -173,7 +182,7 @@ expr_stmt|;
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(
-name|sayok
+name|smtpmode
 condition|)
 name|message
 argument_list|(
@@ -582,7 +591,7 @@ comment|/* check for end-of-message */
 if|if
 condition|(
 operator|!
-name|IgnrDot
+name|ignrdot
 operator|&&
 name|buf
 index|[
@@ -614,9 +623,6 @@ condition|(
 name|OpMode
 operator|==
 name|MD_SMTP
-operator|&&
-operator|!
-name|IgnrDot
 operator|&&
 name|bp
 index|[
