@@ -1001,7 +1001,8 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep:<%s> at 0x%03x in PnP mode!\n"
+literal|"if_ep:<%s> at 0x%03x "
+literal|"in PnP mode!\n"
 argument_list|,
 name|desc
 argument_list|,
@@ -1069,7 +1070,8 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep:<%s> at port 0x%03x in TEST mode!  Erase pencil mark.\n"
+literal|"if_ep:<%s> at port 0x%03x in TEST mode!"
+literal|"  Erase pencil mark.\n"
 argument_list|,
 name|desc
 argument_list|,
@@ -1140,7 +1142,8 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep:<%s> at port 0x%03x-0x%03x irq %d\n"
+literal|"if_ep:<%s>"
+literal|" at port 0x%03x-0x%03x irq %d\n"
 argument_list|,
 name|desc
 argument_list|,

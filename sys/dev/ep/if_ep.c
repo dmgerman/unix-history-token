@@ -1104,7 +1104,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Unable to retrieve Ethernet address!\n"
+literal|"Unable to get Ethernet address!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2019,7 +2019,7 @@ operator||
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*          * Store up a bunch of mbuf's for use later. (MAX_MBS). First we free up          * any that we had in case we're being called from intr or somewhere          * else.          */
+comment|/* 	 * Store up a bunch of mbuf's for use later. (MAX_MBS). 	 * First we free up any that we had in case we're being 	 * called from intr or somewhere else. 	 */
 name|GO_WINDOW
 argument_list|(
 literal|1
@@ -2160,7 +2160,7 @@ operator|)
 operator|&
 literal|3
 expr_stmt|;
-comment|/*          * The 3c509 automatically pads short packets to minimum ethernet length,          * but we drop packets that are too large. Perhaps we should truncate          * them instead?          */
+comment|/* 	 * The 3c509 automatically pads short packets to minimum 	 * ethernet length, but we drop packets that are too large. 	 * Perhaps we should truncate them instead? 	 */
 if|if
 condition|(
 name|len
@@ -2281,6 +2281,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+comment|/* Second dword meaningless */
 name|outw
 argument_list|(
 name|BASE
@@ -2290,7 +2291,6 @@ argument_list|,
 literal|0x0
 argument_list|)
 expr_stmt|;
-comment|/* Second dword meaningless */
 if|if
 condition|(
 name|EP_FTST
@@ -2510,7 +2510,7 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-comment|/*          * Is another packet coming in? We don't want to overflow the tiny RX          * fifo.          */
+comment|/* 	 * Is another packet coming in? We don't want to overflow 	 * the tiny RX fifo. 	 */
 name|readcheck
 label|:
 if|if
@@ -2525,7 +2525,7 @@ operator|&
 name|RX_BYTES_MASK
 condition|)
 block|{
-comment|/* 		 * we check if we have packets left, in that case we prepare to come 		 * back later 		 */
+comment|/* 		 * we check if we have packets left, in that case 		 * we prepare to come back later 		 */
 if|if
 condition|(
 name|ifp
@@ -2592,7 +2592,7 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-comment|/*          * quick fix: Try to detect an interrupt when the card goes away.          */
+comment|/* 	 * quick fix: Try to detect an interrupt when the card goes away. 	 */
 if|if
 condition|(
 name|sc
@@ -2866,8 +2866,7 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-comment|/* we  need ACK. we do it at the end */
-comment|/* 		         * We need to read TX_STATUS until we get a 0 status in order to 		         * turn off the interrupt flag. 		         */
+comment|/* 			 * We need ACK. We do it at the end. 			 * 		         * We need to read TX_STATUS until we get a 			 * 0 status in order to turn off the interrupt flag. 		         */
 while|while
 condition|(
 operator|(
@@ -2942,12 +2941,12 @@ name|TXS_JABBER
 condition|)
 empty_stmt|;
 else|else
-comment|/* TXS_MAX_COLLISION - 							 * we shouldn't get here */
 operator|++
 name|ifp
 operator|->
 name|if_collisions
 expr_stmt|;
+comment|/* TXS_MAX_COLLISION 							 * we shouldn't get 							 * here 							 */
 block|}
 operator|++
 name|ifp
@@ -2963,7 +2962,7 @@ argument_list|,
 name|TX_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* 				         * To have a tx_avail_int but giving the chance to the 				         * Reception 				         */
+comment|/* 				         * To have a tx_avail_int but giving 					 * the chance to the Reception 				         */
 if|if
 condition|(
 name|ifp
@@ -2984,6 +2983,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* pops up the next status */
 name|outb
 argument_list|(
 name|BASE
@@ -2993,7 +2993,6 @@ argument_list|,
 literal|0x0
 argument_list|)
 expr_stmt|;
-comment|/* pops up the next 									 * status */
 block|}
 comment|/* while */
 name|ifp
@@ -3148,7 +3147,7 @@ operator|&
 name|ERR_RX_OVERRUN
 condition|)
 block|{
-comment|/* 		         * we can think the rx latency is actually greather than we 		         * expect 		         */
+comment|/* 		         * We can think the rx latency is actually 			 * greather than we expect 		         */
 ifdef|#
 directive|ifdef
 name|EP_LOCAL_STATS
@@ -3420,7 +3419,7 @@ name|F_ACCESS_32_BITS
 argument_list|)
 condition|)
 block|{
-comment|/* default for EISA 							 * configured cards */
+comment|/* default for EISA configured cards */
 name|insl
 argument_list|(
 name|BASE
@@ -3565,7 +3564,7 @@ operator|&
 name|ERR_RX_INCOMPLETE
 condition|)
 block|{
-comment|/* we haven't received the 						 * complete packet */
+comment|/* we haven't received the complete packet */
 name|sc
 operator|->
 name|mcur
@@ -3575,12 +3574,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EP_LOCAL_STATS
+comment|/* to know how often we come here */
 name|sc
 operator|->
 name|rx_no_first
 operator|++
 expr_stmt|;
-comment|/* to know how often we come here */
 endif|#
 directive|endif
 name|EP_FRST
@@ -3590,11 +3589,6 @@ argument_list|,
 name|F_RX_FIRST
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-operator|(
 name|status
 operator|=
 name|inw
@@ -3603,13 +3597,16 @@ name|BASE
 operator|+
 name|EP_W1_RX_STATUS
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|status
 operator|&
 name|ERR_RX_INCOMPLETE
-operator|)
 condition|)
 block|{
-comment|/* 			 * we see if by now, the packet has completly 			 * arrived 			 */
+comment|/* 			 * We see if by now, the packet has completly 			 * arrived 			 */
 goto|goto
 name|read_again
 goto|;
@@ -4271,7 +4268,7 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-comment|/*         printf("ep: watchdog\n");  	log(LOG_ERR, "ep%d: watchdog\n", ifp->if_unit); 	ifp->if_oerrors++; */
+comment|/* 	printf("ep: watchdog\n");  	log(LOG_ERR, "ep%d: watchdog\n", ifp->if_unit); 	ifp->if_oerrors++; */
 if|if
 condition|(
 name|sc

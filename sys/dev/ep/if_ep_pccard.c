@@ -217,6 +217,7 @@ name|cmd_off
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX check return */
 name|error
 operator|=
 name|get_e
@@ -229,7 +230,6 @@ operator|&
 name|result
 argument_list|)
 expr_stmt|;
-comment|/* XXX check return */
 name|epb
 operator|->
 name|prod_id
@@ -274,6 +274,7 @@ name|cmd_off
 operator|=
 literal|2
 expr_stmt|;
+comment|/* XXX check return */
 name|error
 operator|=
 name|get_e
@@ -286,7 +287,6 @@ operator|&
 name|result
 argument_list|)
 expr_stmt|;
-comment|/* XXX check return */
 name|epb
 operator|->
 name|prod_id
@@ -602,6 +602,7 @@ name|cmd_off
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX check return */
 name|error
 operator|=
 name|get_e
@@ -614,7 +615,6 @@ operator|&
 name|result
 argument_list|)
 expr_stmt|;
-comment|/* XXX check return */
 name|sc
 operator|->
 name|epb
