@@ -457,7 +457,23 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"%s: %.*s"
+argument_list|,
+name|path
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|strlen
+argument_list|(
+name|pathd
+argument_list|)
+operator|-
+name|complen
+operator|-
+literal|1
+argument_list|)
 argument_list|,
 name|pathd
 argument_list|)
