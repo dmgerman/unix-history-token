@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdevs.h>
+file|"usbdevs.h"
 end_include
 
 begin_include

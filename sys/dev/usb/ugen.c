@@ -5192,11 +5192,11 @@ operator|+
 operator|(
 name|sce
 operator|->
-name|limit
+name|cur
 operator|-
 name|sce
 operator|->
-name|cur
+name|limit
 operator|)
 expr_stmt|;
 name|DPRINTFN

@@ -144,25 +144,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdevs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_quirks.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdevs.h>
+file|<dev/usb/ucomvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/ucomvar.h>
+file|"usbdevs.h"
 end_include
 
 begin_ifdef

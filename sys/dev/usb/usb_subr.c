@@ -140,7 +140,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdevs.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -507,7 +507,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdevs_data.h>
+file|"usbdevs_data.h"
 end_include
 
 begin_endif
