@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)nlist.c	4.6 (Berkeley) %G% */
+comment|/* @(#)nlist.c	4.7 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -210,7 +210,8 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NULL
+operator|-
+literal|1
 operator|)
 return|;
 name|fread
