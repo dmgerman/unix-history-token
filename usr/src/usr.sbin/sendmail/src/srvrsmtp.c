@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.37 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.38 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.37 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.38 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2168,25 +2168,7 @@ condition|)
 goto|goto
 name|abortmessage
 goto|;
-name|HoldErrs
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
-name|SmtpPhase
-operator|=
-literal|"delivery"
-expr_stmt|;
-if|if
-condition|(
-name|nrcpts
-operator|!=
-literal|1
-operator|&&
-operator|!
-name|doublequeue
-condition|)
-block|{
+comment|/* from now on, we have to operate silently */
 name|HoldErrs
 operator|=
 name|TRUE
@@ -2197,7 +2179,11 @@ name|e_errormode
 operator|=
 name|EM_MAIL
 expr_stmt|;
-block|}
+comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
+name|SmtpPhase
+operator|=
+literal|"delivery"
+expr_stmt|;
 name|e
 operator|->
 name|e_xfp
@@ -2224,87 +2210,46 @@ name|e
 operator|->
 name|e_id
 expr_stmt|;
+if|if
+condition|(
+name|doublequeue
+condition|)
+block|{
+comment|/* make sure it is in the queue */
+name|queueup
+argument_list|(
+name|e
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* send to all recipients */
 name|sendall
 argument_list|(
 name|e
 argument_list|,
-name|Verbose
-condition|?
-name|SM_DELIVER
-else|:
-name|SM_QUEUE
+name|SM_DEFAULT
 argument_list|)
 expr_stmt|;
+block|}
 name|e
 operator|->
 name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-name|unlockqueue
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
-comment|/* issue success if appropriate and reset */
-if|if
-condition|(
-name|Errors
-operator|==
-literal|0
-operator|||
-name|HoldErrs
-condition|)
+comment|/* issue success message */
 name|message
 argument_list|(
 literal|"250 %s Message accepted for delivery"
 argument_list|,
 name|id
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|EF_FATALERRS
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
-operator|&&
-operator|!
-name|HoldErrs
-condition|)
-block|{
-comment|/* avoid sending back an extra message */
-name|e
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
-expr_stmt|;
-name|e
-operator|->
-name|e_flags
-operator||=
-name|EF_CLRQUEUE
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* from now on, we have to operate silently */
-name|HoldErrs
-operator|=
-name|TRUE
-expr_stmt|;
-name|e
-operator|->
-name|e_errormode
-operator|=
-name|EM_MAIL
 expr_stmt|;
 comment|/* if we just queued, poke it */
 if|if
@@ -2342,7 +2287,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* now make it really happen */
 if|if
