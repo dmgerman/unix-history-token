@@ -234,6 +234,8 @@ decl_stmt|;
 name|u_int8_t
 name|dir
 decl_stmt|,
+name|type
+decl_stmt|,
 name|subtype
 decl_stmt|;
 name|u_int8_t
@@ -254,7 +256,7 @@ literal|"null node"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* trim CRC here for WEP can find its own CRC at the end of packet. */
+comment|/* trim CRC here so WEP can find its own CRC at the end of packet. */
 if|if
 condition|(
 name|m
@@ -280,6 +282,43 @@ operator|~
 name|M_HASFCS
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_frame_min
+argument_list|)
+argument_list|,
+operator|(
+literal|"frame length too short: %u"
+operator|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * In monitor mode, send everything directly to bpf. 	 * XXX may want to include the CRC 	 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_MONITOR
+condition|)
+goto|goto
+name|out
+goto|;
 name|wh
 operator|=
 name|mtod
@@ -350,6 +389,39 @@ index|]
 operator|&
 name|IEEE80211_FC1_DIR_MASK
 expr_stmt|;
+name|type
+operator|=
+name|wh
+operator|->
+name|i_fc
+index|[
+literal|0
+index|]
+operator|&
+name|IEEE80211_FC0_TYPE_MASK
+expr_stmt|;
+comment|/* 	 * NB: We are not yet prepared to handle control frames, 	 *     but permitting drivers to send them to us allows 	 *     them to go through bpf tapping at the 802.11 layer. 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_frame
+argument_list|)
+condition|)
+block|{
+comment|/* XXX statistic */
+goto|goto
+name|out
+goto|;
+comment|/* XXX */
+block|}
 if|if
 condition|(
 name|ic
@@ -485,7 +557,6 @@ break|break;
 case|case
 name|IEEE80211_M_MONITOR
 case|:
-comment|/* NB: this should collect everything */
 goto|goto
 name|out
 goto|;
@@ -564,14 +635,7 @@ expr_stmt|;
 block|}
 switch|switch
 condition|(
-name|wh
-operator|->
-name|i_fc
-index|[
-literal|0
-index|]
-operator|&
-name|IEEE80211_FC0_TYPE_MASK
+name|type
 condition|)
 block|{
 case|case
@@ -1292,6 +1356,9 @@ return|return;
 case|case
 name|IEEE80211_FC0_TYPE_CTL
 case|:
+goto|goto
+name|out
+goto|;
 default|default:
 name|IEEE80211_DPRINTF
 argument_list|(
@@ -1300,12 +1367,7 @@ literal|"%s: bad type %x\n"
 operator|,
 name|__func__
 operator|,
-name|wh
-operator|->
-name|i_fc
-index|[
-literal|0
-index|]
+name|type
 operator|)
 argument_list|)
 expr_stmt|;
