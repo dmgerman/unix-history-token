@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: crontab.c,v 1.3 1995/05/30 03:47:04 rgrimes Exp $"
+literal|"$Id: crontab.c,v 1.4 1996/04/09 20:28:16 scrappy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -752,9 +752,16 @@ block|}
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|User
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|user
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -871,9 +878,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|Filename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Filename
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|argv
 index|[
@@ -2184,6 +2198,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: panic: bad switch() in replace_cmd()\n"
+argument_list|,
+name|ProgramName
 argument_list|)
 expr_stmt|;
 goto|goto
