@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.12	85/06/02	*/
+comment|/*	uipc_socket.c	6.13	85/06/03	*/
 end_comment
 
 begin_include
@@ -2813,11 +2813,19 @@ name|m
 operator|==
 literal|0
 operator|||
+operator|(
 name|m
 operator|->
 name|m_type
 operator|!=
 name|MT_DATA
+operator|&&
+name|m
+operator|->
+name|m_type
+operator|!=
+name|MT_HEADER
+operator|)
 condition|)
 name|panic
 argument_list|(
