@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.16 2001/11/11 20:15:06 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.17 2001/11/11 23:52:28 imp Exp   */
 end_comment
 
 begin_comment
@@ -3192,6 +3192,17 @@ end_define
 
 begin_comment
 comment|/* EXP Computer Inc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_GEMTEK
+value|-1
+end_define
+
+begin_comment
+comment|/* Gem Tek */
 end_comment
 
 begin_define
