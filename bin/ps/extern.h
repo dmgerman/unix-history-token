@@ -291,6 +291,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|nwchan
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|,
+name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pagein
 parameter_list|(
 name|KINFO
