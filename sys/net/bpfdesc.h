@@ -149,9 +149,34 @@ decl_stmt|;
 comment|/* bsd select info */
 endif|#
 directive|endif
+name|struct
+name|mtx
+name|bd_mtx
+decl_stmt|;
+comment|/* mutex for this descriptor */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BPFD_LOCK
+parameter_list|(
+name|bd
+parameter_list|)
+value|mtx_lock(&(bd)->bd_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPFD_UNLOCK
+parameter_list|(
+name|bd
+parameter_list|)
+value|mtx_unlock(&(bd)->bd_mtx)
+end_define
 
 begin_comment
 comment|/*  * Descriptor associated with each attached hardware interface.  */
@@ -187,9 +212,34 @@ modifier|*
 name|bif_ifp
 decl_stmt|;
 comment|/* corresponding interface */
+name|struct
+name|mtx
+name|bif_mtx
+decl_stmt|;
+comment|/* mutex for interface */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BPFIF_LOCK
+parameter_list|(
+name|bif
+parameter_list|)
+value|mtx_lock(&(bif)->bif_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPFIF_UNLOCK
+parameter_list|(
+name|bif
+parameter_list|)
+value|mtx_unlock(&(bif)->bif_mtx)
+end_define
 
 begin_endif
 endif|#
