@@ -865,7 +865,7 @@ literal|0x62
 argument_list|)
 expr_stmt|;
 name|gdc_curaddr
-operator|=
+operator|+=
 operator|(
 name|inb
 argument_list|(
