@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/memrange.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -338,7 +332,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 block|}
 return|return
 operator|(
