@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	8.1 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	7.8 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -6608,7 +6608,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sii_GetByte: ds %x cm %x i %d lotc %d\n"
+literal|"sii_GetByte: cs %x ds %x cm %x i %d lotc %d\n"
+argument_list|,
+name|regs
+operator|->
+name|cstat
 argument_list|,
 name|dstat
 argument_list|,
@@ -7336,29 +7340,8 @@ expr_stmt|;
 name|lp
 operator|=
 name|sii_logp
-operator|+
-literal|1
 expr_stmt|;
-if|if
-condition|(
-name|lp
-operator|>
-operator|&
-name|sii_log
-index|[
-name|NLOG
-index|]
-condition|)
-name|lp
-operator|=
-name|sii_log
-expr_stmt|;
-while|while
-condition|(
-name|lp
-operator|!=
-name|sii_logp
-condition|)
+do|do
 block|{
 name|printf
 argument_list|(
@@ -7401,6 +7384,13 @@ operator|=
 name|sii_log
 expr_stmt|;
 block|}
+do|while
+condition|(
+name|lp
+operator|!=
+name|sii_logp
+condition|)
+do|;
 block|}
 end_block
 
