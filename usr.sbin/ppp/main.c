@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.42 1997/04/12 22:58:39 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.43 1997/04/13 00:54:43 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -2936,7 +2936,12 @@ block|}
 specifier|static
 name|void
 name|StartRedialTimer
-parameter_list|()
+parameter_list|(
+name|Timeout
+parameter_list|)
+name|int
+name|Timeout
+decl_stmt|;
 block|{
 name|StopTimer
 argument_list|(
@@ -2946,16 +2951,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|VarRedialTimeout
+name|Timeout
 condition|)
 block|{
-name|LogPrintf
-argument_list|(
-name|LOG_PHASE_BIT
-argument_list|,
-literal|"Enter pause for redialing.\n"
-argument_list|)
-expr_stmt|;
 name|RedialTimer
 operator|.
 name|state
@@ -2964,7 +2962,7 @@ name|TIMER_STOPPED
 expr_stmt|;
 if|if
 condition|(
-name|VarRedialTimeout
+name|Timeout
 operator|>
 literal|0
 condition|)
@@ -2972,7 +2970,7 @@ name|RedialTimer
 operator|.
 name|load
 operator|=
-name|VarRedialTimeout
+name|Timeout
 operator|*
 name|SECTICKS
 expr_stmt|;
@@ -2989,6 +2987,19 @@ name|REDIAL_PERIOD
 operator|)
 operator|*
 name|SECTICKS
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Enter pause (%d) for redialing.\n"
+argument_list|,
+name|RedialTimer
+operator|.
+name|load
+operator|/
+name|SECTICKS
+argument_list|)
 expr_stmt|;
 name|RedialTimer
 operator|.
@@ -3252,7 +3263,9 @@ literal|0
 condition|)
 block|{
 name|StartRedialTimer
-argument_list|()
+argument_list|(
+name|VarRedialTimeout
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -3338,12 +3351,12 @@ argument_list|)
 expr_stmt|;
 comment|/* Tried all numbers - no luck */
 else|else
-name|sleep
+comment|/* Try all numbers in background mode */
+name|StartRedialTimer
 argument_list|(
-literal|1
+name|VarRedialNextTimeout
 argument_list|)
 expr_stmt|;
-comment|/* Try all numbers in background mode */
 block|}
 elseif|else
 if|if
@@ -3357,7 +3370,9 @@ condition|)
 block|{
 comment|/* I give up !  Can't get through :( */
 name|StartRedialTimer
-argument_list|()
+argument_list|(
+name|VarRedialTimeout
+argument_list|)
 expr_stmt|;
 name|dial_up
 operator|=
@@ -3377,13 +3392,14 @@ name|NULL
 condition|)
 comment|/* Dial failed. Keep quite during redial wait period. */
 name|StartRedialTimer
-argument_list|()
+argument_list|(
+name|VarRedialTimeout
+argument_list|)
 expr_stmt|;
 else|else
-comment|/* 	     * Give the modem a chance to recover, then dial the next 	     * number in our list 	     */
-name|sleep
+name|StartRedialTimer
 argument_list|(
-literal|1
+name|VarRedialNextTimeout
 argument_list|)
 expr_stmt|;
 block|}
