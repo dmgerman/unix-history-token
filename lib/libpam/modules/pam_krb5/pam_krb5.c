@@ -665,8 +665,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_parse_name(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -717,8 +719,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_unparse_name(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -816,8 +820,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_aname_to_localname(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -965,8 +971,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_get_init_creds_password(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -1031,8 +1039,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_resolve(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -1072,8 +1082,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_initialize(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -1114,8 +1126,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_store_cred(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -1588,12 +1602,7 @@ condition|)
 block|{
 name|PAM_LOG
 argument_list|(
-literal|"Error krb5_init_context(): %s"
-argument_list|,
-name|error_message
-argument_list|(
-name|krbret
-argument_list|)
+literal|"Error krb5_init_context() failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1933,8 +1942,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_get_principal(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -1970,8 +1981,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_resolve(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -2006,8 +2019,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_initialize(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -2049,8 +2064,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_start_seq_get(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -2121,8 +2138,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_store_cred(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -2609,12 +2628,7 @@ condition|)
 block|{
 name|PAM_LOG
 argument_list|(
-literal|"Error krb5_init_context(): %s"
-argument_list|,
-name|error_message
-argument_list|(
-name|krbret
-argument_list|)
+literal|"Error krb5_init_context() failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2651,8 +2665,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_get_principal(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -2877,12 +2893,7 @@ condition|)
 block|{
 name|PAM_LOG
 argument_list|(
-literal|"Error krb5_init_context(): %s"
-argument_list|,
-name|error_message
-argument_list|(
-name|krbret
-argument_list|)
+literal|"Error krb5_init_context() failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2931,8 +2942,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_parse_name(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -2973,8 +2986,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_unparse_name(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -3072,8 +3087,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_get_init_creds_password()"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -3201,8 +3218,10 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_change_password(): %s"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|pam_context
+argument_list|,
 name|krbret
 argument_list|)
 argument_list|)
@@ -3479,8 +3498,10 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_sname_to_principal()"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|context
+argument_list|,
 name|retval
 argument_list|)
 argument_list|)
@@ -3565,8 +3586,10 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_kt_read_service_key()"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|context
+argument_list|,
 name|retval
 argument_list|)
 argument_list|)
@@ -3654,8 +3677,10 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_mk_req()"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|context
+argument_list|,
 name|retval
 argument_list|)
 argument_list|)
@@ -3708,8 +3733,10 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_rd_req()"
 argument_list|,
-name|error_message
+name|krb5_get_err_text
 argument_list|(
+name|context
+argument_list|,
 name|retval
 argument_list|)
 argument_list|)
