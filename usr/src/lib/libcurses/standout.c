@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * routines dealing with entering and exiting standout mode  *  * %G% (Berkeley) @(#)standout.c	1.1  */
+comment|/*  * routines dealing with entering and exiting standout mode  *  * @(#)standout.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
