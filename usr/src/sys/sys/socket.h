@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -885,7 +885,7 @@ begin_define
 define|#
 directive|define
 name|CTL_NET_NAMES
-value|{ \ 	"unspec", \ 	"unix", \ 	"inet", \ 	"implink", \ 	"pup", \ 	"chaos", \ 	"xerox_ns", \ 	"iso", \ 	"emca", \ 	"datakit", \ 	"ccitt", \ 	"ibm_sna", \ 	"decnet", \ 	"dec_dli", \ 	"lat", \ 	"hylink", \ 	"appletalk", \ 	"route", \ 	"link_layer", \ 	"xtp", \ 	"coip", \ 	"cnt", \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "unix", CTLTYPE_NODE }, \ 	{ "inet", CTLTYPE_NODE }, \ 	{ "implink", CTLTYPE_NODE }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ "chaos", CTLTYPE_NODE }, \ 	{ "xerox_ns", CTLTYPE_NODE }, \ 	{ "iso", CTLTYPE_NODE }, \ 	{ "emca", CTLTYPE_NODE }, \ 	{ "datakit", CTLTYPE_NODE }, \ 	{ "ccitt", CTLTYPE_NODE }, \ 	{ "ibm_sna", CTLTYPE_NODE }, \ 	{ "decnet", CTLTYPE_NODE }, \ 	{ "dec_dli", CTLTYPE_NODE }, \ 	{ "lat", CTLTYPE_NODE }, \ 	{ "hylink", CTLTYPE_NODE }, \ 	{ "appletalk", CTLTYPE_NODE }, \ 	{ "route", CTLTYPE_NODE }, \ 	{ "link_layer", CTLTYPE_NODE }, \ 	{ "xtp", CTLTYPE_NODE }, \ 	{ "coip", CTLTYPE_NODE }, \ 	{ "cnt", CTLTYPE_NODE }, \ 	{ "rtip", CTLTYPE_NODE }, \ 	{ "ipx", CTLTYPE_NODE }, \ 	{ "sip", CTLTYPE_NODE }, \ 	{ "pip", CTLTYPE_NODE }, \ }
 end_define
 
 begin_comment
@@ -928,8 +928,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NET_RT_MAXID
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|CTL_NET_RT_NAMES
-value|{ \ 	"unspec", \ 	"dump", \ 	"flags", \ 	"iflist", \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "dump", CTLTYPE_STRUCT }, \ 	{ "flags", CTLTYPE_STRUCT }, \ 	{ "iflist", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_comment
