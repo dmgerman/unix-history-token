@@ -46,18 +46,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|char
-name|hexbuf
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|HEXBUF_LEN
+value|256
+end_define
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|prsockaddr
@@ -65,6 +63,10 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+parameter_list|,
+name|char
+modifier|*
+name|hexbuf
 parameter_list|)
 block|{
 name|char
@@ -129,7 +131,11 @@ name|bp
 operator|<
 name|hexbuf
 operator|+
-literal|252
+operator|(
+name|HEXBUF_LEN
+operator|-
+literal|4
+operator|)
 condition|;
 name|cp
 operator|++
@@ -179,11 +185,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|&
+operator|(
 name|hexbuf
-index|[
-literal|0
-index|]
+operator|)
 return|;
 block|}
 end_function
@@ -219,6 +223,12 @@ name|radix_node
 modifier|*
 name|rn
 decl_stmt|;
+name|char
+name|hexbuf
+index|[
+name|HEXBUF_LEN
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"at_addroute: v=%s\n"
@@ -226,6 +236,8 @@ argument_list|,
 name|prsockaddr
 argument_list|(
 name|v_arg
+argument_list|,
+name|hexbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -236,6 +248,8 @@ argument_list|,
 name|prsockaddr
 argument_list|(
 name|n_arg
+argument_list|,
+name|hexbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -308,6 +322,12 @@ name|radix_node
 modifier|*
 name|rn
 decl_stmt|;
+name|char
+name|hexbuf
+index|[
+name|HEXBUF_LEN
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"at_matroute: v=%s\n"
@@ -315,6 +335,8 @@ argument_list|,
 name|prsockaddr
 argument_list|(
 name|v_arg
+argument_list|,
+name|hexbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -381,6 +403,12 @@ name|radix_node
 modifier|*
 name|rn
 decl_stmt|;
+name|char
+name|hexbuf
+index|[
+name|HEXBUF_LEN
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"at_lookup: v=%s\n"
@@ -388,6 +416,8 @@ argument_list|,
 name|prsockaddr
 argument_list|(
 name|v_arg
+argument_list|,
+name|hexbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -398,6 +428,8 @@ argument_list|,
 name|prsockaddr
 argument_list|(
 name|m_arg
+argument_list|,
+name|hexbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -466,6 +498,12 @@ name|radix_node
 modifier|*
 name|rn
 decl_stmt|;
+name|char
+name|hexbuf
+index|[
+name|HEXBUF_LEN
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"at_delroute: v=%s\n"
@@ -473,6 +511,8 @@ argument_list|,
 name|prsockaddr
 argument_list|(
 name|v_arg
+argument_list|,
+name|hexbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -483,6 +523,8 @@ argument_list|,
 name|prsockaddr
 argument_list|(
 name|netmask_arg
+argument_list|,
+name|hexbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
