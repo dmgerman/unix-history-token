@@ -301,12 +301,6 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|exit1
 argument_list|(
 name|td
@@ -393,7 +387,20 @@ name|plimit
 modifier|*
 name|plim
 decl_stmt|;
-name|GIANT_REQUIRED
+comment|/* 	 * Drop Giant if caller has it.  Eventually we should warn about 	 * being called with Giant held. 	 */
+while|while
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+condition|)
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|p
 operator|=
@@ -430,6 +437,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * MUST abort all other threads before proceeding past here. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -484,6 +497,12 @@ argument_list|()
 expr_stmt|;
 comment|/* Don't need this any more. */
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * With this state set: 	 * Any thread entering the kernel from userspace will thread_exit() 	 * in trap().  Any thread attempting to sleep will return immediatly 	 * with EINTR or EWOULDBLOCK, which will hopefully force them 	 * to back out to userland, freeing resources as they go, and 	 * anything attempting to return to userland will thread_exit() 	 * from userret().  thread_exit() will do a wakeup on p->p_numthreads 	 * if it transitions to 1. 	 */
 name|p
 operator|->
@@ -581,12 +600,29 @@ block|}
 ifdef|#
 directive|ifdef
 name|PGINPROF
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vmsizmon
 argument_list|()
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-name|STOPEVENT
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|_STOPEVENT
 argument_list|(
 name|p
 argument_list|,
@@ -604,12 +640,29 @@ name|p_stype
 argument_list|)
 expr_stmt|;
 comment|/* Wakeup anyone in procfs' PIOCWAIT */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check if any loadable modules need anything done at process exit. 	 * e.g. SYSV IPC stuff 	 * XXX what if one of these generates an error? 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_exit
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -747,6 +800,13 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pid. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX: not sure if needed */
 name|funsetownlst
 argument_list|(
 operator|&
@@ -759,6 +819,12 @@ comment|/* 	 * Close open files and release open-file table. 	 * This may block!
 name|fdfree
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove ourself from our leader's peer list and wake our leader. 	 */
@@ -817,6 +883,12 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|ppeers_lock
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* The next two chunks should probably be moved to vmspace_exit. */
@@ -1170,6 +1242,12 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -1271,9 +1349,21 @@ name|p_textvp
 operator|=
 name|NULL
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vrele
 argument_list|(
 name|vtmp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -1449,6 +1539,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Save exit status and final rusage info, adding in child rusage 	 * info and self times. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1527,6 +1623,12 @@ operator|->
 name|p_klist
 argument_list|,
 name|NOTE_EXIT
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Just delete all entries in the p_klist. At this point we won't 	 * report any more events, and there are nasty race conditions that 	 * can beat us if we don't. 	 */
@@ -2078,12 +2180,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
 name|nfound
@@ -2425,12 +2521,6 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2477,6 +2567,12 @@ name|proctree_lock
 argument_list|)
 expr_stmt|;
 comment|/* 			 * As a side effect of this lock, we know that 			 * all other writes to this proc are visible now, so 			 * no more locking is needed for p. 			 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2532,6 +2628,12 @@ operator|->
 name|p_ru
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* 			 * Decrement the count of procs running with this uid. 			 */
 operator|(
@@ -2592,6 +2694,12 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 			 * do any thread-system specific cleanups 			 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|thread_wait
 argument_list|(
 name|p
@@ -2601,6 +2709,12 @@ comment|/* 			 * Give vm and machine-dependent layer a chance 			 * to free anyt
 name|vm_waitproc
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2645,12 +2759,6 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|allproc_lock
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -2824,12 +2932,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2922,12 +3024,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2951,12 +3047,6 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|proctree_lock
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -2988,12 +3078,6 @@ literal|0
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3041,19 +3125,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 goto|goto
 name|loop
 goto|;
