@@ -340,6 +340,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pim_stats
+parameter_list|(
+name|u_long
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
