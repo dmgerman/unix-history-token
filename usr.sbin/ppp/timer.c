@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.31 1998/06/27 14:18:11 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.32 1998/12/14 19:24:29 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -757,15 +763,54 @@ name|prompt
 parameter_list|)
 block|{
 name|struct
+name|itimerval
+name|itimer
+decl_stmt|;
+name|struct
 name|pppTimer
 modifier|*
 name|pt
 decl_stmt|;
-name|int
+name|u_long
 name|rest
 init|=
 literal|0
 decl_stmt|;
+comment|/* Adjust our first delta so that it reflects what's really happening */
+if|if
+condition|(
+name|TimerList
+operator|&&
+name|getitimer
+argument_list|(
+name|ITIMER_REAL
+argument_list|,
+operator|&
+name|itimer
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|TimerList
+operator|->
+name|rest
+operator|=
+name|itimer
+operator|.
+name|it_value
+operator|.
+name|tv_sec
+operator|*
+name|SECTICKS
+operator|+
+name|itimer
+operator|.
+name|it_value
+operator|.
+name|tv_usec
+operator|/
+name|TICKUNIT
+expr_stmt|;
 define|#
 directive|define
 name|SECS
@@ -784,7 +829,7 @@ define|#
 directive|define
 name|DISP
 define|\
-value|"%s timer[%p]: freq = %ld.%02lds, next = %d.%02ds, state = %s\n",	\   pt->name, pt, SECS(pt->load), HSECS(pt->load), SECS(rest),		\   HSECS(rest), tState2Nam(pt->state)
+value|"%s timer[%p]: freq = %ld.%02lds, next = %lu.%02lus, state = %s\n",	\   pt->name, pt, SECS(pt->load), HSECS(pt->load), SECS(rest),		\   HSECS(rest), tState2Nam(pt->state)
 if|if
 condition|(
 operator|!
@@ -956,10 +1001,10 @@ name|LogERROR
 argument_list|,
 literal|"Unable to set itimer (%s)\n"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1026,10 +1071,10 @@ name|LogERROR
 argument_list|,
 literal|"Unable to set itimer (%s)\n"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sig_signal

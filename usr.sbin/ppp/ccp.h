@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.h,v 1.20 1999/02/26 21:28:07 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.h,v 1.19.2.3 1999/05/02 08:59:36 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_define
@@ -520,7 +520,9 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|struct
+name|mbuf
+modifier|*
 function_decl|(
 modifier|*
 name|Write
@@ -540,6 +542,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|u_short
+modifier|*
 parameter_list|,
 name|struct
 name|mbuf
@@ -604,15 +607,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|ccp_Input
 parameter_list|(
 name|struct
-name|ccp
+name|bundle
 modifier|*
 parameter_list|,
 name|struct
-name|bundle
+name|link
 modifier|*
 parameter_list|,
 name|struct
@@ -630,51 +635,6 @@ parameter_list|(
 name|struct
 name|cmdargs
 specifier|const
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ccp_Compress
-parameter_list|(
-name|struct
-name|ccp
-modifier|*
-parameter_list|,
-name|struct
-name|link
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|u_short
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|mbuf
-modifier|*
-name|ccp_Decompress
-parameter_list|(
-name|struct
-name|ccp
-modifier|*
-parameter_list|,
-name|u_short
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -715,6 +675,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|layer
+name|ccplayer
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

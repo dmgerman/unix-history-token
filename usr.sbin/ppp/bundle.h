@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.h,v 1.21 1999/01/28 01:56:30 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.h,v 1.20.2.3 1999/05/02 08:59:35 brian Exp $  */
 end_comment
 
 begin_define
@@ -79,50 +79,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPT_LOOPBACK
+name|OPT_KEEPSESSION
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PASSWDAUTH
+name|OPT_LOOPBACK
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXY
+name|OPT_PASSWDAUTH
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXYALL
+name|OPT_PROXY
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_SROUTES
+name|OPT_PROXYALL
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_THROUGHPUT
+name|OPT_SROUTES
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_UTMP
+name|OPT_THROUGHPUT
 value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_UTMP
+value|0x0200
 end_define
 
 begin_define
@@ -142,6 +149,24 @@ parameter_list|,
 name|o
 parameter_list|)
 value|((b)->cfg.opt& (o))
+end_define
+
+begin_comment
+comment|/* AutoAdjust() values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTO_UP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTO_DOWN
+value|2
 end_define
 
 begin_struct_decl
@@ -235,7 +260,7 @@ block|}
 name|dev
 struct|;
 name|u_long
-name|ifSpeed
+name|bandwidth
 decl_stmt|;
 comment|/* struct tuninfo speed */
 name|struct
@@ -272,7 +297,7 @@ literal|1
 decl_stmt|;
 comment|/* Going to exit.... */
 name|unsigned
-name|AliasEnabled
+name|NatEnabled
 range|:
 literal|1
 decl_stmt|;
@@ -288,12 +313,25 @@ modifier|*
 name|links
 decl_stmt|;
 comment|/* Our data links */
+name|time_t
+name|upat
+decl_stmt|;
+comment|/* When the link came up */
+struct|struct
+block|{
 struct|struct
 block|{
 name|int
-name|idle_timeout
+name|timeout
 decl_stmt|;
 comment|/* NCP Idle timeout value */
+name|int
+name|min_timeout
+decl_stmt|;
+comment|/* Don't idle out before this */
+block|}
+name|idle
+struct|;
 struct|struct
 block|{
 name|char
@@ -328,28 +366,6 @@ name|u_short
 name|mtu
 decl_stmt|;
 comment|/* Interface mtu */
-struct|struct
-block|{
-comment|/* We need/don't need another link when  */
-struct|struct
-block|{
-comment|/* more/less than                        */
-name|int
-name|packets
-decl_stmt|;
-comment|/* this number of packets are queued for */
-name|int
-name|timeout
-decl_stmt|;
-comment|/* this number of seconds                */
-block|}
-name|max
-struct|,
-name|min
-struct|;
-block|}
-name|autoload
-struct|;
 struct|struct
 block|{
 name|int
@@ -423,28 +439,6 @@ decl_stmt|;
 comment|/* write status here */
 block|}
 name|notify
-struct|;
-struct|struct
-block|{
-name|struct
-name|pppTimer
-name|timer
-decl_stmt|;
-name|time_t
-name|done
-decl_stmt|;
-name|unsigned
-name|running
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|comingup
-range|:
-literal|1
-decl_stmt|;
-block|}
-name|autoload
 struct|;
 struct|struct
 block|{
@@ -730,6 +724,8 @@ parameter_list|(
 name|struct
 name|bundle
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1026,6 +1022,66 @@ name|bundle
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bundle_AdjustFilters
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bundle_CalculateBandwidth
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bundle_AutoAdjust
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|bundle_WantAutoloadTimer
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.24 1999/03/31 13:44:07 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.20.2.3 1999/05/02 08:59:54 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"layer.h"
 end_include
 
 begin_include
@@ -1811,11 +1817,9 @@ name|last_recv
 operator|==
 literal|255
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 name|comp
 operator|->
 name|flags
@@ -1878,16 +1882,6 @@ name|ip_hl
 operator|<<
 literal|2
 expr_stmt|;
-if|if
-condition|(
-name|hlen
-operator|==
-literal|0
-condition|)
-goto|goto
-name|bad
-goto|;
-comment|/* We've been pointed at a not-yet-used slot ! */
 name|th
 operator|=
 operator|(
@@ -2318,6 +2312,16 @@ name|changes
 expr_stmt|;
 name|bp
 operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|(
+name|cp
+operator|+
+operator|(
+name|int
+operator|)
 operator|&
 operator|(
 operator|(
@@ -2325,10 +2329,11 @@ expr|struct
 name|ip
 operator|*
 operator|)
-name|cp
+literal|0
 operator|)
 operator|->
 name|ip_sum
+operator|)
 expr_stmt|;
 name|memcpy
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.h,v 1.12.2.6 1998/05/08 01:15:09 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.h,v 1.13 1998/05/21 21:46:36 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
@@ -104,6 +104,18 @@ name|fsm
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|link
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|bundle
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
@@ -193,7 +205,9 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|lqr_RecvEcho
 parameter_list|(
 name|struct
@@ -209,11 +223,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|lqr_Input
 parameter_list|(
 name|struct
-name|physical
+name|bundle
+modifier|*
+parameter_list|,
+name|struct
+name|link
 modifier|*
 parameter_list|,
 name|struct
@@ -222,6 +242,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|layer
+name|lqrlayer
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

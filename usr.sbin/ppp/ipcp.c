@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.68.2.4 1999/05/02 08:59:44 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.68.2.5 1999/06/08 12:00:29 brian Exp $  *  *	TODO:  *		o Support IPADDRS properly  *		o Validate the length in IpcpDecodeConfig  */
 end_comment
 
 begin_include
@@ -102,7 +102,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 end_ifndef
 
 begin_ifdef
@@ -137,6 +137,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"layer.h"
+end_include
 
 begin_include
 include|#
@@ -183,7 +189,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -2478,6 +2484,8 @@ operator|&
 name|ipcp
 operator|->
 name|throughput
+argument_list|,
+name|SAMPLE_PERIOD
 argument_list|)
 expr_stmt|;
 name|memset
@@ -3218,20 +3226,17 @@ name|int
 name|silent
 parameter_list|)
 block|{
-specifier|static
-name|struct
-name|in_addr
-name|none
-init|=
-block|{
-name|INADDR_ANY
-block|}
-decl_stmt|;
 name|struct
 name|in_addr
 name|mask
 decl_stmt|,
 name|oaddr
+decl_stmt|,
+name|none
+init|=
+block|{
+name|INADDR_ANY
+block|}
 decl_stmt|;
 name|mask
 operator|=
@@ -4138,6 +4143,8 @@ operator|)
 name|o
 operator|-
 name|buff
+argument_list|,
+name|MB_IPCPOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4184,6 +4191,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|MB_IPCPOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4753,7 +4762,7 @@ return|;
 block|}
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 if|if
 condition|(
 name|ipcp
@@ -4762,7 +4771,7 @@ name|fsm
 operator|.
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 condition|)
 name|PacketAliasSetAddress
 argument_list|(
@@ -5810,6 +5819,20 @@ name|my_ip
 operator|=
 name|ipaddr
 expr_stmt|;
+name|bundle_AdjustFilters
+argument_list|(
+name|fp
+operator|->
+name|bundle
+argument_list|,
+operator|&
+name|ipcp
+operator|->
+name|my_ip
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6442,23 +6465,11 @@ block|{
 case|case
 name|MODE_REQ
 case|:
-name|ipcp
-operator|->
-name|peer_ip
-operator|=
-name|ipaddr
-expr_stmt|;
-name|ipcp
-operator|->
-name|my_ip
-operator|=
-name|dstipaddr
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|dec
 operator|->
-name|ackend
+name|rejend
 argument_list|,
 name|cp
 argument_list|,
@@ -6467,7 +6478,7 @@ argument_list|)
 expr_stmt|;
 name|dec
 operator|->
-name|ackend
+name|rejend
 operator|+=
 name|length
 expr_stmt|;
@@ -6475,65 +6486,9 @@ break|break;
 case|case
 name|MODE_NAK
 case|:
-name|snprintf
-argument_list|(
-name|tbuff2
-argument_list|,
-sizeof|sizeof
-name|tbuff2
-argument_list|,
-literal|"%s changing address: %s"
-argument_list|,
-name|tbuff
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|ipcp
-operator|->
-name|my_ip
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogIPCP
-argument_list|,
-literal|"%s --> %s\n"
-argument_list|,
-name|tbuff2
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|ipaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ipcp
-operator|->
-name|my_ip
-operator|=
-name|ipaddr
-expr_stmt|;
-name|ipcp
-operator|->
-name|peer_ip
-operator|=
-name|dstipaddr
-expr_stmt|;
-break|break;
 case|case
 name|MODE_REJ
 case|:
-name|ipcp
-operator|->
-name|peer_reject
-operator||=
-operator|(
-literal|1
-operator|<<
-name|type
-operator|)
-expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -7211,18 +7166,21 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
 name|ipcp_Input
 parameter_list|(
 name|struct
-name|ipcp
+name|bundle
 modifier|*
-name|ipcp
+name|bundle
 parameter_list|,
 name|struct
-name|bundle
+name|link
 modifier|*
-name|bundle
+name|l
 parameter_list|,
 name|struct
 name|mbuf
@@ -7231,6 +7189,13 @@ name|bp
 parameter_list|)
 block|{
 comment|/* Got PROTO_IPCP from link */
+name|mbuf_SetType
+argument_list|(
+name|bp
+argument_list|,
+name|MB_IPCPIN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bundle_Phase
@@ -7243,8 +7208,12 @@ condition|)
 name|fsm_Input
 argument_list|(
 operator|&
-name|ipcp
+name|bundle
 operator|->
+name|ncp
+operator|.
+name|ipcp
+operator|.
 name|fsm
 argument_list|,
 name|bp
@@ -7267,11 +7236,7 @@ name|LogIPCP
 argument_list|,
 literal|"%s: Error: Unexpected IPCP in phase %s (ignored)\n"
 argument_list|,
-name|ipcp
-operator|->
-name|fsm
-operator|.
-name|link
+name|l
 operator|->
 name|name
 argument_list|,
@@ -7287,6 +7252,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -7557,9 +7525,7 @@ name|src
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|ipcp
@@ -7710,9 +7676,22 @@ else|else
 return|return
 literal|0
 return|;
+name|bundle_AdjustFilters
+argument_list|(
+name|bundle
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ipcp
+operator|->
+name|peer_ip
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
+comment|/* Ok */
 block|}
 end_function
 

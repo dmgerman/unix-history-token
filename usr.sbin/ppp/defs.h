@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.42 1999/04/27 00:23:54 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.36.2.4 1999/05/02 08:59:40 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* Size of login scripts */
+comment|/* Size of login/dial/hangup scripts */
 end_comment
 
 begin_define
@@ -189,7 +189,18 @@ value|SCRIPT_LEN
 end_define
 
 begin_comment
-comment|/* Size of login scripts */
+comment|/* Size of lines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICE_LEN
+value|SCRIPT_LEN
+end_define
+
+begin_comment
+comment|/* Size of individual devices */
 end_comment
 
 begin_define
@@ -257,13 +268,6 @@ end_define
 begin_comment
 comment|/* Delete queued packets w/ blocked tun */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LINK_MINWEIGHT
-value|20
-end_define
 
 begin_define
 define|#
@@ -610,6 +614,43 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|SpeedToInt
+parameter_list|(
+name|speed_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|speed_t
+name|IntToSpeed
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|MakeArgs
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

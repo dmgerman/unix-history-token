@@ -1,56 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.h,v 1.14 1999/01/28 01:56:31 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.h,v 1.13.2.3 1999/05/02 08:59:41 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
-comment|/*  *   Actions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|A_NONE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_PERMIT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_DENY
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_MASK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_UHOST
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_UPORT
-value|8
-end_define
-
-begin_comment
-comment|/*  *   Known protocols  */
+comment|/* Known protocols - f_proto */
 end_comment
 
 begin_define
@@ -81,8 +35,33 @@ name|P_ICMP
 value|3
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPPROTO_OSPFIGP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|P_OSPF
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|P_IGMP
+value|5
+end_define
+
 begin_comment
-comment|/*  *   Operations  */
+comment|/* Operations - f_srcop, f_dstop */
 end_comment
 
 begin_define
@@ -110,81 +89,120 @@ begin_define
 define|#
 directive|define
 name|OP_LT
-value|4
+value|3
 end_define
+
+begin_comment
+comment|/* srctype or dsttype */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ADDR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_MYADDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_HISADDR
+value|2
+end_define
+
+begin_comment
+comment|/*  * There's a struct filterent for each possible filter rule.  The  * layout is designed to minimise size (there are 4 * MAXFILTERS of  * them) - which is also conveniently a power of 2 (32 bytes) on  * architectures where sizeof(int)==4 (this makes indexing faster).  *  * f_action and f_proto only need to be 6 and 3 bits, respectively,  * but making them 8 bits allows them to be efficently accessed using  * byte operations as well as allowing space for future expansion  * (expanding MAXFILTERS or converting f_proto IPPROTO_... values).  *  * Note that there are four free bits in the initial word for future  * extensions.  */
+end_comment
 
 begin_struct
 struct|struct
 name|filterent
 block|{
-name|int
-name|action
+name|unsigned
+name|f_action
+range|:
+literal|8
 decl_stmt|;
-comment|/* Filtering action */
-name|int
-name|swidth
+comment|/* Filtering action: goto or A_... */
+name|unsigned
+name|f_proto
+range|:
+literal|8
 decl_stmt|;
-comment|/* Effective source address width */
+comment|/* Protocol: P_... */
+name|unsigned
+name|f_srcop
+range|:
+literal|2
+decl_stmt|;
+comment|/* Source port operation: OP_... */
+name|unsigned
+name|f_dstop
+range|:
+literal|2
+decl_stmt|;
+comment|/* Destination port operation: OP_... */
+name|unsigned
+name|f_srctype
+range|:
+literal|2
+decl_stmt|;
+comment|/* T_ value of src */
+name|unsigned
+name|f_dsttype
+range|:
+literal|2
+decl_stmt|;
+comment|/* T_ value of dst */
+name|unsigned
+name|f_estab
+range|:
+literal|1
+decl_stmt|;
+comment|/* Check TCP ACK bit */
+name|unsigned
+name|f_syn
+range|:
+literal|1
+decl_stmt|;
+comment|/* Check TCP SYN bit */
+name|unsigned
+name|f_finrst
+range|:
+literal|1
+decl_stmt|;
+comment|/* Check TCP FIN/RST bits */
+name|unsigned
+name|f_invert
+range|:
+literal|1
+decl_stmt|;
+comment|/* true to complement match */
 name|struct
-name|in_addr
-name|saddr
+name|in_range
+name|f_src
 decl_stmt|;
-comment|/* Source address */
+comment|/* Source address and mask */
 name|struct
-name|in_addr
-name|smask
+name|in_range
+name|f_dst
 decl_stmt|;
-comment|/* Source address mask */
-name|int
-name|dwidth
-decl_stmt|;
-comment|/* Effective destination address width */
-name|struct
-name|in_addr
-name|daddr
-decl_stmt|;
-comment|/* Destination address */
-name|struct
-name|in_addr
-name|dmask
-decl_stmt|;
-comment|/* Destination address mask */
-name|int
-name|proto
-decl_stmt|;
-comment|/* Protocol */
-struct|struct
-block|{
-name|short
-name|srcop
-decl_stmt|;
+comment|/* Destination address and mask */
 name|u_short
-name|srcport
+name|f_srcport
 decl_stmt|;
-name|short
-name|dstop
-decl_stmt|;
+comment|/* Source port, compared with f_srcop */
 name|u_short
-name|dstport
+name|f_dstport
 decl_stmt|;
-name|unsigned
-name|estab
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|syn
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|finrst
-range|:
-literal|1
-decl_stmt|;
-block|}
-name|opt
-struct|;
+comment|/* Destination port, compared with f_dstop */
 block|}
 struct|;
 end_struct
@@ -199,6 +217,31 @@ end_define
 begin_comment
 comment|/* in each filter set */
 end_comment
+
+begin_comment
+comment|/* f_action values [0..MAXFILTERS) specify the next filter rule, others are: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_NONE
+value|(MAXFILTERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_PERMIT
+value|(A_NONE+1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_DENY
+value|(A_PERMIT+1)
+end_define
 
 begin_struct
 struct|struct
@@ -230,6 +273,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Which filter set */
+end_comment
 
 begin_define
 define|#
@@ -367,6 +414,26 @@ name|in_addr
 name|bits2mask
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|filter_AdjustAddr
+parameter_list|(
+name|struct
+name|filter
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
