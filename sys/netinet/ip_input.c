@@ -738,18 +738,6 @@ name|IPFILTER
 argument_list|)
 end_if
 
-begin_decl_stmt
-name|int
-name|iplattach
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|int
 argument_list|(
@@ -1184,14 +1172,6 @@ name|ifq_maxlen
 operator|=
 name|ipqmaxlen
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFILTER
-name|iplattach
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

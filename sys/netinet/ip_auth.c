@@ -177,10 +177,17 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
