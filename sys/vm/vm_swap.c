@@ -1115,7 +1115,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_swapon
+name|mac_check_system_swapon
 argument_list|(
 name|td
 operator|->
