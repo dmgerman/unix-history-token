@@ -74,9 +74,6 @@ name|char
 modifier|*
 name|tmp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 if|if
 condition|(
 name|trace
@@ -86,15 +83,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> Create_Admin (%s, %s, %s, %s, %s, %d, %d)\n"
+literal|"%s-> Create_Admin (%s, %s, %s, %s, %s, %d, %d)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|dir
 argument_list|,
@@ -120,8 +111,6 @@ name|warn
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec

@@ -703,7 +703,7 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-comment|/* The output files, if any, are now created.  Do the fork and dups.         We use vfork not so much for the sake of unices without        copy-on-write (such systems are rare these days), but for the        sake of systems without an MMU, which therefore can't do        copy-on-write (e.g. Amiga).  The other solution is spawn (see        windows-NT/run.c).  */
+comment|/* The output files, if any, are now created.  Do the fork and dups.         We use vfork not so much for a performance boost (the        performance boost, if any, is modest on most modern unices),        but for the sake of systems without a memory management unit,        which find it difficult or impossible to implement fork at all        (e.g. Amiga).  The other solution is spawn (see        windows-NT/run.c).  */
 ifdef|#
 directive|ifdef
 name|HAVE_VFORK
@@ -1611,9 +1611,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -1621,39 +1618,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> run_popen(%s,%s)\n"
+literal|"%s-> run_popen(%s,%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|cmd
 argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> run_popen(%s,%s)\n"
-argument_list|,
-name|cmd
-argument_list|,
-name|mode
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1855,7 +1828,7 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot dup2"
+literal|"cannot dup2 pipe"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1876,7 +1849,7 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot close"
+literal|"cannot close pipe"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1897,7 +1870,7 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot close"
+literal|"cannot close pipe"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1920,7 +1893,7 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot dup2"
+literal|"cannot dup2 pipe"
 argument_list|)
 expr_stmt|;
 name|execvp
@@ -1939,7 +1912,12 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot exec"
+literal|"cannot exec %s"
+argument_list|,
+name|command
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1961,7 +1939,7 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot close"
+literal|"cannot close pipe"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1982,7 +1960,7 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot close"
+literal|"cannot close pipe"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2052,283 +2030,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/*  * dir = 0 : main proc writes to new proc, which writes to oldfd  * dir = 1 : main proc reads from new proc, which reads from oldfd  *  * Returns: a file descriptor.  On failure (i.e., the exec fails),  * then filter_stream_through_program() complains and dies.  */
-end_comment
-
-begin_function
-name|int
-name|filter_stream_through_program
-parameter_list|(
-name|oldfd
-parameter_list|,
-name|dir
-parameter_list|,
-name|prog
-parameter_list|,
-name|pidp
-parameter_list|)
-name|int
-name|oldfd
-decl_stmt|,
-name|dir
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|prog
-decl_stmt|;
-name|pid_t
-modifier|*
-name|pidp
-decl_stmt|;
-block|{
-name|int
-name|p
-index|[
-literal|2
-index|]
-decl_stmt|,
-name|newfd
-decl_stmt|;
-name|pid_t
-name|newpid
-decl_stmt|;
-if|if
-condition|(
-name|pipe
-argument_list|(
-name|p
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"cannot create pipe"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_SETMODE_BINARY
-name|setmode
-argument_list|(
-name|p
-index|[
-literal|0
-index|]
-argument_list|,
-name|O_BINARY
-argument_list|)
-expr_stmt|;
-name|setmode
-argument_list|(
-name|p
-index|[
-literal|1
-index|]
-argument_list|,
-name|O_BINARY
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_VFORK
-name|newpid
-operator|=
-name|vfork
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
-name|newpid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|pidp
-condition|)
-operator|*
-name|pidp
-operator|=
-name|newpid
-expr_stmt|;
-switch|switch
-condition|(
-name|newpid
-condition|)
-block|{
-case|case
-operator|-
-literal|1
-case|:
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"cannot fork"
-argument_list|)
-expr_stmt|;
-case|case
-literal|0
-case|:
-comment|/* child */
-if|if
-condition|(
-name|dir
-condition|)
-block|{
-comment|/* write to new pipe */
-name|close
-argument_list|(
-name|p
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-name|oldfd
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-name|p
-index|[
-literal|1
-index|]
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* read from new pipe */
-name|close
-argument_list|(
-name|p
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-name|p
-index|[
-literal|0
-index|]
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-name|oldfd
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Should I be blocking some signals here?  */
-name|execvp
-argument_list|(
-name|prog
-index|[
-literal|0
-index|]
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"couldn't exec %s"
-argument_list|,
-name|prog
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-default|default:
-comment|/* parent */
-name|close
-argument_list|(
-name|oldfd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dir
-condition|)
-block|{
-comment|/* read from new pipe */
-name|close
-argument_list|(
-name|p
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|newfd
-operator|=
-name|p
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* write to new pipe */
-name|close
-argument_list|(
-name|p
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|newfd
-operator|=
-name|p
-index|[
-literal|1
-index|]
-expr_stmt|;
-block|}
-name|close_on_exec
-argument_list|(
-name|newfd
-argument_list|)
-expr_stmt|;
-return|return
-name|newfd
-return|;
-block|}
 block|}
 end_function
 

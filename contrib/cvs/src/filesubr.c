@@ -69,9 +69,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -79,39 +76,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> copy(%s,%s)\n"
+literal|"%s-> copy(%s,%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|from
 argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> copy(%s,%s)\n"
-argument_list|,
-name|from
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1502,9 +1475,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -1512,15 +1482,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> chmod(%s,%o)\n"
+literal|"%s-> chmod(%s,%o)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|fname
 argument_list|,
@@ -1531,28 +1495,6 @@ operator|)
 name|mode
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> chmod(%s,%o)\n"
-argument_list|,
-name|fname
-argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-name|mode
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1610,9 +1552,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -1620,39 +1559,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> rename(%s,%s)\n"
+literal|"%s-> rename(%s,%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|from
 argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> rename(%s,%s)\n"
-argument_list|,
-name|from
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1705,9 +1620,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -1715,35 +1627,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> unlink(%s)\n"
+literal|"%s-> unlink(%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> unlink(%s)\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1952,6 +1842,10 @@ return|return
 operator|-
 literal|1
 return|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2093,6 +1987,36 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+name|closedir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|closedir
 argument_list|(

@@ -274,16 +274,7 @@ argument_list|(
 literal|"-l"
 argument_list|)
 expr_stmt|;
-name|send_file_names
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|SEND_EXPAND_WILD
-argument_list|)
-expr_stmt|;
-comment|/* For a while, we tried setting SEND_NO_CONTENTS here so this 	 could be a fast operation.  That prevents the 	 server from updating our timestamp if the timestamp is 	 changed but the file is unmodified.  Worse, it is user-visible 	 (shows "locally modified" instead of "up to date" if 	 timestamp is changed but file is not).  And there is no good 	 workaround (you might not want to run "cvs update"; "cvs -n 	 update" doesn't update CVS/Entries; "cvs diff --brief" or 	 something perhaps could be made to work but somehow that 	 seems nonintuitive to me even if so).  Given that timestamps 	 seem to have the potential to get munged for any number of 	 reasons, it seems better to not rely too much on them.  */
+comment|/* For a while, we tried setting SEND_NO_CONTENTS here so this 	   could be a fast operation.  That prevents the 	   server from updating our timestamp if the timestamp is 	   changed but the file is unmodified.  Worse, it is user-visible 	   (shows "locally modified" instead of "up to date" if 	   timestamp is changed but file is not).  And there is no good 	   workaround (you might not want to run "cvs update"; "cvs -n 	   update" doesn't update CVS/Entries; "cvs diff --brief" or 	   something perhaps could be made to work but somehow that 	   seems nonintuitive to me even if so).  Given that timestamps 	   seem to have the potential to get munged for any number of 	   reasons, it seems better to not rely too much on them.  */
 name|send_files
 argument_list|(
 name|argc
@@ -295,6 +286,15 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|send_file_names
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -914,6 +914,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|edata
 operator|->
 name|tag
@@ -1162,6 +1166,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|long_format
@@ -1221,7 +1226,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|cvs_output
 argument_list|(

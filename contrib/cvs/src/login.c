@@ -147,11 +147,12 @@ operator|!
 name|homedir
 condition|)
 block|{
+comment|/* FIXME?  This message confuses a lot of users, at least 	   on Win95 (which doesn't set HOMEDRIVE and HOMEPATH like 	   NT does).  I suppose the answer for Win95 is to store the 	   passwords in the registry or something (??).  And .cvsrc 	   and such too?  Wonder what WinCVS does (about .cvsrc, the 	   right thing for a GUI is to just store the password in 	   memory only)...  */
 name|error
 argument_list|(
 literal|1
 argument_list|,
-name|errno
+literal|0
 argument_list|,
 literal|"could not find out home directory"
 argument_list|)
@@ -838,8 +839,23 @@ argument_list|,
 name|passfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|tmp_name
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|tmp_name
 argument_list|)
 expr_stmt|;
@@ -1525,6 +1541,7 @@ operator|=
 name|construct_cvspass_filename
 argument_list|()
 expr_stmt|;
+comment|/* FIXME: This should not be in /tmp; that is almost surely a security        hole.  Probably should just keep it in memory.  */
 name|tmp_name
 operator|=
 name|cvs_temp_name
@@ -1751,8 +1768,23 @@ argument_list|,
 name|CVSroot_original
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|tmp_name
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|tmp_name
 argument_list|)
 expr_stmt|;
@@ -1767,8 +1799,23 @@ argument_list|,
 name|passfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|tmp_name
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|tmp_name
 argument_list|)
 expr_stmt|;

@@ -7,6 +7,10 @@ begin_comment
 comment|/* This code was modified in 1997 by Jim Kingdon of Cyclic Software to    not require an integer type which is exactly 32 bits.  This work    draws on the changes for the same purpose by Tatu Ylonen<ylo@cs.hut.fi> as part of SSH, but since I didn't actually use    that code, there is no copyright issue.  I hereby disclaim    copyright in any changes I have made; this code remains in the    public domain.  */
 end_comment
 
+begin_comment
+comment|/* Note regarding cvs_* namespace: this avoids potential conflicts    with libraries such as some versions of Kerberos.  No particular    need to worry about whether the system supplies an MD5 library, as    this file is only about 3k of object code.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -24,14 +28,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|HAVE_STRING_H
-operator|||
-name|STDC_HEADERS
-end_if
-
 begin_include
 include|#
 directive|include
@@ -39,13 +35,8 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/* for memcpy() */
+comment|/* for memcpy() and memset() */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Add prototype support.  */
@@ -115,12 +106,12 @@ file|"md5.h"
 end_include
 
 begin_comment
-comment|/* Little-endian byte-swapping routines.  Note that these do not    depend on the size of datatypes such as uint32, nor do they require    us to detect the endianness of the machine we are running on.  It    is possible they should be macros for speed, but I would be    surprised if they were a performance bottleneck for MD5.  */
+comment|/* Little-endian byte-swapping routines.  Note that these do not    depend on the size of datatypes such as cvs_uint32, nor do they require    us to detect the endianness of the machine we are running on.  It    is possible they should be macros for speed, but I would be    surprised if they were a performance bottleneck for MD5.  */
 end_comment
 
 begin_function
 specifier|static
-name|uint32
+name|cvs_uint32
 name|getu32
 parameter_list|(
 name|addr
@@ -183,7 +174,7 @@ name|data
 parameter_list|,
 name|addr
 parameter_list|)
-name|uint32
+name|cvs_uint32
 name|data
 decl_stmt|;
 name|unsigned
@@ -257,12 +248,12 @@ end_comment
 
 begin_function
 name|void
-name|MD5Init
+name|cvs_MD5Init
 parameter_list|(
 name|ctx
 parameter_list|)
 name|struct
-name|MD5Context
+name|cvs_MD5Context
 modifier|*
 name|ctx
 decl_stmt|;
@@ -330,7 +321,7 @@ end_comment
 
 begin_function
 name|void
-name|MD5Update
+name|cvs_MD5Update
 parameter_list|(
 name|ctx
 parameter_list|,
@@ -339,7 +330,7 @@ parameter_list|,
 name|len
 parameter_list|)
 name|struct
-name|MD5Context
+name|cvs_MD5Context
 modifier|*
 name|ctx
 decl_stmt|;
@@ -353,7 +344,7 @@ name|unsigned
 name|len
 decl_stmt|;
 block|{
-name|uint32
+name|cvs_uint32
 name|t
 decl_stmt|;
 comment|/* Update bitcount */
@@ -381,7 +372,7 @@ name|t
 operator|+
 operator|(
 operator|(
-name|uint32
+name|cvs_uint32
 operator|)
 name|len
 operator|<<
@@ -475,7 +466,7 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-name|MD5Transform
+name|cvs_MD5Transform
 argument_list|(
 name|ctx
 operator|->
@@ -514,7 +505,7 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-name|MD5Transform
+name|cvs_MD5Transform
 argument_list|(
 name|ctx
 operator|->
@@ -555,7 +546,7 @@ end_comment
 
 begin_function
 name|void
-name|MD5Final
+name|cvs_MD5Final
 parameter_list|(
 name|digest
 parameter_list|,
@@ -569,7 +560,7 @@ literal|16
 index|]
 decl_stmt|;
 name|struct
-name|MD5Context
+name|cvs_MD5Context
 modifier|*
 name|ctx
 decl_stmt|;
@@ -640,7 +631,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-name|MD5Transform
+name|cvs_MD5Transform
 argument_list|(
 name|ctx
 operator|->
@@ -712,7 +703,7 @@ operator|+
 literal|60
 argument_list|)
 expr_stmt|;
-name|MD5Transform
+name|cvs_MD5Transform
 argument_list|(
 name|ctx
 operator|->
@@ -896,13 +887,13 @@ end_comment
 
 begin_function
 name|void
-name|MD5Transform
+name|cvs_MD5Transform
 parameter_list|(
 name|buf
 parameter_list|,
 name|inraw
 parameter_list|)
-name|uint32
+name|cvs_uint32
 name|buf
 index|[
 literal|4
@@ -918,7 +909,7 @@ index|]
 decl_stmt|;
 block|{
 specifier|register
-name|uint32
+name|cvs_uint32
 name|a
 decl_stmt|,
 name|b
@@ -927,7 +918,7 @@ name|c
 decl_stmt|,
 name|d
 decl_stmt|;
-name|uint32
+name|cvs_uint32
 name|in
 index|[
 literal|16
@@ -2465,7 +2456,7 @@ name|argv
 parameter_list|)
 block|{
 name|struct
-name|MD5Context
+name|cvs_MD5Context
 name|context
 decl_stmt|;
 name|unsigned
@@ -2530,13 +2521,13 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|MD5Init
+name|cvs_MD5Init
 argument_list|(
 operator|&
 name|context
 argument_list|)
 expr_stmt|;
-name|MD5Update
+name|cvs_MD5Update
 argument_list|(
 operator|&
 name|context
@@ -2555,7 +2546,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5Final
+name|cvs_MD5Final
 argument_list|(
 name|checksum
 argument_list|,

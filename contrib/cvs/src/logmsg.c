@@ -2197,8 +2197,23 @@ literal|0
 condition|)
 block|{
 comment|/* Since following error() exits, delete the temp file 		   now.  */
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
@@ -2221,8 +2236,23 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Delete the temp file  */
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;

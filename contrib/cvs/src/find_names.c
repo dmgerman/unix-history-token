@@ -212,6 +212,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Find files in the repository and/or working directory.  On error,    may either print a nonfatal error and return NULL, or just give    a fatal error.  On success, return non-NULL (even if it is an empty    list).  */
+end_comment
+
 begin_function
 name|List
 modifier|*
@@ -344,9 +348,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|errno
 argument_list|,
@@ -355,6 +360,10 @@ argument_list|,
 name|repository
 argument_list|)
 expr_stmt|;
+goto|goto
+name|error_exit
+goto|;
+block|}
 comment|/* search the attic too */
 if|if
 condition|(
@@ -398,14 +407,33 @@ argument_list|,
 name|CVSATTIC
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|find_rcs
 argument_list|(
 name|dir
 argument_list|,
 name|files
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+comment|/* For now keep this a fatal error, seems less useful 		   for access control than the case above.  */
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot open directory %s"
+argument_list|,
+name|dir
 argument_list|)
 expr_stmt|;
 name|free
@@ -427,6 +455,17 @@ return|return
 operator|(
 name|files
 operator|)
+return|;
+name|error_exit
+label|:
+name|dellist
+argument_list|(
+operator|&
+name|files
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
 return|;
 block|}
 end_function
@@ -867,7 +906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finds all the ,v files in the argument directory, and adds them to the  * files list.  Returns 0 for success and non-zero if the argument directory  * cannot be opened.  */
+comment|/*  * Finds all the ,v files in the argument directory, and adds them to the  * files list.  Returns 0 for success and non-zero if the argument directory  * cannot be opened, in which case errno is set to indicate the error.  * In the error case LIST is left in some reasonable state (unchanged, or  * containing the files which were found before the error occurred).  */
 end_comment
 
 begin_function
@@ -921,6 +960,10 @@ literal|1
 operator|)
 return|;
 comment|/* read the dir, grabbing the ,v files */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1011,6 +1054,38 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|closedir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 operator|(
 name|void
@@ -1029,7 +1104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finds all the subdirectories of the argument dir and adds them to  * the specified list.  Sub-directories without a CVS administration  * directory are optionally ignored.  If ENTRIES is not NULL, all  * files on the list are ignored.  Returns 0 for success or 1 on  * error.  */
+comment|/*  * Finds all the subdirectories of the argument dir and adds them to  * the specified list.  Sub-directories without a CVS administration  * directory are optionally ignored.  If ENTRIES is not NULL, all  * files on the list are ignored.  Returns 0 for success or 1 on  * error, in which case errno is set to indicate the error.  */
 end_comment
 
 begin_function
@@ -1163,6 +1238,10 @@ literal|1
 operator|)
 return|;
 comment|/* read the dir, grabbing sub-dirs */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1234,7 +1313,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 comment|/* findnode() is going to be significantly faster than stat() 	   because it involves no system calls.  That is why we bother 	   with the entries argument, and why we check this first.  */
 if|if
 condition|(
@@ -1253,7 +1334,9 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 if|if
 condition|(
 name|skip_emptydir
@@ -1269,7 +1352,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 ifdef|#
 directive|ifdef
 name|DT_DIR
@@ -1296,7 +1381,9 @@ name|d_type
 operator|!=
 name|DT_LNK
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 endif|#
 directive|endif
 comment|/* don't bother stating ,v files */
@@ -1315,7 +1402,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 name|expand_string
 argument_list|(
 operator|&
@@ -1360,7 +1449,9 @@ argument_list|(
 name|tmp
 argument_list|)
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 ifdef|#
 directive|ifdef
 name|DT_DIR
@@ -1395,7 +1486,9 @@ name|d_type
 operator|==
 name|DT_LNK
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 endif|#
 directive|endif
 comment|/* Note that we only get here if we already set tmp 		   above.  */
@@ -1406,7 +1499,9 @@ argument_list|(
 name|tmp
 argument_list|)
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 ifdef|#
 directive|ifdef
 name|DT_DIR
@@ -1470,7 +1565,9 @@ argument_list|(
 name|tmp
 argument_list|)
 condition|)
-continue|continue;
+goto|goto
+name|do_it_again
+goto|;
 block|}
 comment|/* put it in the list */
 name|p
@@ -1511,6 +1608,40 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|do_it_again
+label|:
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|closedir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 operator|(
 name|void

@@ -464,6 +464,12 @@ name|size_t
 name|len
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
 name|cvs_output
 argument_list|(
 name|text

@@ -149,9 +149,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|existence_error
+argument_list|(
 name|errno
-operator|==
-name|ENOENT
+argument_list|)
 condition|)
 block|{
 comment|/* The file doesn't exist; we may be doing an update on a 	       file that's been removed.  A nonexistent file has no 	       link information, so return without changing hardlist. */

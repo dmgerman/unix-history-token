@@ -125,6 +125,10 @@ while|while
 condition|(
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -522,6 +526,10 @@ literal|'}'
 else|:
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -930,6 +938,21 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+name|t
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"cannot find home directory"
+argument_list|)
+expr_stmt|;
 name|doff
 operator|=
 name|d
@@ -1296,6 +1319,10 @@ if|if
 condition|(
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 literal|0

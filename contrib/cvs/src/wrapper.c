@@ -316,6 +316,7 @@ operator|=
 name|get_homedir
 argument_list|()
 expr_stmt|;
+comment|/* If we can't find a home directory, ignore ~/.cvswrappers.  This may        make tracking down problems a bit of a pain, but on the other        hand it might be obnoxious to complain when CVS will function        just fine without .cvswrappers (and many users won't even know what        .cvswrappers is).  */
 if|if
 condition|(
 name|homedir
@@ -1134,6 +1135,10 @@ name|line
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|line
 argument_list|)
@@ -1153,6 +1158,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|line
 argument_list|)
@@ -1428,7 +1437,6 @@ break|break;
 case|case
 literal|'m'
 case|:
-comment|/* FIXME: look into whether this option is still relevant given 	       the 24 Jun 96 change to merge_file.  */
 if|if
 condition|(
 operator|*

@@ -803,6 +803,10 @@ name|tag
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|tag
 index|[
 literal|0

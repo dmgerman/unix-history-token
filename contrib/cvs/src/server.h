@@ -42,6 +42,40 @@ end_endif
 begin_escape
 end_escape
 
+begin_comment
+comment|/*  * Expand to `S', ` ', or the empty string.  Used in `%s-> ...' trace printfs.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CLIENT_SERVER_STR
+value|((server_active) ? "S" : " ")
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CLIENT_SERVER_STR
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -649,25 +683,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Stuff for use by the client.  */
-enum|enum
-block|{
-comment|/*        * Failure to implement this request can imply a fatal        * error.  This should be set only for commands which were in the        * original version of the protocol; it should not be set for new        * commands.        */
-name|rq_essential
-block|,
-comment|/* Some servers might lack this request.  */
-name|rq_optional
-block|,
-comment|/*        * Set by the client to one of the following based on what this        * server actually supports.        */
-name|rq_supported
-block|,
-name|rq_not_supported
-block|,
-comment|/*        * If the server supports this request, and we do too, tell the        * server by making the request.        */
-name|rq_enableme
-block|}
-name|status
-enum|;
+comment|/* One or more of the RQ_* flags described below.  */
+name|int
+name|flags
+decl_stmt|;
+comment|/* If set, failure to implement this request can imply a fatal      error.  This should be set only for commands which were in the      original version of the protocol; it should not be set for new      commands.  */
+define|#
+directive|define
+name|RQ_ESSENTIAL
+value|1
+comment|/* Set by the client if the server we are talking to supports it.  */
+define|#
+directive|define
+name|RQ_SUPPORTED
+value|2
+comment|/* If set, and client and server both support the request, the      client should tell the server by making the request.  */
+define|#
+directive|define
+name|RQ_ENABLEME
+value|4
+comment|/* The server may accept this request before "Root".  */
+define|#
+directive|define
+name|RQ_ROOTLESS
+value|8
 block|}
 struct|;
 end_struct
@@ -691,7 +730,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|gunzip_and_write
 name|PROTO
 argument_list|(
@@ -713,7 +752,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|read_and_gzip
 name|PROTO
 argument_list|(

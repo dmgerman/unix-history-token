@@ -98,43 +98,12 @@ value|2
 if|#
 directive|if
 name|__STDC__
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNU_LIBRARY__
-argument_list|)
-comment|/* Many other libraries have conflicting prototypes for getopt, with    differences in the consts, in stdlib.h.  To avoid compilation    errors, only prototype getopt for the GNU C library.  */
-specifier|extern
-name|int
-name|getopt
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|argv
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|shortopts
-parameter_list|)
-function_decl|;
-else|#
-directive|else
-comment|/* not __GNU_LIBRARY__ */
+comment|/* Many other libraries have conflicting prototypes for getopt, with    differences in the consts, in stdlib.h.  We used to try to prototype    it if __GNU_LIBRARY__ but that wasn't problem free either (I'm not sure    exactly why), and there is no particular need to prototype it.    We really shouldn't be trampling on the system's namespace at all by    declaring getopt() but that is a bigger issue.  */
 specifier|extern
 name|int
 name|getopt
 parameter_list|()
 function_decl|;
-endif|#
-directive|endif
-comment|/* not __GNU_LIBRARY__ */
 specifier|extern
 name|int
 name|getopt_long
