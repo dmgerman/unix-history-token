@@ -1387,6 +1387,14 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|scp
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -3287,14 +3295,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|mtx_destroy
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
