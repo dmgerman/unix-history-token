@@ -141,7 +141,6 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|usage
 parameter_list|(
@@ -472,7 +471,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|funcs
+operator|)
 return|;
 block|}
 end_function
@@ -866,7 +867,7 @@ name|fname
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * If truss starts the process itself, it will ignore some signals --    * they should be passed off to the process, which may or may not    * exit.  If, however, we are examining an already-running process,    * then we restore the event mask on these same signals.    */
+comment|/* 	 * If truss starts the process itself, it will ignore some signals -- 	 * they should be passed off to the process, which may or may not 	 * exit.  If, however, we are examining an already-running process, 	 * then we restore the event mask on these same signals. 	 */
 if|if
 condition|(
 name|trussinfo
@@ -936,7 +937,7 @@ name|restore_proc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * At this point, if we started the process, it is stopped waiting to    * be woken up, either in exit() or in execve().    */
+comment|/* 	 * At this point, if we started the process, it is stopped waiting to 	 * be woken up, either in exit() or in execve(). 	 */
 name|START_TRACE
 label|:
 name|Procfd
@@ -994,7 +995,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|pfs
 operator|.
@@ -1009,7 +1012,7 @@ argument_list|(
 name|trussinfo
 argument_list|)
 expr_stmt|;
-comment|/*    * At this point, it's a simple loop, waiting for the process to    * stop, finding out why, printing out why, and then continuing it.    * All of the grunt work is done in the support routines.    */
+comment|/* 	 * At this point, it's a simple loop, waiting for the process to 	 * stop, finding out why, printing out why, and then continuing it. 	 * All of the grunt work is done in the support routines. 	 */
 name|clock_gettime
 argument_list|(
 name|CLOCK_REALTIME
@@ -1096,7 +1099,7 @@ operator|->
 name|after
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is so we don't get two messages for an exec -- one 	 * for the S_EXEC, and one for the syscall exit.  It also, 	 * conveniently, ensures that the first message printed out 	 * isn't the return-from-syscall used to create the process. 	 */
+comment|/* 				 * This is so we don't get two messages for 				 * an exec -- one for the S_EXEC, and one for 				 * the syscall exit.  It also, conveniently, 				 * ensures that the first message printed out 				 * isn't the return-from-syscall used to 				 * create the process. 				 */
 if|if
 condition|(
 name|in_exec
@@ -1145,7 +1148,7 @@ operator|.
 name|val
 argument_list|)
 expr_stmt|;
-comment|/* 	   * Fork a new copy of ourself to trace the child of the 	   * original traced process. 	   */
+comment|/* 					 * Fork a new copy of ourself to trace 					 * the child of the original traced 					 * process. 					 */
 if|if
 condition|(
 name|fork
@@ -1380,7 +1383,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
