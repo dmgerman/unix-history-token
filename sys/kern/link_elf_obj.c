@@ -3603,7 +3603,7 @@ name|symidx
 expr_stmt|;
 if|if
 condition|(
-name|ELF64_ST_BIND
+name|ELF_ST_BIND
 argument_list|(
 name|sym
 operator|->
@@ -3771,7 +3771,7 @@ name|symidx
 expr_stmt|;
 if|if
 condition|(
-name|ELF64_ST_BIND
+name|ELF_ST_BIND
 argument_list|(
 name|sym
 operator|->
@@ -4672,7 +4672,7 @@ expr_stmt|;
 comment|/* Theoretically we can avoid a lookup for some locals */
 switch|switch
 condition|(
-name|ELF64_ST_BIND
+name|ELF_ST_BIND
 argument_list|(
 name|sym
 operator|->
@@ -5044,7 +5044,7 @@ name|symidx
 expr_stmt|;
 if|if
 condition|(
-name|ELF64_ST_BIND
+name|ELF_ST_BIND
 argument_list|(
 name|sym
 operator|->
@@ -5182,7 +5182,7 @@ name|symidx
 expr_stmt|;
 if|if
 condition|(
-name|ELF64_ST_BIND
+name|ELF_ST_BIND
 argument_list|(
 name|sym
 operator|->
