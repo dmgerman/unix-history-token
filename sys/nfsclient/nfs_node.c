@@ -925,7 +925,7 @@ literal|"nfs"
 argument_list|,
 name|mntp
 argument_list|,
-name|nfsv2_vnodeop_p
+name|nfs_vnodeop_p
 argument_list|,
 operator|&
 name|nvp

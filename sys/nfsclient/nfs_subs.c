@@ -2386,7 +2386,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|fifo_nfsv2nodeop_p
+name|fifo_nfsnodeop_p
 expr_stmt|;
 block|}
 if|if
@@ -2408,7 +2408,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|spec_nfsv2nodeop_p
+name|spec_nfsnodeop_p
 expr_stmt|;
 name|vp
 operator|=

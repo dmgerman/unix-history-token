@@ -706,7 +706,7 @@ begin_decl_stmt
 name|vop_t
 modifier|*
 modifier|*
-name|nfsv2_vnodeop_p
+name|nfs_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 
@@ -714,7 +714,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vnodeopv_entry_desc
-name|nfsv2_vnodeop_entries
+name|nfs_vnodeop_entries
 index|[]
 init|=
 block|{
@@ -1050,13 +1050,13 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vnodeopv_desc
-name|nfsv2_vnodeop_opv_desc
+name|nfs_vnodeop_opv_desc
 init|=
 block|{
 operator|&
-name|nfsv2_vnodeop_p
+name|nfs_vnodeop_p
 block|,
-name|nfsv2_vnodeop_entries
+name|nfs_vnodeop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1064,7 +1064,7 @@ end_decl_stmt
 begin_expr_stmt
 name|VNODEOP_SET
 argument_list|(
-name|nfsv2_vnodeop_opv_desc
+name|nfs_vnodeop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1077,7 +1077,7 @@ begin_decl_stmt
 name|vop_t
 modifier|*
 modifier|*
-name|spec_nfsv2nodeop_p
+name|spec_nfsnodeop_p
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,7 +1085,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vnodeopv_entry_desc
-name|nfsv2_specop_entries
+name|nfs_specop_entries
 index|[]
 init|=
 block|{
@@ -1234,13 +1234,13 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vnodeopv_desc
-name|spec_nfsv2nodeop_opv_desc
+name|spec_nfsnodeop_opv_desc
 init|=
 block|{
 operator|&
-name|spec_nfsv2nodeop_p
+name|spec_nfsnodeop_p
 block|,
-name|nfsv2_specop_entries
+name|nfs_specop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1248,7 +1248,7 @@ end_decl_stmt
 begin_expr_stmt
 name|VNODEOP_SET
 argument_list|(
-name|spec_nfsv2nodeop_opv_desc
+name|spec_nfsnodeop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1257,7 +1257,7 @@ begin_decl_stmt
 name|vop_t
 modifier|*
 modifier|*
-name|fifo_nfsv2nodeop_p
+name|fifo_nfsnodeop_p
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,7 +1265,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vnodeopv_entry_desc
-name|nfsv2_fifoop_entries
+name|nfs_fifoop_entries
 index|[]
 init|=
 block|{
@@ -1414,13 +1414,13 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vnodeopv_desc
-name|fifo_nfsv2nodeop_opv_desc
+name|fifo_nfsnodeop_opv_desc
 init|=
 block|{
 operator|&
-name|fifo_nfsv2nodeop_p
+name|fifo_nfsnodeop_p
 block|,
-name|nfsv2_fifoop_entries
+name|nfs_fifoop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1428,7 +1428,7 @@ end_decl_stmt
 begin_expr_stmt
 name|VNODEOP_SET
 argument_list|(
-name|fifo_nfsv2nodeop_opv_desc
+name|fifo_nfsnodeop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt

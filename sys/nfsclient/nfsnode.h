@@ -541,7 +541,7 @@ specifier|extern
 name|vop_t
 modifier|*
 modifier|*
-name|fifo_nfsv2nodeop_p
+name|fifo_nfsnodeop_p
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +550,7 @@ specifier|extern
 name|vop_t
 modifier|*
 modifier|*
-name|nfsv2_vnodeop_p
+name|nfs_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 
@@ -559,7 +559,7 @@ specifier|extern
 name|vop_t
 modifier|*
 modifier|*
-name|spec_nfsv2nodeop_p
+name|spec_nfsnodeop_p
 decl_stmt|;
 end_decl_stmt
 
