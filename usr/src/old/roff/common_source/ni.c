@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ni.c	4.2 %G%"
+literal|"@(#)ni.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"tdef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -185,7 +191,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/tmac/tmac.xxxxx"
+name|_PATH_TMAC
 decl_stmt|;
 end_decl_stmt
 
@@ -210,7 +216,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/term/tablpr"
+name|_PATH_TABLPR
 decl_stmt|;
 end_decl_stmt
 
