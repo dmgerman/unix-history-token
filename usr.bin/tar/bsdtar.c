@@ -257,6 +257,13 @@ name|OPTION_ONE_FILE_SYSTEM
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|OPTION_NO_SAME_PERMISSIONS
+value|7
+end_define
+
 begin_decl_stmt
 specifier|const
 name|struct
@@ -543,6 +550,16 @@ block|,
 name|NULL
 block|,
 literal|'o'
+block|}
+block|,
+block|{
+literal|"no-same-permissions"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_SAME_PERMISSIONS
 block|}
 block|,
 block|{
@@ -1286,6 +1303,17 @@ name|option_honor_nodump
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_LONG
+case|case
+name|OPTION_NO_SAME_PERMISSIONS
+case|:
+comment|/* GNU tar */
+comment|/* XXX This appears to be a no-op in GNU tar? XXX */
 break|break;
 endif|#
 directive|endif
