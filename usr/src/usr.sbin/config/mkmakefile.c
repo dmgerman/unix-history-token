@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.5	81/03/06  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.7	81/03/31  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -210,6 +210,11 @@ name|cputype
 modifier|*
 name|cp
 decl_stmt|;
+name|struct
+name|opt
+modifier|*
+name|op
+decl_stmt|;
 name|read_files
 argument_list|()
 expr_stmt|;
@@ -329,6 +334,31 @@ operator|->
 name|cpu_name
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|op
+operator|=
+name|opt
+init|;
+name|op
+condition|;
+name|op
+operator|=
+name|op
+operator|->
+name|op_next
+control|)
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|" -D%s"
+argument_list|,
+name|op
+operator|->
+name|op_name
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|ofp
@@ -404,12 +434,12 @@ if|if
 condition|(
 name|maxusers
 operator|>
-literal|100
+literal|128
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"maxusers truncated to 100\n"
+literal|"maxusers truncated to 128\n"
 argument_list|)
 expr_stmt|;
 name|maxusers
@@ -890,6 +920,11 @@ decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
+name|char
+modifier|*
+name|tail
+parameter_list|()
+function_decl|;
 name|fprintf
 argument_list|(
 name|fp
@@ -929,16 +964,12 @@ condition|)
 continue|continue;
 name|sp
 operator|=
-name|rindex
+name|tail
 argument_list|(
 name|tp
 operator|->
 name|f_fn
-argument_list|,
-literal|'/'
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
 name|cp
 operator|=
@@ -1090,6 +1121,25 @@ operator|->
 name|f_type
 operator|==
 name|INVISIBLE
+condition|)
+continue|continue;
+if|if
+condition|(
+name|tp
+operator|->
+name|f_fn
+index|[
+name|strlen
+argument_list|(
+name|tp
+operator|->
+name|f_fn
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'c'
 condition|)
 continue|continue;
 if|if
@@ -1453,47 +1503,6 @@ name|file_list
 modifier|*
 name|fl
 decl_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"all:"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|fl
-operator|=
-name|conf_list
-init|;
-name|fl
-operator|!=
-name|NULL
-condition|;
-name|fl
-operator|=
-name|fl
-operator|->
-name|f_next
-control|)
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|" %s"
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|)
-expr_stmt|;
-name|putc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|fl
@@ -1515,7 +1524,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\n%s: makefile locore.o ${OBJS} ioconf.o param.o swap%s.o\n"
+literal|"%s: makefile locore.o ${OBJS} ioconf.o param.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
@@ -1589,7 +1598,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@chmod 755 %s\n"
+literal|"\t@chmod 755 %s\n\n"
 argument_list|,
 name|fl
 operator|->
@@ -1618,7 +1627,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\nswap%s.o: ../dev/swap%s.c\n"
+literal|"swap%s.o: ../dev/swap%s.c\n"
 argument_list|,
 name|fl
 operator|->
@@ -1659,7 +1668,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\trm -f swap%s.s\n"
+literal|"\trm -f swap%s.s\n\n"
 argument_list|,
 name|fl
 operator|->
@@ -1667,6 +1676,47 @@ name|f_fn
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"all:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|fl
+operator|=
+name|conf_list
+init|;
+name|fl
+operator|!=
+name|NULL
+condition|;
+name|fl
+operator|=
+name|fl
+operator|->
+name|f_next
+control|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|" %s"
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
