@@ -16497,8 +16497,11 @@ name|END_BITS
 value|"\20\7SWSL\6DRQ\5DTQ\4RX\3TX\2MREGS\1STATS"
 end_define
 
+begin_comment
+comment|/* Do not staticize - meant for calling from DDB! */
+end_comment
+
 begin_function
-specifier|static
 name|int
 name|en_dump
 parameter_list|(
@@ -17745,8 +17748,11 @@ begin_comment
 comment|/*  * en_dumpmem: dump the memory  */
 end_comment
 
+begin_comment
+comment|/* Do not staticize - meant for calling from DDB! */
+end_comment
+
 begin_function
-specifier|static
 name|int
 name|en_dumpmem
 parameter_list|(
