@@ -377,21 +377,18 @@ block|}
 comment|/* Finally just format it */
 if|if
 condition|(
-name|minor
-argument_list|(
 name|dev
-argument_list|)
-operator|>
-literal|255
+operator|==
+name|NODEV
 condition|)
 name|r
 operator|=
-literal|"#%c:%d:0x%x"
+literal|"#NODEV"
 expr_stmt|;
 else|else
 name|r
 operator|=
-literal|"#%c:%d:0x%d"
+literal|"#%c:%d:0x%x"
 expr_stmt|;
 name|snprintf
 argument_list|(
