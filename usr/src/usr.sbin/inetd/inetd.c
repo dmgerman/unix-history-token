@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.17 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,7 +212,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+name|config
+argument_list|()
+decl_stmt|,
 name|reapchild
 argument_list|()
 decl_stmt|,
@@ -1928,12 +1931,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|reapchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|union
 name|wait
@@ -2074,14 +2075,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|config
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2571,14 +2570,12 @@ name|omask
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|retry
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2619,7 +2616,7 @@ name|sep
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|setup
