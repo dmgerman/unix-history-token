@@ -2126,6 +2126,19 @@ expr_stmt|;
 name|stop_emulating
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+comment|/* XXX npxsave() doesn't actually initialize the fpu in the SSE case. */
+if|if
+condition|(
+name|cpu_fxsr
+condition|)
+name|fninit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|fldcw
 argument_list|(
 operator|&
