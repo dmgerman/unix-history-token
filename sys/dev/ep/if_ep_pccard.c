@@ -97,34 +97,6 @@ directive|include
 file|<dev/ep/if_epvar.h>
 end_include
 
-begin_comment
-comment|/* XXX should die XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/cardinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/slot.h>
-end_include
-
 begin_function_decl
 specifier|static
 specifier|const

@@ -72,24 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/cardinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/slot.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ed/if_edvar.h>
 end_include
 
