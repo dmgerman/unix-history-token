@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.6	81/11/21	*/
+comment|/*	uipc_socket2.c	4.7	81/11/22	*/
 end_comment
 
 begin_include
@@ -758,6 +758,8 @@ argument_list|(
 name|sb
 operator|->
 name|sb_mbmax
+operator|/
+name|MSIZE
 argument_list|)
 expr_stmt|;
 name|sb
