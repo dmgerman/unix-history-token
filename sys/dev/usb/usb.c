@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.51 2001/01/21 19:00:06 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.52 2001/01/21 19:00:29 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1439,6 +1439,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Add a task to be performed by the event thread.  This function can be  * called from any context and the task will be executed in a process  * context ASAP.  */
+end_comment
 
 begin_function
 name|void
