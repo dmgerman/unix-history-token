@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.14 1997/09/10 19:44:36 phk Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.15 1998/02/18 09:28:41 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -2194,8 +2194,19 @@ name|cnt
 operator|++
 argument_list|,
 name|chksum
+argument_list|,
+name|pmp
+operator|->
+name|pm_flags
+operator|&
+name|MSDOSFSMNT_U2WTABLE
+argument_list|,
+name|pmp
+operator|->
+name|pm_u2w
 argument_list|)
 condition|)
+empty_stmt|;
 break|break;
 block|}
 block|}

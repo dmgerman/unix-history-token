@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfsmount.h,v 1.12 1997/10/12 20:25:02 phk Exp $ */
+comment|/*	$Id: msdosfsmount.h,v 1.13 1998/02/18 09:28:47 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -195,6 +195,13 @@ name|netexport
 name|pm_export
 decl_stmt|;
 comment|/* export information */
+name|u_int16_t
+name|pm_u2w
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local->Unicode table */
 block|}
 struct|;
 end_struct
@@ -575,6 +582,13 @@ name|int
 name|magic
 decl_stmt|;
 comment|/* version number */
+name|u_int16_t
+name|u2w
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local->Unicode table */
 block|}
 struct|;
 end_struct
@@ -638,6 +652,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MSDOSFSMNT_U2WTABLE
+value|0x10
+end_define
+
+begin_comment
+comment|/* Local->Unicode table is loaded */
+end_comment
+
 begin_comment
 comment|/* All flags above: */
 end_comment
@@ -649,7 +674,7 @@ name|MSDOSFSMNT_MNTOPT
 define|\
 value|(MSDOSFSMNT_SHORTNAME|MSDOSFSMNT_LONGNAME|MSDOSFSMNT_NOWIN95 \
 comment|/*|MSDOSFSMNT_GEMDOSFS*/
-value|)
+value||MSDOSFSMNT_U2WTABLE)
 end_define
 
 begin_define
