@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -586,8 +586,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_SYSTEM
+name|P_SUGID
 value|0x00100
+end_define
+
+begin_comment
+comment|/* Had set id privileges since last exec. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_SYSTEM
+value|0x00200
 end_define
 
 begin_comment
@@ -598,7 +609,7 @@ begin_define
 define|#
 directive|define
 name|P_TIMEOUT
-value|0x00200
+value|0x00400
 end_define
 
 begin_comment
@@ -609,7 +620,7 @@ begin_define
 define|#
 directive|define
 name|P_TRACED
-value|0x00400
+value|0x00800
 end_define
 
 begin_comment
@@ -619,34 +630,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_SUGID
-value|0x00800
+name|P_WAITED
+value|0x01000
 end_define
 
 begin_comment
-comment|/* Had set id privileges since last exec. */
+comment|/* Debugging process has waited for child. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|P_WEXIT
-value|0x01000
-end_define
-
-begin_comment
-comment|/* Working on exiting. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_WAITED
 value|0x02000
 end_define
 
 begin_comment
-comment|/* Process being debugged. */
+comment|/* Working on exiting. */
 end_comment
 
 begin_define
