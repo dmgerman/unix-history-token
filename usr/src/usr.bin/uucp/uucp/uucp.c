@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucp.c	5.4 (Berkeley) %G%"
+literal|"@(#)uucp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,13 @@ name|Nuser
 index|[
 literal|32
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeb
+name|Now
 decl_stmt|;
 end_decl_stmt
 
@@ -748,6 +755,24 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Rmtname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|strncpy
+argument_list|(
+name|Rmtname
+argument_list|,
+name|sysfl2
+argument_list|,
+name|MAXBASENAME
+argument_list|)
+expr_stmt|;
 comment|/* block multi-hop requests immediately */
 if|if
 condition|(
@@ -930,6 +955,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Rmtname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|strncpy
+argument_list|(
+name|Rmtname
+argument_list|,
+name|sysfl2
+argument_list|,
+name|MAXBASENAME
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|file1
