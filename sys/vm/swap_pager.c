@@ -2871,8 +2871,6 @@ decl_stmt|;
 name|vm_pindex_t
 name|lastpindex
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|mreq
 operator|=
 name|m
@@ -3126,6 +3124,12 @@ operator|(
 name|VM_PAGER_FAIL
 operator|)
 return|;
+comment|/* 	 * Getpbuf() can sleep. 	 */
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Get a swap buffer header to perform the IO 	 */
 name|bp
 operator|=
@@ -3234,6 +3238,11 @@ name|reqpage
 operator|-
 name|i
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3283,6 +3292,11 @@ block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -3451,6 +3465,13 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|mreq
+operator|->
+name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * mreq is left busied after completion, but all the other pages 	 * are freed.  If we had an unrecoverable read error the page will 	 * not be valid. 	 */

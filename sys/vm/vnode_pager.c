@@ -2320,13 +2320,16 @@ name|count
 operator|*
 name|PAGE_SIZE
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vp
 operator|=
 name|object
 operator|->
 name|handle
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 name|rtval
 operator|=
@@ -2352,6 +2355,11 @@ argument_list|,
 operator|(
 literal|"vnode_pager: FS getpages not implemented\n"
 operator|)
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 return|return

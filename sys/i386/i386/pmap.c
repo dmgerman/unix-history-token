@@ -3859,6 +3859,11 @@ operator|=
 name|pages
 expr_stmt|;
 comment|/*  	 * For the length of the stack, link in a real page of ram for each 	 * page of stack. 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3921,6 +3926,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
 name|pmap_qenter
 argument_list|(
 name|ks
@@ -3989,6 +3999,11 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4047,6 +4062,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Free the space that this stack was mapped to in the kernel 	 * address map. 	 */
 ifdef|#
 directive|ifdef
@@ -4262,6 +4282,11 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4315,6 +4340,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4374,6 +4404,11 @@ operator|=
 name|td
 operator|->
 name|td_kstack
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|ksobj
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -4482,6 +4517,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
 name|pmap_qenter
 argument_list|(
 name|ks

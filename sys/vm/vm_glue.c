@@ -1070,6 +1070,11 @@ name|p
 operator|->
 name|p_upages_obj
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|upobj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1140,11 +1145,6 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
-argument_list|(
-name|upobj
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|upobj

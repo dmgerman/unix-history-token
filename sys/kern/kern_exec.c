@@ -3161,12 +3161,6 @@ name|initial_pagein
 operator|=
 name|i
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|rv
 operator|=
 name|vm_pager_get_pages
@@ -3180,12 +3174,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|ma
 index|[
 literal|0
