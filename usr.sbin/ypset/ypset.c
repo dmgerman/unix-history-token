@@ -531,7 +531,7 @@ name|s_addr
 operator|=
 name|htonl
 argument_list|(
-literal|0x7f000001
+name|INADDR_LOOPBACK
 argument_list|)
 expr_stmt|;
 while|while
