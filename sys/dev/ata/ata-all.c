@@ -4553,8 +4553,8 @@ name|ostat0
 operator|&
 literal|0xf8
 operator|)
-operator|==
-literal|0x50
+operator|!=
+literal|0xf8
 operator|&&
 name|ostat0
 operator|!=
@@ -4606,8 +4606,8 @@ name|ostat1
 operator|&
 literal|0xf8
 operator|)
-operator|==
-literal|0x50
+operator|!=
+literal|0xf8
 operator|&&
 name|ostat1
 operator|!=
