@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.33	%G%"
+literal|"@(#)deliver.c	3.34	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,9 @@ end_decl_stmt
 begin_if
 if|if
 condition|(
+operator|!
+name|ForceMail
+operator|&&
 name|bitset
 argument_list|(
 name|QDONTSEND
@@ -586,6 +589,10 @@ break|break;
 comment|/* if already sent or not for this host, don't send */
 if|if
 condition|(
+operator|(
+operator|!
+name|ForceMail
+operator|&&
 name|bitset
 argument_list|(
 name|QDONTSEND
@@ -594,6 +601,7 @@ name|to
 operator|->
 name|q_flags
 argument_list|)
+operator|)
 operator|||
 name|strcmp
 argument_list|(
