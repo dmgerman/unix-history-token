@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.9 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
@@ -185,6 +191,8 @@ name|pathsearch
 argument_list|(
 name|name
 argument_list|)
+operator|->
+name|d_ino
 argument_list|,
 name|NODE
 argument_list|)
@@ -1474,6 +1482,8 @@ name|pathsearch
 argument_list|(
 name|name
 argument_list|)
+operator|->
+name|d_ino
 expr_stmt|;
 if|if
 condition|(
