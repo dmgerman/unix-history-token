@@ -785,11 +785,14 @@ argument_list|)
 argument_list|,
 literal|"%08x "
 argument_list|,
-operator|~
 name|pthread
 operator|->
-name|sigmask
+name|data
 operator|.
+name|sigwait
+operator|->
+name|waitset
+operator|->
 name|__bits
 index|[
 name|i
