@@ -1,0 +1,134 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* Copyright (c) 1982 Regents of the University of California */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)object.h 1.1 %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Object module definitions.  *  * The object module is the interface to the object file; in particular  * it contains the routines that read symbol and line number information.  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|objname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of object file */
+end_comment
+
+begin_decl_stmt
+name|int
+name|objsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of object code */
+end_comment
+
+begin_struct
+struct|struct
+block|{
+name|unsigned
+name|int
+name|stringsize
+decl_stmt|;
+comment|/* size of the dumped string table */
+name|unsigned
+name|int
+name|nsyms
+decl_stmt|;
+comment|/* number of symbols */
+name|unsigned
+name|int
+name|nfiles
+decl_stmt|;
+comment|/* number of files */
+name|unsigned
+name|int
+name|nlines
+decl_stmt|;
+comment|/* number of lines */
+block|}
+name|nlhdr
+struct|;
+end_struct
+
+begin_decl_stmt
+name|char
+modifier|*
+name|stringtab
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* string table */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|dotpfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of compiled file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZELOC
+value|1016
+end_define
+
+begin_comment
+comment|/* location of objsize in obj file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BASEADDR
+value|1024
+end_define
+
+begin_comment
+comment|/* beginning of object code */
+end_comment
+
+begin_expr_stmt
+name|readobj
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* read in the object file */
+end_comment
+
+begin_expr_stmt
+name|objfree
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* release storage for object file information */
+end_comment
+
+end_unit
+
