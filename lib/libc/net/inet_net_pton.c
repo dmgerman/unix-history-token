@@ -143,28 +143,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|inet_net_pton_ipv4
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|u_char
-operator|*
+modifier|*
 name|dst
-operator|,
+parameter_list|,
 name|size_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * static int  * inet_net_pton(af, src, dst, size)  *	convert network number from presentation to network format.  *	accepts hex octets, hex strings, decimal octets, and /CIDR.  *	"size" is in bytes and describes "dst".  * return:  *	number of bits, either imputed classfully or specified with /CIDR,  *	or -1 if some failure occurred (check errno).  ENOENT means it was  *	not a valid network specification.  * author:  *	Paul Vixie (ISC), June 1996  */

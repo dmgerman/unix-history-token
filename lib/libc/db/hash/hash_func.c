@@ -141,28 +141,23 @@ begin_comment
 comment|/* Global default hash function */
 end_comment
 
-begin_macro
+begin_function_decl
 name|u_int32_t
-argument_list|(
-argument|*__default_hash
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|__default_hash
+function_decl|)
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 name|hash4
-expr_stmt|;
-end_expr_stmt
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * HASH FUNCTIONS  *  * Assume that we've already split the bucket to which this key hashes,  * calculate that bucket, and check that in fact we did already split it.  *  * This came from ejb's hsearch.  */

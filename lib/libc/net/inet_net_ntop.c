@@ -131,32 +131,29 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|inet_net_ntop_ipv4
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|u_char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|int
 name|bits
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|dst
-operator|,
+parameter_list|,
 name|size_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * char *  * inet_net_ntop(af, src, bits, dst, size)  *	convert network number from network to presentation format.  *	generates CIDR style result always.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * author:  *	Paul Vixie (ISC), July 1996  */

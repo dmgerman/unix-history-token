@@ -261,6 +261,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -411,7 +412,9 @@ block|{
 name|char
 modifier|*
 name|bp
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -630,6 +633,7 @@ parameter_list|,
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
