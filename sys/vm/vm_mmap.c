@@ -2130,6 +2130,17 @@ name|uap
 operator|->
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|pageoff
 operator|=
 operator|(
@@ -2169,17 +2180,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|size
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... 	 */
 name|map
 operator|=
@@ -2215,6 +2215,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|vm_map_lock
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make sure entire range is allocated. 	 */
 if|if
 condition|(
@@ -2232,16 +2237,20 @@ argument_list|,
 name|VM_PROT_NONE
 argument_list|)
 condition|)
+block|{
+name|vm_map_unlock
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 comment|/* returns nothing but KERN_SUCCESS anyway */
-operator|(
-name|void
-operator|)
-name|vm_map_remove
+name|vm_map_delete
 argument_list|(
 name|map
 argument_list|,
@@ -2250,6 +2259,11 @@ argument_list|,
 name|addr
 operator|+
 name|size
+argument_list|)
+expr_stmt|;
+name|vm_map_unlock
+argument_list|(
+name|map
 argument_list|)
 expr_stmt|;
 return|return

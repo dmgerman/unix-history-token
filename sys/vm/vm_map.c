@@ -8612,7 +8612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_check_protection:  *  *	Assert that the target map allows the specified privilege on the  *	entire address region given.  The entire region must be allocated.  *  *	WARNING!  This code does not and should not check whether the  *	contents of the region is accessible.  For example a smaller file  *	might be mapped into a larger address space.  *  *	NOTE!  This code is also called by munmap().  */
+comment|/*  *	vm_map_check_protection:  *  *	Assert that the target map allows the specified privilege on the  *	entire address region given.  The entire region must be allocated.  *  *	WARNING!  This code does not and should not check whether the  *	contents of the region is accessible.  For example a smaller file  *	might be mapped into a larger address space.  *  *	NOTE!  This code is also called by munmap().  *  *	The map must be locked.  A read lock is sufficient.  */
 end_comment
 
 begin_function
@@ -8638,11 +8638,6 @@ decl_stmt|;
 name|vm_map_entry_t
 name|tmp_entry
 decl_stmt|;
-name|vm_map_lock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -8656,18 +8651,11 @@ operator|&
 name|tmp_entry
 argument_list|)
 condition|)
-block|{
-name|vm_map_unlock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 name|entry
 operator|=
 name|tmp_entry
@@ -8688,18 +8676,11 @@ name|map
 operator|->
 name|header
 condition|)
-block|{
-name|vm_map_unlock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 comment|/* 		 * No holes allowed! 		 */
 if|if
 condition|(
@@ -8709,18 +8690,11 @@ name|entry
 operator|->
 name|start
 condition|)
-block|{
-name|vm_map_unlock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 comment|/* 		 * Check protection associated with entry. 		 */
 if|if
 condition|(
@@ -8734,18 +8708,11 @@ operator|)
 operator|!=
 name|protection
 condition|)
-block|{
-name|vm_map_unlock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 comment|/* go to next entry */
 name|start
 operator|=
@@ -8760,11 +8727,6 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-name|vm_map_unlock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|TRUE
