@@ -758,7 +758,7 @@ operator|=
 name|ATA_DATA
 init|;
 name|i
-operator|<=
+operator|<
 name|ATA_MAX_RES
 condition|;
 name|i
