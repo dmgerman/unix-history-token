@@ -1122,6 +1122,16 @@ block|{
 block|{
 name|USB_VENDOR_EPSON
 block|,
+name|USB_PRODUCT_EPSON_3200
+block|}
+block|,
+name|USC_KEEP_OPEN
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_EPSON
+block|,
 name|USB_PRODUCT_EPSON_GT9700F
 block|}
 block|,
