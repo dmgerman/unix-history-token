@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strsep.c	5.5 (Berkeley) %G%"
+literal|"@(#)strsep.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * Get next token from string *stringp, where tokens are nonempty  * strings separated by characters from delim.    *  * Writes NULs into the string at *stringp to end tokens.  * delim need not remain constant from call to call.  * On return, *stringp points past the last NUL written (if there might  * be further tokens), or is NULL (if there are definitely no more tokens).  *  * If *stringp is NULL, strtoken returns NULL.  */
+comment|/*  * Get next token from string *stringp, where tokens are possibly-empty  * strings separated by characters from delim.    *  * Writes NULs into the string at *stringp to end tokens.  * delim need not remain constant from call to call.  * On return, *stringp points past the last NUL written (if there might  * be further tokens), or is NULL (if there are definitely no more tokens).  *  * If *stringp is NULL, strsep returns NULL.  */
 end_comment
 
 begin_function
