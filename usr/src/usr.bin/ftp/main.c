@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -817,12 +817,6 @@ name|getcmd
 parameter_list|()
 function_decl|;
 specifier|extern
-name|struct
-name|cmd
-name|cmdtab
-index|[]
-decl_stmt|;
-specifier|extern
 name|int
 name|help
 parameter_list|()
@@ -1048,6 +1042,12 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+specifier|extern
+name|struct
+name|cmd
+name|cmdtab
+index|[]
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -1656,6 +1656,12 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|struct
+name|cmd
+name|cmdtab
+index|[]
+decl_stmt|;
 specifier|register
 name|struct
 name|cmd

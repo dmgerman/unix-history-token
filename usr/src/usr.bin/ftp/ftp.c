@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.15 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4963,7 +4963,6 @@ comment|/*  * Need to start a listen on the data channel  * before we send the c
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|sendport
 init|=
@@ -5103,7 +5102,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ftp: setsockopt (resuse address)"
+literal|"ftp: setsockopt (reuse address)"
 argument_list|)
 expr_stmt|;
 goto|goto
