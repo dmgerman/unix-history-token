@@ -311,42 +311,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|cpu_reset_proxy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|cpu_reset_proxyid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|volatile
-name|u_int
-name|cpu_reset_proxy_active
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -1713,66 +1677,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Force reset the processor by invalidating the entire address space!  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_function
-specifier|static
-name|void
-name|cpu_reset_proxy
-parameter_list|()
-block|{
-name|cpu_reset_proxy_active
-operator|=
-literal|1
-expr_stmt|;
-while|while
-condition|(
-name|cpu_reset_proxy_active
-operator|==
-literal|1
-condition|)
-empty_stmt|;
-comment|/* Wait for other cpu to see that we've started */
-name|stop_cpus
-argument_list|(
-operator|(
-literal|1
-operator|<<
-name|cpu_reset_proxyid
-operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"cpu_reset_proxy: Stopped CPU %d\n"
-argument_list|,
-name|cpu_reset_proxyid
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000000
-argument_list|)
-expr_stmt|;
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|cpu_reset
@@ -1781,36 +1685,17 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-if|if
-condition|(
-name|smp_active
-operator|==
-literal|0
-condition|)
-block|{
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-else|else
-block|{
 name|u_int
 name|map
 decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"cpu_reset called on cpu#%d\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|smp_active
+condition|)
+block|{
 name|map
 operator|=
 name|PCPU_GET
@@ -1838,111 +1723,19 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* Stop all other CPUs */
 block|}
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
 name|DELAY
 argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
-else|else
-block|{
-comment|/* We are not BSP (CPU #0) */
-name|cpu_reset_proxyid
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
-name|cpustop_restartfunc
-operator|=
-name|cpu_reset_proxy
-expr_stmt|;
-name|cpu_reset_proxy_active
-operator|=
-literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"cpu_reset: Restarting BSP\n"
-argument_list|)
-expr_stmt|;
-name|started_cpus
-operator|=
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-expr_stmt|;
-comment|/* Restart CPU #0 */
-name|cnt
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|cpu_reset_proxy_active
-operator|==
-literal|0
-operator|&&
-name|cnt
-operator|<
-literal|10000000
-condition|)
-name|cnt
-operator|++
-expr_stmt|;
-comment|/* Wait for BSP to announce restart */
-if|if
-condition|(
-name|cpu_reset_proxy_active
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"cpu_reset: Failed to restart BSP\n"
-argument_list|)
-expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
-name|cpu_reset_proxy_active
-operator|=
-literal|2
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
-comment|/* NOTREACHED */
-block|}
-block|}
-else|#
-directive|else
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
 endif|#
 directive|endif
+name|cpu_reset_real
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -2040,7 +1833,6 @@ expr_stmt|;
 comment|/* Reset. */
 else|#
 directive|else
-comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn of the GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
 if|#
 directive|if
 operator|!
@@ -2048,6 +1840,7 @@ name|defined
 argument_list|(
 name|BROKEN_KEYBOARD_RESET
 argument_list|)
+comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn off GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
 name|outb
 argument_list|(
 name|IO_KBD
@@ -2079,7 +1872,7 @@ directive|endif
 endif|#
 directive|endif
 comment|/* PC98 */
-comment|/* force a shutdown by unmapping entire address space ! */
+comment|/* Force a shutdown by unmapping entire address space. */
 name|bzero
 argument_list|(
 operator|(
