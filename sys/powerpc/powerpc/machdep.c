@@ -1180,6 +1180,9 @@ name|PSL_DR
 operator|)
 argument_list|)
 expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -1550,6 +1553,9 @@ name|PSL_ME
 operator||
 name|PSL_RI
 argument_list|)
+expr_stmt|;
+name|isync
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialise virtual memory. 	 */
 name|pmap_bootstrap
