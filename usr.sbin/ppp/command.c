@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.169 1998/10/24 01:08:45 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.170 1998/10/26 19:07:36 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -564,6 +564,20 @@ name|VAR_CHOKED
 value|26
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_SENDPIPE
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_RECVPIPE
+value|28
+end_define
+
 begin_comment
 comment|/* ``accept|deny|disable|enable'' masks */
 end_comment
@@ -679,7 +693,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/10/24 01:08:45 $"
+literal|"$Date: 1998/10/26 19:07:36 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3075,7 +3089,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"exec() of %s failed\n"
+literal|"exec() of %s failed: %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -3095,6 +3109,11 @@ name|argn
 index|]
 else|:
 name|shell
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -11160,6 +11179,56 @@ operator|=
 name|CHOKED_TIMEOUT
 expr_stmt|;
 break|break;
+case|case
+name|VAR_SENDPIPE
+case|:
+name|long_val
+operator|=
+name|atol
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
+name|arg
+operator|->
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|ipcp
+operator|.
+name|cfg
+operator|.
+name|sendpipe
+operator|=
+name|long_val
+expr_stmt|;
+break|break;
+case|case
+name|VAR_RECVPIPE
+case|:
+name|long_val
+operator|=
+name|atol
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
+name|arg
+operator|->
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|ipcp
+operator|.
+name|cfg
+operator|.
+name|recvpipe
+operator|=
+name|long_val
+expr_stmt|;
+break|break;
 block|}
 return|return
 name|err
@@ -11985,6 +12054,27 @@ literal|"set reconnect value ntries"
 block|}
 block|,
 block|{
+literal|"recvpipe"
+block|,
+name|NULL
+block|,
+name|SetVariable
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"RECVPIPE value"
+block|,
+literal|"set recvpipe value"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|VAR_RECVPIPE
+block|}
+block|,
+block|{
 literal|"redial"
 block|,
 name|NULL
@@ -11998,6 +12088,27 @@ block|,
 literal|"Redial timeout"
 block|,
 literal|"set redial value|random[.value|random] [attempts]"
+block|}
+block|,
+block|{
+literal|"sendpipe"
+block|,
+name|NULL
+block|,
+name|SetVariable
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"SENDPIPE value"
+block|,
+literal|"set sendpipe value"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|VAR_SENDPIPE
 block|}
 block|,
 block|{
@@ -14613,7 +14724,7 @@ name|OptSet
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Create proxy ARP entry"
+literal|"Create a proxy ARP entry"
 block|,
 literal|"disable|enable"
 block|,
@@ -14623,6 +14734,27 @@ name|void
 operator|*
 operator|)
 name|OPT_PROXY
+block|}
+block|,
+block|{
+literal|"proxyall"
+block|,
+name|NULL
+block|,
+name|OptSet
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Proxy ARP for all remote hosts"
+block|,
+literal|"disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|OPT_PROXYALL
 block|}
 block|,
 block|{
@@ -14712,7 +14844,7 @@ block|,
 define|#
 directive|define
 name|OPT_MAX
-value|8
+value|9
 comment|/* accept/deny allowed below and not above */
 block|{
 literal|"acfcomp"
