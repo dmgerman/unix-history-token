@@ -41,7 +41,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: command.c,v 1.11 1999/05/30 18:06:52 hoek Exp $"
+literal|"$Id: command.c,v 1.12 1999/06/01 20:02:31 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2566,7 +2566,7 @@ modifier|*
 name|base
 decl_stmt|;
 name|int
-name|c
+name|linenumber
 decl_stmt|;
 name|char
 name|buf
@@ -2638,11 +2638,13 @@ expr_stmt|;
 comment|/* emacs also accepts vi-style +nnnn */
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|base
 argument_list|,
 literal|"vi"
+argument_list|,
+literal|2
 argument_list|)
 operator|==
 literal|0
@@ -2666,18 +2668,36 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * XXX Can't just use currline(MIDDLE) since that might be NULL_POSITION 	 * if we are editting a short file or some kind of search positioned 	 * us near the last line.  It's not clear what currline() should do 	 * in those circumstances, but as of this writing, it doesn't do 	 * anything reasonable from our perspective.  The currline(MIDDLE) 	 * never had the desired results for an editfile() after a search() 	 * anyways.  Note, though, that when vi(1) starts its editting, it 	 * positions the focus line in the middle of the screen, not the top. 	 * 	 * I think what is needed is some kind of setfocus() and getfocus() 	 * function.  This could put the focussed line in the middle, top, 	 * or wherever as per the user's wishes, and allow things like us 	 * to getfocus() the correct file-position/line-number.  A search would 	 * then search forward (or backward) from the current focus position, 	 * etc. 	 * 	 * currline() doesn't belong. 	 */
 if|if
 condition|(
-name|dolinenumber
-operator|&&
-operator|(
-name|c
+name|position
+argument_list|(
+name|MIDDLE
+argument_list|)
+operator|==
+name|NULL_POSITION
+condition|)
+name|linenumber
+operator|=
+name|currline
+argument_list|(
+name|TOP
+argument_list|)
+expr_stmt|;
+else|else
+name|linenumber
 operator|=
 name|currline
 argument_list|(
 name|MIDDLE
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|dolinenumber
+operator|&&
+name|linenumber
 condition|)
 operator|(
 name|void
@@ -2695,7 +2715,7 @@ literal|"%s +%d %s"
 argument_list|,
 name|editor
 argument_list|,
-name|c
+name|linenumber
 argument_list|,
 name|current_file
 argument_list|)
