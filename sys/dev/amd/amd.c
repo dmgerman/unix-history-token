@@ -3377,7 +3377,7 @@ name|u_int32_t
 name|xferCnt
 parameter_list|)
 block|{
-name|int
+name|intptr_t
 name|dataPtr
 decl_stmt|;
 name|struct
@@ -3409,7 +3409,7 @@ expr_stmt|;
 name|dataPtr
 operator|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|pcsio
 operator|->
