@@ -236,6 +236,11 @@ name|int
 name|out
 parameter_list|()
 function_decl|;
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|signal
