@@ -1997,6 +1997,10 @@ define|\
 value|(((char *)(cmsg) + _ALIGN((cmsg)->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (char *)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)0 : \ 	    (struct cmsghdr *)((char *)(cmsg) + _ALIGN((cmsg)->cmsg_len)))
 end_define
 
+begin_comment
+comment|/*  * RFC 2292 requires to check msg_controllen, in case that the kernel returns  * an empty list for some reasons.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2004,7 +2008,8 @@ name|CMSG_FIRSTHDR
 parameter_list|(
 name|mhdr
 parameter_list|)
-value|((struct cmsghdr *)(mhdr)->msg_control)
+define|\
+value|((mhdr)->msg_controllen>= sizeof(struct cmsghdr) ? \ 	 (struct cmsghdr *)(mhdr)->msg_control : \ 	 (struct cmsghdr *)NULL)
 end_define
 
 begin_if
