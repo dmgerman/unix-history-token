@@ -3323,6 +3323,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SNDCTL_DSP_GETODELAY
+value|0x5017
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SOUND_MIXER_WRITE_VOLUME
 value|0x4d00
 end_define
