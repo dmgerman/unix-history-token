@@ -190,23 +190,6 @@ name|dt
 operator|.
 name|d_datetime
 expr_stmt|;
-if|if
-condition|(
-name|timediff
-operator|>
-name|ONEYEAR
-operator|&&
-name|pkt
-operator|->
-name|p_verbose
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Clock may be set wrong! (co11)\n"
-argument_list|)
-expr_stmt|;
 name|pkt
 operator|->
 name|p_idel
