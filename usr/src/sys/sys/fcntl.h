@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -88,15 +88,15 @@ begin_comment
 comment|/* mask for above modes */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_comment
-comment|/*  * Kernel encoding of open mode; separate read and write bits  * that are independently testable: 1 greater than the above.  */
+comment|/*  * Kernel encoding of open mode; separate read and write bits that are  * independently testable: 1 greater than the above.  *  * XXX  * FREAD and FWRITE are excluded from the #ifdef KERNEL so that TIOCFLUSH,  * which was documented to use FREAD/FWRITE, continues to work.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
