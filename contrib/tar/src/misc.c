@@ -3,6 +3,10 @@ begin_comment
 comment|/* Miscellaneous functions, not really specific to GNU tar.     Copyright 1988, 1992, 1994, 1995, 1996, 1997, 1999, 2000, 2001 Free    Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any later    version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General    Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2169,19 +2173,6 @@ name|e
 init|=
 name|errno
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|decode_mode
-argument_list|(
-name|mode
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|ERROR
 argument_list|(
 operator|(
@@ -2191,7 +2182,7 @@ name|e
 operator|,
 name|_
 argument_list|(
-literal|"%s: Cannot change mode to %s"
+literal|"%s: Cannot change mode to 0%o"
 argument_list|)
 operator|,
 name|quotearg_colon
@@ -2199,7 +2190,7 @@ argument_list|(
 name|name
 argument_list|)
 operator|,
-name|buf
+name|mode
 operator|)
 argument_list|)
 expr_stmt|;

@@ -3,6 +3,10 @@ begin_comment
 comment|/* A tar (tape archiver) program.     Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001    Free Software Foundation, Inc.     Written by John Gilmore, starting 1985-08-25.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any later    version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General    Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -619,7 +623,27 @@ literal|'b'
 block|}
 block|,
 block|{
+literal|"bzip"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+literal|'j'
+block|}
+block|,
+block|{
 literal|"bzip2"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+literal|'j'
+block|}
+block|,
+block|{
+literal|"bunzip2"
 block|,
 name|no_argument
 block|,
@@ -768,6 +792,17 @@ block|,
 literal|0
 block|,
 literal|'x'
+block|}
+block|,
+block|{
+literal|"fast-read"
+block|,
+name|no_argument
+block|,
+operator|&
+name|fast_read_option
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -1062,6 +1097,17 @@ block|,
 literal|0
 block|,
 name|NO_WILDCARDS_MATCH_SLASH_OPTION
+block|}
+block|,
+block|{
+literal|"norecurse"
+block|,
+name|no_argument
+block|,
+operator|&
+name|recursion_option
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1428,6 +1474,16 @@ literal|'z'
 block|}
 block|,
 block|{
+literal|"unlink"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+literal|'U'
+block|}
+block|,
+block|{
 literal|"unlink-first"
 block|,
 name|no_argument
@@ -1624,7 +1680,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Operation modifiers:\n\   -W, --verify               attempt to verify the archive after writing it\n\       --remove-files         remove files after adding them to the archive\n\   -k, --keep-old-files       don't replace existing files when extracting\n\       --overwrite            overwrite existing files when extracting\n\       --overwrite-dir        overwrite directory metadata when extracting\n\   -U, --unlink-first         remove each file prior to extracting over it\n\       --recursive-unlink     empty hierarchies prior to extracting directory\n\   -S, --sparse               handle sparse files efficiently\n\   -O, --to-stdout            extract files to standard output\n\   -G, --incremental          handle old GNU-format incremental backup\n\   -g, --listed-incremental=FILE\n\                              handle new GNU-format incremental backup\n\       --ignore-failed-read   do not exit with nonzero on unreadable files\n"
+literal|"\ \n\ Operation modifiers:\n\   -W, --verify               attempt to verify the archive after writing it\n\       --remove-files         remove files after adding them to the archive\n\   -k, --keep-old-files       don't replace existing files when extracting\n\       --overwrite            overwrite existing files when extracting\n\       --overwrite-dir        overwrite directory metadata when extracting\n\   -U, --unlink,\n\       --unlink-first         remove each file prior to extracting over it\n\       --recursive-unlink     empty hierarchies prior to extracting directory\n\   -S, --sparse               handle sparse files efficiently\n\   -O, --to-stdout            extract files to standard output\n\   -G, --incremental          handle old GNU-format incremental backup\n\   -g, --listed-incremental=FILE\n\                              handle new GNU-format incremental backup\n\       --ignore-failed-read   do not exit with nonzero on unreadable files\n\       --fast-read            stop after desired names in archive have been found\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -1634,7 +1690,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Handling of file attributes:\n\       --owner=NAME             force NAME as owner for added files\n\       --group=NAME             force NAME as group for added files\n\       --mode=CHANGES           force (symbolic) mode CHANGES for added files\n\       --atime-preserve         don't change access times on dumped files\n\   -m, --modification-time      don't extract file modified time\n\       --same-owner             try extracting files with the same ownership\n\       --no-same-owner          extract files as yourself\n\       --numeric-owner          always use numbers for user/group names\n\   -p, --same-permissions       extract permissions information\n\       --no-same-permissions    do not extract permissions information\n\       --preserve-permissions   same as -p\n\   -s, --same-order             sort names to extract to match archive\n\       --preserve-order         same as -s\n\       --preserve               same as both -p and -s\n"
+literal|"\ \n\ Handling of file attributes:\n\       --owner=NAME             force NAME as owner for added files\n\       --group=NAME             force NAME as group for added files\n\       --mode=CHANGES           force (symbolic) mode CHANGES for added files\n\       --atime-preserve         don't change access times on dumped files\n\   -m, --modification-time      don't extract file modified time\n\       --same-owner             try extracting files with the same ownership\n\       --show-omitted-dirs      show omitted directories while processing the\n\                                archive\n\       --no-same-owner          extract files as yourself\n\       --numeric-owner          always use numbers for user/group names\n\   -p, --same-permissions       extract permissions information\n\       --no-same-permissions    do not extract permissions information\n\       --preserve-permissions   same as -p\n\   -s, --same-order             sort names to extract to match archive\n\       --preserve-order         same as -s\n\       --preserve               same as both -p and -s\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -1644,7 +1700,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Device selection and switching:\n\   -f, --file=ARCHIVE             use archive file or device ARCHIVE\n\       --force-local              archive file is local even if has a colon\n\       --rsh-command=COMMAND      use remote COMMAND instead of rsh\n\   -[0-7][lmh]                    specify drive and density\n\   -M, --multi-volume             create/list/extract multi-volume archive\n\   -L, --tape-length=NUM          change tape after writing NUM x 1024 bytes\n\   -F, --info-script=FILE         run script at end of each tape (implies -M)\n\       --new-volume-script=FILE   same as -F FILE\n\       --volno-file=FILE          use/update the volume number in FILE\n"
+literal|"\ \n\ Device selection and switching:\n\   -f, --file=ARCHIVE             use archive file or device ARCHIVE\n\       --force-local              archive file is local even if it has a colon\n\       --rsh-command=COMMAND      use remote COMMAND instead of rsh\n\   -[0-7][lmh]                    specify drive and density\n\   -M, --multi-volume             create/list/extract multi-volume archive\n\   -L, --tape-length=NUM          change tape after writing NUM x 1024 bytes\n\   -F, --info-script=FILE         run script at end of each tape (implies -M)\n\       --new-volume-script=FILE   same as -F FILE\n\       --volno-file=FILE          use/update the volume number in FILE\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -1664,7 +1720,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Archive format selection:\n\   -V, --label=NAME                   create archive with volume name NAME\n\               PATTERN                at list/extract time, a globbing PATTERN\n\   -o, --old-archive, --portability   write a V7 format archive\n\       --posix                        write a POSIX format archive\n\   -j, --bzip2                        filter the archive through bzip2\n\   -z, --gzip, --ungzip               filter the archive through gzip\n\   -Z, --compress, --uncompress       filter the archive through compress\n\       --use-compress-program=PROG    filter through PROG (must accept -d)\n"
+literal|"\ \n\ Archive format selection:\n\   -V, --label=NAME                   create archive with volume name NAME\n\               PATTERN                at list/extract time, a globbing PATTERN\n\   -o, --old-archive, --portability   write a V7 format archive\n\       --posix                        write a POSIX format archive\n\   -j, -y, --bzip, --bzip2, --bunzip2 filter the archive through bzip2\n\   -z, --gzip, --ungzip               filter the archive through gzip\n\   -Z, --compress, --uncompress       filter the archive through compress\n\       --use-compress-program=PROG    filter through PROG (must accept -d)\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -1674,7 +1730,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Local file selection:\n\   -C, --directory=DIR          change to directory DIR\n\   -T, --files-from=NAME        get names to extract or create from file NAME\n\       --null                   -T reads null-terminated names, disable -C\n\       --exclude=PATTERN        exclude files, given as a PATTERN\n\   -X, --exclude-from=FILE      exclude patterns listed in FILE\n\       --anchored               exclude patterns match file name start (default)\n\       --no-anchored            exclude patterns match after any /\n\       --ignore-case            exclusion ignores case\n\       --no-ignore-case         exclusion is case sensitive (default)\n\       --wildcards              exclude patterns use wildcards (default)\n\       --no-wildcards           exclude patterns are plain strings\n\       --wildcards-match-slash  exclude pattern wildcards match '/' (default)\n\       --no-wildcards-match-slash exclude pattern wildcards do not match '/'\n\   -P, --absolute-names         don't strip leading `/'s from file names\n\   -h, --dereference            dump instead the files symlinks point to\n\       --no-recursion           avoid descending automatically in directories\n\   -l, --one-file-system        stay in local file system when creating archive\n\   -K, --starting-file=NAME     begin at file NAME in the archive\n"
+literal|"\ \n\ Local file selection:\n\   -C, --directory=DIR          change to directory DIR\n\   -T, -I, --files-from=NAME    get names to extract or create from file NAME\n\       --null                   -T reads null-terminated names, disable -C\n\       --exclude=PATTERN        exclude files, given as a a globbing PATTERN\n\   -X, --exclude-from=FILE      exclude patterns listed in FILE\n\       --anchored               exclude patterns match file name start (default)\n\       --no-anchored            exclude patterns match after any /\n\       --ignore-case            exclusion ignores case\n\       --no-ignore-case         exclusion is case sensitive (default)\n\       --wildcards              exclude patterns use wildcards (default)\n\       --no-wildcards           exclude patterns are plain strings\n\       --wildcards-match-slash  exclude pattern wildcards match '/' (default)\n\       --no-wildcards-match-slash exclude pattern wildcards do not match '/'\n\   -P, --absolute-names         don't strip leading `/'s from file names\n\   -h, --dereference            dump instead the files symlinks point to\n\   -n, --norecurse\n\       --no-recursion           avoid descending automatically in directories\n\   -l, --one-file-system        stay in local file system when creating archive\n\   -K, --starting-file=NAME     begin at file NAME in the archive\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -1688,7 +1744,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\   -N, --newer=DATE             only store files newer than DATE\n\       --newer-mtime=DATE       compare date and time when data changed only\n\       --after-date=DATE        same as -N\n"
+literal|"\   -N, --newer=DATE             only store files with creation time newer than\n\                                DATE\n\       --newer-mtime=DATE       only store files with modification time newer\n\                                than DATE\n\       --after-date=DATE        same as -N\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -1710,7 +1766,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Informative output:\n\       --help            print this help, then exit\n\       --version         print tar program version number, then exit\n\   -v, --verbose         verbosely list files processed\n\       --checkpoint      print directory names while reading the archive\n\       --totals          print total bytes written while creating archive\n\   -R, --block-number    show block number within archive with each message\n\   -w, --interactive     ask for confirmation for every action\n\       --confirmation    same as -w\n"
+literal|"\ \n\ Informative output:\n\       --help            print this help, then exit\n\       --version         print tar program version number, then exit\n\   -v, --verbose         verbosely list files processed\n\       --checkpoint      print number of buffer reads/writes\n\       --totals          print total bytes written while creating archive\n\   -R, --block-number    show block number within archive with each message\n\   -w, --interactive     ask for confirmation for every action\n\       --confirmation    same as -w\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -1770,7 +1826,7 @@ define|#
 directive|define
 name|OPTION_STRING
 define|\
-value|"-01234567ABC:F:GIK:L:MN:OPRST:UV:WX:Zb:cdf:g:hijklmoprstuvwxyz"
+value|"-01234567ABC:F:GI:K:L:MnN:OPRST:UV:WX:Zb:cdf:g:hijklmoprstuvwxyz"
 end_define
 
 begin_function
@@ -1932,6 +1988,10 @@ expr_stmt|;
 name|recursion_option
 operator|=
 name|FNM_LEADING_DIR
+expr_stmt|;
+name|namelist_freed
+operator|=
+literal|0
 expr_stmt|;
 name|owner_option
 operator|=
@@ -2531,26 +2591,10 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'I'
-case|:
-name|USAGE_ERROR
-argument_list|(
-operator|(
-literal|0
-operator|,
-literal|0
-operator|,
-name|_
-argument_list|(
-literal|"Warning: the -I option is not supported;"
-literal|" perhaps you meant -j or -T?"
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'j'
+case|:
+case|case
+literal|'y'
 case|:
 name|set_use_compress_program_option
 argument_list|(
@@ -2685,6 +2729,14 @@ comment|/* Make multivolume archive: when we can't write any more into 	   the a
 name|multi_volume_option
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|recursion_option
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 if|#
@@ -2988,6 +3040,9 @@ break|break;
 case|case
 literal|'T'
 case|:
+case|case
+literal|'I'
+case|:
 name|files_from_option
 operator|=
 name|optarg
@@ -3095,25 +3150,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-literal|'y'
-case|:
-name|USAGE_ERROR
-argument_list|(
-operator|(
-literal|0
-operator|,
-literal|0
-operator|,
-name|_
-argument_list|(
-literal|"Warning: the -y option is not supported;"
-literal|" perhaps you meant -j?"
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|'z'
@@ -4473,6 +4509,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setlocale
 argument_list|(
 name|LC_ALL

@@ -7,6 +7,10 @@ begin_comment
 comment|/* The man page rmt(8) for /etc/rmt documents the remote mag tape protocol    which rdump and rrestore use.  Unfortunately, the man page is *WRONG*.    The author of the routines I'm including originally wrote his code just    based on the man page, and it didn't work, so he went to the rdump source    to figure out why.  The only thing he had to change was to check for the    'F' return code in addition to the 'E', and to separate the various    arguments with \n instead of a space.  I personally don't think that this    is much of a problem, but I wanted to point it out. -- Arnold Robbins     Originally written by Jeff Lee, modified some by Arnold Robbins.  Redone    as a library that can replace open, read, write, etc., by Fred Fish, with    some additional work by Arnold Robbins.  Modified to make all rmt* calls    into macros for speed by Jay Fenlason.  Use -DWITH_REXEC for rexec    code, courtesy of Dan Kegel.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1659,6 +1663,18 @@ condition|(
 operator|!
 name|remote_shell
 condition|)
+name|remote_shell
+operator|=
+name|getenv
+argument_list|(
+literal|"TAR_RSH"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|remote_shell
+condition|)
 block|{
 ifdef|#
 directive|ifdef
@@ -1875,17 +1891,17 @@ if|if
 condition|(
 name|remote_user
 condition|)
-name|execl
+name|execlp
 argument_list|(
 name|remote_shell
 argument_list|,
 name|remote_shell_basename
 argument_list|,
-name|remote_host
-argument_list|,
 literal|"-l"
 argument_list|,
 name|remote_user
+argument_list|,
+name|remote_host
 argument_list|,
 literal|"/etc/rmt"
 argument_list|,
@@ -1897,7 +1913,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|execl
+name|execlp
 argument_list|(
 name|remote_shell
 argument_list|,

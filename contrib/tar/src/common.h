@@ -4,6 +4,10 @@ comment|/* Common declarations for the tar program.     Copyright 1988, 1992, 19
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Declare the GNU tar archive format.  */
 end_comment
 
@@ -487,6 +491,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Boolean value.  */
+end_comment
+
+begin_decl_stmt
+name|GLOBAL
+name|int
+name|fast_read_option
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Specified file containing names to work on.  */
 end_comment
 
@@ -642,6 +657,17 @@ begin_decl_stmt
 name|GLOBAL
 name|int
 name|multi_volume_option
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Boolean value.  */
+end_comment
+
+begin_decl_stmt
+name|GLOBAL
+name|int
+name|namelist_freed
 decl_stmt|;
 end_decl_stmt
 

@@ -4,6 +4,10 @@ comment|/* List a tar archive, with support routines for reading a tar archive. 
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Define to non-zero for forcing old ctime format instead of ISO format.  */
 end_comment
 
@@ -24,6 +28,23 @@ include|#
 directive|include
 file|<quotearg.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LANGINFO_CODESET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<langinfo.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -409,6 +430,16 @@ name|read_header
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* check if the namelist got emptied during the course of reading */
+comment|/* the tape, if so stop by setting status to EOF */
+if|if
+condition|(
+name|namelist_freed
+condition|)
+name|status
+operator|=
+name|HEADER_END_OF_FILE
 expr_stmt|;
 switch|switch
 condition|(
@@ -3695,6 +3726,19 @@ name|time_t
 name|t
 parameter_list|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|HAVE_LANGINFO_CODESET
+argument_list|)
 specifier|static
 name|char
 name|buffer
@@ -3900,6 +3944,69 @@ expr_stmt|;
 return|return
 name|p
 return|;
+else|#
+directive|else
+comment|/* __FreeBSD__ */
+specifier|static
+name|char
+name|buffer
+index|[
+literal|80
+index|]
+decl_stmt|;
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
+name|strftime
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|d_first
+condition|?
+literal|"%e %b %R %Y"
+else|:
+literal|"%b %e %R %Y"
+argument_list|,
+name|localtime
+argument_list|(
+operator|&
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|buffer
+return|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 block|}
 end_function
 
