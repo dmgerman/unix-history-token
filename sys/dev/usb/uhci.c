@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.157 2002/03/16 16:13:41 tsutsui Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.158 2002/03/17 18:02:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -121,6 +121,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
 
 begin_include
 include|#
@@ -567,11 +573,43 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
+begin_function_decl
+name|Static
+name|void
+name|uhci_shutdown
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Static
+name|void
+name|uhci_power
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|Static void		uhci_reset(uhci_softc_t *);
 endif|#
 directive|endif
 end_endif
@@ -641,6 +679,18 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|Static void		uhci_enter_ctl_q(uhci_softc_t *, uhci_soft_qh_t *, 					 uhci_intr_info_t *); Static void		uhci_exit_ctl_q(uhci_softc_t *, uhci_soft_qh_t *);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|Static
@@ -3051,7 +3101,7 @@ decl_stmt|;
 name|u_int32_t
 name|n
 decl_stmt|;
-comment|/*  	 * XXX 	 * Since we are allocating a buffer we can assume that we will 	 * need TDs for it.  Since we don't want to allocate those from 	 * an interrupt context, we allocate them here and free them again. 	 * This is no guarantee that we'll get the TDs next time... 	 */
+comment|/* 	 * XXX 	 * Since we are allocating a buffer we can assume that we will 	 * need TDs for it.  Since we don't want to allocate those from 	 * an interrupt context, we allocate them here and free them again. 	 * This is no guarantee that we'll get the TDs next time... 	 */
 name|n
 operator|=
 name|size
@@ -9312,6 +9362,7 @@ name|ii
 operator|->
 name|isdone
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"uhci_device_bulk_transfer: not done, ii=%p\n"
@@ -9319,6 +9370,7 @@ argument_list|,
 name|ii
 argument_list|)
 expr_stmt|;
+block|}
 name|ii
 operator|->
 name|isdone
@@ -9898,7 +9950,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
+comment|/* 	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_device_ctrl_start
@@ -10309,6 +10361,7 @@ name|ii
 operator|->
 name|isdone
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"uhci_device_intr_transfer: not done, ii=%p\n"
@@ -10316,6 +10369,7 @@ argument_list|,
 name|ii
 argument_list|)
 expr_stmt|;
+block|}
 name|ii
 operator|->
 name|isdone
@@ -11287,6 +11341,7 @@ name|ii
 operator|->
 name|isdone
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"uhci_device_request: not done, ii=%p\n"
@@ -11294,6 +11349,7 @@ argument_list|,
 name|ii
 argument_list|)
 expr_stmt|;
+block|}
 name|ii
 operator|->
 name|isdone
@@ -13961,7 +14017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Remove interrupt QH, called with vflock. */
+comment|/* Remove interrupt QH. */
 end_comment
 
 begin_function
