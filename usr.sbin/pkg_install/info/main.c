@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fgGhiIkl:LmoO:pqrRst:vVW:x"
+literal|"acdDe:fgGhiIkl:LmoO:pPqrRst:vVW:x"
 decl_stmt|;
 end_decl_stmt
 
@@ -545,6 +545,14 @@ expr_stmt|;
 break|break;
 block|}
 case|case
+literal|'P'
+case|:
+name|Flags
+operator|=
+name|SHOW_PTREV
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 case|case
@@ -565,6 +573,36 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|Flags
+operator|&
+name|SHOW_PTREV
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|Quiet
+condition|)
+name|printf
+argument_list|(
+literal|"Package tools revision: "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|PKG_INSTALL_VERSION
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Set some reasonable defaults */
 if|if
 condition|(
