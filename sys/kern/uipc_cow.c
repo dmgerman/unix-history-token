@@ -267,7 +267,8 @@ specifier|static
 name|void
 name|socow_iodone
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|addr
 parameter_list|,
 name|void
@@ -282,7 +283,8 @@ specifier|static
 name|void
 name|socow_iodone
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|addr
 parameter_list|,
 name|void

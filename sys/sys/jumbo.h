@@ -98,7 +98,8 @@ begin_function_decl
 name|void
 name|jumbo_freem
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|addr
 parameter_list|,
 name|void
