@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ch2rst.c	1.6	85/02/19  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to rst format and writes to  *	stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2rst to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2rst to NOT trim off any white space in  *	the glyph map.  This is usefull to make stipples of fixed size.  */
+comment|/*	ch2rst.c	1.7	86/03/04  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to rst format and writes to  *	stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2rst to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2rst to NOT trim off any white space in  *	the glyph map.  This is usefull to make stipples of fixed size.  */
 end_comment
 
 begin_include
@@ -107,6 +107,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* fix conversion factor */
+end_comment
+
+begin_decl_stmt
+name|double
+name|wordsptemp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* holds wordsp "fix" `til res. is known */
+end_comment
+
+begin_decl_stmt
+name|double
+name|linesptemp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* holds linesp "fix" `til res. is known */
 end_comment
 
 begin_decl_stmt
@@ -393,15 +413,6 @@ name|filep
 operator|=
 name|stdin
 expr_stmt|;
-name|widthtofix
-operator|=
-operator|(
-literal|1.0
-operator|/
-name|FIXPIX
-operator|)
-expr_stmt|;
-comment|/* default fix conversion factor */
 name|codeindex
 operator|=
 literal|0
@@ -568,7 +579,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|p
 operator|.
 name|p_mag
@@ -577,25 +587,6 @@ name|par
 operator|+
 literal|0.5
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|.
-name|p_mag
-condition|)
-name|widthtofix
-operator|=
-literal|1000.0
-operator|/
-operator|(
-name|FIXPIX
-operator|*
-name|p
-operator|.
-name|p_mag
-operator|)
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -630,15 +621,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|p
-operator|.
-name|p_linesp
+name|linesptemp
 operator|=
 name|par
-operator|*
-name|widthtofix
-operator|+
-literal|0.5
 expr_stmt|;
 elseif|else
 if|if
@@ -652,15 +637,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|p
-operator|.
-name|p_wordsp
+name|wordsptemp
 operator|=
 name|par
-operator|*
-name|widthtofix
-operator|+
-literal|0.5
 expr_stmt|;
 elseif|else
 if|if
@@ -754,10 +733,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-operator|(
 name|p
 operator|.
 name|p_res
@@ -765,26 +740,69 @@ operator|=
 name|par
 operator|+
 literal|0.5
-operator|)
-operator|!=
-name|RES
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ch2rst: warning, wrong resolution (%d).\n"
-argument_list|,
-name|p
-operator|.
-name|p_res
-argument_list|)
 expr_stmt|;
-block|}
 comment|/* ignore unrecognized fields */
 block|}
 else|else
 block|{
+comment|/* set up for real resolution of font file */
+if|if
+condition|(
+name|p
+operator|.
+name|p_mag
+condition|)
+name|widthtofix
+operator|=
+literal|1000.0
+operator|/
+operator|(
+name|FIXIN
+operator|*
+name|p
+operator|.
+name|p_res
+operator|*
+name|p
+operator|.
+name|p_mag
+operator|)
+expr_stmt|;
+else|else
+name|widthtofix
+operator|=
+operator|(
+literal|1.0
+operator|/
+operator|(
+name|FIXIN
+operator|*
+name|p
+operator|.
+name|p_res
+operator|)
+operator|)
+expr_stmt|;
+name|p
+operator|.
+name|p_wordsp
+operator|=
+name|wordsptemp
+operator|*
+name|widthtofix
+operator|+
+literal|0.5
+expr_stmt|;
+name|p
+operator|.
+name|p_linesp
+operator|=
+name|linesptemp
+operator|*
+name|widthtofix
+operator|+
+literal|0.5
+expr_stmt|;
 if|if
 condition|(
 name|sscanf
