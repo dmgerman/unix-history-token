@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.12 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,11 +168,17 @@ begin_comment
 comment|/*  * Definitions for library routines operating on directories.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|DIRBLKSIZ
+end_undef
+
 begin_define
 define|#
 directive|define
 name|DIRBLKSIZ
-value|DEV_BSIZE
+value|1024
 end_define
 
 begin_struct
@@ -1536,10 +1542,14 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|dp
 operator|->
 name|d_reclen
-operator|==
+operator|&
+literal|0x3
+operator|)
+operator|!=
 literal|0
 operator|||
 name|dp
@@ -1547,8 +1557,30 @@ operator|->
 name|d_reclen
 operator|>
 name|i
+operator|||
+name|dp
+operator|->
+name|d_reclen
+operator|<
+name|DIRSIZ
+argument_list|(
+name|dp
+argument_list|)
+operator|||
+name|dp
+operator|->
+name|d_namlen
+operator|>
+name|MAXNAMLEN
 condition|)
 block|{
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"Mangled directory\n"
+argument_list|)
+expr_stmt|;
 name|loc
 operator|+=
 name|i
