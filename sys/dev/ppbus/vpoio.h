@@ -137,6 +137,38 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Mode found during initialisation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VP0_MODE_UNDEFINED
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP0_MODE_NIBBLE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP0_MODE_PS2
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP0_MODE_EPP
+value|0x3
+end_define
+
 begin_struct
 struct|struct
 name|vpoio_data
@@ -146,6 +178,10 @@ name|short
 name|int
 name|vpo_unit
 decl_stmt|;
+name|int
+name|vpo_mode_found
+decl_stmt|;
+comment|/* Mode found during init */
 name|struct
 name|vpo_nibble
 name|vpo_nibble
