@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkboot.c	7.1 (Berkeley) %G%"
+literal|"@(#)mkboot.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,19 +55,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"exec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../include/param.h"
+file|"sys/exec.h"
 end_include
 
 begin_include
@@ -606,7 +600,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * DecHeader -  *  *	Check if the header is a dec (coff) file.  *  * Results:  *	Return true if all went ok.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * DecHeader -  *  *	Check if the header is a DEC (COFF) file.  *  * Results:  *	Return true if all went ok.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_macro
@@ -797,7 +791,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"Input file is coff format\n"
+literal|"Input file is COFF format\n"
 argument_list|)
 expr_stmt|;
 name|printf
