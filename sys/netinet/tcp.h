@@ -15,6 +15,12 @@ directive|define
 name|_NETINET_TCP_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_typedef
 typedef|typedef
 name|u_int32_t
@@ -412,6 +418,15 @@ begin_comment
 comment|/* max space left for options */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
 begin_comment
 comment|/*  * User-settable options (used with setsockopt).  */
 end_comment
@@ -426,6 +441,12 @@ end_define
 begin_comment
 comment|/* don't delay send to coalesce packets */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -464,6 +485,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_NETINET_TCP_H_ */
+end_comment
 
 end_unit
 
