@@ -4653,7 +4653,7 @@ name|variable_set2
 argument_list|(
 name|VAR_BROWSER_PACKAGE
 argument_list|,
-literal|"lynx"
+literal|"links"
 argument_list|,
 literal|0
 argument_list|)
@@ -4662,7 +4662,7 @@ name|variable_set2
 argument_list|(
 name|VAR_BROWSER_BINARY
 argument_list|,
-literal|"/usr/local/bin/lynx"
+literal|"/usr/local/bin/links"
 argument_list|,
 literal|0
 argument_list|)
