@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.32	83/02/25	*/
+comment|/*	sys_generic.c	5.33	83/05/06	*/
 end_comment
 
 begin_include
@@ -3179,7 +3179,9 @@ name|com
 operator|,
 name|data
 operator|,
-literal|0
+name|fp
+operator|->
+name|f_flag
 operator|)
 expr_stmt|;
 block|}
