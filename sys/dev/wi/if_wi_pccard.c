@@ -612,7 +612,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|INTERSIL
 argument_list|,
-name|DWL650
+name|ISL37100P
 argument_list|,
 literal|0
 argument_list|)
@@ -621,7 +621,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|INTERSIL
 argument_list|,
-name|MA401RA
+name|ISL37110P
 argument_list|,
 literal|0
 argument_list|)
@@ -630,7 +630,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|INTERSIL
 argument_list|,
-name|PRISM3
+name|ISL37300P
 argument_list|,
 literal|0
 argument_list|)
