@@ -405,7 +405,12 @@ operator|&
 name|who
 argument_list|)
 condition|)
+block|{
+name|errs
+operator|++
+expr_stmt|;
 continue|continue;
+block|}
 elseif|else
 if|if
 condition|(
@@ -421,6 +426,9 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|errs
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
@@ -440,7 +448,12 @@ operator|&
 name|who
 argument_list|)
 condition|)
+block|{
+name|errs
+operator|++
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|who
@@ -455,6 +468,9 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|errs
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
