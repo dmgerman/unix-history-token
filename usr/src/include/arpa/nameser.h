@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nameser.h	5.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nameser.h	5.27 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -347,8 +347,15 @@ begin_comment
 comment|/* nameserver status query */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__NAMESER_RESV
+value|0x3
+end_define
+
 begin_comment
-comment|/*#define xxx		0x3		/* 0x3 reserved */
+comment|/* 0x3 reserved */
 end_comment
 
 begin_comment
