@@ -2330,7 +2330,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|vs
 operator|==
