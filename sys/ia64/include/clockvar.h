@@ -65,7 +65,7 @@ begin_function_decl
 name|void
 name|clockattach
 parameter_list|(
-name|device_t
+name|kobj_t
 parameter_list|)
 function_decl|;
 end_function_decl
