@@ -1761,11 +1761,17 @@ name|inpline
 operator|!=
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|inpline
 argument_list|)
 expr_stmt|;
+name|inpline
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
