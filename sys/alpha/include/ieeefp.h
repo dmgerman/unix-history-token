@@ -26,7 +26,7 @@ end_define
 begin_typedef
 typedef|typedef
 name|int
-name|fp_except
+name|fp_except_t
 typedef|;
 end_typedef
 
