@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.31 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1818,9 +1818,6 @@ argument_list|(
 name|nbuf
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NEEDGETUSERSHELL
 if|if
 condition|(
 name|pw
@@ -1889,8 +1886,6 @@ operator||=
 name|QBOGUSSHELL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
