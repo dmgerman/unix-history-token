@@ -2129,6 +2129,31 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ldt_warnings
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NUM_LDT_WARNINGS
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -2296,8 +2321,8 @@ condition|(
 name|uap
 operator|->
 name|start
-operator|<
-name|NLDT
+operator|<=
+name|LUDATA_SEL
 operator|||
 name|uap
 operator|->
@@ -2441,6 +2466,37 @@ literal|1
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+comment|/* complain a for a while if using old methods */
+if|if
+condition|(
+name|ldt_warnings
+operator|++
+operator|<
+name|NUM_LDT_WARNINGS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: pid %d used static ldt allocation.\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"See the i386_set_ldt man page for more info\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* verify range of descriptors to modify */
 name|largest_ld
 operator|=
@@ -2457,8 +2513,8 @@ condition|(
 name|uap
 operator|->
 name|start
-operator|<
-name|NLDT
+operator|<=
+name|LUDATA_SEL
 operator|||
 name|uap
 operator|->
@@ -2940,11 +2996,14 @@ index|[
 name|NLDT
 index|]
 expr_stmt|;
+comment|/* 		 * start scanning a bit up to leave room for NVidia and 		 * Wine, which still user the "Blat" method of allocation. 		 */
 for|for
 control|(
 name|i
 operator|=
 name|NLDT
+operator|+
+literal|1
 init|;
 name|i
 operator|<
