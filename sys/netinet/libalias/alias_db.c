@@ -7686,7 +7686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Outside world interfaces  -- "outside world" means other than alias*.c routines --      PacketAliasRedirectPort()     PacketAliasAddServer()     PacketAliasRedirectProto()     PacketAliasRedirectAddr()     PacketAliasRedirectDelete()     PacketAliasSetAddress()     PacketAliasInit()     PacketAliasUninit()     PacketAliasSetMode()  (prototypes in alias.h) */
+comment|/* Outside world interfaces  -- "outside world" means other than alias*.c routines --      PacketAliasRedirectPort()     PacketAliasAddServer()     PacketAliasRedirectProto()     PacketAliasRedirectAddr()     PacketAliasRedirectDynamic()     PacketAliasRedirectDelete()     PacketAliasSetAddress()     PacketAliasInit()     PacketAliasUninit()     PacketAliasSetMode()  (prototypes in alias.h) */
 end_comment
 
 begin_comment
@@ -8134,6 +8134,52 @@ directive|endif
 return|return
 name|link
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Mark the aliasing link dynamic */
+end_comment
+
+begin_function
+name|int
+name|PacketAliasRedirectDynamic
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+name|link
+parameter_list|)
+block|{
+if|if
+condition|(
+name|link
+operator|->
+name|flags
+operator|&
+name|LINK_PARTIALLY_SPECIFIED
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+else|else
+block|{
+name|link
+operator|->
+name|flags
+operator|&=
+operator|~
+name|LINK_PERMANENT
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 end_function
 
