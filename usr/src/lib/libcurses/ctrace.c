@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctrace.c	5.2 (Berkeley) %G%"
+literal|"@(#)ctrace.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+end_define
 
 begin_ifdef
 ifdef|#
