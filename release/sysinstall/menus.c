@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.4 1996/11/07 18:31:38 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.96 1996/11/09 18:12:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -909,16 +909,11 @@ block|,
 block|{
 literal|"Fixit"
 block|,
-literal|"Repair mode with CDROM or floppy."
+literal|"Repair mode with fixit floppy."
 block|,
 name|NULL
 block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuFixit
+name|installFixitFloppy
 block|}
 block|,
 block|{
@@ -1427,6 +1422,21 @@ name|MenuXF86SelectServer
 block|}
 block|,
 block|{
+literal|"XFree86, PC98 Server"
+block|,
+literal|"XFree86 PC98 Server selection menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuXF86SelectPC98Server
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -1507,7 +1517,7 @@ block|,
 block|{
 literal|"3 Keymap"
 block|,
-literal|"Select a keyboard language."
+literal|"Select keyboard type"
 block|,
 name|NULL
 block|,
@@ -1522,7 +1532,7 @@ block|,
 block|{
 literal|"4 Options"
 block|,
-literal|"Go to the options editor"
+literal|"View/Set various installation options"
 block|,
 name|NULL
 block|,
@@ -1567,16 +1577,11 @@ block|,
 block|{
 literal|"8 Fixit"
 block|,
-literal|"Go into repair mode with CDROM or floppy"
+literal|"Go into repair mode with a fixit floppy"
 block|,
 name|NULL
 block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuFixit
+name|installFixitFloppy
 block|}
 block|,
 block|{
@@ -1607,7 +1612,7 @@ block|,
 block|{
 literal|"0 Index"
 block|,
-literal|"Glossary of functions."
+literal|"Glossary of functions"
 block|,
 name|NULL
 block|,
@@ -1617,50 +1622,6 @@ name|NULL
 block|,
 operator|&
 name|MenuIndex
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DMenu
-name|MenuFixit
-init|=
-block|{
-name|DMENU_NORMAL_TYPE
-block|,
-literal|"Please choose a fixit option"
-block|,
-literal|"There are two ways of going into \"fixit\" mode - you may either elect\n\ to use the 2nd FreeBSD CDROM, in which case there will be full access\n\ access to the complete set of FreeBSD commands and utilities, or you\n\ can use the more limited fixit floppy if you don't have a CDROM or are\n\ somehow faced with a situation where a CDROM is impractical.  The fixit\n\ floppy has only a minimal subset of commands which we deemed most useful\n\ for fixing a system in trouble."
-block|,
-literal|"Press F1 for more detailed repair instructions"
-block|,
-literal|"fixit"
-block|,
-block|{
-block|{
-literal|"1 CDROM"
-block|,
-literal|"Use the 2nd \"live\" CDROM from the distribution"
-block|,
-name|NULL
-block|,
-name|installFixitCDROM
-block|}
-block|,
-block|{
-literal|"2 Floppy"
-block|,
-literal|"Use a floppy generated from the fixit image"
-block|,
-name|NULL
-block|,
-name|installFixitFloppy
 block|}
 block|,
 block|{
@@ -1685,7 +1646,11 @@ block|,
 literal|"Documentation for FreeBSD "
 name|RELEASE_NAME
 block|,
-literal|"If you are at all unsure about the configuration of your hardware\n\ or are looking to build a system specifically for FreeBSD, read the\n\ Hardware guide!  New users should also read the Install document for\n\ a step-by-step tutorial on installing FreeBSD.  For general information,\n\ consult the README file."
+literal|"If you are at all unsure about the configuration of your hardware\n"
+literal|"or are looking to build a system specifically for FreeBSD, read the\n"
+literal|"Hardware guide!  New users should also read the Install document for\n"
+literal|"a step-by-step tutorial on installing FreeBSD.  For general information,\n"
+literal|"consult the README file."
 block|,
 literal|"Confused?  Press F1 for help."
 block|,
@@ -1992,7 +1957,13 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select your mouse type from the following menu"
 block|,
-literal|"There are many different types of mice currently on the market,\n\ but this configuration menu should at least narrow down the choices\n\ somewhat.  Once you've selected one of the below, you can specify\n\ /dev/mouse as your mouse device when running the XFree86 configuration\n\ utility (see Configuration menu).  Please note that for PS/2 mice,\n\ a kernel recompile is also required!  See the handbook for more details\n\ on building a kernel."
+literal|"There are many different types of mice currently on the market,\n"
+literal|"but this configuration menu should at least narrow down the choices\n"
+literal|"somewhat.  Once you've selected one of the below, you can specify\n"
+literal|"/dev/mouse as your mouse device when running the XFree86 configuration\n"
+literal|"utility (see Configuration menu).  Please note that for PS/2 mice,\n"
+literal|"a kernel recompile is also required!  See the handbook for more details\n"
+literal|"on building a kernel."
 block|,
 literal|"For more information, visit the Documentation menu"
 block|,
@@ -2150,7 +2121,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a CDROM type"
 block|,
-literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD distribution.  If you are seeing this menu it is because\n\ more than one CDROM drive was found on your system.  Please select one\n\ of the following CDROM drives as your installation drive."
+literal|"FreeBSD can be installed directly from a CDROM containing a valid\n"
+literal|"FreeBSD distribution.  If you are seeing this menu it is because\n"
+literal|"more than one CDROM drive was found on your system.  Please select one\n"
+literal|"of the following CDROM drives as your installation drive."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -2176,7 +2150,8 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a Floppy drive"
 block|,
-literal|"You have more than one floppy drive.  Please chose which drive\n\ you would like to use."
+literal|"You have more than one floppy drive.  Please chose which drive\n"
+literal|"you would like to use."
 block|,
 name|NULL
 block|,
@@ -2202,7 +2177,14 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a DOS partition"
 block|,
-literal|"FreeBSD can be installed directly from a DOS partition\n\ assuming, of course, that you have copied the relevant\n\ distributions into your DOS partition before starting this\n\ installation.  If this is not the case then you should reboot\n\ DOS at this time and copy the distributions you wish to install\n\ into a \"FREEBSD\" subdirectory on one of your DOS partitions.\n\ Otherwise, please select the DOS partition containing the FreeBSD\n\ distribution files."
+literal|"FreeBSD can be installed directly from a DOS partition\n"
+literal|"assuming, of course, that you have copied the relevant\n"
+literal|"distributions into your DOS partition before starting this\n"
+literal|"installation.  If this is not the case then you should reboot\n"
+literal|"DOS at this time and copy the distributions you wish to install\n"
+literal|"into a \"FREEBSD\" subdirectory on one of your DOS partitions.\n"
+literal|"Otherwise, please select the DOS partition containing the FreeBSD\n"
+literal|"distribution files."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -2228,7 +2210,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select a FreeBSD FTP distribution site"
 block|,
-literal|"Please select the site closest to you or \"other\" if you'd like to\n\ specify a different choice.  Also note that not every site listed here\n\ carries more than the base distribution kits. Only the Primary site is\n\ guaranteed to carry the full range of possible distributions."
+literal|"Please select the site closest to you or \"other\" if you'd like to\n"
+literal|"specify a different choice.  Also note that not every site listed here\n"
+literal|"carries more than the base distribution kits. Only the Primary site is\n"
+literal|"guaranteed to carry the full range of possible distributions."
 block|,
 literal|"Select a site that's close!"
 block|,
@@ -3139,7 +3124,12 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a tape drive type"
 block|,
-literal|"FreeBSD can be installed from tape drive, though this installation\n\ method requires a certain amount of temporary storage in addition\n\ to the space required by the distribution itself (tape drives make\n\ poor random-access devices, so we extract _everything_ on the tape\n\ in one pass).  If you have sufficient space for this, then you should\n\ select one of the following tape devices detected on your system."
+literal|"FreeBSD can be installed from tape drive, though this installation\n"
+literal|"method requires a certain amount of temporary storage in addition\n"
+literal|"to the space required by the distribution itself (tape drives make\n"
+literal|"poor random-access devices, so we extract _everything_ on the tape\n"
+literal|"in one pass).  If you have sufficient space for this, then you should\n"
+literal|"select one of the following tape devices detected on your system."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -3202,7 +3192,11 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose Installation Media"
 block|,
-literal|"FreeBSD can be installed from a variety of different installation\n\ media, ranging from floppies to an Internet FTP server.  If you're\n\ installing FreeBSD from a supported CDROM drive then this is generally\n\ the best media to use if you have no overriding reason for using other\n\ media."
+literal|"FreeBSD can be installed from a variety of different installation\n"
+literal|"media, ranging from floppies to an Internet FTP server.  If you're\n"
+literal|"installing FreeBSD from a supported CDROM drive then this is generally\n"
+literal|"the best media to use if you have no overriding reason for using other\n"
+literal|"media."
 block|,
 literal|"Press F1 for more information on the various media types"
 block|,
@@ -3312,7 +3306,13 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose Distributions"
 block|,
-literal|"As a convenience, we provide several \"canned\" distribution sets.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose the\n\ list of distributions yourself, simply select \"Custom\".  You can also\n\ pick a canned distribution set and then fine-tune it with the Custom item.\n\n\ Choose an item by pressing [SPACE]. When you are finished, chose the Exit\n\ item or press [ENTER]."
+literal|"As a convenience, we provide several \"canned\" distribution sets.\n"
+literal|"These select what we consider to be the most reasonable defaults for the\n"
+literal|"type of system in question.  If you would prefer to pick and choose the\n"
+literal|"list of distributions yourself, simply select \"Custom\".  You can also\n"
+literal|"pick a canned distribution set and then fine-tune it with the Custom item.\n\n"
+literal|"Choose an item by pressing [SPACE]. When you are finished, chose the Exit\n"
+literal|"item or press [ENTER]."
 block|,
 literal|"Press F1 for more information on these options."
 block|,
@@ -3469,7 +3469,9 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the distributions you wish to install."
 block|,
-literal|"Please check off the distributions you wish to install.  At the\n\ very minimum, this should be \"bin\".  WARNING:  Do not export the\n\ DES distribution out of the U.S.!  It is for U.S. customers only."
+literal|"Please check off the distributions you wish to install.  At the\n"
+literal|"very minimum, this should be \"bin\".  WARNING:  Do not export the\n"
+literal|"DES distribution out of the U.S.!  It is for U.S. customers only."
 block|,
 name|NULL
 block|,
@@ -3861,7 +3863,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the encryption facilities you wish to install."
 block|,
-literal|"Please check off any special DES-based encryption distributions\n\ you would like to install.  Please note that these services are NOT FOR\n\ EXPORT from the United States.  For information on non-U.S. FTP\n\ distributions of this software, please consult the release notes."
+literal|"Please check off any special DES-based encryption distributions\n"
+literal|"you would like to install.  Please note that these services are NOT FOR\n"
+literal|"EXPORT from the United States.  For information on non-U.S. FTP\n"
+literal|"distributions of this software, please consult the release notes."
 block|,
 name|NULL
 block|,
@@ -3999,7 +4004,8 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the sub-components of src you wish to install."
 block|,
-literal|"Please check off those portions of the FreeBSD source tree\n\ you wish to install."
+literal|"Please check off those portions of the FreeBSD source tree\n"
+literal|"you wish to install."
 block|,
 name|NULL
 block|,
@@ -4474,7 +4480,9 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"XFree86 3.2 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.2\n\ distribution.  We recommend that you select what you need from the basic\n\ component set and at least one entry from the Server and Font set menus."
+literal|"Please select the components you need from the XFree86 3.2\n"
+literal|"distribution.  We recommend that you select what you need from the basic\n"
+literal|"component set and at least one entry from the Server and Font set menus."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -4585,7 +4593,8 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"XFree86 3.2 base distribution types"
 block|,
-literal|"Please check off the basic XFree86 components you wish to install.\n\ Bin, lib, xicf, and xdcf are recommended for a minimum installaion."
+literal|"Please check off the basic XFree86 components you wish to install.\n"
+literal|"Bin, lib, xicf, and xdcf are recommended for a minimum installaion."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -5194,7 +5203,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"X Server selection."
 block|,
-literal|"Please check off the types of X servers you wish to install.\n\ If you are unsure as to which server will work for your graphics card,\n\ it is recommended that try the SVGA or VGA16 servers (the VGA16 and\n\ Mono servers are particularly well-suited to most LCD displays)."
+literal|"Please check off the types of X servers you wish to install.\n"
+literal|"If you are unsure as to which server will work for your graphics card,\n"
+literal|"it is recommended that try the SVGA or VGA16 servers (the VGA16 and\n"
+literal|"Mono servers are particularly well-suited to most LCD displays)."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -5271,6 +5283,29 @@ name|DIST_XF86_SERVER_MONO
 block|}
 block|,
 block|{
+literal|"PC98"
+block|,
+literal|"Select an X server for a NEC PC98 [Submenu]"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuXF86SelectPC98Server
+block|,
+literal|'>'
+block|,
+literal|' '
+block|,
+literal|'>'
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"8514"
 block|,
 literal|"8-bit (256 color) IBM 8514 or compatible card [2.2M]"
@@ -5291,282 +5326,6 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_SERVER_8514
-block|}
-block|,
-block|{
-literal|"9480"
-block|,
-literal|"PC98 8-bit (256 color) PEGC-480 card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9480
-block|}
-block|,
-block|{
-literal|"9EGC"
-block|,
-literal|"PC98 4-bit (16 color) EGC card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9EGC
-block|}
-block|,
-block|{
-literal|"9GA9"
-block|,
-literal|"PC98 GA-968V4/PCI (S3 968) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9GA9
-block|}
-block|,
-block|{
-literal|"9GAN"
-block|,
-literal|"PC98 GANB-WAP (cirrus) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9GAN
-block|}
-block|,
-block|{
-literal|"9LPW"
-block|,
-literal|"PC98 PowerWindowLB (S3) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9LPW
-block|}
-block|,
-block|{
-literal|"9NKV"
-block|,
-literal|"PC98 NKV-NEC (cirrus) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9NKV
-block|}
-block|,
-block|{
-literal|"9NS3"
-block|,
-literal|"PC98 NEC (S3) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9NS3
-block|}
-block|,
-block|{
-literal|"9SPW"
-block|,
-literal|"PC98 SKB-PowerWindow (S3) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9SPW
-block|}
-block|,
-block|{
-literal|"9TGU"
-block|,
-literal|"PC98 Cyber9320 and TGUI9680 cards [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9TGU
-block|}
-block|,
-block|{
-literal|"9WEP"
-block|,
-literal|"PC98 WAB-EP (cirrus) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9WEP
-block|}
-block|,
-block|{
-literal|"9WS"
-block|,
-literal|"PC98 WABS (cirrus) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9WS
-block|}
-block|,
-block|{
-literal|"9WSN"
-block|,
-literal|"PC98 WSN-A2F (cirrus) card [2.2M]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SERVER_9WSN
 block|}
 block|,
 block|{
@@ -5892,6 +5651,328 @@ end_decl_stmt
 
 begin_decl_stmt
 name|DMenu
+name|MenuXF86SelectPC98Server
+init|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"PC98 X Server selection."
+block|,
+literal|"Please check off the types of NEC PC98 X servers you wish to install.\n\ If you are unsure as to which server will work for your graphics card,\n\ it is recommended that try the SVGA or VGA16 servers (the VGA16 and\n\ Mono servers are particularly well-suited to most LCD displays)."
+block|,
+literal|"Press F1 to read the XFree86 release notes for FreeBSD"
+block|,
+literal|"XF86"
+block|,
+block|{
+block|{
+literal|"9480"
+block|,
+literal|"PC98 8-bit (256 color) PEGC-480 card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9480
+block|}
+block|,
+block|{
+literal|"9EGC"
+block|,
+literal|"PC98 4-bit (16 color) EGC card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9EGC
+block|}
+block|,
+block|{
+literal|"9GA9"
+block|,
+literal|"PC98 GA-968V4/PCI (S3 968) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9GA9
+block|}
+block|,
+block|{
+literal|"9GAN"
+block|,
+literal|"PC98 GANB-WAP (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9GAN
+block|}
+block|,
+block|{
+literal|"9LPW"
+block|,
+literal|"PC98 PowerWindowLB (S3) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9LPW
+block|}
+block|,
+block|{
+literal|"9NKV"
+block|,
+literal|"PC98 NKV-NEC (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9NKV
+block|}
+block|,
+block|{
+literal|"9NS3"
+block|,
+literal|"PC98 NEC (S3) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9NS3
+block|}
+block|,
+block|{
+literal|"9SPW"
+block|,
+literal|"PC98 SKB-PowerWindow (S3) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9SPW
+block|}
+block|,
+block|{
+literal|"9TGU"
+block|,
+literal|"PC98 Cyber9320 and TGUI9680 cards [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9TGU
+block|}
+block|,
+block|{
+literal|"9WEP"
+block|,
+literal|"PC98 WAB-EP (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9WEP
+block|}
+block|,
+block|{
+literal|"9WS"
+block|,
+literal|"PC98 WABS (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9WS
+block|}
+block|,
+block|{
+literal|"9WSN"
+block|,
+literal|"PC98 WSN-A2F (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9WSN
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
 name|MenuDiskDevices
 init|=
 block|{
@@ -5901,7 +5982,13 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select Drive(s)"
 block|,
-literal|"Please select the drive, or drives, on which you wish to perform\n\ this operation.  If you are attempting to install a boot partition\n\ on a drive other than the first one or have multiple operating\n\ systems on your machine, you will have the option to install a boot\n\ manager later.  To select a drive, use the arrow keys to move to it\n\ and press [SPACE].  To de-select it, press [SPACE] again.\n\n\ Select OK or Cancel to leave this menu."
+literal|"Please select the drive, or drives, on which you wish to perform\n"
+literal|"this operation.  If you are attempting to install a boot partition\n"
+literal|"on a drive other than the first one or have multiple operating\n"
+literal|"systems on your machine, you will have the option to install a boot\n"
+literal|"manager later.  To select a drive, use the arrow keys to move to it\n"
+literal|"and press [SPACE].  To de-select it, press [SPACE] again.\n\n"
+literal|"Select OK or Cancel to leave this menu."
 block|,
 literal|"Press F1 for important information regarding disk geometry!"
 block|,
@@ -5925,7 +6012,9 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Select HTML Documentation pointer"
 block|,
-literal|"Please select the body of documentation you're interested in, the main\n\ ones right now being the FAQ and the Handbook.  You can also chose \"other\"\n\ to enter an arbitrary URL for browsing."
+literal|"Please select the body of documentation you're interested in, the main\n"
+literal|"ones right now being the FAQ and the Handbook.  You can also chose \"other\"\n"
+literal|"to enter an arbitrary URL for browsing."
 block|,
 literal|"Press F1 for more help on what you see here."
 block|,
@@ -5993,7 +6082,9 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Custom Installation Options"
 block|,
-literal|"This is the custom installation menu. You may use this menu to specify\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from and how you wish to allocate disk storage to FreeBSD."
+literal|"This is the custom installation menu. You may use this menu to specify\n"
+literal|"details on the type of distribution you wish to have, where you wish\n"
+literal|"to install it from and how you wish to allocate disk storage to FreeBSD."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -6003,7 +6094,7 @@ block|{
 block|{
 literal|"1 Options"
 block|,
-literal|"Go to Options editor"
+literal|"View/Set various installation options"
 block|,
 name|NULL
 block|,
@@ -6212,7 +6303,10 @@ block|,
 literal|"FreeBSD Configuration Menu"
 block|,
 comment|/* title */
-literal|"If you've already installed FreeBSD, you may use this menu to customize\n\ it somewhat to suit your particular configuration.  Most importantly,\n\ you can use the Packages utility to load extra \"3rd party\"\n\ software not provided in the base distributions."
+literal|"If you've already installed FreeBSD, you may use this menu to customize\n"
+literal|"it somewhat to suit your particular configuration.  Most importantly,\n"
+literal|"you can use the Packages utility to load extra \"3rd party\"\n"
+literal|"software not provided in the base distributions."
 block|,
 literal|"Press F1 for more information on these options"
 block|,
@@ -6312,7 +6406,7 @@ block|,
 block|{
 literal|"7 Options"
 block|,
-literal|"Go to options editor"
+literal|"View/Set various installation options"
 block|,
 name|NULL
 block|,
@@ -6392,7 +6486,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network Services Menu"
 block|,
-literal|"You may have already configured one network device (and the other\n\ various hostname/gateway/name server parameters) in the process\n\ of installing FreeBSD.  This menu allows you to configure other\n\ aspects of your system's network configuration."
+literal|"You may have already configured one network device (and the other\n"
+literal|"various hostname/gateway/name server parameters) in the process\n"
+literal|"of installing FreeBSD.  This menu allows you to configure other\n"
+literal|"aspects of your system's network configuration."
 block|,
 name|NULL
 block|,
@@ -6451,6 +6548,9 @@ block|,
 literal|"gateway=YES"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|NETCON_EXTENTIONS
 block|{
 literal|"Netcon"
 block|,
@@ -6465,6 +6565,8 @@ block|,
 literal|"novell"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"Ntpdate"
 block|,
@@ -6614,7 +6716,9 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"NTPDATE Server Selection"
 block|,
-literal|"There are a number of time syncronization servers available\n\ for public use around the Internet.  Please select one reasonably\n\ close to you to have your system time syncronized accordingly."
+literal|"There are a number of time syncronization servers available\n"
+literal|"for public use around the Internet.  Please select one reasonably\n"
+literal|"close to you to have your system time syncronized accordingly."
 block|,
 literal|"These are the primary open-access NTP servers"
 block|,
@@ -6937,7 +7041,10 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"System Console Configuration"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) has a\n\ number of configuration options which may be set according to\n\ your preference.\n\n\ When you are done setting configuration options, select Cancel."
+literal|"The default system console driver for FreeBSD (syscons) has a\n"
+literal|"number of configuration options which may be set according to\n"
+literal|"your preference.\n\n"
+literal|"When you are done setting configuration options, select Cancel."
 block|,
 literal|"Configure your system console settings"
 block|,
@@ -7048,7 +7155,13 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keymap"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) defaults\n\ to a standard \"American\" keyboard map.  Users in other countries\n\ (or with different keyboard preferences) may wish to choose one of\n\ the other keymaps below.\n\ Note that sysinstall itself does only guarantee to use the part of\n\ the keyboard mapping that is required to generate the ANSI character\n\ subset, but the desired mapping will be remembered later."
+literal|"The default system console driver for FreeBSD (syscons) defaults\n"
+literal|"to a standard \"American\" keyboard map.  Users in other countries\n"
+literal|"(or with different keyboard preferences) may wish to choose one of\n"
+literal|"the other keymaps below.\n"
+literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
+literal|"which is required to generate the ANSI character subset, but your\n"
+literal|"choice of keymap will also be saved for later (fuller) use."
 block|,
 literal|"Choose a keyboard map"
 block|,
@@ -7368,7 +7481,8 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keyboard Repeat Rate"
 block|,
-literal|"This menu allows you to set the speed at which keys repeat\n\ when held down."
+literal|"This menu allows you to set the speed at which keys repeat\n"
+literal|"when held down."
 block|,
 literal|"Choose a keyboard repeat rate"
 block|,
@@ -7450,7 +7564,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Screen Saver"
 block|,
-literal|"By default, the console driver will not attempt to do anything\n\ special with your screen when it's idle.  If you expect to leave your\n\ monitor switched on and idle for long periods of time then you should\n\ probably enable one of these screen savers to prevent phosphor burn-in."
+literal|"By default, the console driver will not attempt to do anything\n"
+literal|"special with your screen when it's idle.  If you expect to leave your\n"
+literal|"monitor switched on and idle for long periods of time then you should\n"
+literal|"probably enable one of these screen savers to prevent phosphor burn-in."
 block|,
 literal|"Choose a nifty-looking screen saver"
 block|,
