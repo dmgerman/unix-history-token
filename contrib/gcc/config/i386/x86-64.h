@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OS independent definitions for AMD x86-64.    Copyright (C) 2001 Free Software Foundation, Inc.    Contributed by Bo Thorsen<bo@suse.de>.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OS independent definitions for AMD x86-64.    Copyright (C) 2001 Free Software Foundation, Inc.    Contributed by Bo Thorsen<bo@suse.de>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -139,10 +139,6 @@ name|ASM_SPEC
 value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} \  %{Wa,*:%*} %{m32:--32}"
 end_define
 
-begin_comment
-comment|/* A C statement (sans semicolon) to output to the stdio stream    FILE the assembler definition of uninitialized global DECL named    NAME whose size is SIZE bytes and alignment is ALIGN bytes.    Try to use asm_output_aligned_bss to implement this macro.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -163,18 +159,12 @@ value|asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
 end_define
 
 begin_comment
-comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
+comment|/* This is used to align code labels according to Intel recommendations.  */
 end_comment
 
 begin_comment
 comment|/* i386 System V Release 4 uses DWARF debugging info.    x86-64 ABI specifies DWARF2.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DWARF_DEBUGGING_INFO
-end_undef
 
 begin_define
 define|#
@@ -204,6 +194,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_AS_DWARF2_DEBUG_LINE
+value|1
 end_define
 
 begin_undef
