@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)order.c	1.2 (Berkeley) %G%"
+literal|"@(#)order.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,10 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|stoasg
@@ -111,6 +115,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|autoincr
@@ -361,6 +369,10 @@ block|}
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|notoff
@@ -2713,12 +2725,12 @@ begin_decl_stmt
 name|int
 name|crslab
 init|=
-literal|9999
+literal|99999
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Honeywell */
+comment|/* Tahoe */
 end_comment
 
 begin_macro
@@ -2736,6 +2748,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|deflab
+end_ifndef
 
 begin_macro
 name|deflab
@@ -2755,6 +2773,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|genargs
