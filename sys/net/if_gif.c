@@ -320,15 +320,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|gif_softc
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|gif_softc_list
 expr_stmt|;
 end_expr_stmt

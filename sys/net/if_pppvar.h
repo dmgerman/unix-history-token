@@ -282,15 +282,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|ppp_softc
-name|ppp_softc
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ppp_softc
 modifier|*

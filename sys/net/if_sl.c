@@ -334,16 +334,14 @@ begin_comment
 comment|/* in seconds - time to count */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|sl_list
 argument_list|,
 argument|sl_softc
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|sl_list
 expr_stmt|;
 end_expr_stmt
