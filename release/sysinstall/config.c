@@ -1943,7 +1943,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"USA_RESIDENT=\"%s\"\n"
+literal|"USA_RESIDENT=%s\n"
 argument_list|,
 name|USAResident
 condition|?
