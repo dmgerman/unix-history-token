@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: snprintf.c,v 1.7 1997/12/24 14:32:39 ache Exp $"
+literal|"$Id: snprintf.c,v 1.8 1997/12/24 20:24:05 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,20 +150,24 @@ decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
+name|int
+name|on
+decl_stmt|;
+name|on
+operator|=
+name|n
+expr_stmt|;
 if|if
 condition|(
 name|n
-operator|==
+operator|>
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|n
+operator|--
+expr_stmt|;
 if|if
 condition|(
-operator|--
 name|n
 operator|>
 name|INT_MAX
@@ -248,12 +252,18 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|on
+operator|>
+literal|0
+condition|)
 operator|*
 name|f
 operator|.
 name|_p
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|va_end
 argument_list|(
@@ -262,15 +272,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
-operator|>
-operator|(
-name|int
-operator|)
-name|n
-condition|?
-name|n
-else|:
 name|ret
 operator|)
 return|;

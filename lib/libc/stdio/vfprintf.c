@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfprintf.c,v 1.13 1997/12/19 21:59:22 bde Exp $"
+literal|"$Id: vfprintf.c,v 1.14 1997/12/24 13:47:13 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2563,36 +2563,6 @@ comment|/* FLOATING_POINT */
 case|case
 literal|'n'
 case|:
-name|n
-operator|=
-name|ret
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fp
-operator|->
-name|_flags
-operator|&
-name|__SSTR
-operator|)
-operator|&&
-name|fp
-operator|->
-name|_bf
-operator|.
-name|_size
-operator|<
-name|n
-condition|)
-name|n
-operator|=
-name|fp
-operator|->
-name|_bf
-operator|.
-name|_size
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -2606,7 +2576,7 @@ name|quad_t
 operator|*
 argument_list|)
 operator|=
-name|n
+name|ret
 expr_stmt|;
 elseif|else
 if|if
@@ -2622,7 +2592,7 @@ name|long
 operator|*
 argument_list|)
 operator|=
-name|n
+name|ret
 expr_stmt|;
 elseif|else
 if|if
@@ -2638,7 +2608,7 @@ name|short
 operator|*
 argument_list|)
 operator|=
-name|n
+name|ret
 expr_stmt|;
 else|else
 operator|*
@@ -2648,7 +2618,7 @@ name|int
 operator|*
 argument_list|)
 operator|=
-name|n
+name|ret
 expr_stmt|;
 continue|continue;
 comment|/* no output */
