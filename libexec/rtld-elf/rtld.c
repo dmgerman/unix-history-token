@@ -8358,12 +8358,12 @@ name|obj
 expr_stmt|;
 block|}
 block|}
-comment|/* Search all dlopened DAGs containing the referencing object. */
+comment|/* Search all DAGs whose roots are RTLD_GLOBAL objects. */
 name|STAILQ_FOREACH
 argument_list|(
 argument|elm
 argument_list|,
-argument|&refobj->dldags
+argument|&list_global
 argument_list|,
 argument|link
 argument_list|)
@@ -8440,12 +8440,12 @@ name|obj
 expr_stmt|;
 block|}
 block|}
-comment|/* Search all DAGs whose roots are RTLD_GLOBAL objects. */
+comment|/* Search all dlopened DAGs containing the referencing object. */
 name|STAILQ_FOREACH
 argument_list|(
 argument|elm
 argument_list|,
-argument|&list_global
+argument|&refobj->dldags
 argument_list|,
 argument|link
 argument_list|)
