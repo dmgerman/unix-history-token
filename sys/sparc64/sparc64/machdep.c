@@ -370,9 +370,9 @@ end_typedef
 
 begin_decl_stmt
 name|struct
-name|tte
+name|tlb_entry
 modifier|*
-name|kernel_ttes
+name|kernel_tlbs
 decl_stmt|;
 end_decl_stmt
 
@@ -1013,11 +1013,10 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|kernel_ttes
+name|kernel_tlbs
 operator|=
 operator|(
-expr|struct
-name|tte
+name|void
 operator|*
 operator|)
 name|preload_search_info

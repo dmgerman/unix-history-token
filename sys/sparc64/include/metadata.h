@@ -64,6 +64,20 @@ name|MODINFOMD_ITLB
 value|0x1007
 end_define
 
+begin_struct
+struct|struct
+name|tlb_entry
+block|{
+name|vm_offset_t
+name|te_pa
+decl_stmt|;
+name|vm_offset_t
+name|te_va
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define

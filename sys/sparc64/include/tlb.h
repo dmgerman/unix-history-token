@@ -299,6 +299,12 @@ name|MMU_SFSR_W
 value|(1L<< MMU_SFSR_W_SHIFT)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|tlb_entry
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -309,9 +315,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|tte
+name|tlb_entry
 modifier|*
-name|kernel_ttes
+name|kernel_tlbs
 decl_stmt|;
 end_decl_stmt
 

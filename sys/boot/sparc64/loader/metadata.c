@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/tte.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/metadata.h>
 end_include
 
@@ -54,7 +48,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|struct
-name|tte
+name|tlb_entry
 modifier|*
 name|dtlb_store
 decl_stmt|;
@@ -63,7 +57,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|tte
+name|tlb_entry
 modifier|*
 name|itlb_store
 decl_stmt|;
@@ -1224,8 +1218,8 @@ name|dtlb_slots
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|tte
+operator|*
+name|dtlb_store
 argument_list|)
 argument_list|,
 name|dtlb_store
@@ -1241,8 +1235,8 @@ name|itlb_slots
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|tte
+operator|*
+name|itlb_store
 argument_list|)
 argument_list|,
 name|itlb_store
