@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)systat.c	5.4 (Berkeley) %G%"
+literal|"@(#)systat.c	5.5	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,19 +273,28 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|fp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"SYSTAT OPEN FAIL"
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|filename
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -310,12 +319,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	rmstat(name)	remove system status entry  *	char *name;  *  *	return codes:  none  */
+comment|/*  *	remove system status entry  *  *	return codes:  none  */
 end_comment
 
 begin_macro
