@@ -752,6 +752,18 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If this thread tickled GEOM, we need to wait for the giggling to 	 * stop before we return to userland 	 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_GEOM
+condition|)
+name|g_waitidle
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Remove ourself from our leader's peer list and wake our leader. 	 */
 name|mtx_lock
 argument_list|(
