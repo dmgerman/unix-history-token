@@ -115,6 +115,10 @@ begin_struct
 struct|struct
 name|nfsnode
 block|{
+name|struct
+name|lock
+name|n_lock
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|nfsnode

@@ -5058,6 +5058,16 @@ name|v_data
 operator|=
 name|ip
 expr_stmt|;
+comment|/* 	 * FFS supports lock sharing in the stack of vnodes 	 */
+name|vp
+operator|->
+name|v_vnlock
+operator|=
+operator|&
+name|ip
+operator|->
+name|i_lock
+expr_stmt|;
 name|ip
 operator|->
 name|i_vnode

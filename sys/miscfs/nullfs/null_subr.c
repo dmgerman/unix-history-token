@@ -393,7 +393,9 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-literal|0
+name|LK_EXCLUSIVE
+operator||
+name|LK_CANRECURSE
 argument_list|,
 name|p
 argument_list|)
@@ -408,7 +410,15 @@ goto|goto
 name|loop
 goto|;
 block|}
-empty_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|lowervp
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|vp
@@ -559,6 +569,22 @@ name|lowervp
 operator|->
 name|v_type
 expr_stmt|;
+name|lockinit
+argument_list|(
+operator|&
+name|xp
+operator|->
+name|null_lock
+argument_list|,
+name|PINOD
+argument_list|,
+literal|"nullnode"
+argument_list|,
+literal|0
+argument_list|,
+name|LK_CANRECURSE
+argument_list|)
+expr_stmt|;
 name|xp
 operator|->
 name|null_vnode
@@ -626,13 +652,7 @@ return|return
 literal|0
 return|;
 block|}
-empty_stmt|;
-name|VREF
-argument_list|(
-name|lowervp
-argument_list|)
-expr_stmt|;
-comment|/* Extra VREF will be vrele'd in null_node_create */
+comment|/* 	 * From NetBSD: 	 * Now lock the new node. We rely on the fact that we were passed 	 * a locked vnode. If the lower node is exporting a struct lock 	 * (v_vnlock != NULL) then we just set the upper v_vnlock to the 	 * lower one, and both are now locked. If the lower node is exporting 	 * NULL, then we copy that up and manually lock the new vnode. 	 */
 name|lockmgr
 argument_list|(
 operator|&
@@ -643,6 +663,41 @@ argument_list|,
 name|NULL
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_vnlock
+operator|=
+name|lowervp
+operator|->
+name|v_vnlock
+expr_stmt|;
+name|error
+operator|=
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_THISLAYER
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|panic
+argument_list|(
+literal|"null_node_alloc: can't lock new vnode\n"
+argument_list|)
+expr_stmt|;
+name|VREF
+argument_list|(
+name|lowervp
 argument_list|)
 expr_stmt|;
 name|hd
@@ -730,6 +785,11 @@ name|aliasvp
 condition|)
 block|{
 comment|/* 		 * null_node_find has taken another reference 		 * to the alias vnode. 		 */
+name|vrele
+argument_list|(
+name|lowervp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NULLFS_DEBUG
@@ -742,7 +802,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* VREF(aliasvp); --- done in null_node_find */
 block|}
 else|else
 block|{
@@ -777,11 +836,6 @@ name|error
 return|;
 comment|/* 		 * aliasvp is already VREF'd by getnewvnode() 		 */
 block|}
-name|vrele
-argument_list|(
-name|lowervp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC

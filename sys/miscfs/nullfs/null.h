@@ -49,6 +49,17 @@ begin_struct
 struct|struct
 name|null_node
 block|{
+name|struct
+name|lock
+name|null_lock
+decl_stmt|;
+comment|/* Lock for this vnode. MBF */
+name|struct
+name|lock
+modifier|*
+name|null_vnlock
+decl_stmt|;
+comment|/* lock of lower vnode in the stack */
 name|LIST_ENTRY
 argument_list|(
 argument|null_node
