@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.24 %G%"
+literal|"@(#)fend.c 1.25 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4472,13 +4472,15 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|char
+modifier|*
 name|proflabel
 init|=
 name|getlab
 argument_list|()
 decl_stmt|;
-name|int
+name|char
+modifier|*
 name|setjmp0
 init|=
 name|getlab
@@ -4963,7 +4965,8 @@ operator|->
 name|type
 argument_list|)
 decl_stmt|;
-name|long
+name|char
+modifier|*
 name|label
 decl_stmt|;
 name|char
