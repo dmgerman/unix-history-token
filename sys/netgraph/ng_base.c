@@ -2087,7 +2087,7 @@ operator|==
 literal|0
 operator|)
 operator|)
-operator|||
+operator|&&
 operator|(
 name|node
 operator|->
