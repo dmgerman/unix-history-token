@@ -288,6 +288,7 @@ name|readyL
 operator|&
 name|R_LOADING
 condition|)
+block|{
 if|if
 condition|(
 name|mf
@@ -309,6 +310,7 @@ name|readyL
 operator|=
 name|R_LOADED
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mf
@@ -317,6 +319,7 @@ name|readyR
 operator|&
 name|R_LOADING
 condition|)
+block|{
 if|if
 condition|(
 name|mf
@@ -338,6 +341,7 @@ name|readyR
 operator|=
 name|R_LOADED
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

@@ -1473,6 +1473,7 @@ index|]
 operator|.
 name|has_a_pit
 condition|)
+block|{
 if|if
 condition|(
 name|random
@@ -1502,6 +1503,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -1630,6 +1632,7 @@ literal|" \t\n"
 argument_list|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|roomcnt
@@ -1653,6 +1656,7 @@ return|;
 block|}
 else|else
 break|break;
+block|}
 if|if
 condition|(
 name|roomcnt

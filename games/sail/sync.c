@@ -1480,6 +1480,7 @@ name|sn_count
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|b
@@ -1516,6 +1517,7 @@ operator|->
 name|sn_count
 operator|--
 expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
@@ -1547,6 +1549,7 @@ name|sn_count
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|b
@@ -1584,6 +1587,7 @@ name|sn_count
 operator|--
 expr_stmt|;
 block|}
+block|}
 break|break;
 block|}
 case|case
@@ -1595,6 +1599,7 @@ name|mode
 operator|==
 name|MODE_PLAYER
 condition|)
+block|{
 if|if
 condition|(
 name|nobells
@@ -1618,6 +1623,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|W_CREW

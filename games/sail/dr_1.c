@@ -2262,6 +2262,7 @@ index|[
 name|n
 index|]
 condition|)
+block|{
 if|if
 condition|(
 name|index
@@ -2276,6 +2277,7 @@ name|hit
 operator|-=
 literal|2
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ready
@@ -2332,6 +2334,7 @@ name|captured
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|index
@@ -2346,6 +2349,7 @@ name|hit
 operator|-=
 literal|2
 expr_stmt|;
+block|}
 name|hit
 operator|+=
 name|AMMO
@@ -2473,6 +2477,7 @@ literal|55
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|alive
@@ -2486,6 +2491,7 @@ name|people
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|people

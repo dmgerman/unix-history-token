@@ -2637,6 +2637,7 @@ if|if
 condition|(
 name|last
 condition|)
+block|{
 if|if
 condition|(
 name|played
@@ -2692,6 +2693,7 @@ condition|)
 return|return
 name|TRUE
 return|;
+block|}
 block|}
 return|return
 operator|(

@@ -652,6 +652,7 @@ if|if
 condition|(
 name|rakehim
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -672,6 +673,7 @@ argument_list|,
 name|closest
 argument_list|)
 expr_stmt|;
+block|}
 name|index
 operator|=
 name|guns
@@ -786,6 +788,7 @@ index|[
 name|n
 index|]
 condition|)
+block|{
 if|if
 condition|(
 name|index
@@ -800,12 +803,14 @@ name|hit
 operator|-=
 literal|2
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ready
 operator|&
 name|R_INITIAL
 condition|)
+block|{
 if|if
 condition|(
 name|index
@@ -820,6 +825,7 @@ name|hit
 operator|+=
 literal|2
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mf
@@ -828,6 +834,7 @@ name|captured
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|index
@@ -842,6 +849,7 @@ name|hit
 operator|-=
 literal|2
 expr_stmt|;
+block|}
 name|hit
 operator|+=
 name|AMMO

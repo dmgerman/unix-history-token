@@ -1690,6 +1690,7 @@ name|ch
 operator|==
 literal|'Y'
 condition|)
+block|{
 if|if
 condition|(
 name|Player
@@ -1731,6 +1732,7 @@ name|p_blessing
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 break|break;
 block|}

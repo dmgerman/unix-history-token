@@ -263,6 +263,7 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
 comment|/* try to get login name */
 if|if
 condition|(
@@ -325,6 +326,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -5279,6 +5281,7 @@ name|i
 operator|!=
 literal|'.'
 condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -5374,6 +5377,7 @@ literal|"\nYou can't eat that!"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 block|}

@@ -4367,6 +4367,7 @@ index|[
 name|y
 index|]
 condition|)
+block|{
 if|if
 condition|(
 name|nospell
@@ -4426,6 +4427,7 @@ name|lasthy
 operator|=
 name|y
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -6855,6 +6857,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 operator|--
@@ -6879,6 +6882,7 @@ name|j
 operator|=
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -7766,6 +7770,7 @@ name|j
 argument_list|)
 condition|)
 comment|/* if not out of bounds */
+block|{
 if|if
 condition|(
 operator|*
@@ -7855,6 +7860,7 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* lose half hit points*/
+block|}
 block|}
 if|if
 condition|(

@@ -1294,6 +1294,7 @@ if|if
 condition|(
 name|do_explain
 condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -1329,6 +1330,7 @@ argument_list|,
 literal|"No fifteens"
 argument_list|)
 expr_stmt|;
+block|}
 name|i
 operator|=
 name|pairuns
@@ -1348,6 +1350,7 @@ if|if
 condition|(
 name|do_explain
 condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -1385,6 +1388,7 @@ argument_list|,
 literal|", No pairs/runs"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|score

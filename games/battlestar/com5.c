@@ -246,6 +246,7 @@ operator|&&
 operator|!
 name|loved
 condition|)
+block|{
 if|if
 condition|(
 name|godready
@@ -359,6 +360,7 @@ literal|"You wish!"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 if|if
 condition|(

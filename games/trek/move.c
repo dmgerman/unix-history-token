@@ -642,6 +642,7 @@ name|quady
 operator|>=
 name|NQUADS
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -663,6 +664,7 @@ argument_list|(
 name|L_NEGENB
 argument_list|)
 expr_stmt|;
+block|}
 name|initquad
 argument_list|(
 literal|0

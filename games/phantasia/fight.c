@@ -769,6 +769,7 @@ condition|(
 operator|!
 name|Luckout
 condition|)
+block|{
 comment|/* haven't tried to luckout yet */
 if|if
 condition|(
@@ -790,6 +791,7 @@ argument_list|(
 literal|"6:Luckout  "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Player
@@ -4252,6 +4254,7 @@ name|ch
 operator|==
 literal|'Y'
 condition|)
+block|{
 if|if
 condition|(
 name|drandom
@@ -4282,6 +4285,7 @@ argument_list|,
 name|gems
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 else|else
