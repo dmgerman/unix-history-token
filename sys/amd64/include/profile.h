@@ -141,7 +141,9 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = read_eflags(); \  			  __asm __volatile("cli" : : : "memory"); \ 			  mtx_lock(&mcount_mtx); }
+value|{ s = read_eflags(); disable_intr(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1) \
+comment|/* nothing */
+value|; }
 end_define
 
 begin_define
@@ -151,7 +153,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|{ mtx_unlock(&mcount_mtx); write_eflags(s); }
+value|{ atomic_store_rel_int(&mcount_lock, 0); \ 			  write_eflags(s); }
 end_define
 
 begin_else

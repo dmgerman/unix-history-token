@@ -1407,9 +1407,8 @@ comment|/* lock region used by kernel profiling */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|mtx
-name|mcount_mtx
+name|int
+name|mcount_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -1447,17 +1446,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * XXX The mcount mutex probably needs to be statically initialized, 	 * since it will be used even in the function calls that get us to this 	 * point. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|mcount_mtx
-argument_list|,
-literal|"mcount"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_COMLOCK
