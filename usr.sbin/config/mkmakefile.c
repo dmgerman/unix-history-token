@@ -1226,7 +1226,7 @@ name|line
 operator|==
 literal|'\0'
 condition|)
-break|break;
+continue|continue;
 name|fprintf
 argument_list|(
 name|ofp
