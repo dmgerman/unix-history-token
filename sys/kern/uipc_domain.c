@@ -237,7 +237,7 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * update global informatio about maximums 	 */
+comment|/* 	 * update global information about maximums 	 */
 name|max_hdr
 operator|=
 name|max_linkhdr
