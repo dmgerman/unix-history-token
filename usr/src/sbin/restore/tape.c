@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.18	(Berkeley)	83/06/02"
+literal|"@(#)tape.c	3.19	(Berkeley)	83/06/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,13 @@ begin_decl_stmt
 specifier|static
 name|long
 name|blksread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|tapesread
 decl_stmt|;
 end_decl_stmt
 
@@ -932,6 +939,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Prompt user to load a new dump volume.  * "Nextvol" is the next suggested volume to use.  * This suggested volume is enforced when doing full  * or incremental restores, but can be overrridden by  * the user when only extracting a subset of the files.  */
+end_comment
+
 begin_macro
 name|getvol
 argument_list|(
@@ -952,6 +963,8 @@ name|newvol
 decl_stmt|;
 name|long
 name|savecnt
+decl_stmt|,
+name|i
 decl_stmt|;
 name|union
 name|u_spcl
@@ -961,6 +974,16 @@ define|#
 directive|define
 name|tmpbuf
 value|tmpspcl.s_spcl
+if|if
+condition|(
+name|nextvol
+operator|==
+literal|1
+condition|)
+name|tapesread
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pipein
@@ -1036,6 +1059,98 @@ operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|tapesread
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s%s%s%s%s"
+argument_list|,
+literal|"You have not read any tapes yet.\n"
+argument_list|,
+literal|"Unless you know which volume your"
+argument_list|,
+literal|" file(s) are on you should start\n"
+argument_list|,
+literal|"with the last volume and work"
+argument_list|,
+literal|" towards towards the first.\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"You have read volumes"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tbf
+argument_list|,
+literal|": "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+literal|32
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|tapesread
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s%d"
+argument_list|,
+name|tbf
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tbf
+argument_list|,
+literal|", "
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 do|do
 block|{
 name|fprintf
@@ -1123,7 +1238,15 @@ name|newvol
 operator|==
 name|volno
 condition|)
+block|{
+name|tapesread
+operator||=
+literal|1
+operator|<<
+name|volno
+expr_stmt|;
 return|return;
+block|}
 name|closemt
 argument_list|()
 expr_stmt|;
@@ -1326,6 +1449,12 @@ goto|goto
 name|again
 goto|;
 block|}
+name|tapesread
+operator||=
+literal|1
+operator|<<
+name|volno
+expr_stmt|;
 name|blksread
 operator|=
 name|savecnt
