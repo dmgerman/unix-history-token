@@ -140,6 +140,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_OHCI_VENDORID_APPLE
+value|0x106b
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_OHCI_VENDORID_CMDTECH
 value|0x1095
 end_define
@@ -298,6 +305,24 @@ literal|"SiS 5571 USB controller"
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PCI_OHCI_DEVICEID_KEYLARGO
+value|0x0019106b
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ohci_device_keylargo
+init|=
+literal|"Apple KeyLargo USB controller"
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -416,6 +441,14 @@ case|:
 return|return
 operator|(
 name|ohci_device_sis5571
+operator|)
+return|;
+case|case
+name|PCI_OHCI_DEVICEID_KEYLARGO
+case|:
+return|return
+operator|(
+name|ohci_device_keylargo
 operator|)
 return|;
 default|default:
