@@ -1367,7 +1367,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-comment|/* 	 * struct pipe represents a pipe endpoint.  The MAC label is shared 	 * between the connected endpoints.  As a result mac_init_pipe() and 	 * mac_create_pipe() should only be called on one of the endpoints 	 * after they have been connected. 	 */
+comment|/* 	 * The MAC label is shared between the connected endpoints.  As a 	 * result mac_init_pipe() and mac_create_pipe() are called once 	 * for the pair, and not on the endpoints. 	 */
 name|mac_init_pipe
 argument_list|(
 name|pp
@@ -6299,9 +6299,6 @@ name|pipe
 modifier|*
 name|ppipe
 decl_stmt|;
-name|int
-name|hadpeer
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|cpipe
@@ -6312,10 +6309,6 @@ operator|(
 literal|"pipeclose: cpipe == NULL"
 operator|)
 argument_list|)
-expr_stmt|;
-name|hadpeer
-operator|=
-literal|0
 expr_stmt|;
 name|PIPE_LOCK
 argument_list|(
@@ -6391,9 +6384,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|hadpeer
-operator|++
-expr_stmt|;
 name|pipeselwakeup
 argument_list|(
 name|ppipe
