@@ -538,5 +538,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|IO_COMSIZE
+value|8
+end_define
+
+begin_comment
+comment|/* 8250, 16x50 com controllers */
+end_comment
+
 end_unit
 
