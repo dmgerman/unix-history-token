@@ -13233,7 +13233,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ng_callout_trapoline
+name|ng_callout_trampoline
 parameter_list|(
 name|void
 modifier|*
@@ -13371,7 +13371,7 @@ argument_list|,
 name|ticks
 argument_list|,
 operator|&
-name|ng_callout_trapoline
+name|ng_callout_trampoline
 argument_list|,
 name|item
 argument_list|)
@@ -13446,7 +13446,7 @@ operator|->
 name|c_func
 operator|==
 operator|&
-name|ng_callout_trapoline
+name|ng_callout_trampoline
 operator|)
 operator|&&
 operator|(
