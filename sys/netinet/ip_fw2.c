@@ -12014,7 +12014,11 @@ argument_list|(
 operator|&
 name|ipfw_timeout
 argument_list|,
+name|debug_mpsafenet
+condition|?
 name|CALLOUT_MPSAFE
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
