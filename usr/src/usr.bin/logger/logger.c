@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logger.c	6.9 (Berkeley) %G%"
+literal|"@(#)logger.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,7 @@ name|tag
 decl_stmt|,
 name|buf
 index|[
-literal|200
+literal|1024
 index|]
 decl_stmt|,
 modifier|*
@@ -291,8 +291,10 @@ argument_list|(
 name|buf
 argument_list|)
 operator|-
-literal|1
+literal|2
 init|;
+operator|*
+name|argv
 condition|;
 control|)
 block|{
@@ -309,7 +311,7 @@ condition|(
 name|p
 operator|+
 name|len
-operator|<
+operator|>
 name|endp
 operator|&&
 name|p
@@ -317,12 +319,6 @@ operator|>
 name|buf
 condition|)
 block|{
-operator|*
-operator|--
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
 name|syslog
 argument_list|(
 name|pri
@@ -348,7 +344,6 @@ argument_list|)
 operator|-
 literal|1
 condition|)
-block|{
 name|syslog
 argument_list|(
 name|pri
@@ -360,16 +355,20 @@ name|argv
 operator|++
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|--
-name|argc
-condition|)
-break|break;
-block|}
 else|else
 block|{
+if|if
+condition|(
+name|p
+operator|!=
+name|buf
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|*
@@ -381,26 +380,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+operator|*
+operator|(
 name|p
 operator|+=
 name|len
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|--
-name|argc
-condition|)
-break|break;
-operator|*
-name|p
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
-operator|*
-operator|--
-name|p
+operator|)
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -412,12 +397,6 @@ name|p
 operator|!=
 name|buf
 condition|)
-block|{
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
 name|syslog
 argument_list|(
 name|pri
@@ -427,7 +406,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
