@@ -3195,9 +3195,7 @@ name|defrouter_lookup
 argument_list|(
 name|in6
 argument_list|,
-name|rt
-operator|->
-name|rt_ifp
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -3226,9 +3224,7 @@ name|ip6
 operator|->
 name|ip6_src
 argument_list|,
-name|rt
-operator|->
-name|rt_ifp
+name|ifp
 argument_list|)
 expr_stmt|;
 block|}
