@@ -1845,12 +1845,6 @@ name|in
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|herror
-argument_list|(
-literal|"gethostbyname"
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
