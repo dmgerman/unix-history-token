@@ -38,6 +38,11 @@ directive|endif
 include|#
 directive|include
 file|"ansidecl.h"
+comment|/* FreeBSD does not adhere to the Intel386 System V ABI.  */
+define|#
+directive|define
+name|ELF_DYNAMIC_INTERPRETER
+value|"/usr/libexec/ld-elf.so.1"
 comment|/* These two lines get substitutions done by commands in Makefile.in.  */
 comment|/* #define BFD_VERSION  "2.9.5" */
 define|#
