@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|LK_EXTFLG_MASK
-value|0x03000070
+value|0x03010070
 end_define
 
 begin_comment
