@@ -824,6 +824,18 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+name|rdch
+operator|=
+name|i_dev
+operator|->
+name|si_drv1
+expr_stmt|;
+name|wrch
+operator|=
+name|i_dev
+operator|->
+name|si_drv2
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -836,13 +848,9 @@ name|SD_F_SIMPLEX
 operator|)
 operator|&&
 operator|(
-name|i_dev
-operator|->
-name|si_drv1
+name|rdch
 operator|||
-name|i_dev
-operator|->
-name|si_drv2
+name|wrch
 operator|)
 condition|)
 block|{
@@ -861,19 +869,45 @@ return|return
 name|EBUSY
 return|;
 block|}
-comment|/*  if we get here, the open request is valid */
+if|if
+condition|(
+operator|(
+operator|(
+name|flags
+operator|&
+name|FREAD
+operator|)
+operator|&&
 name|rdch
-operator|=
-name|i_dev
-operator|->
-name|si_drv1
-expr_stmt|;
+operator|)
+operator|||
+operator|(
+operator|(
+name|flags
+operator|&
+name|FWRITE
+operator|)
+operator|&&
 name|wrch
-operator|=
-name|i_dev
-operator|->
-name|si_drv2
+operator|)
+condition|)
+block|{
+comment|/* device already open in one or both directions */
+name|pcm_unlock
+argument_list|(
+name|d
+argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|EBUSY
+return|;
+block|}
+comment|/*  if we get here, the open request is valid */
 if|if
 condition|(
 name|flags
@@ -882,14 +916,6 @@ name|FREAD
 condition|)
 block|{
 comment|/* open for read */
-if|if
-condition|(
-name|rdch
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* not already open, try to get a channel */
 if|if
 condition|(
 name|devtype
@@ -958,24 +984,6 @@ return|;
 block|}
 comment|/* got a channel, already locked for us */
 block|}
-else|else
-block|{
-comment|/* already open for read, exit */
-name|pcm_unlock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|EBUSY
-return|;
-block|}
-block|}
 if|if
 condition|(
 name|flags
@@ -984,14 +992,6 @@ name|FWRITE
 condition|)
 block|{
 comment|/* open for write */
-if|if
-condition|(
-name|wrch
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* not already open, try to get a channel */
 name|wrch
 operator|=
 name|pcm_chnalloc
@@ -1019,13 +1019,9 @@ block|{
 comment|/* no channel available */
 if|if
 condition|(
-name|rdch
-operator|&&
-operator|(
 name|flags
 operator|&
 name|FREAD
-operator|)
 condition|)
 block|{
 comment|/* just opened a read channel, release it */
@@ -1052,43 +1048,6 @@ return|;
 block|}
 comment|/* got a channel, already locked for us */
 block|}
-else|else
-block|{
-comment|/* already open for write */
-if|if
-condition|(
-name|rdch
-operator|&&
-operator|(
-name|flags
-operator|&
-name|FREAD
-operator|)
-condition|)
-block|{
-comment|/* just opened a read channel, release it */
-name|pcm_chnrelease
-argument_list|(
-name|rdch
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* exit */
-name|pcm_unlock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|EBUSY
-return|;
-block|}
-block|}
 name|i_dev
 operator|->
 name|si_drv1
@@ -1110,11 +1069,6 @@ comment|/* finished with snddev, new channels still locked */
 comment|/* bump refcounts, reset and unlock any channels that we just opened */
 if|if
 condition|(
-name|rdch
-condition|)
-block|{
-if|if
-condition|(
 name|flags
 operator|&
 name|FREAD
@@ -1180,13 +1134,6 @@ operator|->
 name|flags
 operator||=
 name|CHN_F_NBIO
-expr_stmt|;
-block|}
-else|else
-name|CHN_LOCK
-argument_list|(
-name|rdch
-argument_list|)
 expr_stmt|;
 name|pcm_chnref
 argument_list|(
@@ -1203,11 +1150,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|wrch
-condition|)
-block|{
-if|if
-condition|(
 name|flags
 operator|&
 name|FWRITE
@@ -1235,19 +1177,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rdch
-operator|&&
-operator|(
 name|flags
 operator|&
 name|FREAD
-operator|)
 condition|)
+block|{
+name|CHN_LOCK
+argument_list|(
+name|rdch
+argument_list|)
+expr_stmt|;
+name|pcm_chnref
+argument_list|(
+name|rdch
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|pcm_chnrelease
 argument_list|(
 name|rdch
 argument_list|)
 expr_stmt|;
+name|CHN_UNLOCK
+argument_list|(
+name|rdch
+argument_list|)
+expr_stmt|;
+block|}
 name|pcm_unlock
 argument_list|(
 name|d
@@ -1273,13 +1231,6 @@ operator|->
 name|flags
 operator||=
 name|CHN_F_NBIO
-expr_stmt|;
-block|}
-else|else
-name|CHN_LOCK
-argument_list|(
-name|wrch
-argument_list|)
 expr_stmt|;
 name|pcm_chnref
 argument_list|(
