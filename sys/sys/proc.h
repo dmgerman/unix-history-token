@@ -992,11 +992,22 @@ begin_define
 define|#
 directive|define
 name|KEF_LOANED
-value|0x00004
+value|0x00008
 end_define
 
 begin_comment
 comment|/* On loan from the bound thread to another */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_USER
+value|0x00200
+end_define
+
+begin_comment
+comment|/* Process is not officially in the kernel */
 end_comment
 
 begin_define
@@ -1431,21 +1442,25 @@ name|thread
 modifier|*
 name|p_singlethread
 decl_stmt|;
-comment|/* If single threading this is it */
+comment|/* (j) If single threading this is it */
 name|int
 name|p_suspcount
 decl_stmt|;
-comment|/* # waiting threads in suspended mode*/
+comment|/* (j) # threads in suspended mode */
+name|int
+name|p_userthreads
+decl_stmt|;
+comment|/* (j) # threads in userland */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
-name|p_startcopy
+name|p_endzero
 value|p_sigmask
 comment|/* The following fields are all copied upon creation in fork. */
 define|#
 directive|define
-name|p_endzero
-value|p_startcopy
+name|p_startcopy
+value|p_endzero
 name|sigset_t
 name|p_sigmask
 decl_stmt|;
