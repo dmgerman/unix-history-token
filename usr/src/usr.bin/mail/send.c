@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	2.13 (Berkeley) %G%"
+literal|"@(#)send.c	2.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1110,8 +1110,10 @@ argument_list|(
 literal|"EOT\n"
 argument_list|)
 expr_stmt|;
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Now, take the user names from the combined 	 * to and cc lists and do all the alias 	 * processing. 	 */

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	2.12 (Berkeley) %G%"
+literal|"@(#)cmd1.c	2.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2198,12 +2198,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|clrbuf
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)

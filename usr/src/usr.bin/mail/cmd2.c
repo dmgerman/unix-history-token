@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	2.11 (Berkeley) %G%"
+literal|"@(#)cmd2.c	2.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -589,8 +589,10 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -981,8 +983,10 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

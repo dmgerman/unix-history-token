@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	2.15 (Berkeley) %G%"
+literal|"@(#)lex.c	2.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -502,8 +502,10 @@ argument_list|(
 name|prompt
 argument_list|)
 expr_stmt|;
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -520,8 +522,10 @@ directive|endif
 endif|VMUNIX
 block|}
 else|else
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 name|sreset
 argument_list|()
@@ -2004,13 +2008,10 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|clrbuf
+name|fprintf
 argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+name|stderr
+argument_list|,
 literal|"Interrupt\n"
 argument_list|)
 expr_stmt|;

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	2.16 (Berkeley) %G%"
+literal|"@(#)fio.c	2.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1818,8 +1818,10 @@ argument_list|,
 name|editfile
 argument_list|)
 expr_stmt|;
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2026,8 +2028,10 @@ argument_list|(
 literal|"complete\n"
 argument_list|)
 expr_stmt|;
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 name|done
 label|:
@@ -2135,45 +2139,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Empty the output buffer.  */
-end_comment
-
-begin_expr_stmt
-name|clrbuf
-argument_list|(
-name|buf
-argument_list|)
-specifier|register
-name|FILE
-operator|*
-name|buf
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|buf
-operator|=
-name|stdout
-expr_stmt|;
-name|buf
-operator|->
-name|_ptr
-operator|=
-name|buf
-operator|->
-name|_base
-expr_stmt|;
-name|buf
-operator|->
-name|_cnt
-operator|=
-name|BUFSIZ
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * Open a temp file by creating, closing, unlinking, and  * reopening.  Return the open file descriptor.  */
 end_comment
 
@@ -2273,30 +2238,6 @@ operator|(
 name|f
 operator|)
 return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Flush the standard output.  */
-end_comment
-
-begin_macro
-name|flush
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.13 (Berkeley) %G%"
+literal|"@(#)main.c	2.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -974,19 +974,16 @@ end_macro
 
 begin_block
 block|{
-name|clrbuf
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nInterrupt\n"
-argument_list|)
-expr_stmt|;
 name|fflush
 argument_list|(
 name|stdout
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nInterrupt\n"
 argument_list|)
 expr_stmt|;
 name|longjmp

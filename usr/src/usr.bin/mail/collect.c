@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	2.16 (Berkeley) %G%"
+literal|"@(#)collect.c	2.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -700,8 +700,10 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|VMUNIX
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1229,8 +1231,10 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|flush
-argument_list|()
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 name|lc
 operator|=
@@ -3548,13 +3552,15 @@ block|{
 name|hadintr
 operator|++
 expr_stmt|;
-name|clrbuf
+name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n(Interrupt -- one more to kill letter)\n"
 argument_list|)
 expr_stmt|;
