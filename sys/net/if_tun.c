@@ -832,15 +832,14 @@ operator|&
 name|TUN_OPEN
 condition|)
 return|return
-name|ENXIO
-return|;
+name|EBUSY
 name|ifp
 operator|=
 operator|&
 name|tp
 operator|->
 name|tun_if
-expr_stmt|;
+return|;
 name|tp
 operator|->
 name|tun_flags
