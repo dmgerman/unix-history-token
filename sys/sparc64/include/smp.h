@@ -379,14 +379,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|tl_ipi_test
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
 name|tl_ipi_tlb_context_demap
 index|[]
 decl_stmt|;
