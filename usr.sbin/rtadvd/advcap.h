@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: advcap.h,v 1.3 2001/02/01 09:12:08 jinmei Exp $	*/
+comment|/*	$KAME: advcap.h,v 1.5 2003/06/09 05:40:54 t-momose Exp $	*/
 end_comment
 
 begin_comment
@@ -65,8 +65,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|long
-name|long
+name|int64_t
 name|agetnum
 name|__P
 argument_list|(

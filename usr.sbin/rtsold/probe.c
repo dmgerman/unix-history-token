@@ -49,33 +49,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__>= 3 */
-end_comment
 
 begin_include
 include|#
@@ -434,10 +412,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|dr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -445,13 +425,18 @@ name|dr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dr
 operator|.
 name|ifname
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+name|dr
+operator|.
+name|ifname
 argument_list|)
 expr_stmt|;
 comment|/* dummy interface */
@@ -658,10 +643,12 @@ name|hoplimit
 init|=
 literal|1
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sa6_probe
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

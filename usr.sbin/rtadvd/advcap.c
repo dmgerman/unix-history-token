@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: advcap.c,v 1.5 2001/02/01 09:12:08 jinmei Exp $	*/
+comment|/*	$KAME: advcap.c,v 1.11 2003/05/19 09:46:50 keiichi Exp $	*/
 end_comment
 
 begin_comment
@@ -295,8 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|long
+name|int64_t
 name|tgetnum
 name|__P
 argument_list|(
@@ -769,13 +768,16 @@ operator|(
 literal|1
 operator|)
 return|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tcname
 argument_list|,
 name|p
 operator|+
 literal|3
+argument_list|,
+sizeof|sizeof
+name|tcname
 argument_list|)
 expr_stmt|;
 name|q
@@ -1185,8 +1187,7 @@ comment|/*  * Return the (numeric) option id.  * Numeric options look like  *	li
 end_comment
 
 begin_function
-name|long
-name|long
+name|int64_t
 name|tgetnum
 parameter_list|(
 name|id
@@ -1196,8 +1197,7 @@ modifier|*
 name|id
 decl_stmt|;
 block|{
-name|long
-name|long
+name|int64_t
 name|i
 decl_stmt|;
 name|int

@@ -43,33 +43,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__>= 3 */
-end_comment
 
 begin_include
 include|#
@@ -148,31 +126,6 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<search.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -341,8 +294,7 @@ decl_stmt|;
 name|long
 name|val
 decl_stmt|;
-name|long
-name|long
+name|int64_t
 name|val64
 decl_stmt|;
 name|char
@@ -377,7 +329,7 @@ parameter_list|,
 name|cap
 parameter_list|)
 define|\
-value|do {								\ 	int t;								\ 	if ((t = agetnum(cap))< 0) {					\ 		fprintf(stderr, "rtadvd: need %s for interface %s\n",	\ 			cap, intface);					\ 		exit(1);						\ 	}								\ 	var = t;							\      } while (0)
+value|do {								\ 	int64_t t;							\ 	if ((t = agetnum(cap))< 0) {					\ 		fprintf(stderr, "rtadvd: need %s for interface %s\n",	\ 			cap, intface);					\ 		exit(1);						\ 	}								\ 	var = t;							\      } while (0)
 define|#
 directive|define
 name|MAYHAVE
@@ -2858,11 +2810,13 @@ name|buf
 operator|+
 name|len
 decl_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|string
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
