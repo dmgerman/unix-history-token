@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)trace.c	5.1 (Berkeley) %G%"
+literal|"@(#)trace.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,24 +36,6 @@ include|#
 directive|include
 file|"sendmail.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|trace
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  TtSETUP -- set up for trace package. ** **	Parameters: **		vect -- pointer to trace vector. **		size -- number of flags in trace vector. **		defflags -- flags to set if no value given. ** **	Returns: **		none ** **	Side Effects: **		environment is set up. */

@@ -9,16 +9,6 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)usersmtp.c	5.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -55,27 +45,15 @@ directive|ifndef
 name|SMTP
 end_ifndef
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|usersmtp
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-operator|(
-name|no
-name|SMTP
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)usersmtp.c	5.2 (Berkeley) %G%	(no SMTP)"
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -83,23 +61,15 @@ directive|else
 else|SMTP
 end_else
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|usersmtp
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)usersmtp.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  USERSMTP -- run SMTP protocol from the user end. ** **	This protocol is described in RFC821. */
