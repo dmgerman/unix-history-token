@@ -111,20 +111,6 @@ directive|include
 file|"camcontrol.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_DEVICE
-value|"da"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_UNIT
-value|0
-end_define
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -5023,6 +5009,10 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|device
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|bus
@@ -13380,8 +13370,8 @@ literal|"deviceUNIT        specify the device name, like \"da4\" or \"cd2\"\n"
 literal|"Generic arguments:\n"
 literal|"-v                be verbose, print out sense information\n"
 literal|"-t timeout        command timeout in seconds, overrides default timeout\n"
-literal|"-n dev_name       specify device name (default is %s)\n"
-literal|"-u unit           specify unit number (default is %d)\n"
+literal|"-n dev_name       specify device name, e.g. \"da\", \"cd\"\n"
+literal|"-u unit           specify unit number, e.g. \"0\", \"5\"\n"
 literal|"-E                have the kernel attempt to perform SCSI error recovery\n"
 literal|"-C count          specify the SCSI command retry count (needs -E to work)\n"
 literal|"modepage arguments:\n"
@@ -13425,10 +13415,6 @@ literal|"format arguments:\n"
 literal|"-q                be quiet, don't print status messages\n"
 literal|"-w                don't send immediate format command\n"
 literal|"-y                don't ask any questions\n"
-argument_list|,
-name|DEFAULT_DEVICE
-argument_list|,
-name|DEFAULT_UNIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -14053,41 +14039,6 @@ default|default:
 break|break;
 block|}
 block|}
-if|if
-condition|(
-operator|(
-name|arglist
-operator|&
-name|CAM_ARG_DEVICE
-operator|)
-operator|==
-literal|0
-condition|)
-name|device
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|strdup
-argument_list|(
-name|DEFAULT_DEVICE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|arglist
-operator|&
-name|CAM_ARG_UNIT
-operator|)
-operator|==
-literal|0
-condition|)
-name|unit
-operator|=
-name|DEFAULT_UNIT
-expr_stmt|;
 comment|/* 	 * For most commands we'll want to open the passthrough device 	 * associated with the specified device.  In the case of the rescan 	 * commands, we don't use a passthrough device at all, just the 	 * transport layer device. 	 */
 if|if
 condition|(
@@ -14096,6 +14047,59 @@ operator|==
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|arglist
+operator|&
+operator|(
+name|CAM_ARG_BUS
+operator||
+name|CAM_ARG_TARGET
+operator|)
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|arglist
+operator|&
+name|CAM_ARG_DEVICE
+operator|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|arglist
+operator|&
+name|CAM_ARG_UNIT
+operator|)
+operator|==
+literal|0
+operator|)
+operator|)
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"subcommand \"%s\" requires a valid device "
+literal|"identifier"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
