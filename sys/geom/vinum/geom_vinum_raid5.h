@@ -16,60 +16,32 @@ name|_GEOM_VINUM_RAID5_H_
 end_define
 
 begin_comment
-comment|/*  * A single RAID5 request usually needs more than one I/O transaction,  * depending on the state of the associated subdisks and the direction of the  * transaction (read or write).  Every subrequest of a RAID5 request,  * represented by a gv_raid_packet, is defined by a gv_raid5_bit.  */
+comment|/*  * A single RAID5 request usually needs more than one I/O transaction,  * depending on the state of the associated subdisks and the direction of the  * transaction (read or write).  */
 end_comment
 
-begin_comment
-comment|/* A subrequest of a RAID5 read/write operation. */
-end_comment
-
-begin_struct
-struct|struct
-name|gv_raid5_bit
-block|{
-name|struct
-name|bio
-modifier|*
-name|bio
-decl_stmt|;
-comment|/* BIO of this subrequest. */
-name|caddr_t
-name|buf
-decl_stmt|;
-comment|/* Data buffer of this subrequest. */
-name|int
-name|malloc
-decl_stmt|;
-comment|/* Flag if data buffer was malloced. */
-name|struct
-name|g_consumer
-modifier|*
-name|consumer
-decl_stmt|;
-comment|/* Consumer to send the BIO to. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|gv_raid5_bit
-argument_list|)
-name|list
-expr_stmt|;
-comment|/* Entry in the list of this request. */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Container for one or more gv_raid5_bits; represents a RAID5 I/O request. */
-end_comment
+begin_define
+define|#
+directive|define
+name|GV_ENQUEUE
+parameter_list|(
+name|bp
+parameter_list|,
+name|cbp
+parameter_list|,
+name|pbp
+parameter_list|)
+define|\
+value|do { 							\ 		if (bp->bio_driver1 == NULL) {			\ 			bp->bio_driver1 = cbp;			\ 		} else {					\ 			pbp = bp->bio_driver1;			\ 			while (pbp->bio_caller1 != NULL)	\ 				pbp = pbp->bio_caller1;		\ 			pbp->bio_caller1 = cbp;			\ 		}						\ 	} while (0);
+end_define
 
 begin_struct
 struct|struct
 name|gv_raid5_packet
 block|{
 name|caddr_t
-name|buf
+name|data
 decl_stmt|;
-comment|/* Data buffer of this RAID5 request. */
+comment|/* Data buffer of this sub-request- */
 name|off_t
 name|length
 decl_stmt|;
@@ -100,66 +72,22 @@ modifier|*
 name|bio
 decl_stmt|;
 comment|/* Pointer to the original bio. */
-name|caddr_t
-name|data
-decl_stmt|;
-comment|/* Pointer to the original data. */
 name|struct
-name|g_consumer
-modifier|*
-name|original
-decl_stmt|;
-comment|/* Consumer to the data stripe. */
-name|struct
-name|g_consumer
+name|bio
 modifier|*
 name|parity
 decl_stmt|;
-comment|/* Consumer to the parity stripe. */
-comment|/* State of this RAID5 packet. */
-enum|enum
-block|{
-name|SETUP
-block|,
-comment|/* Newly created. */
-name|VALID
-block|,
-comment|/* Ready for processing. */
-name|IO
-block|,
-comment|/* Currently doing I/O. */
-name|FINISH
-comment|/* Packet has finished. */
-block|}
-name|state
-enum|;
-comment|/* Type of this RAID5 transaction. */
-enum|enum
-block|{
-name|JUNK
-block|,
-comment|/* Newly created, not valid. */
-name|NORMAL
-block|,
-comment|/* Normal read or write. */
-name|ISPARITY
-block|,
-comment|/* Containing only parity data. */
-name|NOPARITY
-block|,
-comment|/* Parity stripe not available. */
-name|DEGRADED
-block|,
-comment|/* Data stripe not available. */
-name|COMBINED
-comment|/* Data and parity stripes ok, others not. */
-block|}
-name|type
-enum|;
+comment|/* The bio containing the parity data. */
+name|struct
+name|bio
+modifier|*
+name|waiting
+decl_stmt|;
+comment|/* A bio that need to wait for other bios. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|gv_raid5_bit
+argument|gv_bioq
 argument_list|)
 name|bits
 expr_stmt|;
@@ -177,8 +105,27 @@ end_struct
 
 begin_function_decl
 name|int
+name|gv_stripe_active
+parameter_list|(
+name|struct
+name|gv_plex
+modifier|*
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|gv_build_raid5_req
 parameter_list|(
+name|struct
+name|gv_plex
+modifier|*
+parameter_list|,
 name|struct
 name|gv_raid5_packet
 modifier|*
@@ -189,31 +136,9 @@ modifier|*
 parameter_list|,
 name|caddr_t
 parameter_list|,
-name|long
+name|off_t
 parameter_list|,
 name|off_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|gv_free_raid5_packet
-parameter_list|(
-name|struct
-name|gv_raid5_packet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|gv_raid5_done
-parameter_list|(
-name|struct
-name|bio
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -229,23 +154,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|gv_raid5_packet
-modifier|*
-name|gv_new_raid5_packet
-parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|gv_raid5_bit
-modifier|*
-name|gv_new_raid5_bit
+name|gv_plex_done
 parameter_list|(
-name|void
+name|struct
+name|bio
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

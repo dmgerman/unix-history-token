@@ -289,6 +289,45 @@ value|65536
 end_define
 
 begin_comment
+comment|/* Flags for BIOs, as they are processed within vinum. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_DONE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_MALLOC
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_ONHOLD
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_SYNCREQ
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_SUCCEED
+value|0x10
+end_define
+
+begin_comment
 comment|/*  * hostname is 256 bytes long, but we don't need to shlep multiple copies in  * vinum.  We use the host name just to identify this system, and 32 bytes  * should be ample for that purpose.  */
 end_comment
 
@@ -392,6 +431,29 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Since we share structures between userland and kernel, we need this helper  * struct instead of struct bio_queue_head and friends.  Maybe I find a proper  * solution some day.  */
+end_comment
+
+begin_struct
+struct|struct
+name|gv_bioq
+block|{
+name|struct
+name|bio
+modifier|*
+name|bp
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|gv_bioq
+argument_list|)
+name|queue
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* This struct contains the main vinum config. */
 end_comment
 
@@ -489,6 +551,24 @@ name|int
 name|sdcount
 decl_stmt|;
 comment|/* Number of subdisks. */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|GV_DRIVE_THREAD_ACTIVE
+value|0x01
+comment|/* Drive has an active worker thread. */
+define|#
+directive|define
+name|GV_DRIVE_THREAD_DIE
+value|0x02
+comment|/* Signal the worker thread to die. */
+define|#
+directive|define
+name|GV_DRIVE_THREAD_DEAD
+value|0x04
+comment|/* The worker thread has died. */
 name|struct
 name|gv_hdr
 modifier|*
@@ -522,6 +602,19 @@ argument_list|)
 name|drive
 expr_stmt|;
 comment|/* Entry in the vinum config. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|gv_bioq
+argument_list|)
+name|bqueue
+expr_stmt|;
+comment|/* BIO queue of this drive. */
+name|struct
+name|mtx
+name|bqueue_mtx
+decl_stmt|;
+comment|/* Mtx. to protect the queue. */
 name|struct
 name|g_geom
 modifier|*
@@ -806,17 +899,25 @@ decl_stmt|;
 comment|/* Count of synced bytes. */
 name|struct
 name|mtx
-name|worklist_mtx
+name|bqueue_mtx
 decl_stmt|;
-comment|/* Mutex for RAID5 worklist. */
+comment|/* Lock for the BIO queue. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|gv_bioq
+argument_list|)
+name|bqueue
+expr_stmt|;
+comment|/* BIO queue. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|gv_raid5_packet
 argument_list|)
-name|worklist
+name|packets
 expr_stmt|;
-comment|/* List of RAID5 work packets. */
+comment|/* RAID5 sub-requests. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -902,6 +1003,37 @@ define|#
 directive|define
 name|GV_VOL_UP
 value|1
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|GV_VOL_THREAD_ACTIVE
+value|0x01
+comment|/* Volume has an active thread. */
+define|#
+directive|define
+name|GV_VOL_THREAD_DIE
+value|0x02
+comment|/* Signal the thread to die. */
+define|#
+directive|define
+name|GV_VOL_THREAD_DEAD
+value|0x04
+comment|/* The thread has died. */
+name|struct
+name|mtx
+name|bqueue_mtx
+decl_stmt|;
+comment|/* Lock for the BIO queue. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|gv_bioq
+argument_list|)
+name|bqueue
+expr_stmt|;
+comment|/* BIO queue. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,

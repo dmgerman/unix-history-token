@@ -517,6 +517,11 @@ name|gv_plex
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|gv_sd
+modifier|*
+name|s
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|v
@@ -603,6 +608,28 @@ case|:
 comment|/* XXX not yet */
 default|default:
 return|return;
+block|}
+block|}
+else|else
+block|{
+name|LIST_FOREACH
+argument_list|(
+argument|s
+argument_list|,
+argument|&p->subdisks
+argument_list|,
+argument|in_plex
+argument_list|)
+block|{
+name|gv_set_sd_state
+argument_list|(
+name|s
+argument_list|,
+name|GV_SD_UP
+argument_list|,
+name|GV_SETSTATE_CONFIG
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -1117,6 +1144,23 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"GEOM_VINUM: plex sync %s -> %s started\n"
+argument_list|,
+name|sync
+operator|->
+name|from
+operator|->
+name|name
+argument_list|,
+name|sync
+operator|->
+name|to
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1245,9 +1289,9 @@ expr_stmt|;
 comment|/* 		 * This hack declare this bio as part of an initialization 		 * process, so that the lower levels allow it to get through. 		 */
 name|bp
 operator|->
-name|bio_caller1
-operator|=
-name|p
+name|bio_cflags
+operator||=
+name|GV_BIO_SYNCREQ
 expr_stmt|;
 comment|/* Schedule it down ... */
 name|g_io_request
@@ -1361,9 +1405,17 @@ name|GV_PLEX_SYNCING
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"gvinum: plex '%s': sync finished\n"
+literal|"GEOM_VINUM: plex sync %s -> %s finished\n"
 argument_list|,
-name|p
+name|sync
+operator|->
+name|from
+operator|->
+name|name
+argument_list|,
+name|sync
+operator|->
+name|to
 operator|->
 name|name
 argument_list|)
