@@ -4137,6 +4137,10 @@ if|if
 condition|(
 name|error
 operator|!=
+literal|0
+operator|&&
+name|error
+operator|!=
 name|EAGAIN
 condition|)
 block|{
@@ -4378,7 +4382,7 @@ modifier|*
 name|nbp
 decl_stmt|;
 name|int
-name|found
+name|retval
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -4399,7 +4403,7 @@ argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
-name|found
+name|retval
 operator|=
 literal|0
 expr_stmt|;
@@ -4453,9 +4457,9 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|found
-operator|+=
-literal|1
+name|retval
+operator|=
+name|EAGAIN
 expr_stmt|;
 name|error
 operator|=
@@ -4637,11 +4641,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|found
-condition|?
-name|EAGAIN
-else|:
-literal|0
+name|retval
 operator|)
 return|;
 block|}
