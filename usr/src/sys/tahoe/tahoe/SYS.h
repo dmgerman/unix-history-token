@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	SYS.h	1.1	86/01/05	*/
+comment|/*	SYS.h	1.2	86/01/24	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ value|.globl _
 comment|/**/
 value|name; .align 2; _
 comment|/**/
-value|name: .word regs; callf $0,mcount
+value|name: .word regs; callf $4,mcount
 end_define
 
 begin_define
@@ -48,7 +48,7 @@ parameter_list|,
 name|regs
 parameter_list|)
 define|\
-value|.globl name; .align 2; name: .word regs; callf $0,mcount
+value|.globl name; .align 2; name: .word regs; callf $4,mcount
 end_define
 
 begin_else
