@@ -456,6 +456,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1013,6 +1014,7 @@ name|one
 init|=
 literal|1
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|errorstr
@@ -1069,7 +1071,7 @@ name|fromp
 operator|->
 name|su_family
 decl_stmt|,
-name|err
+name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1189,7 +1191,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|err
+name|error
 operator|=
 name|getnameinfo
 argument_list|(
@@ -1220,7 +1222,7 @@ operator||
 name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
-comment|/* XXX: do 'err' check */
+comment|/* XXX: do 'error' check */
 ifdef|#
 directive|ifdef
 name|IP_OPTIONS
@@ -3944,9 +3946,10 @@ parameter_list|,
 name|int
 name|cnt
 parameter_list|,
+specifier|const
 name|char
 modifier|*
-name|err
+name|error
 parameter_list|)
 block|{
 name|char
@@ -3992,7 +3995,7 @@ literal|1
 argument_list|,
 literal|"%s too long"
 argument_list|,
-name|err
+name|error
 argument_list|)
 expr_stmt|;
 block|}
