@@ -4394,6 +4394,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4411,6 +4416,11 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
+argument_list|)
+expr_stmt|;
+name|FILEDESC_LOCK
+argument_list|(
+name|fdp
 argument_list|)
 expr_stmt|;
 block|}
