@@ -3692,6 +3692,10 @@ if|if
 condition|(
 name|e
 operator|!=
+name|FTP_CONNECTION_ALREADY_OPEN
+operator|&&
+name|e
+operator|!=
 name|FTP_OPEN_DATA_CONNECTION
 condition|)
 goto|goto
