@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.16 83/09/15	  */
+comment|/*  *	@(#)ww.h	3.17 83/10/19	  */
 end_comment
 
 begin_include
@@ -267,6 +267,9 @@ decl_stmt|;
 comment|/* as a word */
 struct|struct
 block|{
+ifndef|#
+directive|ifndef
+name|O_SUN
 name|char
 name|C_c
 decl_stmt|;
@@ -275,6 +278,18 @@ name|char
 name|C_m
 decl_stmt|;
 comment|/* the mode part */
+else|#
+directive|else
+name|char
+name|C_m
+decl_stmt|;
+comment|/* the mode part */
+name|char
+name|C_c
+decl_stmt|;
+comment|/* the character part */
+endif|#
+directive|endif
 block|}
 name|c_un
 struct|;
