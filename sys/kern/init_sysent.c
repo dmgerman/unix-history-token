@@ -3590,6 +3590,138 @@ name|signanosleep
 block|}
 block|,
 comment|/* 313 = signanosleep */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|aio_return
+block|}
+block|,
+comment|/* 314 = aio_return */
+block|{
+literal|3
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|aio_suspend
+block|}
+block|,
+comment|/* 315 = aio_suspend */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|aio_cancel
+block|}
+block|,
+comment|/* 316 = aio_cancel */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|aio_error
+block|}
+block|,
+comment|/* 317 = aio_error */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|aio_read
+block|}
+block|,
+comment|/* 318 = aio_read */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|aio_write
+block|}
+block|,
+comment|/* 319 = aio_write */
+block|{
+literal|4
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|lio_listio
+block|}
+block|,
+comment|/* 320 = lio_listio */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|yield
+block|}
+block|,
+comment|/* 321 = yield */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|thr_sleep
+block|}
+block|,
+comment|/* 322 = thr_sleep */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|thr_wakeup
+block|}
+block|,
+comment|/* 323 = thr_wakeup */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|mlockall
+block|}
+block|,
+comment|/* 324 = mlockall */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|munlockall
+block|}
+block|,
+comment|/* 325 = munlockall */
 block|}
 decl_stmt|;
 end_decl_stmt

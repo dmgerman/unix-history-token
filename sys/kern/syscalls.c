@@ -1000,6 +1000,42 @@ comment|/* 312 = setresgid */
 literal|"signanosleep"
 block|,
 comment|/* 313 = signanosleep */
+literal|"aio_return"
+block|,
+comment|/* 314 = aio_return */
+literal|"aio_suspend"
+block|,
+comment|/* 315 = aio_suspend */
+literal|"aio_cancel"
+block|,
+comment|/* 316 = aio_cancel */
+literal|"aio_error"
+block|,
+comment|/* 317 = aio_error */
+literal|"aio_read"
+block|,
+comment|/* 318 = aio_read */
+literal|"aio_write"
+block|,
+comment|/* 319 = aio_write */
+literal|"lio_listio"
+block|,
+comment|/* 320 = lio_listio */
+literal|"yield"
+block|,
+comment|/* 321 = yield */
+literal|"thr_sleep"
+block|,
+comment|/* 322 = thr_sleep */
+literal|"thr_wakeup"
+block|,
+comment|/* 323 = thr_wakeup */
+literal|"mlockall"
+block|,
+comment|/* 324 = mlockall */
+literal|"munlockall"
+block|,
+comment|/* 325 = munlockall */
 block|}
 decl_stmt|;
 end_decl_stmt
