@@ -4509,10 +4509,8 @@ name|rp
 operator|->
 name|rp_tty
 operator|=
-name|ttymalloc
-argument_list|(
-name|NULL
-argument_list|)
+name|ttyalloc
+argument_list|()
 expr_stmt|;
 name|rp
 operator|->

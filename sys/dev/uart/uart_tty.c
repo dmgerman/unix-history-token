@@ -1569,10 +1569,8 @@ name|tp
 decl_stmt|;
 name|tp
 operator|=
-name|ttymalloc
-argument_list|(
-name|NULL
-argument_list|)
+name|ttyalloc
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->
