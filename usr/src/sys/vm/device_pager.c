@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1128,9 +1128,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_insert
 argument_list|(
 name|page
@@ -1139,6 +1136,9 @@ name|object
 argument_list|,
 name|offset
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(
