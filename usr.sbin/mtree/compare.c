@@ -59,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vis.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -106,13 +106,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SHA1
+name|RMD160
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sha.h>
+file|<ripemd.h>
 end_include
 
 begin_endif
@@ -123,13 +123,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|RMD160
+name|SHA1
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<ripemd.h>
+file|<sha.h>
 end_include
 
 begin_endif
@@ -159,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
 end_include
 
 begin_include
@@ -232,6 +238,13 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|struct
+name|timeval
+name|tv
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|uint32_t
 name|val
 decl_stmt|;
@@ -967,13 +980,6 @@ condition|(
 name|uflag
 condition|)
 block|{
-name|struct
-name|timeval
-name|tv
-index|[
-literal|2
-index|]
-decl_stmt|;
 name|tv
 index|[
 literal|0
@@ -1212,7 +1218,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * XXX 	 * since chflags(2) will reset file times, the utimes() above 	 * may have been useless!  oh well, we'd rather have correct 	 * flags, rather than times? 	 */
 if|if
 condition|(
 operator|(
@@ -1864,12 +1869,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|char
-name|tbuf
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 specifier|static
 name|char
 name|lbuf
@@ -1881,6 +1880,12 @@ index|]
 decl_stmt|;
 name|int
 name|len
+decl_stmt|;
+name|char
+name|tbuf
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 if|if
 condition|(
