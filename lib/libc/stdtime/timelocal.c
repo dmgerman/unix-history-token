@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ldpart.h"
 end_include
 
@@ -41,8 +47,16 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|LCTIME_SIZE
+name|LCTIME_SIZE_FULL
 value|(sizeof(struct lc_time_T) / sizeof(char *))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCTIME_SIZE_MIN
+define|\
+value|(offsetof(struct lc_time_T, ampm_fmt) / sizeof(char *))
 end_define
 
 begin_decl_stmt
@@ -186,6 +200,9 @@ literal|"%b %e"
 block|,
 comment|/* EF_fmt 	** To determine long months / day order 	*/
 literal|"%B %e"
+block|,
+comment|/* ampm_fmt 	** To determine 12-hour clock format time (empty, if N/A) 	*/
+literal|"%I:%M:%S %p"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -231,6 +248,14 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|_time_locale
+operator|.
+name|ampm_fmt
+operator|=
+name|_C_time_locale
+operator|.
+name|ampm_fmt
+expr_stmt|;
 name|ret
 operator|=
 name|__part_load_locale
@@ -244,9 +269,9 @@ name|time_locale_buf
 argument_list|,
 literal|"LC_TIME"
 argument_list|,
-name|LCTIME_SIZE
+name|LCTIME_SIZE_FULL
 argument_list|,
-name|LCTIME_SIZE
+name|LCTIME_SIZE_MIN
 argument_list|,
 operator|(
 specifier|const
@@ -259,14 +284,6 @@ name|_time_locale
 argument_list|)
 expr_stmt|;
 comment|/* XXX: always overwrite for ctime format parsing compatibility */
-if|if
-condition|(
-name|ret
-operator|==
-literal|0
-operator|&&
-name|_time_using_locale
-condition|)
 name|_time_locale
 operator|.
 name|c_fmt

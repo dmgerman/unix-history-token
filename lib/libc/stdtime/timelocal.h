@@ -103,6 +103,11 @@ name|char
 modifier|*
 name|EF_fmt
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ampm_fmt
+decl_stmt|;
 block|}
 struct|;
 end_struct

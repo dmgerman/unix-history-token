@@ -1049,7 +1049,9 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
-literal|"%I:%M:%S %p"
+name|tptr
+operator|->
+name|ampm_fmt
 argument_list|,
 name|t
 argument_list|,

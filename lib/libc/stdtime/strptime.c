@@ -612,7 +612,9 @@ name|_strptime
 argument_list|(
 name|buf
 argument_list|,
-literal|"%I:%M:%S %p"
+name|tptr
+operator|->
+name|ampm_fmt
 argument_list|,
 name|tm
 argument_list|)
