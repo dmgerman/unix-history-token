@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	5.6 (Berkeley) %G%"
+literal|"@(#)replace.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,7 +276,7 @@ name|curfd
 operator|=
 name|tfd1
 init|;
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -397,7 +397,7 @@ argument_list|,
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -414,7 +414,7 @@ argument_list|(
 name|sfd
 argument_list|)
 expr_stmt|;
-name|skipobj
+name|skip_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -461,7 +461,7 @@ operator||
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -505,7 +505,7 @@ operator||
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -650,7 +650,7 @@ argument_list|,
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -735,7 +735,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf
@@ -786,7 +786,7 @@ name|rfd
 operator|=
 name|tfd2
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf

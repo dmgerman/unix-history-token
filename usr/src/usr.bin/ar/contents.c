@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)contents.c	5.5 (Berkeley) %G%"
+literal|"@(#)contents.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,7 +177,7 @@ operator|!
 operator|*
 name|argv
 init|;
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -316,7 +316,7 @@ condition|)
 break|break;
 name|next
 label|:
-name|skipobj
+name|skip_arobj
 argument_list|(
 name|afd
 argument_list|)

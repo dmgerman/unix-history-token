@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delete.c	5.5 (Berkeley) %G%"
+literal|"@(#)delete.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +187,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -224,14 +224,14 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|skipobj
+name|skip_arobj
 argument_list|(
 name|afd
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -302,7 +302,7 @@ argument_list|,
 name|NOPAD
 argument_list|)
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf

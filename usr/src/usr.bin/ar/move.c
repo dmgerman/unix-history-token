@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.5 (Berkeley) %G%"
+literal|"@(#)move.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,7 @@ name|curfd
 operator|=
 name|tfd1
 init|;
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -280,7 +280,7 @@ name|wfd
 operator|=
 name|tfd2
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -325,7 +325,7 @@ name|wfd
 operator|=
 name|curfd
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -357,7 +357,7 @@ name|wfd
 operator|=
 name|curfd
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -459,7 +459,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf
@@ -504,7 +504,7 @@ name|rfd
 operator|=
 name|tfd2
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf
@@ -549,7 +549,7 @@ name|rfd
 operator|=
 name|tfd3
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf

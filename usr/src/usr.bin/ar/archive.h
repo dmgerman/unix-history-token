@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -283,7 +283,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|skipobj
+name|skip_arobj
 name|__P
 argument_list|(
 operator|(
@@ -295,7 +295,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|copyfile
+name|copy_ar
 name|__P
 argument_list|(
 operator|(
@@ -310,7 +310,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|get_header
+name|get_arobj
 name|__P
 argument_list|(
 operator|(
@@ -340,7 +340,7 @@ end_struct_decl
 
 begin_decl_stmt
 name|int
-name|put_object
+name|put_arobj
 name|__P
 argument_list|(
 operator|(

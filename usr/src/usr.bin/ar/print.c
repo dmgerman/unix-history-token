@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.5 (Berkeley) %G%"
+literal|"@(#)print.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ operator|!
 operator|*
 name|argv
 init|;
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -187,7 +187,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|skipobj
+name|skip_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -220,7 +220,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf

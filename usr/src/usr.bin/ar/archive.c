@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	5.5 (Berkeley) %G%"
+literal|"@(#)archive.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,11 +447,11 @@ value|{ \ 	bcopy(from, buf, len); \ 	buf[len] = '\0'; \ 	to = strtol(buf, (char 
 end_define
 
 begin_comment
-comment|/*  * get_header --  *	read the archive header for this member  */
+comment|/*  * get_arobj --  *	read the archive header for this member  */
 end_comment
 
 begin_macro
-name|get_header
+name|get_arobj
 argument_list|(
 argument|fd
 argument_list|)
@@ -870,11 +870,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * put_object --  *	Write an archive member to a file.  */
+comment|/*  * put_arobj --  *	Write an archive member to a file.  */
 end_comment
 
 begin_macro
-name|put_object
+name|put_arobj
 argument_list|(
 argument|cfp
 argument_list|,
@@ -1223,7 +1223,7 @@ operator|=
 name|lname
 expr_stmt|;
 block|}
-name|copyfile
+name|copy_ar
 argument_list|(
 name|cfp
 argument_list|,
@@ -1238,11 +1238,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * copyfile --  *	Copy size bytes from one file to another - taking care to handle the  *	extra byte (for odd size files) when reading archives and writing an  *	extra byte if necessary when adding files to archive.  The length of  *	the object is the long name plus the object itself; the variable  *	already_written gets set if a long name was written.  *  *	The padding is really unnecessary, and is almost certainly a remnant  *	of early archive formats where the header included binary data which  *	a PDP-11 required to start on an even byte boundary.  (Or, perhaps,  *	because 16-bit word addressed copies were faster?)  Anyhow, it should  *	have been ripped out long ago.  */
+comment|/*  * copy_ar --  *	Copy size bytes from one file to another - taking care to handle the  *	extra byte (for odd size files) when reading archives and writing an  *	extra byte if necessary when adding files to archive.  The length of  *	the object is the long name plus the object itself; the variable  *	already_written gets set if a long name was written.  *  *	The padding is really unnecessary, and is almost certainly a remnant  *	of early archive formats where the header included binary data which  *	a PDP-11 required to start on an even byte boundary.  (Or, perhaps,  *	because 16-bit word addressed copies were faster?)  Anyhow, it should  *	have been ripped out long ago.  */
 end_comment
 
 begin_macro
-name|copyfile
+name|copy_ar
 argument_list|(
 argument|cfp
 argument_list|,
@@ -1504,12 +1504,12 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * skipobj -  *	Skip over an object -- taking care to skip the pad bytes.  */
+comment|/*  * skip_arobj -  *	Skip over an object -- taking care to skip the pad bytes.  */
 end_comment
 
 begin_function
 name|void
-name|skipobj
+name|skip_arobj
 parameter_list|(
 name|fd
 parameter_list|)

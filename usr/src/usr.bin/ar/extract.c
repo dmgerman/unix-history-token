@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)extract.c	5.4 (Berkeley) %G%"
+literal|"@(#)extract.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,7 +216,7 @@ operator|!
 operator|*
 name|argv
 init|;
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -247,7 +247,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|skipobj
+name|skip_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -317,7 +317,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|skipobj
+name|skip_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -356,7 +356,7 @@ name|wname
 operator|=
 name|file
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf

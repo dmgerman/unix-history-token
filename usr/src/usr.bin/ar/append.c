@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)append.c	5.4 (Berkeley) %G%"
+literal|"@(#)append.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,7 +266,7 @@ name|rname
 operator|=
 name|file
 expr_stmt|;
-name|put_object
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
