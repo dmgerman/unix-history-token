@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	8.1 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1783,17 +1783,13 @@ name|len
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|mp
-operator|=
-name|m
-operator|)
 operator|->
 name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|m
+name|mp
 operator|->
 name|m_pkthdr
 operator|.
