@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.3 1996/06/17 15:28:00 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.4 1996/06/17 20:36:57 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -1294,13 +1294,33 @@ decl_stmt|;
 name|int
 name|port
 decl_stmt|;
+specifier|static
 name|FILE
 modifier|*
 name|fp
-decl_stmt|,
+init|=
+name|NULL
+decl_stmt|;
+name|FILE
 modifier|*
 name|fp2
 decl_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+block|{
+comment|/* Close previous managed connection */
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|get_url_info
@@ -1347,11 +1367,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 name|fp2
 return|;
@@ -1395,13 +1410,33 @@ decl_stmt|;
 name|int
 name|port
 decl_stmt|;
+specifier|static
 name|FILE
 modifier|*
 name|fp
-decl_stmt|,
+init|=
+name|NULL
+decl_stmt|;
+name|FILE
 modifier|*
 name|fp2
 decl_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+block|{
+comment|/* Close previous managed connection */
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|get_url_info
@@ -1444,11 +1479,6 @@ argument_list|(
 name|fp
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1713,6 +1743,12 @@ operator|->
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|ftp
+operator|->
+name|binary
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
