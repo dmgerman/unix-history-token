@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: su.c,v 1.12 1996/03/09 14:57:43 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -819,16 +819,19 @@ name|pwd
 operator|->
 name|pw_uid
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"kerberos: not in %s's ACL."
 argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-else|else
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|{
@@ -1035,6 +1038,10 @@ directive|ifdef
 name|KERBEROS
 if|if
 condition|(
+operator|!
+name|use_kerberos
+operator|||
+operator|(
 name|use_kerberos
 operator|&&
 name|kerberos
@@ -1049,6 +1056,7 @@ name|pw_uid
 argument_list|,
 name|p
 argument_list|)
+operator|)
 condition|)
 endif|#
 directive|endif
