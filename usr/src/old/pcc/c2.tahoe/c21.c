@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c	1.7 (Berkeley/CCI) %G%"
+literal|"@(#)c21.c	1.8 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7306,82 +7306,14 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|{
-comment|/* undo any effect on uses in the area between p and q, 		   * as we are going over it again */
-specifier|register
-name|struct
-name|node
-modifier|*
-name|b
-decl_stmt|;
-for|for
-control|(
-name|b
-operator|=
-name|p
-init|;
-name|b
-operator|!=
-name|q
-condition|;
-name|b
-operator|=
-name|b
-operator|->
-name|back
-control|)
-block|{
-for|for
-control|(
-name|r
-operator|=
-literal|0
-init|;
-name|r
-operator|<
-name|NUSE
-condition|;
-name|r
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|uses
-index|[
-name|r
-index|]
-operator|==
-name|b
-condition|)
-name|uses
-index|[
-name|r
-index|]
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|useacc
-operator|==
-name|b
-condition|)
-name|useacc
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-block|}
 return|return
 operator|(
-name|p
+name|q
 operator|->
 name|forw
 operator|)
 return|;
-comment|/* make p the next for bflow */
+comment|/* DON'T re-scan code with dated uses[] */
 block|}
 comment|/* it's a store to reg which isnt used elsewhere */
 if|if
