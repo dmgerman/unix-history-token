@@ -2639,6 +2639,15 @@ operator|=
 name|SWAIT
 expr_stmt|;
 comment|/* we're idle */
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_nvcsw
+operator|++
+expr_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_INTR
