@@ -944,6 +944,8 @@ argument_list|,
 name|fsc
 operator|.
 name|args
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1431,6 +1433,8 @@ argument_list|,
 name|fsc
 operator|.
 name|args
+argument_list|,
+name|retval
 argument_list|)
 expr_stmt|;
 name|fsc

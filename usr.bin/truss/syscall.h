@@ -56,6 +56,8 @@ block|,
 name|Mmapflags
 block|,
 name|Whence
+block|,
+name|Readlinkres
 block|}
 enum|;
 end_enum
@@ -168,6 +170,8 @@ parameter_list|,
 name|unsigned
 name|long
 modifier|*
+parameter_list|,
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
