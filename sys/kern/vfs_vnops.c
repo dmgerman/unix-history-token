@@ -1169,12 +1169,12 @@ expr_stmt|;
 if|if
 condition|(
 name|tmpseq
-operator|>=
-literal|127
+operator|>
+name|IO_SEQMAX
 condition|)
 name|tmpseq
 operator|=
-literal|127
+name|IO_SEQMAX
 expr_stmt|;
 name|fp
 operator|->
@@ -1188,7 +1188,7 @@ name|fp
 operator|->
 name|f_seqcount
 operator|<<
-literal|16
+name|IO_SEQSHIFT
 operator|)
 return|;
 block|}
