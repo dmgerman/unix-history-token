@@ -882,6 +882,32 @@ return|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern
+argument_list|,
+name|KERN_SECURELVL
+argument_list|,
+name|securelevel
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|sysctl_kern_securelvl
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Current secure level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|char
 name|domainname
