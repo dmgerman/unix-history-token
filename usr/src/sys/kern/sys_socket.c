@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_socket.c	4.5	83/06/13	*/
+comment|/*	sys_socket.c	4.6	83/07/20	*/
 end_comment
 
 begin_include
@@ -740,6 +740,16 @@ block|{
 name|int
 name|error
 init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|f_data
+condition|)
+name|error
+operator|=
 name|soclose
 argument_list|(
 operator|(
@@ -751,7 +761,7 @@ name|fp
 operator|->
 name|f_data
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|fp
 operator|->
 name|f_data
