@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslog.c,v 1.15 1998/03/06 02:12:02 brian Exp $"
+literal|"$Id: syslog.c,v 1.16 1998/03/06 03:10:49 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,9 @@ begin_decl_stmt
 specifier|static
 name|int
 name|connected
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1225,7 +1228,8 @@ expr_stmt|;
 block|}
 name|connected
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 comment|/* retry connect */
 block|}
@@ -1289,8 +1293,10 @@ operator|!=
 operator|-
 literal|1
 operator|&&
-operator|!
 name|connected
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|SyslogAddr
@@ -1350,8 +1356,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|connected
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* 			 * Try the old "/dev/log" path, for backward 			 * compatibility. 			 */
@@ -1398,8 +1406,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|connected
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 operator|(
@@ -1512,7 +1522,8 @@ literal|1
 expr_stmt|;
 name|connected
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_function
