@@ -7609,7 +7609,10 @@ block|}
 block|,
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__alpha__
+argument_list|)
 block|{
 literal|" TGA"
 block|,
