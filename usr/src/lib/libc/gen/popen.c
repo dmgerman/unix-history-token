@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.11 (Berkeley) %G%"
+literal|"@(#)popen.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -495,6 +501,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 specifier|register
 name|int
 name|fdes
@@ -565,6 +575,8 @@ name|SIGHUP
 argument_list|)
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|pid
 operator|=
 name|waitpid
@@ -580,6 +592,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|pid
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+do|;
 operator|(
 name|void
 operator|)
