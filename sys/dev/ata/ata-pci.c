@@ -943,7 +943,7 @@ case|case
 literal|0x06801095
 case|:
 return|return
-literal|"Sil 0680 ATA133 controller"
+literal|"SiI 0680 ATA133 controller"
 return|;
 case|case
 literal|0x06491095
@@ -1251,6 +1251,9 @@ condition|)
 block|{
 case|case
 literal|0x01
+case|:
+case|case
+literal|0x02
 case|:
 return|return
 literal|"HighPoint HPT372 ATA133 controller"
@@ -2219,7 +2222,7 @@ break|break;
 case|case
 literal|0x06801095
 case|:
-comment|/* Sil 0680 set ATA reference clock speed */
+comment|/* SiI 0680 set ATA reference clock speed */
 if|if
 condition|(
 operator|(
@@ -2282,7 +2285,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Sil 0680 could not set clock\n"
+literal|"SiI 0680 could not set clock\n"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -3774,7 +3774,7 @@ break|break;
 case|case
 literal|0x06801095
 case|:
-comment|/* Sil 0680 ATA133 controller */
+comment|/* SiI 0680 ATA133 controller */
 block|{
 name|u_int8_t
 name|ureg
@@ -3902,7 +3902,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA6 on Sil chip\n"
+literal|"%s setting UDMA6 on SiI chip\n"
 argument_list|,
 operator|(
 name|error
@@ -3977,7 +3977,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA5 on Sil chip\n"
+literal|"%s setting UDMA5 on SiI chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4052,7 +4052,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA4 on Sil chip\n"
+literal|"%s setting UDMA4 on SiI chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4127,7 +4127,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA2 on Sil chip\n"
+literal|"%s setting UDMA2 on SiI chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4231,7 +4231,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting WDMA2 on Sil chip\n"
+literal|"%s setting WDMA2 on SiI chip\n"
 argument_list|,
 operator|(
 name|error
