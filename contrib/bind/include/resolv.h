@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1983, 1987, 1989, 1993  * -  * Copyright (c) 1983, 1
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.17 1996/11/26 10:11:20 vixie Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.18 1997/06/01 20:34:32 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -950,13 +950,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|res_send
-value|__res_send
-end_define
-
-begin_define
-define|#
-directive|define
 name|res_isourserver
 value|__res_isourserver
 end_define
@@ -1028,6 +1021,13 @@ define|#
 directive|define
 name|res_mkquery
 value|__res_mkquery
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_send
+value|__res_send
 end_define
 
 begin_endif

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_req.c,v 8.27 1996/10/08 04:51:03 vixie Exp $"
+literal|"$Id: ns_req.c,v 8.28 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,7 +2291,7 @@ name|copyCharString
 argument_list|(
 name|cpp
 argument_list|,
-name|Version
+name|ShortVersion
 argument_list|)
 expr_stmt|;
 name|PUTSHORT
@@ -8297,7 +8297,9 @@ decl_stmt|;
 name|u_char
 name|msg
 index|[
-name|PACKETSZ
+literal|64
+operator|*
+literal|1024
 index|]
 decl_stmt|;
 name|u_char
@@ -9692,6 +9694,8 @@ sizeof|sizeof
 name|ll
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|qsp
@@ -9699,8 +9703,6 @@ operator|->
 name|s_rfd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|_exit
 argument_list|(
 literal|0

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_main.c,v 8.24 1996/11/26 10:11:22 vixie Exp $"
+literal|"$Id: ns_main.c,v 8.25 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -693,7 +693,7 @@ decl_stmt|;
 name|u_char
 name|buf
 index|[
-name|BUFSIZ
+name|PACKETSZ
 index|]
 decl_stmt|;
 ifdef|#
@@ -3842,7 +3842,7 @@ name|buf
 expr_stmt|;
 name|sp
 operator|->
-name|s_size
+name|s_bufsize
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -4013,6 +4013,28 @@ operator|-=
 name|n
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|s_size
+operator|>
+literal|0
+operator|&&
+operator|(
+name|n
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|==
+name|PORT_WOULDBLK
+operator|)
+condition|)
+continue|continue;
 comment|/* 			 * we don't have enough memory for the query. 			 * if we have a query id, then we will send an 			 * error back to the user. 			 */
 if|if
 condition|(
@@ -4113,6 +4135,11 @@ name|HFIXEDSZ
 argument_list|)
 expr_stmt|;
 block|}
+name|sqrm
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * If the message is too short to contain a valid 			 * header, try to send back an error, and drop the 			 * message. 			 */
@@ -4219,24 +4246,13 @@ name|HFIXEDSZ
 argument_list|)
 expr_stmt|;
 block|}
+name|sqrm
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-operator|(
-name|n
-operator|==
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|errno
-operator|==
-name|PORT_WOULDBLK
-operator|)
-condition|)
-continue|continue;
 if|if
 condition|(
 name|n

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_forw.c,v 8.19 1996/12/02 09:27:36 vixie Exp $"
+literal|"$Id: ns_forw.c,v 8.20 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2589,6 +2589,37 @@ operator|->
 name|nretry
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 			 * If this A RR has no RTT, initialize its RTT to a 			 * small random value. 			 */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_nstime
+operator|==
+literal|0
+condition|)
+name|dp
+operator|->
+name|d_nstime
+operator|=
+literal|1
+operator|+
+call|(
+name|int
+call|)
+argument_list|(
+literal|25.0
+operator|*
+name|rand
+argument_list|()
+operator|/
+operator|(
+name|RAND_MAX
+operator|+
+literal|1.0
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 			 * if we are being asked to fwd a query whose 			 * nameserver list includes our own name/address(es), 			 * then we have detected a lame delegation and rather 			 * than melt down the network and hose down the other 			 * servers (who will hose us in return), we'll return 			 * -1 here which will cause SERVFAIL to be sent to 			 * the client's resolver which will hopefully then 			 * shut up. 			 * 			 * (originally done in nsContainsUs by vix@dec mar92; 			 * moved into nslookup by apb@und jan1993) 			 * 			 * try to limp along instead of denying service 			 * gdonl mar96 			 */
 if|if

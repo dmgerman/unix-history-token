@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.11 1996/11/11 06:36:49 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.12 1997/06/01 20:34:34 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -971,6 +971,14 @@ begin_decl_stmt
 specifier|extern
 name|char
 name|Version
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ShortVersion
 index|[]
 decl_stmt|;
 end_decl_stmt

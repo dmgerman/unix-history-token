@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 8.12 1996/10/08 04:51:06 vixie Exp $"
+literal|"$Id: res_send.c,v 8.13 1997/06/01 20:34:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2573,6 +2573,31 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|+
+literal|1
+operator|>
+name|FD_SETSIZE
+condition|)
+block|{
+name|Perror
+argument_list|(
+name|stderr
+argument_list|,
+literal|"s+1> FD_SETSIZE"
+argument_list|,
+name|EMFILE
+argument_list|)
+expr_stmt|;
+name|res_close
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next_ns
+goto|;
+block|}
 name|wait
 label|:
 name|FD_ZERO

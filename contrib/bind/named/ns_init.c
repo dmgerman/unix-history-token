@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_init.c,v 8.24 1996/12/02 09:17:21 vixie Exp $"
+literal|"$Id: ns_init.c,v 8.25 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -935,12 +935,12 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|,
 name|obuf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|,
 modifier|*
@@ -2884,7 +2884,7 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"backup file changed\n"
+literal|"backup file changed or missing\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2903,18 +2903,27 @@ name|NULL
 expr_stmt|;
 name|zp
 operator|->
-name|z_flags
-operator|&=
-operator|~
-name|Z_AUTH
-expr_stmt|;
-name|zp
-operator|->
 name|z_serial
 operator|=
 literal|0
 expr_stmt|;
 comment|/* force xfer */
+if|if
+condition|(
+name|zp
+operator|->
+name|z_flags
+operator|&
+name|Z_AUTH
+condition|)
+block|{
+name|zp
+operator|->
+name|z_flags
+operator|&=
+operator|~
+name|Z_AUTH
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CLEANCACHE
@@ -2942,7 +2951,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 				 * reload parent so that NS records are 				 * present during the zone transfer. 				 */
+comment|/* 					 * reload parent so that NS records are 					 * present during the zone transfer. 					 */
 name|do_reload
 argument_list|(
 name|zp
@@ -2958,6 +2967,7 @@ operator|->
 name|z_class
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3341,7 +3351,7 @@ block|{
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|;
 specifier|register

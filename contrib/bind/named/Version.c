@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)Version.c	4.9 (Berkeley) 7/21/90  *	$Id: Version.c,v 8.1 1994/12/15 06:24:14 vixie Exp $  */
+comment|/*  *	@(#)Version.c	4.9 (Berkeley) 7/21/90  *	$Id: Version.c,v 8.2 1997/06/01 20:34:34 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: Version.c,v 8.1 1994/12/15 06:24:14 vixie Exp $"
+literal|"$Id: Version.c,v 8.2 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,15 @@ name|Version
 index|[]
 init|=
 literal|"named %VERSION% %WHEN%\n\t%WHOANDWHERE%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|ShortVersion
+index|[]
+init|=
+literal|"%VERSION%"
 decl_stmt|;
 end_decl_stmt
 
