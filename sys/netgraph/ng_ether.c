@@ -2814,6 +2814,24 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hook
+operator|->
+name|node
+operator|->
+name|numhooks
+operator|==
+literal|0
+condition|)
+name|ng_rmnode
+argument_list|(
+name|hook
+operator|->
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* reset node */
 return|return
 operator|(
 literal|0
