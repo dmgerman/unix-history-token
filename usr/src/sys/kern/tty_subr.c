@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	6.5	84/11/15	*/
+comment|/*	tty_subr.c	6.6	84/11/15	*/
 end_comment
 
 begin_include
@@ -1495,10 +1495,8 @@ name|CBSIZE
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|(
+else|else
+block|{
 name|acc
 operator|=
 operator|(
@@ -1520,7 +1518,10 @@ name|CROUND
 operator|)
 operator|-
 name|cq
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|acc
 operator|>
 name|cc
 condition|)
@@ -1528,6 +1529,7 @@ name|acc
 operator|=
 name|cc
 expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 operator|(
