@@ -874,7 +874,8 @@ name|MPASS
 parameter_list|(
 name|ex
 parameter_list|)
-value|if (!(ex)) panic("Assertion %s failed at %s:%d",	\                 #ex, __FILE__, __LINE__)
+define|\
+value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", #ex, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -886,7 +887,8 @@ name|ex
 parameter_list|,
 name|what
 parameter_list|)
-value|if (!(ex)) panic("Assertion %s failed at %s:%d", \                 what, __FILE__, __LINE__)
+define|\
+value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", what, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -946,7 +948,7 @@ name|MPASS2
 parameter_list|(
 name|ex
 parameter_list|,
-name|where
+name|what
 parameter_list|)
 end_define
 
@@ -1060,7 +1062,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|do {									\ 	if ((m)->mtx_witness != NULL) 					\ 	    witness_save(m,&__CONCAT(n, __wf),&__CONCAT(n, __wl));	\ } while (0)
+value|do {									\ 	if ((m)->mtx_witness != NULL) 					\ 		witness_save(m,&__CONCAT(n, __wf),&__CONCAT(n, __wl));\ } while (0)
 end_define
 
 begin_define
@@ -1073,7 +1075,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|do {									\ 	if ((m)->mtx_witness != NULL)					\ 	    witness_restore(m, __CONCAT(n, __wf), __CONCAT(n, __wl));	\ } while (0)
+value|do {									\ 	if ((m)->mtx_witness != NULL)					\ 		witness_restore(m, __CONCAT(n, __wf), __CONCAT(n, __wl));\ } while (0)
 end_define
 
 begin_function_decl
