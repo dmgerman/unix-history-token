@@ -20,11 +20,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.h,v 1.2.2.2 1996/06/26 20:33:57 gpalmer Exp $  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -40,6 +46,8 @@ block|{
 name|init
 block|,
 name|isopen
+block|,
+name|quit
 block|}
 name|con_state
 enum|;
@@ -76,6 +84,44 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Structure we use to match FTP error codes with readable strings */
+end_comment
+
+begin_struct
+struct|struct
+name|ftperr
+block|{
+specifier|const
+name|int
+name|num
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|string
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ftperr
+name|ftpErrList
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+specifier|const
+name|ftpErrListLength
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Exported routines - deal only with FILE* type */
 end_comment
 
@@ -99,6 +145,13 @@ name|passwd
 parameter_list|,
 name|int
 name|port
+parameter_list|,
+name|int
+name|verbose
+parameter_list|,
+name|int
+modifier|*
+name|retcode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -133,7 +186,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|size_t
+name|off_t
 name|ftpGetSize
 parameter_list|(
 name|FILE
@@ -161,7 +214,7 @@ name|char
 modifier|*
 name|file
 parameter_list|,
-name|int
+name|off_t
 modifier|*
 name|seekto
 parameter_list|)
@@ -256,6 +309,10 @@ parameter_list|,
 name|char
 modifier|*
 name|passwd
+parameter_list|,
+name|int
+modifier|*
+name|retcode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -277,6 +334,10 @@ parameter_list|,
 name|char
 modifier|*
 name|passwd
+parameter_list|,
+name|int
+modifier|*
+name|retcode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -293,6 +354,19 @@ parameter_list|,
 name|char
 modifier|*
 name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ftpErrString
+parameter_list|(
+name|int
+name|errno
 parameter_list|)
 function_decl|;
 end_function_decl
