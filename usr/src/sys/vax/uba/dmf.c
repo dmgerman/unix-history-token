@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1066,10 +1066,7 @@ name|DMFC_LP
 condition|)
 name|dmfaddr
 operator|->
-name|dmfl
-index|[
-literal|0
-index|]
+name|dmfl_ctrl
 operator|=
 name|DMFL_RESET
 expr_stmt|;
@@ -5390,7 +5387,7 @@ name|dmfl_stats
 operator|=
 name|d
 operator|->
-name|dmf_ctrl
+name|dmfl_ctrl
 expr_stmt|;
 if|if
 condition|(
