@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	4.5 82/04/01"
+literal|"@(#)setup.c	4.6 82/10/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_decl_stmt
