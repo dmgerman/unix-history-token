@@ -1251,7 +1251,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_lock(&mmbfree.m_mtx);					\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_unlock(&mmbfree.m_mtx);				\ 		_MGET_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_unlock(&mmbfree.m_mtx);				\ 	(m) = _mm;							\ } while (0)
+value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_lock(&mmbfree.m_mtx);					\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_unlock(&mmbfree.m_mtx);				\ 		_MGET_SETUP(_mm, _mtype);				\ 	} else {							\ 		mtx_unlock(&mmbfree.m_mtx);				\ 		atomic_add_long(&mbstat.m_drops, 1);			\ 	}								\ 	(m) = _mm;							\ } while (0)
 end_define
 
 begin_define
@@ -1277,7 +1277,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_lock(&mmbfree.m_mtx);					\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_unlock(&mmbfree.m_mtx);				\ 		_MGETHDR_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_unlock(&mmbfree.m_mtx);				\ 	(m) = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_lock(&mmbfree.m_mtx);					\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_unlock(&mmbfree.m_mtx);				\ 		_MGETHDR_SETUP(_mm, _mtype);				\ 	} else {							\ 		mtx_unlock(&mmbfree.m_mtx);				\ 		atomic_add_long(&mbstat.m_drops, 1);			\ 	}								\ 	(m) = _mm;							\ } while (0)
 end_define
 
 begin_comment
@@ -1305,7 +1305,7 @@ name|m
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	mtx_lock(&mclfree.m_mtx);					\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	mtx_unlock(&mclfree.m_mtx);					\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		MEXT_INIT_REF(_mm, (how));				\ 		if (_mm->m_ext.ref_cnt == NULL) {			\ 			_MCLFREE(_mm->m_ext.ext_buf);			\ 			_mm->m_ext.ext_buf = NULL;			\ 		} else {						\ 			_mm->m_data = _mm->m_ext.ext_buf;		\ 			_mm->m_flags |= M_EXT;				\ 			_mm->m_ext.ext_free = NULL;			\ 			_mm->m_ext.ext_args = NULL;			\ 			_mm->m_ext.ext_size = MCLBYTES;			\ 			_mm->m_ext.ext_type = EXT_CLUSTER;		\ 		}							\ 	}								\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	mtx_lock(&mclfree.m_mtx);					\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	mtx_unlock(&mclfree.m_mtx);					\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		MEXT_INIT_REF(_mm, (how));				\ 		if (_mm->m_ext.ref_cnt == NULL) {			\ 			_MCLFREE(_mm->m_ext.ext_buf);			\ 			_mm->m_ext.ext_buf = NULL;			\ 		} else {						\ 			_mm->m_data = _mm->m_ext.ext_buf;		\ 			_mm->m_flags |= M_EXT;				\ 			_mm->m_ext.ext_free = NULL;			\ 			_mm->m_ext.ext_args = NULL;			\ 			_mm->m_ext.ext_size = MCLBYTES;			\ 			_mm->m_ext.ext_type = EXT_CLUSTER;		\ 		}							\ 	} else								\ 		atomic_add_long(&mbstat.m_drops, 1);			\ } while (0)
 end_define
 
 begin_define
