@@ -167,6 +167,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|tval
 decl_stmt|;
@@ -752,6 +753,7 @@ value|((s) += 2, ((s)[-2] - '0') * 10 + ((s)[-1] - '0'))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|setthetime
 parameter_list|(
