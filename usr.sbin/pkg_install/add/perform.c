@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.7 1994/05/25 06:24:18 jkh Exp $"
+literal|"$Id: perform.c,v 1.8 1994/05/25 17:59:54 asami Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,10 @@ decl_stmt|;
 name|PackingList
 name|p
 decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 comment|/* Reset some state */
 if|if
 condition|(
@@ -282,13 +286,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|home
-operator|=
-name|make_playpen
-argument_list|(
-name|PlayPen
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pkg
@@ -329,7 +326,7 @@ condition|)
 block|{
 name|whinge
 argument_list|(
-literal|"Can't open package '%s'."
+literal|"Can't find package '%s'."
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -338,6 +335,48 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 65%. 	 */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|pkg_fullname
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+name|FAIL
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Can't stat package file '%s'."
+argument_list|,
+name|pkg_fullname
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|sb
+operator|.
+name|st_size
+operator|*=
+literal|1.65
+expr_stmt|;
+name|home
+operator|=
+name|make_playpen
+argument_list|(
+name|PlayPen
+argument_list|,
+name|sb
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|unpack
