@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.16 91/01/18$  * from: hp300/include/vmparam.h	8.1 (Berkeley) 6/10/93  *  *	@(#)vmparam.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.16 91/01/18$  * from: hp300/include/vmparam.h	8.1 (Berkeley) 6/10/93  *  *	@(#)vmparam.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -420,7 +420,7 @@ comment|/* klusters advance/retard for seq. fifo */
 end_comment
 
 begin_comment
-comment|/*  * Paging thresholds (see vm_sched.c).  * Strategy of 1/19/85:  *	lotsfree is 512k bytes, but at most 1/4 of memory  *	desfree is 200k bytes, but at most 1/8 of memory  *	minfree is 64k bytes, but at most 1/2 of desfree  */
+comment|/*  * Paging thresholds (see vm_sched.c).  * Strategy of 1/19/85:  *	lotsfree is 512k bytes, but at most 1/4 of memory  *	desfree is 200k bytes, but at most 1/8 of memory  */
 end_comment
 
 begin_define
@@ -449,20 +449,6 @@ define|#
 directive|define
 name|DESFREEFRACT
 value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINFREE
-value|(64 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINFREEFRACT
-value|2
 end_define
 
 begin_comment
