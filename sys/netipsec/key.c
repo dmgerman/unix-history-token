@@ -4987,7 +4987,7 @@ name|sah
 operator|->
 name|saidx
 operator|.
-name|src
+name|dst
 operator|.
 name|sa
 argument_list|,
@@ -4997,7 +4997,7 @@ name|sah
 operator|->
 name|saidx
 operator|.
-name|src
+name|dst
 operator|.
 name|sa
 operator|.
