@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<machine/ansi.h>
 end_include
 
 begin_ifdef
@@ -1019,17 +1019,19 @@ name|__P
 argument_list|(
 operator|(
 specifier|const
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|*
 operator|,
 name|int
 operator|,
 specifier|const
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|,
-name|u_int
+name|unsigned
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1042,17 +1044,19 @@ name|__P
 argument_list|(
 operator|(
 specifier|const
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|*
 operator|,
 name|int
 operator|,
 specifier|const
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|,
-name|u_int
+name|unsigned
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1096,6 +1100,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STRICT_ANSI__
+end_ifndef
+
 begin_decl_stmt
 name|long
 name|long
@@ -1138,6 +1148,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
