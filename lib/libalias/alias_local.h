@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* -*- mode: c; tab-width: 3; c-basic-offset: 3; -*-     Alias_local.h contains the function prototypes for alias.c,     alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well     as any future add-ons).  It is intended to be used only within     the aliasing software.  Outside world interfaces are defined     in alias.h      This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)<updated several times by original author and Eivind Eiklund> */
+comment|/* -*- mode: c; tab-width: 3; c-basic-offset: 3; -*-     Alias_local.h contains the function prototypes for alias.c,     alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well     as any future add-ons).  It also includes macros, globals and     struct definitions shared by more than one alias*.c file.      This include file is intended to be used only within the aliasing     software.  Outside world interfaces are defined in alias.h      This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)<updated several times by original author and Eivind Eiklund> */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,30 @@ directive|define
 name|ALIAS_LOCAL_H
 end_define
 
+begin_comment
+comment|/*     Macros  */
+end_comment
+
+begin_comment
+comment|/*    The following macro is used to update an    internet checksum.  "delta" is a 32-bit    accumulation of all the changes to the    checksum (adding in new 16-bit words and    subtracting out old words), and "cksum"    is the checksum value to be updated. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADJUST_CHECKSUM
+parameter_list|(
+name|acc
+parameter_list|,
+name|cksum
+parameter_list|)
+value|{ \     acc += cksum; \     if (acc< 0) \     { \         acc = -acc; \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) ~acc; \     } \     else \     { \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) acc; \     } \ }
+end_define
+
+begin_comment
+comment|/*     Globals */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -22,11 +46,23 @@ name|packetAliasMode
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*     Structs */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|alias_link
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* Incomplete structure */
+end_comment
+
+begin_comment
+comment|/*     Prototypes */
+end_comment
 
 begin_comment
 comment|/* General utilities */
@@ -425,6 +461,56 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|in_addr
+name|GetProxyAddress
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|SetProxyAddress
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_short
+name|GetProxyPort
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|SetProxyPort
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+parameter_list|,
+name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|SetAckModified
 parameter_list|(
@@ -558,6 +644,10 @@ begin_comment
 comment|/*lint -save -library Suppress flexelint warnings */
 end_comment
 
+begin_comment
+comment|/* FTP routines */
+end_comment
+
 begin_function_decl
 name|void
 name|AliasHandleFtpOut
@@ -574,6 +664,10 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* IRC routines */
+end_comment
 
 begin_function_decl
 name|void
@@ -594,6 +688,10 @@ name|maxsize
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* NetBIOS routines */
+end_comment
 
 begin_function_decl
 name|int
@@ -645,6 +743,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* CUSeeMe routines */
+end_comment
+
 begin_function_decl
 name|void
 name|AliasHandleCUSeeMeOut
@@ -674,6 +776,47 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Transparent proxy routines */
+end_comment
+
+begin_function_decl
+name|int
+name|ProxyCheck
+parameter_list|(
+name|struct
+name|ip
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+name|u_short
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ProxyModify
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+parameter_list|,
+name|struct
+name|ip
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_enum
 enum|enum
 name|alias_tcp_state
@@ -686,6 +829,17 @@ name|ALIAS_TCP_STATE_DISCONNECTED
 block|}
 enum|;
 end_enum
+
+begin_function_decl
+name|int
+name|GetPptpAlias
+parameter_list|(
+name|struct
+name|in_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*lint -restore */

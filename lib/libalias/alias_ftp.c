@@ -1103,6 +1103,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1110,6 +1113,8 @@ argument_list|,
 literal|"PacketAlias/HandleFtpOut: Cannot allocate FTP data port\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function

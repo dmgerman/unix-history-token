@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  -*- mode: c; tab-width: 8; c-basic-indent: 4; -*-     Alias_db.c encapsulates all data structures used for storing     packet aliasing data.  Other parts of the aliasing software     access data through functions provided in this file.      Data storage is based on the notion of a "link", which is     established for ICMP echo/reply packets, UDP datagrams and     TCP stream connections.  A link stores the original source     and destination addresses.  For UDP and TCP, it also stores     source and destination port numbers, as well as an alias     port number.  Links are also used to store information about     fragments.      There is a facility for sweeping through and deleting old     links as new packets are sent through.  A simple timeout is     used for ICMP and UDP links.  TCP links are left alone unless     there is an incomplete connection, in which case the link     can be deleted after a certain amount of time.       This software is placed into the public domain with no restrictions     on its distribution.      Initial version: August, 1996  (cjm)      Version 1.4: September 16, 1996 (cjm)         Facility for handling incoming links added.      Version 1.6: September 18, 1996 (cjm)         ICMP data handling simplified.      Version 1.7: January 9, 1997 (cjm)         Fragment handling simplified.         Saves pointers for unresolved fragments.         Permits links for unspecied remote ports           or unspecified remote addresses.         Fixed bug which did not properly zero port           table entries after a link was deleted.         Cleaned up some obsolete comments.      Version 1.8: January 14, 1997 (cjm)         Fixed data type error in StartPoint().         (This error did not exist prior to v1.7         and was discovered and fixed by Ari Suutari)      Version 1.9: February 1, 1997         Optionally, connections initiated from packet aliasing host         machine will will not have their port number aliased unless it         conflicts with an aliasing port already being used. (cjm)          All options earlier being #ifdef'ed now are available through         a new interface, SetPacketAliasMode().  This allow run time         control (which is now available in PPP+pktAlias through the         'alias' keyword). (ee)          Added ability to create an alias port without         either destination address or port specified.         port type = ALIAS_PORT_UNKNOWN_DEST_ALL (ee)           Removed K&R style function headers         and general cleanup. (ee)          Added packetAliasMode to replace compiler #defines's (ee)           Allocates sockets for partially specified         ports if ALIAS_USE_SOCKETS defined. (cjm)      Version 2.0: March, 1997         SetAliasAddress() will now clean up alias links         if the aliasing address is changed. (cjm)          PacketAliasPermanentLink() function added to support permanent         links.  (J. Fortes suggested the need for this.)         Examples:          (192.168.0.1, port 23)<-> alias port 6002, unknown dest addr/port           (192.168.0.2, port 21)<-> alias port 3604, known dest addr                                                      unknown dest port           These permament links allow for incoming connections to         machines on the local network.  They can be given with a         user-chosen amount of specificity, with increasing specificity         meaning more security. (cjm)          Quite a bit of rework to the basic engine.  The portTable[]         array, which kept track of which ports were in use was replaced         by a table/linked list structure. (cjm)          SetExpire() function added. (cjm)          DeleteLink() no longer frees memory association with a pointer         to a fragment (this bug was first recognized by E. Eklund in         v1.9).      Version 2.1: May, 1997 (cjm)         Packet aliasing engine reworked so that it can handle         multiple external addresses rather than just a single         host address.          PacketAliasRedirectPort() and PacketAliasRedirectAddr()         added to the API.  The first function is a more generalized         version of PacketAliasPermanentLink().  The second function         implements static network address translation.      See HISTORY file for additional revisions. */
+comment|/*  -*- mode: c; tab-width: 8; c-basic-indent: 4; -*-     Alias_db.c encapsulates all data structures used for storing     packet aliasing data.  Other parts of the aliasing software     access data through functions provided in this file.      Data storage is based on the notion of a "link", which is     established for ICMP echo/reply packets, UDP datagrams and     TCP stream connections.  A link stores the original source     and destination addresses.  For UDP and TCP, it also stores     source and destination port numbers, as well as an alias     port number.  Links are also used to store information about     fragments.      There is a facility for sweeping through and deleting old     links as new packets are sent through.  A simple timeout is     used for ICMP and UDP links.  TCP links are left alone unless     there is an incomplete connection, in which case the link     can be deleted after a certain amount of time.       This software is placed into the public domain with no restrictions     on its distribution.      Initial version: August, 1996  (cjm)      Version 1.4: September 16, 1996 (cjm)         Facility for handling incoming links added.      Version 1.6: September 18, 1996 (cjm)         ICMP data handling simplified.      Version 1.7: January 9, 1997 (cjm)         Fragment handling simplified.         Saves pointers for unresolved fragments.         Permits links for unspecied remote ports           or unspecified remote addresses.         Fixed bug which did not properly zero port           table entries after a link was deleted.         Cleaned up some obsolete comments.      Version 1.8: January 14, 1997 (cjm)         Fixed data type error in StartPoint().         (This error did not exist prior to v1.7         and was discovered and fixed by Ari Suutari)      Version 1.9: February 1, 1997         Optionally, connections initiated from packet aliasing host         machine will will not have their port number aliased unless it         conflicts with an aliasing port already being used. (cjm)          All options earlier being #ifdef'ed now are available through         a new interface, SetPacketAliasMode().  This allow run time         control (which is now available in PPP+pktAlias through the         'alias' keyword). (ee)          Added ability to create an alias port without         either destination address or port specified.         port type = ALIAS_PORT_UNKNOWN_DEST_ALL (ee)          Removed K&R style function headers         and general cleanup. (ee)          Added packetAliasMode to replace compiler #defines's (ee)          Allocates sockets for partially specified         ports if ALIAS_USE_SOCKETS defined. (cjm)      Version 2.0: March, 1997         SetAliasAddress() will now clean up alias links         if the aliasing address is changed. (cjm)          PacketAliasPermanentLink() function added to support permanent         links.  (J. Fortes suggested the need for this.)         Examples:          (192.168.0.1, port 23)<-> alias port 6002, unknown dest addr/port          (192.168.0.2, port 21)<-> alias port 3604, known dest addr                                                      unknown dest port          These permament links allow for incoming connections to         machines on the local network.  They can be given with a         user-chosen amount of specificity, with increasing specificity         meaning more security. (cjm)          Quite a bit of rework to the basic engine.  The portTable[]         array, which kept track of which ports were in use was replaced         by a table/linked list structure. (cjm)          SetExpire() function added. (cjm)          DeleteLink() no longer frees memory association with a pointer         to a fragment (this bug was first recognized by E. Eklund in         v1.9).      Version 2.1: May, 1997 (cjm)         Packet aliasing engine reworked so that it can handle         multiple external addresses rather than just a single         host address.          PacketAliasRedirectPort() and PacketAliasRedirectAddr()         added to the API.  The first function is a more generalized         version of PacketAliasPermanentLink().  The second function         implements static network address translation.      See HISTORY file for additional revisions. */
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Dummy port number codes used for FindLinkIn/Out() and AddLink().    These constants can be anything except zero, which indicates an    unknown port numbea. */
+comment|/* Dummy port number codes used for FindLinkIn/Out() and AddLink().    These constants can be anything except zero, which indicates an    unknown port number. */
 end_comment
 
 begin_define
@@ -278,7 +278,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Data Structures       The fundamental data structure used in this program is     "struct alias_link".  Whenever a TCP connection is made,     a UDP datagram is sent out, or an ICMP echo request is made,     a link record is made (if it has not already been created).     The link record is identified by the source address/port     and the destination address/port. In the case of an ICMP     echo request, the source port is treated as being equivalent     with the 16-bit id number of the ICMP packet.      The link record also can store some auxiliary data.  For     TCP connections that have had sequence and acknowledgment     modifications, data space is available to track these changes.     A state field is used to keep track in changes to the tcp     connection state.  Id numbers of fragments can also be     stored in the auxiliary space.  Pointers to unresolved     framgents can also be stored.      The link records support two independent chainings.  Lookup     tables for input and out tables hold the initial pointers     the link chains.  On input, the lookup table indexes on alias     port and link type.  On output, the lookup table indexes on     source addreess, destination address, source port, destination     port and link type. */
+comment|/* Data Structures      The fundamental data structure used in this program is     "struct alias_link".  Whenever a TCP connection is made,     a UDP datagram is sent out, or an ICMP echo request is made,     a link record is made (if it has not already been created).     The link record is identified by the source address/port     and the destination address/port. In the case of an ICMP     echo request, the source port is treated as being equivalent     with the 16-bit id number of the ICMP packet.      The link record also can store some auxiliary data.  For     TCP connections that have had sequence and acknowledgment     modifications, data space is available to track these changes.     A state field is used to keep track in changes to the tcp     connection state.  Id numbers of fragments can also be     stored in the auxiliary space.  Pointers to unresolved     framgents can also be stored.      The link records support two independent chainings.  Lookup     tables for input and out tables hold the initial pointers     the link chains.  On input, the lookup table indexes on alias     port and link type.  On output, the lookup table indexes on     source addreess, destination address, source port, destination     port and link type. */
 end_comment
 
 begin_struct
@@ -376,24 +376,26 @@ name|struct
 name|in_addr
 name|dst_addr
 decl_stmt|;
-comment|/*  .                                  */
 name|struct
 name|in_addr
 name|alias_addr
 decl_stmt|;
-comment|/*  .                                  */
+name|struct
+name|in_addr
+name|proxy_addr
+decl_stmt|;
 name|u_short
 name|src_port
 decl_stmt|;
-comment|/*  .                                  */
 name|u_short
 name|dst_port
 decl_stmt|;
-comment|/*  .                                  */
 name|u_short
 name|alias_port
 decl_stmt|;
-comment|/*  .                                  */
+name|u_short
+name|proxy_port
+decl_stmt|;
 name|int
 name|link_type
 decl_stmt|;
@@ -818,6 +820,37 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pptpAliasFlag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Indicates if PPTP aliasing is   */
+end_comment
+
+begin_comment
+comment|/* on or off                       */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|in_addr
+name|pptpAliasAddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Address of source of PPTP 	*/
+end_comment
+
+begin_comment
+comment|/* packets.           		*/
+end_comment
 
 begin_comment
 comment|/* Internal utility routines (used only in alias_db.c)  Lookup table starting points:     StartPointIn()           -- link table initial search point for                                 outgoing packets     StartPointOut()          -- port table initial search point for                                 incoming packets      Miscellaneous:     SeqDiff()                -- difference between two TCP sequences     ShowAliasStats()         -- send alias statistics to a monitor file */
@@ -1473,6 +1506,9 @@ return|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1487,6 +1523,8 @@ argument_list|,
 literal|"input parameter error\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -1667,6 +1705,9 @@ name|port_sys
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1681,6 +1722,8 @@ argument_list|,
 literal|"could not find free port\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -1753,6 +1796,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1767,6 +1813,8 @@ argument_list|,
 literal|"incorrect link type\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1780,6 +1828,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1797,6 +1848,8 @@ operator|*
 name|sockfd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2513,21 +2566,35 @@ name|dst_addr
 expr_stmt|;
 name|link
 operator|->
-name|src_port
-operator|=
-name|src_port
-expr_stmt|;
-name|link
-operator|->
 name|alias_addr
 operator|=
 name|alias_addr
 expr_stmt|;
 name|link
 operator|->
+name|proxy_addr
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+name|link
+operator|->
+name|src_port
+operator|=
+name|src_port
+expr_stmt|;
+name|link
+operator|->
 name|dst_port
 operator|=
 name|dst_port
+expr_stmt|;
+name|link
+operator|->
+name|proxy_port
+operator|=
+literal|0
 expr_stmt|;
 name|link
 operator|->
@@ -2906,6 +2973,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -2920,6 +2990,8 @@ argument_list|,
 literal|" cannot allocate auxiliary TCP data\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 break|break;
 case|case
@@ -2940,6 +3012,9 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -2954,6 +3029,8 @@ argument_list|,
 literal|"malloc() call failed.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -4137,6 +4214,13 @@ operator|&
 name|PKT_ALIAS_DENY_INCOMING
 operator|)
 operator|&&
+operator|!
+operator|(
+name|packetAliasMode
+operator|&
+name|PKT_ALIAS_PROXY_ONLY
+operator|)
+operator|&&
 name|link
 operator|==
 name|NULL
@@ -5013,6 +5097,88 @@ block|}
 end_function
 
 begin_function
+name|struct
+name|in_addr
+name|GetProxyAddress
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+name|link
+parameter_list|)
+block|{
+return|return
+name|link
+operator|->
+name|proxy_addr
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|SetProxyAddress
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+name|link
+parameter_list|,
+name|struct
+name|in_addr
+name|addr
+parameter_list|)
+block|{
+name|link
+operator|->
+name|proxy_addr
+operator|=
+name|addr
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|u_short
+name|GetProxyPort
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+name|link
+parameter_list|)
+block|{
+return|return
+name|link
+operator|->
+name|proxy_port
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|SetProxyPort
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+name|link
+parameter_list|,
+name|u_short
+name|port
+parameter_list|)
+block|{
+name|link
+operator|->
+name|proxy_port
+operator|=
+name|port
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|GetAckModified
 parameter_list|(
@@ -5663,6 +5829,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -5677,6 +5846,8 @@ argument_list|,
 literal|"error in expire parameter\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -5848,6 +6019,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -5862,6 +6036,8 @@ argument_list|,
 literal|"something unexpected in time values\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|lastCleanupTime
 operator|=
 name|timeStamp
@@ -6026,6 +6202,9 @@ name|LINK_TCP
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -6040,6 +6219,8 @@ argument_list|,
 literal|"only TCP and UDP protocols allowed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|NULL
 return|;
@@ -6077,6 +6258,9 @@ operator||=
 name|LINK_PERMANENT
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 else|else
 block|{
 name|fprintf
@@ -6088,8 +6272,67 @@ literal|"call to AddLink() failed\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|link
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Translate PPTP packets to a machine on the inside  */
+end_comment
+
+begin_function
+name|int
+name|PacketAliasPptp
+parameter_list|(
+name|struct
+name|in_addr
+name|src_addr
+parameter_list|)
+block|{
+name|pptpAliasAddr
+operator|=
+name|src_addr
+expr_stmt|;
+comment|/* Address of the inside PPTP machine */
+name|pptpAliasFlag
+operator|=
+name|src_addr
+operator|.
+name|s_addr
+operator|!=
+name|INADDR_NONE
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|GetPptpAlias
+parameter_list|(
+name|struct
+name|in_addr
+modifier|*
+name|alias_addr
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pptpAliasFlag
+condition|)
+operator|*
+name|alias_addr
+operator|=
+name|pptpAliasAddr
+expr_stmt|;
+return|return
+name|pptpAliasFlag
 return|;
 block|}
 end_function
@@ -6151,6 +6394,9 @@ operator||=
 name|LINK_PERMANENT
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 else|else
 block|{
 name|fprintf
@@ -6162,6 +6408,8 @@ literal|"call to AddLink() failed\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|link
 return|;
@@ -6411,6 +6659,10 @@ operator||
 name|PKT_ALIAS_USE_SOCKETS
 operator||
 name|PKT_ALIAS_RESET_ON_ADDR_CHANGE
+expr_stmt|;
+name|pptpAliasFlag
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -6988,6 +7240,9 @@ name|fireWallActiveNum
 operator|=
 name|fireWallBaseNum
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -6995,6 +7250,8 @@ argument_list|,
 literal|"libalias: Unable to create firewall hole!\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 block|}
@@ -7143,6 +7400,9 @@ sizeof|sizeof
 name|rule
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|r
@@ -7154,6 +7414,8 @@ argument_list|,
 literal|"alias punch inbound(1) setsockopt(IP_FW_ADD)"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rule
 operator|.
 name|fw_src
@@ -7223,6 +7485,9 @@ sizeof|sizeof
 name|rule
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|r
@@ -7234,6 +7499,8 @@ argument_list|,
 literal|"alias punch inbound(2) setsockopt(IP_FW_ADD)"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Indicate hole applied */
 name|link
