@@ -181,6 +181,16 @@ define|\
 value|((sizeof (x) == sizeof (float)) ? __fpclassifyf(x) \     : (sizeof (x) == sizeof (double)) ? __fpclassifyd(x) \     : __fpclassifyl(x))
 end_define
 
+begin_define
+define|#
+directive|define
+name|signbit
+parameter_list|(
+name|x
+parameter_list|)
+value|__signbit(x)
+end_define
+
 begin_typedef
 typedef|typedef
 name|__double_t
@@ -632,6 +642,15 @@ name|int
 name|__fpclassifyl
 parameter_list|(
 name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__signbit
+parameter_list|(
 name|double
 parameter_list|)
 function_decl|;
