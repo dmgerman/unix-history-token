@@ -21,17 +21,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -40,6 +29,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Shell output routines.  We use our own output routines because:  *	When a builtin command is interrupted we have to discard  *		any pending output.  *	When a builtin command appears in back quotes, we want to  *		save the output of the command in a region obtained  *		via malloc, rather than doing a fork and reading the  *		output of the command via a pipe.  *	Our output routines may be smaller than the stdio routines.  */
