@@ -307,6 +307,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|telnetport
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|prompt
@@ -557,7 +565,7 @@ name|char
 name|aythelp
 index|[]
 init|=
-literal|"send Are You There"
+literal|"send \"Are You There\""
 decl_stmt|;
 end_decl_stmt
 
@@ -566,7 +574,7 @@ name|char
 name|intphelp
 index|[]
 init|=
-literal|"send Interrupt Process"
+literal|"send \"Interrupt Process\""
 decl_stmt|;
 end_decl_stmt
 
@@ -671,6 +679,14 @@ block|,
 name|sendeschelp
 block|,
 name|sendesc
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|helphelp
+block|,
+name|help
 block|}
 block|,
 block|{
@@ -1202,9 +1218,35 @@ condition|(
 name|sin
 operator|.
 name|sin_port
-operator|<
+operator|<=
 literal|0
 condition|)
+block|{
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+condition|)
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|sp
+operator|->
+name|s_port
+expr_stmt|;
+else|else
 block|{
 name|printf
 argument_list|(
@@ -1218,6 +1260,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+else|else
+block|{
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_port
@@ -1228,6 +1285,11 @@ name|sin
 operator|.
 name|sin_port
 argument_list|)
+expr_stmt|;
+block|}
+name|telnetport
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|net
@@ -2334,6 +2396,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|telnetport
+operator|&&
 operator|!
 name|hisopts
 index|[
@@ -3752,7 +3816,7 @@ name|showoptions
 condition|?
 literal|"Will"
 else|:
-literal|"Wont"
+literal|"Won't"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -3787,7 +3851,7 @@ name|crmod
 condition|?
 literal|"Will"
 else|:
-literal|"Wont"
+literal|"Won't"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -3825,7 +3889,7 @@ name|debug
 condition|?
 literal|"Will"
 else|:
-literal|"Wont"
+literal|"Won't"
 argument_list|)
 expr_stmt|;
 name|fflush
