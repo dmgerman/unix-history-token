@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_cd.c,v 1.1 1998/09/15 06:36:34 gibbs Exp $  */
+comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_cd.c,v 1.2 1998/09/20 07:17:11 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -11955,7 +11955,7 @@ comment|/* cbfcnp */
 name|cddone
 argument_list|,
 comment|/* flags */
-name|CAM_DIR_IN
+name|CAM_DIR_OUT
 argument_list|,
 comment|/* tag_action */
 name|MSG_SIMPLE_Q_TAG
@@ -12099,11 +12099,6 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|scsi_play
-modifier|*
-name|scsi_cmd
-decl_stmt|;
-name|struct
 name|ccb_scsiio
 modifier|*
 name|csio
@@ -12115,6 +12110,9 @@ name|ccb
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|u_int8_t
+name|cdb_len
 decl_stmt|;
 name|error
 operator|=
@@ -12137,46 +12135,29 @@ name|ccb
 operator|->
 name|csio
 expr_stmt|;
-name|cam_fill_csio
-argument_list|(
-name|csio
-argument_list|,
-comment|/* retries */
-literal|1
-argument_list|,
-comment|/* cbfcnp */
-name|cddone
-argument_list|,
-comment|/* flags */
-name|CAM_DIR_IN
-argument_list|,
-comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
-argument_list|,
-comment|/* data_ptr */
-name|NULL
-argument_list|,
-comment|/* dxfer_len */
+comment|/* 	 * Use the smallest possible command to perform the operation. 	 */
+if|if
+condition|(
+operator|(
+name|len
+operator|&
+literal|0xffff0000
+operator|)
+operator|==
 literal|0
-argument_list|,
-comment|/* sense_len */
-name|SSD_FULL_SIZE
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_play
-argument_list|)
-argument_list|,
-comment|/* timeout */
-literal|50000
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* 		 * We can fit in a 10 byte cdb. 		 */
+name|struct
+name|scsi_play_10
+modifier|*
+name|scsi_cmd
+decl_stmt|;
 name|scsi_cmd
 operator|=
 operator|(
 expr|struct
-name|scsi_play
+name|scsi_play_10
 operator|*
 operator|)
 operator|&
@@ -12201,7 +12182,7 @@ name|scsi_cmd
 operator|->
 name|op_code
 operator|=
-name|PLAY
+name|PLAY_10
 expr_stmt|;
 name|scsi_ulto4b
 argument_list|(
@@ -12227,6 +12208,119 @@ operator|)
 name|scsi_cmd
 operator|->
 name|xfer_len
+argument_list|)
+expr_stmt|;
+name|cdb_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|struct
+name|scsi_play_12
+modifier|*
+name|scsi_cmd
+decl_stmt|;
+name|scsi_cmd
+operator|=
+operator|(
+expr|struct
+name|scsi_play_12
+operator|*
+operator|)
+operator|&
+name|csio
+operator|->
+name|cdb_io
+operator|.
+name|cdb_bytes
+expr_stmt|;
+name|bzero
+argument_list|(
+name|scsi_cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|op_code
+operator|=
+name|PLAY_12
+expr_stmt|;
+name|scsi_ulto4b
+argument_list|(
+name|blk
+argument_list|,
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|scsi_cmd
+operator|->
+name|blk_addr
+argument_list|)
+expr_stmt|;
+name|scsi_ulto4b
+argument_list|(
+name|len
+argument_list|,
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|scsi_cmd
+operator|->
+name|xfer_len
+argument_list|)
+expr_stmt|;
+name|cdb_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
+argument_list|)
+expr_stmt|;
+block|}
+name|cam_fill_csio
+argument_list|(
+name|csio
+argument_list|,
+comment|/*retries*/
+literal|2
+argument_list|,
+name|cddone
+argument_list|,
+comment|/*flags*/
+name|CAM_DIR_NONE
+argument_list|,
+name|MSG_SIMPLE_Q_TAG
+argument_list|,
+comment|/*dataptr*/
+name|NULL
+argument_list|,
+comment|/*datalen*/
+literal|0
+argument_list|,
+comment|/*sense_len*/
+name|SSD_FULL_SIZE
+argument_list|,
+name|cdb_len
+argument_list|,
+comment|/*timeout*/
+literal|50
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|error
@@ -12336,7 +12430,7 @@ comment|/* cbfcnp */
 name|cddone
 argument_list|,
 comment|/* flags */
-name|CAM_DIR_IN
+name|CAM_DIR_NONE
 argument_list|,
 comment|/* tag_action */
 name|MSG_SIMPLE_Q_TAG
@@ -12528,7 +12622,7 @@ comment|/* cbfcnp */
 name|cddone
 argument_list|,
 comment|/* flags */
-name|CAM_DIR_IN
+name|CAM_DIR_NONE
 argument_list|,
 comment|/* tag_action */
 name|MSG_SIMPLE_Q_TAG
@@ -12699,7 +12793,7 @@ comment|/* cbfcnp */
 name|cddone
 argument_list|,
 comment|/* flags */
-name|CAM_DIR_IN
+name|CAM_DIR_NONE
 argument_list|,
 comment|/* tag_action */
 name|MSG_SIMPLE_Q_TAG
