@@ -50,12 +50,9 @@ begin_function
 name|ReturnStatus
 name|Lst_Open
 parameter_list|(
-name|l
-parameter_list|)
-specifier|register
 name|Lst
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

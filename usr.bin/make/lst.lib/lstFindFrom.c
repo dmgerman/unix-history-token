@@ -46,40 +46,20 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Lst_FindFrom --  *	Search for a node starting and ending with the given one on the  *	given list using the passed datum and comparison function to  *	determine when it has been found.  *  * Results:  *	The found node or NULL  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|LstNode
 name|Lst_FindFrom
-argument_list|(
-name|l
-argument_list|,
-name|ln
-argument_list|,
-name|d
-argument_list|,
-name|cProc
-argument_list|)
+parameter_list|(
 name|Lst
 name|l
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|register
+parameter_list|,
 name|LstNode
 name|ln
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|register
+parameter_list|,
 name|void
 modifier|*
 name|d
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|register
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
@@ -92,12 +72,8 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
 name|ListNode
 name|tln
 decl_stmt|;
@@ -213,7 +189,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

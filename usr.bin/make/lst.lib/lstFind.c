@@ -46,29 +46,17 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Lst_Find --  *	Find a node on the given list using the given comparison function  *	and the given datum.  *  * Results:  *	The found node or NULL if none matches.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|LstNode
 name|Lst_Find
-argument_list|(
-name|l
-argument_list|,
-name|d
-argument_list|,
-name|cProc
-argument_list|)
+parameter_list|(
 name|Lst
 name|l
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 name|d
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
@@ -81,10 +69,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -104,7 +89,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -50,11 +50,9 @@ begin_function
 name|LstNode
 name|Lst_Succ
 parameter_list|(
-name|ln
-parameter_list|)
 name|LstNode
 name|ln
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

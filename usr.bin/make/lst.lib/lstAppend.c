@@ -43,42 +43,30 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Results:  *	SUCCESS if all went well.  *  * Side Effects:  *	A new ListNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Results:  *	SUCCESS if all went well.  *  * Arguments:  *	l	affected list  *	ln	node after which to append the datum  *	d	said datum  *  * Side Effects:  *	A new ListNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|ReturnStatus
 name|Lst_Append
 parameter_list|(
-name|l
-parameter_list|,
-name|ln
-parameter_list|,
-name|d
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
-comment|/* affected list */
+parameter_list|,
 name|LstNode
 name|ln
-decl_stmt|;
-comment|/* node after which to append the datum */
+parameter_list|,
 name|void
 modifier|*
 name|d
-decl_stmt|;
-comment|/* said datum */
+parameter_list|)
 block|{
-specifier|register
 name|List
 name|list
 decl_stmt|;
-specifier|register
 name|ListNode
 name|lNode
 decl_stmt|;
-specifier|register
 name|ListNode
 name|nLNode
 decl_stmt|;

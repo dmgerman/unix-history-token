@@ -43,28 +43,21 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_AtEnd --  *	Add a node to the end of the given list  *  * Results:  *	SUCCESS if life is good.  *  * Side Effects:  *	A new ListNode is created and added to the list.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_AtEnd --  *	Add a node to the end of the given list  *  * Results:  *	SUCCESS if life is good.  *  * Arguments:  *	l	List to which to add the datum  *	d	Datum to add  *  * Side Effects:  *	A new ListNode is created and added to the list.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|ReturnStatus
 name|Lst_AtEnd
 parameter_list|(
-name|l
-parameter_list|,
-name|d
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
-comment|/* List to which to add the datum */
+parameter_list|,
 name|void
 modifier|*
 name|d
-decl_stmt|;
-comment|/* Datum to add */
+parameter_list|)
 block|{
-specifier|register
 name|LstNode
 name|end
 decl_stmt|;

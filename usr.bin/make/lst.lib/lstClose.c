@@ -43,21 +43,17 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Close --  *	Close a list which was opened for sequential access.  *  * Results:  *	None.  *  * Side Effects:  *	The list is closed.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Close --  *	Close a list which was opened for sequential access.  *  * Results:  *	None.  *  * Arguments:  *	l	The list to close  *  * Side Effects:  *	The list is closed.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|Lst_Close
 parameter_list|(
-name|l
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
-comment|/* The list to close */
+parameter_list|)
 block|{
-specifier|register
 name|List
 name|list
 init|=

@@ -46,35 +46,16 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Lst_ForEachFrom --  *	Apply the given function to each element of the given list. The  *	function should return 0 if traversal should continue and non-  *	zero if it should abort.  *  * Results:  *	None.  *  * Side Effects:  *	Only those created by the passed-in function.  *  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_comment
-comment|/*VARARGS2*/
-end_comment
-
-begin_decl_stmt
+begin_function
 name|void
 name|Lst_ForEachFrom
-argument_list|(
-name|l
-argument_list|,
-name|ln
-argument_list|,
-name|proc
-argument_list|,
-name|d
-argument_list|)
+parameter_list|(
 name|Lst
 name|l
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|LstNode
 name|ln
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|register
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
@@ -87,20 +68,12 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|register
+parameter_list|,
 name|void
 modifier|*
 name|d
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
 name|ListNode
 name|tln
 init|=
@@ -109,7 +82,6 @@ name|ListNode
 operator|)
 name|ln
 decl_stmt|;
-specifier|register
 name|List
 name|list
 init|=
@@ -118,7 +90,6 @@ name|List
 operator|)
 name|l
 decl_stmt|;
-specifier|register
 name|ListNode
 name|next
 decl_stmt|;
@@ -252,7 +223,7 @@ name|done
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -50,13 +50,10 @@ begin_function
 name|Boolean
 name|Lst_IsAtEnd
 parameter_list|(
-name|l
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|List
 name|list
 init|=

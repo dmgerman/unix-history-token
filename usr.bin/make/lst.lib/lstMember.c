@@ -46,17 +46,13 @@ begin_function
 name|LstNode
 name|Lst_Member
 parameter_list|(
-name|l
-parameter_list|,
-name|d
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|)
 block|{
 name|List
 name|list
@@ -66,7 +62,6 @@ name|List
 operator|)
 name|l
 decl_stmt|;
-specifier|register
 name|ListNode
 name|lNode
 decl_stmt|;

@@ -43,39 +43,28 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Insert --  *	Insert a new node with the given piece of data before the given  *	node in the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	the firstPtr field will be changed if ln is the first node in the  *	list.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Insert --  *	Insert a new node with the given piece of data before the given  *	node in the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  *	l	list to manipulate  *	ln	node before which to insert d  *	d	datum to be inserted  *  * Side Effects:  *	the firstPtr field will be changed if ln is the first node in the  *	list.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|ReturnStatus
 name|Lst_Insert
 parameter_list|(
-name|l
-parameter_list|,
-name|ln
-parameter_list|,
-name|d
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
-comment|/* list to manipulate */
+parameter_list|,
 name|LstNode
 name|ln
-decl_stmt|;
-comment|/* node before which to insert d */
+parameter_list|,
 name|void
 modifier|*
 name|d
-decl_stmt|;
-comment|/* datum to be inserted */
+parameter_list|)
 block|{
-specifier|register
 name|ListNode
 name|nLNode
 decl_stmt|;
 comment|/* new lnode for d */
-specifier|register
 name|ListNode
 name|lNode
 init|=
@@ -84,7 +73,6 @@ name|ListNode
 operator|)
 name|ln
 decl_stmt|;
-specifier|register
 name|List
 name|list
 init|=

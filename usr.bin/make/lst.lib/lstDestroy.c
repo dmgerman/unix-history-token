@@ -46,21 +46,13 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Lst_Destroy --  *	Destroy a list and free all its resources. If the freeProc is  *	given, it is called with the datum from each node in turn before  *	the node is freed.  *  * Results:  *	None.  *  * Side Effects:  *	The given list is freed in its entirety.  *  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|Lst_Destroy
-argument_list|(
-name|l
-argument_list|,
-name|freeProc
-argument_list|)
+parameter_list|(
 name|Lst
 name|l
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|register
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -70,22 +62,16 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
 name|ListNode
 name|ln
 decl_stmt|;
-specifier|register
 name|ListNode
 name|tln
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|List
 name|list
 init|=
@@ -216,7 +202,7 @@ name|l
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

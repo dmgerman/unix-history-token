@@ -43,48 +43,35 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Concat --  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *	If LST_CONCLINK is specified, the second list is destroyed since  *	its pointers have been corrupted and the list is no longer useable.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Side Effects:  *	New elements are created and appended the the first list.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Concat --  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *	If LST_CONCLINK is specified, the second list is destroyed since  *	its pointers have been corrupted and the list is no longer useable.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	l1	The list to which l2 is to be appended  *	l2	The list to append to l1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|ReturnStatus
 name|Lst_Concat
 parameter_list|(
-name|l1
-parameter_list|,
-name|l2
-parameter_list|,
-name|flags
-parameter_list|)
 name|Lst
 name|l1
-decl_stmt|;
-comment|/* The list to which l2 is to be appended */
+parameter_list|,
 name|Lst
 name|l2
-decl_stmt|;
-comment|/* The list to append to l1 */
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
-comment|/* LST_CONCNEW if LstNode's should be duplicated 				 * LST_CONCLINK if should just be relinked */
+parameter_list|)
 block|{
-specifier|register
 name|ListNode
 name|ln
 decl_stmt|;
 comment|/* original LstNode */
-specifier|register
 name|ListNode
 name|nln
 decl_stmt|;
 comment|/* new LstNode */
-specifier|register
 name|ListNode
 name|last
 decl_stmt|;
 comment|/* the last element in the list. Keeps 				 * bookkeeping until the end */
-specifier|register
 name|List
 name|list1
 init|=
@@ -93,7 +80,6 @@ name|List
 operator|)
 name|l1
 decl_stmt|;
-specifier|register
 name|List
 name|list2
 init|=

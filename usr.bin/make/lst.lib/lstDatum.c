@@ -51,11 +51,9 @@ name|void
 modifier|*
 name|Lst_Datum
 parameter_list|(
-name|ln
-parameter_list|)
 name|LstNode
 name|ln
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
