@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dir.h>
 end_include
 
@@ -389,6 +395,8 @@ operator|(
 name|dp
 operator|->
 name|di_mtime
+operator|.
+name|tv_sec
 operator|>=
 name|spcl
 operator|.
@@ -397,6 +405,8 @@ operator|||
 name|dp
 operator|->
 name|di_ctime
+operator|.
+name|tv_sec
 operator|>=
 name|spcl
 operator|.
