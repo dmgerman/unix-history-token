@@ -145,22 +145,6 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
-name|char
-modifier|*
-name|getflags
-name|__P
-argument_list|(
-operator|(
-name|u_long
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dflag
 decl_stmt|,
@@ -1824,10 +1808,8 @@ index|[
 literal|15
 index|]
 decl_stmt|,
+modifier|*
 name|flagsp
-index|[
-literal|128
-index|]
 decl_stmt|;
 comment|/* Check -i first. */
 if|if
@@ -1916,30 +1898,26 @@ argument_list|,
 name|modep
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
+if|if
+condition|(
+operator|(
 name|flagsp
-argument_list|,
-name|getflags
+operator|=
+name|fflagstostr
 argument_list|(
 name|sp
 operator|->
 name|st_flags
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
 argument_list|,
 name|NULL
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|flagsp
-condition|)
-name|strcat
-argument_list|(
-name|flagsp
-argument_list|,
-literal|" "
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1949,7 +1927,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"override %s%s%s/%s %sfor %s? "
+literal|"override %s%s%s/%s %s%sfor %s? "
 argument_list|,
 name|modep
 operator|+
@@ -1991,7 +1969,19 @@ name|flagsp
 else|:
 literal|""
 argument_list|,
+operator|*
+name|flagsp
+condition|?
+literal|" "
+else|:
+literal|""
+argument_list|,
 name|path
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|flagsp
 argument_list|)
 expr_stmt|;
 block|}

@@ -644,7 +644,7 @@ name|optarg
 expr_stmt|;
 if|if
 condition|(
-name|setflags
+name|strtofflags
 argument_list|(
 operator|&
 name|flags
