@@ -4261,9 +4261,9 @@ decl_stmt|;
 block|{
 if|#
 directive|if
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|5
+literal|500000
 name|struct
 name|thread
 modifier|*
