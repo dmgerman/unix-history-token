@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.c	7.44 (Berkeley) 5/28/91  *	$Id: tty.c,v 1.14 1994/01/11 18:09:36 ache Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.c	7.44 (Berkeley) 5/28/91  *	$Id: tty.c,v 1.16 1994/01/28 23:17:43 ache Exp $  */
 end_comment
 
 begin_include
@@ -2200,6 +2200,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_function
 name|void
 name|ttrstrt
@@ -2243,6 +2249,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
 
 begin_comment
 comment|/*  * Common code for ioctls on tty devices.  * Called after line-discipline-specific ioctl  * has been called to do discipline-specific functions  * and/or reject any of these ioctl commands.  */
@@ -6758,10 +6773,6 @@ literal|0
 decl_stmt|,
 name|rblen
 decl_stmt|;
-name|struct
-name|timeval
-name|stime
-decl_stmt|;
 name|int
 name|has_stime
 init|=
@@ -6776,6 +6787,7 @@ name|slp
 init|=
 literal|0
 decl_stmt|;
+comment|/* XXX this should be renamed `timo'. */
 name|loop
 label|:
 name|lflag
@@ -6967,6 +6979,15 @@ index|[
 name|VTIME
 index|]
 decl_stmt|;
+name|struct
+name|timeval
+name|stime
+decl_stmt|,
+name|timecopy
+decl_stmt|;
+name|int
+name|x
+decl_stmt|;
 comment|/* 		 * Check each of the four combinations. 		 * (m> 0&& t == 0) is the normal read case. 		 * It should be fairly efficient, so we check that and its 		 * companion case (m == 0&& t == 0) first. 		 * For the other two cases, we compute the target sleep time 		 * into slp. 		 */
 if|if
 condition|(
@@ -6993,14 +7014,17 @@ condition|)
 goto|goto
 name|read
 goto|;
-comment|/* Cheat here */
-name|flag
-operator||=
-name|IO_NDELAY
+comment|/* m, t and rblen are all 0.  0 is enough input. */
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
-goto|goto
-name|sleep
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|t
 operator|*=
@@ -7041,6 +7065,20 @@ condition|)
 goto|goto
 name|read
 goto|;
+name|x
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
+name|timecopy
+operator|=
+name|time
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7054,7 +7092,7 @@ literal|1
 expr_stmt|;
 name|stime
 operator|=
-name|time
+name|timecopy
 expr_stmt|;
 name|slp
 operator|=
@@ -7072,7 +7110,7 @@ block|{
 comment|/* got a character, restart timer */
 name|stime
 operator|=
-name|time
+name|timecopy
 expr_stmt|;
 name|slp
 operator|=
@@ -7088,7 +7126,7 @@ name|t
 operator|-
 name|diff
 argument_list|(
-name|time
+name|timecopy
 argument_list|,
 name|stime
 argument_list|)
@@ -7111,6 +7149,20 @@ condition|)
 goto|goto
 name|read
 goto|;
+name|x
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
+name|timecopy
+operator|=
+name|time
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7123,7 +7175,7 @@ literal|1
 expr_stmt|;
 name|stime
 operator|=
-name|time
+name|timecopy
 expr_stmt|;
 name|slp
 operator|=
@@ -7138,12 +7190,11 @@ name|t
 operator|-
 name|diff
 argument_list|(
-name|time
+name|timecopy
 argument_list|,
 name|stime
 argument_list|)
 expr_stmt|;
-comment|/* Cheat here */
 if|if
 condition|(
 name|slp
@@ -7151,17 +7202,17 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|slp
-operator|=
+comment|/* Timed out, but 0 is enough input. */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0
-expr_stmt|;
-name|flag
-operator||=
-name|IO_NDELAY
-expr_stmt|;
-goto|goto
-name|sleep
-goto|;
+operator|)
+return|;
 block|}
 block|}
 block|}
@@ -7175,7 +7226,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 			 * Rounding down may make us wake up just short 			 * of the target, so we round up. 			 * The formula is ceiling(slp * hz/1000000). 			 * 32-bit arithmetic is enough for hz< 169. 			 * 			 * Also, use plain wakeup() not ttwakeup(). 			 */
+comment|/* 			 * Rounding down may make us wake up just short 			 * of the target, so we round up. 			 * The formula is ceiling(slp * hz/1000000). 			 * 32-bit arithmetic is enough for hz< 169. 			 * XXX see hzto() for how to avoid overflow if hz 			 * is large (divide by `tick' and/or arrange to 			 * use hzto() if hz is large). 			 */
 name|slp
 operator|=
 call|(
@@ -7195,21 +7246,6 @@ literal|999999
 argument_list|)
 operator|/
 literal|1000000
-expr_stmt|;
-name|timeout
-argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|wakeup
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|qp
-argument_list|,
-name|slp
-argument_list|)
 expr_stmt|;
 goto|goto
 name|sleep
@@ -7264,23 +7300,6 @@ operator|&
 name|TS_ISOPEN
 condition|)
 block|{
-if|if
-condition|(
-name|slp
-condition|)
-name|untimeout
-argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|wakeup
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|qp
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -7300,23 +7319,6 @@ operator|&
 name|IO_NDELAY
 condition|)
 block|{
-if|if
-condition|(
-name|slp
-condition|)
-name|untimeout
-argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|wakeup
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|qp
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -7327,6 +7329,31 @@ operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|slp
+condition|)
+block|{
+comment|/* 			 * Use plain wakeup() not ttwakeup(). 			 * XXX why not use the timeout built into tsleep? 			 */
+name|timeout
+argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
+name|wakeup
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|qp
+argument_list|,
+operator|(
+name|int
+operator|)
+name|slp
+argument_list|)
+expr_stmt|;
 block|}
 name|error
 operator|=
@@ -7392,6 +7419,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 		 * XXX what happens if ICANON, MIN or TIME changes or 		 * another process eats some input while we are asleep 		 * (not just here)?  It would be safest to detect changes 		 * and reset our state variables (has_stime and last_cc). 		 */
 goto|goto
 name|loop
 goto|;
