@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.25 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.26 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.25 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.26 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1059,9 +1059,12 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|hp
-operator|->
-name|h_length
+sizeof|sizeof
+name|addr
+operator|.
+name|sin
+operator|.
+name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1563,9 +1566,12 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|hp
-operator|->
-name|h_length
+sizeof|sizeof
+name|addr
+operator|.
+name|sin
+operator|.
+name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
