@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* socketvar.h 4.3 81/11/14 */
+comment|/* socketvar.h 4.4 81/11/16 */
 end_comment
 
 begin_comment
@@ -254,6 +254,21 @@ value|((so)->so_rcv.sb_cc || ((so)->so_state& (SS_CANTRCVMORE|SS_CONNAWAITING)))
 end_define
 
 begin_comment
+comment|/* can we write something to so? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sowriteable
+parameter_list|(
+name|so
+parameter_list|)
+define|\
+value|(sbspace(&(so)->so_snd)> 0 || ((so)->so_state& SS_CANTSENDMORE))
+end_define
+
+begin_comment
 comment|/* adjust counters in sb reflecting allocation of m */
 end_comment
 
@@ -343,7 +358,7 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|sb_copy
+name|sbcopy
 parameter_list|()
 function_decl|;
 end_function_decl

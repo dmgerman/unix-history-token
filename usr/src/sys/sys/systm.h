@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.18	81/10/17	*/
+comment|/*	systm.h	4.19	81/11/16	*/
 end_comment
 
 begin_comment
@@ -503,12 +503,37 @@ begin_comment
 comment|/* reboot flags, from console subsystem */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
-name|select
-parameter_list|()
-function_decl|;
-end_function_decl
+name|selwait
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* casts to keep lint happy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|insque
+parameter_list|(
+name|q
+parameter_list|,
+name|p
+parameter_list|)
+value|_insque((caddr_t)q,(caddr_t)p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|remque
+parameter_list|(
+name|q
+parameter_list|)
+value|_remque((caddr_t)q)
+end_define
 
 end_unit
 
