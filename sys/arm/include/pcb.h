@@ -187,6 +187,23 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|makectx
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|tf
+parameter_list|,
+name|struct
+name|pcb
+modifier|*
+name|pcb
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
