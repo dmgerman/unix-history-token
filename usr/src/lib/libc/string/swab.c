@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swab.c	5.7 (Berkeley) %G%"
+literal|"@(#)swab.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ end_function
 
 begin_decl_stmt
 specifier|register
-name|size_t
+name|int
 name|n
 decl_stmt|;
 end_decl_stmt
@@ -77,12 +77,6 @@ name|unsigned
 name|long
 name|temp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|n
-condition|)
-return|return;
 name|n
 operator|>>=
 literal|1
