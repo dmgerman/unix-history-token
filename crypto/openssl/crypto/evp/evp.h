@@ -113,6 +113,14 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
+name|NO_IDEA
+include|#
+directive|include
+file|<openssl/idea.h>
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
 name|NO_MDC2
 include|#
 directive|include
@@ -783,6 +791,15 @@ comment|/* key schedule (for ede3) */
 block|}
 name|des_ede
 struct|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NO_IDEA
+name|IDEA_KEY_SCHEDULE
+name|idea_ks
+decl_stmt|;
+comment|/* key schedule */
 endif|#
 directive|endif
 ifndef|#
