@@ -2720,7 +2720,7 @@ modifier|*
 name|pr
 call|)
 argument_list|(
-literal|" tn %d sn %d)"
+literal|" tn %d sn %d)\n"
 argument_list|,
 name|sn
 operator|/
