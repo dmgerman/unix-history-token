@@ -688,9 +688,7 @@ operator|&
 name|sin
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|sin
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bcopy

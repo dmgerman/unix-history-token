@@ -845,10 +845,8 @@ argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|url
-argument_list|)
+expr|*
+name|u
 argument_list|)
 operator|)
 operator|==
@@ -1228,10 +1226,8 @@ argument_list|(
 name|u
 argument_list|,
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|u
-argument_list|)
 operator|+
 name|strlen
 argument_list|(
