@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.h	4.5	83/06/29	*/
+comment|/*	lp.h	4.6	83/07/01	*/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wait.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
