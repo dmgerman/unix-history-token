@@ -3174,13 +3174,14 @@ name|master
 operator|==
 name|YP_HAVE_ADJUNCT
 operator|&&
-operator|!
 name|strstr
 argument_list|(
 name|s
 argument_list|,
 literal|"##"
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
