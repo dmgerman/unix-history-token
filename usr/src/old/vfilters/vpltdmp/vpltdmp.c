@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vpltdmp.c	4.5 (Berkeley) %G%"
+literal|"@(#)vpltdmp.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)vpltdmp.c	4.5\t%G%"
+literal|"@(#)vpltdmp.c	4.6\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -558,11 +558,13 @@ argument_list|,
 literal|"t%6.2f\t"
 argument_list|,
 operator|(
+name|double
+operator|)
 name|lines
 operator|/
-literal|200.0
+operator|(
+name|double
 operator|)
-operator|/
 name|PAGE_LINES
 argument_list|)
 expr_stmt|;

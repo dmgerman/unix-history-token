@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rvcat.c	4.6 (Berkeley) %G%"
+literal|"@(#)rvcat.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2372,11 +2372,13 @@ argument_list|,
 literal|"t%6.2f\t"
 argument_list|,
 operator|(
+name|double
+operator|)
 name|lines
 operator|/
-literal|200.0
+operator|(
+name|double
 operator|)
-operator|/
 name|PAGE_LINES
 argument_list|)
 expr_stmt|;
