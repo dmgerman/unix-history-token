@@ -143,7 +143,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* Deliver SIGBUS upon 					   unalinged access */
+comment|/* Deliver SIGBUS upon 					   unaligned access */
 end_comment
 
 begin_define
