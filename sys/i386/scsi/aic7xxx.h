@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.4 1995/02/22 01:43:25 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.5 1995/03/31 13:54:41 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -275,6 +275,11 @@ directive|define
 name|SCB_DOWN_SIZE
 value|19
 comment|/* amount to actually download */
+define|#
+directive|define
+name|SCB_BZERO_SIZE
+value|19
+comment|/*  					 * amount we need to clear between 					 * commands 					 */
 comment|/*23*/
 name|physaddr
 name|data
@@ -296,7 +301,7 @@ define|#
 directive|define
 name|SCB_UP_SIZE
 value|26
-comment|/* amount to actually upload */
+comment|/*  					 * amount we need to upload to perform 					 * a request sense. 					 */
 comment|/*30*/
 name|physaddr
 name|host_scb
@@ -471,6 +476,9 @@ decl_stmt|;
 comment|/* Targets that can handle tagqueing */
 name|int
 name|numscbs
+decl_stmt|;
+name|int
+name|activescbs
 decl_stmt|;
 name|u_char
 name|maxscbs
