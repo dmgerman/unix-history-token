@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -793,6 +793,20 @@ end_define
 begin_comment
 comment|/*  * Definitions for network related sysctl, CTL_NET.  *  * Second level is protocol family.  * Third level is protocol number.  *  * Further levels are defined by the individual families below.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NET_MAXID
+value|AF_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_NET_NAMES
+value|{ \ 	"unspec", \ 	"unix", \ 	"inet", \ 	"implink", \ 	"pup", \ 	"chaos", \ 	"xerox_ns", \ 	"iso", \ 	"emca", \ 	"datakit", \ 	"ccitt", \ 	"ibm_sna", \ 	"decnet", \ 	"dec_dli", \ 	"lat", \ 	"hylink", \ 	"appletalk", \ 	"route", \ 	"link_layer", \ 	"xtp", \ 	"coip", \ 	"cnt", \ }
+end_define
 
 begin_comment
 comment|/*  * PF_ROUTE - Routing table  *  * Three additional levels are defined:  *	Fourth: address family, 0 is wildcard  *	Fifth: type of info, defined below  *	Sixth: flag(s) to mask with for NET_RT_FLAGS  */
