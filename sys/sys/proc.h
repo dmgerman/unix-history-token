@@ -1855,7 +1855,6 @@ modifier|*
 name|p_sigacts
 decl_stmt|;
 comment|/* (x) Signal actions, state (CPU). */
-comment|/*struct ksegrp	p_ksegrp; 	struct kse	p_kse; */
 comment|/* 	 * The following don't make too much sense.. 	 * See the td_ or ke_ versions of the same flags 	 */
 name|int
 name|p_flag
