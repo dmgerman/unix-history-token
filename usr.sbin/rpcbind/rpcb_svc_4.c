@@ -1288,6 +1288,10 @@ operator|&
 name|rlist
 argument_list|)
 expr_stmt|;
+name|tail
+operator|=
+name|NULL
+expr_stmt|;
 name|prog
 operator|=
 name|regp
@@ -1466,7 +1470,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tmerge with: %s"
+literal|"\tmerge with: %s\n"
 argument_list|,
 name|rbl
 operator|->
