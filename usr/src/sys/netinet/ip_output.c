@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	6.3	83/12/15	*/
+comment|/*	ip_output.c	6.4	84/05/25	*/
 end_comment
 
 begin_include
@@ -193,14 +193,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX */
 comment|/* 	 * Fill in IP header. 	 */
-name|ip
-operator|->
-name|ip_hl
-operator|=
-name|hlen
-operator|>>
-literal|2
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -234,7 +226,27 @@ name|ip_id
 operator|++
 argument_list|)
 expr_stmt|;
+name|ip
+operator|->
+name|ip_hl
+operator|=
+name|hlen
+operator|>>
+literal|2
+expr_stmt|;
 block|}
+else|else
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|htons
+argument_list|(
+name|ip
+operator|->
+name|ip_id
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Route packet. 	 */
 if|if
 condition|(
@@ -353,6 +365,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|ro
 operator|->
 name|ro_rt
@@ -360,6 +373,7 @@ operator|->
 name|rt_flags
 operator|&
 name|RTF_UP
+operator|)
 operator|==
 literal|0
 condition|)
@@ -833,6 +847,20 @@ operator|=
 name|off
 operator|>>
 literal|3
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_off
+operator|&
+name|IP_MF
+condition|)
+name|mhip
+operator|->
+name|ip_off
+operator||=
+name|IP_MF
 expr_stmt|;
 if|if
 condition|(
