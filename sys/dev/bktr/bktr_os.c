@@ -2171,10 +2171,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|unsigned
-name|int
-name|unit
-decl_stmt|;
 name|struct
 name|bktr_softc
 modifier|*
@@ -2185,13 +2181,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* Disable the brooktree device */
 name|OUTL
 argument_list|(
@@ -2228,7 +2217,10 @@ name|printf
 argument_list|(
 literal|"bktr%d: i2c_attach: can't attach\n"
 argument_list|,
-name|unit
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
