@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -858,10 +858,9 @@ name|SmtpOut
 argument_list|,
 literal|".%s"
 argument_list|,
-name|crlf
-argument_list|(
 name|m
-argument_list|)
+operator|->
+name|m_eol
 argument_list|)
 expr_stmt|;
 if|if
@@ -1455,10 +1454,9 @@ literal|"%s%s"
 argument_list|,
 name|buf
 argument_list|,
-name|crlf
-argument_list|(
 name|m
-argument_list|)
+operator|->
+name|m_eol
 argument_list|)
 expr_stmt|;
 block|}
