@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass2.c,v 1.10 1995/11/10 12:17:23 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass2.c,v 1.11 1996/02/05 16:06:52 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -484,6 +484,41 @@ break|break;
 block|}
 if|if
 condition|(
+name|SetTime
+operator|&&
+name|getuid
+argument_list|()
+operator|&&
+operator|(
+name|getuid
+argument_list|()
+operator|!=
+name|st
+operator|.
+name|st_uid
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  %s: %s not mine, cannot set time.\n"
+argument_list|,
+name|sp
+operator|->
+name|Key
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|ret
+operator||=
+name|Exit_NotOK
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|j
 operator|&
 name|CTM_Q_Name_Dir
@@ -800,6 +835,16 @@ name|ret
 operator||=
 name|j
 expr_stmt|;
+name|unlink
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -836,6 +881,16 @@ expr_stmt|;
 name|ret
 operator||=
 name|Exit_Mess
+expr_stmt|;
+name|unlink
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 return|return
 name|ret

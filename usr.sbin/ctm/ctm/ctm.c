@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.11 1995/05/30 03:47:19 rgrimes Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a  * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -B<file>		Backup to tar-file.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -b<dir>		Base-dir  * -c			Check it out, don't do anything.  * -F      		Force  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -v 			Tell us more.  * -V<level>		Tell us more level = number of -v  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.12 1996/02/05 16:06:46 phk Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a  * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -B<file>		Backup to tar-file.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -b<dir>		Base-dir  * -c			Check it out, don't do anything.  * -F      		Force  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -u			Set all file modification times to the timestamp  * -v 			Tell us more.  * -V<level>		Tell us more level = number of -v  *  */
 end_comment
 
 begin_define
@@ -97,6 +97,10 @@ name|Paranoid
 operator|=
 literal|1
 expr_stmt|;
+name|SetTime
+operator|=
+literal|0
+expr_stmt|;
 name|setbuf
 argument_list|(
 name|stderr
@@ -122,7 +126,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:B:cd:Fm:pPqr:R:T:V:v"
+literal|"ab:B:cd:Fm:pPqr:R:T:uV:v"
 argument_list|)
 operator|)
 operator|!=
@@ -200,6 +204,14 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'u'
+case|:
+name|SetTime
+operator|++
+expr_stmt|;
+break|break;
+comment|/* Set timestamp on files */
 case|case
 literal|'V'
 case|:

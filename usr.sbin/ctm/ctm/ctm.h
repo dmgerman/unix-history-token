@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.7 1995/05/30 03:47:21 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.8 1996/02/05 16:06:47 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -61,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_define
@@ -403,6 +415,24 @@ begin_decl_stmt
 name|EXTERN
 name|int
 name|CheckIt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|SetTime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|timeval
+name|Times
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 

@@ -145,6 +145,18 @@ begin_comment
 comment|/* Run with '-v' */
 end_comment
 
+begin_decl_stmt
+name|int
+name|set_time
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set the time of the files that is changed. */
+end_comment
+
 begin_function_decl
 name|void
 name|apply_complete
@@ -277,7 +289,7 @@ argument_list|)
 expr_stmt|;
 name|OPTIONS
 argument_list|(
-literal|"[-Df] [-p piecedir] [-d deltadir] [-b basedir] [-l log] [file ...]"
+literal|"[-Dfuv] [-p piecedir] [-d deltadir] [-b basedir] [-l log] [file ...]"
 argument_list|)
 name|FLAG
 argument_list|(
@@ -290,6 +302,12 @@ argument_list|(
 literal|'f'
 argument_list|,
 argument|fork_ctm
+argument_list|)
+name|FLAG
+argument_list|(
+literal|'u'
+argument_list|,
+argument|set_time
 argument_list|)
 name|FLAG
 argument_list|(
@@ -745,9 +763,15 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"(cd %s&& ctm %s%s%s) 2>&1"
+literal|"(cd %s&& ctm %s%s%s%s) 2>&1"
 argument_list|,
 name|base_dir
+argument_list|,
+name|set_time
+condition|?
+literal|"-u "
+else|:
+literal|""
 argument_list|,
 name|apply_verbose
 condition|?
