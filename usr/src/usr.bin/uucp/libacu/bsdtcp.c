@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsdtcp.c	4.1 (Berkeley) %G%"
+literal|"@(#)bsdtcp.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -42,12 +48,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_comment
@@ -262,6 +262,26 @@ name|hp
 operator|->
 name|h_addrtype
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BSD2_9
+name|s
+operator|=
+name|socket
+argument_list|(
+name|SOCK_STREAM
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|hisctladdr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|BSD4_2
 name|s
 operator|=
 name|socket
@@ -273,10 +293,11 @@ argument_list|,
 name|SOCK_STREAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|BSD4_2
 if|if
 condition|(
 name|s
@@ -286,6 +307,9 @@ condition|)
 goto|goto
 name|bad
 goto|;
+ifndef|#
+directive|ifndef
+name|BSD2_9
 if|if
 condition|(
 name|bind
@@ -312,6 +336,9 @@ condition|)
 goto|goto
 name|bad
 goto|;
+endif|#
+directive|endif
+endif|BSD2_9
 name|bcopy
 argument_list|(
 name|hp
@@ -338,6 +365,28 @@ name|sin_port
 operator|=
 name|port
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BSD2_9
+if|if
+condition|(
+name|connect
+argument_list|(
+name|s
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|hisctladdr
+argument_list|)
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
+else|BSD4_2
 if|if
 condition|(
 name|connect
@@ -361,6 +410,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
+endif|BSD4_2
 goto|goto
 name|bad
 goto|;

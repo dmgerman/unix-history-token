@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dn.c	4.1 (Berkeley) %G%"
+literal|"@(#)dn.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,13 @@ ifdef|#
 directive|ifdef
 name|DN11
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACULAST
+value|"-<"
+end_define
 
 begin_comment
 comment|/***  *	dnopn(ph, flds, dev)	dial remote machine  *  *	return codes:  *		file descriptor  -  succeeded  *		FAIL  -  failed  */
@@ -96,14 +103,14 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYSIII
+name|USG
 name|struct
 name|termio
 name|ttbuf
 decl_stmt|;
 endif|#
 directive|endif
-endif|SYSIII
+endif|USG
 name|int
 name|dnf
 decl_stmt|,
@@ -121,6 +128,17 @@ decl_stmt|;
 name|unsigned
 name|timelim
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCFLUSH
+name|int
+name|zero
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
+endif|TIOCFLUSH
 name|sprintf
 argument_list|(
 name|dnname
@@ -387,11 +405,13 @@ name|dnf
 argument_list|,
 name|TIOCFLUSH
 argument_list|,
-name|STBNULL
+operator|&
+name|zero
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|TIOCFLUSH
 name|nw
 operator|=
 name|write
@@ -566,7 +586,7 @@ condition|)
 empty_stmt|;
 ifdef|#
 directive|ifdef
-name|SYSIII
+name|USG
 name|ioctl
 argument_list|(
 name|dcf
@@ -608,7 +628,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|SYSIII
+endif|USG
 name|alarm
 argument_list|(
 literal|0

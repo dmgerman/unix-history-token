@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df2.c	4.1 (Berkeley) %G%"
+literal|"@(#)df2.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,13 +96,14 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYSIII
+name|USG
 name|struct
 name|termio
 name|ttbuf
 decl_stmt|;
 endif|#
 directive|endif
+endif|USG
 name|int
 name|dcf
 decl_stmt|,
@@ -122,6 +123,17 @@ decl_stmt|;
 name|unsigned
 name|timelim
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCFLUSH
+name|int
+name|zero
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
+endif|TIOCFLUSH
 name|sprintf
 argument_list|(
 name|dnname
@@ -400,7 +412,8 @@ name|dnf
 argument_list|,
 name|TIOCFLUSH
 argument_list|,
-name|STBNULL
+operator|&
+name|zero
 argument_list|)
 expr_stmt|;
 endif|#
@@ -592,7 +605,7 @@ condition|)
 empty_stmt|;
 ifdef|#
 directive|ifdef
-name|SYSIII
+name|USG
 name|ioctl
 argument_list|(
 name|dcf
@@ -634,7 +647,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|SYSIII
+endif|USG
 name|alarm
 argument_list|(
 literal|0
