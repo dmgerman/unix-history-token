@@ -5047,7 +5047,8 @@ name|ifp
 operator|->
 name|if_hwassist
 operator|=
-name|RE_CSUM_FEATURES
+comment|/*RE_CSUM_FEATURES*/
+literal|0
 expr_stmt|;
 name|ifp
 operator|->
@@ -5134,6 +5135,9 @@ operator|=
 name|ifp
 operator|->
 name|if_capabilities
+operator|&
+operator|~
+name|IFCAP_HWCSUM
 expr_stmt|;
 name|callout_handle_init
 argument_list|(
