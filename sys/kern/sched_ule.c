@@ -3439,9 +3439,6 @@ name|thread
 modifier|*
 name|newtd
 decl_stmt|;
-name|u_int
-name|sched_nest
-decl_stmt|;
 name|struct
 name|kse
 modifier|*
@@ -3617,12 +3614,6 @@ name|ke
 argument_list|)
 expr_stmt|;
 block|}
-name|sched_nest
-operator|=
-name|sched_lock
-operator|.
-name|mtx_recurse
-expr_stmt|;
 name|newtd
 operator|=
 name|choosethread
@@ -3640,12 +3631,6 @@ name|td
 argument_list|,
 name|newtd
 argument_list|)
-expr_stmt|;
-name|sched_lock
-operator|.
-name|mtx_recurse
-operator|=
-name|sched_nest
 expr_stmt|;
 name|sched_lock
 operator|.
