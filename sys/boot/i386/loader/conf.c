@@ -183,7 +183,23 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|file_format
+name|i386_elf_obj
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|file_format
 name|amd64_elf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|file_format
+name|amd64_elf_obj
 decl_stmt|;
 end_decl_stmt
 
@@ -199,7 +215,13 @@ operator|&
 name|i386_elf
 block|,
 operator|&
+name|i386_elf_obj
+block|,
+operator|&
 name|amd64_elf
+block|,
+operator|&
+name|amd64_elf_obj
 block|,
 name|NULL
 block|}
