@@ -24,7 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -163,7 +175,7 @@ name|NULL
 condition|)
 name|ret
 operator|=
-name|pthread_rwlock_init
+name|_pthread_rwlock_init
 argument_list|(
 name|rwlock
 argument_list|,
@@ -221,7 +233,7 @@ operator|=
 operator|*
 name|rwlock
 expr_stmt|;
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 argument_list|(
 operator|&
 name|prwlock
@@ -229,7 +241,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|pthread_cond_destroy
+name|_pthread_cond_destroy
 argument_list|(
 operator|&
 name|prwlock
@@ -237,7 +249,7 @@ operator|->
 name|read_signal
 argument_list|)
 expr_stmt|;
-name|pthread_cond_destroy
+name|_pthread_cond_destroy
 argument_list|(
 operator|&
 name|prwlock
@@ -320,7 +332,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 operator|&
 name|prwlock
@@ -343,7 +355,7 @@ block|{
 comment|/* initialize the read condition signal */
 name|ret
 operator|=
-name|pthread_cond_init
+name|_pthread_cond_init
 argument_list|(
 operator|&
 name|prwlock
@@ -360,7 +372,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 argument_list|(
 operator|&
 name|prwlock
@@ -379,7 +391,7 @@ block|{
 comment|/* initialize the write condition signal */
 name|ret
 operator|=
-name|pthread_cond_init
+name|_pthread_cond_init
 argument_list|(
 operator|&
 name|prwlock
@@ -396,7 +408,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pthread_cond_destroy
+name|_pthread_cond_destroy
 argument_list|(
 operator|&
 name|prwlock
@@ -404,7 +416,7 @@ operator|->
 name|read_signal
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 argument_list|(
 operator|&
 name|prwlock
@@ -518,7 +530,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|prwlock
@@ -550,7 +562,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|pthread_cond_wait
+name|_pthread_cond_wait
 argument_list|(
 operator|&
 name|prwlock
@@ -571,7 +583,7 @@ literal|0
 condition|)
 block|{
 comment|/* can't do a whole lot if this fails */
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|prwlock
@@ -607,7 +619,7 @@ name|state
 expr_stmt|;
 comment|/* indicate we are locked for reading */
 comment|/* 	 * Something is really wrong if this call fails.  Returning 	 * error won't do because we've already obtained the read 	 * lock.  Decrementing 'state' is no good because we probably 	 * don't have the monitor lock. 	 */
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|prwlock
@@ -692,7 +704,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|prwlock
@@ -747,7 +759,7 @@ name|state
 expr_stmt|;
 comment|/* indicate we are locked for reading */
 comment|/* see the comment on this in pthread_rwlock_rdlock */
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|prwlock
@@ -832,7 +844,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|prwlock
@@ -870,7 +882,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* see the comment on this in pthread_rwlock_rdlock */
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|prwlock
@@ -934,7 +946,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|prwlock
@@ -974,7 +986,7 @@ name|blocked_writers
 condition|)
 name|ret
 operator|=
-name|pthread_cond_signal
+name|_pthread_cond_signal
 argument_list|(
 operator|&
 name|prwlock
@@ -1007,7 +1019,7 @@ name|blocked_writers
 condition|)
 name|ret
 operator|=
-name|pthread_cond_signal
+name|_pthread_cond_signal
 argument_list|(
 operator|&
 name|prwlock
@@ -1018,7 +1030,7 @@ expr_stmt|;
 else|else
 name|ret
 operator|=
-name|pthread_cond_broadcast
+name|_pthread_cond_broadcast
 argument_list|(
 operator|&
 name|prwlock
@@ -1033,7 +1045,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 comment|/* see the comment on this in pthread_rwlock_rdlock */
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|prwlock
@@ -1118,7 +1130,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|prwlock
@@ -1150,7 +1162,7 @@ name|blocked_writers
 expr_stmt|;
 name|ret
 operator|=
-name|pthread_cond_wait
+name|_pthread_cond_wait
 argument_list|(
 operator|&
 name|prwlock
@@ -1175,7 +1187,7 @@ name|prwlock
 operator|->
 name|blocked_writers
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|prwlock
@@ -1204,7 +1216,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* see the comment on this in pthread_rwlock_rdlock */
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|prwlock

@@ -42,7 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -102,7 +114,7 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
-name|pthread_sigmask
+name|_pthread_sigmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -199,7 +211,7 @@ expr_stmt|;
 comment|/* 		 * Lock the garbage collector mutex which ensures that 		 * this thread sees another thread exit: 		 */
 if|if
 condition|(
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|_gc_mutex
@@ -422,7 +434,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_cond_timedwait
+name|_pthread_cond_timedwait
 argument_list|(
 operator|&
 name|_gc_cond
@@ -450,7 +462,7 @@ block|}
 comment|/* Unlock the garbage collector mutex: */
 if|if
 condition|(
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|_gc_mutex

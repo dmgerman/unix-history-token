@@ -308,7 +308,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Reinitialize a mutex to defaults. */
+comment|/*  * Reinitialize a private mutex; this is only used for internal mutexes.  */
 end_comment
 
 begin_function
@@ -345,7 +345,7 @@ name|NULL
 condition|)
 name|ret
 operator|=
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 name|mutex
 argument_list|,
@@ -410,17 +410,10 @@ name|mutex
 operator|)
 operator|->
 name|m_flags
-operator|&=
-name|MUTEX_FLAGS_PRIVATE
-expr_stmt|;
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_flags
 operator||=
 name|MUTEX_FLAGS_INITED
+operator||
+name|MUTEX_FLAGS_PRIVATE
 expr_stmt|;
 operator|(
 operator|*
@@ -533,7 +526,6 @@ operator|=
 name|EINVAL
 expr_stmt|;
 comment|/* Check if default mutex attributes: */
-elseif|else
 if|if
 condition|(
 name|mutex_attr
@@ -2638,7 +2630,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 name|mutex
 argument_list|)
@@ -4484,7 +4476,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|m

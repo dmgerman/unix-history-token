@@ -6,7 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -61,7 +73,7 @@ condition|)
 name|_thread_init
 argument_list|()
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -90,7 +102,7 @@ operator|=
 name|PTHREAD_DONE_INIT
 expr_stmt|;
 block|}
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(

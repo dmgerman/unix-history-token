@@ -2446,7 +2446,7 @@ begin_decl_stmt
 name|SCLASS
 name|struct
 name|pthread_attr
-name|pthread_attr_default
+name|_pthread_attr_default
 ifdef|#
 directive|ifdef
 name|GLOBAL_PTHREAD_PRIVATE
@@ -2496,75 +2496,24 @@ begin_comment
 comment|/* Default mutex attributes: */
 end_comment
 
-begin_decl_stmt
-name|SCLASS
-name|struct
-name|pthread_mutex_attr
-name|pthread_mutexattr_default
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-block|{
-name|PTHREAD_MUTEX_DEFAULT
-block|,
-name|PTHREAD_PRIO_NONE
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|PTHREAD_MUTEXATTR_DEFAULT
+define|\
+value|{ PTHREAD_MUTEX_DEFAULT, PTHREAD_PRIO_NONE, 0, 0 }
+end_define
 
 begin_comment
 comment|/* Default condition variable attributes: */
 end_comment
 
-begin_decl_stmt
-name|SCLASS
-name|struct
-name|pthread_cond_attr
-name|pthread_condattr_default
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-block|{
-name|COND_TYPE_FAST
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|PTHREAD_CONDATTR_DEFAULT
+value|{ COND_TYPE_FAST, 0 }
+end_define
 
 begin_comment
 comment|/*  * Standard I/O file descriptors need special flag treatment since  * setting one to non-blocking does all on *BSD. Sigh. This array  * is used to store the initial flag settings.  */

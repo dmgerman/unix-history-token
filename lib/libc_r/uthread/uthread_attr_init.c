@@ -92,12 +92,12 @@ argument_list|(
 name|pattr
 argument_list|,
 operator|&
-name|pthread_attr_default
+name|_pthread_attr_default
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|pthread_attr
+operator|*
+name|pattr
 argument_list|)
 argument_list|)
 expr_stmt|;

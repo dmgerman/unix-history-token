@@ -148,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -184,11 +190,50 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pthread_private.h"
 end_include
 
+begin_function_decl
+name|int
+name|__pthread_cond_wait
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+parameter_list|,
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__pthread_mutex_lock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__pthread_mutex_trylock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * All weak references used within libc should be in this table.  * This will is so that static libraries will work.  */
+comment|/*  * All weak references used within libc should be in this table.  * This allows static libraries to work.  */
 end_comment
 
 begin_decl_stmt
@@ -270,6 +315,18 @@ name|_nanosleep
 block|,
 operator|&
 name|_open
+block|,
+operator|&
+name|_pthread_cond_destroy
+block|,
+operator|&
+name|_pthread_cond_init
+block|,
+operator|&
+name|_pthread_cond_signal
+block|,
+operator|&
+name|_pthread_cond_wait
 block|,
 operator|&
 name|_pthread_getspecific
@@ -362,7 +419,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These are needed when linking statically.  All references within  * libgcc (and in the future libc) to these routines are weak, but  * if they are not (strongly) referenced by the application or other  * libraries, then the actual functions will not be loaded.  */
+comment|/*  * These are needed when linking statically.  All references within  * libgcc (and libc) to these routines are weak, but if they are not  * (strongly) referenced by the application or other libraries, then  * the actual functions will not be loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -402,6 +459,269 @@ name|_pthread_mutex_trylock
 block|,
 operator|&
 name|_pthread_mutex_unlock
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DUAL_ENTRY
+parameter_list|(
+name|entry
+parameter_list|)
+define|\
+value|(pthread_func_t)entry, (pthread_func_t)entry
+end_define
+
+begin_decl_stmt
+specifier|static
+name|pthread_func_t
+name|jmp_table
+index|[]
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cond_broadcast
+argument_list|)
+block|}
+block|,
+comment|/* PJT_COND_BROADCAST */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cond_destroy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_COND_DESTROY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cond_init
+argument_list|)
+block|}
+block|,
+comment|/* PJT_COND_INIT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cond_signal
+argument_list|)
+block|}
+block|,
+comment|/* PJT_COND_SIGNAL */
+block|{
+operator|(
+name|pthread_func_t
+operator|)
+name|__pthread_cond_wait
+block|,
+operator|(
+name|pthread_func_t
+operator|)
+name|_pthread_cond_wait
+block|}
+block|,
+comment|/* PJT_COND_WAIT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_getspecific
+argument_list|)
+block|}
+block|,
+comment|/* PJT_GETSPECIFIC */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_key_create
+argument_list|)
+block|}
+block|,
+comment|/* PJT_KEY_CREATE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_key_delete
+argument_list|)
+block|}
+block|,
+comment|/* PJT_KEY_DELETE*/
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_main_np
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MAIN_NP */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutex_destroy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEX_DESTROY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutex_init
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEX_INIT */
+block|{
+operator|(
+name|pthread_func_t
+operator|)
+name|__pthread_mutex_lock
+block|,
+operator|(
+name|pthread_func_t
+operator|)
+name|_pthread_mutex_lock
+block|}
+block|,
+comment|/* PJT_MUTEX_LOCK */
+block|{
+operator|(
+name|pthread_func_t
+operator|)
+name|__pthread_mutex_trylock
+block|,
+operator|(
+name|pthread_func_t
+operator|)
+name|_pthread_mutex_trylock
+block|}
+block|,
+comment|/* PJT_MUTEX_TRYLOCK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutex_unlock
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEX_UNLOCK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_destroy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_DESTROY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_init
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_INIT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_settype
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_SETTYPE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_once
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ONCE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_rwlock_destroy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_RWLOCK_DESTROY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_rwlock_init
+argument_list|)
+block|}
+block|,
+comment|/* PJT_RWLOCK_INIT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_rwlock_rdlock
+argument_list|)
+block|}
+block|,
+comment|/* PJT_RWLOCK_RDLOCK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_rwlock_tryrdlock
+argument_list|)
+block|}
+block|,
+comment|/* PJT_RWLOCK_TRYRDLOCK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_rwlock_trywrlock
+argument_list|)
+block|}
+block|,
+comment|/* PJT_RWLOCK_TRYWRLOCK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_rwlock_unlock
+argument_list|)
+block|}
+block|,
+comment|/* PJT_RWLOCK_UNLOCK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_rwlock_wrlock
+argument_list|)
+block|}
+block|,
+comment|/* PJT_RWLOCK_WRLOCK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_self
+argument_list|)
+block|}
+block|,
+comment|/* PJT_SELF */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_setspecific
+argument_list|)
+block|}
+block|,
+comment|/* PJT_SETSPECIFIC */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_sigmask
+argument_list|)
+block|}
+comment|/* PJT_SIGMASK */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -459,27 +779,6 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
-name|_pthread_page_size
-operator|=
-name|getpagesize
-argument_list|()
-expr_stmt|;
-name|_pthread_guard_default
-operator|=
-name|getpagesize
-argument_list|()
-expr_stmt|;
-name|sched_stack_size
-operator|=
-name|getpagesize
-argument_list|()
-expr_stmt|;
-name|pthread_attr_default
-operator|.
-name|guardsize_attr
-operator|=
-name|_pthread_guard_default
-expr_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
 condition|(
@@ -487,6 +786,26 @@ name|_thread_initial
 condition|)
 comment|/* Only initialise the threaded application once. */
 return|return;
+name|_pthread_page_size
+operator|=
+name|getpagesize
+argument_list|()
+expr_stmt|;
+empty_stmt|;
+name|_pthread_guard_default
+operator|=
+name|_pthread_page_size
+expr_stmt|;
+name|sched_stack_size
+operator|=
+name|_pthread_page_size
+expr_stmt|;
+name|_pthread_attr_default
+operator|.
+name|guardsize_attr
+operator|=
+name|_pthread_guard_default
+expr_stmt|;
 comment|/* 	 * Make gcc quiescent about {,libgcc_}references not being 	 * referenced: 	 */
 if|if
 condition|(
@@ -511,6 +830,42 @@ condition|)
 name|PANIC
 argument_list|(
 literal|"Failed loading mandatory references in _thread_init"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Check the size of the jump table to make sure it is preset 	 * with the correct number of entries. 	 */
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|jmp_table
+argument_list|)
+operator|!=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|pthread_func_t
+argument_list|)
+operator|*
+name|PJT_MAX
+operator|*
+literal|2
+operator|)
+condition|)
+name|PANIC
+argument_list|(
+literal|"Thread jump table not properly initialized"
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|__thr_jtable
+argument_list|,
+name|jmp_table
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|jmp_table
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for the special case of this process running as 	 * or in place of init as pid = 1: 	 */
@@ -1042,7 +1397,7 @@ operator|->
 name|attr
 argument_list|,
 operator|&
-name|pthread_attr_default
+name|_pthread_attr_default
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1810,7 +2165,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|pthread_cond_init
+name|_pthread_cond_init
 argument_list|(
 operator|&
 name|_gc_cond

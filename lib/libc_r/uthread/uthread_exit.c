@@ -42,7 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -50,14 +62,6 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|FLAGS_IN_SCHEDQ
-define|\
-value|(PTHREAD_FLAGS_IN_PRIOQ|PTHREAD_FLAGS_IN_WAITQ|PTHREAD_FLAGS_IN_WORKQ)
-end_define
 
 begin_expr_stmt
 name|__weak_reference
@@ -497,7 +501,7 @@ block|}
 comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
 if|if
 condition|(
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|_gc_mutex
@@ -524,7 +528,7 @@ expr_stmt|;
 comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
 if|if
 condition|(
-name|pthread_cond_signal
+name|_pthread_cond_signal
 argument_list|(
 operator|&
 name|_gc_cond
@@ -544,7 +548,7 @@ expr_stmt|;
 comment|/* Unlock the garbage collector mutex: */
 if|if
 condition|(
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|_gc_mutex

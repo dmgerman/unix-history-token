@@ -43,6 +43,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|pthread_cond_attr
+name|default_condattr
+init|=
+name|PTHREAD_CONDATTR_DEFAULT
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|_pthread_condattr_init
@@ -91,7 +101,7 @@ argument_list|(
 name|pattr
 argument_list|,
 operator|&
-name|pthread_condattr_default
+name|default_condattr
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -87,9 +87,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pselect
+argument_list|,
+name|pselect
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|pselect
+name|_pselect
 parameter_list|(
 name|int
 name|count

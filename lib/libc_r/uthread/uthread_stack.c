@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -204,7 +216,7 @@ block|{
 comment|/* 		 * Use the garbage collector mutex for synchronization of the 		 * spare stack list. 		 */
 if|if
 condition|(
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|_gc_mutex
@@ -250,7 +262,7 @@ block|}
 comment|/* Unlock the garbage collector mutex. */
 if|if
 condition|(
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|_gc_mutex
@@ -270,7 +282,7 @@ block|{
 comment|/* 		 * Use the garbage collector mutex for synchronization of the 		 * spare stack list. 		 */
 if|if
 condition|(
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|_gc_mutex
@@ -326,7 +338,7 @@ block|}
 comment|/* Unlock the garbage collector mutex. */
 if|if
 condition|(
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|_gc_mutex

@@ -24,7 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -234,7 +246,7 @@ block|}
 comment|/* 	 * Initialize the semaphore. 	 */
 if|if
 condition|(
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 operator|&
 operator|(
@@ -271,7 +283,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|pthread_cond_init
+name|_pthread_cond_init
 argument_list|(
 operator|&
 operator|(
@@ -287,7 +299,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 argument_list|(
 operator|&
 operator|(
@@ -377,7 +389,7 @@ name|sem
 argument_list|)
 expr_stmt|;
 comment|/* Make sure there are no waiters. */
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -400,7 +412,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -424,7 +436,7 @@ goto|goto
 name|RETURN
 goto|;
 block|}
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -435,7 +447,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 argument_list|(
 operator|&
 operator|(
@@ -446,7 +458,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|pthread_cond_destroy
+name|_pthread_cond_destroy
 argument_list|(
 operator|&
 operator|(
@@ -571,7 +583,7 @@ argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -602,7 +614,7 @@ operator|->
 name|nwaiters
 operator|++
 expr_stmt|;
-name|pthread_cond_wait
+name|_pthread_cond_wait
 argument_list|(
 operator|&
 operator|(
@@ -638,7 +650,7 @@ operator|->
 name|count
 operator|--
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -681,7 +693,7 @@ argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -729,7 +741,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -769,7 +781,7 @@ comment|/* 	 * sem_post() is required to be safe to call from within signal 	 * 
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -799,7 +811,7 @@ name|nwaiters
 operator|>
 literal|0
 condition|)
-name|pthread_cond_signal
+name|_pthread_cond_signal
 argument_list|(
 operator|&
 operator|(
@@ -810,7 +822,7 @@ operator|->
 name|gtzero
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -857,7 +869,7 @@ argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -881,7 +893,7 @@ argument_list|)
 operator|->
 name|count
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(

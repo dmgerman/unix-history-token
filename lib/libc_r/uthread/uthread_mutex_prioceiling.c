@@ -24,7 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -348,7 +360,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 name|mutex
 argument_list|)
@@ -380,7 +392,7 @@ expr_stmt|;
 comment|/* Unlock the mutex: */
 name|ret
 operator|=
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 name|mutex
 argument_list|)

@@ -43,6 +43,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|pthread_mutex_attr
+name|default_mutexattr
+init|=
+name|PTHREAD_MUTEXATTR_DEFAULT
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|_pthread_mutexattr_init
@@ -91,7 +101,7 @@ argument_list|(
 name|pattr
 argument_list|,
 operator|&
-name|pthread_mutexattr_default
+name|default_mutexattr
 argument_list|,
 sizeof|sizeof
 argument_list|(

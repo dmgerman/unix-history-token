@@ -54,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -304,7 +316,7 @@ comment|/* Use the default thread attributes: */
 name|pattr
 operator|=
 operator|&
-name|pthread_attr_default
+name|_pthread_attr_default
 expr_stmt|;
 block|}
 else|else
@@ -796,7 +808,7 @@ if|if
 condition|(
 name|f_gc
 operator|&&
-name|pthread_create
+name|_pthread_create
 argument_list|(
 operator|&
 name|gc_thread
@@ -847,7 +859,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Run the current thread's start routine with argument: */
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|curthread
 operator|->
