@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)isatty.c	4.1 (Berkeley) %G% */
+comment|/* @(#)isatty.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -28,9 +28,11 @@ name|ttyb
 decl_stmt|;
 if|if
 condition|(
-name|gtty
+name|ioctl
 argument_list|(
 name|f
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|ttyb
