@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.6 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1231,7 +1231,7 @@ name|MEMROW
 argument_list|,
 name|MEMCOL
 argument_list|,
-literal|"Mem     REAL    VIRTUAL "
+literal|"Mem     REAL     VIRTUAL"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1242,7 +1242,7 @@ literal|1
 argument_list|,
 name|MEMCOL
 argument_list|,
-literal|"      Tot Text  Tot Text"
+literal|"      Tot Text   Tot Text"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1275,7 +1275,7 @@ literal|1
 argument_list|,
 name|MEMCOL
 operator|+
-literal|27
+literal|28
 argument_list|,
 literal|"Free"
 argument_list|)
@@ -1767,6 +1767,13 @@ parameter_list|)
 value|{t = s.nchstats.fld; s.nchstats.fld -= s1.nchstats.fld; \ 	if(state == TIME) s1.nchstats.fld = t;}
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXFAIL
+value|5
+end_define
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -1830,6 +1837,12 @@ decl_stmt|,
 name|l
 decl_stmt|,
 name|c
+decl_stmt|;
+specifier|static
+name|int
+name|failcnt
+init|=
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -1915,8 +1928,68 @@ name|etime
 operator|<
 literal|5.0
 condition|)
+block|{
 comment|/*< 5 ticks - ignore this trash */
+if|if
+condition|(
+name|failcnt
+operator|++
+operator|>=
+name|MAXFAIL
+condition|)
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+name|mvprintw
+argument_list|(
+literal|2
+argument_list|,
+literal|10
+argument_list|,
+literal|"The alternate system clock has died!"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+literal|3
+argument_list|,
+literal|10
+argument_list|,
+literal|"Reverting to ``pigs'' display."
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|CMDLINE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
+name|failcnt
+operator|=
+literal|0
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|command
+argument_list|(
+literal|"pigs"
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
+block|}
+name|failcnt
+operator|=
+literal|0
+expr_stmt|;
 name|etime
 operator|/=
 name|hertz
@@ -2384,7 +2457,7 @@ name|MEMCOL
 operator|+
 literal|14
 argument_list|,
-literal|5
+literal|6
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2401,7 +2474,7 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|19
+literal|20
 argument_list|,
 literal|5
 argument_list|)
@@ -2460,7 +2533,7 @@ name|MEMCOL
 operator|+
 literal|14
 argument_list|,
-literal|5
+literal|6
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2477,7 +2550,7 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|19
+literal|20
 argument_list|,
 literal|5
 argument_list|)
@@ -2496,7 +2569,7 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|26
+literal|27
 argument_list|,
 literal|5
 argument_list|)
