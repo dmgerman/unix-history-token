@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RESET.c 1.2 %G%"
+literal|"@(#)RESET.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,11 +87,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|rewind
+name|fseek
 argument_list|(
 name|filep
 operator|->
 name|fbuf
+argument_list|,
+operator|(
+name|long
+operator|)
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
