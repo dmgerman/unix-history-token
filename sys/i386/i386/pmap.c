@@ -2198,7 +2198,19 @@ decl_stmt|;
 block|{
 name|pd_entry_t
 name|frame
-init|=
+decl_stmt|;
+comment|/* are we current address space or kernel? */
+if|if
+condition|(
+name|pmap
+operator|==
+name|kernel_pmap
+condition|)
+return|return
+name|PTmap
+return|;
+name|frame
+operator|=
 name|pmap
 operator|->
 name|pm_pdir
@@ -2207,14 +2219,9 @@ name|PTDPTDI
 index|]
 operator|&
 name|PG_FRAME
-decl_stmt|;
-comment|/* are we current address space or kernel? */
+expr_stmt|;
 if|if
 condition|(
-name|pmap
-operator|==
-name|kernel_pmap
-operator|||
 name|frame
 operator|==
 operator|(
