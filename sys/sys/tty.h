@@ -110,24 +110,10 @@ name|int
 name|t_line
 decl_stmt|;
 comment|/* Interface to device drivers. */
-union|union
-block|{
 name|dev_t
-name|t_kdev
+name|t_dev
 decl_stmt|;
 comment|/* Device. */
-name|udev_t
-name|t_udev
-decl_stmt|;
-comment|/* Userland (sysctl) instance. */
-name|void
-modifier|*
-name|t_devp
-decl_stmt|;
-comment|/* Keep user/kernel size in sync. */
-block|}
-name|ttyu
-union|;
 name|int
 name|t_state
 decl_stmt|;
@@ -295,13 +281,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|t_dev
-value|ttyu.t_kdev
-end_define
-
-begin_define
-define|#
-directive|define
 name|t_iflag
 value|t_termios.c_iflag
 end_define
@@ -369,6 +348,110 @@ end_define
 begin_comment
 comment|/* Sleep priority for tty writes. */
 end_comment
+
+begin_comment
+comment|/*  * Userland version of struct tty, for sysctl  */
+end_comment
+
+begin_struct
+struct|struct
+name|xtty
+block|{
+name|size_t
+name|xt_size
+decl_stmt|;
+comment|/* Structure size */
+name|long
+name|xt_rawcc
+decl_stmt|;
+comment|/* Raw input queue statistics. */
+name|long
+name|xt_cancc
+decl_stmt|;
+comment|/* Canonical queue statistics. */
+name|long
+name|xt_outcc
+decl_stmt|;
+comment|/* Output queue statistics. */
+name|int
+name|xt_line
+decl_stmt|;
+comment|/* Interface to device drivers. */
+name|udev_t
+name|xt_dev
+decl_stmt|;
+comment|/* Userland (sysctl) instance. */
+name|int
+name|xt_state
+decl_stmt|;
+comment|/* Device and driver (TS*) state. */
+name|int
+name|xt_flags
+decl_stmt|;
+comment|/* Tty flags. */
+name|int
+name|xt_timeout
+decl_stmt|;
+comment|/* Timeout for ttywait() */
+name|pid_t
+name|xt_pgid
+decl_stmt|;
+comment|/* Process group ID */
+name|pid_t
+name|xt_sid
+decl_stmt|;
+comment|/* Session ID */
+name|struct
+name|termios
+name|xt_termios
+decl_stmt|;
+comment|/* Termios state. */
+name|struct
+name|winsize
+name|xt_winsize
+decl_stmt|;
+comment|/* Window size. */
+name|int
+name|xt_column
+decl_stmt|;
+comment|/* Tty output column. */
+name|int
+name|xt_rocount
+decl_stmt|,
+name|xt_rocol
+decl_stmt|;
+comment|/* Tty. */
+name|int
+name|xt_ififosize
+decl_stmt|;
+comment|/* Total size of upstream fifos. */
+name|int
+name|xt_ihiwat
+decl_stmt|;
+comment|/* High water mark for input. */
+name|int
+name|xt_ilowat
+decl_stmt|;
+comment|/* Low water mark for input. */
+name|speed_t
+name|xt_ispeedwat
+decl_stmt|;
+comment|/* t_ispeed override for watermarks. */
+name|int
+name|xt_ohiwat
+decl_stmt|;
+comment|/* High water mark for output. */
+name|int
+name|xt_olowat
+decl_stmt|;
+comment|/* Low water mark for output. */
+name|speed_t
+name|xt_ospeedwat
+decl_stmt|;
+comment|/* t_ospeed override for watermarks. */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * User data unfortunately has to be copied through buffers on the way to  * and from clists.  The buffers are on the stack so their sizes must be  * fairly small.  */
