@@ -98,6 +98,12 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -259,6 +265,38 @@ include|#
 directive|include
 file|<netinet/ip.h>
 end_include
+
+begin_function_decl
+specifier|extern
+name|void
+name|send_do
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|send_dont
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|send_will
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|send_wont
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -992,7 +1030,7 @@ begin_escape
 end_escape
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|send_esc
 name|P
@@ -1923,10 +1961,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|void
-name|send_do
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|send_tncmd
@@ -1954,10 +1988,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|void
-name|send_dont
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|send_tncmd
@@ -1985,10 +2015,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|void
-name|send_will
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|send_tncmd
@@ -2016,10 +2042,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|void
-name|send_wont
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|send_tncmd
@@ -2844,7 +2866,7 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|togglehelp
 name|P
@@ -6967,7 +6989,7 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|slc_help
 parameter_list|()
@@ -7370,7 +7392,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|env_help
 name|P
 argument_list|(
@@ -11994,7 +12021,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|int
 name|help
 parameter_list|()
