@@ -4,11 +4,11 @@ comment|/*	$NetBSD: clnt.h,v 1.14 2000/06/02 22:57:55 fvdl Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 94/04/29 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
+comment|/*  * The contents of this file are subject to the Sun Standards  * License Version 1.0 the (the "License";) You may not use  * this file except in compliance with the License.  You may  * obtain a copy of the License at lib/libc/rpc/LICENSE  *  * Software distributed under the License is distributed on  * an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either  * express or implied.  See the License for the specific  * language governing rights and limitations under the License.  *  * The Original Code is Copyright 1998 by Sun Microsystems, Inc  *  * The Initial Developer of the Original Code is:  Sun  * Microsystems, Inc.  *  * All Rights Reserved.  *  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 94/04/29 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * clnt.h - Client side remote procedure call interface.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
+comment|/*  * clnt.h - Client side remote procedure call interface.  *  * Copyright (c) 1986-1991,1994-1999 by Sun Microsystems, Inc.  * All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -827,15 +827,10 @@ name|NULLPROC
 value|((rpcproc_t)0)
 end_define
 
-begin_comment
-comment|/*  * Below are the client handle creation routines for the various  * implementations of client side rpc.  They can return NULL if a  * creation failure occurs.  */
-end_comment
-
-begin_comment
-comment|/*  * Generic client creation routine. Supported protocols are those that  * belong to the nettype namespace (/etc/netconfig).  * CLIENT *  * clnt_create(host, prog, vers, prot);  *	const char *host; 	-- hostname  *	const rpcprog_t prog;	-- program number  *	const rpcvers_t vers;	-- version number  *	const char *prot;	-- protocol  */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/*  * Below are the client handle creation routines for the various  * implementations of client side rpc.  They can return NULL if a  * creation failure occurs.  */
+comment|/*  * Generic client creation routine. Supported protocols are those that  * belong to the nettype namespace (/etc/netconfig).  */
 name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
@@ -861,6 +856,42 @@ end_function_decl
 
 begin_comment
 comment|/*  *  * 	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const char *nettype;			-- network type  */
+end_comment
+
+begin_comment
+comment|/*  * Generic client creation routine. Just like clnt_create(), except  * it takes an additional timeout parameter.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|CLIENT
+modifier|*
+name|clnt_create_timed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|rpcprog_t
+parameter_list|,
+specifier|const
+name|rpcvers_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|timeval
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *  *	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const char *nettype;			-- network type  *	const struct timeval *tp;		-- timeout  */
 end_comment
 
 begin_comment
@@ -901,6 +932,48 @@ comment|/*  *	const char *host;		-- hostname  *	const rpcprog_t prog;		-- progra
 end_comment
 
 begin_comment
+comment|/*  * Generic client creation routine. Supported protocols are which belong  * to the nettype name space.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|CLIENT
+modifier|*
+name|clnt_create_vers_timed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|rpcprog_t
+parameter_list|,
+name|rpcvers_t
+modifier|*
+parameter_list|,
+specifier|const
+name|rpcvers_t
+parameter_list|,
+specifier|const
+name|rpcvers_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|timeval
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *	const char *host;		-- hostname  *	const rpcprog_t prog;		-- program number  *	rpcvers_t *vers_out;		-- servers highest available version  *	const rpcvers_t vers_low;	-- low version number  *	const rpcvers_t vers_high;	-- high version number  *	const char *nettype;		-- network type  *	const struct timeval *tp	-- timeout  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. It takes a netconfig structure  * instead of nettype  */
 end_comment
 
@@ -933,6 +1006,43 @@ comment|/*  *	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- 
 end_comment
 
 begin_comment
+comment|/*  * Generic client creation routine. Just like clnt_tp_create(), except  * it takes an additional timeout parameter.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|CLIENT
+modifier|*
+name|clnt_tp_create_timed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|rpcprog_t
+parameter_list|,
+specifier|const
+name|rpcvers_t
+parameter_list|,
+specifier|const
+name|struct
+name|netconfig
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|timeval
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const struct netconfig *netconf; 	-- network config structure  *	const struct timeval *tp		-- timeout  */
+end_comment
+
+begin_comment
 comment|/*  * Generic TLI create routine. Only provided for compatibility.  */
 end_comment
 
@@ -950,7 +1060,6 @@ name|struct
 name|netconfig
 modifier|*
 parameter_list|,
-specifier|const
 name|struct
 name|netbuf
 modifier|*
@@ -971,7 +1080,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	const register int fd;		-- fd  *	const struct netconfig *nconf;	-- netconfig structure  *	const struct netbuf *svcaddr;		-- servers address  *	const u_long prog;			-- program number  *	const u_long vers;			-- version number  *	const u_int sendsz;			-- send size  *	const u_int recvsz;			-- recv size  */
+comment|/*  *	const register int fd;		-- fd  *	const struct netconfig *nconf;	-- netconfig structure  *	struct netbuf *svcaddr;		-- servers address  *	const u_long prog;			-- program number  *	const u_long vers;			-- version number  *	const u_int sendsz;			-- send size  *	const u_int recvsz;			-- recv size  */
 end_comment
 
 begin_comment
