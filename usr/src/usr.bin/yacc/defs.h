@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defs.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defs.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -62,14 +62,6 @@ comment|/*	store n bits					*/
 end_comment
 
 begin_comment
-comment|/*  ROWSIZE computes the number of chars needed to	*/
-end_comment
-
-begin_comment
-comment|/*	store enough words to represent n bits		*/
-end_comment
-
-begin_comment
 comment|/*  BIT returns the value of the n-th bit starting	*/
 end_comment
 
@@ -124,16 +116,6 @@ parameter_list|(
 name|n
 parameter_list|)
 value|(((n)+(BITS_PER_WORD-1))/BITS_PER_WORD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROWSIZE
-parameter_list|(
-name|n
-parameter_list|)
-value|(sizeof(unsigned)*WORDSIZE(n))
 end_define
 
 begin_define
