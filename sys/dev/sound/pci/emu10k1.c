@@ -5117,8 +5117,9 @@ name|tmp
 operator|<<
 literal|1
 operator|)
+operator||
+name|idx
 expr_stmt|;
-comment|/* | idx;*/
 name|ofs
 operator|+=
 name|EMUPAGESIZE
@@ -6674,6 +6675,8 @@ name|i
 index|]
 operator|=
 name|tmp
+operator||
+name|i
 expr_stmt|;
 name|emu_wrptr
 argument_list|(
