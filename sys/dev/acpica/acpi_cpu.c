@@ -1924,6 +1924,12 @@ if|if
 condition|(
 name|sc
 operator|->
+name|cpu_p_blk
+operator|==
+literal|0
+operator|||
+name|sc
+operator|->
 name|cpu_p_blk_len
 operator|!=
 literal|6
