@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.4 1994/10/02 01:45:41 phk Exp $  */
+comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.5 1994/10/02 17:40:38 phk Exp $  */
 end_comment
 
 begin_include
@@ -1022,25 +1022,6 @@ block|{
 name|int
 name|pl
 decl_stmt|;
-name|pl
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-name|sync
-argument_list|(
-name|curproc
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|pl
-argument_list|)
-expr_stmt|;
 name|microtime
 argument_list|(
 operator|&
