@@ -3276,9 +3276,16 @@ name|vp
 operator|->
 name|v_data
 condition|)
-name|panic
+name|printf
 argument_list|(
-literal|"cleaned vnode isn't"
+literal|"cleaned vnode isn't, "
+literal|"address %p, inode %p\n"
+argument_list|,
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_data
 argument_list|)
 expr_stmt|;
 if|if
