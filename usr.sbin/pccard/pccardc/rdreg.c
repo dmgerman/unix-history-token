@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rdreg.c,v 1.8 1997/10/06 11:35:56 charnier Exp $"
+literal|"$Id: rdreg.c,v 1.9 1997/11/18 21:08:07 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +115,7 @@ name|open
 argument_list|(
 name|name
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: enabler.c,v 1.9 1997/10/26 04:36:23 nate Exp $"
+literal|"$Id: enabler.c,v 1.10 1997/11/18 21:08:06 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -586,7 +586,7 @@ name|open
 argument_list|(
 name|name
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
