@@ -1131,7 +1131,7 @@ begin_define
 define|#
 directive|define
 name|MAJOR_AUTO
-value|-1
+value|0
 end_define
 
 begin_comment
