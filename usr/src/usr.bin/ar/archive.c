@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	5.4 (Berkeley) %G%"
+literal|"@(#)archive.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -386,31 +404,16 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|close_archive
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|flock
-argument_list|(
-name|fd
-argument_list|,
-name|LOCK_UN
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -419,8 +422,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* Implicit unlock. */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert ar header field to an integer. */
@@ -912,11 +916,6 @@ decl_stmt|;
 name|off_t
 name|size
 decl_stmt|;
-name|char
-modifier|*
-name|rname
-parameter_list|()
-function_decl|;
 comment|/* 	 * If passed an sb structure, reading a file from disk.  Get stat(2) 	 * information, build a name and construct a header.  (Files are named 	 * by their last component in the archive.)  If not, then just write 	 * the last header read. 	 */
 if|if
 condition|(
@@ -1508,20 +1507,15 @@ begin_comment
 comment|/*  * skipobj -  *	Skip over an object -- taking care to skip the pad bytes.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|skipobj
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|off_t
 name|len
@@ -1567,7 +1561,7 @@ name|archive
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
