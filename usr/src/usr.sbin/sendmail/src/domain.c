@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.7 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.8 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.7 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.8 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1224,6 +1224,11 @@ operator|=
 literal|']'
 expr_stmt|;
 else|else
+block|{
+name|trycanon
+operator|=
+name|TRUE
+expr_stmt|;
 name|mxhosts
 index|[
 literal|0
@@ -1232,18 +1237,22 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 name|trycanon
 operator|&&
 name|getcanonname
 argument_list|(
-name|MXHostBuf
+name|mxhosts
+index|[
+literal|0
+index|]
 argument_list|,
 sizeof|sizeof
 name|MXHostBuf
 operator|-
-literal|1
+literal|2
 argument_list|,
 name|FALSE
 argument_list|)
