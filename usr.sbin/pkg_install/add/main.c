@@ -259,6 +259,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|packageroot
 index|[
@@ -266,6 +267,13 @@ name|MAXPATHLEN
 index|]
 init|=
 literal|"ftp://ftp.FreeBSD.org/pub/FreeBSD/ports/"
+decl_stmt|;
+specifier|static
+name|char
+name|temppackageroot
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|start
 operator|=
@@ -471,6 +479,13 @@ condition|(
 name|Remote
 condition|)
 block|{
+name|strcpy
+argument_list|(
+name|temppackageroot
+argument_list|,
+name|packageroot
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getenv
@@ -482,7 +497,7 @@ name|NULL
 condition|)
 name|strcat
 argument_list|(
-name|packageroot
+name|temppackageroot
 argument_list|,
 name|getpackagesite
 argument_list|()
@@ -491,7 +506,7 @@ expr_stmt|;
 else|else
 name|strcpy
 argument_list|(
-name|packageroot
+name|temppackageroot
 argument_list|,
 operator|(
 name|getenv
@@ -505,7 +520,7 @@ name|remotepkg
 operator|=
 name|strcat
 argument_list|(
-name|packageroot
+name|temppackageroot
 argument_list|,
 operator|*
 name|argv
