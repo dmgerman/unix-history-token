@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.22 %G%"
+literal|"@(#)pc.c 3.23 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,7 +802,30 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"pc: -T but no directory\n"
+literal|"pc: -t but no directory\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argp
+index|[
+literal|2
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"pc: bad -t option\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -818,6 +841,29 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|tmpdir
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"pc: bad -t option\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|tflag
 operator|=
 literal|1
