@@ -11,15 +11,6 @@ begin_comment
 comment|/* These flags are kept in i_flag. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -107,141 +98,6 @@ end_define
 begin_comment
 comment|/* Modified, but don't write yet. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* defined(__NetBSD__) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_ACCESS
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Access time update request. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_CHANGE
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Inode change time update request. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_EXLOCK
-value|0x0004
-end_define
-
-begin_comment
-comment|/* File has exclusive lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LOCKED
-value|0x0008
-end_define
-
-begin_comment
-comment|/* Inode lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LWAIT
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Process waiting on file lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_MODIFIED
-value|0x0020
-end_define
-
-begin_comment
-comment|/* Inode has been modified. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_RENAME
-value|0x0040
-end_define
-
-begin_comment
-comment|/* Inode is being renamed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_SHLOCK
-value|0x0080
-end_define
-
-begin_comment
-comment|/* File has shared lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_UPDATE
-value|0x0100
-end_define
-
-begin_comment
-comment|/* Modification time update request. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_WANTED
-value|0x0200
-end_define
-
-begin_comment
-comment|/* Inode is wanted by a process. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_RECURSE
-value|0x0400
-end_define
-
-begin_comment
-comment|/* Recursion expected */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -389,16 +245,11 @@ begin_struct
 struct|struct
 name|fnode
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|struct
 name|lock
 name|f_lock
 decl_stmt|;
 comment|/* fnode lock>Keep this first< */
-endif|#
-directive|endif
 name|LIST_ENTRY
 argument_list|(
 argument|fnode

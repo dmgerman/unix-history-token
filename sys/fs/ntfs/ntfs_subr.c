@@ -79,26 +79,6 @@ directive|include
 file|<sys/lock.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<miscfs/specfs/specdev.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* #define NTFS_DEBUG 1 */
 end_comment
@@ -144,15 +124,6 @@ include|#
 directive|include
 file|<fs/ntfs/ntfs_ihash.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -201,11 +172,6 @@ literal|"NTFS decompression temporary"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3894,9 +3860,6 @@ argument_list|,
 name|M_NTFSDIR
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|lockdestroy
 argument_list|(
 operator|&
@@ -3905,8 +3868,6 @@ operator|->
 name|f_lock
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|FREE
 argument_list|(
 name|fp
@@ -6989,12 +6950,6 @@ operator|&&
 name|ccl
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|tocopy
 operator|=
 name|min
@@ -7016,24 +6971,6 @@ name|off
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* under NetBSD, bread() can read 			 * maximum one block worth of data */
-name|tocopy
-operator|=
-name|min
-argument_list|(
-name|left
-argument_list|,
-name|ntmp
-operator|->
-name|ntm_bps
-operator|-
-name|off
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|cl
 operator|=
 name|ntfs_btocl
@@ -7503,12 +7440,6 @@ operator|&&
 name|ccl
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|tocopy
 operator|=
 name|min
@@ -7530,24 +7461,6 @@ name|off
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* under NetBSD, bread() can read 					 * maximum one block worth of data */
-name|tocopy
-operator|=
-name|min
-argument_list|(
-name|left
-argument_list|,
-name|ntmp
-operator|->
-name|ntm_bps
-operator|-
-name|off
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|cl
 operator|=
 name|ntfs_btocl
