@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)relocate.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)relocate.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ name|rel
 expr_stmt|;
 name|print
 argument_list|(
-literal|"Adding flaws to bad setor map on "
+literal|"Adding flaws to bad sector map on "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -916,7 +916,7 @@ name|strncmp
 argument_list|(
 name|ptr
 argument_list|,
-literal|"star"
+literal|"start"
 argument_list|,
 literal|4
 argument_list|)
@@ -1990,7 +1990,19 @@ condition|)
 block|{
 name|print
 argument_list|(
-literal|"Sector relocation failed.  Status = 0x%x.\n"
+literal|"Sector relocation failed (c %d t %d s %d).  Status = 0x%x.\n"
+argument_list|,
+name|phys
+operator|.
+name|cylinder
+argument_list|,
+name|phys
+operator|.
+name|track
+argument_list|,
+name|phys
+operator|.
+name|sector
 argument_list|,
 name|status
 argument_list|)
