@@ -356,6 +356,7 @@ name|ds_devs
 index|[]
 init|=
 block|{
+comment|/* Beware, things know the indexes here */
 block|{
 literal|0x00041073
 block|,
@@ -436,6 +437,27 @@ block|,
 name|CntrlInst
 block|}
 block|,
+comment|/*8*/
+block|{
+literal|0x000a1073
+block|,
+literal|0x53328086
+block|,
+literal|"Yamaha DS-1 (YMF740I)"
+block|,
+name|CntrlInst
+block|}
+block|,
+block|{
+literal|0x000a1073
+block|,
+literal|0
+block|,
+literal|"Yamaha DS-1 (YMF740?)"
+block|,
+name|CntrlInst
+block|}
+block|,
 block|{
 literal|0x000c1073
 block|,
@@ -446,6 +468,7 @@ block|,
 name|CntrlInst1E
 block|}
 block|,
+comment|/*11*/
 block|{
 literal|0x00101073
 block|,
@@ -1177,6 +1200,20 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * The YMF740 on some Intel motherboards requires a pretty 		 * hefty delay after this reset for some reason...  Otherwise: 		 * "pcm0: ac97 codec init failed" 		 * Maybe this is needed for all YMF740's? 		 * 400ms and 500ms here seem to work, 300ms does not. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|type
+operator|==
+literal|8
+condition|)
+name|DELAY
+argument_list|(
+literal|400000
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|ds_cdbusy
@@ -1306,7 +1343,7 @@ name|sc
 operator|->
 name|type
 operator|==
-literal|9
+literal|11
 operator|&&
 name|sc
 operator|->
