@@ -1564,6 +1564,10 @@ define|#
 directive|define
 name|ATAENCSTAT
 value|12
+define|#
+directive|define
+name|ATAGMAXCHANNEL
+value|13
 union|union
 block|{
 struct|struct
@@ -1740,6 +1744,9 @@ decl_stmt|;
 block|}
 name|atapi
 struct|;
+name|int
+name|maxchan
+decl_stmt|;
 block|}
 name|u
 union|;
