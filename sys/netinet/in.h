@@ -1241,7 +1241,7 @@ comment|/*  * Local port number conventions:  *  * When a user does a bind(2) or
 end_comment
 
 begin_comment
-comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).         (IP_PORTRANGE_LOW)  * Ports> IPPORT_USERRESERVED are reserved  * for servers, not necessarily privileged.  (IP_PORTRANGE_DEFAULT)  */
+comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).         (IP_PORTRANGE_LOW)  */
 end_comment
 
 begin_define
@@ -1251,15 +1251,8 @@ name|IPPORT_RESERVED
 value|1024
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPPORT_USERRESERVED
-value|5000
-end_define
-
 begin_comment
-comment|/*  * Default local port range to use by setting IP_PORTRANGE_HIGH  */
+comment|/*  * Default local port range, used by both IP_PORTRANGE_DEFAULT  * and IP_PORTRANGE_HIGH.  */
 end_comment
 
 begin_define
