@@ -4,7 +4,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cal.c	4.1 4.1"
+literal|"@(#)cal.c	4.2 82/02/28"
 decl_stmt|;
 end_decl_stmt
 
