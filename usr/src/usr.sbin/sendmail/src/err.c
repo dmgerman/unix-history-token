@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.22 (Berkeley) %G%"
+literal|"@(#)err.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,21 +680,21 @@ expr_stmt|;
 comment|/* output to channel if appropriate */
 if|if
 condition|(
-operator|!
 name|holdmsg
-operator|&&
-operator|(
-name|Verbose
 operator|||
+operator|(
+operator|!
+name|Verbose
+operator|&&
 name|msg
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 literal|'0'
 operator|)
 condition|)
-block|{
+return|return;
 operator|(
 name|void
 operator|)
@@ -751,12 +751,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ferror
 argument_list|(
 name|OutChannel
 argument_list|)
 condition|)
-block|{
+return|return;
+comment|/* error on output -- if reporting lost channel, just ignore it */
+if|if
+condition|(
+name|feof
+argument_list|(
+name|InChannel
+argument_list|)
+operator|||
+name|ferror
+argument_list|(
+name|InChannel
+argument_list|)
+condition|)
+return|return;
 comment|/* can't call syserr, 'cause we are using MsgBuf */
 name|HoldErrs
 operator|=
@@ -796,8 +811,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-block|}
 block|}
 end_block
 
