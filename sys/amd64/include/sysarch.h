@@ -65,43 +65,43 @@ end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
-name|unsigned
-name|long
+name|int
 name|amd64_get_fsbase
 parameter_list|(
 name|void
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|int
 name|amd64_set_fsbase
 parameter_list|(
-name|unsigned
-name|long
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|int
 name|amd64_get_gsbase
 parameter_list|(
 name|void
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|int
 name|amd64_set_gsbase
 parameter_list|(
-name|unsigned
-name|long
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
