@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -75,7 +75,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|signed
+name|__signed
 name|char
 name|int8_t
 typedef|;
