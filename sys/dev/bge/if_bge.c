@@ -13790,6 +13790,10 @@ argument_list|,
 literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"bge%d: gigabit link up\n"
@@ -13862,6 +13866,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|IFM_SUBTYPE
 argument_list|(
 name|mii
@@ -13879,6 +13884,9 @@ name|mii_media_active
 argument_list|)
 operator|==
 name|IFM_1000_SX
+operator|)
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
