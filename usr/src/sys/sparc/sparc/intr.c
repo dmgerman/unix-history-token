@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)intr.c	8.2 (Berkeley) %G%  *  * from: $Header: intr.c,v 1.22 93/09/26 19:48:06 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)intr.c	8.3 (Berkeley) %G%  *  * from: $Header: intr.c,v 1.22 93/09/26 19:48:06 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -39,22 +39,11 @@ directive|include
 file|<machine/ctlreg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/instr.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
