@@ -3403,19 +3403,21 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|X_AS_PKG
-end_ifdef
-
 begin_function
 name|int
-name|installX11package
+name|installPackage
 parameter_list|(
 name|dialogMenuItem
 modifier|*
 name|self
+parameter_list|,
+name|char
+modifier|*
+name|desc
+parameter_list|,
+name|char
+modifier|*
+name|package
 parameter_list|)
 block|{
 name|WINDOW
@@ -3433,14 +3435,16 @@ argument_list|()
 expr_stmt|;
 name|msgNotify
 argument_list|(
-literal|"Installing XFree86 package..."
+literal|"Installing %s package..."
+argument_list|,
+name|desc
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
 name|package_add
 argument_list|(
-literal|"XFree86-4"
+name|package
 argument_list|)
 expr_stmt|;
 name|restorescr
@@ -3453,11 +3457,6 @@ name|i
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Fix side-effects from the the XFree86 installation */
