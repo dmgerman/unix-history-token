@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/coda/coda_vnops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_vnops.c,v 1.3 1998/09/11 18:50:17 rvb Exp $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/coda/coda_vnops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_vnops.c,v 1.4 1998/09/13 13:57:59 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: coda_vnops.c,v $  * Revision 1.3  1998/09/11 18:50:17  rvb  * All the references to cfs, in symbols, structs, and strings  * have been changed to coda.  (Same for CFS.)  *  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.12  1998/08/28 18:28:00  rvb  * NetBSD -current is stricter!  *  * Revision 1.11  1998/08/28 18:12:23  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:21  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:46  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/02/24  22:22:50  rvb  * Fixes up mainly to flush iopen and friends  *   * Revision 1.7  98/01/31  20:53:15  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.6  98/01/23  11:53:47  rvb  * Bring RVB_CODA1_1 to HEAD  *   * Revision 1.5.2.8  98/01/23  11:21:11  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  97/12/19  14:26:08  rvb  * session id  *   * Revision 1.5.2.6  97/12/16  22:01:34  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.5  97/12/16  12:40:14  rvb  * Sync with 1.3  *   * Revision 1.5.2.4  97/12/10  14:08:31  rvb  * Fix O_ flags; check result in coda_call  *   * Revision 1.5.2.3  97/12/10  11:40:27  rvb  * No more ody  *   * Revision 1.5.2.2  97/12/09  16:07:15  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.5.2.1  97/12/06  17:41:25  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:23  rvb  * Read CHANGES  *   * Revision 1.4.14.10  97/11/25  08:08:48  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.4.14.9  97/11/24  15:44:48  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.14.8  97/11/21  11:28:04  rvb  * cfs_venus.c is done: first pass  *   * Revision 1.4.14.7  97/11/20  11:46:51  rvb  * Capture current cfs_venus  *   * Revision 1.4.14.6  97/11/18  10:27:19  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.14.5  97/11/13  22:03:03  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.14.4  97/11/12  12:09:42  rvb  * reorg pass1  *   * Revision 1.4.14.3  97/11/06  21:03:28  rvb  * don't include headers in headers  *   * Revision 1.4.14.2  97/10/29  16:06:30  rvb  * Kill DYING  *   * Revision 1.4.14.1  1997/10/28 23:10:18  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1997/02/20 13:54:50  lily  * check for NULL return from coda_nc_lookup before CTOV  *  * Revision 1.3  1996/12/12 22:11:02  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.2  1996/01/02 16:57:07  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:34  bnoble  * Added CODA-specific files  *  * Revision 3.1.1.1  1995/03/04  19:08:06  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:08:04  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.6  1995/02/17  16:25:26  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *  * Revision 2.5  94/11/09  20:29:27  dcs  * Small bug in remove dealing with hard links and link counts was fixed.  *   * Revision 2.4  94/10/14  09:58:42  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:37  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 2.2  94/09/20  14:12:41  dcs  * Fixed bug in rename when moving a directory.  *   * Revision 2.1  94/07/21  16:25:22  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *   * Revision 1.4  93/12/17  01:38:01  luqi  * Changes made for kernel to pass process info to Venus:  *   * (1) in file cfs.h  * add process id and process group id in most of the cfs argument types.  *   * (2) in file cfs_vnodeops.c  * add process info passing in most of the cfs vnode operations.  *   * (3) in file cfs_xdr.c  * expand xdr routines according changes in (1).   * add variable pass_process_info to allow venus for kernel version checking.  *   * Revision 1.3  93/05/28  16:24:33  bnoble  * *** empty log message ***  *   * Revision 1.2  92/10/27  17:58:25  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:37  mja  * 	Redid buffer allocation so that it does kmem_{alloc,free} for all  * 	architectures.  Zone allocation, previously used on the 386, caused  * 	panics if it was invoked repeatedly.  Stack allocation, previously  * 	used on all other architectures, tickled some Mach bug that appeared  * 	with large stack frames.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.3  90/07/26  15:50:09  mrt  * 	    Fixed fix to rename to remove .. from moved directories.  * 	[90/06/28            dcs]  *   * Revision 1.7  90/06/28  16:24:25  dcs  * Fixed bug with moving directories, we weren't flushing .. for the moved directory.  *   * Revision 1.6  90/05/31  17:01:47  dcs  * Prepare for merge with facilities kernel.  *   *   */
+comment|/*  * HISTORY  * $Log: coda_vnops.c,v $  * Revision 1.4  1998/09/13 13:57:59  rvb  * Finish conversion of cfs -> coda  *  * Revision 1.3  1998/09/11 18:50:17  rvb  * All the references to cfs, in symbols, structs, and strings  * have been changed to coda.  (Same for CFS.)  *  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.12  1998/08/28 18:28:00  rvb  * NetBSD -current is stricter!  *  * Revision 1.11  1998/08/28 18:12:23  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:21  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:46  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/02/24  22:22:50  rvb  * Fixes up mainly to flush iopen and friends  *   * Revision 1.7  98/01/31  20:53:15  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.6  98/01/23  11:53:47  rvb  * Bring RVB_CODA1_1 to HEAD  *   * Revision 1.5.2.8  98/01/23  11:21:11  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  97/12/19  14:26:08  rvb  * session id  *   * Revision 1.5.2.6  97/12/16  22:01:34  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.5  97/12/16  12:40:14  rvb  * Sync with 1.3  *   * Revision 1.5.2.4  97/12/10  14:08:31  rvb  * Fix O_ flags; check result in coda_call  *   * Revision 1.5.2.3  97/12/10  11:40:27  rvb  * No more ody  *   * Revision 1.5.2.2  97/12/09  16:07:15  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.5.2.1  97/12/06  17:41:25  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:23  rvb  * Read CHANGES  *   * Revision 1.4.14.10  97/11/25  08:08:48  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.4.14.9  97/11/24  15:44:48  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.14.8  97/11/21  11:28:04  rvb  * cfs_venus.c is done: first pass  *   * Revision 1.4.14.7  97/11/20  11:46:51  rvb  * Capture current cfs_venus  *   * Revision 1.4.14.6  97/11/18  10:27:19  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.14.5  97/11/13  22:03:03  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.14.4  97/11/12  12:09:42  rvb  * reorg pass1  *   * Revision 1.4.14.3  97/11/06  21:03:28  rvb  * don't include headers in headers  *   * Revision 1.4.14.2  97/10/29  16:06:30  rvb  * Kill DYING  *   * Revision 1.4.14.1  1997/10/28 23:10:18  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1997/02/20 13:54:50  lily  * check for NULL return from coda_nc_lookup before CTOV  *  * Revision 1.3  1996/12/12 22:11:02  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.2  1996/01/02 16:57:07  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:34  bnoble  * Added CODA-specific files  *  * Revision 3.1.1.1  1995/03/04  19:08:06  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:08:04  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.6  1995/02/17  16:25:26  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *  * Revision 2.5  94/11/09  20:29:27  dcs  * Small bug in remove dealing with hard links and link counts was fixed.  *   * Revision 2.4  94/10/14  09:58:42  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:37  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 2.2  94/09/20  14:12:41  dcs  * Fixed bug in rename when moving a directory.  *   * Revision 2.1  94/07/21  16:25:22  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *   * Revision 1.4  93/12/17  01:38:01  luqi  * Changes made for kernel to pass process info to Venus:  *   * (1) in file cfs.h  * add process id and process group id in most of the cfs argument types.  *   * (2) in file cfs_vnodeops.c  * add process info passing in most of the cfs vnode operations.  *   * (3) in file cfs_xdr.c  * expand xdr routines according changes in (1).   * add variable pass_process_info to allow venus for kernel version checking.  *   * Revision 1.3  93/05/28  16:24:33  bnoble  * *** empty log message ***  *   * Revision 1.2  92/10/27  17:58:25  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:37  mja  * 	Redid buffer allocation so that it does kmem_{alloc,free} for all  * 	architectures.  Zone allocation, previously used on the 386, caused  * 	panics if it was invoked repeatedly.  Stack allocation, previously  * 	used on all other architectures, tickled some Mach bug that appeared  * 	with large stack frames.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.3  90/07/26  15:50:09  mrt  * 	    Fixed fix to rename to remove .. from moved directories.  * 	[90/06/28            dcs]  *   * Revision 1.7  90/06/28  16:24:25  dcs  * Fixed bug with moving directories, we weren't flushing .. for the moved directory.  *   * Revision 1.6  90/05/31  17:01:47  dcs  * Prepare for merge with facilities kernel.  *   *   */
 end_comment
 
 begin_include
@@ -1278,6 +1278,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* grab (above) does this when it calls newvnode unless it's in the cache*/
 if|if
 condition|(
 name|vp
@@ -1440,6 +1441,9 @@ operator|->
 name|c_ovp
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"coda_close: destroying container ref %d, ufs vp %p of vp %p/cp %p\n"
@@ -1457,6 +1461,8 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vgone
 argument_list|(
 name|cp
@@ -1467,6 +1473,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"coda_close: NO container vp %p/cp %p\n"
@@ -1476,6 +1485,8 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 name|ENODEV
@@ -3912,7 +3923,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|OLD_DIAGNOSTIC
 if|if
 condition|(
 name|CTOV
@@ -5018,7 +5029,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|OLD_DIAGNOSTIC
 else|else
 block|{
 name|printf
@@ -5029,7 +5040,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
 block|}
 comment|/* Have to free the previously saved name */
 comment|/*       * This condition is stolen from ufs_makeinode.  I have no idea      * why it's here, but what the hey...      */
@@ -5821,7 +5831,7 @@ expr_stmt|;
 comment|/* Hmmm.  The vnodes are already looked up.  Perhaps they are locked?        This could be Bad. XXX */
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|OLD_DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -5853,7 +5863,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DIAGNOSTIC
 comment|/* Check for rename involving control object. */
 if|if
 condition|(
@@ -7515,11 +7524,6 @@ operator|->
 name|c_ovp
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"coda_bmap: container .. "
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|VOP_BMAP
@@ -7543,31 +7547,12 @@ operator|->
 name|a_runb
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"VOP_BMAP(cp->c_ovp %p, bn %p, vpp %p, bnp %p, ap->a_runp %p, ap->a_runb %p) = %d\n"
-argument_list|,
-name|cp
-operator|->
-name|c_ovp
-argument_list|,
-name|bn
-argument_list|,
-name|vpp
-argument_list|,
-name|bnp
-argument_list|,
-name|ap
-operator|->
-name|a_runp
-argument_list|,
-name|ap
-operator|->
-name|a_runb
-argument_list|,
-name|ret
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("VOP_BMAP(cp->c_ovp %p, bn %p, vpp %p, bnp %p, ap->a_runp %p, ap->a_runb %p) = %d\n", 			cp->c_ovp, bn, vpp, bnp, ap->a_runp, ap->a_runb, ret);
+endif|#
+directive|endif
 return|return
 name|ret
 return|;
@@ -7743,7 +7728,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|OLD_DIAGNOSTIC
 if|if
 condition|(
 name|vp
@@ -7752,9 +7737,9 @@ name|v_usecount
 operator|!=
 literal|0
 condition|)
-name|vprint
+name|print
 argument_list|(
-literal|"coda_reclaim: pushing active"
+literal|"coda_reclaim: pushing active %p\n"
 argument_list|,
 name|vp
 argument_list|)
@@ -7777,7 +7762,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DIAGNOSTIC
 block|}
 name|cache_purge
 argument_list|(
