@@ -140,13 +140,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|182
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZS_READ
 parameter_list|(
 name|sc
@@ -551,7 +544,7 @@ comment|/* name */
 literal|"zstty"
 block|,
 comment|/* major */
-name|CDEV_MAJOR
+name|MAJOR_AUTO
 block|,
 comment|/* dump */
 name|nodump
