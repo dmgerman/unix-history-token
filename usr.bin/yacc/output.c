@@ -2585,7 +2585,7 @@ argument_list|)
 expr_stmt|;
 name|maxtable
 operator|=
-literal|1000
+literal|10000
 expr_stmt|;
 name|table
 operator|=
