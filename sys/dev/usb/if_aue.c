@@ -4465,15 +4465,19 @@ expr_stmt|;
 comment|/* 	 * Check to see if this is just the first chunk of a 	 * split transfer. We really need a more reliable way 	 * to detect this. 	 */
 if|if
 condition|(
+name|total_len
+operator|==
+name|AUE_CUTOFF
+operator|&&
 name|r
 operator|.
 name|aue_pktlen
 operator|!=
+operator|(
 name|AUE_CUTOFF
-operator|&&
-name|total_len
-operator|==
-name|AUE_CUTOFF
+operator|-
+literal|4
+operator|)
 condition|)
 block|{
 name|c
