@@ -110,7 +110,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: exphy.c,v 1.1 1999/08/21 17:40:41 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,6 +489,29 @@ operator|->
 name|mii_dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The 3Com PHY can never be isolated, so never allow non-zero 	 * instances! 	 */
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_instance
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ignoring this PHY, non-zero instance\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -529,29 +552,6 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
-comment|/* 	 * The 3Com PHY can never be isolated, so never allow non-zero 	 * instances! 	 */
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ignoring this PHY, non-zero instance\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|mii
 operator|->
 name|mii_instance
