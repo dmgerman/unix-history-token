@@ -913,8 +913,6 @@ argument_list|(
 operator|(
 name|mac_biba
 operator|->
-name|mb_single
-operator|.
 name|mb_flags
 operator|&
 name|MAC_BIBA_FLAG_SINGLE
