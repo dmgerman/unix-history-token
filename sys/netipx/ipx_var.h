@@ -129,14 +129,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ipxpcb
-name|ipxrawpcb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|pr_usrreqs
 name|ipx_usrreqs
 decl_stmt|;

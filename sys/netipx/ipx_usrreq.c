@@ -1895,7 +1895,7 @@ argument_list|(
 name|so
 argument_list|,
 operator|&
-name|ipxpcb
+name|ipxpcb_list
 argument_list|,
 name|td
 argument_list|)
@@ -2614,7 +2614,7 @@ argument_list|(
 name|so
 argument_list|,
 operator|&
-name|ipxrawpcb
+name|ipxrawpcb_list
 argument_list|,
 name|td
 argument_list|)

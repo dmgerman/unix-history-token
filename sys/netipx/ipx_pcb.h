@@ -23,22 +23,12 @@ begin_struct
 struct|struct
 name|ipxpcb
 block|{
-name|struct
-name|ipxpcb
-modifier|*
-name|ipxp_next
-decl_stmt|;
-comment|/* doubly linked list */
-name|struct
-name|ipxpcb
-modifier|*
-name|ipxp_prev
-decl_stmt|;
-name|struct
-name|ipxpcb
-modifier|*
-name|ipxp_head
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|ipxpcb
+argument_list|)
+name|ipxp_list
+expr_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -83,6 +73,36 @@ comment|/* last received packet type by ipx_input() */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Additional IPX pcb-related types and variables.  */
+end_comment
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|ipxpcbhead
+argument_list|,
+name|ipxpcb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ipxpcbhead
+name|ipxpcb_list
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ipxpcbhead
+name|ipxrawpcb_list
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* possible flags */
@@ -220,7 +240,7 @@ modifier|*
 name|so
 parameter_list|,
 name|struct
-name|ipxpcb
+name|ipxpcbhead
 modifier|*
 name|head
 parameter_list|,
