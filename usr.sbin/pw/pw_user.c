@@ -6382,9 +6382,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|srandomdev
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -6403,7 +6400,7 @@ name|unsigned
 name|long
 name|val
 init|=
-name|random
+name|arc4random
 argument_list|()
 decl_stmt|;
 comment|/* Use all bits in the random value */
