@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	1.4 (Lucasfilm) %G%"
+literal|"@(#)iostat.c	1.5 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,7 +334,7 @@ specifier|static
 name|int
 name|msps
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
