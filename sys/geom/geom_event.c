@@ -188,6 +188,13 @@ name|EV_WAKEUP
 value|0x40000
 end_define
 
+begin_define
+define|#
+directive|define
+name|EV_CANCELED
+value|0x20000
+end_define
+
 begin_function
 name|void
 name|g_waitidle
@@ -889,6 +896,12 @@ name|flag
 operator||=
 name|EV_DONE
 expr_stmt|;
+name|ep
+operator|->
+name|flag
+operator||=
+name|EV_CANCELED
+expr_stmt|;
 name|wakeup
 argument_list|(
 name|ep
@@ -1295,6 +1308,18 @@ name|EV_DONE
 operator|)
 condition|)
 do|;
+if|if
+condition|(
+name|ep
+operator|->
+name|flag
+operator|&
+name|EV_CANCELED
+condition|)
+name|error
+operator|=
+name|EAGAIN
+expr_stmt|;
 name|g_destroy_event
 argument_list|(
 name|ep
@@ -1302,7 +1327,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
