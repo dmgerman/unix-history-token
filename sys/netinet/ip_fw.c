@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.90 1998/06/21 14:53:30 bde Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.91 1998/07/02 05:49:08 julian Exp $  */
 end_comment
 
 begin_comment
@@ -688,6 +688,12 @@ name|mbuf
 operator|*
 operator|*
 name|m
+operator|,
+expr|struct
+name|sockaddr_in
+operator|*
+operator|*
+name|next_hop
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1759,6 +1765,48 @@ name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+case|case
+name|IP_FW_F_FWD
+case|:
+name|printf
+argument_list|(
+literal|"Forward to "
+argument_list|)
+expr_stmt|;
+name|print_ip
+argument_list|(
+name|f
+operator|->
+name|fw_fwd_ip
+operator|.
+name|sin_addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|->
+name|fw_fwd_ip
+operator|.
+name|sin_port
+condition|)
+name|printf
+argument_list|(
+literal|":%d"
+argument_list|,
+name|f
+operator|->
+name|fw_fwd_ip
+operator|.
+name|sin_port
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 name|printf
 argument_list|(
@@ -2120,6 +2168,12 @@ name|mbuf
 modifier|*
 modifier|*
 name|m
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+modifier|*
+name|next_hop
 parameter_list|)
 block|{
 name|struct
@@ -3064,6 +3118,38 @@ name|chain
 argument_list|)
 expr_stmt|;
 continue|continue;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+case|case
+name|IP_FW_F_FWD
+case|:
+comment|/* Change the next-hop address for this packet. 			 * Initially we'll only worry about directly 			 * reachable next-hop's, but ultimately 			 * we will work out for next-hops that aren't 			 * direct the route we would take for it. We 			 * [cs]ould leave this latter problem to 			 * ip_output.c. We hope to high [name the abode of 			 * your favourite deity] that ip_output doesn't modify 			 * the new value of next_hop (which is dst there) 			 */
+if|if
+condition|(
+name|next_hop
+operator|!=
+name|NULL
+condition|)
+comment|/* Make sure, first... */
+operator|*
+name|next_hop
+operator|=
+operator|&
+operator|(
+name|f
+operator|->
+name|fw_fwd_ip
+operator|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Allow the packet */
+endif|#
+directive|endif
 block|}
 comment|/* Deny/reject this packet using this rule */
 name|rule
@@ -4911,6 +4997,14 @@ case|:
 case|case
 name|IP_FW_F_SKIPTO
 case|:
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+case|case
+name|IP_FW_F_FWD
+case|:
+endif|#
+directive|endif
 break|break;
 default|default:
 name|dprintf
@@ -5675,6 +5769,38 @@ literal|"divert disabled, "
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+end_ifdef
+
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"rule-based forwarding enabled, "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"rule-based forwarding disabled, "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

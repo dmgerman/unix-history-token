@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.31 1998/01/08 03:03:54 alex Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.32 1998/02/03 22:15:03 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -163,6 +163,10 @@ name|u_short
 name|fu_reject_code
 decl_stmt|;
 comment|/* REJECT response code */
+name|struct
+name|sockaddr_in
+name|fu_fwd_ip
+decl_stmt|;
 block|}
 name|fw_un
 union|;
@@ -244,6 +248,13 @@ define|#
 directive|define
 name|fw_reject_code
 value|fw_un.fu_reject_code
+end_define
+
+begin_define
+define|#
+directive|define
+name|fw_fwd_ip
+value|fw_un.fu_fwd_ip
 end_define
 
 begin_struct
@@ -399,6 +410,17 @@ end_define
 
 begin_comment
 comment|/* This is a skipto rule		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_FWD
+value|0x0070
+end_define
+
+begin_comment
+comment|/* This is a "change forwarding address" rule */
 end_comment
 
 begin_define

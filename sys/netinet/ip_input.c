@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.90 1998/06/12 03:48:16 julian Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.91 1998/07/02 05:49:12 julian Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
 end_comment
 
 begin_define
@@ -853,6 +853,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+modifier|*
+name|ip_fw_fwd_addr
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1716,12 +1724,26 @@ condition|(
 name|ip_fw_chk_ptr
 condition|)
 block|{
+name|u_int16_t
+name|port
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+comment|/* 		 * If we've been forwarded from the output side, then 		 * skip the firewall a second time 		 */
+if|if
+condition|(
+name|ip_fw_fwd_addr
+condition|)
+goto|goto
+name|ours
+goto|;
+endif|#
+directive|endif
+comment|/* IPFIREWALL_FORWARD */
 ifdef|#
 directive|ifdef
 name|IPDIVERT
-name|u_short
-name|port
-decl_stmt|;
 name|port
 operator|=
 call|(
@@ -1741,6 +1763,9 @@ name|ip_divert_cookie
 argument_list|,
 operator|&
 name|m
+argument_list|,
+operator|&
+name|ip_fw_fwd_addr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1759,12 +1784,22 @@ goto|;
 block|}
 else|#
 directive|else
-name|u_int16_t
+comment|/* !DIVERT */
+comment|/* 		 * If ipfw says divert, we have to just drop packet */
+operator|*
+name|Use
+name|port
+name|as
+name|a
 name|dummy
-init|=
+name|argument
+operator|.
+modifier|*
+expr|/
+name|port
+operator|=
 literal|0
-decl_stmt|;
-comment|/* If ipfw says divert, we have to just drop packet */
+expr_stmt|;
 if|if
 condition|(
 call|(
@@ -1780,10 +1815,13 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|dummy
+name|port
 argument_list|,
 operator|&
 name|m
+argument_list|,
+operator|&
+name|ip_fw_fwd_addr
 argument_list|)
 condition|)
 block|{
@@ -1799,6 +1837,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* !DIVERT */
 if|if
 condition|(
 operator|!
@@ -1834,6 +1873,7 @@ condition|)
 return|return;
 endif|#
 directive|endif
+comment|/* !COMPAT_IPFW */
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */
 name|ip_nhops
 operator|=
@@ -1875,19 +1915,21 @@ for|for
 control|(
 name|ia
 operator|=
+name|TAILQ_FIRST
+argument_list|(
 name|in_ifaddrhead
-operator|.
-name|tqh_first
+argument_list|)
 init|;
 name|ia
 condition|;
 name|ia
 operator|=
+name|TAILQ_NEXT
+argument_list|(
 name|ia
-operator|->
+argument_list|,
 name|ia_link
-operator|.
-name|tqe_next
+argument_list|)
 control|)
 block|{
 define|#
@@ -1932,6 +1974,36 @@ operator|.
 name|s_addr
 operator|==
 name|INADDR_ANY
+condition|)
+goto|goto
+name|ours
+goto|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+comment|/* 		 * If the addr to forward to is one of ours, we pretend to 		 * be the destination for this packet. 		 */
+if|if
+condition|(
+name|ip_fw_fwd_addr
+operator|!=
+name|NULL
+operator|&&
+name|IA_SIN
+argument_list|(
+name|ia
+argument_list|)
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+name|ip_fw_fwd_addr
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
 condition|)
 goto|goto
 name|ours
@@ -2543,7 +2615,18 @@ name|ip
 operator|==
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+name|ip_fw_fwd_addr
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
+block|}
 comment|/* Get the length of the reassembled packets header */
 name|hlen
 operator|=
@@ -2756,9 +2839,28 @@ operator|,
 name|hlen
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+name|ip_fw_fwd_addr
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* tcp needed it */
+endif|#
+directive|endif
 return|return;
 name|bad
 label|:
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+name|ip_fw_fwd_addr
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|m_freem
 argument_list|(
 name|m
