@@ -342,7 +342,7 @@ argument_list|,
 operator|~
 literal|0ul
 argument_list|,
-name|IOMEM_STEP
+literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -504,7 +504,7 @@ argument_list|,
 operator|~
 literal|0ul
 argument_list|,
-name|rom_size
+literal|1
 argument_list|,
 literal|0
 argument_list|)
