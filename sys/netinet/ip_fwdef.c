@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fwdef.c,v 1.6 1995/07/23 05:36:31 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -86,20 +86,16 @@ file|<netinet/ip_fw.h>
 end_include
 
 begin_decl_stmt
-name|struct
-name|ip_fw
-modifier|*
-name|ip_fw_chain
-init|=
-name|NULL
+name|u_short
+name|ip_fw_policy
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_short
-name|ip_fw_policy
-init|=
-literal|0
+name|struct
+name|ip_fw
+modifier|*
+name|ip_fw_chain
 decl_stmt|;
 end_decl_stmt
 
@@ -108,8 +104,6 @@ name|struct
 name|ip_fw
 modifier|*
 name|ip_acct_chain
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +120,10 @@ modifier|*
 name|ip_fw_chk_ptr
 function_decl|)
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -176,6 +174,10 @@ name|ip_fw_chk_ptr
 function_decl|)
 parameter_list|(
 name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|,
@@ -187,8 +189,6 @@ name|struct
 name|ip_fw
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -205,8 +205,6 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -293,8 +291,6 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -311,8 +307,6 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 

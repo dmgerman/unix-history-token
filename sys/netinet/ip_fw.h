@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.13 1995/07/23 05:36:30 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -441,6 +441,10 @@ name|ip_fw_chk_ptr
 function_decl|)
 parameter_list|(
 name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|,
@@ -522,6 +526,10 @@ begin_function_decl
 name|int
 name|ip_fw_chk
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*

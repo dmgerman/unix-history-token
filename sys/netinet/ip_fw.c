@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.21 1995/07/23 05:36:29 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -113,12 +113,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -243,6 +237,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -289,7 +319,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Returns 1 if the port is matched by the vector, 0 otherwise  */
+comment|/*  * Returns TRUE if the port is matched by the vector, FALSE otherwise  */
 end_comment
 
 begin_function
@@ -325,7 +355,7 @@ operator|!
 name|nports
 condition|)
 return|return
-literal|1
+name|TRUE
 return|;
 if|if
 condition|(
@@ -350,7 +380,7 @@ index|]
 condition|)
 block|{
 return|return
-literal|1
+name|TRUE
 return|;
 block|}
 name|nports
@@ -380,18 +410,18 @@ name|port
 condition|)
 block|{
 return|return
-literal|1
+name|TRUE
 return|;
 block|}
 block|}
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Returns 0 if packet should be dropped, 1 or more if it should be accepted  */
+comment|/*  * Returns TRUE if it should be accepted, FALSE otherwise.  */
 end_comment
 
 begin_ifdef
@@ -404,12 +434,19 @@ begin_function
 name|int
 name|ip_fw_chk
 parameter_list|(
+name|m
+parameter_list|,
 name|ip
 parameter_list|,
 name|rif
 parameter_list|,
 name|chain
 parameter_list|)
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -516,11 +553,6 @@ name|dst
 decl_stmt|,
 name|ia_i
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|u_short
 name|src_port
 init|=
@@ -542,18 +574,17 @@ name|notcpsyn
 init|=
 literal|1
 decl_stmt|;
-comment|/* 		 * If the chain is empty 		 * allow any packet-this is equal 		 * to disabling firewall. 		 */
+comment|/* 	 * If the chain is empty allow any packet-this is equal to disabling 	 * firewall. 	 */
 if|if
 condition|(
-operator|!
 name|chain
+operator|==
+name|NULL
 condition|)
 return|return
-operator|(
-literal|1
-operator|)
+name|TRUE
 return|;
-comment|/* 		 * This way we handle fragmented packets. 		 * we ignore all fragments but the first one 		 * so the whole packet can't be reassembled. 		 * This way we relay on the full info which 		 * stored only in first packet. 		 */
+comment|/* 	 * This way we handle fragmented packets. we ignore all fragments but 	 * the first one so the whole packet can't be reassembled. This way we 	 * relay on the full info which stored only in first packet. 	 */
 if|if
 condition|(
 name|ip
@@ -563,9 +594,7 @@ operator|&
 name|IP_OFFMASK
 condition|)
 return|return
-operator|(
-literal|1
-operator|)
+name|TRUE
 return|;
 name|src
 operator|=
@@ -579,10 +608,12 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
-comment|/* 		 * If we got interface from 		 * which packet came-store 		 * pointer to it's first adress 		 */
+comment|/* 	 * If we got interface from which packet came-store pointer to it's 	 * first adress 	 */
 if|if
 condition|(
 name|rif
+operator|!=
+name|NULL
 condition|)
 name|ia
 operator|=
@@ -782,6 +813,8 @@ operator|=
 name|chain
 init|;
 name|f
+operator|!=
+name|NULL
 condition|;
 name|f
 operator|=
@@ -830,8 +863,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|rif
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|via_match
@@ -845,6 +879,7 @@ operator|&
 name|IP_FW_F_IFNAME
 condition|)
 block|{
+comment|/* 				 * No name/unit set so 				 * match any. 				 */
 if|if
 condition|(
 operator|!
@@ -858,7 +893,6 @@ condition|)
 goto|goto
 name|via_match
 goto|;
-comment|/* No name/unit set,match any */
 if|if
 condition|(
 name|rif
@@ -889,6 +923,7 @@ goto|;
 block|}
 else|else
 block|{
+comment|/* 				 * No via ip set so match 				 * any. 				 */
 if|if
 condition|(
 operator|!
@@ -901,7 +936,6 @@ condition|)
 goto|goto
 name|via_match
 goto|;
-comment|/* No via ip set,match any */
 for|for
 control|(
 name|ia_p
@@ -909,6 +943,8 @@ operator|=
 name|ia
 init|;
 name|ia_p
+operator|!=
+name|NULL
 condition|;
 name|ia_p
 operator|=
@@ -919,11 +955,15 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
+operator|(
 name|ia_p
 operator|->
 name|ifa_addr
+operator|==
+name|NULL
+operator|)
 operator|||
+operator|(
 name|ia_p
 operator|->
 name|ifa_addr
@@ -931,6 +971,7 @@ operator|->
 name|sa_family
 operator|!=
 name|AF_INET
+operator|)
 condition|)
 continue|continue;
 name|ia_i
@@ -939,12 +980,10 @@ name|s_addr
 operator|=
 operator|(
 operator|(
-operator|(
 expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-expr|\
 operator|(
 name|ia_p
 operator|->
@@ -955,7 +994,6 @@ operator|->
 name|sin_addr
 operator|.
 name|s_addr
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -974,7 +1012,7 @@ name|via_match
 goto|;
 block|}
 block|}
-comment|/* 	    * If we got here,no "via"'s matched,so 	    * we should continue to the next firewall entry. 	    */
+comment|/* 			 * If we got here,no "via"'s matched,so we should 			 * continue to the next firewall entry. 			 */
 continue|continue;
 name|via_match
 label|:
@@ -1000,7 +1038,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 	 * This is actually buggy as if you set SYN flag 	 * on UDp or ICMP firewall it will never work,but 	 * actually it is a concern of software which sets 	 * firewall entries. 	 */
+comment|/* 				 * This is actually buggy as if you set SYN 				 * flag on UDp or ICMP firewall it will never 				 * work,but actually it is a concern of 				 * software which sets firewall entries. 				 */
 if|if
 condition|(
 name|f
@@ -1012,7 +1050,7 @@ operator|&&
 name|notcpsyn
 condition|)
 continue|continue;
-comment|/* 	 * Specific firewall - packet's 	 * protocol must match firewall's 	 */
+comment|/* 				 * Specific firewall - packet's protocol must 				 * match firewall's 				 */
 if|if
 condition|(
 name|prt
@@ -1088,7 +1126,14 @@ block|}
 comment|/* ALL/Specific */
 block|}
 comment|/* IP addr/mask matches */
-comment|/*      * If we get here then none of the firewalls matched.      * So now we relay on policy defined by user-unmatched packet can      * be ever accepted or rejected...      */
+comment|/* 	 * If we get here then none of the firewalls matched. So now we relay 	 * on policy defined by user-unmatched packet can be ever accepted or 	 * rejected... 	 */
+if|if
+condition|(
+name|ip_fw_policy
+operator|&
+name|IP_FW_P_DENY
+condition|)
+block|{
 name|f
 operator|=
 operator|(
@@ -1098,25 +1143,19 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|ip_fw_policy
-operator|&
-name|IP_FW_P_DENY
-condition|)
 goto|goto
 name|bad_packet
 goto|;
-else|else
-goto|goto
-name|good_packet
-goto|;
+block|}
+return|return
+name|TRUE
+return|;
 name|got_match
 label|:
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_VERBOSE
-comment|/* 		 * VERY ugly piece of code which actually 		 * makes kernel printf for denied packets... 		 */
+comment|/* 	 * VERY ugly piece of code which actually makes kernel printf for 	 * denied packets... 	 */
 if|if
 condition|(
 name|f
@@ -1272,38 +1311,27 @@ name|fw_flg
 operator|&
 name|IP_FW_F_ACCEPT
 condition|)
-goto|goto
-name|good_packet
-goto|;
-ifdef|#
-directive|ifdef
-name|noneed
-else|else
-goto|goto
-name|bad_packet
-goto|;
-endif|#
-directive|endif
+return|return
+name|TRUE
+return|;
 name|bad_packet
 label|:
 if|if
 condition|(
 name|f
+operator|!=
+name|NULL
 condition|)
 block|{
-comment|/* 			 * Do not ICMP reply to icmp 			 * packets....:) 			 */
+comment|/* 		 * Do not ICMP reply to icmp packets....:) or to packets 		 * rejected by entry without the special ICMP reply flag. 		 */
 if|if
 condition|(
+operator|(
 name|f_prt
 operator|==
 name|IP_FW_F_ICMP
-condition|)
-return|return
-literal|0
-return|;
-comment|/* 			 * Reply to packets rejected 			 * by entry with this flag 			 * set only. 			 */
-if|if
-condition|(
+operator|)
+operator|||
 operator|!
 operator|(
 name|f
@@ -1313,61 +1341,16 @@ operator|&
 name|IP_FW_F_ICMPRPL
 operator|)
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
-name|m
-operator|=
-name|m_get
-argument_list|(
-name|M_DONTWAIT
-argument_list|,
-name|MT_SOOPTS
-argument_list|)
-expr_stmt|;
-comment|/* 			 * We never retry,we don't want to 			 * waste time-it is not so critical 			 * if ICMP unsent. 			 */
-if|if
-condition|(
-operator|!
-name|m
-condition|)
-return|return
-literal|0
-return|;
-name|m
-operator|->
-name|m_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-operator|+
-literal|64
-expr_stmt|;
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ip
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|m
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|f_prt
@@ -1402,20 +1385,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
-else|else
-block|{
-comment|/* 		 * If global icmp flag set we will do 		 * something here...later.. 		 */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
-return|;
-block|}
-name|good_packet
-label|:
-return|return
-literal|1
+name|FALSE
 return|;
 block|}
 end_function
@@ -1557,8 +1536,9 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|chain
+operator|==
+name|NULL
 condition|)
 return|return;
 if|if
@@ -1585,6 +1565,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rif
+operator|!=
+name|NULL
 condition|)
 name|ia
 operator|=
@@ -1673,6 +1655,8 @@ operator|=
 name|chain
 init|;
 name|f
+operator|!=
+name|NULL
 condition|;
 name|f
 operator|=
@@ -1788,11 +1772,12 @@ block|}
 continue|continue;
 name|addr_match
 label|:
-comment|/* 		 * We use here same code for "via" matching 		 * as in firewall.This is wrong and does not do 		 * much use,because in most cases instead of interface 		 * passed NULL pointer.Need to be completely 		 * rewritten. 		 */
+comment|/* 		 * We use here same code for "via" matching as in 		 * firewall.This is wrong and does not do much use,because in 		 * most cases instead of interface passed NULL pointer.Need to 		 * be completely rewritten. 		 */
 if|if
 condition|(
-operator|!
 name|rif
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|via_match
@@ -1850,6 +1835,7 @@ goto|;
 block|}
 else|else
 block|{
+comment|/* 			 * No via ip set so 			 * match any? 			 */
 if|if
 condition|(
 operator|!
@@ -1862,7 +1848,6 @@ condition|)
 goto|goto
 name|via_match
 goto|;
-comment|/* No via ip set,match any */
 for|for
 control|(
 name|ia_p
@@ -1870,6 +1855,8 @@ operator|=
 name|ia
 init|;
 name|ia_p
+operator|!=
+name|NULL
 condition|;
 name|ia_p
 operator|=
@@ -1900,12 +1887,10 @@ name|s_addr
 operator|=
 operator|(
 operator|(
-operator|(
 expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-expr|\
 operator|(
 name|ia_p
 operator|->
@@ -1916,7 +1901,6 @@ operator|->
 name|sin_addr
 operator|.
 name|s_addr
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1935,7 +1919,7 @@ name|via_match
 goto|;
 block|}
 block|}
-comment|/* 	    * If we got here,no "via"'s matched,so 	    * we should continue to the next firewall entry. 	    */
+comment|/* 		 * If we got here,no "via"'s matched,so we should continue to 		 * the next firewall entry. 		 */
 continue|continue;
 name|via_match
 label|:
@@ -1961,7 +1945,7 @@ name|fw_pcnt
 operator|++
 expr_stmt|;
 comment|/* Rise packet count */
-comment|/* 						     * Rise byte count, 						     * if need to convert from 						     * host to network byte 						     * order,do it. 						     */
+comment|/* 			 * Rise byte count, if need to convert from host to 			 * network byte order,do it. 			 */
 if|if
 condition|(
 name|nh_conv
@@ -1989,7 +1973,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * Specific firewall - packet's 	 * protocol must match firewall's 	 */
+comment|/* 			 * Specific firewall - packet's protocol must match 			 * firewall's 			 */
 if|if
 condition|(
 name|prt
@@ -2118,7 +2102,7 @@ name|fw_pcnt
 operator|++
 expr_stmt|;
 comment|/* Rise packet count */
-comment|/* 					       * Rise byte count, 					       * if need to convert from 					       * host to network byte 					       * order,do it. 					       */
+comment|/* 					 * Rise byte count, if need to convert 					 * from host to network byte order,do 					 * it. 					 */
 if|if
 condition|(
 name|nh_conv
@@ -2154,10 +2138,6 @@ comment|/* IP addr/mask matches */
 block|}
 end_function
 
-begin_comment
-comment|/* End of whole function */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -2190,6 +2170,8 @@ decl_stmt|;
 while|while
 condition|(
 name|ctmp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ctmp
@@ -2230,14 +2212,18 @@ decl_stmt|;
 block|{
 name|int
 name|s
-init|=
+decl_stmt|;
+name|s
+operator|=
 name|splnet
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 operator|*
 name|chainptr
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -2313,12 +2299,6 @@ name|chtmp_prev
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|u_long
 name|m_src_mask
 decl_stmt|,
@@ -2365,6 +2345,14 @@ name|n_o
 decl_stmt|,
 name|n_n
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|ftmp
 operator|=
 name|malloc
@@ -2513,7 +2501,7 @@ name|chtmp
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Very very *UGLY* code... 		 * Sorry,but i had to do this.... 		 */
+comment|/* 			 * Very very *UGLY* code... Sorry,but i had to do 			 * this.... 			 */
 name|n_sa
 operator|=
 name|ntohl
@@ -2743,7 +2731,7 @@ name|IP_FW_F_UDP
 operator|)
 condition|)
 block|{
-comment|/* 				 * Here the main ide is to check the size 				 * of port range which the frwl covers 				 * We actually don't check their values but 				 * just the wideness of range they have 				 * so that less wide ranges or single ports 				 * go first and wide ranges go later. No ports 				 * at all treated as a range of maximum number 				 * of ports. 				 */
+comment|/* 					 * Here the main idea is to check the 					 * size of port range which the frwl 					 * covers We actually don't check 					 * their values but just the wideness 					 * of range they have so that less 					 * wide ranges or single ports go 					 * first and wide ranges go later. No 					 * ports at all treated as a range of 					 * maximum number of ports. 					 */
 if|if
 condition|(
 name|ftmp
@@ -2852,7 +2840,7 @@ name|chtmp
 operator|->
 name|fw_nsp
 expr_stmt|;
-comment|/* 		 * Actually this cannot happen as the frwl control 		 * procedure checks for number of ports in source and 		 * destination range but we will try to be more safe. 		 */
+comment|/* 					 * Actually this cannot happen as the 					 * frwl control procedure checks for 					 * number of ports in source and 					 * destination range but we will try 					 * to be more safe. 					 */
 if|if
 condition|(
 operator|(
@@ -2992,6 +2980,8 @@ block|{
 if|if
 condition|(
 name|chtmp_prev
+operator|!=
+name|NULL
 condition|)
 block|{
 name|chtmp_prev
@@ -3038,6 +3028,8 @@ block|}
 if|if
 condition|(
 name|chtmp_prev
+operator|!=
+name|NULL
 condition|)
 name|chtmp_prev
 operator|->
@@ -3048,7 +3040,7 @@ expr_stmt|;
 else|else
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 name|panic
 argument_list|(
 literal|"Can't happen"
@@ -3120,10 +3112,12 @@ name|was_found
 decl_stmt|;
 name|int
 name|s
-init|=
+decl_stmt|;
+name|s
+operator|=
 name|splnet
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 name|ftmp
 operator|=
 operator|*
@@ -3163,6 +3157,8 @@ expr_stmt|;
 while|while
 condition|(
 name|ftmp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|matches
@@ -3331,6 +3327,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ltmp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ltmp
@@ -3484,6 +3482,8 @@ expr_stmt|;
 while|while
 condition|(
 name|ftmp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|matches
@@ -3877,7 +3877,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ( (frwl->fw_flg& IP_FW_F_KIND) == IP_FW_F_ICMP ) { 		dprintf1("ip_fw_ctl:  request for unsupported ICMP frwling\n"); 		return(NULL); 	    }
+block|if ((frwl->fw_flg& IP_FW_F_KIND) == IP_FW_F_ICMP) { 		dprintf1("ip_fw_ctl:  request for unsupported ICMP frwling\n"); 		return (NULL); 	}
 endif|#
 directive|endif
 return|return
@@ -3968,7 +3968,6 @@ name|frwl
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|frwl
 operator|=
@@ -3977,6 +3976,8 @@ argument_list|(
 name|m
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4033,7 +4034,7 @@ return|;
 default|default:
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 name|panic
 argument_list|(
 literal|"Can't happen"
@@ -4123,7 +4124,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -4182,7 +4183,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*  * Here we really working hard-adding new elements  * to firewall chain or deleting'em  */
+comment|/* 	 * Here we really working hard-adding new elements 	 * to firewall chain or deleting'em 	 */
 if|if
 condition|(
 name|stage
@@ -4201,7 +4202,6 @@ name|frwl
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|frwl
 operator|=
@@ -4210,6 +4210,8 @@ argument_list|(
 name|m
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4252,7 +4254,7 @@ return|;
 default|default:
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 name|panic
 argument_list|(
 literal|"Can't happen"
