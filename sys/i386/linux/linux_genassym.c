@@ -29,7 +29,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 argument_list|,
 name|sf_handler
 argument_list|)
@@ -45,7 +45,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 argument_list|,
 name|sf_sc
 argument_list|)
@@ -61,7 +61,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_sigcontext
+name|l_sigcontext
 argument_list|,
 name|sc_gs
 argument_list|)
@@ -77,7 +77,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_sigcontext
+name|l_sigcontext
 argument_list|,
 name|sc_eflags
 argument_list|)
@@ -93,7 +93,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_rt_sigframe
+name|l_rt_sigframe
 argument_list|,
 name|sf_handler
 argument_list|)
@@ -109,7 +109,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_rt_sigframe
+name|l_rt_sigframe
 argument_list|,
 name|sf_sc
 argument_list|)

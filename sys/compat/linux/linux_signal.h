@@ -21,7 +21,7 @@ name|linux_to_bsd_sigset
 name|__P
 argument_list|(
 operator|(
-name|linux_sigset_t
+name|l_sigset_t
 operator|*
 operator|,
 name|sigset_t
@@ -40,7 +40,7 @@ operator|(
 name|sigset_t
 operator|*
 operator|,
-name|linux_sigset_t
+name|l_sigset_t
 operator|*
 operator|)
 argument_list|)
@@ -59,10 +59,10 @@ operator|*
 operator|,
 name|int
 operator|,
-name|linux_sigaction_t
+name|l_sigaction_t
 operator|*
 operator|,
-name|linux_sigaction_t
+name|l_sigaction_t
 operator|*
 operator|)
 argument_list|)
