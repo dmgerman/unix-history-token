@@ -962,7 +962,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%H:%M:%S %b %d, %Y"
 argument_list|,

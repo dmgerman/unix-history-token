@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive   	Given an archive specification, return a list  *	    	  	    	of GNode's, one for each member in the spec.  *	    	  	    	FAILURE is returned if the specification is  *	    	  	    	invalid for some reason.  *  *	Arch_Touch	    	Alter the modification time of the archive  *	    	  	    	member described by the given node to be  *	    	  	    	the current time.  *  *	Arch_TouchLib	    	Update the modification time of the library  *	    	  	    	described by the given node. This is special  *	    	  	    	because it also updates the modification time  *	    	  	    	of the library's table of contents.  *  *	Arch_MTime	    	Find the modification time of a member of  *	    	  	    	an archive *in the archive*. The time is also  *	    	  	    	placed in the member's GNode. Returns the  *	    	  	    	modification time.  *  *	Arch_MemTime	    	Find the modification time of a member of  *	    	  	    	an archive. Called when the member doesn't  *	    	  	    	already exist. Looks in the archive for the  *	    	  	    	modification time. Returns the modification  *	    	  	    	time.  *  *	Arch_FindLib	    	Search for a library along a path. The  *	    	  	    	library name in the GNode should be in  *	    	  	    	-l<name> format.  *  *	Arch_LibOODate	    	Special function to decide if a library node  *	    	  	    	is out-of-date.  *  *	Arch_Init 	    	Initialize this module.  */
+comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive	Given an archive specification, return a list  *				of GNode's, one for each member in the spec.  *				FAILURE is returned if the specification is  *				invalid for some reason.  *  *	Arch_Touch		Alter the modification time of the archive  *				member described by the given node to be  *				the current time.  *  *	Arch_TouchLib		Update the modification time of the library  *				described by the given node. This is special  *				because it also updates the modification time  *				of the library's table of contents.  *  *	Arch_MTime		Find the modification time of a member of  *				an archive *in the archive*. The time is also  *				placed in the member's GNode. Returns the  *				modification time.  *  *	Arch_MemTime		Find the modification time of a member of  *				an archive. Called when the member doesn't  *				already exist. Looks in the archive for the  *				modification time. Returns the modification  *				time.  *  *	Arch_FindLib		Search for a library along a path. The  *				library name in the GNode should be in  *				-l<name> format.  *  *	Arch_LibOODate		Special function to decide if a library node  *				is out-of-date.  *  *	Arch_Init		Initialize this module.  */
 end_comment
 
 begin_include
@@ -164,7 +164,7 @@ comment|/* Name of archive */
 name|Hash_Table
 name|members
 decl_stmt|;
-comment|/* All the members of the archive described 			       * by<name, struct ar_hdr *> key/value pairs */
+comment|/* All the members of the archive described 				 * by<name, struct ar_hdr *> key/value pairs */
 name|char
 modifier|*
 name|fnametab
@@ -327,7 +327,7 @@ comment|/* Ending delimiter of member-name */
 name|Boolean
 name|subLibName
 decl_stmt|;
-comment|/* TRUE if libName should have/had 				     * variable substitution performed on it */
+comment|/* TRUE if libName should have/had 				 * variable substitution performed on it */
 name|libName
 operator|=
 operator|*
@@ -3418,7 +3418,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|nameStart
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|nameEnd
 decl_stmt|;
@@ -3666,7 +3667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_LibOODate --  *	Decide if a node with the OP_LIB attribute is out-of-date. Called  *	from Make_OODate to make its life easier, with the library's  *	graph node.  *  *	There are several ways for a library to be out-of-date that are  *	not available to ordinary files. In addition, there are ways  *	that are open to regular files that are not available to  *	libraries. A library that is only used as a source is never  *	considered out-of-date by itself. This does not preclude the  *	library's modification time from making its parent be out-of-date.  *	A library will be considered out-of-date for any of these reasons,  *	given that it is a target on a dependency line somewhere:  *	    Its modification time is less than that of one of its  *	    	  sources (gn->mtime< gn->cmtime).  *	    Its modification time is greater than the time at which the  *	    	  make began (i.e. it's been modified in the course  *	    	  of the make, probably by archiving).  *	    The modification time of one of its sources is greater than  *		  the one of its RANLIBMAG member (i.e. its table of contents  *	    	  is out-of-date). We don't compare of the archive time  *		  vs. TOC time because they can be too close. In my  *		  opinion we should not bother with the TOC at all since  *		  this is used by 'ar' rules that affect the data contents  *		  of the archive, not by ranlib rules, which affect the  *		  TOC.  *  * Results:  *	TRUE if the library is out-of-date. FALSE otherwise.  *  * Side Effects:  *	The library will be hashed if it hasn't been already.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_LibOODate --  *	Decide if a node with the OP_LIB attribute is out-of-date. Called  *	from Make_OODate to make its life easier, with the library's  *	graph node.  *  *	There are several ways for a library to be out-of-date that are  *	not available to ordinary files. In addition, there are ways  *	that are open to regular files that are not available to  *	libraries. A library that is only used as a source is never  *	considered out-of-date by itself. This does not preclude the  *	library's modification time from making its parent be out-of-date.  *	A library will be considered out-of-date for any of these reasons,  *	given that it is a target on a dependency line somewhere:  *	    Its modification time is less than that of one of its  *		  sources (gn->mtime< gn->cmtime).  *	    Its modification time is greater than the time at which the  *		  make began (i.e. it's been modified in the course  *		  of the make, probably by archiving).  *	    The modification time of one of its sources is greater than  *		  the one of its RANLIBMAG member (i.e. its table of contents  *		  is out-of-date). We don't compare of the archive time  *		  vs. TOC time because they can be too close. In my  *		  opinion we should not bother with the TOC at all since  *		  this is used by 'ar' rules that affect the data contents  *		  of the archive, not by ranlib rules, which affect the  *		  TOC.  *  * Results:  *	TRUE if the library is out-of-date. FALSE otherwise.  *  * Side Effects:  *	The library will be hashed if it hasn't been already.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
