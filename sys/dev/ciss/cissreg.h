@@ -105,6 +105,66 @@ name|CISS_HDR_ADDRESS_MODE_MASK_PERIPHERAL
 value|0x3
 end_define
 
+begin_define
+define|#
+directive|define
+name|CISS_EXTRA_MODE2
+parameter_list|(
+name|extra
+parameter_list|)
+value|((extra& 0xc0000000)>> 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_EXTRA_BUS2
+parameter_list|(
+name|extra
+parameter_list|)
+value|((extra& 0x3f000000)>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_EXTRA_TARGET2
+parameter_list|(
+name|extra
+parameter_list|)
+value|((extra& 0x00ff0000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_EXTRA_MODE3
+parameter_list|(
+name|extra
+parameter_list|)
+value|((extra& 0x0000c000)>> 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_EXTRA_BUS3
+parameter_list|(
+name|extra
+parameter_list|)
+value|((extra& 0x00003f00)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_EXTRA_TARGET3
+parameter_list|(
+name|extra
+parameter_list|)
+value|((extra& 0x000000ff))
+end_define
+
 begin_struct
 struct|struct
 name|ciss_header
