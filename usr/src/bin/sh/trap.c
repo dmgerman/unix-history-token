@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	5.1 (Berkeley) %G%"
+literal|"@(#)trap.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,10 +26,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * Routines for dealing with signals.  */
 end_comment
 
 begin_include
@@ -598,14 +594,26 @@ operator|=
 name|S_CATCH
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|DEBUG
 case|case
 name|SIGQUIT
 case|:
+ifdef|#
+directive|ifdef
+name|DEBUG
+block|{
+specifier|extern
+name|int
+name|debug
+decl_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
+break|break;
+block|}
 endif|#
 directive|endif
+comment|/* FALLTHROUGH */
 case|case
 name|SIGTERM
 case|:
@@ -946,6 +954,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|savestatus
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -992,6 +1003,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|savestatus
+operator|=
+name|exitstatus
+expr_stmt|;
 name|evalstring
 argument_list|(
 name|trap
@@ -999,6 +1014,10 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|exitstatus
+operator|=
+name|savestatus
 expr_stmt|;
 block|}
 name|done
