@@ -1111,6 +1111,9 @@ argument_list|(
 literal|"vm_proc_swapin: lost pages from upobj"
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|m
@@ -1146,6 +1149,9 @@ name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|up
 operator|=
 operator|(
