@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1138,6 +1138,8 @@ argument_list|(
 name|netmask
 argument_list|,
 name|mask_rnhead
+operator|->
+name|rnh_treetop
 argument_list|)
 operator|)
 condition|)
@@ -1565,11 +1567,23 @@ argument_list|,
 name|gate
 argument_list|)
 expr_stmt|;
+name|IFAFREE
+argument_list|(
+name|rt
+operator|->
+name|rt_ifa
+argument_list|)
+expr_stmt|;
 name|rt
 operator|->
 name|rt_ifa
 operator|=
 name|ifa
+expr_stmt|;
+name|ifa
+operator|->
+name|ifa_refcnt
+operator|++
 expr_stmt|;
 name|rt
 operator|->
