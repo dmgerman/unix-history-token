@@ -2045,6 +2045,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|NAME0_LEN
+value|14
+end_define
+
 begin_function
 specifier|static
 specifier|const
@@ -2097,7 +2104,7 @@ specifier|static
 name|char
 name|name0
 index|[
-literal|10
+name|NAME0_LEN
 index|]
 decl_stmt|;
 if|if
@@ -2122,9 +2129,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|name0
+argument_list|,
+name|NAME0_LEN
 argument_list|,
 literal|"RTM type %#x"
 argument_list|,
