@@ -123,6 +123,14 @@ name|vm_offset_t
 name|avail_ssize
 decl_stmt|;
 comment|/* amt can grow if this is a stack */
+name|vm_size_t
+name|adj_free
+decl_stmt|;
+comment|/* amount of adjacent free space */
+name|vm_size_t
+name|max_free
+decl_stmt|;
+comment|/* max free space in subtree */
 name|union
 name|vm_map_object
 name|object
@@ -451,10 +459,6 @@ name|vm_map_entry_t
 name|root
 decl_stmt|;
 comment|/* Root of a binary search tree */
-name|vm_map_entry_t
-name|first_free
-decl_stmt|;
-comment|/* First free space hint */
 name|pmap_t
 name|pmap
 decl_stmt|;
