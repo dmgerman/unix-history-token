@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.3	82/03/14	*/
+comment|/*	dn.c	4.4	82/04/25	*/
 end_comment
 
 begin_include
@@ -85,7 +85,7 @@ begin_struct
 struct|struct
 name|dndevice
 block|{
-name|int
+name|u_short
 name|dn_reg
 index|[
 literal|4
@@ -153,107 +153,19 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|PWI
-value|0100000
+name|CRQ
+value|0x001
 end_define
 
 begin_comment
-comment|/* power indicate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACR
-value|040000
-end_define
-
-begin_comment
-comment|/* abandon call and retry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DLO
-value|010000
-end_define
-
-begin_comment
-comment|/* data line occupied */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DONE
-value|0200
-end_define
-
-begin_comment
-comment|/* operation complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IENABLE
-value|0100
-end_define
-
-begin_comment
-comment|/* interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSS
-value|040
-end_define
-
-begin_comment
-comment|/* data set status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PND
-value|020
-end_define
-
-begin_comment
-comment|/* present next digit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAINT
-value|010
-end_define
-
-begin_comment
-comment|/* maintenance mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MENABLE
-value|04
-end_define
-
-begin_comment
-comment|/* master enable */
+comment|/* call request */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DPR
-value|02
+value|0x002
 end_define
 
 begin_comment
@@ -263,12 +175,100 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CRQ
-value|01
+name|MENABLE
+value|0x004
 end_define
 
 begin_comment
-comment|/* call request */
+comment|/* master enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAINT
+value|0x008
+end_define
+
+begin_comment
+comment|/* maintenance mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PND
+value|0x010
+end_define
+
+begin_comment
+comment|/* present next digit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSS
+value|0x020
+end_define
+
+begin_comment
+comment|/* data set status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IENABLE
+value|0x040
+end_define
+
+begin_comment
+comment|/* interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DONE
+value|0x080
+end_define
+
+begin_comment
+comment|/* operation complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLO
+value|0x1000
+end_define
+
+begin_comment
+comment|/* data line occupied */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACR
+value|0x4000
+end_define
+
+begin_comment
+comment|/* abandon call and retry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PWI
+value|0x8000
+end_define
+
+begin_comment
+comment|/* power indicate */
 end_comment
 
 begin_define
@@ -310,7 +310,7 @@ comment|/* largest phone # dialer can handle */
 end_comment
 
 begin_comment
-comment|/*  * There's no good way to determine the correct number of dialers attached  * to a single device (especially when dialers such as Vadic-821 MACS  * exist which can address four chassis, each with its own dialer), so  * we take the "flags" value supplied by config as the number of devices  * attached (see dnintr).  */
+comment|/*  * There's no good way to determine the correct number of dialers attached  * to a single device (especially when dialers such as Vadic-821 MACS  * exist which can address four chassis, each with its own dialer).  */
 end_comment
 
 begin_macro
@@ -334,7 +334,7 @@ name|br
 decl_stmt|,
 name|cvec
 decl_stmt|;
-comment|/* value-result */
+comment|/* value-result, must be r11, r10 */
 specifier|register
 name|struct
 name|dndevice
@@ -348,29 +348,7 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|br
-operator|=
-literal|0
-expr_stmt|;
-name|cvec
-operator|=
-name|br
-expr_stmt|;
-name|br
-operator|=
-name|cvec
-expr_stmt|;
-name|dnintr
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * If there's at least one dialer out there it better be 	 * at chassis 0. 	 */
+comment|/* 	 * If there's at least one dialer out there it better be 	 *  at chassis 0. 	 */
 name|dnaddr
 operator|->
 name|dn_reg
@@ -417,65 +395,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{
-if|if
-condition|(
-name|ui
-operator|->
-name|ui_flags
-operator|==
-literal|0
-condition|)
-comment|/* no flags =>'s don't care */
-name|ui
-operator|->
-name|ui_flags
-operator|=
-literal|4
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ui
-operator|->
-name|ui_flags
-operator|>
-literal|4
-operator|||
-name|ui
-operator|->
-name|ui_flags
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dn%d: bad flags value %d (disabled)\n"
-argument_list|,
-name|ui
-operator|->
-name|ui_unit
-argument_list|,
-name|ui
-operator|->
-name|ui_flags
-argument_list|)
-expr_stmt|;
-name|ui
-operator|->
-name|ui_flags
-operator|=
-literal|0
-expr_stmt|;
-name|ui
-operator|->
-name|ui_alive
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
+block|{}
 end_block
 
 begin_comment
@@ -506,7 +426,7 @@ modifier|*
 name|dp
 decl_stmt|;
 specifier|register
-name|int
+name|u_short
 name|unit
 decl_stmt|,
 modifier|*
@@ -551,22 +471,23 @@ operator|->
 name|ui_alive
 operator|==
 literal|0
-operator|||
-operator|(
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return;
+block|}
 name|dialer
 operator|=
 name|DNREG
 argument_list|(
 name|dev
 argument_list|)
-operator|)
-operator|>=
-name|ui
-operator|->
-name|ui_flags
-operator|||
-operator|(
-operator|(
+expr_stmt|;
 name|dp
 operator|=
 operator|(
@@ -577,7 +498,10 @@ operator|)
 name|ui
 operator|->
 name|ui_addr
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
 operator|->
 name|dn_reg
 index|[
@@ -585,7 +509,6 @@ name|dialer
 index|]
 operator|&
 name|PWI
-operator|)
 condition|)
 block|{
 name|u
@@ -724,10 +647,12 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|u_short
 modifier|*
 name|dnreg
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|cc
 decl_stmt|;
 specifier|register
@@ -737,7 +662,7 @@ modifier|*
 name|dp
 decl_stmt|;
 name|char
-name|digits
+name|buf
 index|[
 name|OBUFSIZ
 index|]
@@ -793,7 +718,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|digits
+name|buf
 expr_stmt|;
 name|iomove
 argument_list|(
@@ -836,9 +761,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|spl4
 argument_list|()
 expr_stmt|;
@@ -1008,6 +930,7 @@ operator|<<
 literal|8
 operator|)
 operator||
+operator|(
 name|IENABLE
 operator||
 name|MENABLE
@@ -1015,6 +938,7 @@ operator||
 name|DPR
 operator||
 name|CRQ
+operator|)
 expr_stmt|;
 name|sleep
 argument_list|(
@@ -1057,10 +981,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * NOTE that the flags from the config file define the number  * of dialers attached to this controller.  */
-end_comment
-
 begin_macro
 name|dnintr
 argument_list|(
@@ -1077,20 +997,17 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|u_short
 modifier|*
 name|basereg
 decl_stmt|,
 modifier|*
 name|dnreg
-decl_stmt|,
-modifier|*
-name|lastreg
 decl_stmt|;
 name|basereg
 operator|=
 operator|(
-name|int
+name|u_short
 operator|*
 operator|)
 name|dninfo
@@ -1106,17 +1023,6 @@ operator|&=
 operator|~
 name|MENABLE
 expr_stmt|;
-name|lastreg
-operator|=
-name|basereg
-operator|+
-name|dninfo
-index|[
-name|dev
-index|]
-operator|->
-name|ui_flags
-expr_stmt|;
 for|for
 control|(
 name|dnreg
@@ -1125,7 +1031,9 @@ name|basereg
 init|;
 name|dnreg
 operator|<
-name|lastreg
+name|basereg
+operator|+
+literal|4
 condition|;
 name|dnreg
 operator|++
