@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.64		%G%"
+literal|"@(#)sendmail.h	3.65		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -411,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|M_FOPT
-value|000000001
+value|000000001L
 end_define
 
 begin_comment
@@ -422,7 +422,7 @@ begin_define
 define|#
 directive|define
 name|M_ROPT
-value|000000002
+value|000000002L
 end_define
 
 begin_comment
@@ -433,7 +433,7 @@ begin_define
 define|#
 directive|define
 name|M_QUIET
-value|000000004
+value|000000004L
 end_define
 
 begin_comment
@@ -444,7 +444,7 @@ begin_define
 define|#
 directive|define
 name|M_RESTR
-value|000000010
+value|000000010L
 end_define
 
 begin_comment
@@ -455,7 +455,7 @@ begin_define
 define|#
 directive|define
 name|M_NHDR
-value|000000020
+value|000000020L
 end_define
 
 begin_comment
@@ -466,7 +466,7 @@ begin_define
 define|#
 directive|define
 name|M_LOCAL
-value|000000040
+value|000000040L
 end_define
 
 begin_comment
@@ -477,7 +477,7 @@ begin_define
 define|#
 directive|define
 name|M_STRIPQ
-value|000000100
+value|000000100L
 end_define
 
 begin_comment
@@ -488,7 +488,7 @@ begin_define
 define|#
 directive|define
 name|M_MUSER
-value|000000200
+value|000000200L
 end_define
 
 begin_comment
@@ -499,7 +499,7 @@ begin_define
 define|#
 directive|define
 name|M_NEEDFROM
-value|000000400
+value|000000400L
 end_define
 
 begin_comment
@@ -510,7 +510,7 @@ begin_define
 define|#
 directive|define
 name|M_NEEDDATE
-value|000001000
+value|000001000L
 end_define
 
 begin_comment
@@ -521,7 +521,7 @@ begin_define
 define|#
 directive|define
 name|M_MSGID
-value|000002000
+value|000002000L
 end_define
 
 begin_comment
@@ -531,8 +531,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_RELRCPT
+value|000004000L
+end_define
+
+begin_comment
+comment|/* make recipient addresses relative */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_USR_UPPER
-value|000010000
+value|000010000L
 end_define
 
 begin_comment
@@ -543,7 +554,7 @@ begin_define
 define|#
 directive|define
 name|M_HST_UPPER
-value|000020000
+value|000020000L
 end_define
 
 begin_comment
@@ -554,7 +565,7 @@ begin_define
 define|#
 directive|define
 name|M_FULLNAME
-value|000040000
+value|000040000L
 end_define
 
 begin_comment
@@ -565,7 +576,7 @@ begin_define
 define|#
 directive|define
 name|M_UGLYUUCP
-value|000100000
+value|000100000L
 end_define
 
 begin_comment
@@ -576,7 +587,7 @@ begin_define
 define|#
 directive|define
 name|M_EXPENSIVE
-value|000200000
+value|000200000L
 end_define
 
 begin_comment
