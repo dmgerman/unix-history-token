@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.57 1996/03/10 07:13:10 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.58 1996/04/07 17:32:42 bde Exp $  */
 end_comment
 
 begin_include
@@ -1070,6 +1070,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/***********************************************************************  * A list of known devices and their "quirks".  Matching is based  * first on device type, then on the manufacturer, model, and revision  * strings returned by the device.  The returned strings are fixed lengths  * of 8, 16 and 4 bytes respectively.  In the matching pattern, a  * question mark (?) matches any single character and a trailing   * asterisk (*) matches remaining characters.  For patterns shorter   * than their respective fields, trailing spaces are implied.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1267,7 +1271,7 @@ name|T_REMOV
 block|,
 literal|"ARCHIVE"
 block|,
-literal|"VIPER 150"
+literal|"VIPER 150 *"
 block|,
 literal|"*"
 block|,
