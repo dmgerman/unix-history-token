@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.27 (Berkeley) %G%"
+literal|"@(#)util.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,8 +1122,12 @@ operator|++
 operator|=
 literal|'"'
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|p
+operator|=
+name|gecos
+init|;
 operator|*
 name|p
 operator|!=
@@ -1143,7 +1147,10 @@ operator|*
 name|p
 operator|!=
 literal|'%'
-condition|)
+condition|;
+name|p
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -1184,9 +1191,6 @@ condition|)
 name|bp
 operator|++
 expr_stmt|;
-name|p
-operator|++
-expr_stmt|;
 block|}
 else|else
 operator|*
@@ -1195,7 +1199,6 @@ operator|++
 operator|=
 operator|*
 name|p
-operator|++
 expr_stmt|;
 block|}
 if|if
