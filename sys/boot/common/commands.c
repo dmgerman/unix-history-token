@@ -1398,7 +1398,7 @@ name|echo
 argument_list|,
 literal|"echo"
 argument_list|,
-name|NULL
+literal|"echo arguments"
 argument_list|,
 name|command_echo
 argument_list|)
@@ -1554,7 +1554,7 @@ name|read
 argument_list|,
 literal|"read"
 argument_list|,
-name|NULL
+literal|"read input from the terminal"
 argument_list|,
 name|command_read
 argument_list|)
