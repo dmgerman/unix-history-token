@@ -1898,11 +1898,11 @@ parameter_list|)
 block|{
 name|struct
 name|yppasswd
-name|yppasswd
+name|yppwd
 decl_stmt|;
 name|struct
 name|master_yppasswd
-name|master_yppasswd
+name|master_yppwd
 decl_stmt|;
 name|struct
 name|netconfig
@@ -1956,7 +1956,7 @@ condition|(
 name|suser_override
 condition|)
 block|{
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -1969,7 +1969,7 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -1982,7 +1982,7 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -1992,7 +1992,7 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2002,7 +2002,7 @@ name|pw
 operator|->
 name|pw_gid
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2012,7 +2012,7 @@ name|pw
 operator|->
 name|pw_expire
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2022,7 +2022,7 @@ name|pw
 operator|->
 name|pw_change
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2032,7 +2032,7 @@ name|pw
 operator|->
 name|pw_fields
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2045,7 +2045,7 @@ operator|->
 name|pw_gecos
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2058,7 +2058,7 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2071,7 +2071,7 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2095,7 +2095,7 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|oldpass
 operator|=
@@ -2105,7 +2105,7 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* not really needed */
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|domain
 operator|=
@@ -2114,7 +2114,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -2127,7 +2127,7 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -2140,7 +2140,7 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -2150,7 +2150,7 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -2160,7 +2160,7 @@ name|pw
 operator|->
 name|pw_gid
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -2173,7 +2173,7 @@ operator|->
 name|pw_gecos
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -2186,7 +2186,7 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -2199,7 +2199,7 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|oldpass
 operator|=
@@ -2282,7 +2282,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|yppasswd
+name|yppwd
 operator|.
 name|oldpass
 operator|=
@@ -2472,7 +2472,7 @@ operator|=
 name|yppasswdproc_update_master_1
 argument_list|(
 operator|&
-name|master_yppasswd
+name|master_yppwd
 argument_list|,
 name|clnt
 argument_list|)
@@ -2483,7 +2483,7 @@ operator|=
 name|yppasswdproc_update_1
 argument_list|(
 operator|&
-name|yppasswd
+name|yppwd
 argument_list|,
 name|clnt
 argument_list|)
