@@ -28,7 +28,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|_A
+name|_CTYPE_A
 value|0x00000100L
 end_define
 
@@ -39,7 +39,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_C
+name|_CTYPE_C
 value|0x00000200L
 end_define
 
@@ -50,7 +50,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_D
+name|_CTYPE_D
 value|0x00000400L
 end_define
 
@@ -61,7 +61,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_G
+name|_CTYPE_G
 value|0x00000800L
 end_define
 
@@ -72,7 +72,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_L
+name|_CTYPE_L
 value|0x00001000L
 end_define
 
@@ -83,7 +83,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_P
+name|_CTYPE_P
 value|0x00002000L
 end_define
 
@@ -94,7 +94,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_S
+name|_CTYPE_S
 value|0x00004000L
 end_define
 
@@ -105,7 +105,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_U
+name|_CTYPE_U
 value|0x00008000L
 end_define
 
@@ -116,7 +116,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_X
+name|_CTYPE_X
 value|0x00010000L
 end_define
 
@@ -127,7 +127,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_B
+name|_CTYPE_B
 value|0x00020000L
 end_define
 
@@ -138,7 +138,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_R
+name|_CTYPE_R
 value|0x00040000L
 end_define
 
@@ -149,7 +149,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_I
+name|_CTYPE_I
 value|0x00080000L
 end_define
 
@@ -160,7 +160,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_T
+name|_CTYPE_T
 value|0x00100000L
 end_define
 
@@ -171,7 +171,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_Q
+name|_CTYPE_Q
 value|0x00200000L
 end_define
 
@@ -494,28 +494,28 @@ name|isalnum
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _A|_D)
+value|__istype((c), _CTYPE_A|_CTYPE_D)
 define|#
 directive|define
 name|isalpha
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _A)
+value|__istype((c), _CTYPE_A)
 define|#
 directive|define
 name|iscntrl
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _C)
+value|__istype((c), _CTYPE_C)
 define|#
 directive|define
 name|isdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|__isctype((c), _D)
+value|__isctype((c), _CTYPE_D)
 comment|/* ANSI -- locale independent */
 define|#
 directive|define
@@ -523,49 +523,49 @@ name|isgraph
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _G)
+value|__istype((c), _CTYPE_G)
 define|#
 directive|define
 name|islower
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _L)
+value|__istype((c), _CTYPE_L)
 define|#
 directive|define
 name|isprint
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _R)
+value|__istype((c), _CTYPE_R)
 define|#
 directive|define
 name|ispunct
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _P)
+value|__istype((c), _CTYPE_P)
 define|#
 directive|define
 name|isspace
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _S)
+value|__istype((c), _CTYPE_S)
 define|#
 directive|define
 name|isupper
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _U)
+value|__istype((c), _CTYPE_U)
 define|#
 directive|define
 name|isxdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|__isctype((c), _X)
+value|__isctype((c), _CTYPE_X)
 comment|/* ANSI -- locale independent */
 define|#
 directive|define
@@ -614,35 +614,35 @@ name|isblank
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _B)
+value|__istype((c), _CTYPE_B)
 define|#
 directive|define
 name|ishexnumber
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _X)
+value|__istype((c), _CTYPE_X)
 define|#
 directive|define
 name|isideogram
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _I)
+value|__istype((c), _CTYPE_I)
 define|#
 directive|define
 name|isnumber
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _D)
+value|__istype((c), _CTYPE_D)
 define|#
 directive|define
 name|isphonogram
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _Q)
+value|__istype((c), _CTYPE_Q)
 define|#
 directive|define
 name|isrune
@@ -656,7 +656,7 @@ name|isspecial
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _T)
+value|__istype((c), _CTYPE_T)
 define|#
 directive|define
 name|toascii
