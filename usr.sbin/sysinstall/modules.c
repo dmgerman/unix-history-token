@@ -63,6 +63,12 @@ directive|include
 file|<fnmatch.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<kenv.h>
+end_include
+
 begin_comment
 comment|/* Prototypes */
 end_comment
@@ -423,6 +429,46 @@ name|dirp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|driverFloppyCheck
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Prompt for the driver floppy if requested. */
+if|if
+condition|(
+name|kenv
+argument_list|(
+name|KENV_GET
+argument_list|,
+literal|"driver_floppy"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to load kernel modules from the driver floppy?"
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|kldBrowser
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
