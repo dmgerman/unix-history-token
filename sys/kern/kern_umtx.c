@@ -540,6 +540,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|umtxq_unlock
 parameter_list|(
