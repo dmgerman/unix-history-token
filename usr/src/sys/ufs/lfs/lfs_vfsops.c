@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2222,6 +2222,8 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
+name|crashandburn
+decl_stmt|,
 name|syncprt
 decl_stmt|;
 specifier|static
@@ -2241,6 +2243,20 @@ argument_list|(
 literal|"lfs_sync\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|crashandburn
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 comment|/* 	 * Meta data blocks are only marked dirty, not busy, so LFS syncs 	 * must be single threaded. 	 */
