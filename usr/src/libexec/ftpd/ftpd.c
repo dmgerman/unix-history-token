@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.28 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|guest
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wtmp
 decl_stmt|;
 end_decl_stmt
 
@@ -1243,6 +1249,22 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|guest
+condition|)
+comment|/* grab wtmp before chroot */
+name|wtmp
+operator|=
+name|open
+argument_list|(
+literal|"/usr/adm/wtmp"
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_APPEND
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|guest
@@ -3824,15 +3846,32 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|wtmp
-decl_stmt|;
 name|char
 name|line
 index|[
 literal|32
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|guest
+operator|&&
+operator|(
+name|wtmp
+operator|>=
+literal|0
+operator|)
+condition|)
+name|lseek
+argument_list|(
+name|wtmp
+argument_list|,
+literal|0
+argument_list|,
+name|L_XTND
+argument_list|)
+expr_stmt|;
+else|else
 name|wtmp
 operator|=
 name|open
@@ -3920,6 +3959,11 @@ name|utmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|guest
+condition|)
 operator|(
 name|void
 operator|)
@@ -3951,9 +3995,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|wtmp
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -3969,6 +4010,26 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|guest
+operator|&&
+operator|(
+name|wtmp
+operator|>=
+literal|0
+operator|)
+condition|)
+name|lseek
+argument_list|(
+name|wtmp
+argument_list|,
+literal|0
+argument_list|,
+name|L_XTND
+argument_list|)
+expr_stmt|;
+else|else
 name|wtmp
 operator|=
 name|open
