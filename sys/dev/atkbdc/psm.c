@@ -1351,7 +1351,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_MOUSE_ENTRY
-value|7
+value|((sizeof(vendortype) / sizeof(*vendortype)) - 1)
 end_define
 
 begin_comment
