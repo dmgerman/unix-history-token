@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fgetpos.c,v 1.5 1997/02/22 15:01:53 peter Exp $"
+literal|"$Id: fgetpos.c,v 1.7 1999/02/08 21:32:38 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,7 +93,7 @@ operator|(
 operator|*
 name|pos
 operator|=
-name|ftell
+name|ftello
 argument_list|(
 name|fp
 argument_list|)
