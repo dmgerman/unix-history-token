@@ -473,6 +473,37 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Getlabel callback  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFS_REFRESHLABEL_ARGS
+define|\
+value|struct thread *td, struct proc *p, struct vnode *vp, \ 	struct pfs_node *pn, struct ucred *cred
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|mac
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pfs_refreshlabel_t
+function_decl|)
+parameter_list|(
+name|PFS_REFRESHLABEL_ARGS
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * Last-close callback  */
 end_comment
 
@@ -604,6 +635,9 @@ name|pn_vis
 decl_stmt|;
 name|pfs_getextattr_t
 name|pn_getextattr
+decl_stmt|;
+name|pfs_refreshlabel_t
+name|pn_refreshlabel
 decl_stmt|;
 name|void
 modifier|*
