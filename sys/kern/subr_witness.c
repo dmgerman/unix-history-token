@@ -3152,7 +3152,7 @@ operator|&&
 name|lock1
 operator|->
 name|li_lock
-operator|!=
+operator|==
 operator|&
 name|Giant
 operator|.
