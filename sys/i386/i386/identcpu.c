@@ -2945,7 +2945,7 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Certain BIOS disables cpuid instructnion of Cyrix 6x86MX CPU. 	 * In this case, rdmsr generates general protection fault, and 	 * exception will be trapped by bluetrap13(). 	 */
+comment|/* 	 * Certain BIOS disables cpuid instruction of Cyrix 6x86MX CPU. 	 * In this case, rdmsr generates general protection fault, and 	 * exception will be trapped by bluetrap13(). 	 */
 name|setidt
 argument_list|(
 literal|13
