@@ -304,37 +304,13 @@ directive|ifdef
 name|GPROF
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|_PROF_PROLOGUE
 define|\
-value|mov ip, lr; bl __mcount
+value|mov ip, lr; bl _mcount
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_PROF_PROLOGUE
-define|\
-value|mov ip,lr; bl mcount
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
