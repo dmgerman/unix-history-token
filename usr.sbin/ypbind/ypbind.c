@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.4 1995/02/26 04:42:48 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.5 1995/04/02 03:10:55 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3200,6 +3200,40 @@ break|break;
 if|if
 condition|(
 name|ypdb
+operator|!=
+name|NULL
+operator|&&
+name|ypdb
+operator|->
+name|dom_vers
+operator|==
+name|YPVERS
+operator|&&
+name|ypdb
+operator|->
+name|dom_alive
+operator|==
+literal|1
+operator|&&
+name|ypdb
+operator|->
+name|dom_server_addr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+name|raddrp
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+condition|)
+comment|/*  		 * We're received a second response to one of our broadcasts 		 * from another server, and we've already bound: drop 		 * the response on the floor. No sense changing servers 		 * for no reason. 		 */
+return|return;
+if|if
+condition|(
+name|ypdb
 operator|==
 name|NULL
 condition|)
@@ -3474,8 +3508,9 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 operator|(
@@ -3508,8 +3543,9 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return;
 block|}
@@ -3533,8 +3569,9 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 operator|(
@@ -3565,8 +3602,9 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return;
 block|}
