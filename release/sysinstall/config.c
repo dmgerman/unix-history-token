@@ -2316,12 +2316,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Use the most fascist security settings */
+comment|/* Use the most extreme security settings */
 end_comment
 
 begin_function
 name|int
-name|configSecurityFascist
+name|configSecurityExtreme
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -2337,16 +2337,7 @@ argument_list|()
 decl_stmt|;
 name|variable_set2
 argument_list|(
-literal|"inetd_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"portmap_enable"
+literal|"nfs_server_enable"
 argument_list|,
 literal|"NO"
 argument_list|,
@@ -2365,15 +2356,6 @@ expr_stmt|;
 name|variable_set2
 argument_list|(
 literal|"sshd_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"nfs_server_enable"
 argument_list|,
 literal|"NO"
 argument_list|,
@@ -2398,7 +2380,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* More fascist stuff should go here */
 if|if
 condition|(
 name|self
@@ -2406,114 +2387,8 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Extreme security settings have been selected.\n\n"
-literal|"This means that all \"popular\" network services and\n"
-literal|"mechanisms like inetd(8) have been DISABLED by default.\n\n"
-literal|"PLEASE NOTE that this still does not save you from having\n"
-literal|"to properly secure your system in other ways or exercise\n"
-literal|"due diligence in your administration, this simply picks\n"
-literal|"a more secure set of out-of-box defaults to start with.\n\n"
-literal|"To change any of these settings later, edit /etc/rc.conf"
-argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|configSecurityHigh
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
-name|variable_set2
-argument_list|(
-literal|"inetd_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"sendmail_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"sshd_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"portmap_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"nfs_server_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"kern_securelevel_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"kern_securelevel"
-argument_list|,
-literal|"1"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|self
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"High security settings have been selected.\n\n"
-literal|"This means that most \"popular\" network services and\n"
-literal|"mechanisms like inetd(8) have been DISABLED by default.\n\n"
+literal|"Sendmail, SSHd, and NFS services have been disabled, and\n"
+literal|"securelevels have been enabled.\n"
 literal|"PLEASE NOTE that this still does not save you from having\n"
 literal|"to properly secure your system in other ways or exercise\n"
 literal|"due diligence in your administration, this simply picks\n"
@@ -2548,52 +2423,6 @@ init|=
 name|savescr
 argument_list|()
 decl_stmt|;
-name|variable_set2
-argument_list|(
-literal|"inetd_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|variable_cmp
-argument_list|(
-literal|"nfs_client_enable"
-argument_list|,
-literal|"YES"
-argument_list|)
-operator|||
-operator|!
-name|variable_cmp
-argument_list|(
-literal|"nfs_server_enable"
-argument_list|,
-literal|"YES"
-argument_list|)
-condition|)
-name|variable_set2
-argument_list|(
-literal|"portmap_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|variable_cmp
-argument_list|(
-literal|"nfs_server_enable"
-argument_list|,
-literal|"YES"
-argument_list|)
-condition|)
 name|variable_set2
 argument_list|(
 literal|"nfs_reserved_port_only"
@@ -2637,100 +2466,12 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Moderate security settings have been selected.\n\n"
-literal|"This means that most \"popular\" network services and\n"
-literal|"mechanisms like inetd(8) have been enabled by default\n"
-literal|"for a comfortable user experience but with possible\n"
-literal|"trade-offs in system security.  If this bothers you and\n"
-literal|"you know exactly what you are doing, select one of the\n"
-literal|"other security profiles instead.\n\n"
-literal|"To change any of these settings later, edit /etc/rc.conf"
-argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|configSecurityLiberal
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
-name|variable_set2
-argument_list|(
-literal|"inetd_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"portmap_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"sendmail_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"sshd_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"kern_securelevel_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|self
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"Liberal security settings have been selected.\n\n"
-literal|"This means that most \"popular\" network services and\n"
-literal|"mechanisms like inetd(8) have been enabled by default\n"
-literal|"for the most comfortable user experience but with possible\n"
-literal|"trade-offs in system security.  If this bothers you and\n"
-literal|"you know exactly what you are doing, select one of the\n"
-literal|"other security profiles instead.\n\n"
+literal|"Sendmail and SSHd have been enabled, securelevels are\n"
+literal|"disabled, and NFS server settings have been left intact.\n"
+literal|"PLEASE NOTE that this still does not save you from having\n"
+literal|"to properly secure your system in other ways or exercise\n"
+literal|"due diligence in your administration, this simply picks\n"
+literal|"a standard set of out-of-box defaults to start with.\n\n"
 literal|"To change any of these settings later, edit /etc/rc.conf"
 argument_list|)
 expr_stmt|;
