@@ -942,11 +942,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|p
 operator|->
 name|p_flag
 operator|&
 name|P_DEADLKTREAT
+operator|)
 condition|)
 block|{
 name|lockflags
