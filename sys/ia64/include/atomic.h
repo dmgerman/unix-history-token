@@ -305,7 +305,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|static __inline void						\ 	atomic_##name##_acq_##width(volatile type *p, type v)		\ 	{								\ 		type old, ret;						\ 		do {							\ 			old = *p;					\ 			IA64_CMPXCHG(sz, acq, p, old, old op v, ret);	\ 		} while (ret != old);					\ 	}								\ 									\ 	static __inline void						\ 	atomic_##name##_rel_##width(volatile type *p, type v)		\ 	{								\ 		type old, ret;						\ 		do {							\ 			old = *p;					\ 			IA64_CMPXCHG(sz, rel, p, old, old op v, ret);	\ 		} while (ret != old);					\ 	}
+value|static __inline type						\ 	atomic_##name##_acq_##width(volatile type *p, type v)		\ 	{								\ 		type old, ret;						\ 		do {							\ 			old = *p;					\ 			IA64_CMPXCHG(sz, acq, p, old, old op v, ret);	\ 		} while (ret != old);					\ 		return (old);						\ 	}								\ 									\ 	static __inline type						\ 	atomic_##name##_rel_##width(volatile type *p, type v)		\ 	{								\ 		type old, ret;						\ 		do {							\ 			old = *p;					\ 			IA64_CMPXCHG(sz, rel, p, old, old op v, ret);	\ 		} while (ret != old);					\ 		return (old);						\ 	}
 end_define
 
 begin_macro
