@@ -6832,7 +6832,7 @@ name|pci_map_mem
 argument_list|(
 name|tag
 argument_list|,
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 argument_list|,
 operator|&
 name|sc
@@ -6849,7 +6849,7 @@ name|pci_map_mem
 argument_list|(
 name|tag
 argument_list|,
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 operator|+
 literal|4
 argument_list|,
