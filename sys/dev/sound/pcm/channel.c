@@ -644,7 +644,7 @@ argument|if (delta>= ((sndbuf_getsize(b) *
 literal|15
 argument|) /
 literal|16
-argument|)) { 		if (!(c->flags& (CHN_F_CLOSING | CHN_F_ABORTING))) 			device_printf(c->parentsnddev->dev,
+argument|)) { 		if (!(c->flags& (CHN_F_CLOSING | CHN_F_ABORTING))) 			device_printf(c->dev,
 literal|"hwptr went backwards %d -> %d\n"
 argument|, old, hwptr); 	}
 argument_list|)
@@ -1068,8 +1068,6 @@ name|device_printf
 argument_list|(
 name|c
 operator|->
-name|parentsnddev
-operator|->
 name|dev
 argument_list|,
 literal|"broken app, nbio and tried to write %d bytes with fragsz %d\n"
@@ -1125,8 +1123,6 @@ argument_list|(
 name|device_printf
 argument_list|(
 name|c
-operator|->
-name|parentsnddev
 operator|->
 name|dev
 argument_list|,

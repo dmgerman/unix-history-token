@@ -992,7 +992,7 @@ literal|"ess_reset_dsp 0x%lx failed\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
-name|d
+name|sc
 operator|->
 name|io_base
 argument_list|)

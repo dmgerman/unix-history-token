@@ -1166,7 +1166,7 @@ literal|"sb_reset_dsp 0x%lx failed\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
-name|d
+name|sb
 operator|->
 name|io_base
 argument_list|)

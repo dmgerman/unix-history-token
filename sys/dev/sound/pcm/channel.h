@@ -122,6 +122,9 @@ name|void
 modifier|*
 name|devinfo
 decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
 name|char
 name|name
 index|[

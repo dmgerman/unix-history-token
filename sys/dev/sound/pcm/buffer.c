@@ -3177,7 +3177,7 @@ literal|"stopped"
 argument_list|,
 name|b
 operator|->
-name|chan
+name|isadmachan
 argument_list|)
 argument_list|)
 expr_stmt|;

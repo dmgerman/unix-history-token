@@ -1658,6 +1658,14 @@ name|parentchannel
 operator|=
 name|parent
 expr_stmt|;
+name|ch
+operator|->
+name|dev
+operator|=
+name|d
+operator|->
+name|dev
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|ch

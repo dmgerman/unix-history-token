@@ -4586,9 +4586,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"default ioctl chan%d fn 0x%08lx fail\n"
-argument_list|,
-name|chan
+literal|"default ioctl fn 0x%08lx fail\n"
 argument_list|,
 name|cmd
 argument_list|)
