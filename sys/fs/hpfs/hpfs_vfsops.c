@@ -422,7 +422,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|u_int
+name|size_t
 name|size
 decl_stmt|;
 name|int
