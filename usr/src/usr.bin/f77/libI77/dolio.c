@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dolio[] = "@(#)dolio.c	1.1";  *  * list directed i/o common routines  */
+comment|/* char id_dolio[] = "@(#)dolio.c	1.2";  *  * list directed i/o common routines  */
 end_comment
 
 begin_include
@@ -85,7 +85,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|101
+argument|F_ERUNIT
 argument_list|,
 argument|fmtbuf
 argument_list|)
@@ -171,7 +171,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|102
+argument|F_ERNOFIO
 argument_list|,
 argument|fmtbuf
 argument_list|)
@@ -185,7 +185,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|105
+argument|F_ERNOSIO
 argument_list|,
 argument|fmtbuf
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.1";  *  * formatted read routines  */
+comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.2";  *  * formatted read routines  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fmt.h"
+file|"format.h"
 end_include
 
 begin_define
@@ -209,7 +209,7 @@ return|return
 operator|(
 name|errno
 operator|=
-literal|100
+name|F_ERFMT
 operator|)
 return|;
 block|}
@@ -393,7 +393,7 @@ return|return
 operator|(
 name|errno
 operator|=
-literal|100
+name|F_ERFMT
 operator|)
 return|;
 block|}
@@ -658,7 +658,7 @@ return|return
 operator|(
 name|errno
 operator|=
-literal|115
+name|F_ERRDCHR
 operator|)
 return|;
 block|}
@@ -823,7 +823,7 @@ return|return
 operator|(
 name|errno
 operator|=
-literal|116
+name|F_ERLOGIF
 operator|)
 return|;
 operator|*
@@ -1050,7 +1050,7 @@ return|return
 operator|(
 name|errno
 operator|=
-literal|115
+name|F_ERRDCHR
 operator|)
 return|;
 block|}
@@ -1306,7 +1306,7 @@ return|return
 operator|(
 name|errno
 operator|=
-literal|115
+name|F_ERRDCHR
 operator|)
 return|;
 block|}

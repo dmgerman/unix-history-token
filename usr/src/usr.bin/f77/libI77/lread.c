@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.1";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.2";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -1208,7 +1208,7 @@ return|;
 else|else
 return|return
 operator|(
-literal|109
+name|F_ERREPT
 operator|)
 return|;
 block|}
@@ -1338,7 +1338,7 @@ literal|0.
 condition|)
 return|return
 operator|(
-literal|122
+name|F_ERNREP
 operator|)
 return|;
 name|lcount
@@ -1797,7 +1797,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|112
+argument|F_ERLIO
 argument_list|,
 literal|"no ("
 argument_list|)
@@ -1869,7 +1869,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|112
+argument|F_ERLIO
 argument_list|,
 literal|"no )"
 argument_list|)
@@ -2012,7 +2012,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|112
+name|F_ERLIO
 argument_list|,
 literal|"logical not T or F"
 argument_list|)
@@ -2233,7 +2233,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|113
+argument|F_ERSPACE
 argument_list|,
 argument|lrd
 argument_list|)
@@ -2338,7 +2338,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|113
+argument|F_ERSPACE
 argument_list|,
 argument|lrd
 argument_list|)

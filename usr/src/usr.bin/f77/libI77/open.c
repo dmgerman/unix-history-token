@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_open[] = "@(#)open.c	1.1";  *  * open.c  -  f77 file open routines  */
+comment|/* char id_open[] = "@(#)open.c	1.2";  *  * open.c  -  f77 file open routines  */
 end_comment
 
 begin_include
@@ -154,7 +154,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|101
+argument|F_ERUNIT
 argument_list|,
 literal|"open"
 argument_list|)
@@ -382,7 +382,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|118
+name|F_EROLDF
 argument_list|,
 literal|"open"
 argument_list|)
@@ -397,7 +397,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|117
+name|F_ERNEWF
 argument_list|,
 literal|"open"
 argument_list|)
@@ -537,7 +537,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|108
+argument|F_ERSTAT
 argument_list|,
 literal|"open"
 argument_list|)
@@ -576,7 +576,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|113
+argument|F_ERSPACE
 argument_list|,
 literal|"open"
 argument_list|)
@@ -719,7 +719,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|121
+argument|F_ERARG
 argument_list|,
 literal|"open form="
 argument_list|)

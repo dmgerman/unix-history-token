@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rewind[] = "@(#)rewind.c	1.1";  *  * rewind.c  -  f77 file rewind  */
+comment|/* char id_rewind[] = "@(#)rewind.c	1.2";  *  * rewind.c  -  f77 file rewind  */
 end_comment
 
 begin_include
@@ -68,7 +68,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|101
+argument|F_ERUNIT
 argument_list|,
 literal|"rewind"
 argument_list|)
@@ -130,7 +130,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|106
+argument|F_ERNOBKSP
 argument_list|,
 literal|"rewind"
 argument_list|)

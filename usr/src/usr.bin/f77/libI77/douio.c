@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_douio[] = "@(#)douio.c	1.1";  *  * unformatted external i/o  */
+comment|/* char id_douio[] = "@(#)douio.c	1.2";  *  * unformatted external i/o  */
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|110
+name|F_EREREC
 argument_list|,
 name|eor
 argument_list|)
@@ -290,7 +290,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|110
+name|F_EREREC
 argument_list|,
 name|eor
 argument_list|)

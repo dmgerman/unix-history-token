@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_iio[] = "@(#)iio.c	1.1";  *  * internal (character array) i/o  */
+comment|/* char id_iio[] = "@(#)iio.c	1.2";  *  * internal (character array) i/o  */
 end_comment
 
 begin_include
@@ -169,7 +169,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|110
+argument|F_EREREC
 argument_list|,
 literal|"iio"
 argument_list|)
@@ -199,7 +199,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|110
+argument|F_EREREC
 argument_list|,
 literal|"iio"
 argument_list|)
@@ -260,7 +260,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|107
+name|F_ERBREC
 argument_list|,
 literal|"ilio"
 argument_list|)
@@ -606,7 +606,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 literal|"ifio"
 argument_list|)
@@ -845,7 +845,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|107
+name|F_ERBREC
 operator|)
 return|;
 name|n

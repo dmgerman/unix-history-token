@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fmt[] = "@(#)fmt.c	1.1";  *  * fortran format parser  */
+comment|/* char id_fmt[] = "@(#)fmt.c	1.2";  *  * fortran format parser  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fmt.h"
+file|"format.h"
 end_include
 
 begin_define
@@ -1778,7 +1778,7 @@ name|s
 expr_stmt|;
 name|fatal
 argument_list|(
-literal|100
+name|F_ERFMT
 argument_list|,
 literal|"format too complex"
 argument_list|)
@@ -2007,7 +2007,7 @@ name|s
 expr_stmt|;
 name|fatal
 argument_list|(
-literal|100
+name|F_ERFMT
 argument_list|,
 literal|"bad string"
 argument_list|)

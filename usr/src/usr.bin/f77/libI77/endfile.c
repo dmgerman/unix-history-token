@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_endfile[] = "@(#)endfile.c	1.1";  *  * endfile  */
+comment|/* char id_endfile[] = "@(#)endfile.c	1.2";  *  * endfile  */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|101
+argument|F_ERUNIT
 argument_list|,
 argument|endf
 argument_list|)
@@ -100,7 +100,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|114
+argument|F_ERNOPEN
 argument_list|,
 argument|endf
 argument_list|)
@@ -438,7 +438,7 @@ argument_list|)
 expr_stmt|;
 name|fatal
 argument_list|(
-literal|119
+name|F_ERSYS
 argument_list|,
 literal|"no cp for trunc"
 argument_list|)
@@ -458,7 +458,7 @@ name|err
 argument_list|(
 name|flag
 argument_list|,
-literal|111
+name|F_ERTRUNC
 argument_list|,
 name|endf
 argument_list|)
@@ -483,7 +483,7 @@ name|err
 argument_list|(
 name|flag
 argument_list|,
-literal|111
+name|F_ERTRUNC
 argument_list|,
 name|endf
 argument_list|)

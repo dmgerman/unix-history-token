@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sue[] = "@(#)sue.c	1.1";  *  * sequential unformatted external read/write routines  */
+comment|/* char id_sue[] = "@(#)sue.c	1.2";  *  * sequential unformatted external read/write routines  */
 end_comment
 
 begin_include
@@ -316,7 +316,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|101
+argument|F_ERUNIT
 argument_list|,
 argument|sue
 argument_list|)
@@ -387,7 +387,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|103
+argument|F_ERNOUIO
 argument_list|,
 argument|sue
 argument_list|)
@@ -401,7 +401,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|105
+argument|F_ERNOSIO
 argument_list|,
 argument|sue
 argument_list|)
@@ -416,7 +416,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|120
+argument|F_ERSEEK
 argument_list|,
 argument|sue
 argument_list|)

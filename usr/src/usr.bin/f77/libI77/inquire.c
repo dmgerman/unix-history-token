@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_inquire[] = "@(#)inquire.c	1.1";  *  * inquire.c - f77 i/o inquire statement routine  */
+comment|/* char id_inquire[] = "@(#)inquire.c	1.2";  *  * inquire.c - f77 i/o inquire statement routine  */
 end_comment
 
 begin_include
@@ -187,7 +187,7 @@ name|err
 argument_list|(
 argument|a->inerr
 argument_list|,
-literal|101
+argument|F_ERUNIT
 argument_list|,
 literal|"inquire"
 argument_list|)

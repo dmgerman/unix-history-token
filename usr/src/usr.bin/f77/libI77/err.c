@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_err[] = "@(#)err.c	1.1";  *  * file i/o error and initialization routines  */
+comment|/* char id_err[] = "@(#)err.c	1.2";  *  * file i/o error and initialization routines  */
 end_comment
 
 begin_include
@@ -908,7 +908,7 @@ if|if
 condition|(
 name|n
 operator|==
-literal|100
+name|F_ERFMT
 condition|)
 block|{
 name|i

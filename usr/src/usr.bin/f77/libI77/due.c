@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_due[] = "@(#)due.c	1.1";  *  * direct unformatted external i/o  */
+comment|/* char id_due[] = "@(#)due.c	1.2";  *  * direct unformatted external i/o  */
 end_comment
 
 begin_include
@@ -215,7 +215,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|101
+name|F_ERUNIT
 argument_list|,
 name|due
 argument_list|)
@@ -287,7 +287,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|103
+argument|F_ERNOUIO
 argument_list|,
 argument|due
 argument_list|)
@@ -307,7 +307,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|104
+argument|F_ERNODIO
 argument_list|,
 argument|due
 argument_list|)

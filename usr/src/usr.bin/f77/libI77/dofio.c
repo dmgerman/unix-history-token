@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dofio[] = "@(#)dofio.c	1.1";  *  * fortran format executer  */
+comment|/* char id_dofio[] = "@(#)dofio.c	1.2";  *  * fortran format executer  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fmt.h"
+file|"format.h"
 end_include
 
 begin_define
@@ -254,7 +254,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 literal|"too many nested ()"
 argument_list|)
@@ -286,7 +286,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 literal|"too many nested ()"
 argument_list|)
@@ -520,7 +520,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 literal|"impossible code"
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sfe[] = "@(#)sfe.c	1.1";  *  * sequential formatted external routines  */
+comment|/* char id_sfe[] = "@(#)sfe.c	1.2";  *  * sequential formatted external routines  */
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 literal|"read sfe"
 argument_list|)
@@ -392,7 +392,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|101
+name|F_ERUNIT
 argument_list|,
 literal|"sfe"
 argument_list|)
@@ -467,7 +467,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|102
+argument|F_ERNOFIO
 argument_list|,
 literal|"sfe"
 argument_list|)
@@ -481,7 +481,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|105
+argument|F_ERNOSIO
 argument_list|,
 literal|"sfe"
 argument_list|)
@@ -671,7 +671,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 literal|"write sfe"
 argument_list|)
@@ -861,7 +861,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|107
+name|F_ERBREC
 operator|)
 return|;
 name|n
@@ -941,10 +941,10 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|120
+name|F_ERSEEK
 operator|)
 return|;
-comment|/* cant go back */
+comment|/* can't go back */
 while|while
 condition|(
 name|cursor
@@ -983,7 +983,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|110
+name|F_EREREC
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fmtlib[] = "@(#)fmtlib.c	1.1";  *  * integer to ascii conversion  */
+comment|/* char id_fmtlib[] = "@(#)fmtlib.c	1.2";  *  * integer to ascii conversion  */
 end_comment
 
 begin_include
