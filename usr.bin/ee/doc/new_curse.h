@@ -1652,7 +1652,7 @@ name|WINDOW
 operator|*
 name|window
 operator|,
-name|__const
+specifier|const
 name|char
 operator|*
 name|format
