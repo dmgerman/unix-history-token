@@ -4410,7 +4410,7 @@ name|MSS_IDXBUSY
 condition|)
 name|DELAY
 argument_list|(
-literal|10000
+literal|10
 argument_list|)
 expr_stmt|;
 else|else
