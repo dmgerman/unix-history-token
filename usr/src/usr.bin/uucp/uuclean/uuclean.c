@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuclean.c	5.7	%G%"
+literal|"@(#)uuclean.c	5.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -888,12 +888,6 @@ name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
 name|char
 name|mstr
 index|[
