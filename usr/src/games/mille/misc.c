@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.4 (Berkeley) %G%"
+literal|"@(#)misc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,7 +1041,7 @@ specifier|static
 name|int
 name|ioctl_args
 init|=
-name|FREAD
+name|O_RDONLY
 decl_stmt|;
 operator|(
 name|void
