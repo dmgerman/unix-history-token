@@ -464,6 +464,70 @@ begin_comment
 comment|/*  * Simple assembly macros to get and release spin locks.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WITNESS_ENTER
+parameter_list|(
+name|lck
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|movl	lck+MTX_DEBUG,reg;					\ 	cmpl	$0,MTXD_WITNESS(reg);					\ 	jz	1f;							\ 	pushl	$0;							\ 	pushl	$0;							\ 	pushl	$MTX_SPIN;						\ 	pushl	$lck;							\ 	call	witness_enter;						\ 	addl	$0x10,%esp;						\ 1:
+end_define
+
+begin_define
+define|#
+directive|define
+name|WITNESS_EXIT
+parameter_list|(
+name|lck
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|movl	lck+MTX_DEBUG,reg;					\ 	cmpl	$0,MTXD_WITNESS(reg);					\ 	jz	1f;							\ 	pushl	$0;							\ 	pushl	$0;							\ 	pushl	$MTX_SPIN;						\ 	pushl	$lck;							\ 	call	witness_exit;						\ 	addl	$0x10,%esp;						\ 1:
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|WITNESS_ENTER
+parameter_list|(
+name|lck
+parameter_list|,
+name|reg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WITNESS_EXIT
+parameter_list|(
+name|lck
+parameter_list|,
+name|reg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -483,7 +547,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	_curproc,reg;						\ 	pushfl;								\ 	cli;								\ 	movl	reg,lck+MTX_LOCK;					\ 	popl	lck+MTX_SAVEINTR;
+value|movl	_curproc,reg;						\ 	pushfl;								\ 	cli;								\ 	movl	reg,lck+MTX_LOCK;					\ 	popl	lck+MTX_SAVEINTR;					\ 	WITNESS_ENTER(lck, reg)
 end_define
 
 begin_define
@@ -496,7 +560,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|pushl	lck+MTX_SAVEINTR;					\ 	movl	$ MTX_UNOWNED,lck+MTX_LOCK;				\ 	popfl;
+value|WITNESS_EXIT(lck, reg)						\ 	pushl	lck+MTX_SAVEINTR;					\ 	movl	$ MTX_UNOWNED,lck+MTX_LOCK;				\ 	popfl;
 end_define
 
 begin_else
@@ -518,7 +582,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	_curproc,reg;						\ 	pushfl;								\ 	cli;								\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEINTR;
+value|movl	_curproc,reg;						\ 	pushfl;								\ 	cli;								\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEINTR;					\ 	WITNESS_ENTER(lck, reg)
 end_define
 
 begin_comment
@@ -535,7 +599,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|pushl	lck+MTX_SAVEINTR;					\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popfl;
+value|WITNESS_EXIT(lck, reg)						\ 	pushl	lck+MTX_SAVEINTR;					\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popfl;
 end_define
 
 begin_define
@@ -548,7 +612,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|pushf;								\ 	cli;								\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	_curproc,%eax;						\ 	jne	7f;							\ 	incl	lck+MTX_RECURSE;					\ 	jmp	8f;							\ 7:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	7b;							\ 	popl	lck+MTX_SAVEINTR;					\ 	jmp	9f;							\ 8:	add	$4,%esp;						\ 9:
+value|pushf;								\ 	cli;								\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	_curproc,%eax;						\ 	jne	7f;							\ 	incl	lck+MTX_RECURSE;					\ 	jmp	8f;							\ 7:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	7b;							\ 	popl	lck+MTX_SAVEINTR;					\ 	jmp	9f;							\ 8:	add	$4,%esp;						\ 9:	WITNESS_ENTER(lck, reg)
 end_define
 
 begin_define
@@ -561,7 +625,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	lck+MTX_RECURSE,%eax;					\ 	decl	%eax;							\ 	js	8f;							\ 	movl	%eax,lck+MTX_RECURSE;					\ 	jmp	9f;							\ 8:	pushl	lck+MTX_SAVEINTR;					\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf;								\ 9:
+value|WITNESS_EXIT(lck, reg)						\ 	movl	lck+MTX_RECURSE,%eax;					\ 	decl	%eax;							\ 	js	8f;							\ 	movl	%eax,lck+MTX_RECURSE;					\ 	jmp	9f;							\ 8:	pushl	lck+MTX_SAVEINTR;					\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf;								\ 9:
 end_define
 
 begin_endif
