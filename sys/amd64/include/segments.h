@@ -1015,39 +1015,12 @@ begin_comment
 comment|/* BIOS interface (Arguments) */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BDE_DEBUGGER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NGDT
-value|18
-end_define
-
-begin_comment
-comment|/* some of 11-17 are reserved for debugger */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|NGDT
 value|15
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Entries in the Local Descriptor Table (LDT)  */

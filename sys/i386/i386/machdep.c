@@ -8740,24 +8740,6 @@ condition|;
 name|x
 operator|++
 control|)
-block|{
-ifdef|#
-directive|ifdef
-name|BDE_DEBUGGER
-comment|/* avoid overwriting db entries with APM ones */
-if|if
-condition|(
-name|x
-operator|>=
-name|GAPMCODE32_SEL
-operator|&&
-name|x
-operator|<=
-name|GAPMDATA_SEL
-condition|)
-continue|continue;
-endif|#
-directive|endif
 name|ssdtosd
 argument_list|(
 operator|&
@@ -8775,7 +8757,6 @@ operator|.
 name|sd
 argument_list|)
 expr_stmt|;
-block|}
 name|r_gdt
 operator|.
 name|rd_limit
