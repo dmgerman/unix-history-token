@@ -68,6 +68,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TI12XX_PCI_MULTIMEDIA_CONTROL
+value|0x84
+end_define
+
+begin_comment
+comment|/* Zoom Video */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TI113X_PCI_RETRY_STATUS
 value|0x90
 end_define
