@@ -516,7 +516,7 @@ name|saddr
 operator|->
 name|sa_family
 operator|>
-name|SA_MAX
+name|AF_MAX
 condition|)
 block|{
 name|error
