@@ -1622,6 +1622,27 @@ parameter_list|)
 value|((x) * SK_IMTIMER_TICKS)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SK_IM_MIN
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_IM_DEFAULT
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_IM_MAX
+value|10000
+end_define
+
 begin_comment
 comment|/*  * The SK_EPROM0 register contains a byte that describes the  * amount of SRAM mounted on the NIC. The value also tells if  * the chips are 64K or 128K. This affects the RAMbuffer address  * offset that we need to use.  */
 end_comment
@@ -7839,6 +7860,9 @@ decl_stmt|;
 comment|/* physical media type */
 name|u_int32_t
 name|sk_intrmask
+decl_stmt|;
+name|int
+name|sk_int_mod
 decl_stmt|;
 name|struct
 name|sk_if_softc
