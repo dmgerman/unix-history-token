@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright 1996, 1997, 1998, 1999, 2000 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -132,6 +132,10 @@ name|Struct_Obj_Entry
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* Lists of shared objects */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -164,6 +168,58 @@ argument_list|)
 name|Objlist
 expr_stmt|;
 end_typedef
+
+begin_comment
+comment|/* Lists of init or fini functions */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|InitFunc
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_Funclist_Entry
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|Struct_Funclist_Entry
+argument_list|)
+name|link
+expr_stmt|;
+name|InitFunc
+name|func
+decl_stmt|;
+block|}
+name|Funclist_Entry
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|STAILQ_HEAD
+argument_list|(
+argument|Struct_Funclist
+argument_list|,
+argument|Struct_Funclist_Entry
+argument_list|)
+name|Funclist
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/* Lists of shared object dependencies */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -372,25 +428,13 @@ modifier|*
 name|needed
 decl_stmt|;
 comment|/* Shared objects needed by this one (%) */
-name|void
-function_decl|(
-modifier|*
+name|InitFunc
 name|init
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* Initialization function to call */
-name|void
-function_decl|(
-modifier|*
+name|InitFunc
 name|fini
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* Termination function to call */
 name|bool
 name|mainprog
@@ -596,6 +640,47 @@ name|void
 name|init_pltgot
 parameter_list|(
 name|Obj_Entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lockdflt_acquire
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|lockdflt_create
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lockdflt_destroy
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lockdflt_release
+parameter_list|(
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
