@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.12 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1625,13 +1625,25 @@ name|ee
 operator|->
 name|e_msgsize
 operator|=
-name|e
-operator|->
-name|e_msgsize
-operator|+
 name|ERRORFUDGE
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|NoReturn
+condition|)
+name|ee
+operator|->
+name|e_msgsize
+operator|+=
+name|e
+operator|->
+name|e_msgsize
+expr_stmt|;
+end_if
 
 begin_expr_stmt
 name|openxscript
