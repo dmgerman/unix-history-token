@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.2 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,12 @@ name|is_disk
 init|=
 literal|0
 decl_stmt|;
+specifier|register
+name|unsigned
+name|is_disk_mask
+init|=
+literal|0
+decl_stmt|;
 name|SEGMENT
 name|segp
 decl_stmt|;
@@ -303,7 +309,7 @@ name|segment_ndx
 index|]
 argument_list|)
 expr_stmt|;
-name|is_disk
+name|is_disk_mask
 operator|=
 name|ISDISK
 argument_list|(
@@ -312,6 +318,15 @@ index|[
 name|segment_ndx
 index|]
 argument_list|)
+expr_stmt|;
+name|is_disk
+operator|=
+name|is_disk_mask
+operator|||
+operator|!
+name|hashp
+operator|->
+name|new_file
 expr_stmt|;
 block|}
 if|if
@@ -345,9 +360,6 @@ argument_list|,
 operator|!
 name|prev_bp
 argument_list|,
-operator|(
-name|int
-operator|)
 name|is_disk
 argument_list|,
 literal|0
@@ -381,7 +393,7 @@ name|unsigned
 operator|)
 name|bp
 operator||
-name|is_disk
+name|is_disk_mask
 operator|)
 expr_stmt|;
 block|}
