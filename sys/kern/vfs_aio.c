@@ -7730,6 +7730,12 @@ condition|(
 name|uap
 operator|->
 name|nent
+operator|<
+literal|0
+operator|||
+name|uap
+operator|->
+name|nent
 operator|>
 name|AIO_LISTIO_MAX
 condition|)
@@ -9551,6 +9557,10 @@ name|nent
 expr_stmt|;
 if|if
 condition|(
+name|nent
+operator|<
+literal|0
+operator|||
 name|nent
 operator|>
 name|AIO_LISTIO_MAX
