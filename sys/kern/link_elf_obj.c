@@ -4265,7 +4265,7 @@ name|symname
 argument_list|)
 condition|)
 block|{
-name|uprintf
+name|printf
 argument_list|(
 literal|"link_elf: symbol %s undefined\n"
 argument_list|,
@@ -4350,7 +4350,7 @@ name|symname
 argument_list|)
 condition|)
 block|{
-name|uprintf
+name|printf
 argument_list|(
 literal|"link_elf: symbol %s undefined\n"
 argument_list|,
@@ -4435,7 +4435,7 @@ name|symname
 argument_list|)
 condition|)
 block|{
-name|uprintf
+name|printf
 argument_list|(
 literal|"link_elf: symbol %s undefined\n"
 argument_list|,
@@ -4520,7 +4520,7 @@ name|symname
 argument_list|)
 condition|)
 block|{
-name|uprintf
+name|printf
 argument_list|(
 literal|"link_elf: symbol %s undefined\n"
 argument_list|,
