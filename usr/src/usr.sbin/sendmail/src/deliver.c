@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.35 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1295,6 +1295,19 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Call the mailer. 	**	The argument vector gets built, pipes 	**	are created as necessary, and we fork& exec as 	**	appropriate. 	**	If we are running SMTP, we just need to clean up. 	*/
+if|if
+condition|(
+name|ctladdr
+operator|==
+name|NULL
+condition|)
+name|ctladdr
+operator|=
+operator|&
+name|e
+operator|->
+name|e_from
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
