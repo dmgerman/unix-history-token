@@ -3222,6 +3222,17 @@ name|NDIS_ATTRIBUTE_USES_SAFE_BUFFER_APIS
 value|0x00000200
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_SERIALIZED
+parameter_list|(
+name|block
+parameter_list|)
+define|\
+value|(((block)->nmb_flags& NDIS_ATTRIBUTE_DESERIALIZE) == 0)
+end_define
+
 begin_enum
 enum|enum
 name|ndis_media_state
@@ -3860,6 +3871,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|__stdcall
 name|void
 function_decl|(
 modifier|*
@@ -4973,6 +4985,9 @@ name|np_m0
 decl_stmt|;
 name|int
 name|np_txidx
+decl_stmt|;
+name|kspin_lock
+name|np_lock
 decl_stmt|;
 block|}
 struct|;
@@ -6158,6 +6173,25 @@ name|NDIS_PSTATE_SLEEPING
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|NdisQueryPacket
+parameter_list|(
+name|p
+parameter_list|,
+name|pbufcnt
+parameter_list|,
+name|bufcnt
+parameter_list|,
+name|firstbuf
+parameter_list|,
+name|plen
+parameter_list|)
+define|\
+value|do {								\ 		if ((firstbuf) != NULL) {				\ 			ndis_buffer		**_first;		\ 			_first = firstbuf;				\ 			*(_first) = (p)->np_private.npp_head;		\ 		}							\ 		if ((plen) || (bufcnt) || (pbufcnt)) {			\ 			if ((p)->np_private.npp_validcounts == FALSE) {	\ 				ndis_buffer		*tmp;		\ 				unsigned int		tlen = 0, pcnt = 0; \ 				unsigned int		add = 0;	\ 				unsigned int		pktlen, off;	\ 									\ 				tmp = (p)->np_private.npp_head;		\ 				while (tmp != NULL) {			\ 					off = MmGetMdlByteOffset(tmp);	\ 					pktlen = MmGetMdlByteCount(tmp);\ 					tlen += pktlen;			\ 					pcnt +=				\ 					    NDIS_BUFFER_TO_SPAN_PAGES(tmp); \ 					add++;				\ 					tmp = tmp->mdl_next;		\ 				}					\ 				(p)->np_private.npp_count = add;	\ 				(p)->np_private.npp_totlen = tlen;	\ 				(p)->np_private.npp_physcnt = pcnt;	\ 				(p)->np_private.npp_validcounts = TRUE;	\ 			}						\ 			if (pbufcnt) {					\ 				unsigned int		*_pbufcnt;	\ 				_pbufcnt = (pbufcnt);			\ 				*(_pbufcnt) = (p)->np_private.npp_physcnt; \ 			}						\ 			if (bufcnt) {					\ 				unsigned int		*_bufcnt;	\ 				_bufcnt = (bufcnt);			\ 				*(_bufcnt) = (p)->np_private.npp_count;	\ 			}						\ 			if (plen) {					\ 				unsigned int		*_plen;		\ 				_plen = (plen);				\ 				*(_plen) = (p)->np_private.npp_totlen;	\ 			}						\ 		}							\ 	} while (0)
+end_define
+
 begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
@@ -6472,17 +6506,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|ndis_intrhand
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|ndis_return_packet
 parameter_list|(
@@ -6634,6 +6657,10 @@ name|ndis_thsuspend
 parameter_list|(
 name|struct
 name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int

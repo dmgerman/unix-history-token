@@ -146,12 +146,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/uma.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -225,6 +219,12 @@ begin_include
 include|#
 directive|include
 file|<compat/ndis/cfg_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/ndis/usbd_var.h>
 end_include
 
 begin_include
@@ -317,6 +317,28 @@ name|void
 name|ndis_sendrsrcavail_func
 parameter_list|(
 name|ndis_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__stdcall
+specifier|static
+name|void
+name|ndis_intrhand
+parameter_list|(
+name|kdpc
+modifier|*
+parameter_list|,
+name|device_object
+modifier|*
+parameter_list|,
+name|irp
+modifier|*
+parameter_list|,
+name|struct
+name|ndis_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -502,12 +524,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|uma_zone_t
-name|ndis_buffer_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mtx
 name|ndis_thr_mtx
@@ -515,6 +531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|ndis_req_mtx
@@ -624,6 +641,9 @@ expr_stmt|;
 name|ntoskrnl_libinit
 argument_list|()
 expr_stmt|;
+name|usbd_libinit
+argument_list|()
+expr_stmt|;
 name|patch
 operator|=
 name|kernndis_functbl
@@ -660,42 +680,6 @@ name|patch
 operator|++
 expr_stmt|;
 block|}
-comment|/* Initialize TX buffer UMA zone. */
-name|ndis_buffer_zone
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"NDIS buffer"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mdl
-argument_list|)
-operator|+
-operator|(
-sizeof|sizeof
-argument_list|(
-name|vm_offset_t
-operator|*
-argument_list|)
-operator|*
-literal|16
-operator|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|ndis_create_kthreads
 argument_list|()
 expr_stmt|;
@@ -734,6 +718,9 @@ expr_stmt|;
 name|ntoskrnl_libfini
 argument_list|()
 expr_stmt|;
+name|usbd_libfini
+argument_list|()
+expr_stmt|;
 name|windrv_libfini
 argument_list|()
 expr_stmt|;
@@ -761,12 +748,6 @@ name|patch
 operator|++
 expr_stmt|;
 block|}
-comment|/* Remove zones */
-name|uma_zdestroy
-argument_list|(
-name|ndis_buffer_zone
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -786,6 +767,9 @@ expr_stmt|;
 name|ntoskrnl_libfini
 argument_list|()
 expr_stmt|;
+name|usbd_libfini
+argument_list|()
+expr_stmt|;
 name|windrv_libfini
 argument_list|()
 expr_stmt|;
@@ -813,12 +797,6 @@ name|patch
 operator|++
 expr_stmt|;
 block|}
-comment|/* Remove zones */
-name|uma_zdestroy
-argument_list|(
-name|ndis_buffer_zone
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|error
@@ -906,11 +884,13 @@ name|p
 operator|->
 name|np_p
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Look for any jobs on the work queue. */
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -952,7 +932,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -979,7 +959,7 @@ operator|->
 name|nr_arg
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1015,7 +995,7 @@ name|np_state
 operator|=
 name|NDIS_PSTATE_SLEEPING
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1083,9 +1063,9 @@ name|ndis_thr_mtx
 argument_list|,
 literal|"NDIS thread lock"
 argument_list|,
-name|MTX_NDIS_LOCK
+name|NULL
 argument_list|,
-name|MTX_DEF
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1435,7 +1415,7 @@ name|np_p
 expr_stmt|;
 block|}
 comment|/* Create and post a special 'exit' job. */
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1484,7 +1464,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1514,7 +1494,7 @@ literal|60
 argument_list|)
 expr_stmt|;
 comment|/* Now empty the job list. */
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1552,7 +1532,7 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1621,7 +1601,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1640,7 +1620,7 @@ expr_stmt|;
 name|ndis_jobs
 operator|++
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1688,7 +1668,7 @@ name|i
 operator|++
 control|)
 block|{
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1709,7 +1689,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1732,7 +1712,7 @@ expr_stmt|;
 name|ndis_jobs
 operator|--
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1839,7 +1819,7 @@ operator|.
 name|np_p
 expr_stmt|;
 block|}
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1890,7 +1870,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -1903,7 +1883,7 @@ operator|)
 return|;
 block|}
 block|}
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -2005,7 +1985,7 @@ operator|.
 name|np_p
 expr_stmt|;
 block|}
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -2036,7 +2016,7 @@ operator|==
 name|arg
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -2064,7 +2044,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -2130,7 +2110,7 @@ name|ndis_iproc
 operator|.
 name|np_state
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ndis_thr_mtx
@@ -2162,12 +2142,19 @@ name|ndis_thsuspend
 parameter_list|(
 name|p
 parameter_list|,
+name|m
+parameter_list|,
 name|timo
 parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
+decl_stmt|;
+name|struct
+name|mtx
+modifier|*
+name|m
 decl_stmt|;
 name|int
 name|timo
@@ -2176,6 +2163,36 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|msleep
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_siglist
+argument_list|,
+name|m
+argument_list|,
+name|curthread
+operator|->
+name|td_priority
+argument_list|,
+literal|"ndissp"
+argument_list|,
+name|timo
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2206,6 +2223,7 @@ argument_list|,
 name|timo
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -2579,7 +2597,7 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2879,27 +2897,67 @@ argument|OID_AUTO, cfg->ndis_cfg.nc_cfgkey, flag, 	    cfg->ndis_cfg.nc_val, siz
 literal|0
 argument|); }  int ndis_flush_sysctls(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	struct ndis_cfglist	*cfg;  	sc = arg;  	while (!TAILQ_EMPTY(&sc->ndis_cfglist_head)) { 		cfg = TAILQ_FIRST(&sc->ndis_cfglist_head); 		TAILQ_REMOVE(&sc->ndis_cfglist_head, cfg, link); 		free(cfg->ndis_cfg.nc_cfgkey, M_DEVBUF); 		free(cfg->ndis_cfg.nc_cfgdesc, M_DEVBUF); 		free(cfg, M_DEVBUF); 	}  	return(
 literal|0
-argument|); }  static void ndis_return(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	__stdcall ndis_return_handler	returnfunc; 	ndis_handle		adapter; 	ndis_packet		*p; 	uint8_t			irql;  	p = arg; 	sc = p->np_softc; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL) 		return;  	returnfunc = sc->ndis_chars->nmc_return_packet_func; 	irql = KeRaiseIrql(DISPATCH_LEVEL); 	MSCALL2(returnfunc, adapter, p); 	KeLowerIrql(irql);  	return; }  void ndis_return_packet(buf, arg) 	void			*buf;
+argument|); }  static void ndis_return(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	__stdcall ndis_return_handler	returnfunc; 	ndis_handle		adapter; 	ndis_packet		*p; 	uint8_t			irql;  	p = arg; 	sc = p->np_softc; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL) 		return;  	returnfunc = sc->ndis_chars->nmc_return_packet_func;  	KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql); 	MSCALL2(returnfunc, adapter, p); 	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	return; }  void ndis_return_packet(buf, arg) 	void			*buf;
 comment|/* not used */
 argument|void			*arg; { 	ndis_packet		*p;  	if (arg == NULL) 		return;  	p = arg;
 comment|/* Decrement refcount. */
 argument|p->np_refcnt--;
 comment|/* Release packet when refcount hits zero, otherwise return. */
-argument|if (p->np_refcnt) 		return;  	ndis_sched(ndis_return, p, NDIS_SWI);  	return; }  void ndis_free_bufs(b0) 	ndis_buffer		*b0; { 	ndis_buffer		*next;  	if (b0 == NULL) 		return;  	while(b0 != NULL) { 		next = b0->mdl_next; 		uma_zfree (ndis_buffer_zone, b0); 		b0 = next; 	}  	return; }  void ndis_free_packet(p) 	ndis_packet		*p; { 	if (p == NULL) 		return;  	ndis_free_bufs(p->np_private.npp_head); 	NdisFreePacket(p);  	return; }  int ndis_convert_res(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_resource_list	*rl = NULL; 	cm_partial_resource_desc	*prd = NULL; 	ndis_miniport_block	*block; 	device_t		dev; 	struct resource_list	*brl; 	struct resource_list	brl_rev; 	struct resource_list_entry	*brle, *n; 	int 			error =
+argument|if (p->np_refcnt) 		return;  	ndis_sched(ndis_return, p, NDIS_TASKQUEUE);  	return; }  void ndis_free_bufs(b0) 	ndis_buffer		*b0; { 	ndis_buffer		*next;  	if (b0 == NULL) 		return;  	while(b0 != NULL) { 		next = b0->mdl_next; 		IoFreeMdl(b0); 		b0 = next; 	}  	return; } int in_reset =
 literal|0
-argument|;  	sc = arg; 	block = sc->ndis_block; 	dev = sc->ndis_dev;  	SLIST_INIT(&brl_rev);  	rl = malloc(sizeof(ndis_resource_list) + 	    (sizeof(cm_partial_resource_desc) * (sc->ndis_rescnt -
+argument|; void ndis_free_packet(p) 	ndis_packet		*p; { 	if (p == NULL) 		return;  	ndis_free_bufs(p->np_private.npp_head); 	NdisFreePacket(p); 	return; }  int ndis_convert_res(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_resource_list	*rl = NULL; 	cm_partial_resource_desc	*prd = NULL; 	ndis_miniport_block	*block; 	device_t		dev; 	struct resource_list	*brl; 	struct resource_list_entry	*brle;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|600022
+argument|struct resource_list	brl_rev; 	struct resource_list_entry	*n;
+endif|#
+directive|endif
+argument|int 			error =
+literal|0
+argument|;  	sc = arg; 	block = sc->ndis_block; 	dev = sc->ndis_dev;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|600022
+argument|SLIST_INIT(&brl_rev);
+endif|#
+directive|endif
+argument|rl = malloc(sizeof(ndis_resource_list) + 	    (sizeof(cm_partial_resource_desc) * (sc->ndis_rescnt -
 literal|1
 argument|)), 	    M_DEVBUF, M_NOWAIT|M_ZERO);  	if (rl == NULL) 		return(ENOMEM);  	rl->cprl_version =
 literal|5
 argument|; 	rl->cprl_version =
 literal|1
 argument|; 	rl->cprl_count = sc->ndis_rescnt; 	prd = rl->cprl_partial_descs;  	brl = BUS_GET_RESOURCE_LIST(dev, dev);  	if (brl != NULL) {
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|600022
 comment|/* 		 * We have a small problem. Some PCI devices have 		 * multiple I/O ranges. Windows orders them starting 		 * from lowest numbered BAR to highest. We discover 		 * them in that order too, but insert them into a singly 		 * linked list head first, which means when time comes 		 * to traverse the list, we enumerate them in reverse 		 * order. This screws up some drivers which expect the 		 * BARs to be in ascending order so that they can choose 		 * the "first" one as their register space. Unfortunately, 		 * in order to fix this, we have to create our own 		 * temporary list with the entries in reverse order. 		 */
-argument|SLIST_FOREACH(brle, brl, link) { 			n = malloc(sizeof(struct resource_list_entry), 			    M_TEMP, M_NOWAIT); 			if (n == NULL) { 				error = ENOMEM; 				goto bad; 			} 			bcopy((char *)brle, (char *)n, 			    sizeof(struct resource_list_entry)); 			SLIST_INSERT_HEAD(&brl_rev, n, link); 		}  		SLIST_FOREACH(brle,&brl_rev, link) { 			switch (brle->type) { 			case SYS_RES_IOPORT: 				prd->cprd_type = CmResourceTypePort; 				prd->cprd_flags = CM_RESOURCE_PORT_IO; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_MEMORY: 				prd->cprd_type = CmResourceTypeMemory; 				prd->cprd_flags = 				    CM_RESOURCE_MEMORY_READ_WRITE; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_IRQ: 				prd->cprd_type = CmResourceTypeInterrupt; 				prd->cprd_flags =
+argument|SLIST_FOREACH(brle, brl, link) { 			n = malloc(sizeof(struct resource_list_entry), 			    M_TEMP, M_NOWAIT); 			if (n == NULL) { 				error = ENOMEM; 				goto bad; 			} 			bcopy((char *)brle, (char *)n, 			    sizeof(struct resource_list_entry)); 			SLIST_INSERT_HEAD(&brl_rev, n, link); 		}  		SLIST_FOREACH(brle,&brl_rev, link) {
+else|#
+directive|else
+argument|STAILQ_FOREACH(brle, brl, link) {
+endif|#
+directive|endif
+argument|switch (brle->type) { 			case SYS_RES_IOPORT: 				prd->cprd_type = CmResourceTypePort; 				prd->cprd_flags = CM_RESOURCE_PORT_IO; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_MEMORY: 				prd->cprd_type = CmResourceTypeMemory; 				prd->cprd_flags = 				    CM_RESOURCE_MEMORY_READ_WRITE; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_IRQ: 				prd->cprd_type = CmResourceTypeInterrupt; 				prd->cprd_flags =
 literal|0
 argument|; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_intr.cprd_level = brle->start; 				prd->u.cprd_intr.cprd_vector = brle->start; 				prd->u.cprd_intr.cprd_affinity =
 literal|0
-argument|; 				break; 			default: 				break; 			} 			prd++; 		} 	}  	block->nmb_rlist = rl;  bad:  	while (!SLIST_EMPTY(&brl_rev)) { 		n = SLIST_FIRST(&brl_rev); 		SLIST_REMOVE_HEAD(&brl_rev, link); 		free (n, M_TEMP); 	}  	return(error); }
+argument|; 				break; 			default: 				break; 			} 			prd++; 		} 	}  	block->nmb_rlist = rl;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|600022
+argument|bad:  	while (!SLIST_EMPTY(&brl_rev)) { 		n = SLIST_FIRST(&brl_rev); 		SLIST_REMOVE_HEAD(&brl_rev, link); 		free (n, M_TEMP); 	}
+endif|#
+directive|endif
+argument|return(error); }
 comment|/*  * Map an NDIS packet to an mbuf list. When an NDIS driver receives a  * packet, it will hand it to us in the form of an ndis_packet,  * which we need to convert to an mbuf that is then handed off  * to the stack. Note: we configure the mbuf list so that it uses  * the memory regions specified by the ndis_buffer structures in  * the ndis_packet as external storage. In most cases, this will  * point to a memory region allocated by the driver (either by  * ndis_malloc_withtag() or ndis_alloc_sharedmem()). We expect  * the driver to handle free()ing this region for is, so we set up  * a dummy no-op free handler for it.  */
 argument|int ndis_ptom(m0, p) 	struct mbuf		**m0; 	ndis_packet		*p; { 	struct mbuf		*m, *prev = NULL; 	ndis_buffer		*buf; 	ndis_packet_private	*priv; 	uint32_t		totlen =
 literal|0
@@ -2910,10 +2968,10 @@ literal|0
 argument|, EXT_NDIS); 		p->np_refcnt++; 		totlen += m->m_len; 		if (m->m_flags& MT_HEADER) 			*m0 = m; 		else 			prev->m_next = m; 		prev = m; 	}  	(*m0)->m_pkthdr.len = totlen;  	return(
 literal|0
 argument|); }
-comment|/*  * Create an mbuf chain from an NDIS packet chain.  * This is used mainly when transmitting packets, where we need  * to turn an mbuf off an interface's send queue and transform it  * into an NDIS packet which will be fed into the NDIS driver's  * send routine.  *  * NDIS packets consist of two parts: an ndis_packet structure,  * which is vaguely analagous to the pkthdr portion of an mbuf,  * and one or more ndis_buffer structures, which define the  * actual memory segments in which the packet data resides.  * We need to allocate one ndis_buffer for each mbuf in a chain,  * plus one ndis_packet as the header.  */
+comment|/*  * Create an NDIS packet from an mbuf chain.  * This is used mainly when transmitting packets, where we need  * to turn an mbuf off an interface's send queue and transform it  * into an NDIS packet which will be fed into the NDIS driver's  * send routine.  *  * NDIS packets consist of two parts: an ndis_packet structure,  * which is vaguely analagous to the pkthdr portion of an mbuf,  * and one or more ndis_buffer structures, which define the  * actual memory segments in which the packet data resides.  * We need to allocate one ndis_buffer for each mbuf in a chain,  * plus one ndis_packet as the header.  */
 argument|int ndis_mtop(m0, p) 	struct mbuf		*m0; 	ndis_packet		**p; { 	struct mbuf		*m; 	ndis_buffer		*buf = NULL, *prev = NULL; 	ndis_packet_private	*priv;  	if (p == NULL || *p == NULL || m0 == NULL) 		return(EINVAL);  	priv =&(*p)->np_private; 	priv->npp_totlen = m0->m_pkthdr.len;  	for (m = m0; m != NULL; m = m->m_next) { 		if (m->m_len ==
 literal|0
-argument|) 			continue; 		buf = uma_zalloc(ndis_buffer_zone, M_NOWAIT | M_ZERO); 		if (buf == NULL) { 			ndis_free_packet(*p); 			*p = NULL; 			return(ENOMEM); 		}  		MmInitializeMdl(buf, m->m_data, m->m_len); 		if (priv->npp_head == NULL) 			priv->npp_head = buf; 		else 			prev->mdl_next = buf; 		prev = buf; 	}  	priv->npp_tail = buf; 	priv->npp_totlen = m0->m_pkthdr.len;  	return(
+argument|) 			continue; 		buf = IoAllocateMdl(m->m_data, m->m_len, FALSE, FALSE, NULL); 		if (buf == NULL) { 			ndis_free_packet(*p); 			*p = NULL; 			return(ENOMEM); 		}  		if (priv->npp_head == NULL) 			priv->npp_head = buf; 		else 			prev->mdl_next = buf; 		prev = buf; 	}  	priv->npp_tail = buf;  	return(
 literal|0
 argument|); }  int ndis_get_supported_oids(arg, oids, oidcnt) 	void			*arg; 	ndis_oid		**oids; 	int			*oidcnt; { 	int			len, rval; 	ndis_oid		*o;  	if (arg == NULL || oids == NULL || oidcnt == NULL) 		return(EINVAL); 	len =
 literal|0
@@ -2925,21 +2983,25 @@ argument|); }  int ndis_set_info(arg, oid, buf, buflen) 	void			*arg; 	ndis_oid	
 literal|0
 argument|, bytesneeded =
 literal|0
-argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	setfunc = sc->ndis_chars->nmc_setinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || setfunc == NULL) 		return(ENXIO);  	KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql); 	rval = MSCALL6(setfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block->nmb_setstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
+argument|; 	int			error; 	uint8_t			irql;
+comment|/* 	 * According to the NDIS spec, MiniportQueryInformation() 	 * and MiniportSetInformation() requests are handled serially: 	 * once one request has been issued, we must wait for it to  	 * finish before allowing another request to proceed. 	 */
+argument|sc = arg;  	KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	if (sc->ndis_block->nmb_pendingreq != NULL) 		panic(
+literal|"ndis_set_info() called while other request pending"
+argument|); 	else 		sc->ndis_block->nmb_pendingreq = (ndis_request *)sc;  	setfunc = sc->ndis_chars->nmc_setinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL || setfunc == NULL) { 		sc->ndis_block->nmb_pendingreq = NULL; 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql); 		return(ENXIO); 	}  	rval = MSCALL6(setfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded);  	sc->ndis_block->nmb_pendingreq = NULL;  	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block->nmb_setstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisset"
 argument|,
 literal|5
-argument|* hz); 		rval = sc->ndis_block->nmb_setstat; 	}  	if (byteswritten) 		*buflen = byteswritten; 	if (bytesneeded) 		*buflen = bytesneeded;  	if (rval == NDIS_STATUS_INVALID_LENGTH) 		return(ENOSPC);  	if (rval == NDIS_STATUS_INVALID_OID) 		return(EINVAL);  	if (rval == NDIS_STATUS_NOT_SUPPORTED || 	    rval == NDIS_STATUS_NOT_ACCEPTED) 		return(ENOTSUP);  	if (rval != NDIS_STATUS_SUCCESS) 		return(ENODEV);  	return(
+argument|* hz); 		rval = sc->ndis_block->nmb_setstat; 	}   	if (byteswritten) 		*buflen = byteswritten; 	if (bytesneeded) 		*buflen = bytesneeded;  	if (rval == NDIS_STATUS_INVALID_LENGTH) 		return(ENOSPC);  	if (rval == NDIS_STATUS_INVALID_OID) 		return(EINVAL);  	if (rval == NDIS_STATUS_NOT_SUPPORTED || 	    rval == NDIS_STATUS_NOT_ACCEPTED) 		return(ENOTSUP);  	if (rval != NDIS_STATUS_SUCCESS) 		return(ENODEV);  	return(
 literal|0
-argument|); }  typedef void (*ndis_senddone_func)(ndis_handle, ndis_packet *, ndis_status);  int ndis_send_packets(arg, packets, cnt) 	void			*arg; 	ndis_packet		**packets; 	int			cnt; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_sendmulti_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	int			i; 	ndis_packet		*p; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars->nmc_sendmulti_func; 	senddonefunc = sc->ndis_block->nmb_senddone_func; 	irql = KeRaiseIrql(DISPATCH_LEVEL); 	MSCALL3(sendfunc, adapter, packets, cnt); 	KeLowerIrql(irql);  	for (i =
+argument|); }  typedef void (*ndis_senddone_func)(ndis_handle, ndis_packet *, ndis_status);  int ndis_send_packets(arg, packets, cnt) 	void			*arg; 	ndis_packet		**packets; 	int			cnt; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_sendmulti_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	int			i; 	ndis_packet		*p; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars->nmc_sendmulti_func; 	senddonefunc = sc->ndis_block->nmb_senddone_func;  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	MSCALL3(sendfunc, adapter, packets, cnt);  	for (i =
 literal|0
 argument|; i< cnt; i++) { 		p = packets[i];
 comment|/* 		 * Either the driver already handed the packet to 		 * ndis_txeof() due to a failure, or it wants to keep 		 * it and release it asynchronously later. Skip to the 		 * next one. 		 */
-argument|if (p == NULL || p->np_oob.npo_status == NDIS_STATUS_PENDING) 			continue; 		MSCALL3(senddonefunc, sc->ndis_block, p, p->np_oob.npo_status); 	}  	return(
+argument|if (p == NULL || p->np_oob.npo_status == NDIS_STATUS_PENDING) 			continue; 		MSCALL3(senddonefunc, sc->ndis_block, p, p->np_oob.npo_status); 	}  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	return(
 literal|0
-argument|); }  int ndis_send_packet(arg, packet) 	void			*arg; 	ndis_packet		*packet; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_status		status; 	__stdcall ndis_sendsingle_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars->nmc_sendsingle_func; 	senddonefunc = sc->ndis_block->nmb_senddone_func;  	irql = KeRaiseIrql(DISPATCH_LEVEL); 	status = MSCALL3(sendfunc, adapter, packet, 	    packet->np_private.npp_flags); 	KeLowerIrql(irql);  	if (status == NDIS_STATUS_PENDING) 		return(
+argument|); }  int ndis_send_packet(arg, packet) 	void			*arg; 	ndis_packet		*packet; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_status		status; 	__stdcall ndis_sendsingle_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars->nmc_sendsingle_func; 	senddonefunc = sc->ndis_block->nmb_senddone_func;  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql); 	status = MSCALL3(sendfunc, adapter, packet, 	    packet->np_private.npp_flags);  	if (status == NDIS_STATUS_PENDING) { 		if (NDIS_SERIALIZED(sc->ndis_block)) 			KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql); 		return(
 literal|0
-argument|);  	MSCALL3(senddonefunc, sc->ndis_block, packet, status);  	return(
+argument|); 	}  	MSCALL3(senddonefunc, sc->ndis_block, packet, status);  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	return(
 literal|0
 argument|); }  int ndis_init_dma(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	int			i, error;  	sc = arg;  	sc->ndis_tmaps = malloc(sizeof(bus_dmamap_t) * sc->ndis_maxpkts, 	    M_DEVBUF, M_NOWAIT|M_ZERO);  	if (sc->ndis_tmaps == NULL) 		return(ENOMEM);  	for (i =
 literal|0
@@ -2953,7 +3015,7 @@ argument|; i< sc->ndis_maxpkts; i++) { 		if (sc->ndis_txarray[i] != NULL) { 			p
 literal|1
 argument|]; 			if (m != NULL) 				m_freem(m); 			ndis_free_packet(sc->ndis_txarray[i]); 		} 		bus_dmamap_destroy(sc->ndis_ttag, sc->ndis_tmaps[i]); 	}  	free(sc->ndis_tmaps, M_DEVBUF);  	bus_dma_tag_destroy(sc->ndis_ttag);  	return(
 literal|0
-argument|); }  int ndis_reset_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_reset_handler	resetfunc; 	uint8_t			addressing_reset; 	struct ifnet		*ifp; 	int			rval; 	uint8_t			irql;  	sc = arg; 	ifp =&sc->arpcom.ac_if; 	NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	resetfunc = sc->ndis_chars->nmc_reset_func; 	NDIS_UNLOCK(sc); 	if (adapter == NULL || resetfunc == NULL) 		return(EIO);  	irql = KeRaiseIrql(DISPATCH_LEVEL); 	rval = MSCALL2(resetfunc,&addressing_reset, adapter); 	KeLowerIrql(irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		msleep(sc,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
+argument|); }  int ndis_reset_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_reset_handler	resetfunc; 	uint8_t			addressing_reset; 	struct ifnet		*ifp; 	int			rval; 	uint8_t			irql;  	sc = arg; 	ifp =&sc->arpcom.ac_if;  	adapter = sc->ndis_block->nmb_miniportadapterctx; 	resetfunc = sc->ndis_chars->nmc_reset_func;  	if (adapter == NULL || resetfunc == NULL) 		return(EIO);  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	rval = MSCALL2(resetfunc,&addressing_reset, adapter);  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		msleep(sc,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisrst"
 argument|,
 literal|0
@@ -2975,15 +3037,17 @@ argument|; i< NdisMediumMax; i++) 		mediumarray[i] = i;          status = MSCALL
 comment|/* 	 * If the init fails, blow away the other exported routines 	 * we obtained from the driver so we can't call them later. 	 * If the init failed, none of these will work. 	 */
 argument|if (status != NDIS_STATUS_SUCCESS) { 		NDIS_LOCK(sc); 		sc->ndis_block->nmb_miniportadapterctx = NULL; 		NDIS_UNLOCK(sc); 		return(ENXIO); 	}  	return(
 literal|0
-argument|); }  void ndis_enable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_enable_interrupts_handler	intrenbfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrenbfunc = sc->ndis_chars->nmc_enable_interrupts_func; 	if (adapter == NULL || intrenbfunc == NULL) 		return; 	MSCALL1(intrenbfunc, adapter);  	return; }  void ndis_disable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_disable_interrupts_handler	intrdisfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrdisfunc = sc->ndis_chars->nmc_disable_interrupts_func; 	if (adapter == NULL || intrdisfunc == NULL) 	    return; 	MSCALL1(intrdisfunc, adapter);  	return; }  int ndis_isr(arg, ourintr, callhandler) 	void			*arg; 	int			*ourintr; 	int			*callhandler; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_isr_handler	isrfunc; 	uint8_t			accepted, queue;  	if (arg == NULL || ourintr == NULL || callhandler == NULL) 		return(EINVAL);  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	isrfunc = sc->ndis_chars->nmc_isr_func; 	if (adapter == NULL || isrfunc == NULL) 		return(ENXIO);  	MSCALL3(isrfunc,&accepted,&queue, adapter); 	*ourintr = accepted; 	*callhandler = queue;  	return(
+argument|); }  void ndis_enable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_enable_interrupts_handler	intrenbfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrenbfunc = sc->ndis_chars->nmc_enable_interrupts_func; 	if (adapter == NULL || intrenbfunc == NULL) 		return; 	MSCALL1(intrenbfunc, adapter);  	return; }  void ndis_disable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_disable_interrupts_handler	intrdisfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrdisfunc = sc->ndis_chars->nmc_disable_interrupts_func; 	if (adapter == NULL || intrdisfunc == NULL) 	    return;  	MSCALL1(intrdisfunc, adapter);  	return; }  int ndis_isr(arg, ourintr, callhandler) 	void			*arg; 	int			*ourintr; 	int			*callhandler; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_isr_handler	isrfunc; 	uint8_t			accepted, queue;  	if (arg == NULL || ourintr == NULL || callhandler == NULL) 		return(EINVAL);  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	isrfunc = sc->ndis_chars->nmc_isr_func;  	if (adapter == NULL || isrfunc == NULL) 		return(ENXIO);  	MSCALL3(isrfunc,&accepted,&queue, adapter);  	*ourintr = accepted; 	*callhandler = queue;  	return(
 literal|0
-argument|); }  int ndis_intrhand(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_interrupt_handler	intrfunc;  	if (arg == NULL) 		return(EINVAL);  	sc = arg; 	NDIS_LOCK(sc); 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrfunc = sc->ndis_chars->nmc_interrupt_func; 	NDIS_UNLOCK(sc); 	if (adapter == NULL || intrfunc == NULL) 		return(EINVAL);  	MSCALL1(intrfunc, adapter);  	return(
-literal|0
-argument|); }  int ndis_get_info(arg, oid, buf, buflen) 	void			*arg; 	ndis_oid		oid; 	void			*buf; 	int			*buflen; { 	struct ndis_softc	*sc; 	ndis_status		rval; 	ndis_handle		adapter; 	__stdcall ndis_queryinfo_handler	queryfunc; 	uint32_t		byteswritten =
+argument|); }  __stdcall static void ndis_intrhand(dpc, dobj, ip, sc) 	kdpc			*dpc; 	device_object		*dobj; 	irp			*ip; 	struct ndis_softc	*sc; { 	ndis_handle		adapter; 	__stdcall ndis_interrupt_handler	intrfunc; 	uint8_t			irql;  	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrfunc = sc->ndis_chars->nmc_interrupt_func;  	if (adapter == NULL || intrfunc == NULL) 		return;  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	MSCALL1(intrfunc, adapter);
+comment|/* If there's a MiniportEnableInterrupt() routine, call it. */
+argument|ndis_enable_intr(sc);  	if (NDIS_SERIALIZED(sc->ndis_block)) 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);  	return; }  int ndis_get_info(arg, oid, buf, buflen) 	void			*arg; 	ndis_oid		oid; 	void			*buf; 	int			*buflen; { 	struct ndis_softc	*sc; 	ndis_status		rval; 	ndis_handle		adapter; 	__stdcall ndis_queryinfo_handler	queryfunc; 	uint32_t		byteswritten =
 literal|0
 argument|, bytesneeded =
 literal|0
-argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	queryfunc = sc->ndis_chars->nmc_queryinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || queryfunc == NULL) 		return(ENXIO);  	KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql); 	rval = MSCALL6(queryfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);
+argument|; 	int			error; 	uint8_t			irql; 	 	sc = arg; 	KeAcquireSpinLock(&sc->ndis_block->nmb_lock,&irql);  	if (sc->ndis_block->nmb_pendingreq != NULL) 		panic(
+literal|"ndis_get_info() called while other request pending"
+argument|); 	else 		sc->ndis_block->nmb_pendingreq = (ndis_request *)sc;  	queryfunc = sc->ndis_chars->nmc_queryinfo_func; 	adapter = sc->ndis_block->nmb_miniportadapterctx;  	if (adapter == NULL || queryfunc == NULL) { 		sc->ndis_block->nmb_pendingreq = NULL; 		KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql); 		return(ENXIO); 	}  	rval = MSCALL6(queryfunc, adapter, oid, buf, *buflen,&byteswritten,&bytesneeded);  	sc->ndis_block->nmb_pendingreq = NULL;  	KeReleaseSpinLock(&sc->ndis_block->nmb_lock, irql);
 comment|/* Wait for requests that block. */
 argument|if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block->nmb_getstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisget"
@@ -2997,7 +3061,7 @@ argument|, FALSE,&fdo);  	if (status != STATUS_SUCCESS) 		return(status);  	bloc
 comment|/* 	 * Stash pointers to the miniport block and miniport 	 * characteristics info in the if_ndis softc so the 	 * UNIX wrapper driver can get to them later.          */
 argument|sc = device_get_softc(pdo->do_devext); 	sc->ndis_block = block; 	sc->ndis_chars = IoGetDriverObjectExtension(drv, (void *)
 literal|1
-argument|);
+argument|);  	IoInitializeDpcRequest(fdo, ndis_intrhand);
 comment|/* Finish up BSD-specific setup. */
 argument|block->nmb_signature = (void *)
 literal|0xcafebabe
@@ -3013,9 +3077,9 @@ argument|].ipt_wrap; 	block->nmb_resetdone_func = kernndis_functbl[
 literal|4
 argument|].ipt_wrap; 	block->nmb_sendrsrc_func = kernndis_functbl[
 literal|5
-argument|].ipt_wrap;  	ndis_enlarge_thrqueue(
+argument|].ipt_wrap; 	block->nmb_pendingreq = NULL;  	ndis_enlarge_thrqueue(
 literal|8
-argument|);  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	ndis_shrink_thrqueue(
+argument|);  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	if (sc->ndis_block->nmb_rlist != NULL) 		free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	ndis_shrink_thrqueue(
 literal|8
 argument|); 	TAILQ_REMOVE(&ndis_devhead, sc->ndis_block, link);  	fdo = sc->ndis_block->nmb_deviceobj; 	IoDetachDevice(sc->ndis_block->nmb_nextdeviceobj); 	IoDeleteDevice(fdo);  	return(
 literal|0

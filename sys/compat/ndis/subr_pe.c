@@ -51,6 +51,38 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_function_decl
+specifier|extern
+name|int
+name|ndis_strncasecmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|strncasecmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|ndis_strncasecmp(a, b, c)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1555,7 +1587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the import descriptor for a particular module. An image  * may be linked against several modules, typically HAL.dll, ntoskrnl.exe  * and NDIS.SYS. For each module, there is a list of imported function  * names and their addresses.  */
+comment|/*  * Return the import descriptor for a particular module. An image  * may be linked against several modules, typically HAL.dll, ntoskrnl.exe  * and NDIS.SYS. For each module, there is a list of imported function  * names and their addresses.  *  * Note: module names are case insensitive!  */
 end_comment
 
 begin_function
@@ -1663,7 +1695,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|module
 argument_list|,

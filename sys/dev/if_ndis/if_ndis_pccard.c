@@ -565,21 +565,13 @@ name|driver_object
 modifier|*
 name|drv
 decl_stmt|;
-name|vm_offset_t
-name|img
-decl_stmt|;
-name|img
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|drv_data
-expr_stmt|;
 name|drv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|img
+literal|0
+argument_list|,
+literal|"PCCARD Bus"
 argument_list|)
 expr_stmt|;
 if|if
