@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.51 2001/10/24 15:30:17 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.52 2001/10/26 17:53:59 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1769,12 +1769,16 @@ condition|(
 name|up
 operator|->
 name|device
+operator|!=
+name|NULL
 operator|&&
 name|up
 operator|->
 name|device
 operator|->
 name|hub
+operator|!=
+name|NULL
 condition|)
 name|up
 operator|->
@@ -1789,6 +1793,17 @@ operator|->
 name|device
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+operator|&&
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+block|if (up->device == NULL&&  			    (status& UPS_CURRENT_CONNECT_STATUS)) 				printf("%s: connected, no device\n", 				       USBDEVNAME(sc->sc_dev));
+endif|#
+directive|endif
 continue|continue;
 block|}
 comment|/* We have a connect status change, handle it. */
