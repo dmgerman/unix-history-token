@@ -75,6 +75,12 @@ directive|include
 file|<dev/cs/if_csvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/cs/if_csreg.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -195,6 +201,7 @@ argument_list|)
 expr_stmt|;
 name|end
 label|:
+comment|/* Make sure IRQ is assigned for probe message and available */
 if|if
 condition|(
 name|error
@@ -255,27 +262,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|port_used
-operator|>
-literal|0
-condition|)
 name|cs_alloc_port
 argument_list|(
 name|dev
 argument_list|,
-name|sc
-operator|->
-name|port_rid
+literal|0
 argument_list|,
-name|sc
-operator|->
-name|port_used
+name|CS_89x0_IO_PORTS
 argument_list|)
 expr_stmt|;
+comment|/* XXX mem appears to not be used at all */
 if|if
 condition|(
 name|sc
