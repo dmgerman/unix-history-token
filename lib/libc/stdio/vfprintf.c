@@ -159,15 +159,13 @@ block|{
 name|int
 name|intarg
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|uintarg
 decl_stmt|;
 name|long
 name|longarg
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|ulongarg
 decl_stmt|;
 name|quad_t
