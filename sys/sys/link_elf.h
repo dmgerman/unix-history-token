@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.16 1997/11/28 19:05:11 jdp Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.17 1997/12/06 17:59:52 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -18,6 +18,12 @@ define|#
 directive|define
 name|_LINK_H_
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|dl_info
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * A `Shared Object Descriptor' describes a shared object that is needed  * to complete the link edit process of the object containing it.  * A list of such objects (chained through `sod_next') is pointed at  * by `sdt_sods' in the section_dispatch_table structure.  */
@@ -386,6 +392,17 @@ begin_comment
 comment|/* includes 3-argument dlsym */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LDSO_VERSION_HAS_DLADDR
+value|3
+end_define
+
+begin_comment
+comment|/* includes dladdr in ld_entry */
+end_comment
+
 begin_comment
 comment|/*  * Entry points into ld.so - user interface to the run-time linker.  * Entries are valid for the given version numbers returned by ld.so  * to crt0.  */
 end_comment
@@ -493,6 +510,24 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* HAS_DLSYM3 */
+name|int
+argument_list|(
+argument|*dladdr
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+expr|struct
+name|dl_info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* HAS_DLADDR */
 block|}
 struct|;
 end_struct
@@ -770,6 +805,12 @@ modifier|*
 name|crt_ldentry
 decl_stmt|;
 comment|/* dl*() access (v4) */
+name|char
+modifier|*
+modifier|*
+name|crt_argv
+decl_stmt|;
+comment|/* argument strings (v5) */
 block|}
 struct|;
 end_struct
@@ -804,6 +845,13 @@ define|#
 directive|define
 name|CRT_VERSION_BSD_4
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRT_VERSION_BSD_5
+value|5
 end_define
 
 begin_comment
