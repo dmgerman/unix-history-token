@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: if_altq.h,v 1.11 2003/07/10 12:07:50 kjc Exp $	*/
 end_comment
 
@@ -150,6 +154,23 @@ name|ifq_mtx
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* driver owned queue (used for bulk dequeue and prepend) UNLOCKED */
+name|struct
+name|mbuf
+modifier|*
+name|ifq_drv_head
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|ifq_drv_tail
+decl_stmt|;
+name|int
+name|ifq_drv_len
+decl_stmt|;
+name|int
+name|ifq_drv_maxlen
+decl_stmt|;
 comment|/* alternate queueing related fields */
 name|int
 name|altq_type
