@@ -564,6 +564,11 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fget
@@ -579,11 +584,6 @@ index|]
 argument_list|,
 operator|&
 name|fp
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 if|if
