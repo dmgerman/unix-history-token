@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -708,6 +708,15 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+comment|/* make sure error messages don't have garbage on them */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|q
 operator|=
 name|buf
