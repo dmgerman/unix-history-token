@@ -1400,6 +1400,16 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|adp
+operator|->
+name|controller
+operator|->
+name|active
+operator|==
+name|ATA_IDLE
+condition|)
 name|ad_start
 argument_list|(
 name|adp
