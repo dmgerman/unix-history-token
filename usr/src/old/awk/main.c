@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.4 (Berkeley) %G%"
+literal|"@(#)main.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,34 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|yyin
+operator|=
+name|stdin
+expr_stmt|;
+else|else
+block|{
 name|yyin
 operator|=
 name|fopen
@@ -278,6 +306,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|argc
 operator|--
 expr_stmt|;

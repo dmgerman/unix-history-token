@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lib.c	4.4 9/17/84"
+literal|"@(#)lib.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,18 @@ include|#
 directive|include
 file|"ctype.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|yyin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lex input file */
+end_comment
 
 begin_decl_stmt
 name|FILE
@@ -472,10 +484,26 @@ name|file
 operator|==
 literal|'-'
 condition|)
+block|{
+if|if
+condition|(
+name|yyin
+operator|==
+name|stdin
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"standard input already used for reading commands"
+argument_list|)
+expr_stmt|;
+else|else
 name|infile
 operator|=
 name|stdin
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
