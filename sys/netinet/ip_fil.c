@@ -8145,6 +8145,9 @@ condition|(
 name|i
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|ip
 operator|->
 name|ip_id
@@ -8156,6 +8159,8 @@ operator|->
 name|ip_id
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|ip_len
