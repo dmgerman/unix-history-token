@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.139 1999/01/21 08:29:11 dillon Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.140 1999/01/21 09:46:55 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -2529,100 +2529,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  *	vm_object_pmap_copy:  *  *	Makes all physical pages in the specified  *	object range copy-on-write.  No writeable  *	references to these pages should remain.  *  *	The object must *not* be locked.  */
 end_comment
 
-begin_function
-name|void
-name|vm_object_pmap_copy
-parameter_list|(
-name|object
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-specifier|register
-name|vm_object_t
-name|object
-decl_stmt|;
-specifier|register
-name|vm_pindex_t
-name|start
-decl_stmt|;
-specifier|register
-name|vm_pindex_t
-name|end
-decl_stmt|;
-block|{
-specifier|register
-name|vm_page_t
-name|p
-decl_stmt|;
-if|if
-condition|(
-name|object
-operator|==
-name|NULL
-operator|||
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_WRITEABLE
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
-for|for
-control|(
-name|p
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|object
-operator|->
-name|memq
-argument_list|)
-init|;
-name|p
-operator|!=
-name|NULL
-condition|;
-name|p
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|p
-argument_list|,
-name|listq
-argument_list|)
-control|)
-block|{
-name|vm_page_protect
-argument_list|(
-name|p
-argument_list|,
-name|VM_PROT_READ
-argument_list|)
-expr_stmt|;
-block|}
-name|vm_object_clear_flag
-argument_list|(
-name|object
-argument_list|,
-name|OBJ_WRITEABLE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_endif
+unit|void vm_object_pmap_copy(object, start, end) 	register vm_object_t object; 	register vm_pindex_t start; 	register vm_pindex_t end; { 	register vm_page_t p;  	if (object == NULL || (object->flags& OBJ_WRITEABLE) == 0) 		return;  	for (p = TAILQ_FIRST(&object->memq); 		p != NULL; 		p = TAILQ_NEXT(p, listq)) { 		vm_page_protect(p, VM_PROT_READ); 	}  	vm_object_clear_flag(object, OBJ_WRITEABLE); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  * Same as vm_object_pmap_copy_1, except range checking really  * works, and is meant for small sections of an object.  */
+comment|/*  * Same as vm_object_pmap_copy, except range checking really  * works, and is meant for small sections of an object.  *  * This code protects resident pages by making them read-only  * and is typically called on a fork or split when a page  * is converted to copy-on-write.    *  * NOTE: If the page is already at VM_PROT_NONE, calling  * vm_page_protect will have no effect.  */
 end_comment
 
 begin_function
