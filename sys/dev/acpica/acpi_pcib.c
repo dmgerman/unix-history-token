@@ -1635,7 +1635,7 @@ name|ACPI_FAILURE
 argument_list|(
 name|status
 operator|=
-name|AcpiGetCurrentResources
+name|AcpiGetPossibleResources
 argument_list|(
 name|lnkdev
 argument_list|,
