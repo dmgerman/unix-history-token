@@ -260,6 +260,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|NPNP
+operator|>
+literal|0
+end_if
+
+begin_comment
+comment|/* the ad1816 is pnp only */
+end_comment
+
 begin_comment
 comment|/* ad1816 prototypes */
 end_comment
@@ -285,16 +297,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
-name|short
+name|u_short
 name|ad1816_read
 parameter_list|(
 name|snddev_info
 modifier|*
 name|d
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|reg
 parameter_list|)
 function_decl|;
@@ -309,12 +319,10 @@ name|snddev_info
 modifier|*
 name|d
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|reg
 parameter_list|,
-name|unsigned
-name|short
+name|u_short
 name|data
 parameter_list|)
 function_decl|;
@@ -413,6 +421,11 @@ end_function_decl
 begin_comment
 comment|/* ad1816 prototypes end */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * device descriptors for the boards supported by this module.  */
@@ -785,6 +798,14 @@ comment|/* mss uses 8 regs */
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NPNP
+operator|>
+literal|0
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -917,6 +938,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NPNP */
+end_comment
+
 begin_comment
 comment|/*  * the address passed as io_base for mss_attach is also the old  * MSS base address (e.g. 0x530). The codec is four locations ahead.  * Note that the attach routine for PnP devices might support  * device-specific initializations.  */
 end_comment
@@ -983,6 +1013,11 @@ operator|->
 name|id_flags
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NPNP
+operator|>
+literal|0
 if|if
 condition|(
 name|d
@@ -997,6 +1032,8 @@ argument_list|(
 name|dev
 argument_list|)
 return|;
+endif|#
+directive|endif
 name|dev
 operator|->
 name|id_alive
@@ -6020,7 +6057,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|vend_id
+name|id
 operator|==
 literal|0x0000a865
 condition|)
