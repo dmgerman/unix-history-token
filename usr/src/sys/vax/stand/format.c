@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	7.4 (Berkeley) %G%"
+literal|"@(#)format.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,18 +60,6 @@ begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"inode.h"
 end_include
 
 begin_include
