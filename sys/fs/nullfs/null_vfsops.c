@@ -700,7 +700,7 @@ expr_stmt|;
 comment|/* 	 * Save reference.  Each mount also holds 	 * a reference on the root vnode. 	 */
 name|error
 operator|=
-name|null_node_create
+name|null_nodeget
 argument_list|(
 name|mp
 argument_list|,
@@ -1568,7 +1568,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|null_node_create
+name|null_nodeget
 argument_list|(
 name|mp
 argument_list|,
@@ -1640,7 +1640,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|null_node_create
+name|null_nodeget
 argument_list|(
 name|mp
 argument_list|,
