@@ -178,7 +178,7 @@ name|__temp
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("1: move%.l %0,%1\n\t" 			"add%.l %2,%1\n\t" 			"cas%.l %0,%1,%3\n\t" 			"jbne 1b" 			: "=d" (__result), "=&d" (__temp) 			: "d" (__val), "m" (*__mem), "0" (__result) 			: "memory");
+asm|("1: move%.l %0,%1\n\t" 			"add%.l %2,%1\n\t" 			"cas%.l %0,%1,%3\n\t" 			"jne 1b" 			: "=d" (__result), "=&d" (__temp) 			: "d" (__val), "m" (*__mem), "0" (__result) 			: "memory");
 return|return
 name|__result
 return|;

@@ -183,9 +183,7 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|__table ==
-literal|0
-argument|? classic_table() : __table
+argument|__table ? __table : classic_table()
 argument_list|)
 block|{ }
 name|ctype
@@ -231,9 +229,7 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|__table ==
-literal|0
-argument|? classic_table() : __table
+argument|__table ? __table : classic_table()
 argument_list|)
 block|{ }
 name|char

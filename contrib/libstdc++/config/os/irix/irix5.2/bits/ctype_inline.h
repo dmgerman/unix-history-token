@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -135,7 +135,14 @@ operator|(
 name|_M_table
 operator|)
 index|[
+name|static_cast
+operator|<
+name|unsigned
+name|char
+operator|>
+operator|(
 name|__c
+operator|)
 index|]
 operator|&
 name|__m
@@ -176,9 +183,16 @@ operator|(
 name|_M_table
 operator|)
 index|[
+name|static_cast
+operator|<
+name|unsigned
+name|char
+operator|>
+operator|(
 operator|*
 name|__low
 operator|++
+operator|)
 index|]
 expr_stmt|;
 end_expr_stmt
@@ -215,17 +229,15 @@ operator|<
 name|__high
 operator|&&
 operator|!
-operator|(
-operator|(
-name|_M_table
-operator|)
-index|[
+name|this
+operator|->
+name|is
+argument_list|(
+name|__m
+argument_list|,
 operator|*
 name|__low
-index|]
-operator|&
-name|__m
-operator|)
+argument_list|)
 condition|)
 operator|++
 name|__low
@@ -263,21 +275,15 @@ name|__low
 operator|<
 name|__high
 operator|&&
-operator|(
-operator|(
-name|_M_table
-operator|+
-literal|1
-operator|)
-index|[
+name|this
+operator|->
+name|is
+argument_list|(
+name|__m
+argument_list|,
 operator|*
 name|__low
-index|]
-operator|&
-name|__m
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 operator|++
 name|__low

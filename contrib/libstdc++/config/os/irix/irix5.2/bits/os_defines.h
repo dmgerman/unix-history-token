@@ -4,7 +4,7 @@ comment|// Specific definitions for IRIX  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -189,6 +189,33 @@ directive|define
 name|_G_USING_THUNKS
 value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|__glibcpp_long_double_bits
+value|64
+end_define
+
+begin_if
+if|#
+directive|if
+name|__LONG_MAX__
+operator|>
+literal|2147483647
+end_if
+
+begin_define
+define|#
+directive|define
+name|__glibcpp_long_bits
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

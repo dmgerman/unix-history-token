@@ -306,7 +306,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// http://gcc.gnu.org/onlinedocs/libstdc++/20_util/howto.html#pairlt
+comment|///<http://gcc.gnu.org/onlinedocs/libstdc++/20_util/howto.html#pairlt>
 end_comment
 
 begin_expr_stmt

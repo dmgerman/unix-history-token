@@ -127,6 +127,12 @@ name|GCC
 name|system_header
 end_pragma
 
+begin_undef
+undef|#
+directive|undef
+name|__need___va_list
+end_undef
+
 begin_empty
 empty|#include_next<stdarg.h>
 end_empty

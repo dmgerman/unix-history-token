@@ -4,7 +4,7 @@ comment|// new abi support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -337,7 +337,7 @@ name|public
 operator|:
 name|unsigned
 name|int
-name|__qualifier_flags
+name|__flags
 block|;
 comment|/* qualification of the target object */
 specifier|const
@@ -375,7 +375,7 @@ argument_list|(
 name|__n
 argument_list|)
 block|,
-name|__qualifier_flags
+name|__flags
 argument_list|(
 name|__quals
 argument_list|)
@@ -389,7 +389,7 @@ comment|/* implementation defined types */
 name|public
 operator|:
 expr|enum
-name|__qualifier_masks
+name|__masks
 block|{
 name|__const_mask
 operator|=
@@ -515,7 +515,7 @@ name|public
 operator|:
 name|__class_type_info
 operator|*
-name|__context_class
+name|__context
 block|;
 comment|/* class of the member */
 comment|/* abi defined member functions */
@@ -549,7 +549,7 @@ argument_list|,
 name|__type
 argument_list|)
 block|,
-name|__context_class
+name|__context
 argument_list|(
 argument|__klass
 argument_list|)
@@ -575,7 +575,7 @@ name|__class_type_info
 decl_stmt|;
 comment|/* helper class for __vmi_class_type */
 name|class
-name|__base_class_info
+name|__base_class_type_info
 block|{
 comment|/* abi defined member variables */
 name|public
@@ -583,7 +583,7 @@ label|:
 specifier|const
 name|__class_type_info
 modifier|*
-name|__base
+name|__base_type
 decl_stmt|;
 comment|/* base class type */
 name|long
@@ -604,11 +604,11 @@ name|__public_mask
 init|=
 literal|0x2
 block|,
-name|hwm_bit
+name|__hwm_bit
 init|=
 literal|2
 block|,
-name|offset_shift
+name|__offset_shift
 init|=
 literal|8
 comment|/* bits to shift offset by */
@@ -655,7 +655,7 @@ operator|(
 name|__offset_flags
 operator|)
 operator|>>
-name|offset_shift
+name|__offset_shift
 return|;
 block|}
 block|}
@@ -715,14 +715,14 @@ block|,
 comment|/* contained ambiguously */
 name|__contained_virtual_mask
 operator|=
-name|__base_class_info
+name|__base_class_type_info
 operator|::
 name|__virtual_mask
 block|,
 comment|/* via a virtual path */
 name|__contained_public_mask
 operator|=
-name|__base_class_info
+name|__base_class_type_info
 operator|::
 name|__public_mask
 block|,
@@ -731,9 +731,9 @@ name|__contained_mask
 operator|=
 literal|1
 operator|<<
-name|__base_class_info
+name|__base_class_type_info
 operator|::
-name|hwm_bit
+name|__hwm_bit
 block|,
 comment|/* contained within us */
 name|__contained_private
@@ -974,8 +974,7 @@ name|int
 name|__base_count
 block|;
 comment|/* number of direct bases */
-name|__base_class_info
-specifier|const
+name|__base_class_type_info
 name|__base_info
 index|[
 literal|1

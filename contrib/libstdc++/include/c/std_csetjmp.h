@@ -131,6 +131,41 @@ begin_empty
 empty|#include_next<setjmp.h>
 end_empty
 
+begin_comment
+comment|// Get rid of those macros defined in<setjmp.h> in lieu of real functions.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|longjmp
+end_undef
+
+begin_comment
+comment|// Adhere to section 17.4.1.2 clause 5 of ISO 14882:1998
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|setjmp
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|setjmp
+parameter_list|(
+name|env
+parameter_list|)
+value|std::setjmp (env)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

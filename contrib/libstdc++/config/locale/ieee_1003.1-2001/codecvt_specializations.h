@@ -406,7 +406,12 @@ operator|=
 name|__obj
 operator|.
 name|_M_int_bom
-block|;     }
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 operator|~
 name|__enc_traits
 argument_list|()

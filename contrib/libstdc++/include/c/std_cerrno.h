@@ -107,6 +107,10 @@ begin_comment
 comment|//
 end_comment
 
+begin_comment
+comment|/** @file cerrno  *  This is a Standard C++ Library file.  You should @c #include this file  *  in your programs, rather than any of the "*.h" implementation files.  *  *  This is the C++ version of the Standard C Library header @c errno.h,  *  and its contents are (mostly) the same as that header, but are all  *  contained in the namespace @c std.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -130,6 +134,28 @@ end_pragma
 begin_empty
 empty|#include_next<errno.h>
 end_empty
+
+begin_comment
+comment|// Adhere to section 17.4.1.2 clause 5 of ISO 14882:1998
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|errno
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|errno
+value|errno
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -314,30 +314,6 @@ argument_list|,
 argument|unsigned int
 argument_list|)
 expr_stmt|;
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|>
-specifier|inline
-name|_Tp
-name|__cmath_abs
-argument_list|(
-argument|_Tp __x
-argument_list|)
-block|{
-return|return
-name|__x
-operator|<
-name|_Tp
-argument_list|()
-operator|?
-operator|-
-name|__x
-operator|:
-name|__x
-return|;
-block|}
 specifier|inline
 name|double
 name|abs

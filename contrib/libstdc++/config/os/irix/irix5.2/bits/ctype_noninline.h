@@ -132,7 +132,9 @@ name|throw
 argument_list|()
 block|{
 return|return
-literal|0
+name|__ctype
+operator|+
+literal|1
 return|;
 block|}
 end_expr_stmt
@@ -183,7 +185,7 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|!__table ? __ctype : __table
+argument|!__table ? classic_table() : __table
 argument_list|)
 block|{ }
 name|ctype
@@ -229,7 +231,7 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|!__table ? __ctype : __table
+argument|!__table ? classic_table() : __table
 argument_list|)
 block|{ }
 name|char

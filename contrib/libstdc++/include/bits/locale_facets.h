@@ -185,6 +185,17 @@ name|_GLIBCPP_NUM_FACETS
 value|14
 endif|#
 directive|endif
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|,
+name|typename
+name|_Traits
+operator|>
+expr|struct
+name|__pad
+expr_stmt|;
 comment|// 22.2.1.1  Template class ctype
 comment|// Include host and configuration specific ctype enums for ctype_base.
 include|#
@@ -3592,6 +3603,22 @@ operator|::
 name|id
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|// Partial specialization for istreambuf_iterator, so can use traits_type.
+end_comment
+
+begin_endif
+unit|template<typename _CharT>     class num_get<_CharT, istreambuf_iterator<_CharT>>;        iter_type        _M_extract_float(iter_type, iter_type, ios_base&, ios_base::iostate&,  		       string& __xtrc) const;        iter_type        _M_extract_int(iter_type, iter_type, ios_base&, ios_base::iostate&,  		     string& __xtrc, int& __base) const;        virtual iter_type        do_get(iter_type, iter_type, ios_base&, ios_base::iostate&, bool&) const;
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|template
@@ -7277,6 +7304,8 @@ name|moneypunct
 argument_list|(
 argument|__c_locale __cloc
 argument_list|,
+argument|const char* __s
+argument_list|,
 argument|size_t __refs =
 literal|0
 argument_list|)
@@ -7291,6 +7320,8 @@ block|{
 name|_M_initialize_moneypunct
 argument_list|(
 name|__cloc
+argument_list|,
+name|__s
 argument_list|)
 block|; }
 name|char_type
@@ -7569,6 +7600,13 @@ name|__c_locale
 name|__cloc
 init|=
 name|_S_c_locale
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__name
+init|=
+name|NULL
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7667,7 +7705,11 @@ operator|>
 operator|::
 name|_M_initialize_moneypunct
 argument_list|(
-argument|__c_locale __cloc
+name|__c_locale
+argument_list|,
+specifier|const
+name|char
+operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7686,7 +7728,11 @@ operator|>
 operator|::
 name|_M_initialize_moneypunct
 argument_list|(
-argument|__c_locale __cloc
+name|__c_locale
+argument_list|,
+specifier|const
+name|char
+operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7745,7 +7791,11 @@ operator|>
 operator|::
 name|_M_initialize_moneypunct
 argument_list|(
-argument|__c_locale __cloc
+name|__c_locale
+argument_list|,
+specifier|const
+name|char
+operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7764,7 +7814,11 @@ operator|>
 operator|::
 name|_M_initialize_moneypunct
 argument_list|(
-argument|__c_locale __cloc
+name|__c_locale
+argument_list|,
+specifier|const
+name|char
+operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt

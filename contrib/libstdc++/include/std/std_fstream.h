@@ -924,6 +924,65 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|// Explicit specializations.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|basic_filebuf
+operator|<
+name|char
+operator|>
+operator|::
+name|int_type
+name|basic_filebuf
+operator|<
+name|char
+operator|>
+operator|::
+name|_M_underflow_common
+argument_list|(
+argument|bool __bump
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCPP_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|basic_filebuf
+operator|<
+name|wchar_t
+operator|>
+operator|::
+name|int_type
+name|basic_filebuf
+operator|<
+name|wchar_t
+operator|>
+operator|::
+name|_M_underflow_common
+argument_list|(
+argument|bool __bump
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// 27.8.1.5  Template class basic_ifstream
 end_comment
 

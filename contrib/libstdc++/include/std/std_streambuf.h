@@ -273,6 +273,13 @@ name|traits_type
 operator|>
 name|__streambuf_type
 expr_stmt|;
+typedef|typedef
+name|typename
+name|traits_type
+operator|::
+name|state_type
+name|__state_type
+expr_stmt|;
 name|friend
 name|class
 name|basic_ios
@@ -354,11 +361,11 @@ modifier|*
 name|_M_buf
 decl_stmt|;
 comment|// Actual size of allocated internal buffer, in bytes.
-name|int_type
+name|size_t
 name|_M_buf_size
 decl_stmt|;
 comment|// Optimal or preferred size of internal buffer, in bytes.
-name|int_type
+name|size_t
 name|_M_buf_size_opt
 decl_stmt|;
 comment|// True iff _M_in_* and _M_out_* buffers should always point to
@@ -422,7 +429,7 @@ comment|// needs access to these data members is in_avail...
 comment|// NB: pbacks of over one character are not currently supported.
 specifier|static
 specifier|const
-name|int_type
+name|size_t
 name|_S_pback_size
 init|=
 literal|1
@@ -444,6 +451,13 @@ decl_stmt|;
 name|bool
 name|_M_pback_init
 decl_stmt|;
+comment|// Yet unused.
+name|fpos
+operator|<
+name|__state_type
+operator|>
+name|_M_pos
+expr_stmt|;
 comment|// Initializes pback buffers, and moves normal buffers to safety.
 comment|// Assumptions:
 comment|// _M_in_cur has already been moved back
@@ -457,14 +471,14 @@ operator|!
 name|_M_pback_init
 condition|)
 block|{
-name|int_type
+name|size_t
 name|__dist
 init|=
 name|_M_in_end
 operator|-
 name|_M_in_cur
 decl_stmt|;
-name|int_type
+name|size_t
 name|__len
 init|=
 name|min
@@ -525,7 +539,7 @@ name|_M_pback_init
 condition|)
 block|{
 comment|// Length _M_in_cur moved in the pback buffer.
-name|int_type
+name|size_t
 name|__off_cur
 init|=
 name|_M_in_cur
@@ -533,19 +547,19 @@ operator|-
 name|_M_pback
 decl_stmt|;
 comment|// For in | out buffers, the end can be pushed back...
-name|int_type
+name|size_t
 name|__off_end
 init|=
 literal|0
 decl_stmt|;
-name|int_type
+name|size_t
 name|__pback_len
 init|=
 name|_M_in_end
 operator|-
 name|_M_pback
 decl_stmt|;
-name|int_type
+name|size_t
 name|__save_len
 init|=
 name|_M_pback_end_save
@@ -929,14 +943,14 @@ condition|(
 name|_M_pback_init
 condition|)
 block|{
-name|int_type
+name|size_t
 name|__save_len
 init|=
 name|_M_pback_end_save
 operator|-
 name|_M_pback_cur_save
 decl_stmt|;
-name|int_type
+name|size_t
 name|__pback_len
 init|=
 name|_M_in_cur
@@ -990,12 +1004,17 @@ argument_list|()
 decl_stmt|;
 return|return
 operator|(
+name|traits_type
+operator|::
+name|eq_int_type
+argument_list|(
 name|this
 operator|->
 name|sbumpc
 argument_list|()
-operator|==
+argument_list|,
 name|__eof
+argument_list|)
 condition|?
 name|__eof
 else|:
@@ -1134,13 +1153,7 @@ argument_list|)
 operator|,
 name|_M_buf_size_opt
 argument_list|(
-name|static_cast
-operator|<
-name|int_type
-operator|>
-operator|(
 name|BUFSIZ
-operator|)
 argument_list|)
 operator|,
 name|_M_buf_unified
@@ -1572,12 +1585,17 @@ decl_stmt|;
 name|bool
 name|__testeof
 init|=
+name|traits_type
+operator|::
+name|eq_int_type
+argument_list|(
 name|this
 operator|->
 name|underflow
 argument_list|()
-operator|==
+argument_list|,
 name|__ret
+argument_list|)
 decl_stmt|;
 name|bool
 name|__testpending

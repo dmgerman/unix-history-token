@@ -728,7 +728,7 @@ name|reference
 argument_list|(
 name|_M_p
 argument_list|,
-literal|1U
+literal|1UL
 operator|<<
 name|_M_offset
 argument_list|)
@@ -1044,7 +1044,7 @@ name|_Bit_reference
 argument_list|(
 name|_M_p
 argument_list|,
-literal|1U
+literal|1UL
 operator|<<
 name|_M_offset
 argument_list|)
