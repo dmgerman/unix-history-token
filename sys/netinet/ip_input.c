@@ -1038,6 +1038,9 @@ decl_stmt|;
 name|int
 name|hlen
 decl_stmt|;
+name|u_short
+name|sum
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1272,9 +1275,7 @@ name|ip
 argument_list|)
 condition|)
 block|{
-name|ip
-operator|->
-name|ip_sum
+name|sum
 operator|=
 name|in_cksum_hdr
 argument_list|(
@@ -1284,9 +1285,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ip
-operator|->
-name|ip_sum
+name|sum
 operator|=
 name|in_cksum
 argument_list|(
@@ -1298,9 +1297,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ip
-operator|->
-name|ip_sum
+name|sum
 condition|)
 block|{
 name|ipstat
