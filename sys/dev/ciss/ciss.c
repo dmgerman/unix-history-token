@@ -5243,9 +5243,13 @@ name|sc
 argument_list|,
 literal|"logical drive %d: %s, %dMB "
 argument_list|,
-name|cbc
+name|ld
 operator|->
-name|log_drive
+name|cl_address
+operator|.
+name|logical
+operator|.
+name|lun
 argument_list|,
 name|ciss_name_ldrive_org
 argument_list|(
