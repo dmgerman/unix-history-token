@@ -1044,9 +1044,6 @@ name|rf
 operator|->
 name|f_data
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|rpipe
 expr_stmt|;
 name|rf
@@ -1183,9 +1180,6 @@ name|wf
 operator|->
 name|f_data
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|wpipe
 expr_stmt|;
 name|wf
@@ -3210,9 +3204,6 @@ name|kva
 operator|+
 name|pos
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|wpipe
 operator|->
 name|pipe_buffer
@@ -5345,9 +5336,6 @@ name|f_data
 decl_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ub
 argument_list|,
 sizeof|sizeof
@@ -6006,9 +5994,6 @@ name|kn
 operator|->
 name|kn_hook
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|cpipe
 expr_stmt|;
 name|PIPE_LOCK
