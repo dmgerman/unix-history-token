@@ -10320,6 +10320,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALTIMA_DEVICE_AC1002
+value|0x03e9
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALTIMA_DEVICE_AC9100
 value|0x03ea
 end_define

@@ -466,6 +466,14 @@ block|,
 block|{
 name|ALTIMA_VENDORID
 block|,
+name|ALTIMA_DEVICE_AC1002
+block|,
+literal|"Altima AC1002 Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|ALTIMA_VENDORID
+block|,
 name|ALTIMA_DEVICE_AC9100
 block|,
 literal|"Altima AC9100 Gigabit Ethernet"
