@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dol.c	5.15 (Berkeley) %G%"
+literal|"@(#)dol.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2375,7 +2375,7 @@ operator|++
 operator|-
 literal|'0'
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|(

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.30 (Berkeley) %G%"
+literal|"@(#)csh.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,7 +725,7 @@ name|tcp
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|tcp
@@ -812,7 +812,7 @@ condition|;
 name|k
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 name|AsciiOnly
 operator|=
 name|k
@@ -1279,7 +1279,7 @@ argument_list|)
 expr_stmt|;
 comment|/* ...and on XFSZ */
 block|}
-comment|/*      * Process the arguments.      *       * Note that processing of -v/-x is actually delayed till after script      * processing.      *       * We set the first character of our name to be '-' if we are a shell      * running interruptible commands.  Many programs which examine ps'es       * use this to filter such shells out.      */
+comment|/*      * Process the arguments.      *      * Note that processing of -v/-x is actually delayed till after script      * processing.      *      * We set the first character of our name to be '-' if we are a shell      * running interruptible commands.  Many programs which examine ps'es      * use this to filter such shells out.      */
 name|argc
 operator|--
 operator|,
@@ -1607,7 +1607,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Replace FSHIN. Handle /dev/std{in,out,err} specially 	 * since once they are closed we cannot open them again. 	 * In that case we use our own saved descriptors 	 */
+comment|/* 	 * Replace FSHIN. Handle /dev/std{in,out,err} specially 	 * since once they are closed we cannot open them again. 	 * In that case we use our own saved descriptors 	 */
 if|if
 condition|(
 operator|(
@@ -2051,7 +2051,7 @@ name|tpgrp
 operator|=
 name|shpgrp
 expr_stmt|;
-comment|/* 		 * Setpgid will fail if we are a session leader and  		 * mypid == mypgrp (POSIX 4.3.3) 		 */
+comment|/* 		 * Setpgid will fail if we are a session leader and 		 * mypid == mypgrp (POSIX 4.3.3) 		 */
 if|if
 condition|(
 name|opgrp
@@ -2966,7 +2966,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/*      * There is a critical section here while we are pushing down the input      * stream since we have stuff in different structures. If we weren't      * careful an interrupt could corrupt SHIN's Bin structure and kill the      * shell.      *       * We could avoid the critical region by grouping all the stuff in a single      * structure and pointing at it to move it all at once.  This is less      * efficient globally on many variable references however.      */
+comment|/*      * There is a critical section here while we are pushing down the input      * stream since we have stuff in different structures. If we weren't      * careful an interrupt could corrupt SHIN's Bin structure and kill the      * shell.      *      * We could avoid the critical region by grouping all the stuff in a single      * structure and pointing at it to move it all at once.  This is less      * efficient globally on many variable references however.      */
 name|insource
 operator|=
 literal|1
@@ -4128,7 +4128,7 @@ name|SIGINT
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Save input text on the history list if reading in old history, or it 	 * is from the terminal at the top level and not in a loop. 	 *  	 * PWP: entry of items in the history list while in a while loop is done 	 * elsewhere... 	 */
+comment|/* 	 * Save input text on the history list if reading in old history, or it 	 * is from the terminal at the top level and not in a loop. 	 * 	 * PWP: entry of items in the history list while in a while loop is done 	 * elsewhere... 	 */
 if|if
 condition|(
 name|enterhist

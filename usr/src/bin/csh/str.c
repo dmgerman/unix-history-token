@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.8 (Berkeley) %G%"
+literal|"@(#)str.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * tc.str.c: Short string package  * 	     This has been a lesson of how to write buggy code!  */
+comment|/*  * tc.str.c: Short string package  *	     This has been a lesson of how to write buggy code!  */
 end_comment
 
 begin_if
@@ -130,7 +130,7 @@ condition|;
 name|n
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 name|sdst
 operator|=
 name|dst
@@ -239,7 +239,7 @@ condition|;
 name|n
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 name|sdst
 operator|=
 name|dst
@@ -696,7 +696,7 @@ operator|*
 name|src
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|sdst
@@ -842,7 +842,7 @@ operator|*
 name|dst
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 operator|--
 name|dst
 expr_stmt|;
@@ -856,7 +856,7 @@ operator|*
 name|src
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|sdst
@@ -927,7 +927,7 @@ operator|*
 name|dst
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 operator|--
 name|dst
 expr_stmt|;
@@ -958,7 +958,7 @@ name|n
 operator|!=
 literal|0
 condition|)
-do|;
+do|continue;
 operator|*
 name|dst
 operator|=
@@ -1106,7 +1106,7 @@ condition|;
 name|n
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|n
@@ -1153,7 +1153,7 @@ operator|,
 name|str2
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 comment|/*      * The following case analysis is necessary so that characters which look      * negative collate low against normal characters but high against the      * end-of-string NUL.      */
 if|if
 condition|(
@@ -1263,7 +1263,7 @@ operator|*
 name|str2
 condition|)
 block|{
-comment|/* 	     * The following case analysis is necessary so that characters  	     * which look negative collate low against normal characters 	     * but high against the end-of-string NUL. 	     */
+comment|/* 	     * The following case analysis is necessary so that characters 	     * which look negative collate low against normal characters 	     * but high against the end-of-string NUL. 	     */
 if|if
 condition|(
 operator|*
@@ -1380,7 +1380,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|n
 operator|=
 name|p
@@ -1418,7 +1418,7 @@ operator|*
 name|s
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|n
@@ -1488,7 +1488,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|q
@@ -1500,7 +1500,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|ep
 operator|=
 operator|(
@@ -1555,7 +1555,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p
@@ -1574,7 +1574,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|ep

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.19 (Berkeley) %G%"
+literal|"@(#)file.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1603,7 +1603,7 @@ operator|*
 name|o
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|p
 operator|=
@@ -2858,7 +2858,7 @@ operator|,
 name|len
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|x
 operator|=
@@ -2988,7 +2988,7 @@ name|c
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|t
@@ -3000,7 +3000,7 @@ name|t
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 init|;

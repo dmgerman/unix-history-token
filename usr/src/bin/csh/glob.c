@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.29 (Berkeley) %G%"
+literal|"@(#)glob.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -457,7 +457,7 @@ operator|*
 name|s
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|b
 operator|=
@@ -4044,7 +4044,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|q
@@ -4056,7 +4056,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|n
 operator|=
 operator|(
@@ -4160,7 +4160,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p
@@ -4179,7 +4179,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 block|}
 end_block
 

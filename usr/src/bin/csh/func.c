@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.29 (Berkeley) %G%"
+literal|"@(#)func.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4516,7 +4516,7 @@ condition|;
 name|k
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 name|AsciiOnly
 operator|=
 name|k
@@ -4642,7 +4642,7 @@ operator|,
 name|i
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|i
@@ -4738,7 +4738,7 @@ operator|*
 name|p
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|n
 operator|=
@@ -4812,7 +4812,7 @@ condition|;
 name|k
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 name|AsciiOnly
 operator|=
 name|k

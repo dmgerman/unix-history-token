@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.15 (Berkeley) %G%"
+literal|"@(#)misc.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,7 +237,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|n
 operator|=
 name|p
@@ -275,7 +275,7 @@ operator|*
 name|s
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|n
@@ -805,7 +805,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|q
@@ -817,7 +817,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|ep
 operator|=
 operator|(
@@ -872,7 +872,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p
@@ -891,7 +891,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|ep

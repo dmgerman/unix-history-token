@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.26 (Berkeley) %G%"
+literal|"@(#)proc.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2426,7 +2426,7 @@ name|fp
 operator|->
 name|p_friends
 control|)
-empty_stmt|;
+continue|continue;
 name|fp
 operator|->
 name|p_friends

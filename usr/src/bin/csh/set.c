@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.15 (Berkeley) %G%"
+literal|"@(#)set.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3058,7 +3058,7 @@ name|c
 operator|->
 name|v_right
 control|)
-empty_stmt|;
+continue|continue;
 name|p
 operator|->
 name|v_name

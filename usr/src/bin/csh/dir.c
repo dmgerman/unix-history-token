@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.15 (Berkeley) %G%"
+literal|"@(#)dir.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -609,7 +609,7 @@ modifier|*
 name|dp
 decl_stmt|;
 block|{
-comment|/*      * Don't call set() directly cause if the directory contains ` or      * other junk characters glob will fail.       */
+comment|/*      * Don't call set() directly cause if the directory contains ` or      * other junk characters glob will fail.      */
 specifier|register
 name|Char
 modifier|*
@@ -1911,7 +1911,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -1944,7 +1944,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|dp
 operator|=
 operator|(
@@ -1997,7 +1997,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|cwdlen
@@ -2030,7 +2030,7 @@ name|q
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|xfree
 argument_list|(
 operator|(
@@ -2269,7 +2269,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|dp
 index|[
 operator|-
@@ -2293,7 +2293,7 @@ name|p
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|chdir
@@ -3370,7 +3370,7 @@ operator|==
 literal|'/'
 condition|)
 comment|/* flush extra slashes */
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|p
@@ -3397,7 +3397,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|p
 operator|=
 name|sp
@@ -3500,7 +3500,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|p
 operator|=
 operator|--
@@ -3637,7 +3637,7 @@ name|p1
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|*
@@ -3655,7 +3655,7 @@ name|sp
 operator|!=
 literal|'/'
 condition|)
-empty_stmt|;
+continue|continue;
 name|sp
 operator|++
 expr_stmt|;
@@ -3718,7 +3718,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p1
@@ -3737,7 +3737,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p1
@@ -3756,7 +3756,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 comment|/* 		     * Restart canonicalization at expanded "/xxx". 		     */
 name|p
 operator|=
@@ -3819,7 +3819,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p1
@@ -3838,7 +3838,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 comment|/* 		     * Restart canonicalization at beginning 		     */
 name|p
 operator|=
@@ -3879,7 +3879,7 @@ name|sp
 operator|!=
 literal|'/'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|slash
@@ -3908,7 +3908,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 name|p
 operator|=
 name|sp
@@ -4021,7 +4021,7 @@ name|p1
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|*
@@ -4039,7 +4039,7 @@ name|sp
 operator|!=
 literal|'/'
 condition|)
-empty_stmt|;
+continue|continue;
 name|sp
 operator|++
 expr_stmt|;
@@ -4102,7 +4102,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p1
@@ -4121,7 +4121,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p1
@@ -4140,7 +4140,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 comment|/* 		     * Restart canonicalization at expanded "/xxx". 		     */
 name|p
 operator|=
@@ -4203,7 +4203,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|p1
@@ -4222,7 +4222,7 @@ name|p2
 operator|++
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 comment|/* 		     * Restart canonicalization at beginning 		     */
 name|p
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.23 (Berkeley) %G%"
+literal|"@(#)lex.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1024,7 +1024,7 @@ name|c
 operator|==
 literal|'\t'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|cmap
