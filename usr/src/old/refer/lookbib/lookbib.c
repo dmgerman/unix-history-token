@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookbib.c	4.1 (Berkeley) %G%"
+literal|"@(#)lookbib.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
