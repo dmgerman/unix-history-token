@@ -2150,7 +2150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  *  */
+comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  */
 end_comment
 
 begin_typedef
@@ -2168,15 +2168,15 @@ comment|/* FC Loop Down */
 name|ISPASYNC_LOOP_UP
 block|,
 comment|/* FC Loop Up */
-name|ISPASYNC_PDB_CHANGED
-block|,
-comment|/* FC Port Data Base Changed */
 name|ISPASYNC_CHANGE_NOTIFY
 block|,
-comment|/* FC SNS Change Notification */
+comment|/* FC SNS or Port Database Changed */
 name|ISPASYNC_FABRIC_DEV
 block|,
-comment|/* FC New Fabric Device */
+comment|/* FC Fabric Device Arrived/Left */
+name|ISPASYNC_LOGGED_INOUT
+block|,
+comment|/* FC Object Logged In/Out */
 name|ISPASYNC_TARGET_MESSAGE
 block|,
 comment|/* target message */
