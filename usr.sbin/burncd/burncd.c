@@ -845,7 +845,7 @@ name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"ioctl(CDRIOCGETBLOCKSIZE)"
+literal|"ioctl(CDRIOCSETBLOCKSIZE)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -892,7 +892,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|CDRIOCGETBLOCKSIZE
+name|CDRIOCSETBLOCKSIZE
 argument_list|,
 operator|&
 name|saved_block_size
@@ -904,7 +904,7 @@ name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"ioctl(CDRIOCGETBLOCKSIZE)"
+literal|"ioctl(CDRIOCSETBLOCKSIZE)"
 argument_list|)
 expr_stmt|;
 block|}
