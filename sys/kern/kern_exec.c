@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.53 1997/03/31 11:10:55 davidg Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.54 1997/04/04 01:30:33 davidg Exp $  */
 end_comment
 
 begin_include
@@ -775,11 +775,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 goto|goto
 name|exec_fail_dealloc
 goto|;
-block|}
 comment|/* 	 * Loop through list of image activators, calling each one. 	 *	If there is no match, the activator returns -1. If there 	 *	is a match, but there was an error during the activation, 	 *	the error is returned. Otherwise 0 means success. If the 	 *	image is interpreted, loop back up and try activating 	 *	the interpreter. 	 */
 for|for
 control|(
@@ -876,6 +874,12 @@ name|image_header
 argument_list|,
 name|M_TEMP
 argument_list|)
+expr_stmt|;
+name|imgp
+operator|->
+name|image_header
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* free old vnode and name buffer */
@@ -2369,20 +2373,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Check number of open-for-writes on the file and deny execution 	 *	if there are any. 	 */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_writecount
-condition|)
-block|{
-return|return
-operator|(
-name|ETXTBSY
-operator|)
-return|;
-block|}
 comment|/* Get file attributes */
 name|error
 operator|=
@@ -2462,7 +2452,69 @@ operator|(
 name|ENOEXEC
 operator|)
 return|;
-comment|/* 	 * Disable setuid/setgid if the filesystem prohibits it or if 	 *	the process is being traced. 	 */
+comment|/* 	 *  Check for execute permission to file based on current credentials. 	 */
+name|error
+operator|=
+name|VOP_ACCESS
+argument_list|(
+name|vp
+argument_list|,
+name|VEXEC
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 	 * Check number of open-for-writes on the file and deny execution 	 * if there are any. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_writecount
+condition|)
+return|return
+operator|(
+name|ETXTBSY
+operator|)
+return|;
+comment|/* 	 * Call filesystem specific open routine (which does nothing in the 	 * general case). 	 */
+name|error
+operator|=
+name|VOP_OPEN
+argument_list|(
+name|vp
+argument_list|,
+name|FREAD
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 	 * Disable setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 */
 if|if
 condition|(
 operator|(
@@ -2494,55 +2546,6 @@ operator||
 name|VSGID
 operator|)
 expr_stmt|;
-comment|/* 	 *  Check for execute permission to file based on current credentials. 	 *	Then call filesystem specific open routine (which does nothing 	 *	in the general case). 	 */
-name|error
-operator|=
-name|VOP_ACCESS
-argument_list|(
-name|vp
-argument_list|,
-name|VEXEC
-argument_list|,
-name|p
-operator|->
-name|p_ucred
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-name|error
-operator|=
-name|VOP_OPEN
-argument_list|(
-name|vp
-argument_list|,
-name|FREAD
-argument_list|,
-name|p
-operator|->
-name|p_ucred
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 return|return
 operator|(
 literal|0
