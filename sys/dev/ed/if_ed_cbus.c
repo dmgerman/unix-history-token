@@ -4562,7 +4562,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid i/o port configuration (0x%x) "
+literal|"Invalid i/o port configuration (0x%lx) "
 literal|"must be %s for %s\n"
 argument_list|,
 name|rman_get_start
@@ -4611,7 +4611,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Please change window address(0x%x)\n"
+literal|"Please change window address(0x%lx)\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -4665,8 +4665,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Please change iobase address(0x%x) "
-literal|"or window address(0x%x)\n"
+literal|"Please change iobase address(0x%lx) "
+literal|"or window address(0x%lx)\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -5167,7 +5167,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid i/o port configuration (0x%x) "
+literal|"Invalid i/o port configuration (0x%lx) "
 literal|"must be %s for %s\n"
 argument_list|,
 name|rman_get_start
@@ -6292,7 +6292,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid i/o port configuration (0x%x) "
+literal|"Invalid i/o port configuration (0x%lx) "
 literal|"must be %s for %s\n"
 argument_list|,
 name|rman_get_start
