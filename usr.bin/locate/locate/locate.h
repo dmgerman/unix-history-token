@@ -171,5 +171,16 @@ name|INTSIZE
 value|(sizeof(int))
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOCATE_REG
+value|"*?[]\\"
+end_define
+
+begin_comment
+comment|/* fnmatch(3) meta characters */
+end_comment
+
 end_unit
 
