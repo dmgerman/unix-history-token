@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.h	4.1	%G%	*/
+comment|/*	cons.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -109,12 +109,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TXDB_AUTOR
+name|TXDB_WSI
+value|0xf02
+end_define
+
+begin_comment
+comment|/* set warm start inhibit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TXDB_CWSI
 value|0xf03
 end_define
 
 begin_comment
-comment|/* auto-restart command */
+comment|/* clear warm start inhibit */
 end_comment
 
 begin_define
@@ -125,7 +136,7 @@ value|0xf04
 end_define
 
 begin_comment
-comment|/* boot command */
+comment|/* enable boot */
 end_comment
 
 end_unit
