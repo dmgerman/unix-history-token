@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logger.c	6.15 (Berkeley) %G%"
+literal|"@(#)logger.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -70,11 +82,71 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_NAMES
+end_define
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_decl_stmt
+name|int
+name|decode
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|CODE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pencode
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* **  LOGGER -- read and log utility ** **	This routine reads from an input and arranges to write the **	result on the system log, along with a useful tag. */
+comment|/*  * logger -- read and log utility  *  *	Reads from an input and arranges to write the result on the system  *	log.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -86,32 +158,16 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|optind
-decl_stmt|;
-name|int
-name|pri
-init|=
-name|LOG_NOTICE
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
 name|logflags
-init|=
-literal|0
+decl_stmt|,
+name|pri
 decl_stmt|;
 name|char
 modifier|*
@@ -121,18 +177,18 @@ name|buf
 index|[
 literal|1024
 index|]
-decl_stmt|,
-modifier|*
-name|getlogin
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 name|tag
 operator|=
 name|NULL
+expr_stmt|;
+name|pri
+operator|=
+name|LOG_NOTICE
+expr_stmt|;
+name|logflags
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -428,13 +484,8 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
-comment|/* main loop */
+else|else
 while|while
 condition|(
 name|fgets
@@ -468,35 +519,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|SYSLOG_NAMES
-end_define
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
 begin_comment
 comment|/*  *  Decode a symbolic name to a numeric value  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|pencode
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -638,32 +675,24 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|decode
-argument_list|(
-argument|name
-argument_list|,
-argument|codetab
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|codetab
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CODE
 modifier|*
 name|codetab
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|CODE
@@ -725,14 +754,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -741,7 +768,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"logger: [-i] [-f file] [-p pri] [-t tag] [ message ... ]\n"
+literal|"logger: [-is] [-f file] [-p pri] [-t tag] [ message ... ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -750,7 +777,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
