@@ -191,7 +191,7 @@ index|]
 condition|)
 return|return
 operator|(
-name|ENOEXEC
+name|ENAMETOOLONG
 operator|)
 return|;
 block|}

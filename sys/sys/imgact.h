@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MAXSHELLCMDLEN
-value|64
+value|128
 end_define
 
 begin_struct
