@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.5 1995/12/07 12:47:35 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.6 1995/12/18 02:47:43 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -445,7 +445,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|inline
-name|void
+name|int
 name|fxp_scb_wait
 name|__P
 argument_list|(
@@ -721,7 +721,7 @@ end_comment
 begin_function
 specifier|static
 specifier|inline
-name|void
+name|int
 name|fxp_scb_wait
 parameter_list|(
 name|csr
@@ -751,6 +751,11 @@ operator|--
 name|i
 condition|)
 empty_stmt|;
+return|return
+operator|(
+name|i
+operator|)
+return|;
 block|}
 end_function
 
@@ -1618,22 +1623,10 @@ operator|->
 name|kdc_unit
 index|]
 decl_stmt|;
-comment|/* 	 * Cancel stats updater. 	 */
-name|untimeout
+name|fxp_stop
 argument_list|(
-name|fxp_stats_update
-argument_list|,
 name|sc
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Issue software reset. 	 */
-name|sc
-operator|->
-name|csr
-operator|->
-name|port
-operator|=
-literal|0
 expr_stmt|;
 operator|(
 name|void
@@ -2037,12 +2030,26 @@ operator|=
 name|txp
 expr_stmt|;
 block|}
-comment|/* 	 * Resume transmission if suspended. 	 */
+if|if
+condition|(
+operator|!
 name|fxp_scb_wait
 argument_list|(
 name|csr
 argument_list|)
+condition|)
+block|{
+comment|/* 		 * Hmmm, card has gone out to lunch 		 */
+name|fxp_init
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
+goto|goto
+name|txloop
+goto|;
+block|}
+comment|/* 	 * Resume transmission if suspended. 	 */
 name|csr
 operator|->
 name|scb_command
@@ -2503,11 +2510,9 @@ name|sc
 operator|->
 name|csr
 decl_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -2610,7 +2615,31 @@ name|sp
 operator|->
 name|rx_good
 expr_stmt|;
-comment|/* 	 * If there is a pending command, don't wait for it to 	 * be accepted - we'll pick up the stats the next time 	 * around. Make sure we don't count the stats twice 	 * however. 	 */
+name|ifp
+operator|->
+name|if_ierrors
+operator|+=
+name|sp
+operator|->
+name|rx_crc_errors
+operator|+
+name|sp
+operator|->
+name|rx_alignment_errors
+operator|+
+name|sp
+operator|->
+name|rx_rnr_errors
+operator|+
+name|sp
+operator|->
+name|rx_overrun_errors
+operator|+
+name|sp
+operator|->
+name|rx_shortframes
+expr_stmt|;
+comment|/* 	 * If there is no pending command, start another stats 	 * dump. Otherwise punt for now. 	 */
 if|if
 condition|(
 operator|(
@@ -2635,6 +2664,9 @@ name|scb_command
 operator|=
 name|FXP_SCB_COMMAND_CU_DUMPRESET
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|sc
@@ -2645,7 +2677,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * A previous command is still waiting to be accepted. 		 * Just zero our copy of the stats and wait for the 		 * next timer event to pdate them. 		 */
+comment|/* 		 * A previous command is still waiting to be accepted. 		 * Just zero our copy of the stats and wait for the 		 * next timer event to update them. 		 */
 name|sp
 operator|->
 name|tx_good
@@ -2664,6 +2696,37 @@ name|rx_good
 operator|=
 literal|0
 expr_stmt|;
+name|sp
+operator|->
+name|rx_crc_errors
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|rx_alignment_errors
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|rx_rnr_errors
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|rx_overrun_errors
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|rx_shortframes
+operator|=
+literal|0
+expr_stmt|;
+empty_stmt|;
 block|}
 comment|/* 	 * Schedule another timeout one second from now. 	 */
 name|timeout
@@ -2707,6 +2770,14 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
+name|struct
+name|fxp_cb_tx
+modifier|*
+name|txp
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/* 	 * Cancel stats updater. 	 */
 name|untimeout
 argument_list|(
@@ -2715,6 +2786,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Issue software reset 	 */
 name|sc
 operator|->
 name|csr
@@ -2728,12 +2800,130 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Release any xmit buffers. 	 */
+for|for
+control|(
+name|txp
+operator|=
+name|sc
+operator|->
+name|cbl_first
+init|;
+name|txp
+operator|!=
+name|NULL
+operator|&&
+name|txp
+operator|->
+name|mb_head
+operator|!=
+name|NULL
+condition|;
+name|txp
+operator|=
+name|txp
+operator|->
+name|next
+control|)
+block|{
+name|m_freem
+argument_list|(
+name|txp
+operator|->
+name|mb_head
+argument_list|)
+expr_stmt|;
+name|txp
+operator|->
+name|mb_head
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|sc
+operator|->
+name|tx_queued
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Free all the receive buffers then reallocate/reinitialize 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|rfa_headm
+operator|!=
+name|NULL
+condition|)
+name|m_freem
+argument_list|(
+name|sc
+operator|->
+name|rfa_headm
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|rfa_headm
+operator|=
+name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|rfa_tailm
+operator|=
+name|NULL
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|FXP_NRFABUFS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|fxp_add_rfabuf
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * This "can't happen" - we're at splimp() 			 * and we just freed all the buffers we need 			 * above. 			 */
+name|panic
+argument_list|(
+literal|"fxp_stop: no buffers!"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|ifp
 operator|->
 name|if_flags
 operator|&=
 operator|~
+operator|(
 name|IFF_RUNNING
+operator||
+name|IFF_OACTIVE
+operator|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -2837,29 +3027,15 @@ name|mcast
 decl_stmt|,
 name|prm
 decl_stmt|;
-comment|/* 	 * Cancel stats updater. 	 */
-name|untimeout
-argument_list|(
-name|fxp_stats_update
-argument_list|,
-name|sc
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Issue software reset and wait 10us for the card to recover. 	 */
-name|csr
-operator|->
-name|port
-operator|=
-literal|0
-expr_stmt|;
-name|DELAY
+comment|/* 	 * Cancel any pending I/O 	 */
+name|fxp_stop
 argument_list|(
-literal|10
+name|sc
 argument_list|)
 expr_stmt|;
 name|prm
@@ -2914,6 +3090,9 @@ name|scb_command
 operator|=
 name|FXP_SCB_COMMAND_CU_BASE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -2926,6 +3105,9 @@ operator|=
 name|FXP_SCB_COMMAND_RU_BASE
 expr_stmt|;
 comment|/* 	 * Initialize base of dump-stats buffer. 	 */
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3191,9 +3373,9 @@ name|cbp
 operator|->
 name|fdx_pin_en
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* (ignore) FDX# pin */
+comment|/* (enable) FDX# pin */
 name|cbp
 operator|->
 name|multi_ia
@@ -3209,6 +3391,9 @@ name|mcast
 expr_stmt|;
 comment|/* accept all multicasts */
 comment|/* 	 * Start the config command/DMA. 	 */
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3302,6 +3487,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the IAS (Individual Address Setup) command/DMA. 	 */
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3468,6 +3656,9 @@ name|tx_queued
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
@@ -3480,6 +3671,9 @@ operator|=
 name|FXP_SCB_COMMAND_CU_START
 expr_stmt|;
 comment|/* 	 * Initialize receiver buffer area - RFA. 	 */
+operator|(
+name|void
+operator|)
 name|fxp_scb_wait
 argument_list|(
 name|csr
