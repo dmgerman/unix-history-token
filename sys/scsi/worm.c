@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * worm: Write Once device driver  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * Copyright (C) 1996, interface business GmbH  *   Tolkewitzer Str. 49  *   D-01277 Dresden  *   F.R. Germany  *<joerg_wunsch@interface-business.de>  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: worm.c,v 1.20 1996/01/27 17:48:12 joerg Exp $  */
+comment|/*  * worm: Write Once device driver  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * Copyright (C) 1996, interface business GmbH  *   Tolkewitzer Str. 49  *   D-01277 Dresden  *   F.R. Germany  *<joerg_wunsch@interface-business.de>  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: worm.c,v 1.21 1996/01/28 09:56:04 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -529,7 +529,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
 name|void
 name|worminit
 parameter_list|(
@@ -1439,6 +1438,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * check it's not too big a transfer for our adapter 	 */
+name|wormminphys
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|opri
 operator|=
 name|splbio
@@ -1820,9 +1825,6 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|errval
-name|error
-decl_stmt|;
 name|struct
 name|scsi_data
 modifier|*
@@ -2836,15 +2838,6 @@ name|pagelen
 decl_stmt|,
 name|dat_len
 decl_stmt|;
-name|struct
-name|scsi_data
-modifier|*
-name|worm
-init|=
-name|sc_link
-operator|->
-name|sd
-decl_stmt|;
 name|pagelen
 operator|=
 sizeof|sizeof
@@ -3068,15 +3061,6 @@ decl_stmt|,
 name|dat_len
 decl_stmt|,
 name|blk_len
-decl_stmt|;
-name|struct
-name|scsi_data
-modifier|*
-name|worm
-init|=
-name|sc_link
-operator|->
-name|sd
 decl_stmt|;
 name|pagelen
 operator|=
@@ -3303,15 +3287,6 @@ name|sc_link
 parameter_list|)
 block|{
 name|struct
-name|scsi_data
-modifier|*
-name|worm
-init|=
-name|sc_link
-operator|->
-name|sd
-decl_stmt|;
-name|struct
 name|scsi_synchronize_cache
 name|cmd
 decl_stmt|;
@@ -3397,15 +3372,6 @@ name|int
 name|onp
 parameter_list|)
 block|{
-name|struct
-name|scsi_data
-modifier|*
-name|worm
-init|=
-name|sc_link
-operator|->
-name|sd
-decl_stmt|;
 name|struct
 name|scsi_fixation
 name|cmd
