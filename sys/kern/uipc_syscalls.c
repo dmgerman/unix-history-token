@@ -8664,10 +8664,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|VM_OBJECT_LOCK
 argument_list|(
 name|obj
@@ -8679,6 +8675,16 @@ expr_stmt|;
 name|vm_page_io_finish
 argument_list|(
 name|pg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
 argument_list|)
 expr_stmt|;
 name|mbstat
