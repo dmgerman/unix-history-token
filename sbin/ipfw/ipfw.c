@@ -2413,6 +2413,29 @@ name|chain
 operator|->
 name|fw_ipflg
 operator|&
+name|IP_FW_IF_IPPRE
+condition|)
+name|printf
+argument_list|(
+literal|" ipprecedence %u"
+argument_list|,
+operator|(
+name|chain
+operator|->
+name|fw_iptos
+operator|&
+literal|0xe0
+operator|)
+operator|>>
+literal|5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chain
+operator|->
+name|fw_ipflg
+operator|&
 name|IP_FW_IF_IPTOS
 condition|)
 block|{
@@ -5132,6 +5155,7 @@ literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg}, ...\n"
 literal|"    ipoptions [!]{ssrr|lsrr|rr|ts}, ...\n"
 literal|"    iplen {length}\n"
 literal|"    ipid {identification number}\n"
+literal|"    ipprecedence {precedence}\n"
 literal|"    iptos [!]{lowdelay|throughput|reliability|mincost|congestion}, ...\n"
 literal|"    ipttl {time to live}\n"
 literal|"    ipversion {version number}\n"
@@ -13138,6 +13162,119 @@ operator|(
 name|u_short
 operator|)
 name|ipid
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"ipprecedence"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|u_long
+name|ippre
+decl_stmt|;
+name|char
+modifier|*
+name|c
+decl_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ac
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"missing argument"
+literal|" for ``ipprecedence''"
+argument_list|)
+expr_stmt|;
+name|ippre
+operator|=
+name|strtoul
+argument_list|(
+operator|*
+name|av
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+operator|!=
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"argument to ipprecedence"
+literal|" must be numeric"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ippre
+operator|>
+literal|7
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"argument to ipprecedence"
+literal|" out of range"
+argument_list|)
+expr_stmt|;
+name|rule
+operator|.
+name|fw_ipflg
+operator||=
+name|IP_FW_IF_IPPRE
+expr_stmt|;
+name|rule
+operator|.
+name|fw_iptos
+operator||=
+call|(
+name|u_short
+call|)
+argument_list|(
+name|ippre
+operator|<<
+literal|5
+argument_list|)
 expr_stmt|;
 name|av
 operator|++
