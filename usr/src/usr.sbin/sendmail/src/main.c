@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.58
+literal|3.59
 operator|%
 name|G
 operator|%
@@ -1238,11 +1238,16 @@ operator|&&
 operator|!
 name|GrabTo
 condition|)
+block|{
 name|usrerr
 argument_list|(
 literal|"Usage: /etc/sendmail [flags] addr..."
 argument_list|)
 expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 	**  Process Hop count. 	**	The Hop count tells us how many times this message has 	**	been processed by sendmail.  If it exceeds some 	**	fairly large threshold, then we assume that we have 	**	an infinite forwarding loop and die. 	*/
 if|if
 condition|(
@@ -1984,6 +1989,9 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+name|bool
+name|nofullname
+decl_stmt|;
 comment|/* 	**  Figure out the real user executing us. 	**	Getlogin can return errno != 0 on non-errors. 	*/
 if|if
 condition|(
@@ -2007,12 +2015,26 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|nofullname
+operator|=
+operator|(
+name|from
+operator|!=
+name|NULL
+operator|)
+expr_stmt|;
 block|}
 else|else
+block|{
 name|p
 operator|=
 name|from
 expr_stmt|;
+name|nofullname
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|p
@@ -2079,6 +2101,10 @@ function_decl|;
 name|int
 name|uid
 decl_stmt|;
+name|nofullname
+operator|=
+name|TRUE
+expr_stmt|;
 name|uid
 operator|=
 name|getruid
@@ -2168,6 +2194,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|nofullname
+operator|&&
 name|safefile
 argument_list|(
 name|cfbuf
@@ -2188,6 +2217,9 @@ expr_stmt|;
 comment|/* extract full name from passwd file */
 if|if
 condition|(
+operator|!
+name|nofullname
+operator|&&
 operator|(
 name|FullName
 operator|==
@@ -2447,6 +2479,15 @@ argument_list|)
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|macvalue
+argument_list|(
+literal|'d'
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|define
 argument_list|(
 literal|'d'
@@ -2464,6 +2505,15 @@ name|dbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|macvalue
+argument_list|(
+literal|'a'
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|define
 argument_list|(
 literal|'a'
@@ -2487,6 +2537,16 @@ name|Version
 argument_list|)
 expr_stmt|;
 comment|/* tty name */
+if|if
+condition|(
+name|macvalue
+argument_list|(
+literal|'y'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|p
 operator|=
 name|ttyname
@@ -2537,6 +2597,7 @@ argument_list|,
 name|ybuf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

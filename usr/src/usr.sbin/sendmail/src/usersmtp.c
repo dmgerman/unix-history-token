@@ -8,12 +8,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wellknown.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sysexits.h>
 end_include
 
@@ -39,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.7
+literal|3.8
 operator|%
 name|G
 operator|%
@@ -67,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.7
+literal|3.8
 operator|%
 name|G
 operator|%

@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -103,11 +103,6 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|QueueDir
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
 name|macvalue
 parameter_list|()
 function_decl|;
@@ -176,7 +171,13 @@ argument_list|,
 name|tempfname
 argument_list|)
 expr_stmt|;
-return|return;
+name|NoReturn
+operator|=
+name|TRUE
+expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
 block|}
 name|InFileName
 operator|=
@@ -185,6 +186,8 @@ expr_stmt|;
 comment|/* 	**  Create the Mail-From line if we want to. 	*/
 if|if
 condition|(
+name|Smtp
+operator|&&
 name|macvalue
 argument_list|(
 literal|'s'
@@ -1472,6 +1475,12 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|arpadate
+parameter_list|()
+function_decl|;
 comment|/* we have found a date */
 name|q
 operator|=
@@ -1501,6 +1510,23 @@ argument_list|(
 literal|'d'
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|q
+operator|=
+name|arpadate
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'a'
+argument_list|,
+name|newstr
+argument_list|(
+name|q
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
