@@ -528,23 +528,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|,
-name|rid
-argument_list|,
-name|io
-argument_list|)
-expr_stmt|;
-return|return
-name|ENXIO
-return|;
-block|}
 comment|/* allocate the altport range */
 name|rid
 operator|=
