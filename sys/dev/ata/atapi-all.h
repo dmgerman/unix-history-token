@@ -497,6 +497,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_READ_FORMAT_CAPACITIES
+value|0x23
+end_define
+
+begin_comment
+comment|/* get format capacities */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_READ_CAPACITY
 value|0x25
 end_define
