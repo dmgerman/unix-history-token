@@ -18,7 +18,7 @@ value|(a< b ? a : b)
 end_define
 
 begin_comment
-comment|/*  *	This routine writes win1 on win2 destructively.  *  * %G% (Berkeley) @(#)overwrite.c	1.2  */
+comment|/*  *	This routine writes win1 on win2 destructively.  *  * %G% (Berkeley) @(#)overwrite.c	1.3  */
 end_comment
 
 begin_macro
