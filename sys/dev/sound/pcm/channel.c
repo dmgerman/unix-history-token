@@ -4125,6 +4125,8 @@ name|oldspeed
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
 name|chn_tryspeed
 argument_list|(
 name|c
