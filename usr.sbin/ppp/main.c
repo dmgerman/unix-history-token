@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.99 1997/11/16 22:15:05 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.100 1997/11/17 00:42:40 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -1309,7 +1309,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|char
+modifier|*
 name|ProcessArgs
 parameter_list|(
 name|int
@@ -1546,18 +1547,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|argc
-operator|==
-literal|1
-condition|)
-name|SetLabel
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|optc
 operator|>
 literal|1
@@ -1576,6 +1565,17 @@ name|EX_START
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|argc
+operator|==
+literal|1
+condition|?
+operator|*
+name|argv
+else|:
+name|NULL
+return|;
+comment|/* Don't SetLabel yet ! */
 block|}
 end_function
 
@@ -1626,6 +1626,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+decl_stmt|,
+modifier|*
+name|label
 decl_stmt|;
 name|VarTerm
 operator|=
@@ -1663,6 +1666,8 @@ expr_stmt|;
 name|argv
 operator|++
 expr_stmt|;
+name|label
+operator|=
 name|ProcessArgs
 argument_list|(
 name|argc
@@ -1786,8 +1791,7 @@ condition|(
 operator|!
 name|ValidSystem
 argument_list|(
-name|GetLabel
-argument_list|()
+name|label
 argument_list|)
 condition|)
 block|{
@@ -1810,19 +1814,12 @@ name|char
 modifier|*
 name|l
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|l
 operator|=
-name|GetLabel
-argument_list|()
-operator|)
-operator|==
-name|NULL
-condition|)
-name|l
-operator|=
+name|label
+condition|?
+name|label
+else|:
 literal|"default"
 expr_stmt|;
 name|VarTerm
@@ -1945,8 +1942,7 @@ operator|)
 condition|)
 if|if
 condition|(
-name|GetLabel
-argument_list|()
+name|label
 operator|==
 name|NULL
 condition|)
@@ -2109,16 +2105,14 @@ directive|endif
 block|}
 if|if
 condition|(
-name|GetLabel
-argument_list|()
+name|label
 condition|)
 block|{
 if|if
 condition|(
 name|SelectSystem
 argument_list|(
-name|GetLabel
-argument_list|()
+name|label
 argument_list|,
 name|CONFFILE
 argument_list|)
@@ -2142,6 +2136,12 @@ name|EX_START
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * We don't SetLabel() 'till now in case SelectSystem() has an      * embeded load "otherlabel" command.      */
+name|SetLabel
+argument_list|(
+name|label
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -2164,8 +2164,7 @@ argument_list|,
 literal|"You must \"set ifaddr\" in label %s for"
 literal|" auto, background or ddial mode.\n"
 argument_list|,
-name|GetLabel
-argument_list|()
+name|label
 argument_list|)
 expr_stmt|;
 name|Cleanup
