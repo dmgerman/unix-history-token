@@ -2303,7 +2303,7 @@ argument_list|,
 literal|1
 argument_list|,
 name|BUS_SPACE_MAXADDR_24BIT
-operator|-
+operator|+
 literal|1
 argument_list|,
 name|BUS_SPACE_MAXADDR_32BIT
@@ -2524,7 +2524,7 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|BUS_SPACE_MAXADDR_24BIT
-operator|-
+operator|+
 literal|1
 argument_list|,
 name|BUS_SPACE_MAXADDR_32BIT
