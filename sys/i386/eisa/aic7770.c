@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7770.c,v 1.26 1996/03/31 03:04:38 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7770.c,v 1.27 1996/04/20 21:21:47 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -703,7 +703,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* 	 * The IRQMS bit enables level sensitive interrupts only allow 	 * IRQ sharing if its set. 	 */
+comment|/* 	 * The IRQMS bit enables level sensitive interrupts. Only allow 	 * IRQ sharing if it's set. 	 */
 if|if
 condition|(
 name|eisa_reg_intr
@@ -790,23 +790,35 @@ block|{
 case|case
 name|AHC_AIC7770
 case|:
-block|{
-comment|/* XXX 		 * It would be really nice to know if the BIOS 		 * was installed for the motherboard controllers, 		 * but I don't know how to yet.  Assume its enabled 		 * for now. 		 */
-break|break;
-block|}
 case|case
 name|AHC_274
 case|:
 block|{
-if|if
-condition|(
-operator|(
+name|u_char
+name|biosctrl
+init|=
 name|inb
 argument_list|(
 name|HA_274_BIOSCTRL
 operator|+
 name|iobase
 argument_list|)
+decl_stmt|;
+comment|/* Get the primary channel information */
+name|ahc
+operator|->
+name|flags
+operator||=
+operator|(
+name|biosctrl
+operator|&
+name|CHANNEL_B_PRIMARY
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|biosctrl
 operator|&
 name|BIOSMODE
 operator|)
@@ -831,7 +843,7 @@ block|}
 default|default:
 break|break;
 block|}
-comment|/*       	 * See if we have a Rev E or higher aic7770. Anything below a 	 * Rev E will have a R/O autoflush disable configuration bit. 	 * Its still not clear exactly what is differenent about the Rev E. 	 * We think it allows 8 bit entries in the QOUTFIFO to support 	 * "paging" SCBs so you can have more than 4 commands active at 	 * once. 	 */
+comment|/*       	 * See if we have a Rev E or higher aic7770. Anything below a 	 * Rev E will have a R/O autoflush disable configuration bit. 	 * It's still not clear exactly what is differenent about the Rev E. 	 * We think it allows 8 bit entries in the QOUTFIFO to support 	 * "paging" SCBs so you can have more than 4 commands active at 	 * once. 	 */
 block|{
 name|char
 modifier|*
@@ -926,35 +938,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Setup the FIFO threshold and the bus off time */
-if|if
-condition|(
-name|ahc
-operator|->
-name|flags
-operator|&
-name|AHC_USEDEFAULTS
-condition|)
-block|{
-name|outb
-argument_list|(
-name|BUSSPD
-operator|+
-name|iobase
-argument_list|,
-name|DFTHRSH_100
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|BUSTIME
-operator|+
-name|iobase
-argument_list|,
-name|BOFF_60BCLKS
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|u_char
 name|hostconf
@@ -1007,7 +990,7 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The board's IRQ line is not yet enabled so its safe 		 * to release the irq. 		 */
+comment|/* 		 * The board's IRQ line is not yet enabled so it's safe 		 * to release the irq. 		 */
 name|eisa_release_intr
 argument_list|(
 name|e_dev
