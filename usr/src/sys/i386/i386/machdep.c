@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -990,6 +990,17 @@ name|callout
 index|[
 name|i
 index|]
+expr_stmt|;
+name|callout
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|.
+name|c_next
+operator|=
+name|NULL
 expr_stmt|;
 comment|/*printf("avail mem = %d\n", ptoa(vm_page_free_count));*/
 name|printf
