@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.14	82/10/17	*/
+comment|/*	ffs_alloc.c	2.15	82/10/17	*/
 end_comment
 
 begin_include
@@ -919,6 +919,9 @@ name|b_un
 operator|.
 name|b_addr
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|osize
 argument_list|)
 expr_stmt|;
@@ -1914,6 +1917,9 @@ name|cg
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -2264,6 +2270,9 @@ name|cg
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -3300,6 +3309,9 @@ name|cg
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -3713,6 +3725,9 @@ name|cg
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -4317,6 +4332,9 @@ name|cg
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize

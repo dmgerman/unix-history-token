@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_inode.c	4.26	82/10/17	*/
+comment|/*	ffs_inode.c	4.27	82/10/17	*/
 end_comment
 
 begin_include
@@ -895,6 +895,9 @@ name|ino
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -1396,6 +1399,9 @@ name|i_number
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fp
 operator|->
 name|fs_bsize
@@ -2085,6 +2091,9 @@ argument_list|,
 name|bn
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
