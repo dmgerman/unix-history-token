@@ -1519,6 +1519,16 @@ condition|(
 name|errno
 operator|==
 name|ENOENT
+operator|&&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
 condition|)
 block|{
 comment|/* Try prepending "/dev" */
