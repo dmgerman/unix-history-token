@@ -1781,8 +1781,7 @@ asm|__asm __volatile("mov	%0=psr" : "=r" (psr));
 asm|__asm __volatile("rsm	psr.ic|psr.i");
 asm|__asm __volatile("srlz.d");
 asm|__asm __volatile("mov	cr.ifa=%0" :: "r"(ia64_port_base));
-comment|/* XXX We should use the size from the memory descriptor. */
-asm|__asm __volatile("mov	cr.itir=%0" :: "r"(24<< 2));
+asm|__asm __volatile("mov	cr.itir=%0" :: "r"(IA64_ID_PAGE_SHIFT<< 2));
 asm|__asm __volatile("itr.d dtr[%0]=%1" :: "r"(2), "r"(*(u_int64_t*)&pte));
 asm|__asm __volatile("mov	psr.l=%0" :: "r" (psr));
 asm|__asm __volatile("srlz.d");
