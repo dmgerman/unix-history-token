@@ -196,6 +196,9 @@ comment|/* ! */
 name|GROUP
 block|,
 comment|/* { */
+name|ENDGROUP
+block|,
+comment|/* } */
 name|COMMENT
 block|,
 comment|/* # */
