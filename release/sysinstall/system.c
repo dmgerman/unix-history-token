@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.54 1996/04/28 01:07:27 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.55 1996/04/28 03:27:26 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -381,6 +381,11 @@ name|foo
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|Fake
+condition|)
 name|status
 operator|=
 name|system
@@ -388,6 +393,20 @@ argument_list|(
 name|command
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|status
+operator|=
+literal|0
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"systemExecute:  Faked execution of `%s'\n"
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+block|}
 name|DialogActive
 operator|=
 name|TRUE
@@ -786,6 +805,22 @@ name|SIGCHLD
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Fake
+condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"vsystem:  Faked execution of `%s'\n"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|isDebug
