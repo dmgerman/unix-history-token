@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.5	83/03/20	*/
+comment|/*	rx.c	4.6	83/03/23	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * RX02 floppy disk device driver  *  * WARNING, UNTESTED  */
+comment|/*  * RX02 floppy disk device driver  *  * -- WARNING, UNTESTED --  */
 end_comment
 
 begin_include
@@ -189,18 +189,22 @@ index|]
 struct|;
 end_struct
 
+begin_comment
+comment|/* per-drive buffers */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|buf
 name|rrxbuf
 index|[
-name|NFX
+name|NRX
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* buffer for I/O */
+comment|/* buffers for I/O */
 end_comment
 
 begin_decl_stmt
@@ -208,13 +212,13 @@ name|struct
 name|buf
 name|erxbuf
 index|[
-name|NFX
+name|NRX
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* buffer for reading error status */
+comment|/* buffers for reading error status */
 end_comment
 
 begin_comment
@@ -412,6 +416,16 @@ parameter_list|(
 name|dev
 parameter_list|)
 value|(minor(dev)>>3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASKREG
+parameter_list|(
+name|reg
+parameter_list|)
+value|(reg&0xffff)
 end_define
 
 begin_comment
@@ -968,8 +982,6 @@ operator|->
 name|um_tab
 operator|.
 name|b_actf
-operator|->
-name|b_actf
 operator|==
 name|NULL
 condition|)
@@ -977,8 +989,6 @@ name|um
 operator|->
 name|um_tab
 operator|.
-name|b_actf
-operator|->
 name|b_actf
 operator|=
 name|bp
@@ -988,8 +998,6 @@ name|um
 operator|->
 name|um_tab
 operator|.
-name|b_actf
-operator|->
 name|b_actl
 operator|->
 name|b_forw
@@ -1000,33 +1008,10 @@ name|um
 operator|->
 name|um_tab
 operator|.
-name|b_actf
-operator|->
 name|b_actl
 operator|=
 name|bp
 expr_stmt|;
-name|bp
-operator|=
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_active
-operator|&&
-name|bp
-operator|->
-name|b_actf
-condition|)
 name|rxstart
 argument_list|(
 name|um
@@ -1101,15 +1086,15 @@ index|]
 decl_stmt|;
 name|ls
 operator|=
+operator|(
 name|bp
 operator|->
 name|b_blkno
 operator|*
-operator|(
-name|NBPS
-operator|/
 name|DEV_BSIZE
 operator|)
+operator|/
+name|NBPS
 expr_stmt|;
 name|lt
 operator|=
@@ -1262,8 +1247,6 @@ name|um
 operator|->
 name|um_tab
 operator|.
-name|b_actf
-operator|->
 name|b_actf
 operator|)
 operator|==
@@ -1533,13 +1516,11 @@ name|buf
 modifier|*
 name|bp
 init|=
-operator|&
-name|rrxbuf
-index|[
 name|um
 operator|->
-name|um_ctlr
-index|]
+name|um_tab
+operator|.
+name|b_actf
 decl_stmt|;
 name|struct
 name|rx_softc
@@ -1570,14 +1551,6 @@ operator|->
 name|um_ctlr
 index|]
 decl_stmt|;
-name|bp
-operator|=
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
-expr_stmt|;
 name|sc
 operator|->
 name|sc_tocnt
@@ -1785,9 +1758,7 @@ operator|=
 operator|&
 name|rxerr
 index|[
-name|um
-operator|->
-name|um_ctlr
+name|unit
 index|]
 expr_stmt|;
 name|bp
@@ -1797,18 +1768,20 @@ operator|->
 name|um_tab
 operator|.
 name|b_actf
-operator|->
-name|b_actf
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rxintr: unit=%d, state=0x%x\n"
+literal|"rxintr: unit=%d, state=0x%x, ctrlr status=0x%x\n"
 argument_list|,
 name|unit
 argument_list|,
 name|rxc
 operator|->
 name|rxc_state
+argument_list|,
+name|rxaddr
+operator|->
+name|rxcs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2069,23 +2042,65 @@ name|printf
 argument_list|(
 literal|"cs=%b, db=%b, err=%x\n"
 argument_list|,
+name|MASKREG
+argument_list|(
 name|er
 operator|->
 name|rxcs
+argument_list|)
 argument_list|,
 name|RXCS_BITS
 argument_list|,
+name|MASKREG
+argument_list|(
 name|er
 operator|->
 name|rxdb
+argument_list|)
 argument_list|,
 name|RXES_BITS
+argument_list|,
+name|MASKREG
+argument_list|(
+name|er
+operator|->
+name|rxxt
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"errstatus: 0x%x, 0x%x, 0x%x, 0x%x\n"
 argument_list|,
 name|er
 operator|->
 name|rxxt
 index|[
 literal|0
+index|]
+argument_list|,
+name|er
+operator|->
+name|rxxt
+index|[
+literal|1
+index|]
+argument_list|,
+name|er
+operator|->
+name|rxxt
+index|[
+literal|2
+index|]
+argument_list|,
+name|er
+operator|->
+name|rxxt
+index|[
+literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -2204,7 +2219,7 @@ condition|)
 empty_stmt|;
 name|retry
 label|:
-comment|/* 	 * In case we already have UNIBUS resources, give 	 * them back since we reallocate things in rxstart. 	 */
+comment|/* 	 * In case we already have UNIBUS resources, give 	 * them back since we reallocate things in rxstart. 	 * Also, the active flag must be reset, otherwise rxstart 	 * will refuse to restart the transfer 	 */
 if|if
 condition|(
 name|um
@@ -2215,6 +2230,14 @@ name|ubadone
 argument_list|(
 name|um
 argument_list|)
+expr_stmt|;
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|0
 expr_stmt|;
 name|rxstart
 argument_list|(
@@ -2357,8 +2380,6 @@ operator|->
 name|um_tab
 operator|.
 name|b_actf
-operator|->
-name|b_actf
 operator|==
 name|NULL
 condition|)
@@ -2366,8 +2387,6 @@ name|um
 operator|->
 name|um_tab
 operator|.
-name|b_actf
-operator|->
 name|b_actl
 operator|=
 name|bp
@@ -2381,15 +2400,11 @@ operator|->
 name|um_tab
 operator|.
 name|b_actf
-operator|->
-name|b_actf
 expr_stmt|;
 name|um
 operator|->
 name|um_tab
 operator|.
-name|b_actf
-operator|->
 name|b_actf
 operator|=
 name|bp
@@ -2430,8 +2445,6 @@ operator|->
 name|um_tab
 operator|.
 name|b_actf
-operator|->
-name|b_actf
 operator|=
 name|bp
 operator|->
@@ -2459,15 +2472,13 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this unit has more work to do, 	 * start it up right away 	 */
+comment|/* 	 * If this unit (controller) has more work to do, 	 * start it up right away 	 */
 if|if
 condition|(
 name|um
 operator|->
 name|um_tab
 operator|.
-name|b_actf
-operator|->
 name|b_actf
 condition|)
 name|rxstart
@@ -2592,6 +2603,13 @@ operator|<
 name|RX_MAXTIMEOUT
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"rx: timeout on dev %d\n"
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 name|rxintr
 argument_list|(
 name|dev
@@ -3203,7 +3221,10 @@ operator|=
 operator|&
 name|rrxbuf
 index|[
-name|ctlr
+name|RXUNIT
+argument_list|(
+name|dev
+argument_list|)
 index|]
 expr_stmt|;
 name|s
