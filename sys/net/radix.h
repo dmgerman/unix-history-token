@@ -15,17 +15,28 @@ directive|define
 name|_RADIX_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/_lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/_mutex.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -551,10 +562,16 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* empty tree for common case */
+ifdef|#
+directive|ifdef
+name|_KERNEL
 name|struct
 name|mtx
 name|rnh_mtx
 decl_stmt|;
+comment|/* locks entire radix tree */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

@@ -28,6 +28,18 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -5292,11 +5304,16 @@ name|rnh
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
 name|RADIX_NODE_HEAD_LOCK_INIT
 argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|head
 operator|=
