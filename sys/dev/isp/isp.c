@@ -10962,6 +10962,8 @@ name|u_int32_t
 name|portid
 decl_stmt|,
 name|first_portid
+decl_stmt|,
+name|last_portid
 decl_stmt|;
 name|sns_screq_t
 modifier|*
@@ -10978,6 +10980,8 @@ name|int
 name|hicap
 decl_stmt|,
 name|first_portid_seen
+decl_stmt|,
+name|last_port_same
 decl_stmt|;
 if|if
 condition|(
@@ -11033,6 +11037,15 @@ index|]
 operator|)
 expr_stmt|;
 comment|/* 	 * Since Port IDs are 24 bits, we can check against having seen 	 * anything yet with this value. 	 */
+name|last_port_same
+operator|=
+literal|0
+expr_stmt|;
+name|last_portid
+operator|=
+literal|0xffffffff
+expr_stmt|;
+comment|/* not a port */
 name|first_portid
 operator|=
 name|portid
@@ -11544,16 +11557,58 @@ literal|0
 operator|)
 return|;
 block|}
-block|}
+if|if
+condition|(
+name|portid
+operator|==
+name|last_portid
+condition|)
+block|{
+if|if
+condition|(
+name|last_port_same
+operator|++
+operator|>
+literal|20
+condition|)
+block|{
 name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"broken fabric nameserver...*wheeze*..."
+literal|"tangled fabric database detected"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+name|last_portid
+operator|=
+name|portid
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|hicap
+operator|>=
+literal|65535
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"fabric too big (> 65535)"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * We either have a broken name server or a huge fabric if we get here. 	 */
 name|fcp
 operator|->
