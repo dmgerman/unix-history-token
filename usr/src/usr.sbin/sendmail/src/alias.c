@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.13 (Berkeley) %G%"
+literal|"@(#)alias.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1313,6 +1313,11 @@ name|FILE
 modifier|*
 name|af
 decl_stmt|;
+name|bool
+name|nolock
+init|=
+name|FALSE
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -1348,6 +1353,30 @@ operator|->
 name|map_file
 argument_list|,
 literal|"r+"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EACCES
+operator|||
+name|automatic
+operator|||
+operator|(
+name|af
+operator|=
+name|fopen
+argument_list|(
+name|map
+operator|->
+name|map_file
+argument_list|,
+literal|"r"
 argument_list|)
 operator|)
 operator|==
@@ -1407,9 +1436,31 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+name|nolock
+operator|=
+name|TRUE
+expr_stmt|;
+name|message
+argument_list|(
+literal|"warning: cannot lock %s: %s"
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* see if someone else is rebuilding the alias file */
 if|if
 condition|(
+operator|!
+name|nolock
+operator|&&
 operator|!
 name|lockfile
 argument_list|(
