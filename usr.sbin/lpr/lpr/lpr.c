@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -416,6 +422,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* pr'ing title */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|locale
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pr'ing locale */
 end_comment
 
 begin_decl_stmt
@@ -885,7 +903,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":#:1:2:3:4:C:J:P:T:U:cdfghi:lnmprstvw:"
+literal|":#:1:2:3:4:C:J:L:P:T:U:cdfghi:lnmprstvw:"
 argument_list|)
 operator|)
 operator|!=
@@ -988,6 +1006,15 @@ literal|'P'
 case|:
 comment|/* specifiy printer name */
 name|printer
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+comment|/* pr's locale */
+name|locale
 operator|=
 name|optarg
 expr_stmt|;
@@ -1690,6 +1717,52 @@ argument_list|,
 name|width
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|format
+operator|==
+literal|'p'
+condition|)
+block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
+if|if
+condition|(
+name|locale
+condition|)
+name|card
+argument_list|(
+literal|'Z'
+argument_list|,
+name|locale
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|card
+argument_list|(
+literal|'Z'
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Read the files and spool them. 	 */
 if|if
 condition|(
@@ -3712,7 +3785,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: lpr [-Pprinter] [-#num] [-C class] [-J job] [-T title] [-U user]"
 argument_list|,
-literal|"[-i[numcols]] [-1234 font] [-wnum] [-cdfghlnmprstv] [name ...]"
+literal|"[-i[numcols]] [-1234 font] [-L locale] [-wnum] [-cdfghlnmprstv] [name ...]"
 argument_list|)
 expr_stmt|;
 name|exit
