@@ -526,12 +526,6 @@ name|tcp_keepcnt
 operator|*
 name|tcp_keepintvl
 expr_stmt|;
-name|tcp_iss
-operator|+=
-name|TCP_ISSINCR
-operator|/
-name|PR_SLOWHZ
-expr_stmt|;
 name|splx
 argument_list|(
 name|s

@@ -392,12 +392,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|tcp_seq
-name|tcp_iss
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|tcp_cc
 name|tcp_ccgen
 decl_stmt|;
@@ -4822,7 +4816,9 @@ operator|->
 name|iss
 operator|=
 name|tcp_new_isn
-argument_list|()
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 block|}
 name|tp
@@ -6437,7 +6433,9 @@ block|{
 name|iss
 operator|=
 name|tcp_new_isn
-argument_list|()
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 name|tp
 operator|=
