@@ -978,6 +978,21 @@ value|_IOR('x', 67, unsigned long )
 end_define
 
 begin_comment
+comment|/* Read/Write the BT848's I2C bus directly  * b7-b0:    data (read/write)  * b15-b8:   internal peripheral register (write)     * b23-b16:  i2c addr (write)  * b31-b24:  1 = write, 0 = read   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_I2CWR
+value|_IOWR('x', 57, u_long)
+end_define
+
+begin_comment
+comment|/* i2c read-write */
+end_comment
+
+begin_comment
 comment|/*  XXX - Copied from /sys/pci/brktree_reg.h  */
 end_comment
 
