@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.39 (Berkeley) %G%"
+literal|"@(#)login.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/quota.h>
+file|<ufs/quota.h>
 end_include
 
 begin_include
@@ -108,12 +108,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<lastlog.h>
 end_include
 
 begin_include
@@ -459,6 +453,16 @@ index|[
 name|MAXPATHLEN
 operator|+
 literal|2
+index|]
+decl_stmt|,
+name|tname
+index|[
+sizeof|sizeof
+argument_list|(
+name|_PATH_TTY
+argument_list|)
+operator|+
+literal|10
 index|]
 decl_stmt|;
 name|char
@@ -1053,10 +1057,24 @@ name|ttyn
 operator|==
 literal|'\0'
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|tname
+argument_list|,
+literal|"%s??"
+argument_list|,
+name|_PATH_TTY
+argument_list|)
+expr_stmt|;
 name|ttyn
 operator|=
-literal|"/dev/tty??"
+name|tname
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|tty
@@ -1403,6 +1421,10 @@ name|u_int
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* paranoia... */
+name|endpwent
+argument_list|()
 expr_stmt|;
 comment|/* 	 * If valid so far and root is logging in, see if root logins on 	 * this terminal are permitted. 	 */
 if|if
@@ -2511,6 +2533,31 @@ else|:
 name|pwd
 operator|->
 name|pw_shell
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setlogname
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|,
+name|strlen
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setlogname() failure: %m"
 argument_list|)
 expr_stmt|;
 comment|/* discard permissions last so can't get killed and drop core */
