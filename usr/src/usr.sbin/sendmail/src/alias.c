@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.42 (Berkeley) %G%"
+literal|"@(#)alias.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1280,6 +1280,17 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+operator|(
+name|MF_OPEN
+operator||
+name|MF_WRITABLE
+operator|)
+expr_stmt|;
 name|sleep
 argument_list|(
 name|sleeptime
@@ -1491,6 +1502,7 @@ if|if
 condition|(
 name|isopen
 condition|)
+block|{
 name|map
 operator|->
 name|map_class
@@ -1500,6 +1512,18 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+operator|(
+name|MF_OPEN
+operator||
+name|MF_WRITABLE
+operator|)
+expr_stmt|;
+block|}
 name|rebuildaliases
 argument_list|(
 name|map
@@ -2015,6 +2039,7 @@ operator|->
 name|map_mflags
 argument_list|)
 condition|)
+block|{
 name|map
 operator|->
 name|map_class
@@ -2024,6 +2049,18 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+operator|(
+name|MF_OPEN
+operator||
+name|MF_WRITABLE
+operator|)
+expr_stmt|;
+block|}
 comment|/* restore the old signals */
 operator|(
 name|void

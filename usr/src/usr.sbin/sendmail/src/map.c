@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.54 (Berkeley) %G%"
+literal|"@(#)map.c	8.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9922,6 +9922,17 @@ name|map_close
 argument_list|(
 name|mm
 argument_list|)
+expr_stmt|;
+name|mm
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+operator|(
+name|MF_OPEN
+operator||
+name|MF_WRITABLE
+operator|)
 expr_stmt|;
 block|}
 block|}
