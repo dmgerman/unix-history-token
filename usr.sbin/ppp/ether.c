@@ -1139,7 +1139,7 @@ name|msgbuf
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return;
@@ -2531,7 +2531,7 @@ name|rbuf
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
