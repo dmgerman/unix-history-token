@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -874,7 +874,7 @@ call|(
 modifier|*
 name|rnh
 operator|->
-name|rnh_add
+name|rnh_addaddr
 call|)
 argument_list|(
 operator|(
@@ -888,8 +888,6 @@ operator|)
 name|smask
 argument_list|,
 name|rnh
-operator|->
-name|rnh_treetop
 argument_list|,
 name|np
 operator|->
@@ -1057,12 +1055,10 @@ call|(
 modifier|*
 name|rnh
 operator|->
-name|rnh_walk
+name|rnh_walktree
 call|)
 argument_list|(
 name|rnh
-operator|->
-name|rnh_treetop
 argument_list|,
 name|ufs_free_netcred
 argument_list|,
@@ -1259,7 +1255,7 @@ call|(
 modifier|*
 name|rnh
 operator|->
-name|rnh_match
+name|rnh_matchaddr
 call|)
 argument_list|(
 operator|(
@@ -1268,8 +1264,6 @@ operator|)
 name|saddr
 argument_list|,
 name|rnh
-operator|->
-name|rnh_treetop
 argument_list|)
 expr_stmt|;
 if|if
