@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,10 +550,10 @@ comment|/* 	 * Collect an initial view of the world by 	 * checking the interfac
 name|rtinit
 argument_list|()
 expr_stmt|;
-name|gwkludge
+name|ifinit
 argument_list|()
 expr_stmt|;
-name|ifinit
+name|gwkludge
 argument_list|()
 expr_stmt|;
 if|if
@@ -960,6 +960,40 @@ literal|1
 operator|)
 return|;
 block|}
+name|on
+operator|=
+literal|48
+operator|*
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsockopt SO_RCVBUF: %m"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bind
