@@ -3059,7 +3059,7 @@ literal|"Intel 443MX"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x24158086
@@ -3072,7 +3072,7 @@ literal|"Intel ICH (82801AA)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x24258086
@@ -3085,7 +3085,7 @@ literal|"Intel ICH (82801AB)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x24458086
@@ -3098,7 +3098,7 @@ literal|"Intel ICH2 (82801BA)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x24858086
@@ -3111,7 +3111,7 @@ literal|"Intel ICH3 (82801CA)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ICH4ID
@@ -3124,10 +3124,8 @@ literal|"Intel ICH4 (82801DB)"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1000
+name|BUS_PROBE_LOW_PRIORITY
 return|;
-comment|/* allow a better driver to override us */
 case|case
 name|ICH5ID
 case|:
@@ -3139,10 +3137,8 @@ literal|"Intel ICH5 (82801EB)"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1000
+name|BUS_PROBE_LOW_PRIORITY
 return|;
-comment|/* allow a better driver to override us */
 case|case
 name|ICH6ID
 case|:
@@ -3154,10 +3150,8 @@ literal|"Intel ICH6 (82801FB)"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1000
+name|BUS_PROBE_LOW_PRIORITY
 return|;
-comment|/* allow a better driver to override us */
 case|case
 name|SIS7012ID
 case|:
@@ -3169,7 +3163,7 @@ literal|"SiS 7012"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x01b110de
@@ -3182,7 +3176,7 @@ literal|"nVidia nForce"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x006a10de
@@ -3195,7 +3189,7 @@ literal|"nVidia nForce2"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x008a10de
@@ -3208,7 +3202,7 @@ literal|"nVidia nForce2 400"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x00da10de
@@ -3221,7 +3215,7 @@ literal|"nVidia nForce3"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x00ea10de
@@ -3234,7 +3228,7 @@ literal|"nVidia nForce3 250"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x74451022
@@ -3247,7 +3241,7 @@ literal|"AMD-768"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 literal|0x746d1022
@@ -3260,7 +3254,7 @@ literal|"AMD-8111"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 default|default:
 return|return

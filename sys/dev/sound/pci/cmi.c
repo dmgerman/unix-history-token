@@ -3923,7 +3923,7 @@ literal|"CMedia CMI8338A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|CMI8338B_PCI_ID
@@ -3936,7 +3936,7 @@ literal|"CMedia CMI8338B"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|CMI8738_PCI_ID
@@ -3949,7 +3949,7 @@ literal|"CMedia CMI8738"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|CMI8738B_PCI_ID
@@ -3962,7 +3962,7 @@ literal|"CMedia CMI8738B"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 default|default:
 return|return

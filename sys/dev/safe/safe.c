@@ -1116,7 +1116,7 @@ name|PCI_PRODUCT_SAFEXCEL
 condition|)
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 return|return

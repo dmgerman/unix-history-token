@@ -3697,7 +3697,7 @@ literal|"Forte Media FM801 Audio Controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 comment|/* 	if ((id = pci_get_devid(dev)) == PCI_DEVICE_FORTEMEDIA2 ) { 		device_set_desc(dev, "Forte Media FM801 Joystick (Not Supported)"); 		return ENXIO; 	} */

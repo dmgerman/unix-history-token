@@ -4884,7 +4884,7 @@ literal|"AudioPCI ES1370"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ES1371_PCI_ID
@@ -4908,7 +4908,7 @@ literal|"AudioPCI ES1371-A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ES1371REV_ES1371_B
@@ -4921,7 +4921,7 @@ literal|"AudioPCI ES1371-B"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ES1371REV_ES1373_A
@@ -4934,7 +4934,7 @@ literal|"AudioPCI ES1373-A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ES1371REV_ES1373_B
@@ -4947,7 +4947,7 @@ literal|"AudioPCI ES1373-B"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ES1371REV_ES1373_8
@@ -4960,7 +4960,7 @@ literal|"AudioPCI ES1373-8"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ES1371REV_CT5880_A
@@ -4973,7 +4973,7 @@ literal|"Creative CT5880-A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 default|default:
 name|device_set_desc
@@ -4996,7 +4996,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 case|case
@@ -5022,7 +5022,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|CT4730_PCI_ID
@@ -5046,7 +5046,7 @@ literal|"Creative SB AudioPCI CT4730"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 default|default:
 name|device_set_desc
@@ -5069,7 +5069,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 case|case
@@ -5094,7 +5094,7 @@ literal|"Creative CT5880-C"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|CT5880REV_CT5880_D
@@ -5107,7 +5107,7 @@ literal|"Creative CT5880-D"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|CT5880REV_CT5880_E
@@ -5120,7 +5120,7 @@ literal|"Creative CT5880-E"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 default|default:
 name|device_set_desc
@@ -5143,7 +5143,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 default|default:

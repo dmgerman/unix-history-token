@@ -3055,7 +3055,7 @@ literal|"VIA VT8233 (pre)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|VIA8233_REV_ID_8233C
@@ -3068,7 +3068,7 @@ literal|"VIA VT8233C"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|VIA8233_REV_ID_8233
@@ -3081,7 +3081,7 @@ literal|"VIA VT8233"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|VIA8233_REV_ID_8233A
@@ -3094,7 +3094,7 @@ literal|"VIA VT8233A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|VIA8233_REV_ID_8235
@@ -3107,7 +3107,7 @@ literal|"VIA VT8235"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|VIA8233_REV_ID_8237
@@ -3120,7 +3120,7 @@ literal|"VIA VT8237"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 default|default:
 name|device_set_desc
@@ -3132,7 +3132,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Unknown */
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 block|}

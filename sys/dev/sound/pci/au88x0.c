@@ -2110,9 +2110,7 @@ name|auc_name
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 block|}

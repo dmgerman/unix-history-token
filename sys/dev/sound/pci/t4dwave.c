@@ -4278,7 +4278,7 @@ literal|"SiS 7018"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|ALI_PCI_ID
@@ -4291,7 +4291,7 @@ literal|"Acer Labs M5451"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|TDX_PCI_ID
@@ -4304,7 +4304,7 @@ literal|"Trident 4DWave DX"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|TNX_PCI_ID
@@ -4317,7 +4317,7 @@ literal|"Trident 4DWave NX"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 return|return

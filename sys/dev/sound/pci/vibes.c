@@ -3625,7 +3625,7 @@ literal|"S3 Sonicvibes"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 default|default:
 return|return

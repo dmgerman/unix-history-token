@@ -3315,7 +3315,7 @@ expr_stmt|;
 return|return
 name|s
 condition|?
-literal|0
+name|BUS_PROBE_DEFAULT
 else|:
 name|ENXIO
 return|;
