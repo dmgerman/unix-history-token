@@ -4374,7 +4374,7 @@ expr_stmt|;
 if|if
 condition|(
 name|orig_resid
-operator|<=
+operator|==
 literal|0
 condition|)
 return|return
@@ -4382,6 +4382,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * The caller is supposed to check if 	 * uio->uio_offset>= 0 and uio->uio_resid>= 0. 	 */
 name|bytesinfile
 operator|=
 name|dp
@@ -4420,7 +4421,9 @@ operator||=
 name|IN_ACCESS
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 for|for
