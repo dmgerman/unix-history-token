@@ -334,6 +334,11 @@ argument_list|)
 block|,
 name|keypair
 argument_list|(
+name|preferred
+argument_list|)
+block|,
+name|keypair
+argument_list|(
 name|rename
 argument_list|)
 block|,

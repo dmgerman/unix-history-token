@@ -130,9 +130,13 @@ block|,
 name|kw_round
 block|,
 comment|/* round robin */
+comment|/*      * The first of these is a volume attibute ("prefer plex"), and the      * second is a plex attribute ("preferred" means that the volume      * prefers this plex).      */
 name|kw_prefer
 block|,
 comment|/* prefer plex */
+name|kw_preferred
+block|,
+comment|/* preferred plex */
 name|kw_device
 block|,
 name|kw_init
