@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)protosw.h	8.1 (Berkeley) 6/2/93  *	$Id: protosw.h,v 1.15 1997/02/22 09:45:42 peter Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)protosw.h	8.1 (Berkeley) 6/2/93  *	$Id: protosw.h,v 1.16 1997/03/14 16:51:28 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -165,39 +165,19 @@ expr|struct
 name|mbuf
 operator|*
 operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* control output (from above) */
 comment|/* user-protocol hook */
-name|int
-argument_list|(
-argument|*pr_ousrreq
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* user request: see list below */
+name|void
+modifier|*
+name|pr_ousrreq
+decl_stmt|;
 comment|/* utility hooks */
 name|void
 argument_list|(
@@ -699,7 +679,7 @@ comment|/* users shouldn't see this decl */
 end_comment
 
 begin_comment
-comment|/*  * If the ordering here looks odd, that's because it's alphabetical.  * Having this structure separated out from the main protoswitch is actually  * a big (12 cycles per call) lose on high-end CPUs.  We will eventually  * migrate this stuff back into the main structure.  */
+comment|/*  * If the ordering here looks odd, that's because it's alphabetical.  * Having this structure separated out from the main protoswitch is allegedly  * a big (12 cycles per call) lose on high-end CPUs.  We will eventually  * migrate this stuff back into the main structure.  */
 end_comment
 
 begin_struct
@@ -753,6 +733,11 @@ name|so
 operator|,
 name|int
 name|proto
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 expr_stmt|;
@@ -772,6 +757,11 @@ expr|struct
 name|mbuf
 operator|*
 name|nam
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 expr_stmt|;
@@ -791,6 +781,11 @@ expr|struct
 name|mbuf
 operator|*
 name|nam
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 expr_stmt|;
@@ -835,6 +830,11 @@ expr|struct
 name|ifnet
 operator|*
 name|ifp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 expr_stmt|;
@@ -877,6 +877,11 @@ expr|struct
 name|socket
 operator|*
 name|so
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 expr_stmt|;
@@ -967,6 +972,11 @@ expr|struct
 name|mbuf
 operator|*
 name|control
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1030,7 +1040,7 @@ name|nam
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * These two added later, so they are out of order.  They are used 	 * for shortcutting (fast path input/output) in some protocols. 	 * XXX - that's a lie, they are not implemented yet 	 */
+comment|/* 	 * These three added later, so they are out of order.  They are used 	 * for shortcutting (fast path input/output) in some protocols. 	 * XXX - that's a lie, they are not implemented yet 	 * Rather than calling sosend() etc. directly, calls are made 	 * through these entry points.  For protocols which still use 	 * the generic code, these just point to those routines. 	 */
 name|int
 argument_list|(
 argument|*pru_sosend
@@ -1109,6 +1119,28 @@ name|flagsp
 operator|)
 argument_list|)
 expr_stmt|;
+name|int
+argument_list|(
+argument|*pru_soselect
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
+operator|,
+name|int
+name|which
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1155,6 +1187,37 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|pru_control_notsupp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
+operator|,
+name|int
+name|cmd
+operator|,
+name|caddr_t
+name|data
+operator|,
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|pru_listen_notsupp
 name|__P
 argument_list|(
@@ -1163,6 +1226,11 @@ expr|struct
 name|socket
 operator|*
 name|so
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1228,39 +1296,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PRU_OLDSTYLE
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PRU_OLDSTYLE
-end_ifdef
-
-begin_comment
-comment|/*  * Protocols which don't yet implement pr_usrreqs can point it to this  * structure, which will call the old pr_usrreq() entry point with the  * appropriate arguments.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pr_usrreqs
-name|pru_oldstyle
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PRU_OLDSTYLE */
-end_comment
 
 begin_endif
 endif|#
@@ -1581,7 +1616,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The arguments to ctloutput are:  *	(*protosw[].pr_ctloutput)(req, so, level, optname, optval);  * req is one of the actions listed below, so is a (struct socket *),  * level is an indication of which protocol layer the option is intended.  * optname is a protocol dependent socket option request,  * optval is a pointer to a mbuf-chain pointer, for value-return results.  * The protocol is responsible for disposal of the mbuf chain *optval  * if supplied,  * the caller is responsible for any space held by *optval, when returned.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
+comment|/*  * The arguments to ctloutput are:  *	(*protosw[].pr_ctloutput)(req, so, level, optname, optval, p);  * req is one of the actions listed below, so is a (struct socket *),  * level is an indication of which protocol layer the option is intended.  * optname is a protocol dependent socket option request,  * optval is a pointer to a mbuf-chain pointer, for value-return results.  * The protocol is responsible for disposal of the mbuf chain *optval  * if supplied,  * the caller is responsible for any space held by *optval, when returned.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
 end_comment
 
 begin_define

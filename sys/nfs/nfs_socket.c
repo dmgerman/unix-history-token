@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_socket.c	8.5 (Berkeley) 3/30/95  * $Id: nfs_socket.c,v 1.22 1997/03/22 06:53:08 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_socket.c	8.5 (Berkeley) 3/30/95  * $Id: nfs_socket.c,v 1.23 1997/04/22 17:38:01 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -700,7 +700,7 @@ init|=
 operator|&
 name|proc0
 decl_stmt|;
-comment|/* only used for socreate */
+comment|/* only used for socreate and sobind */
 name|nmp
 operator|->
 name|nm_so
@@ -762,14 +762,6 @@ name|nmp
 operator|->
 name|nm_so
 expr_stmt|;
-name|so
-operator|->
-name|so_state
-operator|&=
-operator|~
-name|SS_PRIV
-expr_stmt|;
-comment|/* don't need it */
 name|nmp
 operator|->
 name|nm_soflags
@@ -871,6 +863,8 @@ argument_list|(
 name|so
 argument_list|,
 name|m
+argument_list|,
+name|p
 argument_list|)
 operator|)
 operator|==
@@ -944,6 +938,8 @@ argument_list|,
 name|nmp
 operator|->
 name|nm_nam
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1273,6 +1269,8 @@ argument_list|,
 name|SO_KEEPALIVE
 argument_list|,
 name|m
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1325,6 +1323,8 @@ argument_list|,
 name|TCP_NODELAY
 argument_list|,
 name|m
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1897,26 +1897,22 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|sosend
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_sosend
 argument_list|(
 name|so
 argument_list|,
 name|sendnam
 argument_list|,
-operator|(
-expr|struct
-name|uio
-operator|*
-operator|)
 literal|0
 argument_list|,
 name|top
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
 literal|0
 argument_list|,
 name|flags
@@ -2420,7 +2416,13 @@ name|MSG_WAITALL
 expr_stmt|;
 name|error
 operator|=
-name|soreceive
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -2602,7 +2604,13 @@ name|MSG_WAITALL
 expr_stmt|;
 name|error
 operator|=
-name|soreceive
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -2716,7 +2724,13 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|soreceive
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -2986,7 +3000,13 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|soreceive
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -6177,6 +6197,15 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* NFS_NOSERVER */
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+operator|&
+name|proc0
+decl_stmt|;
+comment|/* XXX for credentials, will break if sleep */
 name|s
 operator|=
 name|splnet
@@ -6555,6 +6584,8 @@ name|mbuf
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 else|else
@@ -6587,6 +6618,8 @@ name|mbuf
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -7898,7 +7931,13 @@ name|MSG_DONTWAIT
 expr_stmt|;
 name|error
 operator|=
-name|soreceive
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -8079,7 +8118,13 @@ name|MSG_DONTWAIT
 expr_stmt|;
 name|error
 operator|=
-name|soreceive
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_soreceive
 argument_list|(
 name|so
 argument_list|,
