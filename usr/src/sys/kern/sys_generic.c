@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.41	83/06/21	*/
+comment|/*	sys_generic.c	5.42	83/06/24	*/
 end_comment
 
 begin_include
@@ -704,6 +704,9 @@ name|EINVAL
 expr_stmt|;
 return|return;
 block|}
+name|iov
+operator|++
+expr_stmt|;
 block|}
 name|count
 operator|=
