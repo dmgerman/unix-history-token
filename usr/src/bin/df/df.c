@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.16 (Berkeley) %G%"
+literal|"@(#)df.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,6 +501,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mntpt
 operator|=
 name|mktemp
@@ -599,6 +600,7 @@ name|mntpt
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 else|else
 name|mntpt
