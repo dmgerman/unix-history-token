@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.3 1996/12/23 18:13:36 jkh Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.4 1997/01/12 21:52:48 joerg Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -3268,6 +3268,40 @@ expr_stmt|;
 name|TimerService
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|TimerServiceRequest
+operator|>
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|logprintf
+argument_list|(
+literal|"Invoking TimerService before select()\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Maybe a bit cautious.... */
+name|TimerServiceRequest
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|TimerService
+argument_list|()
+expr_stmt|;
+name|TimerServiceRequest
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
+block|}
 endif|#
 directive|endif
 comment|/* If there are aren't many packets queued, look for some more. */
@@ -3402,6 +3436,47 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|TimerServiceRequest
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* we want to service any SIGALRMs even if we got it before calling            select. */
+name|int
+name|rem_errno
+init|=
+name|errno
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|logprintf
+argument_list|(
+literal|"Invoking TimerService\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Maybe a bit cautious.... */
+name|TimerServiceRequest
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|TimerService
+argument_list|()
+expr_stmt|;
+name|TimerServiceRequest
+operator|=
+literal|0
+expr_stmt|;
+name|errno
+operator|=
+name|rem_errno
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|i
 operator|<
 literal|0
@@ -3415,7 +3490,7 @@ name|EINTR
 condition|)
 block|{
 continue|continue;
-comment|/* Got SIGALRM, Do check a queue for dialing */
+comment|/* Got a signal - should have been dealt with */
 block|}
 name|perror
 argument_list|(
