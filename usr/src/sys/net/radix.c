@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1962,6 +1962,12 @@ name|rn_b
 operator|>=
 name|b_leaf
 operator|)
+operator|&&
+name|x
+operator|->
+name|rn_mklist
+operator|==
+literal|0
 condition|)
 block|{
 name|MKGet
@@ -2949,42 +2955,34 @@ operator|>=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|m
+for|for
+control|(
+name|mp
 operator|=
+operator|&
 name|x
 operator|->
 name|rn_mklist
-condition|)
-block|{
-while|while
-condition|(
-name|m
-operator|->
-name|rm_mklist
-condition|)
+init|;
 name|m
 operator|=
+operator|*
+name|mp
+condition|;
+control|)
+name|mp
+operator|=
+operator|&
 name|m
 operator|->
 name|rm_mklist
 expr_stmt|;
-name|m
-operator|->
-name|rm_mklist
+operator|*
+name|mp
 operator|=
 name|t
 operator|->
 name|rn_mklist
-expr_stmt|;
-block|}
-else|else
-name|x
-operator|->
-name|rn_mklist
-operator|=
-name|m
 expr_stmt|;
 block|}
 else|else
@@ -3045,7 +3043,13 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"rn_delete: Orphaned mask\n"
+literal|"%s %x at %x\n"
+argument_list|,
+literal|"rn_delete: Orphaned Mask"
+argument_list|,
+name|m
+argument_list|,
+name|x
 argument_list|)
 expr_stmt|;
 name|m
