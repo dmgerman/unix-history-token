@@ -4196,6 +4196,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 operator|(
@@ -4224,13 +4231,6 @@ condition|?
 name|NULL
 else|:
 name|ch
-expr_stmt|;
-name|snd_mtxunlock
-argument_list|(
-name|sc
-operator|->
-name|lock
-argument_list|)
 expr_stmt|;
 return|return
 name|r
