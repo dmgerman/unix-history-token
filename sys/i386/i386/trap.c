@@ -362,22 +362,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|void
-name|ast
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|trapframe
-operator|*
-name|framep
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|trap_pfault
