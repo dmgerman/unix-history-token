@@ -47,6 +47,52 @@ directive|include
 file|<sys/elf_generic.h>
 end_include
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* Auxiliary vector entry on initial stack */
+name|int
+name|a_type
+decl_stmt|;
+comment|/* Entry type. */
+union|union
+block|{
+name|long
+name|a_val
+decl_stmt|;
+comment|/* Integer value. */
+name|void
+modifier|*
+name|a_ptr
+decl_stmt|;
+comment|/* Address. */
+name|void
+function_decl|(
+modifier|*
+name|a_fcn
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Function pointer (not used). */
+block|}
+name|a_un
+union|;
+block|}
+name|Elf32_Auxinfo
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|__ElfType
+argument_list|(
+name|Auxinfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -66,6 +112,208 @@ end_define
 
 begin_comment
 comment|/*  * Relocation types.  */
+end_comment
+
+begin_comment
+comment|/* Values for a_type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_NULL
+value|0
+end_define
+
+begin_comment
+comment|/* Terminates the vector. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_IGNORE
+value|1
+end_define
+
+begin_comment
+comment|/* Ignored entry. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EXECFD
+value|2
+end_define
+
+begin_comment
+comment|/* File descriptor of program to load. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PHDR
+value|3
+end_define
+
+begin_comment
+comment|/* Program header of program already loaded. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PHENT
+value|4
+end_define
+
+begin_comment
+comment|/* Size of each program header entry. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PHNUM
+value|5
+end_define
+
+begin_comment
+comment|/* Number of program header entries. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PAGESZ
+value|6
+end_define
+
+begin_comment
+comment|/* Page size in bytes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_BASE
+value|7
+end_define
+
+begin_comment
+comment|/* Interpreter's base address. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_FLAGS
+value|8
+end_define
+
+begin_comment
+comment|/* Flags (unused). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_ENTRY
+value|9
+end_define
+
+begin_comment
+comment|/* Where interpreter should transfer control. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_BRK
+value|10
+end_define
+
+begin_comment
+comment|/* Starting point for sbrk and brk. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_DEBUG
+value|11
+end_define
+
+begin_comment
+comment|/* Debugging level. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_NOTELF
+value|10
+end_define
+
+begin_comment
+comment|/* Program is not ELF ?? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_UID
+value|11
+end_define
+
+begin_comment
+comment|/* Real uid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EUID
+value|12
+end_define
+
+begin_comment
+comment|/* Effective uid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_GID
+value|13
+end_define
+
+begin_comment
+comment|/* Real gid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EGID
+value|14
+end_define
+
+begin_comment
+comment|/* Effective gid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_COUNT
+value|15
+end_define
+
+begin_comment
+comment|/* Count of defined aux entry types. */
 end_comment
 
 begin_define
@@ -243,7 +491,18 @@ value|24
 end_define
 
 begin_comment
-comment|/* Add GOT-relative symbol address. * #define	R_ARM_GOTPC		25	/* Add PC-relative GOT table address. */
+comment|/* Add GOT-relative symbol address. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ARM_GOTPC
+value|25
+end_define
+
+begin_comment
+comment|/* Add PC-relative GOT table address. */
 end_comment
 
 begin_define
