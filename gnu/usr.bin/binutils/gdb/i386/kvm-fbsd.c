@@ -3575,7 +3575,40 @@ operator|~
 literal|0
 operator|)
 return|;
-comment|/*    * Read the second-level page table.    */
+if|if
+condition|(
+name|pte
+operator|&
+name|PG_PS
+condition|)
+block|{
+comment|/*        * No second-level page table; ptd describes one 4MB page.        * (We assume that the kernel wouldn't set PG_PS without enabling        * it cr0, and that the kernel doesn't support 36-bit physical        * addresses).        */
+define|#
+directive|define
+name|PAGE4M_MASK
+value|(NBPDR - 1)
+define|#
+directive|define
+name|PG_FRAME4M
+value|(~PAGE4M_MASK)
+name|addr
+operator|=
+operator|(
+name|pte
+operator|&
+name|PG_FRAME4M
+operator|)
+operator|+
+operator|(
+name|addr
+operator|&
+name|PAGE4M_MASK
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*        * Read the second-level page table.        */
 name|v
 operator|=
 operator|(
@@ -3652,6 +3685,7 @@ operator|&
 name|PAGE_MASK
 operator|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
