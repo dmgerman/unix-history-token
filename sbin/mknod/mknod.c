@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mknod.c,v 1.5 1997/02/22 14:32:38 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ name|endp
 operator|==
 name|argv
 index|[
-literal|3
+literal|4
 index|]
 operator|||
 operator|*
