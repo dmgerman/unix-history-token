@@ -3892,6 +3892,26 @@ begin_comment
 comment|/*  * Hook to idle the CPU when possible.  This currently only works in  * the !SMP case, as there is no clean way to ensure that a CPU will be  * woken when there is work available for it.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cpu_idle_hlt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -3900,6 +3920,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -3933,9 +3958,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|SMP
 if|if
 condition|(
 name|cpu_idle_hlt
@@ -3960,8 +3982,6 @@ comment|/* 			 * we must absolutely guarentee that hlt is the 			 * absolute nex
 asm|__asm __volatile("sti; hlt");
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
