@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3419,6 +3419,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return:  *	0	if not really an error  *<0	if we should do a retry  *>0	if a fatal error  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3451,9 +3455,9 @@ name|hp
 decl_stmt|;
 block|{
 name|int
-name|retry
+name|cond
 init|=
-literal|0
+literal|1
 decl_stmt|;
 name|sdsense
 index|[
@@ -3576,25 +3580,33 @@ operator|->
 name|info1
 argument_list|)
 expr_stmt|;
-comment|/* no sense or recovered error, try again */
-if|if
+switch|switch
 condition|(
 name|sp
 operator|->
 name|key
-operator|==
-literal|0
-operator|||
-name|sp
-operator|->
-name|key
-operator|==
-literal|1
 condition|)
-name|retry
+block|{
+comment|/* no sense, try again */
+case|case
+literal|0
+case|:
+name|cond
 operator|=
+operator|-
 literal|1
 expr_stmt|;
+break|break;
+comment|/* recovered error, not a problem */
+case|case
+literal|1
+case|:
+name|cond
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|printf
 argument_list|(
@@ -3604,7 +3616,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|retry
+name|cond
 operator|)
 return|;
 block|}
@@ -4274,7 +4286,7 @@ operator|->
 name|sc_hd
 decl_stmt|;
 name|int
-name|retry
+name|cond
 decl_stmt|;
 if|if
 condition|(
@@ -4336,7 +4348,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|retry
+name|cond
 operator|=
 name|sderror
 argument_list|(
@@ -4351,7 +4363,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|retry
+name|cond
+condition|)
+block|{
+if|if
+condition|(
+name|cond
+operator|<
+literal|0
 operator|&&
 name|sdtab
 index|[
@@ -4408,6 +4427,7 @@ name|b_error
 operator|=
 name|EIO
 expr_stmt|;
+block|}
 block|}
 name|sdfinish
 argument_list|(
