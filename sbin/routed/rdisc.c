@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.16 $"
+empty|#ident "$Revision: 1.1.1.4 $"
 end_empty
 
 begin_include
@@ -480,7 +480,7 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"\t%s preference=%#x"
+literal|"\t%s preference=%d"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -526,8 +526,7 @@ else|else
 block|{
 name|trace_act
 argument_list|(
-literal|"%s Router Solic. from %s to %s via %s"
-literal|" value=%#x\n"
+literal|"%s Router Solic. from %s to %s via %s value=%#x"
 argument_list|,
 name|act
 argument_list|,
@@ -636,8 +635,8 @@ parameter_list|,
 name|int
 name|on
 parameter_list|)
-block|{
 comment|/* 0=turn it off */
+block|{
 name|struct
 name|ip_mreq
 name|m
@@ -679,14 +678,6 @@ operator|->
 name|int_if_flags
 operator|&
 name|IFF_MULTICAST
-operator|)
-operator|||
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_ALIAS
 operator|)
 condition|)
 block|{
@@ -1054,7 +1045,7 @@ condition|)
 return|return;
 name|trace_act
 argument_list|(
-literal|"start suppying routes\n"
+literal|"start suppying routes"
 argument_list|)
 expr_stmt|;
 comment|/* Forget discovered routes. 	 */
@@ -1298,8 +1289,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"age 0.0.0.0 --> %s"
-literal|" via %s\n"
+literal|"age 0.0.0.0 --> %s via %s"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -1602,8 +1592,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"discovered route is bad"
-literal|"--re-solicit routers via %s\n"
+literal|"discovered route is bad--re-solicit routers via %s"
 argument_list|,
 name|ifp
 operator|->
@@ -1884,7 +1873,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"turn off Router Discovery client\n"
+literal|"turn off Router Discovery client"
 argument_list|)
 expr_stmt|;
 name|rdisc_ok
@@ -1969,7 +1958,7 @@ block|{
 name|trace_act
 argument_list|(
 literal|"turn on Router Discovery client"
-literal|" using %s via %s\n"
+literal|" using %s via %s"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -1995,7 +1984,7 @@ block|{
 name|trace_act
 argument_list|(
 literal|"switch Router Discovery from"
-literal|" %s via %s to %s via %s\n"
+literal|" %s via %s to %s via %s"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -2082,7 +2071,9 @@ name|new_drp
 operator|->
 name|dr_gate
 argument_list|,
-literal|0
+name|HOPCNT_INFINITY
+operator|-
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -2135,7 +2126,8 @@ name|ifp
 parameter_list|)
 block|{
 specifier|static
-name|naddr
+name|struct
+name|msg_limit
 name|bad_gate
 decl_stmt|;
 name|struct
@@ -2159,15 +2151,13 @@ name|gate
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|bad_gate
-operator|!=
-name|from
-condition|)
-block|{
-name|msglog
+name|msglim
 argument_list|(
+operator|&
+name|bad_gate
+argument_list|,
+name|from
+argument_list|,
 literal|"router %s advertising bad gateway %s"
 argument_list|,
 name|naddr_ntoa
@@ -2181,11 +2171,6 @@ name|gate
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bad_gate
-operator|=
-name|from
-expr_stmt|;
-block|}
 return|return;
 block|}
 comment|/* ignore pointers to ourself and routes via unreachable networks 	 */
@@ -2205,7 +2190,7 @@ condition|)
 block|{
 name|trace_pkt
 argument_list|(
-literal|"\tdiscard Router Discovery Ad pointing at us\n"
+literal|"    discard Router Discovery Ad pointing at us"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2229,8 +2214,8 @@ condition|)
 block|{
 name|trace_pkt
 argument_list|(
-literal|"\tdiscard Router Discovery Ad"
-literal|" toward unreachable net\n"
+literal|"    discard Router Discovery Ad"
+literal|" toward unreachable net"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2721,6 +2706,7 @@ case|case
 literal|0
 case|:
 comment|/* unicast */
+default|default:
 name|msg
 operator|=
 literal|"Send"
@@ -2792,7 +2778,7 @@ block|{
 name|trace_act
 argument_list|(
 literal|"abort multicast output via %s"
-literal|" with duplicate address\n"
+literal|" with duplicate address"
 argument_list|,
 name|ifp
 operator|->
@@ -3216,6 +3202,12 @@ name|interface
 modifier|*
 name|ifp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|supplier
+condition|)
+return|return;
 name|rdisc_timer
 operator|.
 name|tv_sec
@@ -3252,10 +3244,6 @@ name|int_state
 operator|&
 operator|(
 name|IS_NO_ADV_OUT
-operator||
-name|IS_PASSIVE
-operator||
-name|IS_ALIAS
 operator||
 name|IS_BROKE
 operator|)
@@ -3415,6 +3403,11 @@ name|union
 name|ad_u
 name|u
 decl_stmt|;
+if|if
+condition|(
+name|supplier
+condition|)
+return|return;
 name|rdisc_timer
 operator|.
 name|tv_sec
@@ -3451,10 +3444,6 @@ name|int_state
 operator|&
 operator|(
 name|IS_NO_SOL_OUT
-operator||
-name|IS_PASSIVE
-operator||
-name|IS_ALIAS
 operator||
 name|IS_BROKE
 operator|)
@@ -3646,6 +3635,11 @@ parameter_list|,
 name|naddr
 name|from
 parameter_list|,
+name|struct
+name|interface
+modifier|*
+name|ifp
+parameter_list|,
 name|naddr
 name|to
 parameter_list|,
@@ -3658,33 +3652,10 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|struct
-name|interface
-modifier|*
-name|ifp
-decl_stmt|;
 name|char
 modifier|*
 name|type
 decl_stmt|;
-comment|/* If we could tell the interface on which a packet from address 0 	 * arrived, we could deal with such solicitations. 	 */
-name|ifp
-operator|=
-operator|(
-operator|(
-name|from
-operator|==
-literal|0
-operator|)
-condition|?
-literal|0
-else|:
-name|iflookup
-argument_list|(
-name|from
-argument_list|)
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -3737,8 +3708,7 @@ condition|)
 block|{
 name|trace_pkt
 argument_list|(
-literal|"unrecognized ICMP Router"
-literal|" %s code=%d from %s to %s\n"
+literal|"unrecognized ICMP Router %s code=%d from %s to %s"
 argument_list|,
 name|type
 argument_list|,
@@ -3820,11 +3790,22 @@ name|void
 parameter_list|)
 block|{
 specifier|static
-name|naddr
+name|struct
+name|msg_limit
 name|bad_asize
 decl_stmt|,
 name|bad_len
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PASSIFNAME
+specifier|static
+name|struct
+name|msg_limit
+name|bad_name
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_in
 name|from
@@ -3838,6 +3819,19 @@ name|cc
 decl_stmt|,
 name|hlen
 decl_stmt|;
+struct|struct
+block|{
+ifdef|#
+directive|ifdef
+name|USE_PASSIFNAME
+name|char
+name|ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 union|union
 block|{
 name|struct
@@ -3861,6 +3855,9 @@ decl_stmt|;
 block|}
 name|pkt
 union|;
+block|}
+name|buf
+struct|;
 name|union
 name|ad_u
 modifier|*
@@ -3895,11 +3892,11 @@ argument_list|(
 name|rdisc_sock
 argument_list|,
 operator|&
-name|pkt
+name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pkt
+name|buf
 argument_list|)
 argument_list|,
 literal|0
@@ -3959,8 +3956,46 @@ argument_list|,
 name|fromlen
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PASSIFNAME
+if|if
+condition|(
+operator|(
+name|cc
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|buf
+operator|.
+name|ifname
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|logbad
+argument_list|(
+literal|0
+argument_list|,
+literal|"missing USE_PASSIFNAME; only %d bytes"
+argument_list|,
+name|cc
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+operator|.
+name|ifname
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|hlen
 operator|=
+name|buf
+operator|.
 name|pkt
 operator|.
 name|ip
@@ -3986,6 +4021,8 @@ name|ad_u
 operator|*
 operator|)
 operator|&
+name|buf
+operator|.
 name|pkt
 operator|.
 name|b
@@ -3997,6 +4034,76 @@ name|cc
 operator|-=
 name|hlen
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PASSIFNAME
+name|ifp
+operator|=
+name|ifwithname
+argument_list|(
+name|buf
+operator|.
+name|ifname
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+literal|0
+condition|)
+name|msglim
+argument_list|(
+operator|&
+name|bad_name
+argument_list|,
+name|from
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|,
+literal|"impossible rdisc if_ name %.*s"
+argument_list|,
+name|IFNAMSIZ
+argument_list|,
+name|buf
+operator|.
+name|ifname
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* If we could tell the interface on which a packet from 		 * address 0 arrived, we could deal with such solicitations. 		 */
+name|ifp
+operator|=
+operator|(
+operator|(
+name|from
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+name|iflookup
+argument_list|(
+name|from
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|=
 name|ck_icmp
@@ -4009,6 +4116,10 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|,
+name|ifp
+argument_list|,
+name|buf
+operator|.
 name|pkt
 operator|.
 name|ip
@@ -4047,7 +4158,8 @@ condition|)
 block|{
 name|trace_pkt
 argument_list|(
-literal|"\tdiscard our own Router Discovery msg\n"
+literal|"    "
+literal|"discard our own Router Discovery message"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4087,21 +4199,18 @@ index|]
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
+name|msglim
+argument_list|(
+operator|&
 name|bad_asize
-operator|!=
+argument_list|,
 name|from
 operator|.
 name|sin_addr
 operator|.
 name|s_addr
-condition|)
-block|{
-name|msglog
-argument_list|(
-literal|"intolerable rdisc address"
-literal|" size=%d"
+argument_list|,
+literal|"intolerable rdisc address size=%d"
 argument_list|,
 name|p
 operator|->
@@ -4110,15 +4219,6 @@ operator|.
 name|icmp_ad_asize
 argument_list|)
 expr_stmt|;
-name|bad_asize
-operator|=
-name|from
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-expr_stmt|;
-block|}
 continue|continue;
 block|}
 if|if
@@ -4134,7 +4234,7 @@ condition|)
 block|{
 name|trace_pkt
 argument_list|(
-literal|"\tempty?\n"
+literal|"    empty?"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4182,21 +4282,19 @@ operator|)
 operator|)
 condition|)
 block|{
-if|if
-condition|(
+name|msglim
+argument_list|(
+operator|&
 name|bad_len
-operator|!=
+argument_list|,
 name|from
 operator|.
 name|sin_addr
 operator|.
 name|s_addr
-condition|)
-block|{
-name|msglog
-argument_list|(
-literal|"rdisc length %d does not"
-literal|" match ad_num %d"
+argument_list|,
+literal|"rdisc length %d does not match ad_num"
+literal|" %d"
 argument_list|,
 name|cc
 argument_list|,
@@ -4207,15 +4305,6 @@ operator|.
 name|icmp_ad_num
 argument_list|)
 expr_stmt|;
-name|bad_len
-operator|=
-name|from
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-expr_stmt|;
-block|}
 continue|continue;
 block|}
 if|if

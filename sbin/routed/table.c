@@ -59,10 +59,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$Revision: 1.1.1.1 $"
-end_empty
-
 begin_include
 include|#
 directive|include
@@ -145,6 +141,10 @@ name|int
 name|total_routes
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* zap any old routes through this gateway */
+end_comment
 
 begin_decl_stmt
 name|naddr
@@ -2033,7 +2033,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Trim a mask in a sockaddr  *	Produce a length of 0 for an address of 0.  *	Otherwise produce the index of the first zero byte.  */
+comment|/* Trim a mask in a sockaddr  *	Produce the index of the first zero byte.  *	i.e. Produce a index of 4 for an mask of 0. (default route)  */
 end_comment
 
 begin_function
@@ -2065,25 +2065,13 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-if|if
-condition|(
 name|ap
 operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
-literal|0
-condition|)
-block|{
-name|ap
-operator|->
-name|sin_len
+name|sin_port
 operator|=
-literal|0
+literal|0xffff
 expr_stmt|;
-return|return;
-block|}
+comment|/* buffer zone for default route */
 name|cp
 operator|=
 operator|(
@@ -2110,6 +2098,8 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/*ap->sin_port = 0x0;*/
+comment|/* may not be needed (who cares?)*/
 name|ap
 operator|->
 name|sin_len
@@ -2414,27 +2404,6 @@ operator|.
 name|w_mask
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|w
-operator|.
-name|w_mask
-operator|.
-name|sin_len
-operator|==
-literal|0
-condition|)
-name|w
-operator|.
-name|w_mask
-operator|.
-name|sin_len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-expr_stmt|;
 name|w
 operator|.
 name|w_rtm
@@ -2547,7 +2516,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"route to %s disappeared before %s\n"
+literal|"route to %s disappeared before %s"
 argument_list|,
 name|addrname
 argument_list|(
@@ -2733,6 +2702,7 @@ value|30
 name|time_t
 name|k_redirect_time
 decl_stmt|;
+comment|/* when redirected route 1st seen */
 block|}
 modifier|*
 name|khash_bins
@@ -3168,7 +3138,7 @@ else|else
 block|{
 name|msglog
 argument_list|(
-literal|"punt %s without mask"
+literal|"ignore %s without mask"
 argument_list|,
 name|rtm_type_name
 argument_list|(
@@ -3201,7 +3171,7 @@ condition|)
 block|{
 name|msglog
 argument_list|(
-literal|"punt %s without gateway"
+literal|"ignore %s without gateway"
 argument_list|,
 name|rtm_type_name
 argument_list|(
@@ -3359,10 +3329,61 @@ condition|)
 block|{
 if|if
 condition|(
+name|INFO_AUTHOR
+argument_list|(
+name|info
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|INFO_AUTHOR
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+condition|)
+name|ifp
+operator|=
+name|iflookup
+argument_list|(
+name|S_ADDR
+argument_list|(
+name|INFO_AUTHOR
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|ifp
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|supplier
+operator|&&
+operator|(
+name|ifp
+operator|==
+literal|0
+operator|||
+operator|!
+operator|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_REDIRECT_OK
+operator|)
+operator|)
 condition|)
 block|{
-comment|/* Routers are not supposed to listen to redirects, 			 * so delete it. 			 */
+comment|/* Routers are not supposed to listen to redirects, 			 * so delete it if it came via an unknown interface 			 * or the interface does not have special permission. 			 */
 name|k
 operator|->
 name|k_state
@@ -3385,8 +3406,8 @@ argument_list|)
 expr_stmt|;
 name|trace_act
 argument_list|(
-literal|"mark redirected %s --> %s for deletion"
-literal|" since this is a router\n"
+literal|"mark for deletion redirected %s --> %s"
+literal|" via %s"
 argument_list|,
 name|addrname
 argument_list|(
@@ -3407,6 +3428,14 @@ name|k
 operator|->
 name|k_gate
 argument_list|)
+argument_list|,
+name|ifp
+condition|?
+name|ifp
+operator|->
+name|int_name
+else|:
+literal|"unknown interface"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3425,6 +3454,39 @@ operator|=
 name|now
 operator|.
 name|tv_sec
+expr_stmt|;
+name|trace_act
+argument_list|(
+literal|"accept redirected %s --> %s via %s"
+argument_list|,
+name|addrname
+argument_list|(
+name|k
+operator|->
+name|k_dst
+argument_list|,
+name|k
+operator|->
+name|k_mask
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|k
+operator|->
+name|k_gate
+argument_list|)
+argument_list|,
+name|ifp
+condition|?
+name|ifp
+operator|->
+name|int_name
+else|:
+literal|"unknown interface"
+argument_list|)
 expr_stmt|;
 block|}
 return|return;
@@ -3459,27 +3521,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Put static routes with real metrics into the daemon table so 	 * they can be advertised. 	 * 	 * Find the interface concerned 	 */
-name|ifp
-operator|=
-name|iflookup
-argument_list|(
-name|k
-operator|->
-name|k_gate
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* if there is no known interface, 		 * maybe there is a new interface 		 */
-name|ifinit
-argument_list|()
-expr_stmt|;
+comment|/* Put static routes with real metrics into the daemon table so 	 * they can be advertised. 	 * 	 * Find the interface toward the gateway. 	 */
 name|ifp
 operator|=
 name|iflookup
@@ -3522,7 +3564,6 @@ name|k_gate
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|kern_check_static
 argument_list|(
 name|k
@@ -3572,9 +3613,9 @@ operator|!=
 name|AF_INET
 condition|)
 block|{
-name|msglog
+name|trace_act
 argument_list|(
-literal|"punt %s without gateway"
+literal|"ignore %s without gateway"
 argument_list|,
 name|rtm_type_name
 argument_list|(
@@ -4290,7 +4331,7 @@ condition|)
 name|trace_act
 argument_list|(
 literal|"note %s with flags %#x"
-literal|" for index #%d\n"
+literal|" for index #%d"
 argument_list|,
 name|rtm_type_name
 argument_list|(
@@ -4319,7 +4360,7 @@ expr_stmt|;
 else|else
 name|trace_act
 argument_list|(
-literal|"note %s with flags %#x for %s\n"
+literal|"note %s with flags %#x for %s"
 argument_list|,
 name|rtm_type_name
 argument_list|(
@@ -4487,7 +4528,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"ignore %s without dst\n"
+literal|"ignore %s without dst"
 argument_list|,
 name|str
 argument_list|)
@@ -4509,7 +4550,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"ignore %s for AF %d\n"
+literal|"ignore %s for AF %d"
 argument_list|,
 name|str
 argument_list|,
@@ -4621,7 +4662,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"ignore multicast %s\n"
+literal|"ignore multicast %s"
 argument_list|,
 name|str
 argument_list|)
@@ -4729,7 +4770,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"ignore %s with \"%s\" error\n"
+literal|"ignore %s with \"%s\" error"
 argument_list|,
 name|str
 argument_list|,
@@ -4750,7 +4791,7 @@ else|else
 block|{
 name|trace_act
 argument_list|(
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|str
 argument_list|)
@@ -4790,7 +4831,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"ignore %s with \"%s\" error\n"
+literal|"ignore %s with \"%s\" error"
 argument_list|,
 name|str
 argument_list|,
@@ -4811,7 +4852,7 @@ else|else
 block|{
 name|trace_act
 argument_list|(
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|str
 argument_list|)
@@ -4839,7 +4880,7 @@ name|RTM_LOSING
 case|:
 name|trace_act
 argument_list|(
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|str
 argument_list|)
@@ -4861,7 +4902,7 @@ break|break;
 default|default:
 name|trace_act
 argument_list|(
-literal|"ignore %s\n"
+literal|"ignore %s"
 argument_list|,
 name|str
 argument_list|)
@@ -5294,7 +5335,6 @@ operator|==
 literal|0
 operator|||
 operator|(
-operator|(
 name|RT
 operator|->
 name|rt_ifp
@@ -5302,15 +5342,6 @@ operator|->
 name|int_state
 operator|&
 name|IS_REMOTE
-operator|)
-operator|&&
-name|RT
-operator|->
-name|rt_ifp
-operator|->
-name|int_metric
-operator|==
-literal|0
 operator|)
 condition|)
 name|ags
@@ -6035,7 +6066,7 @@ name|tv_sec
 expr_stmt|;
 name|trace_act
 argument_list|(
-literal|"mark redirected %s --> %s for deletion\n"
+literal|"mark redirected %s --> %s for deletion"
 argument_list|,
 name|addrname
 argument_list|(
@@ -8192,24 +8223,35 @@ name|interface
 modifier|*
 name|ifp
 decl_stmt|;
+name|int
+name|need_query
+init|=
+literal|0
+decl_stmt|;
+comment|/* If not listening to RIP, there is no need to age the routes in 	 * the table. 	 */
 name|age_timer
 operator|.
 name|tv_sec
 operator|=
+operator|(
 name|now
 operator|.
 name|tv_sec
 operator|+
 operator|(
+operator|(
 name|rip_sock
 operator|<
 literal|0
+operator|)
 condition|?
 name|NEVER
 else|:
 name|SUPPLY_INTERVAL
 operator|)
+operator|)
 expr_stmt|;
+comment|/* Check for dead IS_REMOTE interfaces by timing their 	 * transmissions. 	 */
 for|for
 control|(
 name|ifp
@@ -8225,9 +8267,9 @@ operator|->
 name|int_next
 control|)
 block|{
-comment|/* Check for dead IS_REMOTE interfaces by timing their 		 * transmissions. 		 */
 if|if
 condition|(
+operator|!
 operator|(
 name|ifp
 operator|->
@@ -8235,38 +8277,42 @@ name|int_state
 operator|&
 name|IS_REMOTE
 operator|)
-operator|&&
-operator|!
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_PASSIVE
-operator|)
-operator|&&
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_ACTIVE
-operator|)
 condition|)
-block|{
-name|LIM_SEC
+continue|continue;
+comment|/* ignore unreachable remote interfaces */
+if|if
+condition|(
+operator|!
+name|check_remote
 argument_list|(
-name|age_timer
+name|ifp
+argument_list|)
+condition|)
+continue|continue;
+comment|/* Restore remote interface that has become reachable 		 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_BROKE
+condition|)
+name|if_ok
+argument_list|(
+name|ifp
 argument_list|,
-name|now
-operator|.
-name|tv_sec
-operator|+
-name|SUPPLY_INTERVAL
+literal|"remote "
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ifp
+operator|->
+name|int_act_time
+operator|!=
+name|NEVER
+operator|&&
 name|now
 operator|.
 name|tv_sec
@@ -8276,21 +8322,12 @@ operator|->
 name|int_act_time
 operator|>
 name|EXPIRE_TIME
-operator|&&
-operator|!
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_BROKE
-operator|)
 condition|)
 block|{
 name|msglog
 argument_list|(
-literal|"remote interface %s to %s timed out"
-literal|"--turned off"
+literal|"remote interface %s to %s timed out after"
+literal|" %d:%d"
 argument_list|,
 name|ifp
 operator|->
@@ -8300,16 +8337,62 @@ name|naddr_ntoa
 argument_list|(
 name|ifp
 operator|->
-name|int_addr
+name|int_dstaddr
 argument_list|)
+argument_list|,
+operator|(
+name|now
+operator|.
+name|tv_sec
+operator|-
+name|ifp
+operator|->
+name|int_act_time
+operator|)
+operator|/
+literal|60
+argument_list|,
+operator|(
+name|now
+operator|.
+name|tv_sec
+operator|-
+name|ifp
+operator|->
+name|int_act_time
+operator|)
+operator|%
+literal|60
 argument_list|)
 expr_stmt|;
-name|if_bad
+name|if_sick
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If we have not heard from the other router 		 * recently, ask it. 		 */
+if|if
+condition|(
+name|now
+operator|.
+name|tv_sec
+operator|>=
+name|ifp
+operator|->
+name|int_query_time
+condition|)
+block|{
+name|ifp
+operator|->
+name|int_query_time
+operator|=
+name|NEVER
+expr_stmt|;
+name|need_query
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 comment|/* Age routes. */
@@ -8331,6 +8414,14 @@ argument_list|)
 expr_stmt|;
 comment|/* Update the kernel routing table. */
 name|fix_kern
+argument_list|()
+expr_stmt|;
+comment|/* poke reticent remote gateways */
+if|if
+condition|(
+name|need_query
+condition|)
+name|rip_query
 argument_list|()
 expr_stmt|;
 block|}

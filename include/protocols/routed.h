@@ -27,7 +27,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-empty|#ident "$Revision: 1.9 $"
+empty|#ident "$Revision: 1.10 $"
 comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
 define|#
 directive|define
@@ -123,25 +123,71 @@ struct|struct
 name|netauth
 block|{
 name|u_int16_t
+name|a_family
+decl_stmt|;
+comment|/* always RIP_AF_AUTH */
+name|u_int16_t
 name|a_type
 decl_stmt|;
+define|#
+directive|define
+name|RIP_AUTH_NONE
+value|0
 define|#
 directive|define
 name|RIP_AUTH_PW
 value|htons(2)
 comment|/* password type */
+define|#
+directive|define
+name|RIP_AUTH_MD5
+value|htons(3)
+comment|/* Keyed MD5 */
 union|union
 block|{
 define|#
 directive|define
 name|RIP_AUTH_PW_LEN
 value|16
-name|int8_t
+name|u_int8_t
 name|au_pw
 index|[
 name|RIP_AUTH_PW_LEN
 index|]
 decl_stmt|;
+struct|struct
+name|a_md5
+block|{
+name|int16_t
+name|md5_pkt_len
+decl_stmt|;
+comment|/* RIP-II packet length */
+name|int8_t
+name|md5_keyid
+decl_stmt|;
+comment|/* key ID and auth data len */
+name|int8_t
+name|md5_auth_len
+decl_stmt|;
+comment|/* 16 */
+name|u_int32_t
+name|md5_seqno
+decl_stmt|;
+comment|/* sequence number */
+name|u_int32_t
+name|rsvd
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* must be 0 */
+define|#
+directive|define
+name|RIP_AUTH_MD5_LEN
+value|RIP_AUTH_PW_LEN
+block|}
+name|a_md5
+struct|;
 block|}
 name|au
 union|;
@@ -192,6 +238,10 @@ define|#
 directive|define
 name|rip_nets
 value|ripun.ru_nets
+define|#
+directive|define
+name|rip_auths
+value|ripun.ru_auth
 define|#
 directive|define
 name|rip_tracefile
