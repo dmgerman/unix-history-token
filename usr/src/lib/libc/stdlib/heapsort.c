@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)heapsort.c	5.2 (Berkeley) %G%"
+literal|"@(#)heapsort.c	1.3 (Berkeley) 7/29/91"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,62 +74,85 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	cnt = size; \ 	do { \ 		ch = *a; \ 		*a++ = *b; \ 		*b++ = ch; \ 	} while (--cnt); \ }
+value|{ \ 	int cnt = size; \ 	char	ch; \ 	do { \ 		ch = *a; \ 		*a++ = *b; \ 		*b++ = ch; \ 	} while (--cnt); \ }
 end_define
 
 begin_comment
-comment|/*  * Build the list into a heap, where a heap is defined such that for  * the records K1 ... KN, Kj/2>= Kj for 1<= j/2<= j<= N.  *  * There two cases.  If j == nmemb, select largest of Ki and Kj.  If  * j< nmemb, select largest of Ki, Kj and Kj+1.  *  * The initial value depends on if we're building the initial heap or  * reconstructing it after saving a value.  */
+comment|/*  * Assign one block of size size to another.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HEAP
+name|ASSIGN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|{ \ 	int cnt = size; \ 	char *t1 = a, *t2 = b; \ 	do { \ 		*t1++ = *t2++; \ 	} while (--cnt); \ }
+end_define
+
+begin_comment
+comment|/*  * Build the list into a heap, where a heap is defined such that for  * the records K1 ... KN, Kj/2>= Kj for 1<= j/2<= j<= N.  *  * There two cases.  If j == nmemb, select largest of Ki and Kj.  If  * j< nmemb, select largest of Ki, Kj and Kj+1.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CREATE
 parameter_list|(
 name|initval
 parameter_list|)
-value|{ \ 	for (i = initval; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		if (compar(p, t)<= 0) \ 			break; \ 		SWAP(t, p); \ 	} \ }
+value|{ \ 	int i,j; \ 	char *t,*p; \ 	for (i = initval; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		if (compar(p,t)<= 0) \ 			break; \ 		SWAP(t, p); \ 	} \ }
+end_define
+
+begin_comment
+comment|/*  * Select the top of the heap and 'heapify'.  Since by far the most expensive  * action is the call to the compar function, an considerable optimization  * in the average case can be achieved due to the fact that k, the displaced  * elememt, is ususally quite small, so it would be preferable to first  * heapify, always maintaining the invariant that the larger child is copied  * over its parent's record.  *  * Then, starting from the *bottom* of the heap, finding k's correct  * place, again maintianing the invariant.  As a result of the invariant  * no element is 'lost' when k is assigned it's correct place in the heap.  *  * The time savings from this optimization are on the order of 15-20% for the  * average case. See Knuth, Vol. 3, page 158, problem 18.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SELECT
+parameter_list|(
+name|initval
+parameter_list|)
+value|{ \ 	int	i,j; \ 	char	*p,*t; \ 	for (i = initval; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		ASSIGN(t, p); \ 	} \ 	while (1) { \ 		j = i; \ 		i = j / 2; \ 		p = (char *)bot + j * size; \ 		t = (char *)bot + i * size; \ 		if ( j == initval || compar(k, t)< 0) { \ 			ASSIGN(p, k); \ 			break; \ 		} \ 		ASSIGN(p, t); \ 	} \ }
 end_define
 
 begin_comment
 comment|/*  * Heapsort -- Knuth, Vol. 3, page 145.  Runs in O (N lg N), both average  * and worst.  While heapsort is faster than the worst case of quicksort,  * the BSD quicksort does median selection so that the chance of finding  * a data set that will trigger the worst case is nonexistent.  Heapsort's  * only advantage over quicksort is that it requires no additional memory.  */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|heapsort
-argument_list|(
+parameter_list|(
 name|bot
-argument_list|,
+parameter_list|,
 name|nmemb
-argument_list|,
+parameter_list|,
 name|size
-argument_list|,
+parameter_list|,
 name|compar
-argument_list|)
-specifier|register
+parameter_list|)
 name|void
-operator|*
+modifier|*
 name|bot
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
+decl_stmt|;
 name|size_t
 name|nmemb
 decl_stmt|,
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|int
-argument_list|(
-argument|*compar
-argument_list|)
-end_macro
+function_decl|int
+parameter_list|(
+function_decl|*compar
+end_function_decl
 
 begin_expr_stmt
+unit|)
 name|__P
 argument_list|(
 operator|(
@@ -147,7 +170,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -155,16 +177,19 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|,
-name|ch
+modifier|*
+name|k
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|size
+argument_list|)
 decl_stmt|;
-specifier|register
 name|int
-name|cnt
-decl_stmt|,
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
 name|l
 decl_stmt|;
 if|if
@@ -214,12 +239,12 @@ operator|--
 name|l
 condition|;
 control|)
-name|HEAP
+name|CREATE
 argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For each element of the heap, save the largest element into its 	 * final slot, then recreate the heap. 	 */
+comment|/* 	 * For each element of the heap, save the largest element into its 	 * final slot, save the displaced element (k), then recreate the 	 * heap. 	 */
 while|while
 condition|(
 name|nmemb
@@ -249,17 +274,24 @@ name|nmemb
 operator|*
 name|size
 expr_stmt|;
-name|SWAP
+name|ASSIGN
 argument_list|(
-name|p
+name|k
 argument_list|,
 name|t
+argument_list|)
+expr_stmt|;
+name|ASSIGN
+argument_list|(
+name|t
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|--
 name|nmemb
 expr_stmt|;
-name|HEAP
+name|SELECT
 argument_list|(
 literal|1
 argument_list|)
