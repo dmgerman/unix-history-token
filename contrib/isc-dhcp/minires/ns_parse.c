@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 1.2 2001/01/16 22:33:08 mellon Exp $"
+literal|"$Id: ns_parse.c,v 1.2.2.1 2002/02/19 19:16:52 mellon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,16 +93,6 @@ end_function_decl
 begin_comment
 comment|/* Macros. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RETERR
-parameter_list|(
-name|err
-parameter_list|)
-value|do { errno = (err); return (-1); } while (0)
-end_define
 
 begin_comment
 comment|/* Public. */
@@ -238,7 +228,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|isc_result_t
 name|ns_skiprr
 parameter_list|(
 specifier|const
@@ -256,6 +246,10 @@ name|section
 parameter_list|,
 name|int
 name|count
+parameter_list|,
+name|int
+modifier|*
+name|rc
 parameter_list|)
 block|{
 specifier|const
@@ -300,11 +294,9 @@ name|b
 operator|<
 literal|0
 condition|)
-name|RETERR
-argument_list|(
-name|EMSGSIZE
-argument_list|)
-expr_stmt|;
+return|return
+name|ISC_R_INCOMPLETE
+return|;
 name|ptr
 operator|+=
 name|b
@@ -333,11 +325,9 @@ name|NS_INT16SZ
 operator|>
 name|eom
 condition|)
-name|RETERR
-argument_list|(
-name|EMSGSIZE
-argument_list|)
-expr_stmt|;
+return|return
+name|ISC_R_INCOMPLETE
+return|;
 name|ptr
 operator|+=
 name|NS_INT32SZ
@@ -367,23 +357,28 @@ name|ptr
 operator|>
 name|eom
 condition|)
-name|RETERR
-argument_list|(
-name|EMSGSIZE
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
+name|ISC_R_INCOMPLETE
+return|;
+if|if
+condition|(
+name|rc
+condition|)
+operator|*
+name|rc
+operator|=
 name|ptr
 operator|-
 name|optr
-operator|)
+expr_stmt|;
+return|return
+name|ISC_R_SUCCESS
 return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|isc_result_t
 name|ns_initparse
 parameter_list|(
 specifier|const
@@ -442,11 +437,9 @@ name|NS_INT16SZ
 operator|>
 name|eom
 condition|)
-name|RETERR
-argument_list|(
-name|EMSGSIZE
-argument_list|)
-expr_stmt|;
+return|return
+name|ISC_R_INCOMPLETE
+return|;
 name|handle
 operator|->
 name|_id
@@ -468,11 +461,9 @@ name|NS_INT16SZ
 operator|>
 name|eom
 condition|)
-name|RETERR
-argument_list|(
-name|EMSGSIZE
-argument_list|)
-expr_stmt|;
+return|return
+name|ISC_R_INCOMPLETE
+return|;
 name|handle
 operator|->
 name|_flags
@@ -508,11 +499,9 @@ name|NS_INT16SZ
 operator|>
 name|eom
 condition|)
-name|RETERR
-argument_list|(
-name|EMSGSIZE
-argument_list|)
-expr_stmt|;
+return|return
+name|ISC_R_INCOMPLETE
+return|;
 name|handle
 operator|->
 name|_counts
@@ -567,6 +556,9 @@ else|else
 block|{
 name|int
 name|b
+decl_stmt|;
+name|isc_result_t
+name|status
 init|=
 name|ns_skiprr
 argument_list|(
@@ -585,19 +577,19 @@ name|_counts
 index|[
 name|i
 index|]
+argument_list|,
+operator|&
+name|b
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|b
-operator|<
-literal|0
+name|status
+operator|!=
+name|ISC_R_SUCCESS
 condition|)
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|STATUS
 return|;
 name|handle
 operator|->
@@ -619,11 +611,9 @@ name|msg
 operator|!=
 name|eom
 condition|)
-name|RETERR
-argument_list|(
-name|EMSGSIZE
-argument_list|)
-expr_stmt|;
+return|return
+name|ISC_R_INCOMPLETE
+return|;
 name|setsection
 argument_list|(
 name|handle
@@ -632,9 +622,7 @@ name|ns_s_max
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|ISC_R_SUCCESS
 return|;
 block|}
 end_function
@@ -660,6 +648,9 @@ parameter_list|)
 block|{
 name|int
 name|b
+decl_stmt|;
+name|isc_result_t
+name|status
 decl_stmt|;
 comment|/* Make section right. */
 if|if
@@ -722,11 +713,9 @@ operator|)
 name|section
 index|]
 condition|)
-name|RETERR
-argument_list|(
-name|ENODEV
-argument_list|)
-expr_stmt|;
+return|return
+name|ISC_R_UNKNOWNATTRIBUTE
+return|;
 if|if
 condition|(
 name|rrnum
@@ -751,7 +740,7 @@ operator|->
 name|_rrnum
 condition|)
 block|{
-name|b
+name|status
 operator|=
 name|ns_skiprr
 argument_list|(
@@ -770,19 +759,19 @@ operator|-
 name|handle
 operator|->
 name|_rrnum
+argument_list|,
+operator|&
+name|b
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|b
-operator|<
-literal|0
+name|status
+operator|!=
+name|ISC_R_SUCCESS
 condition|)
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|status
 return|;
 name|handle
 operator|->
@@ -828,10 +817,7 @@ operator|<
 literal|0
 condition|)
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|ISC_R_FORMERR
 return|;
 name|handle
 operator|->
@@ -854,7 +840,7 @@ operator|->
 name|_eom
 condition|)
 return|return
-name|ISC_R_NOSPACE
+name|ISC_R_INCOMPLETE
 return|;
 name|rr
 operator|->
@@ -933,7 +919,7 @@ operator|->
 name|_eom
 condition|)
 return|return
-name|ISC_R_NOSPACE
+name|ISC_R_INCOMPLETE
 return|;
 name|rr
 operator|->
@@ -984,7 +970,7 @@ operator|->
 name|_eom
 condition|)
 return|return
-name|ISC_R_NOSPACE
+name|ISC_R_INCOMPLETE
 return|;
 name|rr
 operator|->

@@ -144,6 +144,16 @@ comment|/* #define DEBUG_FAILOVER_TIMING */
 end_comment
 
 begin_comment
+comment|/* Define this if you want all leases written to the lease file, even if    they are free leases that have never been used. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG_DUMP_ALL_LEASES
+end_define
+
+begin_comment
 comment|/* Define this if you want DHCP failover protocol support in the DHCP    server. */
 end_comment
 

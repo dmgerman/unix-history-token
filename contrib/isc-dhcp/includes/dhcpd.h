@@ -863,13 +863,9 @@ name|FTS_BACKUP
 init|=
 literal|7
 block|,
-name|FTS_RESERVED
+name|FTS_LAST
 init|=
 literal|8
-block|,
-name|FTS_BOOTP
-init|=
-literal|9
 block|}
 name|binding_state_t
 typedef|;
@@ -993,6 +989,10 @@ name|STATIC_LEASE
 value|1
 define|#
 directive|define
+name|BOOTP_LEASE
+value|2
+define|#
+directive|define
 name|PERSISTENT_FLAGS
 value|(ON_ACK_QUEUE | ON_UPDATE_QUEUE)
 define|#
@@ -1011,6 +1011,10 @@ define|#
 directive|define
 name|UNICAST_BROADCAST_HACK
 value|64
+define|#
+directive|define
+name|ON_DEFERRED_QUEUE
+value|128
 define|#
 directive|define
 name|EPHEMERAL_FLAGS
@@ -1038,6 +1042,18 @@ argument_list|)
 operator|)
 argument_list|)
 name|next_binding_state
+decl_stmt|;
+name|binding_state_t
+name|__attribute__
+argument_list|(
+operator|(
+name|mode
+argument_list|(
+name|__byte__
+argument_list|)
+operator|)
+argument_list|)
+name|desired_binding_state
 decl_stmt|;
 name|struct
 name|lease_state
@@ -1558,6 +1574,13 @@ define|#
 directive|define
 name|SV_LOG_FACILITY
 value|44
+end_define
+
+begin_define
+define|#
+directive|define
+name|SV_DO_FORWARD_UPDATES
+value|45
 end_define
 
 begin_if
@@ -2604,6 +2627,10 @@ name|int
 name|omapi_port
 decl_stmt|;
 comment|/* port on which to accept OMAPI 					   connections, or -1 for no 					   listener. */
+name|int
+name|do_forward_update
+decl_stmt|;
+comment|/* If nonzero, and if we have the 					   information we need, update the 					   A record for the address we get. */
 block|}
 struct|;
 end_struct
@@ -2686,6 +2713,10 @@ name|TIME
 name|interval
 decl_stmt|;
 comment|/* What's the current resend interval? */
+name|int
+name|dns_update_timeout
+decl_stmt|;
+comment|/* Last timeout set for DNS update. */
 name|struct
 name|string_list
 modifier|*
@@ -13115,12 +13146,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|client_dns_update_timeout
+parameter_list|(
+name|void
+modifier|*
+name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
 name|client_dns_update
 parameter_list|(
 name|struct
 name|client_state
 modifier|*
 name|client
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -13248,6 +13292,19 @@ argument_list|(
 operator|(
 expr|struct
 name|class
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|commit_leases_timeout
+name|PROTO
+argument_list|(
+operator|(
+name|void
 operator|*
 operator|)
 argument_list|)

@@ -4,7 +4,7 @@ comment|/* options.c     DHCP options parsing and reassembly. */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995-2001 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon in cooperation with Vixie Enterprises and Nominum, Inc.  * To learn more about the Internet Software Consortium, see  * ``http://www.isc.org/''.  To learn more about Vixie Enterprises,  * see ``http://www.vix.com''.   To learn more about Nominum, Inc., see  * ``http://www.nominum.com''.  */
+comment|/*  * Copyright (c) 1995-2002 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon in cooperation with Vixie Enterprises and Nominum, Inc.  * To learn more about the Internet Software Consortium, see  * ``http://www.isc.org/''.  To learn more about Vixie Enterprises,  * see ``http://www.vix.com''.   To learn more about Nominum, Inc., see  * ``http://www.nominum.com''.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: options.c,v 1.85.2.6 2001/10/18 20:11:38 mellon Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: options.c,v 1.85.2.8 2002/02/19 20:36:52 mellon Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1589,8 +1589,20 @@ expr_stmt|;
 name|total_len
 operator|+=
 name|len
+operator|+
+literal|1
 expr_stmt|;
 block|}
+comment|/* We wind up with a length that's one too many because 		   we shouldn't increment for the last label, but there's 		   no way to tell we're at the last label until we exit 		   the loop.   :'*/
+if|if
+condition|(
+name|total_len
+operator|>
+literal|0
+condition|)
+name|total_len
+operator|--
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2259,6 +2271,14 @@ index|]
 operator|=
 name|DHO_DHCP_REQUESTED_ADDRESS
 expr_stmt|;
+name|priority_list
+index|[
+name|priority_len
+operator|++
+index|]
+operator|=
+name|DHO_FQDN
+expr_stmt|;
 if|if
 condition|(
 name|prl
@@ -2424,6 +2444,11 @@ operator|.
 name|index
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|hash
+condition|)
+block|{
 for|for
 control|(
 name|pp
@@ -2496,6 +2521,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
 comment|/* Now cycle through the site option space, or if there 		   is no site option space, we'll be cycling through the 		   dhcp option space. */
 for|for
 control|(
@@ -2524,6 +2550,10 @@ name|site_universe
 index|]
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|hash
+condition|)
 for|for
 control|(
 name|pp
@@ -3491,6 +3521,14 @@ expr_stmt|;
 comment|/* It's an encapsulation, try to find the universe 	       to be encapsulated first, except that if it's a straight 	       encapsulation and the user has provided a value for the 	       encapsulation option, use the user-provided value. */
 if|if
 condition|(
+name|u
+operator|->
+name|options
+index|[
+name|code
+index|]
+operator|&&
+operator|(
 operator|(
 name|u
 operator|->
@@ -3523,6 +3561,7 @@ literal|0
 index|]
 operator|==
 literal|'e'
+operator|)
 condition|)
 block|{
 name|int

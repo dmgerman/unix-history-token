@@ -15,6 +15,13 @@ directive|include
 file|"osdep.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|_ns_flagdata
+value|MR_ns_flagdata
+end_define
+
 begin_include
 include|#
 directive|include
@@ -1194,7 +1201,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|isc_result_t
 name|ns_initparse
 parameter_list|(
 specifier|const
@@ -1313,7 +1320,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|isc_result_t
 name|ns_skiprr
 parameter_list|(
 specifier|const
@@ -1329,6 +1336,9 @@ parameter_list|,
 name|ns_sect
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
