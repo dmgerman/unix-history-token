@@ -289,21 +289,10 @@ name|void
 name|outputPurge
 parameter_list|()
 block|{
-name|int
-name|tmp
-init|=
-name|flushout
-decl_stmt|;
-name|flushout
-operator|=
-literal|1
-expr_stmt|;
 name|ttyflush
-argument_list|()
-expr_stmt|;
-name|flushout
-operator|=
-name|tmp
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -398,7 +387,9 @@ name|ttyobuf
 condition|)
 block|{
 name|ttyflush
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -460,7 +451,9 @@ endif|#
 directive|endif
 comment|/* defined(unix) */
 name|ttyflush
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -581,7 +574,9 @@ name|tbackp
 condition|)
 block|{
 name|ttyflush
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|#
 directive|if

@@ -32,9 +32,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|SYNCHing
-decl_stmt|,
-comment|/* we are in TELNET SYNCH mode */
 name|flushout
 decl_stmt|,
 comment|/* flush output */
@@ -57,8 +54,6 @@ name|donelclchars
 decl_stmt|,
 comment|/* the user has set "localchars" */
 name|showoptions
-decl_stmt|,
-name|flushline
 decl_stmt|,
 name|net
 decl_stmt|,

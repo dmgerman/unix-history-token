@@ -84,7 +84,12 @@ end_comment
 begin_function
 name|int
 name|ttyflush
-parameter_list|()
+parameter_list|(
+name|drop
+parameter_list|)
+name|int
+name|drop
+decl_stmt|;
 block|{
 name|int
 name|n
@@ -104,13 +109,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
-name|SYNCHing
-operator|||
-name|flushout
-operator|)
+name|drop
 condition|)
+block|{
+name|TerminalFlushOutput
+argument_list|()
+expr_stmt|;
+comment|/* we leave 'n' alone! */
+block|}
+else|else
 block|{
 name|n
 operator|=
@@ -123,13 +130,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|TerminalFlushOutput
-argument_list|()
-expr_stmt|;
-comment|/* we leave 'n' alone! */
 block|}
 block|}
 if|if
