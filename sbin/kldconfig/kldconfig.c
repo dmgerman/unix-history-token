@@ -548,8 +548,11 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"allocating %u bytes for the path"
+literal|"allocating %lu bytes for the path"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sz
 operator|+
 literal|1
