@@ -5217,7 +5217,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*        * XXX - Linux emulator        * Make sure sure edx is 0x0 on entry. Linux binaries depend        * on it.        */
+comment|/* 	 * XXX - Linux emulator 	 * Make sure sure edx is 0x0 on entry. Linux binaries depend 	 * on it. 	 */
 name|p
 operator|->
 name|p_retval
