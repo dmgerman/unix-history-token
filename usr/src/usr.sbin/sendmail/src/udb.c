@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.1 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.2 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.1 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.2 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -581,9 +581,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"udbexpand: trying %s\n"
+literal|"udbexpand: trying %s (%d)\n"
 argument_list|,
 name|keybuf
+argument_list|,
+name|keylen
 argument_list|)
 expr_stmt|;
 name|i
@@ -634,9 +636,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"udbexpand: no match on %s\n"
+literal|"udbexpand: no match on %s (%d)\n"
 argument_list|,
 name|keybuf
+argument_list|,
+name|keylen
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1511,9 +1515,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"udbsender: no match on %s\n"
+literal|"udbsender: no match on %s (%d)\n"
 argument_list|,
 name|keybuf
+argument_list|,
+name|keylen
 argument_list|)
 expr_stmt|;
 continue|continue;
