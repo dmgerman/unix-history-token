@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_vfsops.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_vfsops.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1985,45 +1985,24 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 if|if
 condition|(
-operator|(
 name|error
 operator|=
-name|iflush
+name|vflush
 argument_list|(
-name|dev
-argument_list|,
 name|mp
-operator|->
-name|m_qinod
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|forcibly
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|iflush
+argument_list|,
+name|ITOV
 argument_list|(
-name|dev
+name|ump
+operator|->
+name|um_qinod
 argument_list|)
-operator|)
-operator|&&
-operator|!
-name|forcibly
+argument_list|,
+name|flags
+argument_list|)
 condition|)
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
@@ -2040,20 +2019,26 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Here we have to iflush again to get rid of the quota inode. 	 * A drag, but it would be ugly to cheat,& this doesn't happen often. 	 */
-operator|(
-name|void
-operator|)
-name|iflush
+comment|/* 	 * A drag, but it would be ugly to cheat,& this doesn't happen often. 	 */
+if|if
+condition|(
+name|vflush
 argument_list|(
 name|mp
 argument_list|,
 operator|(
 expr|struct
-name|inode
+name|vnode
 operator|*
 operator|)
 name|NULL
+argument_list|,
+name|MNT_NOFORCE
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"ufs_unmount: quota"
 argument_list|)
 expr_stmt|;
 endif|#
