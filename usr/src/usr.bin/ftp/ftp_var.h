@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ftp_var.h	4.1	83/01/15	*/
+comment|/*	ftp_var.h	4.2	83/02/21	*/
 end_comment
 
 begin_comment
@@ -181,6 +181,29 @@ end_decl_stmt
 
 begin_comment
 comment|/* file transfer mode */
+end_comment
+
+begin_decl_stmt
+name|char
+name|bytename
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* local byte size in ascii */
+end_comment
+
+begin_decl_stmt
+name|int
+name|bytesize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* local byte size in binary */
 end_comment
 
 begin_decl_stmt

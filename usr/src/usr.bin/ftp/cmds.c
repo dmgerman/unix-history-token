@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,7 +216,7 @@ name|atoi
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -229,11 +229,26 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: bad port number.\n"
+literal|"%s: bad port number-- %s\n"
 argument_list|,
 name|argv
 index|[
 literal|1
+index|]
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"usage: %s host-name [port]\n"
+argument_list|,
+name|argv
+index|[
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -296,6 +311,10 @@ decl_stmt|;
 name|int
 name|t_type
 decl_stmt|;
+name|char
+modifier|*
+name|t_arg
+decl_stmt|;
 block|}
 name|types
 index|[]
@@ -307,6 +326,8 @@ block|,
 literal|"A"
 block|,
 name|TYPE_A
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -315,6 +336,8 @@ block|,
 literal|"I"
 block|,
 name|TYPE_I
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -323,6 +346,8 @@ block|,
 literal|"I"
 block|,
 name|TYPE_I
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -331,6 +356,8 @@ block|,
 literal|"E"
 block|,
 name|TYPE_E
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -339,6 +366,8 @@ block|,
 literal|"L"
 block|,
 name|TYPE_L
+block|,
+name|bytename
 block|}
 block|,
 literal|0
@@ -374,6 +403,9 @@ name|struct
 name|types
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|comret
 decl_stmt|;
 if|if
 condition|(
@@ -513,6 +545,43 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|p
+operator|->
+name|t_arg
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+operator|*
+operator|(
+name|p
+operator|->
+name|t_arg
+operator|)
+operator|!=
+literal|'\0'
+operator|)
+condition|)
+name|comret
+operator|=
+name|command
+argument_list|(
+literal|"TYPE %s %s"
+argument_list|,
+name|p
+operator|->
+name|t_mode
+argument_list|,
+name|p
+operator|->
+name|t_arg
+argument_list|)
+expr_stmt|;
+else|else
+name|comret
+operator|=
 name|command
 argument_list|(
 literal|"TYPE %s"
@@ -521,6 +590,10 @@ name|p
 operator|->
 name|t_mode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|comret
 operator|==
 name|COMPLETE
 condition|)
