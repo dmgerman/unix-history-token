@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.23 (Berkeley) %G%"
+literal|"@(#)more.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -734,13 +734,6 @@ end_decl_stmt
 begin_comment
 comment|/* current UL state */
 end_comment
-
-begin_function_decl
-name|long
-name|fseek
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|char
