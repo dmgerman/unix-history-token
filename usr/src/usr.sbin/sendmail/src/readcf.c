@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.98 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.99 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,8 +1251,46 @@ argument_list|)
 expr_stmt|;
 name|rwp
 operator|=
-name|NULL
+name|RewriteRules
+index|[
+name|ruleset
+index|]
 expr_stmt|;
+if|if
+condition|(
+name|rwp
+operator|!=
+name|NULL
+condition|)
+block|{
+while|while
+condition|(
+name|rwp
+operator|->
+name|r_next
+operator|!=
+name|NULL
+condition|)
+name|rwp
+operator|=
+name|rwp
+operator|->
+name|r_next
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: Ruleset %s redefined\n"
+argument_list|,
+operator|&
+name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'D'
