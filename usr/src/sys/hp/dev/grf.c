@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1458,6 +1458,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 name|int
 name|error
 decl_stmt|;
@@ -1479,9 +1489,7 @@ name|printf
 argument_list|(
 literal|"grflock(%d): dev %x flags %x lockpid %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -1607,9 +1615,7 @@ name|gp
 operator|->
 name|g_lockp
 operator|==
-name|u
-operator|.
-name|u_procp
+name|p
 condition|)
 return|return
 operator|(
@@ -1694,9 +1700,7 @@ name|gp
 operator|->
 name|g_lockp
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2891,6 +2895,16 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|grf_softc
 modifier|*
 name|gp
@@ -2904,7 +2918,6 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|mapmem
 modifier|*
@@ -2929,9 +2942,7 @@ name|printf
 argument_list|(
 literal|"grfmmap(%d): addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -2955,10 +2966,16 @@ name|g_display
 operator|.
 name|gd_fbsize
 expr_stmt|;
-name|mp
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
 operator|=
 name|mmalloc
 argument_list|(
+name|p
+argument_list|,
 name|minor
 argument_list|(
 name|dev
@@ -2976,13 +2993,10 @@ name|MM_NOCORE
 argument_list|,
 operator|&
 name|grfops
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|mp
-operator|==
-name|MMNIL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2996,6 +3010,8 @@ condition|(
 operator|!
 name|mmmapin
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|grfmapin
@@ -3004,6 +3020,8 @@ condition|)
 block|{
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
@@ -3214,6 +3232,16 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|grf_softc
 modifier|*
 name|gp
@@ -3242,9 +3270,7 @@ name|printf
 argument_list|(
 literal|"grfexit(%d): id %d %x@%x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -3283,11 +3309,15 @@ endif|#
 directive|endif
 name|mmmapout
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
@@ -3325,6 +3355,16 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|grf_softc
 modifier|*
 name|gp
@@ -3338,7 +3378,6 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|mapmem
 modifier|*
@@ -3367,9 +3406,7 @@ name|printf
 argument_list|(
 literal|"iommap(%d): addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -3387,10 +3424,16 @@ name|g_display
 operator|.
 name|gd_regsize
 expr_stmt|;
-name|mp
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
 operator|=
 name|mmalloc
 argument_list|(
+name|p
+argument_list|,
 name|minor
 argument_list|(
 name|dev
@@ -3408,13 +3451,10 @@ name|MM_NOCORE
 argument_list|,
 operator|&
 name|grfiomops
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|mp
-operator|==
-name|MMNIL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -3428,6 +3468,8 @@ condition|(
 operator|!
 name|mmmapin
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|grfmapin
@@ -3436,6 +3478,8 @@ condition|)
 block|{
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
@@ -4201,6 +4245,16 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|grf_softc
 modifier|*
 name|gp
@@ -4214,7 +4268,6 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|mapmem
 modifier|*
@@ -4241,9 +4294,7 @@ name|printf
 argument_list|(
 literal|"grflckmmap(%d): addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -4289,10 +4340,16 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|mp
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
 operator|=
 name|mmalloc
 argument_list|(
+name|p
+argument_list|,
 name|minor
 argument_list|(
 name|dev
@@ -4308,13 +4365,10 @@ name|MM_CI
 argument_list|,
 operator|&
 name|grflckops
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|mp
-operator|==
-name|MMNIL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -4328,6 +4382,8 @@ condition|(
 operator|!
 name|mmmapin
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|grflckmapin
@@ -4336,6 +4392,8 @@ condition|)
 block|{
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;

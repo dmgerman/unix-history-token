@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -447,6 +447,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|hilloop
@@ -484,9 +494,7 @@ name|printf
 argument_list|(
 literal|"hilopen(%d): device %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -561,9 +569,7 @@ return|;
 comment|/* 	 * Open semantics: 	 * 1.	Open devices have only one of HIL_READIN/HIL_QUEUEIN. 	 * 2.	HPUX processes always get read syscall interface and 	 *	must have exclusive use of the device. 	 * 3.	BSD processes default to shared queue interface. 	 *	Multiple processes can open the device. 	 */
 if|if
 condition|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator|&
@@ -757,6 +763,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|hilloop
@@ -803,9 +819,7 @@ name|printf
 argument_list|(
 literal|"hilclose(%d): device %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -844,9 +858,7 @@ return|;
 if|if
 condition|(
 operator|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator|&
@@ -888,9 +900,7 @@ index|]
 operator|.
 name|hq_procp
 operator|==
-name|u
-operator|.
-name|u_procp
+name|p
 condition|)
 operator|(
 name|void
@@ -941,9 +951,7 @@ index|]
 operator|.
 name|hq_procp
 operator|==
-name|u
-operator|.
-name|u_procp
+name|p
 condition|)
 block|{
 name|dptr
@@ -1434,6 +1442,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|hilloop
@@ -1480,9 +1498,7 @@ name|printf
 argument_list|(
 literal|"hilioctl(%d): dev %x cmd %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -1575,9 +1591,7 @@ directive|ifdef
 name|HPUXCOMPAT
 if|if
 condition|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator|&
@@ -2725,6 +2739,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|MMAP
@@ -2795,9 +2819,7 @@ name|qp
 operator|->
 name|hq_procp
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|p
 condition|)
 return|return
 operator|(
@@ -2855,6 +2877,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|hilloop
@@ -2978,9 +3010,7 @@ name|dptr
 operator|->
 name|hd_selr
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 expr_stmt|;
 name|splx
 argument_list|(
@@ -3070,9 +3100,7 @@ name|qp
 operator|->
 name|hq_procp
 operator|==
-name|u
-operator|.
-name|u_procp
+name|p
 operator|&&
 operator|(
 name|mask
@@ -3139,9 +3167,7 @@ name|dptr
 operator|->
 name|hd_selr
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 expr_stmt|;
 name|splx
 argument_list|(
@@ -4349,6 +4375,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|MAPMEM
@@ -4393,9 +4429,7 @@ name|printf
 argument_list|(
 literal|"hilqalloc(%d): addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -4520,10 +4554,16 @@ operator|=
 name|HEVQSIZE
 expr_stmt|;
 comment|/* 	 * Map queue into user address space as instructed 	 */
-name|mp
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
 operator|=
 name|mmalloc
 argument_list|(
+name|p
+argument_list|,
 name|qnum
 argument_list|,
 operator|&
@@ -4542,13 +4582,10 @@ name|MM_CI
 argument_list|,
 operator|&
 name|hilqops
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|mp
-operator|==
-name|MMNIL
+argument_list|)
 condition|)
 block|{
 name|cifree
@@ -4594,6 +4631,8 @@ condition|(
 operator|!
 name|mmmapin
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|hilqmapin
@@ -4602,6 +4641,8 @@ condition|)
 block|{
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
@@ -4646,9 +4687,7 @@ index|]
 operator|.
 name|hq_procp
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 expr_stmt|;
 name|hilp
 operator|->
@@ -4691,6 +4730,16 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|MAPMEM
@@ -4723,9 +4772,7 @@ name|printf
 argument_list|(
 literal|"hilqfree(%d): qnum %d\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -4749,9 +4796,7 @@ index|]
 operator|.
 name|hq_procp
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|p
 condition|)
 return|return
 operator|(
@@ -4836,6 +4881,16 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|hilloop
@@ -4876,9 +4931,7 @@ name|printf
 argument_list|(
 literal|"hilqmap(%d): qnum %d device %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -4904,9 +4957,7 @@ index|]
 operator|.
 name|hq_procp
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|p
 condition|)
 return|return
 operator|(
@@ -5015,9 +5066,7 @@ name|printf
 argument_list|(
 literal|"hilqmap(%d): devmask %x qmask %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -5062,6 +5111,16 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|hilloop
@@ -5088,9 +5147,7 @@ name|printf
 argument_list|(
 literal|"hilqunmap(%d): qnum %d device %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -5116,9 +5173,7 @@ index|]
 operator|.
 name|hq_procp
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|p
 condition|)
 return|return
 operator|(
@@ -5178,9 +5233,7 @@ name|printf
 argument_list|(
 literal|"hilqunmap(%d): devmask %x qmask %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -5323,6 +5376,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -5336,9 +5399,7 @@ name|printf
 argument_list|(
 literal|"hilqfork(%d): %s qnum %d\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -5362,11 +5423,15 @@ condition|)
 block|{
 name|mmmapout
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
@@ -5515,6 +5580,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|hilloop
@@ -5547,9 +5622,7 @@ name|printf
 argument_list|(
 literal|"hilqexit(%d): qnum %d\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -5656,6 +5729,8 @@ name|NULL
 expr_stmt|;
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
