@@ -26,6 +26,11 @@ name|struct
 name|ifatm_mib
 name|mib
 decl_stmt|;
+name|int
+name|phy_present
+range|:
+literal|1
+decl_stmt|;
 name|u_int
 name|phy_type
 decl_stmt|;
