@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1988 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hostid.c	5.4 (Berkeley) %G%"
+literal|"@(#)hostid.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -61,40 +67,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|unsigned
-name|long
-name|inet_addr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|long
-name|gethostid
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|main
@@ -117,17 +91,28 @@ name|char
 modifier|*
 name|id
 decl_stmt|;
-name|u_long
-name|addr
-decl_stmt|;
-name|long
-name|hostid
-decl_stmt|;
 name|struct
 name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|u_long
+name|addr
+decl_stmt|,
+name|inet_addr
+argument_list|()
+decl_stmt|;
+name|long
+name|hostid
+decl_stmt|,
+name|gethostid
+argument_list|()
+decl_stmt|;
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|argc
@@ -137,7 +122,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%#x\n"
+literal|"%#lx\n"
 argument_list|,
 name|gethostid
 argument_list|()
@@ -252,7 +237,7 @@ name|sscanf
 argument_list|(
 name|id
 argument_list|,
-literal|"%x"
+literal|"%lx"
 argument_list|,
 operator|&
 name|hostid
@@ -263,16 +248,11 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|fputs
 argument_list|(
+literal|"usage: hostid [hexnum or internet address]\n"
+argument_list|,
 name|stderr
-argument_list|,
-literal|"usage: %s [hexnum or internet address]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|exit
