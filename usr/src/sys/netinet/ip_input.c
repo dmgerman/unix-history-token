@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4221,7 +4221,7 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
-comment|/* 		     * If the destination is reached by a route to host, 		     * is directly on the attached net (!), 		     * or if the destination is on a subnet of a local net 		     * not known to the source net, use host redirect. 		     * (We may be the correct first hop for other subnets.) 		     */
+comment|/* 		     * If the destination is reached by a route to host, 		     * is on a subnet of a local net, or is directly 		     * on the attached net (!), use host redirect. 		     * (We may be the correct first hop for other subnets.) 		     */
 name|type
 operator|=
 name|ICMP_REDIRECT
@@ -4289,17 +4289,13 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|src
-operator|&
 name|ia
 operator|->
-name|ia_netmask
-operator|)
+name|ia_subnetmask
 operator|!=
 name|ia
 operator|->
-name|ia_net
+name|ia_netmask
 condition|)
 name|code
 operator|=
