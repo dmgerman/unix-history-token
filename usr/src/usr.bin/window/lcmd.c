@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.12 84/03/23"
+literal|"@(#)lcmd.c	3.13 84/03/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,13 @@ include|#
 directive|include
 file|"lcmd.h"
 end_include
+
+begin_function_decl
+name|int
+name|l_background
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -69,6 +76,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_escape
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_foreground
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -125,6 +139,14 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|lcmd_arg
+name|arg_background
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
 name|arg_buffer
 index|[]
 decl_stmt|;
@@ -158,6 +180,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_escape
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_foreground
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -233,9 +263,17 @@ name|l_select
 block|,
 name|arg_select
 block|,
+literal|"background"
+block|,
+literal|2
+block|,
+name|l_background
+block|,
+name|arg_background
+block|,
 literal|"buffer"
 block|,
-literal|1
+literal|2
 block|,
 name|l_buffer
 block|,
@@ -272,6 +310,14 @@ block|,
 name|l_escape
 block|,
 name|arg_escape
+block|,
+literal|"foreground"
+block|,
+literal|1
+block|,
+name|l_foreground
+block|,
+name|arg_foreground
 block|,
 literal|"label"
 block|,
@@ -330,13 +376,7 @@ block|,
 name|arg_write
 block|,
 literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

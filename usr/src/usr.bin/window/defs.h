@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.9 84/03/03	  */
+comment|/*  *	@(#)defs.h	3.10 84/03/29	  */
 end_comment
 
 begin_include
@@ -131,6 +131,50 @@ end_decl_stmt
 begin_comment
 comment|/* the window for the box */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|fgwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the last foreground window */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|bgwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the first background window */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isfg
+parameter_list|(
+name|w
+parameter_list|)
+value|((w)->ww_order<= fgwin->ww_order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isbg
+parameter_list|(
+name|w
+parameter_list|)
+value|((w)->ww_order>= bgwin->ww_order)
+end_define
 
 begin_decl_stmt
 name|char
