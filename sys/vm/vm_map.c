@@ -1126,9 +1126,13 @@ argument_list|(
 literal|"vmspace_free: attempt to free already freed vmspace"
 argument_list|)
 expr_stmt|;
+operator|--
+name|vm
+operator|->
+name|vm_refcnt
+expr_stmt|;
 if|if
 condition|(
-operator|--
 name|vm
 operator|->
 name|vm_refcnt
@@ -1179,18 +1183,22 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * cleanup by parent process wait()ing on exiting child.  vm_refcnt 	 * may not be 0 (e.g. fork() and child exits without exec()ing). 	 * exitingcnt may increment above 0 and drop back down to zero 	 * several times while vm_refcnt is held non-zero.  vm_refcnt 	 * may also increment above 0 and drop back down to zero several 	 * times while vm_exitingcnt is held non-zero. 	 * 	 * The last wait on the exiting child's vmspace will clean up 	 * the remainder of the vmspace. 	 */
-if|if
-condition|(
 operator|--
 name|vm
 operator|->
 name|vm_exitingcnt
+expr_stmt|;
+if|if
+condition|(
+name|vm
+operator|->
+name|vm_refcnt
 operator|==
 literal|0
 operator|&&
 name|vm
 operator|->
-name|vm_refcnt
+name|vm_exitingcnt
 operator|==
 literal|0
 condition|)
