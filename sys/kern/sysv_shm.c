@@ -20,12 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_rlimit.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sysvipc.h"
 end_include
 
@@ -1661,9 +1655,9 @@ name|p_vmspace
 operator|->
 name|vm_taddr
 operator|+
-name|MAXTSIZ
+name|maxtsiz
 operator|+
-name|MAXDSIZ
+name|maxdsiz
 argument_list|)
 expr_stmt|;
 block|}

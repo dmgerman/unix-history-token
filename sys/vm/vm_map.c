@@ -8031,7 +8031,7 @@ if|if
 condition|(
 name|max_ssize
 operator|<
-name|SGROWSIZ
+name|sgrowsiz
 condition|)
 name|init_ssize
 operator|=
@@ -8040,7 +8040,7 @@ expr_stmt|;
 else|else
 name|init_ssize
 operator|=
-name|SGROWSIZ
+name|sgrowsiz
 expr_stmt|;
 name|vm_map_lock
 argument_list|(
@@ -8531,7 +8531,7 @@ name|roundup
 argument_list|(
 name|grow_amount
 argument_list|,
-name|SGROWSIZ
+name|sgrowsiz
 argument_list|)
 expr_stmt|;
 if|if

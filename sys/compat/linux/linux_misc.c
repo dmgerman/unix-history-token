@@ -1686,7 +1686,7 @@ name|a_out
 operator|->
 name|a_text
 operator|>
-name|MAXTSIZ
+name|maxtsiz
 operator|||
 name|a_out
 operator|->

@@ -2942,7 +2942,7 @@ name|p_vmspace
 operator|->
 name|vm_daddr
 operator|+
-name|MAXDSIZ
+name|maxdsiz
 argument_list|)
 argument_list|)
 expr_stmt|;

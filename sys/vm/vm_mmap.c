@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_rlimit.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -841,7 +835,7 @@ name|vms
 operator|->
 name|vm_daddr
 operator|+
-name|MAXDSIZ
+name|maxdsiz
 argument_list|)
 operator|)
 condition|)
@@ -856,7 +850,7 @@ name|vms
 operator|->
 name|vm_daddr
 operator|+
-name|MAXDSIZ
+name|maxdsiz
 argument_list|)
 expr_stmt|;
 if|if

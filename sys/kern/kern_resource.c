@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_rlimit.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1958,13 +1952,13 @@ name|limp
 operator|->
 name|rlim_cur
 operator|>
-name|MAXDSIZ
+name|maxdsiz
 condition|)
 name|limp
 operator|->
 name|rlim_cur
 operator|=
-name|MAXDSIZ
+name|maxdsiz
 expr_stmt|;
 if|if
 condition|(
@@ -1972,13 +1966,13 @@ name|limp
 operator|->
 name|rlim_max
 operator|>
-name|MAXDSIZ
+name|maxdsiz
 condition|)
 name|limp
 operator|->
 name|rlim_max
 operator|=
-name|MAXDSIZ
+name|maxdsiz
 expr_stmt|;
 break|break;
 case|case
@@ -1990,13 +1984,13 @@ name|limp
 operator|->
 name|rlim_cur
 operator|>
-name|MAXSSIZ
+name|maxssiz
 condition|)
 name|limp
 operator|->
 name|rlim_cur
 operator|=
-name|MAXSSIZ
+name|maxssiz
 expr_stmt|;
 if|if
 condition|(
@@ -2004,13 +1998,13 @@ name|limp
 operator|->
 name|rlim_max
 operator|>
-name|MAXSSIZ
+name|maxssiz
 condition|)
 name|limp
 operator|->
 name|rlim_max
 operator|=
-name|MAXSSIZ
+name|maxssiz
 expr_stmt|;
 comment|/* 		 * Stack is allocated to the max at exec time with only 		 * "rlim_cur" bytes accessible.  If stack limit is going 		 * up make more accessible, if going down make inaccessible. 		 */
 if|if

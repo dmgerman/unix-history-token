@@ -764,8 +764,7 @@ name|path
 parameter_list|,
 name|var
 parameter_list|)
-define|\
-value|do {							\ 	getenv_int((path), (var));			\ } while (0)
+value|getenv_int((path), (var))
 end_define
 
 begin_comment
@@ -785,6 +784,89 @@ name|var
 parameter_list|)
 define|\
 value|static void __Tunable_ ## var (void *ignored)	\ {						\ 	(var) = (defval);			\ 	TUNABLE_INT_FETCH((path),&(var));	\ }						\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|tunable_quad_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|tunable_quad
+block|{
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|quad_t
+modifier|*
+name|var
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_QUAD
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|_TUNABLE_QUAD((path), (var), __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TUNABLE_QUAD
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|__TUNABLE_QUAD((path), (var), line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__TUNABLE_QUAD
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|static struct tunable_quad __tunable_quad_ ## line = {	\ 		path,						\ 		var,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	    tunable_quad_init,&__tunable_quad_ ## line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_QUAD_FETCH
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+value|getenv_quad((path), (var))
 end_define
 
 begin_function_decl
@@ -879,7 +961,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|do {							\ 	char *tmp;					\ 	tmp = getenv((path));				\ 	if (tmp != NULL) {				\ 		strncpy((var), tmp, (size));		\ 		(var)[(size) - 1] = 0;			\ 	}						\ } while (0)
+value|getenv_string((path), (var), (size))
 end_define
 
 begin_comment

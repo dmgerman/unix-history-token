@@ -661,7 +661,7 @@ parameter_list|(
 name|vmspace
 parameter_list|)
 define|\
-value|(round_page((vm_offset_t)(vmspace)->vm_daddr + MAXDSIZ))
+value|(round_page((vm_offset_t)(vmspace)->vm_daddr + maxdsiz))
 end_define
 
 begin_endif
