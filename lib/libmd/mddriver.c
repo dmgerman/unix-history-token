@@ -141,6 +141,12 @@ modifier|*
 name|string
 decl_stmt|;
 block|{
+name|char
+name|buf
+index|[
+literal|33
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"MD%d (\"%s\") = %s\n"
@@ -157,6 +163,8 @@ name|strlen
 argument_list|(
 name|string
 argument_list|)
+argument_list|,
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
