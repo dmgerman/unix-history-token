@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.1 1997/08/13 23:36:11 smp Exp smp $"
+literal|"$Id: main.c,v 1.20 1997/08/14 19:24:11 fsmp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -748,6 +748,15 @@ case|:
 name|compatMake
 operator|=
 name|TRUE
+expr_stmt|;
+name|Var_Append
+argument_list|(
+name|MAKEFLAGS
+argument_list|,
+literal|"-B"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
 expr_stmt|;
 break|break;
 ifdef|#
