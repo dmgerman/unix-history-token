@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quot.c	5.1 (Berkeley) %G%"
+literal|"@(#)quot.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -278,7 +284,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|struct
+name|timeval
 name|now
 decl_stmt|;
 end_decl_stmt
@@ -288,14 +295,6 @@ name|unsigned
 name|ino
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|char
@@ -333,10 +332,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 operator|(
@@ -427,10 +422,12 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|time
+name|gettimeofday
 argument_list|(
 operator|&
 name|now
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|setpassent
@@ -680,7 +677,7 @@ name|c
 decl_stmt|,
 name|fd
 decl_stmt|;
-comment|/* 	 * Initialize tables between checks; 	 * because of the qsort done in report() 	 * the hash tables must be rebuilt each time. 	 */
+comment|/* 	 * Initialize tables between checks; because of the qsort done in 	 * report() the hash tables must be rebuilt each time. 	 */
 for|for
 control|(
 name|i
@@ -835,7 +832,7 @@ argument_list|(
 name|fd
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|SBOFF
 argument_list|,
@@ -947,14 +944,13 @@ name|bread
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|iblk
 operator|*
 name|dev_bsize
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|itab
 argument_list|,
 operator|(
@@ -1318,10 +1314,14 @@ comment|/* seconds per day */
 if|if
 condition|(
 name|now
+operator|.
+name|tv_sec
 operator|-
 name|ip
 operator|->
 name|di_atime
+operator|.
+name|tv_sec
 operator|>
 literal|30
 operator|*
@@ -1336,10 +1336,14 @@ expr_stmt|;
 if|if
 condition|(
 name|now
+operator|.
+name|tv_sec
 operator|-
 name|ip
 operator|->
 name|di_atime
+operator|.
+name|tv_sec
 operator|>
 literal|60
 operator|*
@@ -1354,10 +1358,14 @@ expr_stmt|;
 if|if
 condition|(
 name|now
+operator|.
+name|tv_sec
 operator|-
 name|ip
 operator|->
 name|di_atime
+operator|.
+name|tv_sec
 operator|>
 literal|90
 operator|*
@@ -1535,13 +1543,21 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|int
+name|fd
+decl_stmt|,
+name|cnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|long
 name|bno
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|void
 modifier|*
 name|buf
 decl_stmt|;
@@ -1549,10 +1565,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
