@@ -87,7 +87,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Default maximum packet size */
+comment|/* Maximum transmit packet size (default) */
 end_comment
 
 begin_define
@@ -95,6 +95,17 @@ define|#
 directive|define
 name|TUNMTU
 value|1500
+end_define
+
+begin_comment
+comment|/* Maximum receive packet size (hard limit) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TUNMRU
+value|16384
 end_define
 
 begin_struct

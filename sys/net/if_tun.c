@@ -2606,9 +2606,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
-name|ifp
-operator|->
-name|if_mtu
+name|TUNMRU
 condition|)
 block|{
 name|TUNDEBUG
