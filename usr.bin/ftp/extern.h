@@ -1370,6 +1370,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|setrestrict
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|setrunique
 name|__P
 argument_list|(

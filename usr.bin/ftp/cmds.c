@@ -10036,6 +10036,37 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Restrict FTP data port range to a high group of "safe" ports  */
+end_comment
+
+begin_function
+name|void
+name|setrestrict
+parameter_list|()
+block|{
+name|restricted_data_ports
+operator|=
+operator|!
+name|restricted_data_ports
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Data port range restrictions %s.\n"
+argument_list|,
+name|onoff
+argument_list|(
+name|restricted_data_ports
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|restricted_data_ports
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * get size of file on remote machine  */
 end_comment
 

@@ -253,6 +253,16 @@ comment|/* passive mode enabled */
 end_comment
 
 begin_decl_stmt
+name|int
+name|restricted_data_ports
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* restrict data port range */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|altarg
