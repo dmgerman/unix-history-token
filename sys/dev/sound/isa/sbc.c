@@ -688,6 +688,26 @@ end_function
 
 begin_function
 name|void
+name|sbc_lockassert
+parameter_list|(
+name|struct
+name|sbc_softc
+modifier|*
+name|scp
+parameter_list|)
+block|{
+name|snd_mtxassert
+argument_list|(
+name|scp
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|sbc_unlock
 parameter_list|(
 name|struct
