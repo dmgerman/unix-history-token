@@ -55,11 +55,9 @@ begin_function
 name|int
 name|wcwidth
 parameter_list|(
-name|wc
-parameter_list|)
 name|wchar_t
 name|wc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|width
