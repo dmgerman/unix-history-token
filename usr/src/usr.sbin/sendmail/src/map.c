@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	5.6 (Berkeley) %G%"
+literal|"@(#)map.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,6 +1221,13 @@ modifier|*
 name|args
 decl_stmt|;
 block|{
+name|int
+name|yperr
+decl_stmt|;
+name|char
+modifier|*
+name|master
+decl_stmt|;
 comment|/* parse arguments */
 name|map_parseargs
 argument_list|(
@@ -1266,8 +1273,60 @@ operator|->
 name|map_domain
 argument_list|)
 expr_stmt|;
+comment|/* check to see if this map actually exists */
+name|yperr
+operator|=
+name|yp_master
+argument_list|(
+name|map
+operator|->
+name|map_domain
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+operator|&
+name|master
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|yperr
+operator|==
+literal|0
+condition|)
 return|return
 name|TRUE
+return|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MF_OPTIONAL
+argument_list|,
+name|map
+operator|->
+name|map_flags
+argument_list|)
+condition|)
+name|syserr
+argument_list|(
+literal|"Cannot bind to domain %s: %s"
+argument_list|,
+name|map
+operator|->
+name|map_domain
+argument_list|,
+name|yperr_string
+argument_list|(
+name|yperr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
 return|;
 block|}
 end_function
