@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.211 (Berkeley) 10/12/96"
+literal|"@(#)main.c	8.215 (Berkeley) 11/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1637,9 +1637,25 @@ argument_list|(
 literal|"NAME"
 argument_list|)
 expr_stmt|;
+comment|/* 	**  Initialize name server if it is going to be used. 	*/
 if|#
 directive|if
 name|NAMED_BIND
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|RES_INIT
+argument_list|,
+name|_res
+operator|.
+name|options
+argument_list|)
+condition|)
+name|res_init
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1649,17 +1665,23 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-block|{
-name|res_init
-argument_list|()
-expr_stmt|;
 name|_res
 operator|.
 name|options
 operator||=
 name|RES_DEBUG
 expr_stmt|;
-block|}
+ifdef|#
+directive|ifdef
+name|RES_NOALIASES
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_NOALIASES
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|errno
@@ -2295,35 +2317,9 @@ case|:
 case|case
 name|MD_FGDAEMON
 case|:
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|DAEMON
-if|if
-condition|(
-name|RealUid
-operator|!=
-literal|0
-condition|)
-block|{
-name|usrerr
-argument_list|(
-literal|"Permission denied"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_USAGE
-argument_list|)
-expr_stmt|;
-block|}
-name|vendor_daemon_setup
-argument_list|(
-name|CurEnv
-argument_list|)
-expr_stmt|;
-comment|/* fall through ... */
-else|#
-directive|else
 name|usrerr
 argument_list|(
 literal|"Daemon mode not implemented"
@@ -2359,7 +2355,6 @@ comment|/* SMTP */
 case|case
 name|MD_INITALIAS
 case|:
-comment|/* fall through ... */
 case|case
 name|MD_DELIVER
 case|:
@@ -3525,40 +3520,6 @@ literal|"\n========================================================\n\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**  Initialize name server if it is going to be used. 	*/
-if|#
-directive|if
-name|NAMED_BIND
-if|if
-condition|(
-name|UseNameServer
-operator|&&
-operator|!
-name|bitset
-argument_list|(
-name|RES_INIT
-argument_list|,
-name|_res
-operator|.
-name|options
-argument_list|)
-condition|)
-name|res_init
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RES_NOALIASES
-name|_res
-operator|.
-name|options
-operator||=
-name|RES_NOALIASES
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/* 	**  Do more command line checking -- these are things that 	**  have to modify the results of reading the config file. 	*/
 comment|/* process authorization warnings from command line */
 if|if
@@ -3717,9 +3678,11 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Warning: .cf version level (%d) exceeds program functionality (%d)"
+literal|"Warning: .cf version level (%d) exceeds sendmail version %s functionality (%d)"
 argument_list|,
 name|ConfigLevel
+argument_list|,
+name|Version
 argument_list|,
 name|MAXCONFIGLEVEL
 argument_list|)
@@ -3806,6 +3769,50 @@ comment|/* fall through ... */
 case|case
 name|MD_DAEMON
 case|:
+comment|/* check for permissions */
+if|if
+condition|(
+name|RealUid
+operator|!=
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|1
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"user %d attempted to run daemon"
+argument_list|,
+name|RealUid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|usrerr
+argument_list|(
+literal|"Permission denied"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+name|vendor_daemon_setup
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
 comment|/* remove things that don't make sense in daemon mode */
 name|FullName
 operator|=
@@ -7769,6 +7776,51 @@ argument_list|(
 name|SIGHUP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setgid
+argument_list|(
+name|RealGid
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"could not set[ug]id(%d, %d): %m"
+argument_list|,
+name|RealUid
+argument_list|,
+name|RealGid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 name|execv
 argument_list|(
 name|SaveArgv

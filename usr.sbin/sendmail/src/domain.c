@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.63 (Berkeley) 9/15/96 (with name server)"
+literal|"@(#)domain.c	8.64 (Berkeley) 10/30/96 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.63 (Berkeley) 9/15/96 (without name server)"
+literal|"@(#)domain.c	8.64 (Berkeley) 10/30/96 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,32 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_comment
+comment|/* **  The standard udp packet size PACKETSZ (512) is not sufficient for some **  nameserver answers containing very many resource records. The resolver **  may switch to tcp and retry if it detects udp packet overflow. **  Also note that the resolver routines res_query and res_search return **  the size of the *un*truncated answer in case the supplied answer buffer **  it not big enough to accommodate the entire answer. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPACKET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPACKET
+value|8192
+end_define
+
+begin_comment
+comment|/* max packet size used internally by BIND */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 union|union
@@ -94,7 +120,7 @@ decl_stmt|;
 name|u_char
 name|qb2
 index|[
-name|PACKETSZ
+name|MAXPACKET
 index|]
 decl_stmt|;
 block|}
@@ -655,6 +681,23 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* avoid problems after truncation in tcp packets */
+if|if
+condition|(
+name|n
+operator|>
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+condition|)
+name|n
+operator|=
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+expr_stmt|;
 comment|/* find first satisfactory answer */
 name|hp
 operator|=
@@ -1940,7 +1983,7 @@ name|nbuf
 index|[
 name|MAX
 argument_list|(
-name|PACKETSZ
+name|MAXPACKET
 argument_list|,
 name|MAXDNAME
 operator|*
@@ -2423,6 +2466,23 @@ condition|)
 name|printf
 argument_list|(
 literal|"\tYES\n"
+argument_list|)
+expr_stmt|;
+comment|/* avoid problems after truncation in tcp packets */
+if|if
+condition|(
+name|ret
+operator|>
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+condition|)
+name|ret
+operator|=
+sizeof|sizeof
+argument_list|(
+name|answer
 argument_list|)
 expr_stmt|;
 comment|/* 		**  Appear to have a match.  Confirm it by searching for A or 		**  CNAME records.  If we don't have a local domain 		**  wild card MX record, we will accept MX as well. 		*/
