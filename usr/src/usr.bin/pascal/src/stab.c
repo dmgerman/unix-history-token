@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.8.1.1 %G%"
+literal|"@(#)stab.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -853,6 +853,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|filename
 argument_list|,
 name|N_PC
@@ -876,6 +879,9 @@ return|return;
 block|}
 name|label
 operator|=
+operator|(
+name|int
+operator|)
 name|getlab
 argument_list|()
 expr_stmt|;
@@ -892,6 +898,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|filename
 argument_list|)
 expr_stmt|;
@@ -910,6 +919,9 @@ name|PREFIXFORMAT
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|LLABELPREFIX
 argument_list|,
 name|label
@@ -921,6 +933,9 @@ name|PREFIXFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|LLABELPREFIX
 argument_list|,
 name|label
@@ -997,6 +1012,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|filename
 argument_list|,
 name|N_PC
@@ -1020,15 +1038,11 @@ return|return;
 block|}
 name|label
 operator|=
+operator|(
+name|int
+operator|)
 name|getlab
 argument_list|()
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
@@ -1036,6 +1050,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|filename
 argument_list|)
 expr_stmt|;
@@ -1054,6 +1071,9 @@ name|PREFIXFORMAT
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|LLABELPREFIX
 argument_list|,
 name|label
@@ -1065,6 +1085,9 @@ name|PREFIXFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|LLABELPREFIX
 argument_list|,
 name|label

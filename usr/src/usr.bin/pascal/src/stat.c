@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat.c 1.11.1.1 %G%"
+literal|"@(#)stat.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,23 +1016,6 @@ operator|=
 name|withlist
 expr_stmt|;
 comment|/* 		     *	no one uses the allocated temporary namelist entry, 		     *	since we have to use it before we know its type; 		     *	but we use its runtime location for the with pointer. 		     */
-name|tempnlp
-operator|=
-name|tmpalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|int
-operator|*
-argument_list|)
-argument_list|,
-name|nl
-operator|+
-name|TPTR
-argument_list|,
-name|REGOK
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ
