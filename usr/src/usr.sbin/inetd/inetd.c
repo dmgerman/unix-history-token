@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.14 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -556,7 +562,7 @@ name|char
 modifier|*
 name|CONFIG
 init|=
-literal|"/etc/inetd.conf"
+name|_PATH_INETDCONF
 decl_stmt|;
 end_decl_stmt
 
