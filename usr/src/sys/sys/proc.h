@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -684,6 +684,26 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((p)->p_session->s_leader == (p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESSHOLD
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_count++)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESSRELE
+parameter_list|(
+name|s
+parameter_list|)
+value|{ \ 		if (--(s)->s_count == 0) \ 			FREE(s, M_SESSION); \ 		}
 end_define
 
 begin_endif
