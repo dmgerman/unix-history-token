@@ -4743,6 +4743,9 @@ name|csum_flags
 operator||=
 name|CSUM_IP_VALID
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 operator|(
@@ -4791,6 +4794,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|ether_input
 argument_list|(
 name|ifp
@@ -5604,11 +5609,15 @@ argument_list|)
 operator||
 name|tot_len
 expr_stmt|;
+name|LGE_INC
+argument_list|(
 operator|(
 operator|*
 name|txidx
 operator|)
-operator|++
+argument_list|,
+name|LGE_TX_LIST_CNT
+argument_list|)
 expr_stmt|;
 comment|/* Queue for transmit */
 name|CSR_WRITE_4
