@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.24 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"un.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -182,6 +188,14 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|req
@@ -279,6 +293,8 @@ argument_list|(
 name|unp
 argument_list|,
 name|nam
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -308,6 +324,8 @@ argument_list|(
 name|so
 argument_list|,
 name|nam
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -558,6 +576,8 @@ operator|=
 name|unp_internalize
 argument_list|(
 name|control
+argument_list|,
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -603,6 +623,8 @@ argument_list|(
 name|so
 argument_list|,
 name|nam
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1486,6 +1508,8 @@ argument_list|(
 argument|unp
 argument_list|,
 argument|nam
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1502,6 +1526,14 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1647,10 +1679,9 @@ name|namei
 argument_list|(
 name|ndp
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 condition|)
-comment|/* XXX */
 return|return
 operator|(
 name|error
@@ -1736,6 +1767,8 @@ name|ndp
 argument_list|,
 operator|&
 name|vattr
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1798,6 +1831,8 @@ argument_list|(
 argument|so
 argument_list|,
 argument|nam
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1814,6 +1849,14 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1970,10 +2013,9 @@ name|namei
 argument_list|(
 name|ndp
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 condition|)
-comment|/* XXX */
 return|return
 operator|(
 name|error
@@ -2012,9 +2054,11 @@ name|vp
 argument_list|,
 name|VWRITE
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -2885,6 +2929,8 @@ begin_macro
 name|unp_internalize
 argument_list|(
 argument|control
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2896,6 +2942,14 @@ name|control
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -2903,11 +2957,10 @@ name|filedesc
 modifier|*
 name|fdp
 init|=
-name|curproc
+name|p
 operator|->
 name|p_fd
 decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|struct
 name|cmsghdr
