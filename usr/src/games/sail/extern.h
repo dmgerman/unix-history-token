@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	1.8 83/10/14  */
+comment|/*  * @(#)extern.h	1.9 83/10/28  */
 end_comment
 
 begin_include
@@ -667,7 +667,7 @@ begin_define
 define|#
 directive|define
 name|NSCENE
-value|31
+value|nscene
 end_define
 
 begin_define
@@ -688,7 +688,7 @@ begin_define
 define|#
 directive|define
 name|NNATION
-value|5
+value|8
 end_define
 
 begin_define
@@ -724,6 +724,27 @@ define|#
 directive|define
 name|N_J
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_D
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_K
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_O
+value|7
 end_define
 
 begin_struct
@@ -939,9 +960,13 @@ begin_decl_stmt
 name|struct
 name|scenario
 name|scene
-index|[
-name|NSCENE
-index|]
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nscene
 decl_stmt|;
 end_decl_stmt
 
