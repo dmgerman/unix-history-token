@@ -50,6 +50,12 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/device.h>
+end_include
+
 begin_elif
 elif|#
 directive|elif
@@ -116,12 +122,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
 end_include
 
 begin_include
