@@ -61,7 +61,7 @@ end_comment
 
 begin_decl_stmt
 name|short
-name|hp6_off
+name|rp06_off
 index|[
 literal|8
 index|]
@@ -92,7 +92,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|rm3_off
+name|rm03_off
 index|[
 literal|8
 index|]
@@ -113,7 +113,7 @@ block|,
 operator|-
 literal|1
 block|,
-literal|310
+literal|309
 block|,
 operator|-
 literal|1
@@ -123,7 +123,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|rm5_off
+name|rm05_off
 index|[
 literal|8
 index|]
@@ -173,14 +173,15 @@ literal|1
 block|,
 literal|115
 block|,
-literal|305
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|hp7_off
+name|rp07_off
 index|[
 literal|8
 index|]
@@ -192,15 +193,15 @@ literal|10
 block|,
 literal|0
 block|,
-literal|330
+literal|235
 block|,
-literal|340
+literal|245
 block|,
-literal|500
+literal|437
 block|,
-literal|330
+literal|235
 block|,
-literal|50
+literal|52
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -241,7 +242,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|si9775_off
+name|cdc9775_off
 index|[
 literal|8
 index|]
@@ -262,16 +263,16 @@ block|,
 operator|-
 literal|1
 block|,
-literal|40
+literal|294
 block|,
-literal|441
+literal|66
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|si9730_off
+name|cdc9730_off
 index|[
 literal|8
 index|]
@@ -292,17 +293,17 @@ block|,
 operator|-
 literal|1
 block|,
+literal|155
+block|,
 operator|-
 literal|1
-block|,
-literal|155
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|hpam_off
+name|capricorn_off
 index|[
 literal|8
 index|]
@@ -329,7 +330,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|hpfj_off
+name|eagle_off
 index|[
 literal|8
 index|]
@@ -337,22 +338,19 @@ init|=
 block|{
 literal|0
 block|,
-literal|19
+literal|17
 block|,
 literal|0
 block|,
-operator|-
-literal|1
+literal|391
 block|,
-operator|-
-literal|1
+literal|408
 block|,
-operator|-
-literal|1
+literal|728
 block|,
-literal|398
+literal|391
 block|,
-literal|59
+literal|87
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -378,7 +376,7 @@ literal|5
 block|,
 literal|823
 block|,
-name|rm3_off
+name|rm03_off
 block|,
 comment|/* RM03 */
 literal|32
@@ -391,7 +389,7 @@ literal|19
 block|,
 literal|823
 block|,
-name|rm5_off
+name|rm05_off
 block|,
 comment|/* RM05 */
 literal|22
@@ -404,7 +402,7 @@ literal|19
 block|,
 literal|815
 block|,
-name|hp6_off
+name|rp06_off
 block|,
 comment|/* RP06 */
 literal|31
@@ -430,7 +428,7 @@ literal|19
 block|,
 literal|411
 block|,
-name|hp6_off
+name|rp06_off
 block|,
 comment|/* RP06 */
 literal|50
@@ -443,7 +441,7 @@ literal|32
 block|,
 literal|630
 block|,
-name|hp7_off
+name|rp07_off
 block|,
 comment|/* RP07 */
 literal|1
@@ -478,7 +476,7 @@ literal|40
 block|,
 literal|843
 block|,
-name|si9775_off
+name|cdc9775_off
 block|,
 comment|/* 9775 */
 literal|32
@@ -491,7 +489,7 @@ literal|10
 block|,
 literal|823
 block|,
-name|si9730_off
+name|cdc9730_off
 block|,
 comment|/* 9730 */
 literal|32
@@ -504,10 +502,10 @@ literal|16
 block|,
 literal|1024
 block|,
-name|hpam_off
+name|capricorn_off
 block|,
 comment|/* Ampex capricorn */
-literal|43
+literal|48
 block|,
 literal|20
 block|,
@@ -517,22 +515,9 @@ literal|20
 block|,
 literal|842
 block|,
-name|hpfj_off
+name|eagle_off
 block|,
 comment|/* Fuji Eagle */
-literal|48
-block|,
-literal|20
-block|,
-literal|48
-operator|*
-literal|20
-block|,
-literal|842
-block|,
-name|hpfj_off
-block|,
-comment|/* 48 sector Eagle */
 literal|1
 block|,
 literal|1
@@ -554,7 +539,7 @@ literal|19
 block|,
 literal|815
 block|,
-name|rm5_off
+name|rm05_off
 block|,
 comment|/* Ampex 9300 */
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	upmaptype.c	4.2	83/02/18	*/
+comment|/*	upmaptype.c	4.3	83/02/21	*/
 end_comment
 
 begin_comment
@@ -77,37 +77,8 @@ literal|0
 block|,
 literal|27
 block|,
-literal|68
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-literal|82
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|short
-name|up9766_off
-index|[]
-init|=
-block|{
 literal|0
 block|,
-literal|27
-block|,
-literal|68
-block|,
 operator|-
 literal|1
 block|,
@@ -117,8 +88,7 @@ block|,
 operator|-
 literal|1
 block|,
-operator|-
-literal|1
+literal|562
 block|,
 literal|82
 block|}
@@ -146,17 +116,13 @@ block|,
 operator|-
 literal|1
 block|,
+literal|155
+block|,
 operator|-
 literal|1
-block|,
-literal|155
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* this is called upam instead of am because hp.c has a similar array */
-end_comment
 
 begin_decl_stmt
 name|short
@@ -213,7 +179,7 @@ literal|19
 block|,
 literal|823
 block|,
-name|up9766_off
+name|up9300_off
 block|,
 comment|/* 9766 */
 literal|32
