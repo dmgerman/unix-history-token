@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.27 1998/05/26 06:39:08 danny Exp $"
+literal|"$Id: su.c,v 1.28 1998/09/21 07:44:25 roberto Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_ifdef
@@ -794,6 +800,34 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|k
+operator|=
+name|auth_getval
+argument_list|(
+literal|"auth_list"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|&&
+operator|!
+name|strstr
+argument_list|(
+name|k
+argument_list|,
+literal|"kerberos"
+argument_list|)
+condition|)
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0
