@@ -1170,7 +1170,7 @@ operator|<=
 name|USB_MEM_SMALL
 argument_list|,
 operator|(
-literal|"USB_MEM_SMALL(%d) is too small for struct usb_frag_dma(%d)\n"
+literal|"USB_MEM_SMALL(%d) is too small for struct usb_frag_dma(%zd)\n"
 operator|,
 name|USB_MEM_SMALL
 operator|,
