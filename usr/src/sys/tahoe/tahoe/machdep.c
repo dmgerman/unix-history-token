@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
@@ -72,7 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|"vnode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../ufs/inode.h"
 end_include
 
 begin_include
@@ -126,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"quota.h"
+file|"../ufs/quota.h"
 end_include
 
 begin_include
@@ -2292,10 +2292,10 @@ literal|0
 condition|)
 name|xumount
 argument_list|(
-name|NODEV
+name|NULL
 argument_list|)
 expr_stmt|;
-name|update
+name|sync
 argument_list|()
 expr_stmt|;
 for|for
