@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.22 (Berkeley) %G%"
+literal|"@(#)command.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,6 +1005,10 @@ name|cmdstack
 block|;
 name|int
 name|ch
+block|;
+name|off_t
+name|position
+argument_list|()
 block|;
 comment|/* left over from error() routine. */
 if|if
