@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff3.c	4.2 (Berkeley) %G%"
+literal|"@(#)diff3.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,16 +26,12 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_empty
-empty|#
-end_empty
-
 begin_comment
 comment|/* diff3 - 3-way differential file comparison*/
 end_comment
 
 begin_comment
-comment|/* diff3 [-e] d13 d23 f1 f2 f3   *  * d13 = diff report on f1 vs f3  * d23 = diff report on f2 vs f3  * f1, f2, f3 the 3 files */
+comment|/* diff3 [-ex3EX] d13 d23 f1 f2 f3 [m1 m3]  *  * d13 = diff report on f1 vs f3  * d23 = diff report on f2 vs f3  * f1, f2, f3 the 3 files  * if changes in f1 overlap with changes in f3, m1 and m3 are used  * to mark the overlaps; otherwise, the file names f1 and f3 are used  * (only for options E and X). */
 end_comment
 
 begin_struct
@@ -76,10 +72,6 @@ name|NC
 value|200
 end_define
 
-begin_comment
-comment|/* de is used to gather editing scripts,  * that are later spewed out in reverse order.  * its first element must be all zero  * the "new" component of de contains line positions  * or byte positions depending on when you look(!?) */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|diff
@@ -100,6 +92,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* de is used to gather editing scripts,  * that are later spewed out in reverse order.  * its first element must be all zero  * the "new" component of de contains line positions  * or byte positions depending on when you look(!?)  * array overlap indicates which sections in de correspond to  * lines that are different in all three files. */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|diff
@@ -107,6 +103,23 @@ name|de
 index|[
 name|NC
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|overlap
+index|[
+name|NC
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|overlapcnt
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -180,11 +193,39 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|oflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indicates whether to mark overlaps (-E or -X)*/
+end_comment
+
+begin_decl_stmt
+name|int
 name|debug
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|f1mark
+index|[
+literal|40
+index|]
+decl_stmt|,
+name|f3mark
+index|[
+literal|40
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*markers for -E and -X*/
+end_comment
 
 begin_function
 name|main
@@ -205,6 +246,14 @@ operator|,
 name|m
 operator|,
 name|n
+expr_stmt|;
+name|eflag
+operator|=
+literal|0
+expr_stmt|;
+name|oflag
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -249,6 +298,29 @@ name|eflag
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|eflag
+operator|=
+literal|3
+expr_stmt|;
+name|oflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|oflag
+operator|=
+name|eflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 name|argv
 operator|++
@@ -274,6 +346,54 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|oflag
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|f1mark
+argument_list|,
+literal|"<<<<<<< %s"
+argument_list|,
+name|argc
+operator|>=
+literal|7
+condition|?
+name|argv
+index|[
+literal|6
+index|]
+else|:
+name|argv
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|f3mark
+argument_list|,
+literal|">>>>>>> %s"
+argument_list|,
+name|argc
+operator|>=
+literal|8
+condition|?
+name|argv
+index|[
+literal|7
+index|]
+else|:
+name|argv
+index|[
+literal|5
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -2298,6 +2418,22 @@ return|;
 name|j
 operator|++
 expr_stmt|;
+name|overlap
+index|[
+name|j
+index|]
+operator|=
+operator|!
+name|dup
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dup
+condition|)
+name|overlapcnt
+operator|++
+expr_stmt|;
 name|de
 index|[
 name|j
@@ -2446,6 +2582,17 @@ name|n
 operator|--
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|oflag
+operator|||
+operator|!
+name|overlap
+index|[
+name|n
+index|]
+condition|)
 name|prange
 argument_list|(
 operator|&
@@ -2455,6 +2602,23 @@ name|n
 index|]
 operator|.
 name|old
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%da\n=======\n"
+argument_list|,
+name|de
+index|[
+name|n
+index|]
+operator|.
+name|old
+operator|.
+name|to
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|fseek
@@ -2553,12 +2717,56 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|oflag
+operator|||
+operator|!
+name|overlap
+index|[
+name|n
+index|]
+condition|)
 name|printf
 argument_list|(
 literal|".\n"
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%s\n.\n"
+argument_list|,
+name|f3mark
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%da\n%s\n.\n"
+argument_list|,
+name|de
+index|[
+name|n
+index|]
+operator|.
+name|old
+operator|.
+name|from
+operator|-
+literal|1
+argument_list|,
+name|f1mark
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+name|exit
+argument_list|(
+name|overlapcnt
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
