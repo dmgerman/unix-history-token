@@ -3058,9 +3058,10 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|int
+name|long
 name|entries
-decl_stmt|,
+decl_stmt|;
+name|int
 name|modcnt
 decl_stmt|;
 if|if
