@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.39	83/06/11	*/
+comment|/*	sys_generic.c	5.39	83/06/12	*/
 end_comment
 
 begin_include
@@ -1354,6 +1354,8 @@ name|int
 name|s
 decl_stmt|,
 name|ncoll
+decl_stmt|,
+name|mask
 decl_stmt|;
 name|label_t
 name|lqsave
@@ -1390,6 +1392,18 @@ operator|=
 name|NOFILE
 expr_stmt|;
 comment|/* forgiving, if slightly wrong */
+name|mask
+operator|=
+operator|(
+literal|1
+operator|<<
+name|uap
+operator|->
+name|nd
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 define|#
 directive|define
 name|getbits
@@ -1399,7 +1413,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		u.u_error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    sizeof (ibits[x])); \ 		if (u.u_error) \ 			goto done; \ 	} else \ 		ibits[x] = 0;
+value|if (uap->name) { \ 		u.u_error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    sizeof (ibits[x])); \ 		if (u.u_error) \ 			goto done; \ 		ibits[x]&= mask; \ 	} else \ 		ibits[x] = 0;
 name|getbits
 argument_list|(
 name|in
