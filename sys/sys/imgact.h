@@ -24,6 +24,12 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|label
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sysentvec
 struct_decl|;
 end_struct_decl
@@ -62,6 +68,12 @@ modifier|*
 name|userspace_envv
 decl_stmt|;
 comment|/* system call argument */
+name|struct
+name|label
+modifier|*
+name|execlabel
+decl_stmt|;
+comment|/* optional exec label */
 name|struct
 name|vnode
 modifier|*

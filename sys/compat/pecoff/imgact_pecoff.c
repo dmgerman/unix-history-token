@@ -1776,6 +1776,12 @@ name|NULL
 expr_stmt|;
 name|imgp
 operator|->
+name|execlabel
+operator|=
+name|NULL
+expr_stmt|;
+name|imgp
+operator|->
 name|attr
 operator|=
 operator|&
