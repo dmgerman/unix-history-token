@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -235,6 +235,11 @@ directive|define
 name|__ISDIRTY
 value|0x01
 comment|/* Line is dirty. */
+define|#
+directive|define
+name|__ISPASTEOL
+value|0x02
+comment|/* Cursor is past end of line */
 name|u_int
 name|flags
 decl_stmt|;
@@ -594,6 +599,18 @@ name|VS
 decl_stmt|,
 modifier|*
 name|VE
+decl_stmt|,
+modifier|*
+name|al
+decl_stmt|,
+modifier|*
+name|dl
+decl_stmt|,
+modifier|*
+name|sf
+decl_stmt|,
+modifier|*
+name|sr
 decl_stmt|,
 modifier|*
 name|AL_PARM
@@ -2229,6 +2246,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|tscroll
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Private #defines. */
 end_comment
@@ -2286,6 +2320,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|__rawmode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__noqch
 decl_stmt|;
 end_decl_stmt
 
