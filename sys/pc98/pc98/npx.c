@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.34 1998/04/07 09:09:41 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.35 1998/04/16 16:34:46 kato Exp $  */
 end_comment
 
 begin_include
@@ -933,31 +933,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|__asm
+asm|__asm("								\n\ 	.text							\n\ 	.p2align 2,0x90						\n\ " __XSTRING(CNAME(probeintr)) ":				\n\ 	ss							\n\ 	incl	" __XSTRING(CNAME(npx_intrs_while_probing)) "	\n\ 	pushl	%eax						\n\ 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) \n\ #ifdef PC98 	outb	%al,$0x08	# IO_ICU2			\n\ 	outb	%al,$0x00	# IO_ICU1			\n\ #else 	outb	%al,$0xa0	# IO_ICU2			\n\ 	outb	%al,$0x20	# IO_ICU1			\n\ #endif 	movb	$0,%al						\n\ #ifdef PC98 	outb	%al,$0xf8	# clear BUSY# latch		\n\ #else 	outb	%al,$0xf0	# clear BUSY# latch		\n\ #endif 	popl	%eax						\n\ 	iret							\n\ ");
 end_asm
-
-begin_expr_stmt
-operator|(
-literal|" 	.text 	.p2align 2,0x90 "
-name|__XSTRING
-argument_list|(
-name|CNAME
-argument_list|(
-name|probeintr
-argument_list|)
-argument_list|)
-literal|": 	ss 	incl	"
-name|__XSTRING
-argument_list|(
-name|CNAME
-argument_list|(
-name|npx_intrs_while_probing
-argument_list|)
-argument_list|)
-literal|" 	pushl	%eax 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) #ifdef PC98 	outb	%al,$0x08	# IO_ICU2 	outb	%al,$0x0	# IO_ICU1 #else 	outb	%al,$0xa0	# IO_ICU2 	outb	%al,$0x20	# IO_ICU1 #endif 	movb	$0,%al #ifdef PC98 	outb	%al,$0xf8	# clear BUSY# latch #else 	outb	%al,$0xf0	# clear BUSY# latch #endif 	popl	%eax 	iret "
-operator|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|inthand_t
@@ -966,31 +943,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|__asm
+asm|__asm("								\n\ 	.text							\n\ 	.p2align 2,0x90						\n\ " __XSTRING(CNAME(probetrap)) ":				\n\ 	ss							\n\ 	incl	" __XSTRING(CNAME(npx_traps_while_probing)) "	\n\ 	fnclex							\n\ 	iret							\n\ ");
 end_asm
-
-begin_expr_stmt
-operator|(
-literal|" 	.text 	.p2align 2,0x90 "
-name|__XSTRING
-argument_list|(
-name|CNAME
-argument_list|(
-name|probetrap
-argument_list|)
-argument_list|)
-literal|": 	ss 	incl	"
-name|__XSTRING
-argument_list|(
-name|CNAME
-argument_list|(
-name|npx_traps_while_probing
-argument_list|)
-argument_list|)
-literal|" 	fnclex 	iret "
-operator|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#
@@ -2783,7 +2737,10 @@ call|)
 argument_list|(
 name|BUFSIZE
 operator|*
-literal|1000000ll
+operator|(
+name|int64_t
+operator|)
+literal|1000000
 operator|/
 name|usec
 argument_list|)
