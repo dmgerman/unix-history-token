@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.10 (Berkeley) 83/10/19"
+literal|"@(#)iostat.c	4.11 (Berkeley) 84/11/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -1153,6 +1153,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|contin
 label|:
 operator|--
@@ -1418,7 +1423,7 @@ name|printf
 argument_list|(
 literal|"%3.0f"
 argument_list|,
-literal|100
+literal|100.
 operator|*
 name|s
 operator|.
