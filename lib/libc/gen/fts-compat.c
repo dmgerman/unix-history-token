@@ -60,25 +60,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -284,12 +278,10 @@ name|fts_ufslinks
 parameter_list|(
 name|FTS
 modifier|*
-name|sp
 parameter_list|,
 specifier|const
 name|FTSENT
 modifier|*
-name|ent
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -384,7 +376,7 @@ comment|/* fts_read */
 end_comment
 
 begin_comment
-comment|/*  * Internal representation of FTS, including extra implementation details.  * The FTS returned from fts_open is ftsp_fts from this structure, and it's  * fts_priv in turn points back to this internal version. i.e. for a given  * fts_private *priv:&priv->fts_fts == (FTS *)f == priv->fts_fts.fts_priv  */
+comment|/*  * Internal representation of an FTS, including extra implementation  * details.  The FTS returned from fts_open points to this structure's  * ftsp_fts member (and can be cast to an _fts_private as required)  */
 end_comment
 
 begin_struct
@@ -409,7 +401,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The "FTS_NOSTAT" option can avoid a lot of calls to stat(2) if it knows  * that a directory could not possibly have subdirectories. This is decided  * by looking at the link count: A subdirectory would increment its parent's  * link count by virtue of its own ".." entry.   * This assumption only holds for UFS-like filesystems that implement links  * and directories this way, so we must punt for others.  */
+comment|/*  * The "FTS_NOSTAT" option can avoid a lot of calls to stat(2) if it  * knows that a directory could not possibly have subdirectories.  This  * is decided by looking at the link count: a subdirectory would  * increment its parent's link count by virtue of its own ".." entry.  * This assumption only holds for UFS-like filesystems that implement  * links and directories this way, so we must punt for others.  */
 end_comment
 
 begin_decl_stmt
@@ -541,8 +533,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|_fts_private
+operator|*
+name|priv
 argument_list|)
 argument_list|)
 operator|)
@@ -562,8 +554,8 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|_fts_private
+operator|*
+name|priv
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -585,12 +577,6 @@ operator|->
 name|fts_options
 operator|=
 name|options
-expr_stmt|;
-name|sp
-operator|->
-name|fts_priv
-operator|=
-name|priv
 expr_stmt|;
 comment|/* Shush, GCC. */
 name|tmp
@@ -5007,9 +4993,12 @@ name|cpp
 decl_stmt|;
 name|priv
 operator|=
+operator|(
+expr|struct
+name|_fts_private
+operator|*
+operator|)
 name|sp
-operator|->
-name|fts_priv
 expr_stmt|;
 comment|/* 	 * If this node's device is different from the previous, grab 	 * the filesystem information, and decide on the reliability 	 * of the link information from this filesystem for stat(2) 	 * avoidance. 	 */
 if|if
@@ -5106,9 +5095,11 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|priv
 operator|->
 name|ftsp_linksreliable
+operator|)
 return|;
 block|}
 end_function

@@ -145,12 +145,6 @@ modifier|*
 name|fts_clientptr
 decl_stmt|;
 comment|/* thunk for sort function */
-name|struct
-name|_fts_private
-modifier|*
-name|fts_priv
-decl_stmt|;
-comment|/* implementation data */
 block|}
 name|FTS
 typedef|;
