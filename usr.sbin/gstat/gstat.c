@@ -237,8 +237,7 @@ literal|'c'
 case|:
 name|flag_c
 operator|=
-operator|!
-name|flag_c
+literal|1
 expr_stmt|;
 break|break;
 case|case
