@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcopy.c	5.4 (Berkeley) %G%"
+literal|"@(#)bcopy.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,18 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  * bcopy -- vax movc3 instruction  */
+comment|/*  * bcopy -- copy memory block, handling overlap of source and destination  *	(vax movc3 instruction)  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|word
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* size of "word" used for optimal copy speed */
 end_comment
 
 begin_expr_stmt
@@ -57,7 +68,7 @@ argument_list|,
 name|length
 argument_list|)
 specifier|register
-name|long
+name|char
 operator|*
 name|src
 operator|,
@@ -111,7 +122,14 @@ operator||
 name|length
 operator|)
 operator|&
-literal|3
+operator|(
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+operator|-
+literal|1
+operator|)
 condition|)
 do|do
 comment|/* copy by bytes */
@@ -132,31 +150,44 @@ do|;
 else|else
 block|{
 name|length
-operator|>>=
-literal|2
+operator|/=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
 expr_stmt|;
 do|do
-comment|/* copy by longs */
+block|{
+comment|/* copy by words */
 operator|*
 operator|(
-operator|(
-name|long
+name|word
 operator|*
 operator|)
 name|dst
-operator|)
-operator|++
 operator|=
 operator|*
 operator|(
-operator|(
-name|long
+name|word
 operator|*
 operator|)
 name|src
-operator|)
-operator|++
 expr_stmt|;
+name|src
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+expr_stmt|;
+name|dst
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+expr_stmt|;
+block|}
 do|while
 condition|(
 operator|--
@@ -191,7 +222,14 @@ operator||
 name|length
 operator|)
 operator|&
-literal|3
+operator|(
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+operator|-
+literal|1
+operator|)
 condition|)
 do|do
 comment|/* copy by bytes */
@@ -212,31 +250,44 @@ do|;
 else|else
 block|{
 name|length
-operator|>>=
-literal|2
+operator|/=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
 expr_stmt|;
 do|do
-comment|/* copy by shorts */
+block|{
+comment|/* copy by words */
 operator|*
-operator|--
 operator|(
-operator|(
-name|long
+name|word
 operator|*
 operator|)
 name|dst
-operator|)
 operator|=
 operator|*
-operator|--
 operator|(
-operator|(
-name|long
+name|word
 operator|*
 operator|)
 name|src
-operator|)
 expr_stmt|;
+name|src
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+expr_stmt|;
+name|dst
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|word
+argument_list|)
+expr_stmt|;
+block|}
 do|while
 condition|(
 operator|--
