@@ -4041,6 +4041,11 @@ operator|.
 name|tqe
 argument_list|)
 expr_stmt|;
+name|TARG_UNLOCK
+argument_list|(
+name|softc
+argument_list|)
+expr_stmt|;
 name|notify_user
 argument_list|(
 name|softc
@@ -4061,11 +4066,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-name|TARG_UNLOCK
-argument_list|(
-name|softc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5493,11 +5493,24 @@ operator|->
 name|abort_queue
 argument_list|)
 condition|)
+block|{
+comment|/* 		 * XXX KNOTE calls back into targreadfilt, causing a 		 * lock recursion.  So unlock around calls to it although 		 * this may open up a race allowing a user to submit 		 * another CCB after we have aborted all pending ones 		 * A better approach is to mark the softc as dying 		 * under lock and check for this in targstart(). 		 */
+name|TARG_UNLOCK
+argument_list|(
+name|softc
+argument_list|)
+expr_stmt|;
 name|notify_user
 argument_list|(
 name|softc
 argument_list|)
 expr_stmt|;
+name|TARG_LOCK
+argument_list|(
+name|softc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
