@@ -998,6 +998,10 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+name|type
+operator|!=
+name|MOUNT_UNION
 condition|)
 block|{
 name|hostp
@@ -1039,6 +1043,10 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+name|type
+operator|!=
+name|MOUNT_UNION
 condition|)
 block|{
 operator|*
