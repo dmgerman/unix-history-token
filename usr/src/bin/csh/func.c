@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.32 (Berkeley) %G%"
+literal|"@(#)func.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2796,6 +2796,7 @@ comment|/*VARARGS2*/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|search
 parameter_list|(
