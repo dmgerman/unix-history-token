@@ -9,21 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)rpc.rstatd.c 1.1 86/09/25 Copyr 1984 Sun Micro";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)rstat_proc.c	2.2 88/08/01 4.0 RPCSRC";*/
-end_comment
+begin_endif
+unit|static char sccsid[] = "from: @(#)rpc.rstatd.c 1.1 86/09/25 Copyr 1984 Sun Micro"; static char sccsid[] = "from: @(#)rstat_proc.c	2.2 88/08/01 4.0 RPCSRC";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rstat_proc.c,v 1.2 1994/10/15 13:39:54 davidg Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +40,12 @@ end_endif
 begin_comment
 comment|/*  * rstat service:  built with rstat.x and derived from rpc.rstatd.c  *  * Copyright (c) 1984 by Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -93,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -100,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -274,7 +285,9 @@ block|}
 block|,
 endif|#
 directive|endif
+block|{
 literal|""
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -344,6 +357,30 @@ name|stats_all
 union|;
 end_union
 
+begin_decl_stmt
+name|int
+name|havedisk
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setup
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|updatestat
@@ -364,13 +401,6 @@ specifier|static
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -617,12 +647,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|stat_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|stat_is_init
 operator|=
@@ -650,7 +678,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|statstime
@@ -924,7 +952,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read hz from kmem\n"
+literal|"rstat: can't read hz from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -977,7 +1005,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read cp_time from kmem\n"
+literal|"rstat: can't read cp_time from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1068,7 +1096,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read cp_time from kmem\n"
+literal|"rstat: can't read cp_time from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1120,7 +1148,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read avenrun from kmem\n"
+literal|"rstat: can't read avenrun from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1252,7 +1280,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read boottime from kmem\n"
+literal|"rstat: can't read boottime from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1368,7 +1396,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read cnt from kmem\n"
+literal|"rstat: can't read cnt from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1532,7 +1560,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read dk_xfer from kmem\n"
+literal|"rstat: can't read dk_xfer from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1628,7 +1656,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read ifnet from kmem\n"
+literal|"rstat: can't read ifnet from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1737,12 +1765,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|setup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|ifnet
@@ -1817,7 +1843,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstatd: Can't get namelist. %d"
+literal|"rstatd: can't get namelist. %d"
 argument_list|,
 name|en
 argument_list|)
@@ -1863,7 +1889,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read firstifnet from kmem\n"
+literal|"rstat: can't read firstifnet from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1913,7 +1939,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read ifnet from kmem\n"
+literal|"rstat: can't read ifnet from kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1936,18 +1962,16 @@ name|if_next
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * returns true if have a disk  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|havedisk
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1976,7 +2000,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstatd: Can't get namelist.(d)"
+literal|"rstatd: can't get namelist.(d)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2019,7 +2043,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rstat: can't read kmem\n"
+literal|"rstat: can't read kmem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2060,7 +2084,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -2403,23 +2427,13 @@ operator|&
 name|argument
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to free arguments\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to free arguments"
 argument_list|)
 expr_stmt|;
-block|}
 name|leave
 label|:
 if|if
