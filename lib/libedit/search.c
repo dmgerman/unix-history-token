@@ -291,9 +291,6 @@ name|REGEXEC
 name|regex_t
 name|re
 decl_stmt|;
-name|regmatch_t
-name|mb
-decl_stmt|;
 else|#
 directive|else
 ifndef|#
@@ -364,6 +361,8 @@ argument_list|,
 name|pat
 argument_list|,
 name|REG_EXTENDED
+operator||
+name|REG_NOSUB
 argument_list|)
 operator|!=
 literal|0
@@ -380,10 +379,9 @@ name|re
 argument_list|,
 name|str
 argument_list|,
-literal|1
+literal|0
 argument_list|,
-operator|&
-name|mb
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
