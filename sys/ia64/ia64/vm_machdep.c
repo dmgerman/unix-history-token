@@ -909,38 +909,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
-begin_function
-specifier|static
-name|void
-name|setredzone
-parameter_list|(
-name|pte
-parameter_list|,
-name|vaddr
-parameter_list|)
-name|u_short
-modifier|*
-name|pte
-decl_stmt|;
-name|caddr_t
-name|vaddr
-decl_stmt|;
-block|{
-comment|/* eventually do this by setting up an expand-down stack segment    for ss0: selector, allowing stack access down to top of u.    this means though that protection violations need to be handled    thru a double fault exception that must do an integral task    switch to a known good context, within which a dump can be    taken. a sensible scheme might be to save the initial context    used by sched (that has physical memory mapped 1:1 at bottom)    and take the dump while still in mapped mode */
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Map an IO request into kernel virtual address space.  *  * All requests are (re)mapped into kernel VA space.  * Notice that we use b_bufsize for the size of the buffer  * to be mapped.  b_bcount might be modified by the driver.  */
 end_comment
