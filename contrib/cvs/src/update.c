@@ -1675,9 +1675,7 @@ name|date
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -1994,9 +1992,7 @@ condition|(
 name|err
 condition|)
 return|return
-operator|(
 name|err
-operator|)
 return|;
 comment|/* FIXME-twp: at this point we should walk the hardlist 	   and update the `links' field of each hardlink_info struct 	   to list the files that are linked on dist.  That would make 	   it easier& more efficient to compare the disk linkage with 	   the repository linkage (a simple strcmp). */
 block|}
@@ -2061,9 +2057,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -3286,9 +3280,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -3381,9 +3373,7 @@ operator|!
 name|update_build_dirs
 condition|)
 return|return
-operator|(
 name|R_SKIP_ALL
-operator|)
 return|;
 comment|/* Various CVS administrators are in the habit of removing 	   the repository directory for things they don't want any 	   more.  I've even been known to do it myself (on rare 	   occasions).  Not the usual recommended practice, but we 	   want to try to come up with some kind of 	   reasonable/documented/sensible behavior.  Generally 	   the behavior is to just skip over that directory (see 	   dirs test in sanity.sh; the case which reaches here 	   is when update -d is specified, and the working directory 	   is gone but the subdirectory is still mentioned in 	   CVS/Entries).  */
 if|if
@@ -3426,9 +3416,7 @@ name|update_dir
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|R_SKIP_ALL
-operator|)
 return|;
 block|}
 else|else
@@ -3768,9 +3756,7 @@ name|update_dir
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|R_PROCESS
-operator|)
 return|;
 block|}
 end_function
@@ -3973,9 +3959,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -4119,9 +4103,7 @@ name|dir
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|errno
@@ -4191,9 +4173,7 @@ name|dirp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 else|else
@@ -4302,9 +4282,7 @@ name|dirp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 block|}
@@ -4341,9 +4319,7 @@ name|dirp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 operator|(
@@ -4355,9 +4331,7 @@ name|dirp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -4558,9 +4532,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -5700,9 +5672,7 @@ name|revbuf
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|retval
-operator|)
 return|;
 block|}
 end_function
@@ -7126,9 +7096,7 @@ name|file2
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|retval
-operator|)
 return|;
 block|}
 end_function
@@ -11516,11 +11484,9 @@ name|joining
 parameter_list|()
 block|{
 return|return
-operator|(
 name|join_rev1
 operator|!=
 name|NULL
-operator|)
 return|;
 block|}
 end_function

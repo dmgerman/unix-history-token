@@ -18562,14 +18562,6 @@ operator|++
 operator|=
 name|cvs_rsh
 expr_stmt|;
-operator|*
-name|p
-operator|++
-operator|=
-name|root
-operator|->
-name|hostname
-expr_stmt|;
 comment|/* If the login names differ between client and server 	 * pass it on to rsh. 	 */
 if|if
 condition|(
@@ -18595,6 +18587,14 @@ operator|->
 name|username
 expr_stmt|;
 block|}
+operator|*
+name|p
+operator|++
+operator|=
+name|root
+operator|->
+name|hostname
+expr_stmt|;
 operator|*
 name|p
 operator|++
