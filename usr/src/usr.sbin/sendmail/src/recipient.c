@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.16 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +468,11 @@ operator|=
 name|a
 operator|->
 name|q_next
+expr_stmt|;
+name|setctladdr
+argument_list|(
+name|a
+argument_list|)
 expr_stmt|;
 name|sibl
 operator|=

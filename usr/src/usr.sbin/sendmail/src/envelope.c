@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.20 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2013,34 +2013,6 @@ name|q_gid
 operator|=
 name|getgid
 argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|CurEnv
-operator|->
-name|e_from
-operator|.
-name|q_uid
-operator|!=
-literal|0
-condition|)
-block|{
-name|DefUid
-operator|=
-name|CurEnv
-operator|->
-name|e_from
-operator|.
-name|q_uid
-expr_stmt|;
-name|DefGid
-operator|=
-name|CurEnv
-operator|->
-name|e_from
-operator|.
-name|q_gid
 expr_stmt|;
 block|}
 comment|/* 	**  Rewrite the from person to dispose of possible implicit 	**	links in the net. 	*/

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.19 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2944,6 +2944,9 @@ name|atoi
 argument_list|(
 name|val
 argument_list|)
+expr_stmt|;
+name|setdefuser
+argument_list|()
 expr_stmt|;
 break|break;
 case|case

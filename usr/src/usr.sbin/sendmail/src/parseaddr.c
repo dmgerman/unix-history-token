@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.11 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3705,88 +3705,492 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|indent
+init|;
+name|i
+operator|>
+literal|0
+condition|;
+name|i
+operator|--
+control|)
 name|printf
 argument_list|(
-literal|"%s: mailer %d (%s), host `%s', user `%s'\n"
-argument_list|,
-argument|a->q_paddr
-argument_list|,
-argument|for (i = indent; i>
-literal|0
-argument|; i--) 			printf(
 literal|"\t"
-argument|); 		printf(
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\tnext=%x, flags=%o, rmailer %d, alias=%x, sibling=%x, child=%x\n"
-argument|, 		       a->q_next, a->q_flags, a->q_rmailer, a->q_alias, 		       a->q_sibling, a->q_child);
+argument_list|,
+name|a
+operator|->
+name|q_next
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|,
+name|a
+operator|->
+name|q_rmailer
+argument_list|,
+name|a
+operator|->
+name|q_alias
+argument_list|,
+name|a
+operator|->
+name|q_sibling
+argument_list|,
+name|a
+operator|->
+name|q_child
+argument_list|)
+expr_stmt|;
 comment|/* follow the chain if appropriate */
-argument|if (!follow) 			return; 		 		indent++; 		printaddr(a->q_child, TRUE); 		indent--; 		a = a->q_sibling; 	} 	if (first) 		printf(
+if|if
+condition|(
+operator|!
+name|follow
+condition|)
+return|return;
+name|indent
+operator|++
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+operator|->
+name|q_child
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|indent
+operator|--
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|->
+name|q_sibling
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|first
+condition|)
+name|printf
+argument_list|(
 literal|"[NULL]\n"
-argument|); }
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		canonical -- if set, strip out any comment information, **			etc. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
-argument|char * remotename(name, m, senderaddress, canonical) 	char *name; 	struct mailer *m; 	bool senderaddress; 	bool canonical; { 	register char **pvp; 	char *fancy; 	extern char *macvalue(); 	char *oldg = macvalue(
-literal|'g'
-argument|, CurEnv); 	static char buf[MAXNAME]; 	char lbuf[MAXNAME]; 	char pvpbuf[PSBUFSIZE]; 	extern char **prescan(); 	extern char *crackaddr();  	if (tTd(
-literal|12
-argument|,
-literal|1
-argument|)) 		printf(
-literal|"remotename(%s)\n"
-argument|, name);
-comment|/* don't do anything if we are tagging it as special */
-argument|if ((senderaddress ? m->m_s_rwset : m->m_r_rwset)<
-literal|0
-argument|) 		return (name);
-comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	**	This will leave the name as a comment and a $g macro. 	*/
-argument|if (canonical) 		fancy =
-literal|"\001g"
-argument|; 	else 		fancy = crackaddr(name);
-comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/
-argument|pvp = prescan(name,
-literal|'\0'
-argument|, pvpbuf); 	if (pvp == NULL) 		return (name); 	rewrite(pvp,
-literal|3
-argument|); 	if (CurEnv->e_fromdomain != NULL) 	{
-comment|/* append from domain to this address */
-argument|register char **pxp = pvp;
-comment|/* see if there is an "@domain" in the current name */
-argument|while (*pxp != NULL&& strcmp(*pxp,
-literal|"@"
-argument|) !=
-literal|0
-argument|) 			pxp++; 		if (*pxp == NULL) 		{
-comment|/* no.... append the "@domain" from the sender */
-argument|register char **qxq = CurEnv->e_fromdomain;  			while ((*pxp++ = *qxq++) != NULL) 				continue; 			rewrite(pvp,
-literal|3
-argument|); 		} 	}
-comment|/* 	**  Do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 depending on whether this is 	**		a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
-argument|if (senderaddress) 	{ 		rewrite(pvp,
-literal|1
-argument|); 		if (m->m_s_rwset>
-literal|0
-argument|) 			rewrite(pvp, m->m_s_rwset); 	} 	else 	{ 		rewrite(pvp,
-literal|2
-argument|); 		if (m->m_r_rwset>
-literal|0
-argument|) 			rewrite(pvp, m->m_r_rwset); 	}
-comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
-argument|rewrite(pvp,
-literal|4
-argument|);
-comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
-argument|cataddr(pvp, lbuf, sizeof lbuf); 	define(
-literal|'g'
-argument|, lbuf, CurEnv); 	expand(fancy, buf,&buf[sizeof buf -
-literal|1
-argument|], CurEnv); 	define(
-literal|'g'
-argument|, oldg, CurEnv);  	if (tTd(
-literal|12
-argument|,
-literal|1
-argument|)) 		printf(
-literal|"remotename => `%s'\n"
-argument|, buf); 	return (buf); }
+argument_list|)
+expr_stmt|;
+block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		canonical -- if set, strip out any comment information, **			etc. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|remotename
+parameter_list|(
+name|name
+parameter_list|,
+name|m
+parameter_list|,
+name|senderaddress
+parameter_list|,
+name|canonical
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|struct
+name|mailer
+modifier|*
+name|m
+decl_stmt|;
+name|bool
+name|senderaddress
+decl_stmt|;
+name|bool
+name|canonical
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|pvp
+decl_stmt|;
+name|char
+modifier|*
+name|fancy
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|macvalue
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+name|oldg
+init|=
+name|macvalue
+argument_list|(
+literal|'g'
+argument_list|,
+name|CurEnv
+argument_list|)
+decl_stmt|;
+specifier|static
+name|char
+name|buf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+name|char
+name|lbuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+name|char
+name|pvpbuf
+index|[
+name|PSBUFSIZE
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|prescan
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|crackaddr
+parameter_list|()
+function_decl|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|12
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"remotename(%s)\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+comment|/* don't do anything if we are tagging it as special */
+if|if
+condition|(
+operator|(
+name|senderaddress
+condition|?
+name|m
+operator|->
+name|m_s_rwset
+else|:
+name|m
+operator|->
+name|m_r_rwset
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|name
+operator|)
+return|;
+comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	**	This will leave the name as a comment and a $g macro. 	*/
+if|if
+condition|(
+name|canonical
+condition|)
+name|fancy
+operator|=
+literal|"\001g"
+expr_stmt|;
+else|else
+name|fancy
+operator|=
+name|crackaddr
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/
+name|pvp
+operator|=
+name|prescan
+argument_list|(
+name|name
+argument_list|,
+literal|'\0'
+argument_list|,
+name|pvpbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pvp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|name
+operator|)
+return|;
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_fromdomain
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* append from domain to this address */
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|pxp
+init|=
+name|pvp
+decl_stmt|;
+comment|/* see if there is an "@domain" in the current name */
+while|while
+condition|(
+operator|*
+name|pxp
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+operator|*
+name|pxp
+argument_list|,
+literal|"@"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|pxp
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pxp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* no.... append the "@domain" from the sender */
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|qxq
+init|=
+name|CurEnv
+operator|->
+name|e_fromdomain
+decl_stmt|;
+while|while
+condition|(
+operator|(
+operator|*
+name|pxp
+operator|++
+operator|=
+operator|*
+name|qxq
+operator|++
+operator|)
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* 	**  Do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 depending on whether this is 	**		a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
+if|if
+condition|(
+name|senderaddress
+condition|)
+block|{
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_s_rwset
+operator|>
+literal|0
+condition|)
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+name|m
+operator|->
+name|m_s_rwset
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_r_rwset
+operator|>
+literal|0
+condition|)
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+name|m
+operator|->
+name|m_r_rwset
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
+name|cataddr
+argument_list|(
+name|pvp
+argument_list|,
+name|lbuf
+argument_list|,
+sizeof|sizeof
+name|lbuf
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'g'
+argument_list|,
+name|lbuf
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|expand
+argument_list|(
+name|fancy
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'g'
+argument_list|,
+name|oldg
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|12
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"remotename => `%s'\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buf
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
