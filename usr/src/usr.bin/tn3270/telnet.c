@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	6.7 (Berkeley) %G%"
+literal|"@(#)telnet.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5939,9 +5939,13 @@ init|=
 name|min
 argument_list|(
 name|length
+operator|-
+literal|4
 argument_list|,
 sizeof|sizeof
 name|tmpbuf
+operator|-
+literal|1
 argument_list|)
 decl_stmt|;
 name|memcpy
@@ -5958,8 +5962,6 @@ expr_stmt|;
 name|tmpbuf
 index|[
 name|minlen
-operator|-
-literal|1
 index|]
 operator|=
 literal|0
