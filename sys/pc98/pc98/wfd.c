@@ -438,7 +438,7 @@ name|maxblks
 decl_stmt|;
 comment|/* transfer size limit */
 name|struct
-name|buf_queue_head
+name|bio_queue_head
 name|buf_queue
 decl_stmt|;
 comment|/* Queue of i/o requests */
@@ -527,7 +527,7 @@ modifier|*
 name|t
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -829,7 +829,7 @@ name|wfd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|t
@@ -2008,7 +2008,7 @@ name|void
 name|wfdstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -2020,7 +2020,7 @@ name|UNIT
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -2041,14 +2041,14 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|==
 literal|0
 condition|)
 block|{
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -2059,7 +2059,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Do bounds checking, adjust transfer, and set b_pblkno.          */
+comment|/* 	 * Do bounds checking, adjust transfer, and set bio_pblkno.          */
 if|if
 condition|(
 name|dscheck
@@ -2087,7 +2087,7 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/* Place it in the queue of disk activities for this disk. */
-name|bufqdisksort
+name|bioqdisksort
 argument_list|(
 operator|&
 name|t
@@ -2127,11 +2127,11 @@ name|t
 parameter_list|)
 block|{
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|t
@@ -2167,7 +2167,7 @@ name|bp
 condition|)
 return|return;
 comment|/* Unqueue the request. */
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|t
@@ -2191,7 +2191,7 @@ name|blkno
 operator|=
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|/
 operator|(
 name|t
@@ -2208,7 +2208,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|+
 operator|(
 name|t
@@ -2250,9 +2250,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|bio_cmd
 operator|&
-name|B_READ
+name|BIO_READ
 condition|)
 block|{
 name|op_code
@@ -2263,7 +2263,7 @@ name|count
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 block|}
 else|else
@@ -2277,7 +2277,7 @@ operator|=
 operator|-
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 block|}
 comment|/* only one transfer */
@@ -2286,7 +2286,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_driver1
+name|bio_driver1
 operator|=
 literal|0
 expr_stmt|;
@@ -2295,7 +2295,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_driver2
+name|bio_driver2
 operator|=
 literal|0
 expr_stmt|;
@@ -2355,7 +2355,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 argument_list|,
 name|count
 argument_list|,
@@ -2373,14 +2373,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * We can't handle this request in a single 		 * read/write operation.  Instead, queue a set of 		 * transfers, and record the number of transfers 		 * and the running residual in the b_driver 		 * fields of the bp. 		 */
+comment|/* 		 * We can't handle this request in a single 		 * read/write operation.  Instead, queue a set of 		 * transfers, and record the number of transfers 		 * and the running residual in the bio_driver 		 * fields of the bp. 		 */
 if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|bio_cmd
 operator|&
-name|B_READ
+name|BIO_READ
 condition|)
 block|{
 name|op_code
@@ -2401,7 +2401,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_driver1
+name|bio_driver1
 operator|=
 operator|(
 name|nblk
@@ -2418,7 +2418,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_driver2
+name|bio_driver2
 operator|=
 literal|0
 expr_stmt|;
@@ -2430,13 +2430,13 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 name|pxcount
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 comment|/* construct partial transfer requests */
 while|while
@@ -2529,9 +2529,9 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|bio_cmd
 operator|&
-name|B_READ
+name|BIO_READ
 operator|)
 condition|?
 name|count
@@ -2582,7 +2582,7 @@ modifier|*
 name|t
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -2610,13 +2610,13 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2627,7 +2627,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_driver2
+name|bio_driver2
 operator|+=
 name|resid
 expr_stmt|;
@@ -2640,7 +2640,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_driver1
+name|bio_driver1
 operator|)
 operator|--
 operator|<=
@@ -2649,16 +2649,16 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 operator|(
 name|int
 operator|)
 name|bp
 operator|->
-name|b_driver2
+name|bio_driver2
 expr_stmt|;
-name|devstat_end_transaction_buf
+name|devstat_end_transaction_bio
 argument_list|(
 operator|&
 name|t

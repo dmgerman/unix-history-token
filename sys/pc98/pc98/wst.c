@@ -726,7 +726,7 @@ name|blksize
 decl_stmt|;
 comment|/* Block size (512 | 1024) */
 name|struct
-name|buf_queue_head
+name|bio_queue_head
 name|buf_queue
 decl_stmt|;
 comment|/* Queue of i/o requests */
@@ -865,7 +865,7 @@ modifier|*
 name|t
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -1214,7 +1214,7 @@ name|wst
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|t
@@ -2193,7 +2193,7 @@ name|void
 name|wststrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -2205,7 +2205,7 @@ name|UNIT
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -2226,14 +2226,14 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|==
 literal|0
 condition|)
 block|{
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -2249,7 +2249,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|%
 name|t
 operator|->
@@ -2269,13 +2269,13 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2290,7 +2290,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|>
 name|t
 operator|->
@@ -2324,7 +2324,7 @@ name|lun
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|,
 name|t
 operator|->
@@ -2354,9 +2354,9 @@ name|wst_total
 operator|+=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
-name|bufq_insert_tail
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|t
@@ -2456,11 +2456,11 @@ name|t
 parameter_list|)
 block|{
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|t
@@ -2562,7 +2562,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|t
@@ -2576,7 +2576,7 @@ name|blk_count
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|/
 name|t
 operator|->
@@ -2586,9 +2586,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|bio_cmd
 operator|&
-name|B_READ
+name|BIO_READ
 condition|)
 block|{
 name|op_code
@@ -2599,7 +2599,7 @@ name|byte_count
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 block|}
 else|else
@@ -2619,7 +2619,7 @@ operator|=
 operator|-
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 block|}
 name|atapi_request_callback
@@ -2674,7 +2674,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 argument_list|,
 name|byte_count
 argument_list|,
@@ -2703,7 +2703,7 @@ modifier|*
 name|t
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -2736,13 +2736,13 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2750,7 +2750,7 @@ block|}
 else|else
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|resid
 expr_stmt|;
