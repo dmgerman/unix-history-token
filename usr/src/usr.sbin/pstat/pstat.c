@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.34 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,29 +345,13 @@ block|{
 literal|"_swdevt"
 block|}
 block|,
-define|#
-directive|define
-name|SFIL
-value|6
-block|{
-literal|"_file"
-block|}
-block|,
-define|#
-directive|define
-name|SNFILE
-value|7
-block|{
-literal|"_nfile"
-block|}
-block|,
 ifdef|#
 directive|ifdef
 name|NEWVM
 define|#
 directive|define
 name|NLMANDATORY
-value|SNFILE
+value|SSWDEVT
 comment|/* names up to here are mandatory */
 else|#
 directive|else
@@ -3003,9 +2987,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * add emulation of KINFO_VNODE here 		 */
 name|error
 argument_list|(
-literal|"vnodes on dead kernel, not impl yet\n"
+literal|"vnodes on dead kernel, not impl\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3667,7 +3652,7 @@ directive|ifdef
 name|NEWVM
 name|printf
 argument_list|(
-literal|"pstat: -p no longer supported\n"
+literal|"pstat: -p no longer supported (use ps)\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -4839,37 +4824,52 @@ argument|; 	while (*s) 		v = (v<<
 literal|3
 argument|) + *s++ -
 literal|'0'
-argument|; 	return(v); }  dofile() { 	int nfile; 	struct file *xfile
+argument|; 	return(v); }  dofile() { 	register struct file *fp; 	struct file *addr; 	char *buf; 	int len
 argument_list|,
-argument|*afile; 	register struct file *fp; 	register nf; 	int loc; 	static char *dtypes[] = {
+argument|maxfile
+argument_list|,
+argument|nfile; 	struct nlist fnl[] = {
+define|#
+directive|define
+name|FNL_NFILE
+value|0
+argument|{
+literal|"_nfiles"
+argument|}
+argument_list|,
+define|#
+directive|define
+name|FNL_MAXFILE
+value|1
+argument|{
+literal|"_maxfiles"
+argument|}
+argument_list|,
+argument|{
+literal|""
+argument|} 	}; 	static char *dtypes[] = {
 literal|"???"
 argument_list|,
 literal|"inode"
 argument_list|,
 literal|"socket"
-argument|};  	nf =
+argument|};  	if (kvm_nlist(fnl) !=
 literal|0
-argument|; 	nfile = getword(nl[SNFILE].n_value); 	xfile = (struct file *)calloc(nfile, sizeof (struct file)); 	afile = (struct file *)getword(nl[SFIL].n_value); 	if (nfile<
-literal|0
-argument||| nfile>
-literal|100000
-argument|) { 		fprintf(stderr,
-literal|"number of files is preposterous (%d)\n"
-argument|, 			nfile); 		return; 	} 	if (xfile == NULL) { 		fprintf(stderr,
-literal|"can't allocate memory for file table\n"
-argument|); 		return; 	} 	kvm_read(afile, xfile, nfile * sizeof (struct file)); 	for (fp=xfile; fp<&xfile[nfile]; fp++) 		if (fp->f_count) 			nf++; 	if (totflg) { 		printf(
+argument|) { 		error(
+literal|"kvm_nlist: no _nfiles or _maxfiles: %s"
+argument|,  			kvm_geterr()); 		return; 	} 	kvm_read(V(fnl[FNL_MAXFILE].n_value),&maxfile, 		sizeof (maxfile)); 	if (totflg) { 		kvm_read(V(fnl[FNL_NFILE].n_value),&nfile, sizeof (nfile)); 		printf(
 literal|"%3d/%3d files\n"
-argument|, nf, nfile); 		return; 	} 	printf(
+argument|, nfile, maxfile); 		return; 	} 	if (getfiles(&buf,&len) == -
+literal|1
+argument|) 		return;
+comment|/* 	 * getfiles returns in malloc'd buf a pointer to the first file 	 * structure, and then an array of file structs (whose 	 * addresses are derivable from the previous entry) 	 */
+argument|addr = *((struct file **)buf); 	fp = (struct file *)(buf + sizeof (struct file *)); 	nfile = (len - sizeof (struct file *)) / sizeof (struct file); 	 	printf(
 literal|"%d/%d open files\n"
-argument|, nf, nfile); 	printf(
+argument|, nfile, maxfile); 	printf(
 literal|"   LOC   TYPE    FLG     CNT  MSG    DATA    OFFSET\n"
-argument|); 	for (fp=xfile,loc=(int)afile; fp<&xfile[nfile]; fp++,loc+=sizeof(xfile[
-literal|0
-argument|])) { 		if (fp->f_count==
-literal|0
-argument|) 			continue; 		printf(
+argument|); 	for (; (char *)fp< buf + len; addr = fp->f_filef, fp++) { 		printf(
 literal|"%x "
-argument|, loc); 		if (fp->f_type<= DTYPE_SOCKET) 			printf(
+argument|, addr); 		if (fp->f_type<= DTYPE_SOCKET) 			printf(
 literal|"%-8.8s"
 argument|, dtypes[fp->f_type]); 		else 			printf(
 literal|"%8d"
@@ -4889,15 +4889,26 @@ literal|'S'
 argument|); 		putf(fp->f_flag&FEXLOCK,
 literal|'X'
 argument|);
+else|#
+directive|else
+argument|putf(
+literal|0
+argument|,
+literal|' '
+argument|); 		putf(
+literal|0
+argument|,
+literal|' '
+argument|);
 endif|#
 directive|endif
 argument|putf(fp->f_flag&FASYNC,
 literal|'I'
 argument|); 		printf(
 literal|"  %3d"
-argument|, mask(fp->f_count)); 		printf(
+argument|, fp->f_count); 		printf(
 literal|"  %3d"
-argument|, mask(fp->f_msgcount)); 		printf(
+argument|, fp->f_msgcount); 		printf(
 literal|"  %8.1x"
 argument|, fp->f_data); 		if (fp->f_offset<
 literal|0
@@ -4905,7 +4916,35 @@ argument|) 			printf(
 literal|"  %x\n"
 argument|, fp->f_offset); 		else 			printf(
 literal|"  %ld\n"
-argument|, fp->f_offset); 	} 	free(xfile); }
+argument|, fp->f_offset); 	} 	free(buf); }  getfiles(abuf, alen) 	char **abuf; 	int *alen; { 	char *buf; 	int len;  	if (fcore != NULL) {
+comment|/* 		 * add emulation of KINFO_FILE here 		 */
+argument|error(
+literal|"files on dead kernel, not impl\n"
+argument|); 		exit(
+literal|1
+argument|); 	} 	if ((len = getkerninfo(KINFO_FILE, NULL, NULL,
+literal|0
+argument|)) == -
+literal|1
+argument|) { 		syserror(
+literal|"getkerninfo estimate"
+argument|); 		return (-
+literal|1
+argument|); 	} 	if ((buf = (char *)malloc(len)) == NULL) { 		error(
+literal|"out of memory"
+argument|); 		return (-
+literal|1
+argument|); 	} 	if ((len = getkerninfo(KINFO_FILE, buf,&len,
+literal|0
+argument|)) == -
+literal|1
+argument|) { 		syserror(
+literal|"getkerninfo"
+argument|); 		return (-
+literal|1
+argument|); 	} 	*abuf = buf; 	*alen = len; 	return (
+literal|0
+argument|); }
 ifdef|#
 directive|ifdef
 name|NEWVM
