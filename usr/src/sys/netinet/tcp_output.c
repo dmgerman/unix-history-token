@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	6.7	84/11/14	*/
+comment|/*	tcp_output.c	6.8	85/05/27	*/
 end_comment
 
 begin_include
@@ -254,11 +254,44 @@ name|tp
 operator|->
 name|snd_cwnd
 argument_list|)
-operator|+
+expr_stmt|;
+comment|/* 	 * If in persist timeout with window of 0, send 1 byte. 	 * Otherwise, window is small but nonzero 	 * and timer expired, go to transmit state. 	 */
+if|if
+condition|(
 name|tp
 operator|->
 name|t_force
+condition|)
+block|{
+if|if
+condition|(
+name|win
+operator|==
+literal|0
+condition|)
+name|win
+operator|=
+literal|1
 expr_stmt|;
+else|else
+block|{
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_PERSIST
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_rxtshift
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 name|len
 operator|=
 name|MIN
@@ -302,7 +335,7 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
-comment|/* 		 * Don't send more than one segment if retransmitting. 		 */
+comment|/* 		 * Don't send more than one segment if retransmitting 		 * (or persisting, but then we shouldn't be here). 		 */
 if|if
 condition|(
 name|tp
@@ -316,6 +349,16 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|win
+operator|=
+name|sbspace
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 name|flags
 operator|=
 name|tcp_outflags
@@ -379,7 +422,7 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * Sender silly window avoidance.  If connection is idle 	 * and can send all data, a maximum segment, 	 * at least a maximum default-size segment do it, 	 * or are forced, do it; otherwise don't bother. 	 */
+comment|/* 	 * Sender silly window avoidance.  If connection is idle 	 * and can send all data, a maximum segment, 	 * at least a maximum default-size segment do it, 	 * or are forced, do it; otherwise don't bother. 	 * If retransmitting (possibly after persist timer forced us 	 * to send into a small window), then must resend. 	 */
 if|if
 condition|(
 name|len
@@ -420,6 +463,22 @@ condition|(
 name|tp
 operator|->
 name|t_force
+condition|)
+goto|goto
+name|send
+goto|;
+if|if
+condition|(
+name|SEQ_LT
+argument_list|(
+name|tp
+operator|->
+name|snd_nxt
+argument_list|,
+name|tp
+operator|->
+name|snd_max
+argument_list|)
 condition|)
 goto|goto
 name|send
@@ -485,15 +544,9 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * TCP window updates are not reliable, rather a polling protocol 	 * using ``persist'' packets is used to insure receipt of window 	 * updates.  The three ``states'' for the output side are: 	 *	idle			not doing retransmits or persists 	 *	persisting		to move a zero window 	 *	(re)transmitting	and thereby not persisting 	 * 	 * tp->t_timer[TCPT_PERSIST] 	 *	is set when we are in persist state. 	 * tp->t_force 	 *	is set when we are called to send a persist packet. 	 * tp->t_timer[TCPT_REXMT] 	 *	is set when we are retransmitting 	 * The output side is idle when both timers are zero. 	 * 	 * If send window is closed, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state, 	 * arranging to force out a byte to get more current window information 	 * if nothing happens soon. 	 */
+comment|/* 	 * TCP window updates are not reliable, rather a polling protocol 	 * using ``persist'' packets is used to insure receipt of window 	 * updates.  The three ``states'' for the output side are: 	 *	idle			not doing retransmits or persists 	 *	persisting		to move a zero window 	 *	(re)transmitting	and thereby not persisting 	 * 	 * tp->t_timer[TCPT_PERSIST] 	 *	is set when we are in persist state. 	 * tp->t_force 	 *	is set when we are called to send a persist packet. 	 * tp->t_timer[TCPT_REXMT] 	 *	is set when we are retransmitting 	 * The output side is idle when both timers are zero. 	 * 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state. 	 * If nothing happens soon, send when timer expires: 	 * if window is nonzero, transmit what we can, 	 * otherwise force out a byte. 	 */
 if|if
 condition|(
-name|tp
-operator|->
-name|snd_wnd
-operator|==
-literal|0
-operator|&&
 name|so
 operator|->
 name|so_snd
@@ -976,20 +1029,10 @@ name|ti_flags
 operator|=
 name|flags
 expr_stmt|;
-name|win
-operator|=
-name|sbspace
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|win
-operator|<
+operator|>=
 name|so
 operator|->
 name|so_rcv
@@ -999,16 +1042,6 @@ operator|/
 literal|4
 condition|)
 comment|/* avoid silly window */
-name|win
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|win
-operator|>
-literal|0
-condition|)
 name|ti
 operator|->
 name|ti_win
@@ -1156,12 +1189,21 @@ operator|+
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In transmit state, time the transmission and arrange for 	 * the retransmit.  In persist state, reset persist time for 	 * next persist. 	 */
+comment|/* 	 * In transmit state, time the transmission and arrange for 	 * the retransmit.  In persist state, just set snd_max. 	 */
 if|if
 condition|(
 name|tp
 operator|->
 name|t_force
+operator|==
+literal|0
+operator|||
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_PERSIST
+index|]
 operator|==
 literal|0
 condition|)
@@ -1238,7 +1280,7 @@ name|len
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Set retransmit timer if not currently set. 		 * Initial value for retransmit timer to tcp_beta*tp->t_srtt. 		 * Initialize shift counter which is used for exponential 		 * backoff of retransmit time. 		 */
+comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing a keep-alive probe. 		 * Initial value for retransmit timer to tcp_beta*tp->t_srtt. 		 * Initialize shift counter which is used for exponential 		 * backoff of retransmit time. 		 */
 if|if
 condition|(
 name|tp
