@@ -205,7 +205,7 @@ end_function_decl
 
 begin_function
 name|nl_catd
-name|_catopen
+name|catopen
 parameter_list|(
 name|name
 parameter_list|,
@@ -1164,7 +1164,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|_catgets
+name|catgets
 parameter_list|(
 name|catd
 parameter_list|,
@@ -1272,7 +1272,7 @@ end_function
 
 begin_function
 name|int
-name|_catclose
+name|catclose
 parameter_list|(
 name|catd
 parameter_list|)
