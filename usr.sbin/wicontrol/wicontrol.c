@@ -3718,7 +3718,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -P 0|1t\n"
+literal|"\t%s -i iface -P 0|1\n"
 argument_list|,
 name|p
 argument_list|)
