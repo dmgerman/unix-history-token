@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quot.c	4.21 (Berkeley) %G%"
+literal|"@(#)quot.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,10 +52,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * quot  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -65,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/dinode.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/fs.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
