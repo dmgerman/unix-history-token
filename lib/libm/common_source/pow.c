@@ -525,8 +525,10 @@ argument_list|()
 decl_stmt|;
 name|double
 name|__exp__D
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+specifier|volatile
+name|double
 name|huge
 init|=
 literal|1e300
