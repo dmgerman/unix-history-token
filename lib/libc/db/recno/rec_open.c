@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	8.6 (Berkeley) 2/22/94"
+literal|"@(#)rec_open.c	8.10 (Berkeley) 9/1/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,7 +338,7 @@ operator|&
 name|R_FIXEDLEN
 condition|)
 block|{
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
@@ -381,7 +381,7 @@ name|bt_bval
 operator|=
 literal|'\n'
 expr_stmt|;
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
@@ -394,7 +394,7 @@ name|fname
 operator|==
 name|NULL
 condition|)
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
@@ -409,12 +409,6 @@ operator|->
 name|bt_rfd
 operator|=
 name|rfd
-expr_stmt|;
-name|t
-operator|->
-name|bt_rcursor
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -460,7 +454,7 @@ block|{
 case|case
 name|O_RDONLY
 case|:
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
@@ -495,7 +489,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
@@ -506,7 +500,7 @@ name|t
 operator|->
 name|bt_irec
 operator|=
-name|ISSET
+name|F_ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -530,7 +524,7 @@ block|{
 case|case
 name|O_RDONLY
 case|:
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
@@ -569,7 +563,7 @@ name|st_size
 operator|==
 literal|0
 condition|)
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
@@ -578,6 +572,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|MMAP_NOT_AVAILABLE
+comment|/* 				 * XXX 				 * Mmap doesn't work correctly on many current 				 * systems.  In particular, it can fail subtly, 				 * with cache coherency problems.  Don't use it 				 * for now. 				 */
 name|t
 operator|->
 name|bt_msize
@@ -647,7 +645,7 @@ name|t
 operator|->
 name|bt_irec
 operator|=
-name|ISSET
+name|F_ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -658,13 +656,20 @@ name|__rec_fmap
 else|:
 name|__rec_vmap
 expr_stmt|;
-name|SET
+name|F_SET
 argument_list|(
 name|t
 argument_list|,
 name|R_MEMMAPPED
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+goto|goto
+name|slow
+goto|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
@@ -747,18 +752,19 @@ operator|==
 name|P_BLEAF
 condition|)
 block|{
+name|F_CLR
+argument_list|(
 name|h
-operator|->
-name|flags
-operator|=
-name|h
-operator|->
-name|flags
-operator|&
-operator|~
+argument_list|,
 name|P_TYPE
-operator||
+argument_list|)
+expr_stmt|;
+name|F_SET
+argument_list|(
+name|h
+argument_list|,
 name|P_RLEAF
+argument_list|)
 expr_stmt|;
 name|mpool_put
 argument_list|(
@@ -795,7 +801,7 @@ operator|&
 name|R_SNAPSHOT
 operator|&&
 operator|!
-name|ISSET
+name|F_ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -930,7 +936,7 @@ block|}
 comment|/* In-memory database can't have a file descriptor. */
 if|if
 condition|(
-name|ISSET
+name|F_ISSET
 argument_list|(
 name|t
 argument_list|,

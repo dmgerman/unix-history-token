@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	8.3 (Berkeley) 2/21/94"
+literal|"@(#)bt_split.c	8.9 (Berkeley) 7/26/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,7 +289,7 @@ name|flags
 parameter_list|,
 name|ilen
 parameter_list|,
-name|skip
+name|argskip
 parameter_list|)
 name|BTREE
 modifier|*
@@ -322,8 +322,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|indx_t
-name|skip
+name|u_int32_t
+name|argskip
 decl_stmt|;
 end_decl_stmt
 
@@ -368,7 +368,10 @@ decl_stmt|;
 name|indx_t
 name|nxtindex
 decl_stmt|;
-name|size_t
+name|u_int16_t
+name|skip
+decl_stmt|;
+name|u_int32_t
 name|n
 decl_stmt|,
 name|nbytes
@@ -383,6 +386,10 @@ modifier|*
 name|dest
 decl_stmt|;
 comment|/* 	 * Split the page into two pages, l and r.  The split routines return 	 * a pointer to the page into which the key should be inserted and with 	 * skip set to the offset which should be used.  Additionally, l and r 	 * are pinned. 	 */
+name|skip
+operator|=
+name|argskip
+expr_stmt|;
 name|h
 operator|=
 name|sp
@@ -466,7 +473,7 @@ name|upper
 expr_stmt|;
 if|if
 condition|(
-name|ISSET
+name|F_ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -502,7 +509,7 @@ operator|==
 name|P_ROOT
 operator|&&
 operator|(
-name|ISSET
+name|F_ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -1401,7 +1408,7 @@ operator|==
 name|P_ROOT
 operator|&&
 operator|(
-name|ISSET
+name|F_ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -1800,6 +1807,22 @@ name|NULL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|PURIFY
+name|memset
+argument_list|(
+name|l
+argument_list|,
+literal|0xff
+argument_list|,
+name|t
+operator|->
+name|bt_psize
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|l
 operator|->
 name|pgno
@@ -1908,7 +1931,7 @@ name|bt_mp
 argument_list|,
 name|tp
 argument_list|,
-literal|0
+name|MPOOL_DIRTY
 argument_list|)
 expr_stmt|;
 block|}
@@ -2435,7 +2458,7 @@ name|BLEAF
 modifier|*
 name|bl
 decl_stmt|;
-name|size_t
+name|u_int32_t
 name|nbytes
 decl_stmt|;
 name|char
@@ -2789,13 +2812,13 @@ name|BLEAF
 modifier|*
 name|bl
 decl_stmt|;
+name|CURSOR
+modifier|*
+name|c
+decl_stmt|;
 name|RLEAF
 modifier|*
 name|rl
-decl_stmt|;
-name|EPGNO
-modifier|*
-name|c
 decl_stmt|;
 name|PAGE
 modifier|*
@@ -2820,7 +2843,7 @@ name|top
 decl_stmt|,
 name|used
 decl_stmt|;
-name|size_t
+name|u_int32_t
 name|nbytes
 decl_stmt|;
 name|int
@@ -3124,18 +3147,27 @@ argument_list|(
 name|indx_t
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * cursor is at or past the skipped slot, the cursor is incremented by 	 * one.  If the cursor is on the right page, it is decremented by the 	 * number of records split to the left page. 	 * 	 * Don't bother checking for the B_SEQINIT flag, the page number will 	 * be P_INVALID. 	 */
+comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * cursor is at or past the skipped slot, the cursor is incremented by 	 * one.  If the cursor is on the right page, it is decremented by the 	 * number of records split to the left page. 	 */
 name|c
 operator|=
 operator|&
 name|t
 operator|->
-name|bt_bcursor
+name|bt_cursor
 expr_stmt|;
 if|if
 condition|(
+name|F_ISSET
+argument_list|(
+name|c
+argument_list|,
+name|CURS_INIT
+argument_list|)
+operator|&&
 name|c
 operator|->
+name|pg
+operator|.
 name|pgno
 operator|==
 name|h
@@ -3147,6 +3179,8 @@ if|if
 condition|(
 name|c
 operator|->
+name|pg
+operator|.
 name|index
 operator|>=
 name|skip
@@ -3154,12 +3188,16 @@ condition|)
 operator|++
 name|c
 operator|->
+name|pg
+operator|.
 name|index
 expr_stmt|;
 if|if
 condition|(
 name|c
 operator|->
+name|pg
+operator|.
 name|index
 operator|<
 name|nxt
@@ -3167,6 +3205,8 @@ condition|)
 comment|/* Left page. */
 name|c
 operator|->
+name|pg
+operator|.
 name|pgno
 operator|=
 name|l
@@ -3178,6 +3218,8 @@ block|{
 comment|/* Right page. */
 name|c
 operator|->
+name|pg
+operator|.
 name|pgno
 operator|=
 name|r
@@ -3186,6 +3228,8 @@ name|pgno
 expr_stmt|;
 name|c
 operator|->
+name|pg
+operator|.
 name|index
 operator|-=
 name|nxt
