@@ -626,7 +626,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"clock correction %d sec too large to adjust"
+literal|"clock correction %ld sec too large to adjust"
 argument_list|,
 name|adj
 operator|.
