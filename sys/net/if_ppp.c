@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.28 1995/11/13 22:09:39 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.29 1995/12/14 09:53:13 phk Exp $ */
 end_comment
 
 begin_comment
@@ -6326,13 +6326,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-specifier|static
-name|char
-name|digits
-index|[]
-init|=
-literal|"0123456789abcdef"
-decl_stmt|;
 for|for
 control|(
 name|m
@@ -6393,27 +6386,26 @@ operator|*
 name|bp
 operator|++
 operator|=
-name|digits
-index|[
+name|hex2ascii
+argument_list|(
 operator|*
 name|rptr
 operator|>>
 literal|4
-index|]
+argument_list|)
 expr_stmt|;
-comment|/* convert byte to ascii hex */
 operator|*
 name|bp
 operator|++
 operator|=
-name|digits
-index|[
+name|hex2ascii
+argument_list|(
 operator|*
 name|rptr
 operator|++
 operator|&
 literal|0xf
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 if|if
