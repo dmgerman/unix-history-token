@@ -1138,6 +1138,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Am79C975
+value|0x2627
+end_define
+
+begin_define
+define|#
+directive|define
 name|Am79C976
 value|0x2628
 end_define
