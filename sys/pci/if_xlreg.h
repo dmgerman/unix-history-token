@@ -2949,6 +2949,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XL_FLAG_NO_MMIO
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
 name|XL_NO_XCVR_PWR_MAGICBITS
 value|0x0900
 end_define
