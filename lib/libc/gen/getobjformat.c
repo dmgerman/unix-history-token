@@ -384,6 +384,8 @@ name|len
 decl_stmt|;
 name|found
 operator|=
+name|len
+operator|=
 literal|0
 expr_stmt|;
 while|while
