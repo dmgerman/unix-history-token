@@ -450,25 +450,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Can process p, with pcred pc, send the signal sig to process q?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CANSIGNAL
-parameter_list|(
-name|p
-parameter_list|,
-name|q
-parameter_list|,
-name|sig
-parameter_list|)
-define|\
-value|(!p_can(p, q, P_CAN_KILL, NULL) || \ 	((sig) == SIGCONT&& (q)->p_session == (p)->p_session))
-end_define
-
-begin_comment
 comment|/*  * Policy -- Can real uid ruid with ucred uc send a signal to process q?  */
 end_comment
 
@@ -4585,8 +4566,7 @@ expr_stmt|;
 comment|/* 			 * XXX: this locking needs work.. specifically the 			 * session checks.. 			 */
 if|if
 condition|(
-operator|!
-name|CANSIGNAL
+name|p_cansignal
 argument_list|(
 name|cp
 argument_list|,
@@ -4739,8 +4719,7 @@ expr_stmt|;
 comment|/* XXX: locking b0rked */
 if|if
 condition|(
-operator|!
-name|CANSIGNAL
+name|p_cansignal
 argument_list|(
 name|cp
 argument_list|,
@@ -4895,8 +4874,7 @@ return|;
 comment|/* XXX: locking b0rked */
 if|if
 condition|(
-operator|!
-name|CANSIGNAL
+name|p_cansignal
 argument_list|(
 name|cp
 argument_list|,
