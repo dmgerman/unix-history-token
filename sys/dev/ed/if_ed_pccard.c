@@ -1436,7 +1436,7 @@ return|;
 block|}
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 block|}
