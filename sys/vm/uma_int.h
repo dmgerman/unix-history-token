@@ -590,6 +590,24 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * These give us the size of one free item reference within our corresponding  * uma_slab structures, so that our calculations during zone setup are correct  * regardless of what the compiler decides to do with padding the structure  * arrays within uma_slab.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_FRITM_SZ
+value|(sizeof(struct uma_slab) - sizeof(struct uma_slab_head))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMA_FRITMREF_SZ
+value|(sizeof(struct uma_slab_refcnt) -	\     sizeof(struct uma_slab_head))
+end_define
+
+begin_comment
 comment|/*  * Zone management structure   *  * TODO: Optimize for cache line size  *  */
 end_comment
 
