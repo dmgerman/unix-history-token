@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -87,7 +87,7 @@ case|case
 ifdef|#
 directive|ifdef
 name|REL
-empty|# we need to do special stuff on microvax II
+empty|# we need to do special stuff on microvaxen
 name|mfpr
 name|$SID
 operator|,
@@ -100,9 +100,21 @@ decl_stmt|,
 name|r0
 decl_stmt|,
 name|$VAX_630
-name|bneq
+name|beql
 decl|1f
+name|cmpzv
+name|$24
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r0
+decl_stmt|,
+name|$VAX_650
+name|bneq
+decl|2f
 comment|/* 	 * Were we booted by VMB?  If so, r11 is not boothowto, 	 * but rather the address of the `Extended RPB' (see KA630 	 * User's Manual, pp 3-21).  These tests were devised by 	 * richl@tektronix, 11/10/87. 	 */
+decl|1
+range|:
 name|cmpl
 argument_list|(
 name|r11
@@ -117,7 +129,7 @@ name|will
 name|be
 name|small
 name|bneq
-decl|1f			#
+decl|2f			#
 name|and
 name|these
 name|will
@@ -131,7 +143,7 @@ argument_list|)
 decl_stmt|,
 name|$0
 name|bneq
-decl|1f
+decl|2f
 name|cmpl
 decl|8
 argument_list|(
@@ -141,14 +153,14 @@ decl_stmt|,
 name|$
 decl|-1
 name|bneq
-decl|1f
+decl|2f
 name|tstl
 decl|0xc
 argument_list|(
 name|r11
 argument_list|)
 name|bneq
-decl|1f
+decl|2f
 comment|/* 	 * Booted by VMB: get flags from extended rpb. 	 * We can only guess at the boot device (here ra(0,0)). 	 */
 name|movl
 decl|0x30
@@ -170,7 +182,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-literal|1
+literal|2
 case|:
 end_case
 
@@ -533,6 +545,24 @@ operator|#
 literal|8
 name|is
 literal|630
+operator|.
+name|word
+literal|1f
+operator|-
+literal|0b
+operator|#
+literal|9
+name|is
+operator|???
+operator|.
+name|word
+literal|5f
+operator|-
+literal|0b
+operator|#
+literal|10
+name|is
+literal|650
 literal|5
 operator|:
 name|mtpr

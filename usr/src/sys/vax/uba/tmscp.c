@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.4 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.5 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1198,12 +1198,16 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|VAX630
+name|QBA
 if|if
 condition|(
 name|cpu
 operator|==
 name|VAX_630
+operator|||
+name|cpu
+operator|==
+name|VAX_650
 condition|)
 name|br
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)qdcons.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)qdcons.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -641,6 +641,10 @@ name|dga
 modifier|*
 name|dga
 decl_stmt|;
+specifier|extern
+name|int
+name|cpu
+decl_stmt|;
 name|qdaddr
 operator|=
 operator|(
@@ -842,6 +846,13 @@ argument_list|()
 expr_stmt|;
 comment|/* PtoB the font into off-screen */
 comment|/*-------------------------------------------------------------------- * tell the VAX ROM that the cursor is at the bottom of the screen  */
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+block|{
 name|NVR
 operator|=
 operator|(
@@ -922,7 +933,13 @@ index|[
 name|ROW_MAX
 index|]
 expr_stmt|;
+block|}
 comment|/*---------------------------------------------------------- * smash system virtual console service routine addresses */
+name|printf
+argument_list|(
+literal|"switching console to QDSS display...\n"
+argument_list|)
+expr_stmt|;
 name|v_getc
 operator|=
 name|qdgetc

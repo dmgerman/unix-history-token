@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -325,6 +325,8 @@ begin_if
 if|#
 directive|if
 name|VAX630
+operator|||
+name|VAX650
 end_if
 
 begin_comment
@@ -1004,6 +1006,41 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+if|#
+directive|if
+name|VAX650
+case|case
+name|VAX_650
+case|:
+ifndef|#
+directive|ifndef
+name|SMALL
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"cpu: uVAX 3000\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ubaddr
+operator|=
+name|ubaddr630
+expr_stmt|;
+name|uioaddr
+operator|=
+name|uioaddr630
+expr_stmt|;
+name|nuba
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Forward into the past... 	 */
 comment|/* 	for (i = 0; i< nmba; i++) 		if (!badaddr(mbaddr[i], sizeof(long))) 			mbaddr[i]->mba_cr = MBCR_INIT; */
@@ -1036,8 +1073,13 @@ directive|endif
 if|#
 directive|if
 name|VAX630
+operator|||
+name|VAX650
 case|case
 name|VAX_630
+case|:
+case|case
+name|VAX_650
 case|:
 name|mtpr
 argument_list|(
@@ -1097,7 +1139,6 @@ directive|endif
 break|break;
 endif|#
 directive|endif
-comment|/* VAX630 */
 block|}
 comment|/* give unibus devices a chance to recover... */
 if|if
