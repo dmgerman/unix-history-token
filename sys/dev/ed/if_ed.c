@@ -1500,7 +1500,7 @@ operator|&&
 operator|--
 name|n
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 end_function
 
@@ -4920,7 +4920,7 @@ operator|&&
 operator|--
 name|maxwait
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 end_function
 
@@ -5366,7 +5366,7 @@ operator|&&
 operator|--
 name|maxwait
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
