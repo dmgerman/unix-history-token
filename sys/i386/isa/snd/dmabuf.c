@@ -740,6 +740,10 @@ condition|(
 name|ret
 operator|==
 name|EINTR
+operator|||
+name|ret
+operator|==
+name|ERESTART
 condition|)
 name|d
 operator|->
@@ -2008,6 +2012,10 @@ condition|(
 name|ret
 operator|==
 name|EINTR
+operator|||
+name|ret
+operator|==
+name|ERESTART
 condition|)
 name|d
 operator|->
