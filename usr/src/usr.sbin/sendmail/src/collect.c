@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.22 (Berkeley) %G%"
+literal|"@(#)collect.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -889,9 +889,14 @@ case|:
 if|if
 condition|(
 name|c
-operator|!=
+operator|==
 literal|'\n'
 condition|)
+name|istate
+operator|=
+name|IS_BOL
+expr_stmt|;
+else|else
 block|{
 name|ungetc
 argument_list|(
@@ -904,10 +909,21 @@ name|c
 operator|=
 literal|'\r'
 expr_stmt|;
+name|istate
+operator|=
+name|IS_NORM
+expr_stmt|;
 block|}
-elseif|else
+goto|goto
+name|bufferchar
+goto|;
+block|}
 if|if
 condition|(
+name|c
+operator|==
+literal|'\r'
+operator|&&
 operator|!
 name|bitset
 argument_list|(
@@ -917,18 +933,6 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
-condition|)
-name|istate
-operator|=
-name|IS_BOL
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|c
-operator|==
-literal|'\r'
 condition|)
 block|{
 name|istate
@@ -963,6 +967,8 @@ name|istate
 operator|=
 name|IS_NORM
 expr_stmt|;
+name|bufferchar
+label|:
 if|if
 condition|(
 name|mstate
