@@ -288,44 +288,16 @@ name|dbreg
 block|{
 name|unsigned
 name|int
-name|dr0
+name|dr
+index|[
+literal|8
+index|]
 decl_stmt|;
-comment|/* debug address register 0 */
-name|unsigned
-name|int
-name|dr1
-decl_stmt|;
-comment|/* debug address register 1 */
-name|unsigned
-name|int
-name|dr2
-decl_stmt|;
-comment|/* debug address register 2 */
-name|unsigned
-name|int
-name|dr3
-decl_stmt|;
-comment|/* debug address register 3 */
-name|unsigned
-name|int
-name|dr4
-decl_stmt|;
-comment|/* reserved */
-name|unsigned
-name|int
-name|dr5
-decl_stmt|;
-comment|/* reserved */
-name|unsigned
-name|int
-name|dr6
-decl_stmt|;
-comment|/* debug status register */
-name|unsigned
-name|int
-name|dr7
-decl_stmt|;
-comment|/* debug control register */
+comment|/* debug registers */
+comment|/* Index 0-3: debug address registers */
+comment|/* Index 4-5: reserved */
+comment|/* Index 6: debug status */
+comment|/* Index 7: debug control */
 block|}
 struct|;
 end_struct
@@ -372,7 +344,7 @@ name|d
 parameter_list|,
 name|x
 parameter_list|)
-value|((&d->dr0)[x])
+value|(d->dr[(x)])
 end_define
 
 begin_comment

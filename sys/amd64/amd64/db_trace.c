@@ -2456,7 +2456,10 @@ condition|(
 operator|(
 name|d
 operator|->
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|&
 name|mask
 operator|)
@@ -2562,7 +2565,10 @@ expr_stmt|;
 comment|/* clear the bits we are about to affect */
 name|d
 operator|->
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|&=
 operator|~
 operator|(
@@ -2602,7 +2608,10 @@ expr_stmt|;
 comment|/* enable the watchpoint */
 name|d
 operator|->
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator||=
 operator|(
 literal|0x2
@@ -2669,11 +2678,17 @@ operator|)
 return|;
 name|d
 operator|->
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|=
 name|d
 operator|->
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|&
 operator|~
 operator|(
@@ -2775,7 +2790,10 @@ condition|(
 operator|(
 name|d
 operator|.
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|&
 operator|(
 literal|3
@@ -2833,7 +2851,10 @@ condition|(
 operator|(
 name|d
 operator|.
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|&
 operator|(
 literal|3
@@ -2961,7 +2982,10 @@ if|if
 condition|(
 name|d
 operator|.
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|&
 operator|(
 literal|3
@@ -3132,7 +3156,10 @@ if|if
 condition|(
 name|d
 operator|.
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|&
 operator|(
 literal|0x03
@@ -3155,7 +3182,10 @@ operator|=
 operator|(
 name|d
 operator|.
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|>>
 operator|(
 literal|16
@@ -3175,7 +3205,10 @@ operator|=
 operator|(
 name|d
 operator|.
-name|dr7
+name|dr
+index|[
+literal|7
+index|]
 operator|>>
 operator|(
 literal|16
