@@ -226,6 +226,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|epsv4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use EPSV/EPRT cmds on IPv4 ftp */
+end_comment
+
+begin_decl_stmt
+name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt

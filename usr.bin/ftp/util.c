@@ -400,7 +400,7 @@ literal|1
 expr_stmt|;
 name|try_epsv
 operator|=
-literal|1
+name|epsv4
 expr_stmt|;
 comment|/* 		 * Set up defaults for FTP. 		 */
 operator|(

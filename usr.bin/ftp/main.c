@@ -332,6 +332,15 @@ name|passivemode
 operator|=
 literal|0
 expr_stmt|;
+name|epsv4
+operator|=
+literal|1
+expr_stmt|;
+name|try_epsv
+operator|=
+name|epsv4
+expr_stmt|;
+comment|/* so status w/o connection isn't bogus */
 name|restricted_data_ports
 operator|=
 literal|1

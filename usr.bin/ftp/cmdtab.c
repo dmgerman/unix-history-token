@@ -251,6 +251,15 @@ end_comment
 
 begin_decl_stmt
 name|char
+name|epsv4help
+index|[]
+init|=
+literal|"toggle use of EPSV/EPRT on IPv4 ftp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|formhelp
 index|[]
 init|=
@@ -1125,6 +1134,21 @@ block|,
 endif|#
 directive|endif
 comment|/* !SMALL */
+block|{
+literal|"epsv4"
+block|,
+name|epsv4help
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setepsv4
+block|}
+block|,
 block|{
 literal|"exit"
 block|,
