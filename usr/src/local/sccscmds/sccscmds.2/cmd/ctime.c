@@ -15,7 +15,7 @@ operator|)
 name|ctime
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -25,16 +25,31 @@ comment|/*  * This routine converts time as follows.  * The epoch is 0000 Jan 1 
 comment|\\  *	01234567890123456789012345  *	0	  1	    2  *  * ctime(t) just calls localtime, then asctime.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* included by macros.h above */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
