@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.24 1999/02/11 23:59:29 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.68 1999/03/27 20:35:14 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -141,6 +141,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/bus_memio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus_pio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcireg.h>
 end_include
 
@@ -191,7 +209,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.24 1999/02/11 23:59:29 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.68 1999/03/27 20:35:14 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5698,19 +5716,61 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|sc
-operator|->
-name|iobase
-operator|=
-name|pci_conf_read
+if|if
+condition|(
+operator|!
+name|pci_map_port
 argument_list|(
 name|config_id
 argument_list|,
 name|XL_PCI_LOIO
-argument_list|)
+argument_list|,
+operator|(
+name|u_short
+operator|*
+operator|)
 operator|&
-literal|0xFFFFFFE0
+operator|(
+name|sc
+operator|->
+name|xl_bhandle
+operator|)
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"xl%d: couldn't map port\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+ifdef|#
+directive|ifdef
+name|__i386__
+name|sc
+operator|->
+name|xl_btag
+operator|=
+name|I386_BUS_SPACE_IO
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|sc
+operator|->
+name|xl_btag
+operator|=
+name|ALPHA_BUS_SPACE_IO
+expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 if|if
@@ -5764,14 +5824,32 @@ goto|;
 block|}
 name|sc
 operator|->
-name|csr
+name|xl_bhandle
 operator|=
-operator|(
-specifier|volatile
-name|caddr_t
-operator|)
 name|vbase
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+name|sc
+operator|->
+name|xl_btag
+operator|=
+name|I386_BUS_SPACE_MEM
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|sc
+operator|->
+name|xl_btag
+operator|=
+name|ALPHA_BUS_SPACE_MEM
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* Allocate interrupt */
@@ -7630,6 +7708,18 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__alpha__
+comment|/* Force longword alignment for packet payload to pacify alpha. */
+name|m_new
+operator|->
+name|m_data
+operator|+=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|->
 name|xl_mbuf

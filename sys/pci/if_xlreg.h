@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xlreg.h,v 1.19 1998/10/22 15:35:06 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xlreg.h,v 1.20 1999/03/27 20:10:10 wpaul Exp $  */
 end_comment
 
 begin_define
@@ -2766,20 +2766,12 @@ name|ifmedia
 name|ifmedia
 decl_stmt|;
 comment|/* media info */
-name|u_int32_t
-name|iobase
+name|bus_space_handle_t
+name|xl_bhandle
 decl_stmt|;
-comment|/* pointer to PIO space */
-ifndef|#
-directive|ifndef
-name|XL_USEIOSPACE
-specifier|volatile
-name|caddr_t
-name|csr
+name|bus_space_tag_t
+name|xl_btag
 decl_stmt|;
-comment|/* pointer to register map */
-endif|#
-directive|endif
 name|struct
 name|xl_type
 modifier|*
@@ -2918,12 +2910,6 @@ begin_comment
 comment|/*  * register space access macros  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XL_USEIOSPACE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2936,7 +2922,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|outl(sc->iobase + (u_int32_t)(reg), val)
+value|bus_space_write_4(sc->xl_btag, sc->xl_bhandle, reg, val)
 end_define
 
 begin_define
@@ -2951,7 +2937,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|outw(sc->iobase + (u_int32_t)(reg), val)
+value|bus_space_write_2(sc->xl_btag, sc->xl_bhandle, reg, val)
 end_define
 
 begin_define
@@ -2966,7 +2952,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|outb(sc->iobase + (u_int32_t)(reg), val)
+value|bus_space_write_1(sc->xl_btag, sc->xl_bhandle, reg, val)
 end_define
 
 begin_define
@@ -2979,7 +2965,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|inl(sc->iobase + (u_int32_t)(reg))
+value|bus_space_read_4(sc->xl_btag, sc->xl_bhandle, reg)
 end_define
 
 begin_define
@@ -2992,7 +2978,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|inw(sc->iobase + (u_int32_t)(reg))
+value|bus_space_read_2(sc->xl_btag, sc->xl_bhandle, reg)
 end_define
 
 begin_define
@@ -3005,102 +2991,8 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|inb(sc->iobase + (u_int32_t)(reg))
+value|bus_space_read_1(sc->xl_btag, sc->xl_bhandle, reg)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|((*(u_int32_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int32_t)(val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|((*(u_int16_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int16_t)(val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|((*(u_int8_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int8_t)(val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*(u_int32_t *)((sc)->csr + (u_int32_t)(reg)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*(u_int16_t *)((sc)->csr + (u_int32_t)(reg)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*(u_int8_t *)((sc)->csr + (u_int32_t)(reg)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3998,6 +3890,33 @@ directive|define
 name|PHY_BMSR_EXTENDED
 value|0x0001
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|vtophys
+end_undef
+
+begin_define
+define|#
+directive|define
+name|vtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|(pmap_kextract(((vm_offset_t) (va))) \ 					+ 1*1024*1024*1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
