@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.47 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6533,6 +6533,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|4
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: clone %s"
+argument_list|,
+name|ee
+operator|->
+name|e_id
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 if|if
@@ -7086,6 +7112,33 @@ literal|0
 condition|)
 block|{
 comment|/* oops....  lost it */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|13
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"sendenvelope: %s lost lock: lockfp=%x, %s\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|e
+operator|->
+name|e_lockfp
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
