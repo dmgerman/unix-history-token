@@ -5949,11 +5949,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|prev_object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|prev_object
@@ -5969,6 +5964,11 @@ argument_list|,
 name|next_pindex
 argument_list|,
 name|next_size
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|prev_object
 argument_list|)
 expr_stmt|;
 block|}

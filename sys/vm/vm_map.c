@@ -8268,11 +8268,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|object
@@ -8314,6 +8309,11 @@ operator|=
 name|offidxstart
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
