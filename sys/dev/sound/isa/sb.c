@@ -6956,6 +6956,15 @@ operator|=
 literal|"ESS1868"
 expr_stmt|;
 break|break;
+case|case
+literal|0x69187316
+case|:
+comment|/* ESS1869 */
+name|s
+operator|=
+literal|"ESS1869"
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
