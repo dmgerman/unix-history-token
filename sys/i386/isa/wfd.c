@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -218,7 +218,6 @@ name|wfdstrategy
 block|,
 name|wfdioctl
 block|,
-comment|/*22*/
 name|nodump
 block|,
 name|nopsize
@@ -938,14 +937,6 @@ argument_list|(
 expr|struct
 name|wfd
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|bufq_init
-argument_list|(
-operator|&
-name|t
-operator|->
-name|buf_queue
 argument_list|)
 expr_stmt|;
 name|t
@@ -2235,7 +2226,7 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/* Place it in the queue of disk activities for this disk. */
-name|bufqdisksort
+name|tqdisksort
 argument_list|(
 operator|&
 name|t
@@ -2279,7 +2270,7 @@ name|buf
 modifier|*
 name|bp
 init|=
-name|bufq_first
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|t
@@ -2306,7 +2297,7 @@ name|bp
 condition|)
 return|return;
 comment|/* Unqueue the request. */
-name|bufq_remove
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|t
@@ -2314,6 +2305,8 @@ operator|->
 name|buf_queue
 argument_list|,
 name|bp
+argument_list|,
+name|b_act
 argument_list|)
 expr_stmt|;
 comment|/* We have a buf, now we should make a command 	 * First, translate the block to absolute and put it in terms of the 	 * logical blocksize of the device. 	 * What if something asks for 512 bytes not on a 2k boundary? */
@@ -2447,7 +2440,9 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|b_un
+operator|.
+name|b_addr
 argument_list|,
 name|count
 argument_list|,
