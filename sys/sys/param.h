@@ -76,7 +76,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Machine-independent constants (some used in following include files).  * Redefined constants are from POSIX 1003.1 limits file.  *  * MAXCOMLEN should be>= sizeof(ac_comm) (see<acct.h>)  * MAXLOGNAME should be>= UT_NAMESIZE (see<utmp.h>)  */
+comment|/*  * Machine-independent constants (some used in following include files).  * Redefined constants are from POSIX 1003.1 limits file.  *  * MAXCOMLEN should be>= sizeof(ac_comm) (see<acct.h>)  * MAXLOGNAME should be> max login_name + 1  * (see also UT_NAMESIZE (see<utmp.h>))  */
 end_comment
 
 begin_include
@@ -115,7 +115,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* max login name length */
+comment|/* max login name length (incl. NUL) */
 end_comment
 
 begin_define
