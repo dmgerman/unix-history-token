@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../general/general.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"api_exch.h"
 end_include
 
@@ -1167,10 +1173,7 @@ block|{
 name|int
 name|netleng
 init|=
-name|htons
-argument_list|(
 name|length
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1323,10 +1326,7 @@ name|i
 decl_stmt|,
 name|netleng
 init|=
-name|htons
-argument_list|(
 name|length
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1449,12 +1449,9 @@ name|type
 argument_list|,
 name|length
 argument_list|,
-name|ntohs
-argument_list|(
 name|exch_state
 operator|.
 name|length
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
