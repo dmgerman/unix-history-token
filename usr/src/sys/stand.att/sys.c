@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys.c	4.1	%G%	*/
+comment|/*	sys.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -2482,6 +2482,38 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NFILES
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|iob
+index|[
+name|i
+index|]
+operator|.
+name|i_flgs
+operator|!=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
