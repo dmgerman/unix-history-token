@@ -879,6 +879,12 @@ case|:
 case|case
 name|ETHERTYPE_PPPOES
 case|:
+case|case
+name|ETHERTYPE_PPPOED2
+case|:
+case|case
+name|ETHERTYPE_PPPOES2
+case|:
 name|pppoe_print
 argument_list|(
 name|p
