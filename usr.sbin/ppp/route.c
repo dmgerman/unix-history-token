@@ -1764,6 +1764,25 @@ operator|->
 name|sa_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sa
+index|[
+name|rtax
+index|]
+operator|->
+name|sa_family
+operator|==
+literal|0
+condition|)
+name|sa
+index|[
+name|rtax
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* ??? */
 block|}
 else|else
 name|sa
