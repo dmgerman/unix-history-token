@@ -718,6 +718,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ed_clear_memory
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ed_stop
 parameter_list|(
