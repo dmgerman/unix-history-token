@@ -2481,7 +2481,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: runt packet -- m_pullup failed."
+literal|"arp: runt packet -- m_pullup failed\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2522,7 +2522,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: unknown hardware address format (%2D)"
+literal|"arp: unknown hardware address format (0x%2D)\n"
 argument_list|,
 operator|(
 name|unsigned
