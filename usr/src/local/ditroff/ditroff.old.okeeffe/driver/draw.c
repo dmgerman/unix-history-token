@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	draw.c	1.10	85/12/16  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
+comment|/*	draw.c	1.11	86/01/12  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
 end_comment
 
 begin_include
@@ -697,7 +697,7 @@ name|word
 argument_list|(
 name|ybound
 argument_list|(
-name|hd
+name|vd
 argument_list|)
 argument_list|)
 expr_stmt|;
