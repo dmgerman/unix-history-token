@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	1.7	87/04/02	*/
+comment|/*	param.h	1.8	87/05/12	*/
 end_comment
 
 begin_comment
@@ -125,7 +125,8 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|u_short
+name|unsigned
+name|short
 name|ntohs
 argument_list|()
 decl_stmt|,
@@ -135,7 +136,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|unsigned
+name|long
 name|ntohl
 argument_list|()
 decl_stmt|,
