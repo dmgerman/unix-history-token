@@ -2005,6 +2005,9 @@ name|_thread_activated
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SYSTEM_SCOPE_ONLY
 if|if
 condition|(
 name|_thread_scope_system
@@ -2039,7 +2042,8 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
-block|{
+endif|#
+directive|endif
 name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
@@ -2052,7 +2056,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
