@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: expr.c,v 1.12 2002/02/16 21:27:48 millert Exp $	*/
+comment|/*	$OpenBSD: expr.c,v 1.14 2002/04/26 16:15:16 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|__SCCSID
 argument_list|(
-literal|"@(#)expr.c      8.2 (Berkeley) 4/29/95"
+literal|"@(#)expr.c	8.2 (Berkeley) 4/29/95"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,7 +28,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID_SOURCE
 argument_list|(
-literal|"$OpenBSD: expr.c,v 1.12 2002/02/16 21:27:48 millert Exp $"
+literal|"$OpenBSD: expr.c,v 1.14 2002/04/26 16:15:16 espie Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -375,13 +375,11 @@ begin_function
 name|int
 name|expr
 parameter_list|(
-name|expbuf
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|expbuf
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|rval
@@ -443,13 +441,13 @@ name|query
 parameter_list|()
 block|{
 name|int
-name|bool
+name|result
 decl_stmt|,
 name|true_val
 decl_stmt|,
 name|false_val
 decl_stmt|;
-name|bool
+name|result
 operator|=
 name|lor
 argument_list|()
@@ -466,7 +464,7 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-name|bool
+name|result
 return|;
 block|}
 name|true_val
@@ -492,7 +490,7 @@ name|query
 argument_list|()
 expr_stmt|;
 return|return
-name|bool
+name|result
 condition|?
 name|true_val
 else|:
@@ -1937,13 +1935,11 @@ specifier|static
 name|void
 name|experr
 parameter_list|(
-name|msg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf
 argument_list|(

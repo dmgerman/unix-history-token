@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: main.c,v 1.52 2002/02/16 21:27:48 millert Exp $	*/
+comment|/*	$OpenBSD: main.c,v 1.53 2002/04/26 16:15:16 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__SCCSID
 argument_list|(
-literal|"@(#)main.c      8.1 (Berkeley) 6/6/93"
+literal|"@(#)main.c	8.1 (Berkeley) 6/6/93"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -36,7 +36,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID_SOURCE
 argument_list|(
-literal|"$OpenBSD: main.c,v 1.52 2002/02/16 21:27:48 millert Exp $"
+literal|"$OpenBSD: main.c,v 1.53 2002/04/26 16:15:16 espie Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -912,18 +912,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -1452,18 +1448,14 @@ specifier|static
 name|int
 name|do_look_ahead
 parameter_list|(
-name|t
-parameter_list|,
-name|token
-parameter_list|)
 name|int
 name|t
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|token
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2373,13 +2365,11 @@ begin_function
 name|void
 name|outputstr
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2426,17 +2416,13 @@ specifier|static
 name|ndptr
 name|inspect
 parameter_list|(
-name|c
-parameter_list|,
-name|tp
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2778,13 +2764,11 @@ begin_function
 name|int
 name|builtin_type
 parameter_list|(
-name|key
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2837,11 +2821,9 @@ name|char
 modifier|*
 name|builtin_realname
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2897,18 +2879,14 @@ specifier|static
 name|void
 name|record
 parameter_list|(
-name|t
-parameter_list|,
-name|lev
-parameter_list|)
 name|struct
 name|position
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|int
 name|lev
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2944,18 +2922,14 @@ specifier|static
 name|void
 name|dump_stack
 parameter_list|(
-name|t
-parameter_list|,
-name|lev
-parameter_list|)
 name|struct
 name|position
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|int
 name|lev
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
