@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.8.1.2 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,9 @@ argument_list|()
 decl_stmt|,
 name|shell
 argument_list|()
+decl_stmt|,
+name|site
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -329,6 +332,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|chmodhelp
+index|[]
+init|=
+literal|"change file permissions of remote file"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|connecthelp
 index|[]
 init|=
@@ -423,6 +435,15 @@ name|helphelp
 index|[]
 init|=
 literal|"print local help information"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|idlehelp
+index|[]
+init|=
+literal|"get (set) idle timer on remote side"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,6 +701,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|sitehelp
+index|[]
+init|=
+literal|"send site specific command to remote server\n\t\tTry \"rhelp site\" or \"site help\" for more information"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|shellhelp
 index|[]
 init|=
@@ -756,6 +786,15 @@ name|typehelp
 index|[]
 init|=
 literal|"set file transfer type"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|umaskhelp
+index|[]
+init|=
+literal|"get (set) umask on remote side"
 decl_stmt|;
 end_decl_stmt
 
@@ -939,6 +978,20 @@ name|cdup
 block|}
 block|,
 block|{
+literal|"chmod"
+block|,
+name|chmodhelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|do_chmod
+block|}
+block|,
+block|{
 literal|"close"
 block|,
 name|disconhelp
@@ -1090,6 +1143,20 @@ block|,
 literal|1
 block|,
 name|help
+block|}
+block|,
+block|{
+literal|"idle"
+block|,
+name|idlehelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|idle
 block|}
 block|,
 block|{
@@ -1541,6 +1608,20 @@ name|put
 block|}
 block|,
 block|{
+literal|"site"
+block|,
+name|sitehelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|site
+block|}
+block|,
+block|{
 literal|"size"
 block|,
 name|sizecmdhelp
@@ -1664,6 +1745,20 @@ block|,
 literal|1
 block|,
 name|user
+block|}
+block|,
+block|{
+literal|"umask"
+block|,
+name|umaskhelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|do_umask
 block|}
 block|,
 block|{
