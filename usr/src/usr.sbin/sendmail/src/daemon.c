@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.27 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.28 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.27 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.28 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,6 +668,15 @@ directive|endif
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|CurHostAddr
+argument_list|,
+sizeof|sizeof
+name|CurHostAddr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
