@@ -14083,8 +14083,9 @@ argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
-argument|s
+name|s
 argument_list|)
+expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|5
