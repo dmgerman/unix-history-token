@@ -262,6 +262,7 @@ comment|/* Used to do headers */
 end_comment
 
 begin_struct
+specifier|const
 specifier|static
 struct|struct
 name|segment
