@@ -2473,6 +2473,9 @@ name|clearobjflags
 operator|=
 literal|1
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|p
@@ -2518,6 +2521,9 @@ name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|clearobjflags
@@ -3503,6 +3509,9 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|idx
@@ -3541,6 +3550,9 @@ name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
