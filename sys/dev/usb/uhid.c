@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhid.c,v 1.43 2001/08/15 00:06:49 augustss Exp $	*/
+comment|/*	$NetBSD: uhid.c,v 1.44 2001/09/15 16:16:28 yamt Exp $	*/
 end_comment
 
 begin_comment
@@ -1759,7 +1759,10 @@ argument_list|,
 operator|(
 literal|"uhid_intr: waking %p\n"
 operator|,
+operator|&
 name|sc
+operator|->
+name|sc_q
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2350,7 +2353,10 @@ argument_list|,
 operator|(
 literal|"uhidread: sleep on %p\n"
 operator|,
+operator|&
 name|sc
+operator|->
+name|sc_q
 operator|)
 argument_list|)
 expr_stmt|;
