@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.53 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7821,20 +7821,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|strcpy
-argument_list|(
-name|bp
-argument_list|,
-literal|", stat="
-argument_list|)
-expr_stmt|;
-name|bp
-operator|+=
-name|strlen
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
