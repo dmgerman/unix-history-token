@@ -4656,22 +4656,23 @@ block|{
 name|int
 name|link
 decl_stmt|;
-comment|/* Notify that the link state has changed. */
+comment|/* Return if state hasn't changed. */
 if|if
 condition|(
 name|ifp
 operator|->
 name|if_link_state
-operator|!=
+operator|==
 name|link_state
 condition|)
-block|{
+return|return;
 name|ifp
 operator|->
 name|if_link_state
 operator|=
 name|link_state
 expr_stmt|;
+comment|/* Notify that the link state has changed. */
 name|rt_ifmsg
 argument_list|(
 name|ifp
@@ -4766,6 +4767,24 @@ argument_list|,
 name|link_state
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_carp
+condition|)
+name|carp_carpdev_state
+argument_list|(
+name|ifp
+operator|->
+name|if_carp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|log
 argument_list|(
 name|LOG_NOTICE
@@ -4787,7 +4806,6 @@ else|:
 literal|"DOWN"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
