@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.21 1998/10/30 05:41:15 msmith Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.22 1999/07/10 18:08:57 iwasaki Exp $  */
 end_comment
 
 begin_ifndef
@@ -58,7 +58,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSTEM_BIOS
+name|APM_INT
 value|0x1f
 end_define
 
@@ -77,7 +77,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSTEM_BIOS
+name|APM_INT
 value|0x15
 end_define
 
@@ -134,31 +134,6 @@ define|#
 directive|define
 name|APM_OURADDR
 value|0x00080000
-end_define
-
-begin_comment
-comment|/* Error code of APM initializer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|APMINI_CANTFIND
-value|0xffffffff
-end_define
-
-begin_define
-define|#
-directive|define
-name|APMINI_NOT32BIT
-value|0xfffffffe
-end_define
-
-begin_define
-define|#
-directive|define
-name|APMINI_CONNECTERR
-value|0xfffffffd
 end_define
 
 begin_comment
@@ -1147,32 +1122,6 @@ typedef|*
 name|apm_info_t
 typedef|;
 end_typedef
-
-begin_struct
-struct|struct
-name|apm_bios_arg
-block|{
-name|u_long
-name|eax
-decl_stmt|;
-name|u_long
-name|ebx
-decl_stmt|;
-name|u_long
-name|ecx
-decl_stmt|;
-name|u_long
-name|edx
-decl_stmt|;
-name|u_long
-name|esi
-decl_stmt|;
-name|u_long
-name|edi
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
