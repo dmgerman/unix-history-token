@@ -335,6 +335,9 @@ parameter_list|,
 name|UINTN
 modifier|*
 name|mapkey
+parameter_list|,
+name|UINTN
+name|pages
 parameter_list|)
 function_decl|;
 end_function_decl

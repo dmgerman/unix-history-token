@@ -853,6 +853,9 @@ parameter_list|,
 name|UINTN
 modifier|*
 name|mapkey
+parameter_list|,
+name|UINTN
+name|pages
 parameter_list|)
 block|{
 name|char
@@ -891,6 +894,8 @@ name|EFI_STATUS
 name|status
 decl_stmt|;
 name|UINTN
+name|bisz
+decl_stmt|,
 name|key
 decl_stmt|;
 comment|/*      * Version 1 bootinfo.      */
@@ -928,7 +933,7 @@ name|u_int64_t
 operator|)
 name|ST
 expr_stmt|;
-comment|/*       * Allow the environment variable 'rootdev' to override the supplied device       * This should perhaps go to MI code and/or have $rootdev tested/set by      * MI code before launching the kernel.      */
+comment|/*       * Allow the environment variable 'rootdev' to override the supplied      * device. This should perhaps go to MI code and/or have $rootdev      * tested/set by MI code before launching the kernel.      */
 name|rootdevname
 operator|=
 name|getenv
@@ -1239,31 +1244,44 @@ name|bi_kernend
 operator|=
 name|addr
 expr_stmt|;
-comment|/* read memory map and stash it after bootinfo */
-name|bi
-operator|->
-name|bi_memmap
+comment|/*      * Read the memory map and stash it after bootinfo. Align the memory map      * on a 16-byte boundary (the bootinfo block is page aligned).      */
+name|bisz
 operator|=
-call|(
-name|u_int64_t
-call|)
-argument_list|(
-name|bi
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|bi
-operator|->
-name|bi_memmap_size
-operator|=
-literal|8192
-operator|-
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|bootinfo
 argument_list|)
+operator|+
+literal|0x0f
+operator|)
+operator|&
+operator|~
+literal|0x0f
+expr_stmt|;
+name|bi
+operator|->
+name|bi_memmap
+operator|=
+operator|(
+operator|(
+name|u_int64_t
+operator|)
+name|bi
+operator|)
+operator|+
+name|bisz
+expr_stmt|;
+name|bi
+operator|->
+name|bi_memmap_size
+operator|=
+name|EFI_PAGE_SIZE
+operator|*
+name|pages
+operator|-
+name|bisz
 expr_stmt|;
 name|status
 operator|=
