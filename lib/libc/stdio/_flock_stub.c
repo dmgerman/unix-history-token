@@ -53,41 +53,45 @@ begin_comment
 comment|/*  * Weak symbols for externally visible functions in this file:  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|flockfile
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_flockfile
-end_pragma
+argument_list|,
+name|flockfile
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|_flockfile_debug
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_flockfile_debug_stub
-end_pragma
+argument_list|,
+name|_flockfile_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|ftrylockfile
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_ftrylockfile
-end_pragma
+argument_list|,
+name|ftrylockfile
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|funlockfile
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_funlockfile
-end_pragma
+argument_list|,
+name|funlockfile
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * We need to retain binary compatibility for a while.  So pretend  * that _lock is part of FILE * even though it is dereferenced off  * _extra now.  When we stop encoding the size of FILE into binaries  * this can be changed in stdio.h.  This will reduce the amount of  * code that has to change in the future (just remove this comment  * and #define).  */

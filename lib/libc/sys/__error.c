@@ -20,14 +20,15 @@ begin_comment
 comment|/*  * Declare a weak reference in case the application is not linked  * with libpthread.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|__error
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|__error_unthreaded
-end_pragma
+argument_list|,
+name|__error
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

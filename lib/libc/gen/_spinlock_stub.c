@@ -19,32 +19,35 @@ begin_comment
 comment|/*  * Declare weak definitions in case the application is not linked  * with libpthread.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|_atomic_lock
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_atomic_lock_stub
-end_pragma
+argument_list|,
+name|_atomic_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|_spinlock
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_spinlock_stub
-end_pragma
+argument_list|,
+name|_spinlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|_spinlock_debug
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_spinlock_debug_stub
-end_pragma
+argument_list|,
+name|_spinlock_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * This function is a stub for the _atomic_lock function in libpthread.  */
