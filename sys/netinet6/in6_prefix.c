@@ -2888,6 +2888,12 @@ name|NULL
 condition|)
 block|{
 comment|/* link this addr and the prefix each other */
+if|if
+condition|(
+name|rap
+operator|->
+name|ra_addr
+condition|)
 name|IFAFREE
 argument_list|(
 operator|&
@@ -2936,6 +2942,12 @@ name|rpp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|rap
+operator|->
+name|ra_addr
+condition|)
 name|IFAFREE
 argument_list|(
 operator|&
