@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|INTHIBIT
-value|(1<< (INTBITS - 1))
+value|(unsigned) (1<< (INTBITS - 1))
 end_define
 
 begin_define

@@ -290,37 +290,6 @@ name|patlock
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|GNU_REGEX
-comment|/* initialize pattern buffer */
-name|exp
-operator|->
-name|buffer
-operator|=
-name|NULL
-expr_stmt|;
-name|exp
-operator|->
-name|allocated
-operator|=
-literal|0L
-expr_stmt|;
-name|exp
-operator|->
-name|fastmap
-operator|=
-literal|0
-expr_stmt|;
-comment|/* not used by GNU regex after 0.12 */
-name|exp
-operator|->
-name|translate
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|n
