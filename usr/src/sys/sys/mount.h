@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -138,10 +138,14 @@ name|fsid_t
 name|f_fsid
 decl_stmt|;
 comment|/* file system id */
+name|uid_t
+name|f_owner
+decl_stmt|;
+comment|/* user that mounted the filesystem */
 name|long
 name|f_spare
 index|[
-literal|9
+literal|8
 index|]
 decl_stmt|;
 comment|/* spare for later */
@@ -437,10 +441,6 @@ name|int
 name|mnt_maxsymlinklen
 decl_stmt|;
 comment|/* max size of short symlink */
-name|uid_t
-name|mnt_owner
-decl_stmt|;
-comment|/* uid that did mount */
 name|struct
 name|statfs
 name|mnt_stat
