@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -105,14 +105,12 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
-name|o
+name|off_t
+name|v
 decl_stmt|;
 specifier|register
 name|u_int
 name|c
-decl_stmt|,
-name|v
 decl_stmt|;
 specifier|register
 name|struct
@@ -250,11 +248,15 @@ comment|/* minor device 1 is kernel memory */
 case|case
 literal|1
 case|:
-if|if
-condition|(
+name|v
+operator|=
 name|uio
 operator|->
 name|uio_offset
+expr_stmt|;
+if|if
+condition|(
+name|v
 operator|<
 name|MACH_CACHED_MEMORY_ADDR
 condition|)
@@ -271,17 +273,16 @@ name|iov_len
 expr_stmt|;
 if|if
 condition|(
-name|uio
-operator|->
-name|uio_offset
+name|v
 operator|+
 name|c
 operator|<=
+name|MACH_PHYS_TO_CACHED
+argument_list|(
 name|avail_end
+argument_list|)
 operator|||
-name|uio
-operator|->
-name|uio_offset
+name|v
 operator|>=
 name|MACH_KSEG2_ADDR
 operator|&&
@@ -290,9 +291,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|uio
-operator|->
-name|uio_offset
+name|v
 argument_list|,
 name|c
 argument_list|,
@@ -315,9 +314,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|uio
-operator|->
-name|uio_offset
+name|v
 argument_list|,
 operator|(
 name|int
