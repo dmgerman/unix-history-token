@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.57
+literal|3.58
 operator|%
 name|G
 operator|%
@@ -282,7 +282,7 @@ condition|)
 name|fvalue
 operator|++
 expr_stmt|;
-comment|/* search header list for this header */
+comment|/* delete default value for this header */
 for|for
 control|(
 name|hp
@@ -337,8 +337,23 @@ name|h
 operator|->
 name|h_flags
 argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|H_FORCE
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
 condition|)
-break|break;
+name|h
+operator|->
+name|h_value
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 comment|/* see if it is a known type */
 for|for
@@ -474,23 +489,6 @@ name|hi_flags
 operator|)
 return|;
 block|}
-comment|/* create/fill in a new node */
-if|if
-condition|(
-name|h
-operator|==
-name|NULL
-operator|||
-name|bitset
-argument_list|(
-name|H_FORCE
-argument_list|,
-name|h
-operator|->
-name|h_flags
-argument_list|)
-condition|)
-block|{
 comment|/* create a new node */
 name|h
 operator|=
@@ -524,8 +522,7 @@ name|h
 operator|->
 name|h_link
 operator|=
-operator|*
-name|hp
+name|NULL
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -544,7 +541,6 @@ name|hp
 operator|=
 name|h
 expr_stmt|;
-block|}
 name|h
 operator|->
 name|h_flags
