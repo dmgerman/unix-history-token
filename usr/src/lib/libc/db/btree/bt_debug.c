@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_debug.c	5.7 (Berkeley) %G%"
+literal|"@(#)bt_debug.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,20 +471,6 @@ literal|")"
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\nlorder %lu\n"
-argument_list|,
-name|m
-operator|->
-name|m_lorder
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
