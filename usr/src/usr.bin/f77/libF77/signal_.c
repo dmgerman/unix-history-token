@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal_.c	5.2	%G%  *  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 16  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  *  * This routine arranges to trap user specified signals so that it can  * pass the signum fortran style - by address. (boo)  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal_.c	5.3	%G%  *  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 32  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  *  * This routine arranges to trap user specified signals so that it can  * pass the signum fortran style - by address. (boo)  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ function_decl|(
 modifier|*
 name|dispatch
 index|[
-literal|17
+literal|33
 index|]
 function_decl|)
 parameter_list|()
@@ -104,7 +104,7 @@ operator|||
 operator|*
 name|sigp
 operator|>
-literal|16
+literal|32
 condition|)
 return|return
 operator|(
