@@ -1936,7 +1936,11 @@ operator|->
 name|si_iosize_max
 operator|=
 operator|(
-literal|65534
+operator|(
+literal|256
+operator|*
+name|DEV_BSIZE
+operator|)
 operator|/
 name|cdp
 operator|->
