@@ -371,15 +371,6 @@ expr_stmt|;
 name|pw_init
 argument_list|()
 expr_stmt|;
-comment|/* Create with exact permissions. */
-operator|(
-name|void
-operator|)
-name|umask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|pfd
 operator|=
 name|pw_lock

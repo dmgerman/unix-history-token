@@ -379,6 +379,15 @@ argument_list|,
 name|pw_cont
 argument_list|)
 expr_stmt|;
+comment|/* Create with exact permissions. */
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
