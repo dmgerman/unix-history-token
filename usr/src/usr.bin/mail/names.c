@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)names.c	2.6 %G%"
+literal|"@(#)names.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -825,7 +825,7 @@ name|cp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DELIVERMAIL
+name|SENDMAIL
 return|return
 operator|(
 name|names
@@ -2464,7 +2464,7 @@ literal|2
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DELIVERMAIL
+name|SENDMAIL
 name|extra
 operator|++
 expr_stmt|;
@@ -2486,7 +2486,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-endif|DELIVERMAIL
+endif|SENDMAIL
 if|if
 condition|(
 name|hflag
@@ -2546,7 +2546,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DELIVERMAIL
+name|SENDMAIL
 operator|*
 name|ap
 operator|++
@@ -2565,7 +2565,7 @@ literal|"-m"
 expr_stmt|;
 endif|#
 directive|endif
-endif|DELIVERMAIL
+endif|SENDMAIL
 if|if
 condition|(
 name|hflag

@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.7 %G%"
+literal|"@(#)send.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1715,7 +1715,7 @@ directive|endif
 endif|CC
 ifdef|#
 directive|ifdef
-name|DELIVERMAIL
+name|SENDMAIL
 if|if
 condition|(
 operator|(
@@ -1731,7 +1731,7 @@ name|NOSTR
 condition|)
 name|deliver
 operator|=
-name|DELIVERMAIL
+name|SENDMAIL
 expr_stmt|;
 name|execv
 argument_list|(
@@ -1742,7 +1742,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DELIVERMAIL
+endif|SENDMAIL
 name|execv
 argument_list|(
 name|MAIL

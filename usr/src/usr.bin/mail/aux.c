@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	2.7 %G%"
+literal|"@(#)aux.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2495,7 +2495,7 @@ literal|1
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|DELIVERMAIL
+name|SENDMAIL
 if|if
 condition|(
 operator|(

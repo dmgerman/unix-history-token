@@ -4,7 +4,7 @@ comment|/*  * Declarations and constants specific to an installation.  *  * Vax/
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)pathnames.h	2.3 %G%";  */
+comment|/*  * Sccs Id = "@(#)pathnames.h	2.4 %G%";  */
 end_comment
 
 begin_define
@@ -70,8 +70,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DELIVERMAIL
-value|"/etc/delivermail"
+name|SENDMAIL
+value|"/usr/lib/sendmail"
 end_define
 
 begin_comment
