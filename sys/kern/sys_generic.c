@@ -5465,7 +5465,7 @@ operator|&
 name|sellock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the thread is NULL then take ownership of selinfo 	 * however if the thread is not NULL and the thread points to 	 * someone else, then we have a collision, otherwise leave it alone 	 * as we've owned it in a previous selrecord on this selinfo. 	 */
+comment|/* 	 * If the selinfo's thread pointer is NULL then take ownership of it. 	 * 	 * If the thread pointer is not NULL and it points to another 	 * thread, then we have a collision. 	 * 	 * If the thread pointer is not NULL and points back to us then leave 	 * it alone as we've already added pointed it at us and added it to 	 * our list. 	 */
 if|if
 condition|(
 name|sip
