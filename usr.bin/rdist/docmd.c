@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: docmd.c,v 1.4 1996/07/12 04:00:13 nate Exp $"
+literal|"$Id: docmd.c,v 1.3.4.1 1996/07/12 06:19:46 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2164,6 +2164,11 @@ argument_list|(
 name|target
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|target
+argument_list|)
 argument_list|)
 operator|==
 name|NULL

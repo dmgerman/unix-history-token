@@ -660,6 +660,20 @@ comment|/* general purpose buffer */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|char
+name|target
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* target/source directory name */
+end_comment
+
+begin_decl_stmt
 name|int
 name|any
 name|__P
@@ -792,6 +806,8 @@ index|[]
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
