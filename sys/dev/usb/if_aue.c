@@ -1819,6 +1819,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|phy
@@ -1830,6 +1833,8 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 name|csr_write_1
 argument_list|(
