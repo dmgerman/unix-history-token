@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.23 (Berkeley) %G%"
+literal|"@(#)rlogind.c	4.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1077,6 +1077,18 @@ name|stop
 init|=
 name|TIOCPKT_DOSTOP
 decl_stmt|;
+comment|/* 	 * This is a hack for the TIOCSWINSZ calls 	 * (csh pgrp manipulation appears to cause 	 * trouble). 	 */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTTOU
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 for|for
 control|(
 init|;
