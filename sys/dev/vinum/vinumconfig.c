@@ -14,18 +14,6 @@ name|STATIC
 value|static
 end_define
 
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
-
 begin_include
 include|#
 directive|include

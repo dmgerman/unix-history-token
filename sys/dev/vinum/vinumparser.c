@@ -11,61 +11,17 @@ begin_comment
 comment|/*  * Go through a text and split up into text tokens.  These are either non-blank  * sequences, or any sequence (except \0) enclosed in ' or ".  Embedded ' or  * " characters may be escaped by \, which otherwise has no special meaning.  *  * Delimit by following with a \0, and return pointers to the starts at token [].  * Return the number of tokens found as the return value.  *  * This method has the restriction that a closing " or ' must be followed by  * grey space.  *  * Error conditions are end of line before end of quote, or no space after  * a closing quote.  In this case, tokenize() returns -1.   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_include
 include|#
@@ -89,6 +45,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/setjmp.h>
+end_include
 
 begin_comment
 comment|/* All this mess for a single struct definition */
@@ -121,13 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
+file|<sys/device.h>
 end_include
 
 begin_include
@@ -163,7 +125,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|REALLYKERNEL
+name|KERNEL
 end_ifdef
 
 begin_define

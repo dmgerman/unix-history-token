@@ -14,18 +14,6 @@ begin_comment
 comment|/* nothing while we're testing XXX */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
-
 begin_include
 include|#
 directive|include

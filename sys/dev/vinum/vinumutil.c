@@ -7,23 +7,6 @@ begin_comment
 comment|/* This file contains utility routines used both in kernel and user context */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -39,7 +22,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|REALLYKERNEL
+name|KERNEL
 end_ifndef
 
 begin_include
@@ -810,7 +793,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|REALLYKERNEL
+name|KERNEL
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
@@ -844,7 +827,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|REALLYKERNEL
+name|KERNEL
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
