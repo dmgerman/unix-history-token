@@ -977,7 +977,7 @@ name|disk
 operator|.
 name|d_maxsize
 operator|=
-literal|256
+literal|128
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
