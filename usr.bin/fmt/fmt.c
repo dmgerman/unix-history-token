@@ -521,19 +521,17 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|(
 name|c
 operator|<
 literal|' '
-operator|||
-name|c
-operator|>=
-literal|0177
-operator|)
 operator|&&
 name|c
 operator|!=
 literal|'\t'
+operator|||
+name|c
+operator|==
+literal|0177
 condition|)
 block|{
 name|c
@@ -599,6 +597,10 @@ while|while
 condition|(
 name|c
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -1015,6 +1017,10 @@ literal|'\\'
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|cp
 index|[
 literal|1
