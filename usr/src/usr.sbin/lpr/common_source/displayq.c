@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	5.9 (Berkeley) %G%"
+literal|"@(#)displayq.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2251,6 +2251,8 @@ name|n
 operator|/
 literal|10
 operator|)
+operator|%
+literal|10
 operator|==
 literal|1
 condition|)
