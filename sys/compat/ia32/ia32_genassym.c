@@ -167,7 +167,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|ia32_sigframe
+name|ia32_sigframe4
 argument_list|,
 name|sf_uc
 argument_list|)
