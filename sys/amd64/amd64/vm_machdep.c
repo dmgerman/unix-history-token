@@ -869,6 +869,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_flags
+operator|&
+name|PCB_DBREGS
+condition|)
+block|{
+comment|/*                  * disable all hardware breakpoints                  */
+name|reset_dbregs
+argument_list|()
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+name|PCB_DBREGS
+expr_stmt|;
+block|}
 name|cnt
 operator|.
 name|v_swtch

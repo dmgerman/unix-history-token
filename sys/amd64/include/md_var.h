@@ -707,6 +707,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|user_dbreg_trap
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vm_page_zero_idle
 name|__P
 argument_list|(
