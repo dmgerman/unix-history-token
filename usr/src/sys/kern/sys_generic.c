@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -900,55 +900,6 @@ name|uap
 operator|->
 name|cmd
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|COMPAT
-argument_list|)
-comment|/* 	 * Map old style ioctl's into new for the 	 * sake of backwards compatibility (sigh). 	 */
-if|if
-condition|(
-operator|(
-name|com
-operator|&
-operator|~
-literal|0xffff
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|com
-operator|=
-name|mapioctl
-argument_list|(
-name|com
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|com
-operator|==
-literal|0
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return;
-block|}
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|com
