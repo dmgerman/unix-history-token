@@ -3399,6 +3399,13 @@ operator|+=
 name|dlen
 expr_stmt|;
 block|}
+name|len
+operator|=
+name|ALIGN
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cp
