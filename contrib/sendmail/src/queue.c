@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.863.2.30 2003/03/20 00:20:16 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.863.2.61 2003/09/03 19:58:26 ca Exp $"
 argument_list|)
 end_macro
 
@@ -39,8 +39,25 @@ parameter_list|)
 value|(st).st_ino
 end_define
 
+begin_define
+define|#
+directive|define
+name|sm_file_exists
+parameter_list|(
+name|errno
+parameter_list|)
+value|((errno) == EEXIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TF_OPEN_FLAGS
+value|(O_CREAT|O_WRONLY|O_EXCL)
+end_define
+
 begin_comment
-comment|/* **  Historical notes: **     QF_VERSION == 4 was sendmail 8.10/8.11 without _FFR_QUEUEDELAY **     QF_VERSION == 5 was sendmail 8.10/8.11 with    _FFR_QUEUEDELAY **     QF_VERSION == 6 is  sendmail 8.12      without _FFR_QUEUEDELAY **     QF_VERSION == 7 is  sendmail 8.12      with    _FFR_QUEUEDELAY */
+comment|/* **  Historical notes: **	QF_VERSION == 4 was sendmail 8.10/8.11 without _FFR_QUEUEDELAY **	QF_VERSION == 5 was sendmail 8.10/8.11 with    _FFR_QUEUEDELAY **	QF_VERSION == 6 is  sendmail 8.12      without _FFR_QUEUEDELAY **	QF_VERSION == 7 is  sendmail 8.12      with    _FFR_QUEUEDELAY */
 end_comment
 
 begin_if
@@ -275,6 +292,37 @@ end_decl_stmt
 begin_comment
 comment|/* number of work groups */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|time_t
+name|Current_LA_time
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Get new load average every 30 seconds. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_NEW_LA_TIME
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_GET_LA
+parameter_list|(
+name|now
+parameter_list|)
+define|\
+value|do							\ 	{							\ 		now = curtime();				\ 		if (Current_LA_time< now - GET_NEW_LA_TIME)	\ 		{						\ 			sm_getla();				\ 			Current_LA_time = now;			\ 		}						\ 	} while (0)
+end_define
 
 begin_comment
 comment|/* **  DoQueueRun indicates that a queue run is needed. **	Notice: DoQueueRun is modified in a signal handler! */
@@ -1390,11 +1438,121 @@ condition|(
 name|tfp
 operator|==
 name|NULL
-condition|)
+operator|&&
 name|newid
-operator|=
-name|false
+condition|)
+block|{
+comment|/* 		**  open qf file directly: this will give an error if the file 		**  already exists and hence prevent problems if a queue-id 		**  is reused (e.g., because the clock is set back). 		*/
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
+argument_list|(
+name|tf
+argument_list|,
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+name|ANYQFL_LETTER
+argument_list|)
+argument_list|,
+sizeof|sizeof
+name|tf
+argument_list|)
 expr_stmt|;
+name|tfd
+operator|=
+name|open
+argument_list|(
+name|tf
+argument_list|,
+name|TF_OPEN_FLAGS
+argument_list|,
+name|FileMode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tfd
+operator|<
+literal|0
+operator|||
+operator|!
+name|lockfile
+argument_list|(
+name|tfd
+argument_list|,
+name|tf
+argument_list|,
+name|NULL
+argument_list|,
+name|LOCK_EX
+operator||
+name|LOCK_NB
+argument_list|)
+operator|||
+operator|(
+name|tfp
+operator|=
+name|sm_io_open
+argument_list|(
+name|SmFtStdiofd
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|tfd
+argument_list|,
+name|SM_IO_WRONLY_B
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+name|printopenfds
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"!queueup: cannot create queue file %s, euid=%d"
+argument_list|,
+name|tf
+argument_list|,
+operator|(
+name|int
+operator|)
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+name|e
+operator|->
+name|e_lockfp
+operator|=
+name|tfp
+expr_stmt|;
+block|}
 comment|/* if newid, write the queue file directly (instead of temp file) */
 if|if
 condition|(
@@ -1402,16 +1560,6 @@ operator|!
 name|newid
 condition|)
 block|{
-specifier|const
-name|int
-name|flags
-init|=
-name|O_CREAT
-operator||
-name|O_WRONLY
-operator||
-name|O_EXCL
-decl_stmt|;
 comment|/* get a locked tf file */
 for|for
 control|(
@@ -1461,7 +1609,7 @@ name|open
 argument_list|(
 name|tf
 argument_list|,
-name|flags
+name|TF_OPEN_FLAGS
 argument_list|,
 name|QueueFileMode
 argument_list|)
@@ -1681,7 +1829,7 @@ operator|)
 operator|&
 name|tfd
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -2100,6 +2248,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
+operator||
+name|QF_O_EXTRA
 argument_list|,
 name|QueueFileMode
 argument_list|)
@@ -2143,7 +2293,7 @@ operator|)
 operator|&
 name|dfd
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -6228,17 +6378,6 @@ begin_comment
 comment|/* **  RUNNER_WORK -- have a queue runner do its work ** **  Have a queue runner do its work a list of entries. **  When work isn't directly being done then this process can take a signal **  and terminate immediately (in a clean fashion of course). **  When work is directly being done, it's not to be interrupted **  immediately: the work should be allowed to finish at a clean point **  before termination (in a clean fashion of course). ** **	Parameters: **		e -- envelope. **		sequenceno -- 'th process to run WorkQ. **		didfork -- did the calling process fork()? **		skip -- process only each skip'th item. **		njobs -- number of jobs in WorkQ. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
 
-begin_comment
-comment|/* Get new load average every 30 seconds. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GET_NEW_LA_TIME
-value|30
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -6280,14 +6419,12 @@ modifier|*
 name|w
 decl_stmt|;
 name|time_t
-name|current_la_time
-decl_stmt|,
 name|now
 decl_stmt|;
-name|current_la_time
-operator|=
-name|curtime
-argument_list|()
+name|SM_GET_LA
+argument_list|(
+name|now
+argument_list|)
 expr_stmt|;
 comment|/* 	**  Here we temporarily block the second calling of the handlers. 	**  This allows us to handle the signal without terminating in the 	**  middle of direct work. If a signal does come, the test for 	**  NoMoreRunners will find it. 	*/
 name|BlockOldsh
@@ -6413,35 +6550,18 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 		**  Ignore jobs that are too expensive for the moment. 		** 		**	Get new load average every GET_NEW_LA_TIME seconds. 		*/
+name|SM_GET_LA
+argument_list|(
 name|now
-operator|=
-name|curtime
-argument_list|()
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|current_la_time
-operator|<
-name|now
-operator|-
-name|GET_NEW_LA_TIME
-condition|)
-block|{
-name|sm_getla
-argument_list|()
-expr_stmt|;
-name|current_la_time
-operator|=
-name|now
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|shouldqueue
 argument_list|(
 name|WkRecipFact
 argument_list|,
-name|current_la_time
+name|Current_LA_time
 argument_list|)
 condition|)
 block|{
@@ -6909,8 +7029,6 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|time_t
-name|current_la_time
-decl_stmt|,
 name|now
 decl_stmt|;
 name|bool
@@ -6956,14 +7074,10 @@ return|return
 name|false
 return|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
-name|sm_getla
-argument_list|()
-expr_stmt|;
-comment|/* get load average */
-name|current_la_time
-operator|=
-name|curtime
-argument_list|()
+name|SM_GET_LA
+argument_list|(
+name|now
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6979,7 +7093,7 @@ name|shouldqueue
 argument_list|(
 name|WkRecipFact
 argument_list|,
-name|current_la_time
+name|Current_LA_time
 argument_list|)
 condition|)
 block|{
@@ -7997,7 +8111,7 @@ literal|"run_work_group: cannot fork"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|false
 return|;
 block|}
 elseif|else
@@ -8513,32 +8627,17 @@ name|wg_lowqintvl
 argument_list|)
 expr_stmt|;
 comment|/* 		**  Get the LA outside the WorkQ loop if necessary. 		**  In a persistent queue runner the code is repeated over 		**  and over but gatherq() may ignore entries due to 		**  shouldqueue() (do we really have to do this twice?). 		**  Hence the queue runners would just idle around when once 		**  CurrentLA caused all entries in a queue to be ignored. 		*/
-name|now
-operator|=
-name|curtime
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|njobs
 operator|==
 literal|0
-operator|&&
-name|current_la_time
-operator|<
-name|now
-operator|-
-name|GET_NEW_LA_TIME
 condition|)
-block|{
-name|sm_getla
-argument_list|()
-expr_stmt|;
-name|current_la_time
-operator|=
+name|SM_GET_LA
+argument_list|(
 name|now
+argument_list|)
 expr_stmt|;
-block|}
 name|rpool
 operator|=
 name|sm_rpool_new_x
@@ -9853,7 +9952,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|qf
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -10453,6 +10552,11 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+else|else
+operator|++
+name|p
+expr_stmt|;
+comment|/* skip over ':' */
 block|}
 else|else
 name|p
@@ -14037,7 +14141,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|qf
 argument_list|,
-name|SM_IO_RDWR
+name|SM_IO_RDWR_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -14194,6 +14298,8 @@ return|return
 name|false
 return|;
 block|}
+name|RELEASE_QUEUE
+expr_stmt|;
 comment|/* 	**  Prevent locking race condition. 	** 	**  Process A: readqf(): qfp = fopen(qffile) 	**  Process B: queueup(): rename(tf, qf) 	**  Process B: unlocks(tf) 	**  Process A: lockfile(qf); 	** 	**  Process A (us) has the old qf file (before the rename deleted 	**  the directory entry) and will be delivering based on old data. 	**  This can lead to multiple deliveries of the same recipients. 	** 	**  Catch this by checking if the underlying qf file has changed 	**  *after* acquiring our lock and if so, act as though the file 	**  was still locked (i.e., just return like the lockfile() case 	**  above. 	*/
 if|if
 condition|(
@@ -14256,8 +14362,6 @@ name|qfp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
-expr_stmt|;
-name|RELEASE_QUEUE
 expr_stmt|;
 return|return
 name|false
@@ -14398,8 +14502,6 @@ name|qfp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
-expr_stmt|;
-name|RELEASE_QUEUE
 expr_stmt|;
 return|return
 name|false
@@ -14669,8 +14771,6 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
-name|RELEASE_QUEUE
-expr_stmt|;
 return|return
 name|false
 return|;
@@ -14739,8 +14839,6 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
-name|RELEASE_QUEUE
-expr_stmt|;
 return|return
 name|false
 return|;
@@ -14764,8 +14862,6 @@ name|qfp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
-expr_stmt|;
-name|RELEASE_QUEUE
 expr_stmt|;
 return|return
 name|false
@@ -15706,8 +15802,6 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-name|RELEASE_QUEUE
-expr_stmt|;
 return|return
 name|false
 return|;
@@ -15965,6 +16059,23 @@ name|qflags
 operator||=
 name|QPRIMARY
 expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|)
+argument_list|,
+literal|"e r"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -16084,6 +16195,23 @@ expr_stmt|;
 name|orcpt
 operator|=
 name|NULL
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -16415,8 +16543,6 @@ name|EF_FATALERRS
 operator||
 name|EF_RESPONSE
 expr_stmt|;
-name|RELEASE_QUEUE
-expr_stmt|;
 return|return
 name|true
 return|;
@@ -16444,8 +16570,6 @@ name|qfp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
-expr_stmt|;
-name|RELEASE_QUEUE
 expr_stmt|;
 return|return
 name|false
@@ -16533,7 +16657,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|p
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -16648,8 +16772,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|RELEASE_QUEUE
-expr_stmt|;
 return|return
 name|true
 return|;
@@ -16690,8 +16812,6 @@ name|e
 argument_list|,
 name|err
 argument_list|)
-expr_stmt|;
-name|RELEASE_QUEUE
 expr_stmt|;
 return|return
 name|false
@@ -17903,7 +18023,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|qf
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -24922,9 +25042,11 @@ name|Pshm
 operator|!=
 name|NULL
 operator|||
+operator|!
+name|sm_file_exists
+argument_list|(
 name|save_errno
-operator|!=
-name|EEXIST
+argument_list|)
 condition|)
 break|break;
 if|if
@@ -31406,7 +31528,7 @@ operator|)
 operator|&
 name|fd
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|)

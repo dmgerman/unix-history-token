@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.437.2.9 2003/03/15 23:57:52 gshapiro Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.437.2.10 2003/05/05 23:51:47 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4531,6 +4531,10 @@ name|void
 operator|)
 name|sm_strlcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|(
 operator|*
 name|psecret

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.972.2.35 2003/03/28 05:46:09 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.972.2.50 2003/09/03 21:37:03 ca Exp $"
 argument_list|)
 end_macro
 
@@ -21,6 +21,27 @@ include|#
 directive|include
 file|<sendmail/pathnames.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|NEWDB
+end_if
+
+begin_include
+include|#
+directive|include
+file|"sm/bdb.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEWDB */
+end_comment
 
 begin_include
 include|#
@@ -1867,6 +1888,69 @@ decl_stmt|;
 if|#
 directive|if
 name|NEWDB
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|>
+literal|1
+name|int
+name|major_v
+decl_stmt|,
+name|minor_v
+decl_stmt|,
+name|patch_v
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|db_version
+argument_list|(
+operator|&
+name|major_v
+argument_list|,
+operator|&
+name|minor_v
+argument_list|,
+operator|&
+name|patch_v
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|major_v
+operator|!=
+name|DB_VERSION_MAJOR
+operator|||
+name|minor_v
+operator|!=
+name|DB_VERSION_MINOR
+condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"Berkeley DB version mismatch: compiled against %d.%d.%d, run-time linked against %d.%d.%d"
+argument_list|,
+name|DB_VERSION_MAJOR
+argument_list|,
+name|DB_VERSION_MINOR
+argument_list|,
+name|DB_VERSION_PATCH
+argument_list|,
+name|major_v
+argument_list|,
+name|minor_v
+argument_list|,
+name|patch_v
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* DB_VERSION_MAJOR> 1 */
 name|MAPDEF
 argument_list|(
 literal|"hash"
@@ -11592,15 +11676,6 @@ return|return
 literal|0
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 	**  Popen is known to have security holes. 	*/
-comment|/* try uuname -l to return local name */
-block|if ((file = popen("uuname -l", "r")) != NULL) 	{ 		(void) sm_io_fgets(file, SM_TIME_DEFAULT, name, 				   NODE_LENGTH + 1); 		(void) pclose(file); 		n = strchr(name, '\n'); 		if (n != NULL) 			*n = '\0'; 		if (name->nodename[0] != '\0') 			return 0; 	}
-endif|#
-directive|endif
-comment|/* 0 */
 return|return
 operator|-
 literal|1
@@ -17866,7 +17941,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __hpux */
+comment|/* ! __hpux */
 if|if
 condition|(
 name|ioctl
@@ -21469,6 +21544,14 @@ block|,
 endif|#
 directive|endif
 comment|/* ADDRCONFIG_IS_BROKEN */
+if|#
+directive|if
+name|ALLOW_255
+literal|"ALLOW_255"
+block|,
+endif|#
+directive|endif
+comment|/* ALLOW_255 */
 ifdef|#
 directive|ifdef
 name|AUTO_NETINFO_HOSTS
@@ -22099,6 +22182,15 @@ directive|endif
 comment|/* _FFR_CHK_QUEUE */
 if|#
 directive|if
+name|_FFR_CLIENT_SIZE
+comment|/* Don't try to send mail if its size exceeds SIZE= of server. */
+literal|"_FFR_CLIENT_SIZE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CLIENT_SIZE */
+if|#
+directive|if
 name|_FFR_CONTROL_MSTAT
 comment|/* Extended daemon status. */
 literal|"_FFR_CONTROL_MSTAT"
@@ -22219,6 +22311,15 @@ directive|endif
 comment|/* _FFR_DROP_TRUSTUSER_WARNING */
 if|#
 directive|if
+name|_FFR_EXTRA_MAP_CHECK
+comment|/* perform extra checks on $( $) in R lines */
+literal|"_FFR_EXTRA_MAP_CHECK"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_EXTRA_MAP_CHECK */
+if|#
+directive|if
 name|_FFR_FIX_DASHT
 comment|/* 	**  If using -t, force not sending to argv recipients, even 	**  if they are mentioned in the headers. 	*/
 literal|"_FFR_FIX_DASHT"
@@ -22283,6 +22384,15 @@ directive|endif
 comment|/* _FFR_HPUX_NSSWITCH */
 if|#
 directive|if
+name|_FFR_IGNORE_BOGUS_ADDR
+comment|/* Ignore addresses for which prescan() failed */
+literal|"_FFR_IGNORE_BOGUS_ADDR"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_IGNORE_BOGUS_ADDR */
+if|#
+directive|if
 name|_FFR_IGNORE_EXT_ON_HELO
 comment|/* Ignore extensions offered in response to HELO */
 literal|"_FFR_IGNORE_EXT_ON_HELO"
@@ -22329,6 +22439,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_MAX_FORWARD_ENTRIES */
+if|#
+directive|if
+name|_FFR_MAX_SLEEP_TIME
+comment|/* Limit sleep(2) time in libsm/clock.c */
+literal|"_FFR_MAX_SLEEP_TIME"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
 name|MILTER
@@ -22517,6 +22636,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SHM_STATUS */
+if|#
+directive|if
+name|_FFR_SLEEP_USE_SELECT
+comment|/* Use select(2) in libsm/clock.c to emulate sleep(2) */
+literal|"_FFR_SLEEP_USE_SELECT "
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SLEEP_USE_SELECT */
 if|#
 directive|if
 name|_FFR_SMFI_OPENSOCKET

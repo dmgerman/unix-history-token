@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: version.c,v 8.104.2.15 2003/03/19 21:19:53 ca Exp $"
+literal|"@(#)$Id: version.c,v 8.104.2.22 2003/09/16 20:02:04 ca Exp $"
 argument_list|)
 end_macro
 
@@ -21,7 +21,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"8.12.9p2"
+literal|"8.12.10"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.266.4.5 2003/03/12 22:42:52 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.266.4.7 2003/09/03 21:32:20 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1233,6 +1233,7 @@ operator|=
 literal|'"'
 expr_stmt|;
 comment|/* - 3 to avoid problems with " at the end */
+comment|/* should be sizeof(qval), not MAXNAME */
 for|for
 control|(
 name|k
@@ -6850,6 +6851,7 @@ name|nlp
 operator|-
 name|v
 expr_stmt|;
+comment|/* 		**  XXX This is broken for SPACELEFT()==0 		**  However, SPACELEFT() is always> 0 unless MAXLINE==1. 		*/
 if|if
 condition|(
 name|SPACELEFT
@@ -6941,6 +6943,7 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+comment|/* XXX This is broken for SPACELEFT()==0 */
 operator|(
 name|void
 operator|)
@@ -7130,6 +7133,7 @@ operator|->
 name|h_field
 argument_list|)
 expr_stmt|;
+comment|/* opos = strlen(obp); */
 name|opos
 operator|=
 name|strlen
@@ -7285,6 +7289,26 @@ name|p
 operator|=
 name|oldp
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_IGNORE_BOGUS_ADDR
+comment|/* ignore addresses that can't be parsed */
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+block|{
+name|name
+operator|=
+name|p
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_IGNORE_BOGUS_ADDR */
 comment|/* look to see if we have an at sign */
 while|while
 condition|(
@@ -7940,6 +7964,7 @@ return|return
 literal|0
 return|;
 comment|/* Split on each ';' */
+comment|/* find_character() never returns NULL */
 while|while
 condition|(
 operator|(

@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.919.2.17 2003/03/12 22:42:52 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.919.2.28 2003/09/03 19:58:27 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -1045,6 +1045,17 @@ end_endif
 begin_comment
 comment|/* ! INADDR_NONE */
 end_comment
+
+begin_comment
+comment|/* (f)open() modes for queue files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QF_O_EXTRA
+value|0
+end_define
 
 begin_comment
 comment|/* **  An 'argument class' describes the storage allocation status **  of an object pointed to by an argument to a function. */
@@ -10629,6 +10640,7 @@ name|setup_daemon_milters
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12615,7 +12627,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|run_work_group
 name|__P
 argument_list|(
@@ -13233,6 +13245,21 @@ name|val
 parameter_list|)
 define|\
 value|do \ 	{ \ 		char *_newval = sm_pstrdup_x(val); \ 		if (var != NULL) \ 			sm_free(var); \ 		var = _newval; \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_CHECK_RESTART
+define|\
+value|do \ 	{ \ 		if (ShutdownRequest != NULL) \ 			shutdown_daemon(); \ 		else if (RestartRequest != NULL) \ 			restart_daemon(); \ 		else if (RestartWorkGroup) \ 			restart_marked_work_groups(); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK_RESTART
+value|_CHECK_RESTART
 end_define
 
 begin_comment
@@ -16767,6 +16794,8 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -17999,6 +18028,7 @@ name|restart_marked_work_groups
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

@@ -53,7 +53,7 @@ name|SM_IDSTR
 argument_list|(
 argument|MilterlId
 argument_list|,
-literal|"@(#)$Id: libmilter.h,v 8.33.2.9 2003/01/03 22:14:40 ca Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.33.2.12 2003/09/08 21:39:55 yuri Exp $"
 argument_list|)
 end_macro
 
@@ -825,7 +825,7 @@ begin_define
 define|#
 directive|define
 name|sm_dprintf
-value|printf
+value|(void) printf
 end_define
 
 begin_define

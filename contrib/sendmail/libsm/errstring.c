@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: errstring.c,v 1.12 2001/10/03 16:09:32 ca Exp $"
+literal|"@(#)$Id: errstring.c,v 1.12.2.4 2003/06/24 17:16:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -107,7 +107,7 @@ comment|/* **  Notice: this file is used by libmilter. Please try to avoid **	us
 end_comment
 
 begin_comment
-comment|/* **  SM_ERRSTRING -- return string description of error code ** **	Parameters: **		errnum -- the error number to translate ** **	Returns: **		A string description of errnum. */
+comment|/* **  SM_ERRSTRING -- return string description of error code ** **	Parameters: **		errnum -- the error number to translate ** **	Returns: **		A string description of errnum. ** **	Note: this may point to a local (static) buffer. */
 end_comment
 
 begin_function
@@ -382,6 +382,12 @@ name|SMDBE_OLD_VERSION
 case|:
 return|return
 literal|"Berkeley DB file is an old version, recreate it"
+return|;
+case|case
+name|SMDBE_VERSION_MISMATCH
+case|:
+return|return
+literal|"Berkeley DB version mismatch between include file and library"
 return|;
 block|}
 comment|/* 	**  LDAP error messages. 	*/

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: signal.c,v 8.37.2.2 2002/10/23 16:52:00 ca Exp $"
+literal|"@(#)$Id: signal.c,v 8.37.2.3 2003/08/04 18:14:33 ca Exp $"
 argument_list|)
 end_macro
 
@@ -152,12 +152,18 @@ decl_stmt|;
 name|sigset_t
 name|set
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sigemptyset
 argument_list|(
 operator|&
 name|set
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&
@@ -166,6 +172,9 @@ argument_list|,
 name|SIGHUP
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&
@@ -175,6 +184,9 @@ name|SIGTERM
 argument_list|)
 expr_stmt|;
 comment|/* Handle Ctrl-C gracefully for debugging */
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&
@@ -187,10 +199,11 @@ name|errs
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
-name|true
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|sig
 operator|=
@@ -336,6 +349,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -365,12 +379,18 @@ name|sigset_t
 name|set
 decl_stmt|;
 comment|/* Mask HUP and KILL signals */
+operator|(
+name|void
+operator|)
 name|sigemptyset
 argument_list|(
 operator|&
 name|set
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&
@@ -379,6 +399,9 @@ argument_list|,
 name|SIGHUP
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&
@@ -387,6 +410,9 @@ argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&

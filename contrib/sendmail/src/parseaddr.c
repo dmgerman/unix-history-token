@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.359.2.6 2003/03/27 02:39:53 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.359.2.9 2003/09/16 18:07:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3814,8 +3814,8 @@ name|p
 operator|>
 name|addr
 condition|)
-name|p
 operator|--
+name|p
 expr_stmt|;
 operator|*
 name|delimptr
@@ -4525,20 +4525,28 @@ name|avp
 operator|=
 name|NULL
 expr_stmt|;
-name|p
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|delimptr
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|>
+name|addr
+condition|)
+name|p
+operator|--
+expr_stmt|;
 operator|*
 name|delimptr
 operator|=
 name|p
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|tTd
@@ -4758,6 +4766,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+comment|/* 	**  mlp will not exceed mlist[] because readcf enforces 	**	the upper limit of entries when reading rulesets. 	*/
 if|if
 condition|(
 name|ruleset
@@ -7559,7 +7568,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		**  Now we need to call the ruleset specified for 		**  the subroutine. we can do this inplace since 		**  we call the "last" subroutine first. 		*/
+comment|/* 		**  Now we need to call the ruleset specified for 		**  the subroutine. We can do this in place since 		**  we call the "last" subroutine first. 		*/
 name|status
 operator|=
 name|rewrite
@@ -9668,7 +9677,7 @@ block|}
 if|#
 directive|if
 name|_FFR_CATCH_LONG_STRINGS
-comment|/* Don't silently truncate long strings */
+comment|/* Don't silently truncate long strings; broken for evp != NULL */
 if|if
 condition|(
 operator|*
@@ -10856,7 +10865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		flags -- fine tune operations. **		pstat -- pointer to status word. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative to. **		flags -- fine tune operations. **		pstat -- pointer to status word. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
 end_comment
 
 begin_function
@@ -13435,7 +13444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  RSCAP -- call rewriting set to return capabilities ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		pvp -- pointer to token vector. **		pvpbuf -- buffer space. ** **	Returns: **		EX_UNAVAILABLE -- ruleset doesn't exist. **		EX_DATAERR -- prescan() failed. **		EX_OK -- rewrite() was successful. **		else -- return status from rewrite(). */
+comment|/* **  RSCAP -- call rewriting set to return capabilities ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		pvp -- pointer to token vector. **		pvpbuf -- buffer space. **		size -- size of buffer space. ** **	Returns: **		EX_UNAVAILABLE -- ruleset doesn't exist. **		EX_DATAERR -- prescan() failed. **		EX_OK -- rewrite() was successful. **		else -- return status from rewrite(). */
 end_comment
 
 begin_function

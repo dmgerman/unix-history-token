@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sm_os_aix.h,v 1.9 2001/10/09 23:12:13 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sm_os_aix.h,v 1.9.2.1 2003/04/28 23:11:07 ca Exp $  */
 end_comment
 
 begin_comment
@@ -134,6 +134,30 @@ end_endif
 
 begin_comment
 comment|/* _AIX3 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_AIX5
+operator|>=
+literal|50200
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_CONF_LONGLONG
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _AIX5>= 50200 */
 end_comment
 
 end_unit

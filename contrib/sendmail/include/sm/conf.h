@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.14 2003/03/06 18:38:06 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.18 2003/08/20 22:27:44 ca Exp $  */
 end_comment
 
 begin_comment
@@ -352,12 +352,27 @@ name|_PATH_SENDMAIL
 value|"/usr/sbin/sendmail"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMRSH_CMDDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SMRSH_CMDDIR
 value|"/var/adm/sm.bin"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SMRSH_CMDDIR */
+end_comment
 
 begin_endif
 endif|#
@@ -422,12 +437,27 @@ begin_comment
 comment|/* ! BROKEN_RES_SEARCH */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMRSH_CMDDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SMRSH_CMDDIR
 value|"/var/adm/sm.bin"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SMRSH_CMDDIR */
+end_comment
 
 begin_define
 define|#
@@ -744,6 +774,34 @@ directive|define
 name|_AIX4
 value|40300
 end_define
+
+begin_if
+if|#
+directive|if
+name|_AIX5
+operator|>=
+literal|50200
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _AIX5>= 50200 */
+end_comment
 
 begin_endif
 endif|#
@@ -2760,12 +2818,27 @@ name|_PATH_SENDMAILPID
 value|"/var/run/sendmail.pid"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMRSH_CMDDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SMRSH_CMDDIR
 value|"/var/adm/sm.bin"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SMRSH_CMDDIR */
+end_comment
 
 begin_define
 define|#
@@ -6266,6 +6339,12 @@ begin_comment
 comment|/* 3.3.0-release and later */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMRSH_CMDDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -6273,12 +6352,36 @@ name|SMRSH_CMDDIR
 value|"/usr/libexec/sm.bin"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SMRSH_CMDDIR */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMRSH_PATH
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SMRSH_PATH
 value|"/bin:/usr/bin"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SMRSH_PATH */
+end_comment
 
 begin_endif
 endif|#
@@ -6394,6 +6497,14 @@ begin_comment
 comment|/* has setlogin(2) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|OpenBSD
+operator|<
+literal|200305
+end_if
+
 begin_define
 define|#
 directive|define
@@ -6402,7 +6513,16 @@ value|0
 end_define
 
 begin_comment
-comment|/* OpenBSD has broken setreuid(2) emulation */
+comment|/* setreuid(2) broken in OpenBSD< 3.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OpenBSD< 200305 */
 end_comment
 
 begin_define
@@ -9256,6 +9376,55 @@ begin_comment
 comment|/* (LINUX_VERSION_CODE>= KERNEL_VERSION(2,0,0)) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GLIBC_MINOR__
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASSTRERROR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASSTRERROR
+value|1
+end_define
+
+begin_comment
+comment|/* has strerror(3) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HASSTRERROR */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__GLIBC__)&& defined(__GLIBC_MINOR__) */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -9379,17 +9548,6 @@ argument_list|(
 name|__GLIBC_MINOR__
 argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|HASSTRERROR
-value|1
-end_define
-
-begin_comment
-comment|/* has strerror(3) */
-end_comment
 
 begin_define
 define|#

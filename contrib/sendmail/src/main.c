@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.887.2.22 2003/03/06 18:38:08 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.887.2.27 2003/08/04 17:23:37 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9545,32 +9545,7 @@ decl_stmt|;
 name|int
 name|group
 decl_stmt|;
-if|if
-condition|(
-name|ShutdownRequest
-operator|!=
-name|NULL
-condition|)
-name|shutdown_daemon
-argument_list|()
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|RestartRequest
-operator|!=
-name|NULL
-condition|)
-name|restart_daemon
-argument_list|()
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|RestartWorkGroup
-condition|)
-name|restart_marked_work_groups
-argument_list|()
+name|CHECK_RESTART
 expr_stmt|;
 while|while
 condition|(
@@ -9638,7 +9613,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* don't restart this one */
+comment|/* don't restart this */
 name|mark_work_group_restart
 argument_list|(
 name|group
@@ -9785,32 +9760,7 @@ operator|)
 name|pause
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|ShutdownRequest
-operator|!=
-name|NULL
-condition|)
-name|shutdown_daemon
-argument_list|()
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|RestartRequest
-operator|!=
-name|NULL
-condition|)
-name|restart_daemon
-argument_list|()
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|RestartWorkGroup
-condition|)
-name|restart_marked_work_groups
-argument_list|()
+name|CHECK_RESTART
 expr_stmt|;
 if|if
 condition|(
@@ -10684,6 +10634,8 @@ name|NULL
 argument_list|,
 operator|&
 name|MainEnvelope
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|finis
@@ -10840,6 +10792,8 @@ name|NULL
 argument_list|,
 operator|&
 name|MainEnvelope
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* header checks failed */

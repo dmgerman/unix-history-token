@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.109.2.4 2002/12/03 17:27:32 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.109.2.5 2003/08/04 18:14:33 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2972,6 +2972,9 @@ name|i
 operator|++
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -3960,6 +3963,10 @@ end_function
 
 begin_comment
 comment|/* **  ST_QUIT -- quit command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		noreply */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_function

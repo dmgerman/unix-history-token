@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb2.c,v 8.72.2.6 2003/01/23 22:21:39 ca Exp $"
+literal|"@(#)$Id: smdb2.c,v 8.72.2.7 2003/06/24 17:16:10 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2235,6 +2235,13 @@ decl_stmt|;
 name|int
 name|db_fd
 decl_stmt|;
+name|int
+name|major_v
+decl_stmt|,
+name|minor_v
+decl_stmt|,
+name|patch_v
+decl_stmt|;
 name|SMDB_DATABASE
 modifier|*
 name|smdb_db
@@ -2260,6 +2267,34 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|db_version
+argument_list|(
+operator|&
+name|major_v
+argument_list|,
+operator|&
+name|minor_v
+argument_list|,
+operator|&
+name|patch_v
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|major_v
+operator|!=
+name|DB_VERSION_MAJOR
+operator|||
+name|minor_v
+operator|!=
+name|DB_VERSION_MINOR
+condition|)
+return|return
+name|SMDBE_VERSION_MISMATCH
+return|;
 operator|*
 name|database
 operator|=

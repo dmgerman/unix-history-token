@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.130 2002/05/21 03:39:34 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.130.2.1 2003/04/15 01:05:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1333,6 +1333,8 @@ operator|&
 name|hdr
 argument_list|,
 name|e
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -1618,6 +1620,8 @@ operator|&
 name|hdr
 argument_list|,
 name|e
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
