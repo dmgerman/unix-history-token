@@ -636,6 +636,8 @@ name|struct
 name|address_info
 modifier|*
 name|mpu_config
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|mpu_base
@@ -649,6 +651,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* XXX dead code? */
 name|mpu_base
 operator|=
 name|mpu_config
