@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.23 1997/07/09 20:33:58 julian Exp $"
+literal|"$Id: ping.c,v 1.24 1997/07/13 06:16:44 sef Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
 end_include
 
 begin_include
@@ -663,6 +669,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* sum of all times, for doing average */
+end_comment
+
+begin_decl_stmt
+name|double
+name|tsumsq
+init|=
+literal|0.0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sum of all times squared, for std. dev. */
 end_comment
 
 begin_decl_stmt
@@ -3172,6 +3190,12 @@ name|tsum
 operator|+=
 name|triptime
 expr_stmt|;
+name|tsumsq
+operator|+=
+name|triptime
+operator|*
+name|triptime
+expr_stmt|;
 if|if
 condition|(
 name|triptime
@@ -4568,26 +4592,50 @@ name|nreceived
 operator|&&
 name|timing
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"round-trip min/avg/max = %.3f/%.3f/%.3f ms\n"
-argument_list|,
-name|tmin
-argument_list|,
-name|tsum
-operator|/
-operator|(
+block|{
+name|double
+name|n
+init|=
 name|nreceived
 operator|+
 name|nrepeats
-operator|)
+decl_stmt|;
+name|double
+name|avg
+init|=
+name|tsum
+operator|/
+name|n
+decl_stmt|;
+name|double
+name|vari
+init|=
+name|tsumsq
+operator|/
+name|n
+operator|-
+name|avg
+operator|*
+name|avg
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"round-trip min/avg/max/stddev = "
+literal|"%.3f/%.3f/%.3f/%.3f ms\n"
+argument_list|,
+name|tmin
+argument_list|,
+name|avg
 argument_list|,
 name|tmax
+argument_list|,
+name|sqrt
+argument_list|(
+name|vari
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|reset_kerninfo
