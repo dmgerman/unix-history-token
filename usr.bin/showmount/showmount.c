@@ -426,15 +426,14 @@ name|mntvers
 init|=
 literal|1
 decl_stmt|;
-name|char
-name|ch
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|host
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|estat
 decl_stmt|;
 while|while
@@ -457,9 +456,6 @@ literal|1
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{

@@ -363,7 +363,7 @@ decl_stmt|,
 modifier|*
 name|special
 decl_stmt|;
-name|char
+name|int
 name|ch
 decl_stmt|;
 name|size_t
