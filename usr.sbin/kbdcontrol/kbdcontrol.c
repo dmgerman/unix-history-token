@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdcontrol.c,v 1.3 1995/01/12 11:44:42 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdcontrol.c,v 1.4 1995/01/28 22:17:19 sos Exp $  */
 end_comment
 
 begin_include
@@ -488,10 +488,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|number
-decl_stmt|,
-name|verbose
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1663,6 +1659,17 @@ literal|"  N\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|3
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"  B\n"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -2133,25 +2140,6 @@ argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|verbose
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"setting function key %d to<%s>\n"
-argument_list|,
-name|fkey
-operator|.
-name|keynum
-argument_list|,
-name|fkey
-operator|.
-name|keydef
-argument_list|)
-expr_stmt|;
 name|fkey
 operator|.
 name|keynum
@@ -2336,33 +2324,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|if
-condition|(
-name|verbose
-condition|)
-if|if
-condition|(
-name|bell
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"setting visual bell\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"setting bell values to %d.%d\n"
-argument_list|,
-name|duration
-argument_list|,
-name|pitch
-argument_list|)
-expr_stmt|;
 name|ioctl
 argument_list|(
 literal|0
@@ -2648,31 +2609,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|verbose
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"setting keyboard rate to %d.%d\n"
-argument_list|,
-name|delays
-index|[
-name|rate
-operator|.
-name|del
-index|]
-argument_list|,
-name|repeats
-index|[
-name|rate
-operator|.
-name|rep
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|ioctl
 argument_list|(
 literal|0
@@ -2687,6 +2623,71 @@ condition|)
 name|perror
 argument_list|(
 literal|"setting keyboard rate"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|set_history
+parameter_list|(
+name|char
+modifier|*
+name|opt
+parameter_list|)
+block|{
+name|int
+name|size
+decl_stmt|;
+name|size
+operator|=
+name|atoi
+argument_list|(
+name|opt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|opt
+operator|==
+literal|'\0'
+operator|)
+operator|||
+name|size
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"argument must be a positive number\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_HISTORY
+argument_list|,
+operator|&
+name|size
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"setting history buffer size"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2707,13 +2708,13 @@ literal|"Usage: kbdcontrol -b duration.pitch   (set bell duration& pitch)\n"
 literal|"                  -b normal | visual  (set bell to visual type)\n"
 literal|"                  -d                  (dump keyboard map to stdout)\n"
 literal|"                  -l filename         (load keyboard map file)\n"
+literal|"                  -h<N>              (set history buffer size (in lines))\n"
 literal|"                  -f<N> string       (set function key N to send<string>)\n"
 literal|"                  -F                  (set function keys back to default)\n"
 literal|"                  -r delay.repeat     (set keyboard delay& repeat rate)\n"
 literal|"                  -r slow             (set keyboard delay& repeat to slow)\n"
 literal|"                  -r normal           (set keyboard delay& repeat to normal)\n"
 literal|"                  -r fast             (set keyboard delay& repeat to fast)\n"
-literal|"                  -v                  (verbose)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2744,7 +2745,6 @@ decl_stmt|;
 name|int
 name|opt
 decl_stmt|;
-comment|/* 	if (!is_syscons(0)) 		exit(1); 	*/
 while|while
 condition|(
 operator|(
@@ -2756,7 +2756,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:df:Fl:r:vx"
+literal|"b:df:h:Fl:r:x"
 argument_list|)
 operator|)
 operator|!=
@@ -2822,20 +2822,21 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
+literal|'h'
 case|:
-name|set_keyrates
+name|set_history
 argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'v'
+literal|'r'
 case|:
-name|verbose
-operator|=
-literal|1
+name|set_keyrates
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
