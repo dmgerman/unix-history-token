@@ -179,41 +179,6 @@ directive|include
 file|<nfsclient/nlminfo.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NFSOWNER_1ST_LEVEL_START
-value|1
-end_define
-
-begin_comment
-comment|/* initial entries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSOWNER_2ND_LEVEL
-value|256
-end_define
-
-begin_comment
-comment|/* some power of 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSOWNER
-parameter_list|(
-name|tbl
-parameter_list|,
-name|i
-parameter_list|)
-define|\
-value|(tbl)[(i) / NFSOWNER_2ND_LEVEL][(i) % NFSOWNER_2ND_LEVEL]
-end_define
-
 begin_comment
 comment|/*  * XXX  * We have to let the process know if the call succeeded.  I'm using an extra  * field in the p_nlminfo field in the proc structure, as it is already for  * lockd stuff.  */
 end_comment
@@ -502,7 +467,6 @@ name|a_op
 operator|==
 name|F_GETLK
 expr_stmt|;
-comment|/* 	 * XXX: the lm_cred assignment below directly exports a ucred 	 * structure to userland.  This is probably wrong, and should at 	 * least be xucred. 	 */
 name|bcopy
 argument_list|(
 name|VFSTONFS
@@ -768,17 +732,10 @@ condition|)
 comment|/* 			 * XXX this isn't exactly correct.  The client side 			 * needs to continue sending it's unlock until 			 * it gets a responce back. 			 */
 break|break;
 comment|/* 		 * retry after 20 seconds if we haven't gotten a responce yet. 		 * This number was picked out of thin air... but is longer 		 * then even a reasonably loaded system should take (at least 		 * on a local network).  XXX Probably should use a back-off 		 * scheme. 		 */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|p
 operator|->
 name|p_nlminfo
@@ -793,7 +750,10 @@ literal|20
 operator|*
 name|hz
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -869,9 +829,6 @@ name|retcode
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-operator|(
 name|error1
 operator|=
 name|vn_close
@@ -886,20 +843,17 @@ name|td_ucred
 argument_list|,
 name|td
 argument_list|)
-operator|)
-operator|&&
+expr_stmt|;
+comment|/* prefer any previous 'error' to our vn_close 'error1'. */
+return|return
+operator|(
 name|error
-operator|==
+operator|!=
 literal|0
-condition|)
-return|return
-operator|(
-name|error1
-operator|)
-return|;
-return|return
-operator|(
+condition|?
 name|error
+else|:
+name|error1
 operator|)
 return|;
 block|}
@@ -1093,15 +1047,8 @@ name|ansp
 operator|->
 name|la_getlk_pid
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wakeup
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|targetp
 operator|->
 name|p_nlminfo
