@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.35 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1896,6 +1896,10 @@ argument_list|,
 name|S_IRUSR
 operator||
 name|S_IWUSR
+operator||
+name|S_IRGRP
+operator||
+name|S_IROTH
 argument_list|)
 expr_stmt|;
 comment|/* Open the raw device. */
