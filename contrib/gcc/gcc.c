@@ -17237,7 +17237,7 @@ operator|&
 name|exec_prefixes
 argument_list|,
 name|PREFIX
-literal|"/libexec/elf/"
+literal|"/bin/"
 argument_list|,
 literal|"BINUTILS"
 argument_list|,
