@@ -3203,7 +3203,7 @@ name|labelstr
 operator|=
 name|strdup
 argument_list|(
-literal|""
+literal|"-"
 argument_list|)
 expr_stmt|;
 name|labelstrlen
