@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.h	4.5	83/07/29	*/
+comment|/*	if_vv.h	4.6	84/01/03	*/
 end_comment
 
 begin_comment
@@ -477,6 +477,32 @@ directive|define
 name|VVRETRY
 value|7
 end_define
+
+begin_comment
+comment|/* output retry limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VVIDENTRETRY
+value|10
+end_define
+
+begin_comment
+comment|/* identify loop retry limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VVTIMEOUT
+value|60
+end_define
+
+begin_comment
+comment|/* seconds before a transmit timeout */
+end_comment
 
 end_unit
 
