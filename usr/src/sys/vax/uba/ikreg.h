@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ikreg.h	6.1	83/07/29	*/
+comment|/*	ikreg.h	4.4	83/08/13	*/
 end_comment
 
 begin_struct
@@ -36,8 +36,9 @@ name|ik_istat
 decl_stmt|;
 comment|/* Ikonas status/command reg */
 name|u_short
-name|ik_dummy
+name|ik_chan
 decl_stmt|;
+comment|/* Channel control register */
 block|}
 struct|;
 end_struct

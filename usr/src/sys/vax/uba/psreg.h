@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	psreg.h	6.1	83/07/29	*/
+comment|/*	psreg.h	4.3	83/08/13	*/
 end_comment
 
 begin_comment
@@ -174,6 +174,17 @@ end_define
 
 begin_comment
 comment|/* get Unibus address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSIOTIMEREFRESH
+value|_IO(p,12)
+end_define
+
+begin_comment
+comment|/* time refresh */
 end_comment
 
 begin_comment
