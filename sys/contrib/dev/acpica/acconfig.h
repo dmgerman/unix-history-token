@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 156 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 158 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20040514
+value|0x20040527
 end_define
 
 begin_comment
@@ -61,7 +61,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* State objects for stacks */
+comment|/* State objects */
 end_comment
 
 begin_define
@@ -326,19 +326,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_LO_RSDP_WINDOW_BASE
-value|0
+name|ACPI_EBDA_PTR_LOCATION
+value|0x0000040E
 end_define
 
 begin_comment
 comment|/* Physical Address */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EBDA_PTR_LENGTH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EBDA_WINDOW_SIZE
+value|1024
+end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_HI_RSDP_WINDOW_BASE
-value|0xE0000
+value|0x000E0000
 end_define
 
 begin_comment
@@ -348,15 +362,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_LO_RSDP_WINDOW_SIZE
-value|0x400
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_HI_RSDP_WINDOW_SIZE
-value|0x20000
+value|0x00020000
 end_define
 
 begin_define

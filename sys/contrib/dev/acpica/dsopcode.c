@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -103,10 +103,6 @@ decl_stmt|;
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-decl_stmt|;
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Arg
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -247,25 +243,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get and init the Op created above */
-name|Arg
-operator|=
 name|Op
-operator|->
-name|Common
-operator|.
-name|Value
-operator|.
-name|Arg
-expr_stmt|;
-name|Op
-operator|->
-name|Common
-operator|.
-name|Node
-operator|=
-name|Node
-expr_stmt|;
-name|Arg
 operator|->
 name|Common
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 105 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 106 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1865,6 +1865,8 @@ name|RegisterInfo
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
 name|GpeBlock
 operator|->
 name|RegisterInfo
@@ -1873,8 +1875,11 @@ name|StatusAddress
 operator|.
 name|Address
 argument_list|)
+argument_list|)
 argument_list|,
 name|ACPI_FORMAT_UINT64
+argument_list|(
+name|ACPI_GET_ADDRESS
 argument_list|(
 name|GpeBlock
 operator|->
@@ -1883,6 +1888,7 @@ operator|->
 name|EnableAddress
 operator|.
 name|Address
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1938,20 +1944,26 @@ name|EnableForRun
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
 name|GpeRegisterInfo
 operator|->
 name|StatusAddress
 operator|.
 name|Address
 argument_list|)
+argument_list|)
 argument_list|,
 name|ACPI_FORMAT_UINT64
+argument_list|(
+name|ACPI_GET_ADDRESS
 argument_list|(
 name|GpeRegisterInfo
 operator|->
 name|EnableAddress
 operator|.
 name|Address
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

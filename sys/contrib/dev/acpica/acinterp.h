@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 148 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 149 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -213,6 +213,24 @@ end_function_decl
 begin_comment
 comment|/*  * exfield - ACPI AML (p-code) execution - field manipulation  */
 end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExCommonBufferSetup
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|,
+name|UINT32
+modifier|*
+name|DatumCount
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
