@@ -4573,6 +4573,11 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ALTQ
@@ -4636,6 +4641,11 @@ operator|->
 name|ifq_len
 operator|=
 literal|0
+expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
 expr_stmt|;
 block|}
 end_function
