@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -469,6 +469,32 @@ name|KN02_PHYS_TC_6_START
 block|,
 name|KN02_PHYS_TC_7_START
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the following is used externally (sysctl_hw) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|machine
+index|[]
+init|=
+literal|"DEC"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cpu "architecture" */
+end_comment
+
+begin_decl_stmt
+name|char
+name|cpu_model
+index|[
+literal|30
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1660,6 +1686,13 @@ expr_stmt|;
 name|pmax_slot_hand_fill
 argument_list|()
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"3100"
+argument_list|)
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
@@ -1769,6 +1802,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"5000/200"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|DS_3MIN
@@ -1902,6 +1942,13 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"5000/1xx"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|DS_MAXINE
@@ -2026,6 +2073,13 @@ name|XINE_REG_TIMEOUT
 argument_list|)
 operator|=
 literal|0
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"5000/25"
+argument_list|)
 expr_stmt|;
 break|break;
 ifdef|#
@@ -2161,6 +2215,13 @@ name|KN03_SYS_ERRADR
 argument_list|)
 operator|=
 literal|0
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"5000/240"
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
