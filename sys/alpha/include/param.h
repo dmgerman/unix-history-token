@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: param.h,v 1.1 1998/01/10 10:13:15 jb Exp $ */
 end_comment
 
 begin_comment
@@ -105,6 +105,13 @@ end_define
 begin_comment
 comment|/* bytes/page */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PAGE_SIZE
+value|NBPG
+end_define
 
 begin_define
 define|#

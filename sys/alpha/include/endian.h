@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: endian.h,v 1.2 1998/01/10 22:09:53 jb Exp $ */
 end_comment
 
 begin_comment
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_typedef

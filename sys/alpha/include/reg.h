@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: frame.h,v 1.1 1998/01/10 10:13:14 jb Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
-comment|/* From: NetBSD: frame.h,v 1.4 1997/04/06 08:47:27 cgd Exp */
+comment|/* From: NetBSD: reg.h,v 1.3 1997/04/06 08:47:40 cgd Exp */
 end_comment
 
 begin_comment
@@ -14,303 +14,320 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ALPHA_FRAME_H_
+name|_ALPHA_REG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ALPHA_FRAME_H_
+name|_ALPHA_REG_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/alpha_cpu.h>
-end_include
-
 begin_comment
-comment|/*  * Software trap, exception, and syscall frame.  *  * Includes "hardware" (PALcode) frame.  *  * PALcode puts ALPHA_HWFRAME_* fields on stack.  We have to add  * all of the general-purpose registers except for zero, for sp  * (which is automatically saved in the PCB's USP field for entries  * from user mode, and which is implicitly saved and restored by the  * calling conventions for entries from kernel mode), and (on traps  * and exceptions) for a0, a1, and a2 (which are saved by PALcode).  */
+comment|/*  * XXX where did this info come from?  */
 end_comment
 
 begin_comment
-comment|/* Quadword offsets of the registers to be saved. */
+comment|/*  * Struct reg, used for procfs and in signal contexts  * Note that in signal contexts, it's represented as an array.  * That array has to look exactly like 'struct reg' though.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FRAME_V0
+name|R_V0
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T0
+name|R_T0
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T1
+name|R_T1
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T2
+name|R_T2
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T3
+name|R_T3
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T4
+name|R_T4
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T5
+name|R_T5
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T6
+name|R_T6
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T7
+name|R_T7
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_S0
+name|R_S0
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_S1
+name|R_S1
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_S2
+name|R_S2
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_S3
+name|R_S3
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_S4
+name|R_S4
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_S5
+name|R_S5
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_S6
+name|R_S6
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_A3
+name|R_A0
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_A4
+name|R_A1
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_A5
+name|R_A2
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T8
+name|R_A3
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T9
+name|R_A4
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T10
+name|R_A5
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T11
+name|R_T8
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_RA
+name|R_T9
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_T12
+name|R_T10
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_AT
+name|R_T11
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_SP
+name|R_RA
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_SW_SIZE
-value|(FRAME_SP + 1)
+name|R_T12
+value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_HW_OFFSET
-value|FRAME_SW_SIZE
+name|R_AT
+value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_PS
-value|(FRAME_HW_OFFSET + ALPHA_HWFRAME_PS)
+name|R_GP
+value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_PC
-value|(FRAME_HW_OFFSET + ALPHA_HWFRAME_PC)
+name|R_SP
+value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_GP
-value|(FRAME_HW_OFFSET + ALPHA_HWFRAME_GP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_A0
-value|(FRAME_HW_OFFSET + ALPHA_HWFRAME_A0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_A1
-value|(FRAME_HW_OFFSET + ALPHA_HWFRAME_A1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_A2
-value|(FRAME_HW_OFFSET + ALPHA_HWFRAME_A2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_HW_SIZE
-value|ALPHA_HWFRAME_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_SIZE
-value|(FRAME_HW_OFFSET + FRAME_HW_SIZE)
+name|R_ZERO
+value|31
 end_define
 
 begin_struct
 struct|struct
-name|trapframe
+name|reg
 block|{
-name|unsigned
-name|long
-name|tf_regs
+name|u_int64_t
+name|r_regs
 index|[
-name|FRAME_SIZE
+literal|32
 index|]
 decl_stmt|;
-comment|/* See above */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Floating point unit state. (also, register set used for ptrace.)  *  * The floating point registers for a process, saved only when  * necessary.  *  * Note that in signal contexts, it's represented as an array.  * That array has to look exactly like 'struct reg' though.  */
+end_comment
+
+begin_struct
+struct|struct
+name|fpreg
+block|{
+name|u_int64_t
+name|fpr_regs
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int64_t
+name|fpr_cr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|restorefpstate
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fpreg
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|savefpstate
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fpreg
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -318,7 +335,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ALPHA_FRAME_H_ */
+comment|/* _ALPHA_REG_H_ */
 end_comment
 
 end_unit

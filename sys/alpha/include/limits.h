@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: limits.h,v 1.1 1998/01/10 10:13:15 jb Exp $ */
 end_comment
 
 begin_comment

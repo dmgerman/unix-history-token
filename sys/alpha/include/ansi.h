@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ansi.h,v 1.1 1998/01/10 10:13:13 jb Exp $ */
 end_comment
 
 begin_comment
@@ -229,6 +229,24 @@ end_define
 begin_comment
 comment|/* rune_t */
 end_comment
+
+begin_comment
+comment|/*  * Frequencies of the clock ticks reported by clock() and times().  They  * are the same as stathz for bogus historical reasons.  They should be  * 1e6 because clock() and times() are implemented using getrusage() and  * there is no good reason why they should be less accurate.  There is  * the bad reason that (broken) programs might not like clock_t or  * CLOCKS_PER_SEC being ``double'' (``unsigned long'' is not large enough  * to hold the required 24 hours worth of ticks if the frequency is  * 1000000ul, and ``unsigned long long'' would be nonstandard).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_CLK_TCK_
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BSD_CLOCKS_PER_SEC_
+value|100
+end_define
 
 begin_endif
 endif|#

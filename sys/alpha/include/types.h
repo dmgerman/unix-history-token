@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: types.h,v 1.1 1998/01/10 10:13:16 jb Exp $ */
 end_comment
 
 begin_comment
@@ -175,6 +175,39 @@ typedef|typedef
 name|int64_t
 name|register_t
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int32_t
+name|ufs_daddr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Interrupt mask (spl, xxx_imask, etc) */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|intrmask_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Interrupt handler function type - arg should be "void *" one day */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|inthand2_t
+parameter_list|(
+name|int
+name|_unit
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: float.h,v 1.1 1998/01/10 22:09:53 jb Exp $ */
 end_comment
 
 begin_comment
