@@ -265,6 +265,13 @@ block|{
 name|free
 argument_list|(
 name|na
+operator|->
+name|buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|na
 argument_list|)
 expr_stmt|;
 return|return
@@ -296,6 +303,13 @@ expr_stmt|;
 name|close
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|na
+operator|->
+name|buf
 argument_list|)
 expr_stmt|;
 name|free
