@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -260,6 +260,27 @@ comment|/* squawk on requests from non-local nets */
 end_comment
 
 begin_decl_stmt
+name|int
+name|r
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Routing socket to install updates with */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|sockaddr_ns
+name|ns_netmask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Used in installing routes */
+end_comment
+
+begin_decl_stmt
 name|char
 name|packet
 index|[
@@ -312,6 +333,34 @@ name|cleanup
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|rtioctl
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ADD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELETE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANGE
+value|3
+end_define
 
 end_unit
 
