@@ -1779,12 +1779,6 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1805,11 +1799,6 @@ directive|define
 name|HAS_DOMAINNAME
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
