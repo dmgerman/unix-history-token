@@ -878,7 +878,7 @@ begin_define
 define|#
 directive|define
 name|GETOPTOPTS
-value|"d:ef:sw:"
+value|"d:ef:lsw:"
 end_define
 
 begin_define
@@ -886,13 +886,15 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: morse [-s] [-e] [-d device] [-w speed] [-f frequency] [string ...]\n"
+value|"usage: morse [-els] [-d device] [-w speed] [-f frequency] [string ...]\n"
 end_define
 
 begin_decl_stmt
 specifier|static
 name|int
 name|pflag
+decl_stmt|,
+name|lflag
 decl_stmt|,
 name|sflag
 decl_stmt|,
@@ -1014,7 +1016,7 @@ begin_define
 define|#
 directive|define
 name|GETOPTOPTS
-value|"d:ef:psw:"
+value|"d:ef:lpsw:"
 end_define
 
 begin_undef
@@ -1135,6 +1137,14 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|SPEAKER
@@ -1186,18 +1196,42 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|sflag
+operator|&&
+name|lflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"morse: only one of -l and -s allowed\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|pflag
 operator|||
 name|device
 operator|)
 operator|&&
+operator|(
 name|sflag
+operator|||
+name|lflag
+operator|)
 condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"morse: only one of -p, -d and -s allowed\n"
+literal|"morse: only one of -p, -d and -l, -s allowed\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1590,6 +1624,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|lflag
+condition|)
+name|printf
+argument_list|(
+literal|"m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|*
 name|argv
 condition|)
@@ -1767,36 +1810,38 @@ if|if
 condition|(
 name|pflag
 condition|)
-block|{
 name|play
 argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 elseif|else
 if|if
 condition|(
 name|device
 condition|)
-block|{
 name|ttyout
 argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+elseif|else
+if|if
+condition|(
+name|lflag
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 else|else
-block|{
 name|show
 argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 for|for
 control|(
@@ -1891,16 +1936,33 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|sflag
+name|lflag
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|" %s"
+literal|"%s "
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" %s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 for|for
 control|(
 init|;
@@ -1929,6 +1991,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
