@@ -38,6 +38,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_PCIC_TI1031
+value|0xac13104cul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_PCIC_TI1130
 value|0xac12104cul
 end_define
