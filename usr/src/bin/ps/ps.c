@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.31 (Berkeley) %G%"
+literal|"@(#)ps.c	4.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,7 +620,9 @@ argument_list|()
 decl_stmt|,
 name|mytty
 index|[
-literal|16
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1060,13 +1062,15 @@ name|tptr
 operator|=
 name|ttyname
 argument_list|(
-literal|2
+literal|0
 argument_list|)
 operator|)
 operator|!=
 literal|0
 condition|)
 block|{
+name|tptr
+operator|=
 name|strcpy
 argument_list|(
 name|mytty
@@ -1076,23 +1080,39 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|tptr
-operator|=
-name|index
+name|strncmp
 argument_list|(
-name|mytty
+name|tptr
 argument_list|,
-literal|'y'
+literal|"/dev/"
+argument_list|,
+literal|5
 argument_list|)
-operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|tptr
-operator|++
+operator|+=
+literal|5
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|tptr
+argument_list|,
+literal|"tty"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|tptr
+operator|+=
+literal|3
+expr_stmt|;
 name|aflg
 operator|++
 expr_stmt|;
@@ -1612,13 +1632,13 @@ name|sp
 operator|->
 name|ap
 operator|->
-name|a_flag
-operator|&
-name|SWEXIT
+name|a_stat
+operator|==
+name|SZOMB
 condition|)
 name|printf
 argument_list|(
-literal|"<exiting>"
+literal|"<defunct>"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1628,13 +1648,13 @@ name|sp
 operator|->
 name|ap
 operator|->
-name|a_stat
-operator|==
-name|SZOMB
+name|a_flag
+operator|&
+name|SWEXIT
 condition|)
 name|printf
 argument_list|(
-literal|"<defunct>"
+literal|"<exiting>"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1667,30 +1687,6 @@ condition|)
 name|printf
 argument_list|(
 literal|" pagedaemon"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sp
-operator|->
-name|ap
-operator|->
-name|a_pid
-operator|==
-literal|3
-operator|&&
-name|sp
-operator|->
-name|ap
-operator|->
-name|a_flag
-operator|&
-name|SSYS
-condition|)
-name|printf
-argument_list|(
-literal|" ip input"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1891,6 +1887,12 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|setuid
 argument_list|(
 name|getuid
@@ -6076,7 +6078,7 @@ name|char
 modifier|*
 name|lhdr
 init|=
-literal|"      F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN  STAT TT  TIME"
+literal|"      F UID   PID  PPID CP PRI NI ADDR  SZ  RSS  WCHAN STAT TT  TIME"
 decl_stmt|;
 end_decl_stmt
 
