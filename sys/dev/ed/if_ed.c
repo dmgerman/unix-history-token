@@ -3693,7 +3693,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * 0x14-0x19 : Physical Address Register 0-5 (PAR0-PAR5) 	 * 0x1A      : Card ID Register (CIR) 	 * 0x1B      : Check Sum Register (SR) 	 */
+comment|/* 	 * Linksys registers(offset from ASIC base) 	 * 	 * 0x04-0x09 : Physical Address Register 0-5 (PAR0-PAR5) 	 * 0x0A      : Card ID Register (CIR) 	 * 0x0B      : Check Sum Register (SR) 	 */
 for|for
 control|(
 name|sum
@@ -3702,11 +3702,11 @@ literal|0
 operator|,
 name|i
 operator|=
-literal|0x14
+literal|0x04
 init|;
 name|i
 operator|<
-literal|0x1c
+literal|0x0c
 condition|;
 name|i
 operator|++
@@ -3717,7 +3717,7 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|nic_addr
+name|asic_addr
 operator|+
 name|i
 argument_list|)
@@ -3761,9 +3761,9 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|nic_addr
+name|asic_addr
 operator|+
-literal|0x14
+literal|0x04
 operator|+
 name|i
 argument_list|)
