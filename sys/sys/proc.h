@@ -1506,24 +1506,30 @@ begin_define
 define|#
 directive|define
 name|need_resched
-parameter_list|()
-value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	curproc->p_sflag |= PS_NEEDRESCHED;				\ } while (0)
+parameter_list|(
+name|p
+parameter_list|)
+value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_NEEDRESCHED;					\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|resched_wanted
-parameter_list|()
-value|(curproc->p_sflag& PS_NEEDRESCHED)
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_sflag& PS_NEEDRESCHED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|clear_resched
-parameter_list|()
-value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	curproc->p_sflag&= ~PS_NEEDRESCHED;				\ } while (0)
+parameter_list|(
+name|p
+parameter_list|)
+value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag&= ~PS_NEEDRESCHED;				\ } while (0)
 end_define
 
 begin_comment

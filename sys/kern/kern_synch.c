@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -138,12 +144,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
 end_include
 
 begin_decl_stmt
@@ -405,7 +405,9 @@ operator|.
 name|pri_level
 condition|)
 name|need_resched
-argument_list|()
+argument_list|(
+name|curproc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -452,12 +454,8 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 name|need_resched
-argument_list|()
-expr_stmt|;
-name|mtx_unlock_spin
 argument_list|(
-operator|&
-name|sched_lock
+name|curproc
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -468,6 +466,12 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -3366,7 +3370,9 @@ operator|=
 name|NOCPU
 expr_stmt|;
 name|clear_resched
-argument_list|()
+argument_list|(
+name|curproc
+argument_list|)
 expr_stmt|;
 name|cpu_switch
 argument_list|()

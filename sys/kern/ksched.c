@@ -519,7 +519,9 @@ name|p_pri
 argument_list|)
 expr_stmt|;
 name|need_resched
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -574,7 +576,9 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX Simply revert to whatever we had for last 			 *     normal scheduler priorities. 			 *     This puts a requirement 			 *     on the scheduling code: You must leave the 			 *     scheduling info alone. 			 */
 name|need_resched
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -648,7 +652,9 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 name|need_resched
-argument_list|()
+argument_list|(
+name|curproc
+argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(

@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/callout.h>
 end_include
 
@@ -366,23 +372,6 @@ include|#
 directive|include
 file|<machine/intrcnt.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1252,13 +1241,6 @@ end_endif
 
 begin_decl_stmt
 name|struct
-name|cpuhead
-name|cpuhead
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|mtx
 name|sched_lock
 decl_stmt|;
@@ -2035,39 +2017,22 @@ expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
-name|SLIST_INIT
-argument_list|(
-operator|&
-name|cpuhead
-argument_list|)
-expr_stmt|;
-name|SLIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|cpuhead
-argument_list|,
-name|GLOBALDATA
-argument_list|,
-name|gd_allcpu
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 	 * OK, enough kmem_alloc/malloc state should be up, lets get on with it! 	 */
-name|mp_start
-argument_list|()
+name|globaldata_register
+argument_list|(
+name|GLOBALDATA
+argument_list|)
 expr_stmt|;
-comment|/* fire up the APs and APICs */
-name|mp_announce
+else|#
+directive|else
+comment|/* For SMP, we delay the cpu_setregs() until after SMP startup. */
+name|cpu_setregs
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SMP */
-name|cpu_setregs
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -7319,7 +7284,7 @@ literal|1024
 argument_list|)
 expr_stmt|;
 comment|/* look for the MP hardware - needed for apic addresses */
-name|mp_probe
+name|i386_mp_probe
 argument_list|()
 expr_stmt|;
 endif|#

@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -175,12 +181,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
 end_include
 
 begin_define
@@ -6184,12 +6184,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -6201,7 +6195,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-else|else
 name|mtx_unlock_spin
 argument_list|(
 operator|&

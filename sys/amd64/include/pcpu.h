@@ -150,24 +150,6 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|SLIST_HEAD
-argument_list|(
-name|cpuhead
-argument_list|,
-name|globaldata
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cpuhead
-name|cpuhead
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef

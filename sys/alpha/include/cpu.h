@@ -100,16 +100,6 @@ parameter_list|)
 value|TRAPF_PC(&(framep)->cf_tf)
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLKF_INTR
-parameter_list|(
-name|framep
-parameter_list|)
-value|(curproc->p_intr_nesting_level>= 2)
-end_define
-
 begin_comment
 comment|/*  * Arrange to handle pending profiling ticks before returning to user mode.  *  * XXX this is now poorly named and implemented.  It used to handle only a  * single tick and the PS_OWEUPC flag served as a counter.  Now there is a  * counter in the proc table and flag isn't really necessary.  */
 end_comment

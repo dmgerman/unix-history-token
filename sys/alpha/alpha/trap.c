@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -187,12 +193,6 @@ begin_include
 include|#
 directive|include
 file|<machine/fpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
 end_include
 
 begin_ifdef
@@ -618,7 +618,9 @@ expr_stmt|;
 if|if
 condition|(
 name|resched_wanted
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, a clock interrupt could 		 * change our priority without changing run queues 		 * (the running process is not kept on a run queue). 		 * If this happened after we setrunqueue ourselves but 		 * before we switch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
@@ -3464,7 +3466,9 @@ name|p
 argument_list|)
 operator|||
 name|resched_wanted
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 operator|)
 condition|)
 block|{

@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -255,12 +261,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
 end_include
 
 begin_include
@@ -378,13 +378,6 @@ begin_decl_stmt
 name|struct
 name|bootinfo_kernel
 name|bootinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|cpuhead
-name|cpuhead
 decl_stmt|;
 end_decl_stmt
 
@@ -1662,20 +1655,6 @@ argument_list|,
 name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 	 * OK, enough kmem_alloc/malloc state should be up, lets get on with it! 	 */
-name|mp_start
-argument_list|()
-expr_stmt|;
-comment|/* fire up the secondaries */
-name|mp_announce
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SMP */
 block|}
 end_function
 
@@ -3989,23 +3968,6 @@ operator|.
 name|pcb_hw
 operator|.
 name|apcb_ptbr
-expr_stmt|;
-comment|/* 	 * Record all cpus in a list. 	 */
-name|SLIST_INIT
-argument_list|(
-operator|&
-name|cpuhead
-argument_list|)
-expr_stmt|;
-name|SLIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|cpuhead
-argument_list|,
-name|GLOBALP
-argument_list|,
-name|gd_allcpu
-argument_list|)
 expr_stmt|;
 comment|/* Setup curproc so that mutexes work */
 name|PCPU_SET

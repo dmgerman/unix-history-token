@@ -100,27 +100,6 @@ parameter_list|)
 value|TRAPF_PC(&(framep)->cf_tf)
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLKF_BASEPRI
-parameter_list|(
-name|framep
-parameter_list|)
-define|\
-value|(((framep)->cf_tf.tf_cr_ipsr& IA64_PSR_I) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_INTR
-parameter_list|(
-name|framep
-parameter_list|)
-value|(curproc->p_intr_nesting_level>= 2)
-end_define
-
 begin_comment
 comment|/*  * Give a profiling tick to the current process when the user profiling  * buffer pages are invalid.  On the hp300, request an ast to send us  * through trap, marking the proc as needing a profiling tick.  */
 end_comment

@@ -1330,13 +1330,6 @@ end_endif
 
 begin_decl_stmt
 name|struct
-name|cpuhead
-name|cpuhead
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|mtx
 name|sched_lock
 decl_stmt|;
@@ -2113,36 +2106,16 @@ expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
-name|SLIST_INIT
-argument_list|(
-operator|&
-name|cpuhead
-argument_list|)
-expr_stmt|;
-name|SLIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|cpuhead
-argument_list|,
-name|GLOBALDATA
-argument_list|,
-name|gd_allcpu
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 	 * OK, enough kmem_alloc/malloc state should be up, lets get on with it! 	 */
-name|mp_start
-argument_list|()
-expr_stmt|;
-comment|/* fire up the APs and APICs */
-name|mp_announce
-argument_list|()
+name|globaldata_register
+argument_list|(
+name|GLOBALDATA
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SMP */
 name|cpu_setregs
 argument_list|()
 expr_stmt|;

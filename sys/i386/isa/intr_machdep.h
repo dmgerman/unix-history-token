@@ -190,8 +190,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XCPUCHECKSTATE_OFFSET
+name|XHARDCLOCK_OFFSET
 value|(ICU_OFFSET + 113)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XSTATCLOCK_OFFSET
+value|(ICU_OFFSET + 114)
 end_define
 
 begin_comment
@@ -202,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|XRENDEZVOUS_OFFSET
-value|(ICU_OFFSET + 114)
+value|(ICU_OFFSET + 115)
 end_define
 
 begin_comment
@@ -703,9 +710,12 @@ name|inthand_t
 name|Xinvltlb
 decl_stmt|,
 comment|/* TLB shootdowns */
-name|Xcpucheckstate
+name|Xhardclock
 decl_stmt|,
-comment|/* Check cpu state */
+comment|/* Forward hardclock() */
+name|Xstatclock
+decl_stmt|,
+comment|/* Forward statclock() */
 name|Xcpuast
 decl_stmt|,
 comment|/* Additional software trap on other cpu */

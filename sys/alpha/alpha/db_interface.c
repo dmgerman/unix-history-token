@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -103,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<machine/prom.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
 end_include
 
 begin_include
@@ -2177,6 +2177,9 @@ name|globaldata
 modifier|*
 name|gd
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 name|int
 name|id
 decl_stmt|;
@@ -2212,31 +2215,20 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
-name|SLIST_FOREACH
-argument_list|(
-argument|gd
-argument_list|,
-argument|&cpuhead
-argument_list|,
-argument|gd_allcpu
-argument_list|)
-block|{
-if|if
-condition|(
 name|gd
-operator|->
-name|gd_cpuid
-operator|==
+operator|=
+name|globaldata_find
+argument_list|(
 name|id
-condition|)
-break|break;
-block|}
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gd
 operator|==
 name|NULL
 condition|)
+block|{
 name|db_printf
 argument_list|(
 literal|"CPU %d not found\n"
@@ -2244,8 +2236,16 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+return|return;
+block|}
+else|#
+directive|else
+name|gd
+operator|=
+name|GLOBALP
+expr_stmt|;
+endif|#
+directive|endif
 name|db_printf
 argument_list|(
 literal|"cpuid     = %d\n"
@@ -2420,7 +2420,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 block|}
 end_block
 

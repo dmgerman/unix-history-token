@@ -731,7 +731,9 @@ expr_stmt|;
 if|if
 condition|(
 name|resched_wanted
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrunqueue ourselves but before we 		 * mi_switch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
@@ -4660,7 +4662,9 @@ name|p
 argument_list|)
 operator|||
 name|resched_wanted
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 operator|)
 condition|)
 block|{

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -44,23 +50,6 @@ include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * i686 memory range operations  *  * This code will probably be impenetrable without reference to the  * Intel Pentium Pro documentation.  */

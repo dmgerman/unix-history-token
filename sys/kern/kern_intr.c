@@ -1826,7 +1826,9 @@ expr_stmt|;
 block|}
 else|else
 name|need_resched
-argument_list|()
+argument_list|(
+name|curproc
+argument_list|)
 expr_stmt|;
 block|}
 else|else

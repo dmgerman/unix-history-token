@@ -140,16 +140,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLKF_INTR
-parameter_list|(
-name|framep
-parameter_list|)
-value|(curproc->p_intr_nesting_level>= 2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLKF_PC
 parameter_list|(
 name|framep

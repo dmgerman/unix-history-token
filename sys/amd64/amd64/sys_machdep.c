@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -96,23 +102,6 @@ include|#
 directive|include
 file|<machine/sysarch.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -687,8 +676,23 @@ name|ext_tssd
 argument_list|)
 expr_stmt|;
 comment|/* switch to the new TSS after syscall completes */
+comment|/* 	 * XXX: The sched_lock here needs to be over a slightly larger area. 	 * I have patches to more properly lock accesses to process ldt's 	 * and tss's that still need to be reviewed, but this keeps us from 	 * panic'ing on the mtx_assert() in need_resched() for the time being. 	 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|need_resched
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
