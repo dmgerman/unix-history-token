@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.54 1999/04/07 08:27:40 brian Exp $"
+literal|"$Id: ftpd.c,v 1.55 1999/04/25 22:23:35 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,12 +344,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTERNAL_LS
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -365,26 +359,6 @@ undef|#
 directive|undef
 name|main
 end_undef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|char
-name|version
-index|[]
-init|=
-literal|"Version 6.00"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.14 1998/05/15 16:51:06 ache Exp $"
+literal|"$Id: popen.c,v 1.15 1998/05/18 00:06:28 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,12 +101,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTERNAL_LS
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -130,11 +124,6 @@ include|#
 directive|include
 file|<varargs.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -533,9 +522,6 @@ name|iop
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INTERNAL_LS
 name|fflush
 argument_list|(
 name|NULL
@@ -563,15 +549,6 @@ else|:
 name|vfork
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|pid
-operator|=
-name|vfork
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|pid
@@ -718,9 +695,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INTERNAL_LS
 if|if
 condition|(
 name|strcmp
@@ -796,8 +770,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|execv
 argument_list|(
 name|gargv
