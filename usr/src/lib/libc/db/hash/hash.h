@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -280,6 +280,14 @@ name|NCACHED
 index|]
 decl_stmt|;
 comment|/* Pointers to page maps */
+name|int
+name|nmaps
+decl_stmt|;
+comment|/* Initial number of bitmaps */
+name|int
+name|exmaps
+decl_stmt|;
+comment|/* Number of extra allocated bitmaps */
 name|int
 name|nbufs
 decl_stmt|;

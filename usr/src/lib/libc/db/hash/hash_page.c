@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.6 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3249,6 +3249,11 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|hashp
+operator|->
+name|exmaps
+operator|++
+expr_stmt|;
 name|clearints
 operator|=
 operator|(
