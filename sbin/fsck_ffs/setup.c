@@ -1554,7 +1554,7 @@ name|sblock
 operator|.
 name|fs_magic
 operator|==
-name|FS_BAD2_MAGIC
+name|FS_BAD_MAGIC
 condition|)
 block|{
 name|fprintf
@@ -1664,7 +1664,7 @@ name|sblock
 operator|.
 name|fs_magic
 operator|==
-name|FS_BAD2_MAGIC
+name|FS_BAD_MAGIC
 condition|)
 block|{
 name|fprintf

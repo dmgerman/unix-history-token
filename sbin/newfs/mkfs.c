@@ -1217,6 +1217,13 @@ argument_list|,
 name|fssize
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Before the filesystem is finally initialized, mark it 	 * as incompletely initialized. 	 */
+name|sblock
+operator|.
+name|fs_magic
+operator|=
+name|FS_BAD_MAGIC
+expr_stmt|;
 if|if
 condition|(
 name|Oflag
@@ -1224,12 +1231,6 @@ operator|==
 literal|1
 condition|)
 block|{
-name|sblock
-operator|.
-name|fs_magic
-operator|=
-name|FS_UFS1_MAGIC
-expr_stmt|;
 name|sblock
 operator|.
 name|fs_sblockloc
@@ -1367,12 +1368,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sblock
-operator|.
-name|fs_magic
-operator|=
-name|FS_BAD2_MAGIC
-expr_stmt|;
 name|sblock
 operator|.
 name|fs_sblockloc
@@ -2765,18 +2760,20 @@ argument_list|(
 literal|"** Leaving BAD MAGIC on Eflag 2\n"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|Oflag
-operator|!=
-literal|1
-condition|)
+else|else
 name|sblock
 operator|.
 name|fs_magic
 operator|=
+operator|(
+name|Oflag
+operator|!=
+literal|1
+operator|)
+condition|?
 name|FS_UFS2_MAGIC
+else|:
+name|FS_UFS1_MAGIC
 expr_stmt|;
 comment|/* 	 * Now build the cylinders group blocks and 	 * then print out indices of cylinder groups. 	 */
 name|printf
