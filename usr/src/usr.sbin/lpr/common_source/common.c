@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)common.c	5.8 (Berkeley) %G%"
+literal|"@(#)common.c	5.9 (Berkeley) 8/6/92"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,12 +100,61 @@ directive|include
 file|"lp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_comment
 comment|/*  * Routines and data common to all the line printer functions.  */
 end_comment
 
 begin_decl_stmt
-name|int
+name|char
+modifier|*
+name|AF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* accounting file */
+end_comment
+
+begin_decl_stmt
+name|long
+name|BR
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* baud rate if lp is a tty */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|CF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of cifplot filter (per job) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|DF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of tex filter (per job) */
+end_comment
+
+begin_decl_stmt
+name|long
 name|DU
 decl_stmt|;
 end_decl_stmt
@@ -115,23 +164,88 @@ comment|/* daeomon user-id */
 end_comment
 
 begin_decl_stmt
-name|int
-name|MX
+name|long
+name|FC
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* maximum number of blocks to copy */
+comment|/* flags to clear if lp is a tty */
 end_comment
 
 begin_decl_stmt
-name|int
-name|MC
+name|char
+modifier|*
+name|FF
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* maximum number of copies allowed */
+comment|/* form feed string */
+end_comment
+
+begin_decl_stmt
+name|long
+name|FS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flags to set if lp is a tty */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|GF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of graph(1G) filter (per job) */
+end_comment
+
+begin_decl_stmt
+name|long
+name|HL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print header last */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|IF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of input filter (created per job) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|LF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* log file for error messages */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|LO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lock file name */
 end_comment
 
 begin_decl_stmt
@@ -143,6 +257,121 @@ end_decl_stmt
 
 begin_comment
 comment|/* line printer device name */
+end_comment
+
+begin_decl_stmt
+name|long
+name|MC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum number of copies allowed */
+end_comment
+
+begin_decl_stmt
+name|long
+name|MX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum number of blocks to copy */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|NF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of ditroff filter (per job) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|OF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of output filter (created once) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|PF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of vrast filter (per job) */
+end_comment
+
+begin_decl_stmt
+name|long
+name|PL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page length */
+end_comment
+
+begin_decl_stmt
+name|long
+name|PW
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page width */
+end_comment
+
+begin_decl_stmt
+name|long
+name|PX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page width in pixels */
+end_comment
+
+begin_decl_stmt
+name|long
+name|PY
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page length in pixels */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|RF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of fortran text filter (per job) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|RG
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* resricted group */
 end_comment
 
 begin_decl_stmt
@@ -168,14 +397,74 @@ comment|/* remote printer name */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|LO
+name|long
+name|RS
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lock file name */
+comment|/* restricted to those with local accounts */
+end_comment
+
+begin_decl_stmt
+name|long
+name|RW
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* open LP for reading and writing */
+end_comment
+
+begin_decl_stmt
+name|long
+name|SB
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* short banner instead of normal header */
+end_comment
+
+begin_decl_stmt
+name|long
+name|SC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suppress multiple copies */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|SD
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* spool directory */
+end_comment
+
+begin_decl_stmt
+name|long
+name|SF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suppress FF on each print job */
+end_comment
+
+begin_decl_stmt
+name|long
+name|SH
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suppress header page */
 end_comment
 
 begin_decl_stmt
@@ -192,155 +481,12 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|SD
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* spool directory */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|AF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* accounting file */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|LF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* log file for error messages */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|OF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of output filter (created once) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|IF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of input filter (created per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|RF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of fortran text filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
 name|TF
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* name of troff filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|NF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of ditroff filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|DF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of tex filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|GF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of graph(1G) filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|VF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of vplot filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|CF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of cifplot filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|PF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of vrast filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|FF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* form feed string */
 end_comment
 
 begin_decl_stmt
@@ -355,137 +501,18 @@ comment|/* trailer string to be output when Q empties */
 end_comment
 
 begin_decl_stmt
-name|short
-name|SC
+name|char
+modifier|*
+name|VF
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* suppress multiple copies */
+comment|/* name of vplot filter (per job) */
 end_comment
 
 begin_decl_stmt
-name|short
-name|SF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* suppress FF on each print job */
-end_comment
-
-begin_decl_stmt
-name|short
-name|SH
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* suppress header page */
-end_comment
-
-begin_decl_stmt
-name|short
-name|SB
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* short banner instead of normal header */
-end_comment
-
-begin_decl_stmt
-name|short
-name|HL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print header last */
-end_comment
-
-begin_decl_stmt
-name|short
-name|RW
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* open LP for reading and writing */
-end_comment
-
-begin_decl_stmt
-name|short
-name|PW
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* page width */
-end_comment
-
-begin_decl_stmt
-name|short
-name|PL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* page length */
-end_comment
-
-begin_decl_stmt
-name|short
-name|PX
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* page width in pixels */
-end_comment
-
-begin_decl_stmt
-name|short
-name|PY
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* page length in pixels */
-end_comment
-
-begin_decl_stmt
-name|short
-name|BR
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* baud rate if lp is a tty */
-end_comment
-
-begin_decl_stmt
-name|int
-name|FC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flags to clear if lp is a tty */
-end_comment
-
-begin_decl_stmt
-name|int
-name|FS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flags to set if lp is a tty */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|XC
 decl_stmt|;
 end_decl_stmt
@@ -495,23 +522,13 @@ comment|/* flags to clear for local mode */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|XS
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* flags to set for local mode */
-end_comment
-
-begin_decl_stmt
-name|short
-name|RS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* restricted to those with local accounts */
 end_comment
 
 begin_decl_stmt
@@ -525,30 +542,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|pbuf
-index|[
-name|BUFSIZ
-operator|/
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* buffer for printcap strings */
-end_comment
-
-begin_decl_stmt
-name|char
 modifier|*
 name|bp
-init|=
-name|pbuf
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pointer into pbuf for pgetent() */
+comment|/* pointer into printcap buffer. */
 end_comment
 
 begin_decl_stmt
@@ -608,6 +608,22 @@ end_decl_stmt
 begin_comment
 comment|/* are we sending to a remote? */
 end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|printcapdb
+index|[
+literal|2
+index|]
+init|=
+block|{
+name|_PATH_PRINTCAP
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

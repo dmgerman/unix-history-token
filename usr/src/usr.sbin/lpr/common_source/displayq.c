@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	5.14 (Berkeley) %G%"
+literal|"@(#)displayq.c	5.16 (Berkeley) 8/31/92"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,6 +149,29 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|requ
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* job number of spool entries */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|requests
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of spool requests */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|user
@@ -172,39 +195,18 @@ comment|/* # of users in user array */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
-name|requ
-index|[]
+name|col
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* job number of spool entries */
+comment|/* column on screen */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|requests
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of spool requests */
-end_comment
-
-begin_decl_stmt
-name|int
-name|lflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* long output option */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|char
 name|current
 index|[
@@ -218,56 +220,7 @@ comment|/* current file being printed */
 end_comment
 
 begin_decl_stmt
-name|int
-name|garbage
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of garbage cf files */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rank
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* order to be printed (-1=none, 0=active) */
-end_comment
-
-begin_decl_stmt
-name|long
-name|totsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total print job size in bytes */
-end_comment
-
-begin_decl_stmt
-name|int
-name|first
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* first file in ``files'' column? */
-end_comment
-
-begin_decl_stmt
-name|int
-name|col
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* column on screen */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|char
 name|file
 index|[
@@ -281,6 +234,62 @@ comment|/* print file name */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|first
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* first file in ``files'' column? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|garbage
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of garbage cf files */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* long output option */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rank
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* order to be printed (-1=none, 0=active) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|totsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total print job size in bytes */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|head0
@@ -290,6 +299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|head1
@@ -363,19 +373,23 @@ condition|(
 operator|(
 name|i
 operator|=
-name|pgetent
+name|cgetent
 argument_list|(
-name|line
+operator|&
+name|bp
+argument_list|,
+name|printcapdb
 argument_list|,
 name|printer
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|2
 condition|)
 name|fatal
 argument_list|(
-literal|"cannot open printer description file"
+literal|"can't open printer description file"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -383,28 +397,40 @@ if|if
 condition|(
 name|i
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 name|fatal
 argument_list|(
 literal|"unknown printer"
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
-operator|(
-name|LP
-operator|=
-name|pgetstr
+name|i
+operator|==
+operator|-
+literal|3
+condition|)
+name|fatal
 argument_list|(
+literal|"potential reference loop detected in printcap file"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cgetstr
+argument_list|(
+name|bp
+argument_list|,
 literal|"lp"
 argument_list|,
 operator|&
-name|bp
+name|LP
 argument_list|)
-operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|LP
 operator|=
@@ -412,19 +438,17 @@ name|_PATH_DEFDEVLP
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|RP
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"rp"
 argument_list|,
 operator|&
-name|bp
+name|RP
 argument_list|)
-operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|RP
 operator|=
@@ -432,19 +456,17 @@ name|DEFLP
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|SD
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"sd"
 argument_list|,
 operator|&
-name|bp
+name|SD
 argument_list|)
-operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|SD
 operator|=
@@ -452,19 +474,17 @@ name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|LO
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"lo"
 argument_list|,
 operator|&
-name|bp
+name|LO
 argument_list|)
-operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|LO
 operator|=
@@ -472,32 +492,30 @@ name|DEFLOCK
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ST
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"st"
 argument_list|,
 operator|&
-name|bp
+name|ST
 argument_list|)
-operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|ST
 operator|=
 name|DEFSTAT
 expr_stmt|;
-name|RM
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"rm"
 argument_list|,
 operator|&
-name|bp
+name|RM
 argument_list|)
 expr_stmt|;
 if|if
