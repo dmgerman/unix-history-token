@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.8 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -933,6 +933,8 @@ operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
+operator||
+name|QBADADDR
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -1159,11 +1161,19 @@ operator|&&
 operator|!
 name|ForceMail
 condition|)
+block|{
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QBADADDR
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"Cannot mail directly to :include:s"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|message
@@ -1285,6 +1295,8 @@ operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
+operator||
+name|QBADADDR
 expr_stmt|;
 name|usrerr
 argument_list|(
