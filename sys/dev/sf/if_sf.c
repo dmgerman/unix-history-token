@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu
 end_comment
 
 begin_comment
-comment|/*  * Adaptec AIC-6915 "Starfire" PCI fast ethernet driver for FreeBSD.  * Programming manual is available from www.adaptec.com.  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Department of Electical Engineering  * Columbia University, New York City  */
+comment|/*  * Adaptec AIC-6915 "Starfire" PCI fast ethernet driver for FreeBSD.  * Programming manual is available from:  * ftp.adaptec.com:/pub/BBS/userguides/aic6915_pg.pdf.  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Department of Electical Engineering  * Columbia University, New York City  */
 end_comment
 
 begin_comment
