@@ -3462,6 +3462,7 @@ name|id
 operator|.
 name|src_port
 condition|)
+block|{
 name|dir
 operator|=
 literal|0
@@ -3470,6 +3471,7 @@ comment|/* reverse match */
 goto|goto
 name|found
 goto|;
+block|}
 block|}
 break|break ;
 block|}
