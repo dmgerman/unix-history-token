@@ -470,6 +470,50 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Real input/output to (hopefully) iomapped port  */
+end_comment
+
+begin_function
+name|void
+name|outb_port
+parameter_list|(
+name|int
+name|port
+parameter_list|,
+name|unsigned
+name|char
+name|byte
+parameter_list|)
+block|{
+name|out
+argument_list|(
+name|port
+argument_list|,
+name|byte
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|char
+name|inb_port
+parameter_list|(
+name|int
+name|port
+parameter_list|)
+block|{
+return|return
+name|in
+argument_list|(
+name|port
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*   * Fake input/output ports  */
 end_comment
 
