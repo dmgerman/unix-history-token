@@ -2343,20 +2343,13 @@ if|if
 condition|(
 name|rusage
 condition|)
-name|bcopy
-argument_list|(
+operator|*
+name|rusage
+operator|=
+operator|*
 name|p
 operator|->
 name|p_ru
-argument_list|,
-name|rusage
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rusage
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* 			 * If we got the child via a ptrace 'attach', 			 * we need to give it back to the old parent. 			 */
 name|PROC_UNLOCK
