@@ -1061,7 +1061,7 @@ name|wso
 expr_stmt|;
 name|error
 operator|=
-name|unp_connect2
+name|uipc_connect2
 argument_list|(
 name|wso
 argument_list|,

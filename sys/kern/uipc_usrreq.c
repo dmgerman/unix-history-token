@@ -318,6 +318,24 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|unp_connect2
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|unp_disconnect
 parameter_list|(
@@ -784,7 +802,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|uipc_connect2
 parameter_list|(
@@ -3769,6 +3786,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|unp_connect2
 parameter_list|(
