@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.22 1996/05/24 06:09:04 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.23 1996/07/05 08:44:10 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -48,6 +48,13 @@ end_include
 begin_comment
 comment|/* Where we stick our temporary expanded doc file */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DOC_TMP_DIR
+value|"/tmp"
+end_define
 
 begin_define
 define|#
@@ -100,6 +107,11 @@ modifier|*
 name|fname
 parameter_list|)
 block|{
+name|Mkdir
+argument_list|(
+name|DOC_TMP_DIR
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|DOC_TMP_FILE
