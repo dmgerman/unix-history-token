@@ -126,6 +126,66 @@ name|_POSIX_THREAD_SAFE_FUNCTIONS
 end_define
 
 begin_comment
+comment|/*  * Flags for threads and thread attributes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_DETACHED
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_SCOPE_SYSTEM
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_INHERIT_SCHED
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_NOFLOAT
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CREATE_DETACHED
+value|PTHREAD_DETACHED
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CREATE_JOINABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_SCOPE_PROCESS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_EXPLICIT_SCHED
+value|0
+end_define
+
+begin_comment
 comment|/*  * Forward structure definitions.  *  * These are mostly opaque to the user.  */
 end_comment
 
@@ -265,16 +325,19 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-modifier|*
-function_decl|(
-modifier|*
+operator|*
+operator|(
+operator|*
 name|pthread_startroutine_t
-function_decl|)
-parameter_list|(
+operator|)
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -328,6 +391,12 @@ begin_comment
 comment|/*  * Default attribute arguments.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTHREAD_KERNEL
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -342,12 +411,6 @@ name|pthread_mutexattr_default
 value|NULL
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PTHREAD_KERNEL
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -359,6 +422,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_enum
+enum|enum
+name|pthread_mutextype
+block|{
+name|MUTEX_TYPE_FAST
+init|=
+literal|1
+block|,
+name|MUTEX_TYPE_COUNTING_FAST
+init|=
+literal|2
+block|,
+comment|/* Recursive */
+name|MUTEX_TYPE_MAX
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Thread function prototype definitions:  */
@@ -627,7 +708,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|pthread_cleanup_push
 name|__P
 argument_list|(
@@ -879,16 +960,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+modifier|*
 name|pthread_getspecific
 name|__P
 argument_list|(
 operator|(
 name|pthread_key_t
-operator|,
-name|void
-operator|*
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
