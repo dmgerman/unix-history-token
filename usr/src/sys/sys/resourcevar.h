@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resourcevar.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resourcevar.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -66,18 +66,26 @@ modifier|*
 name|pr_base
 decl_stmt|;
 comment|/* buffer base */
-name|unsigned
+name|u_long
 name|pr_size
 decl_stmt|;
 comment|/* buffer size */
-name|unsigned
+name|u_long
 name|pr_off
 decl_stmt|;
 comment|/* pc offset */
-name|unsigned
+name|u_long
 name|pr_scale
 decl_stmt|;
 comment|/* pc scaling */
+name|u_long
+name|pr_addr
+decl_stmt|;
+comment|/* temp storage for addr until AST */
+name|u_long
+name|pr_ticks
+decl_stmt|;
+comment|/* temp storage for ticks until AST */
 block|}
 name|p_prof
 struct|;
