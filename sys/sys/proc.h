@@ -1449,6 +1449,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KEF_SCHED0
+value|0x00001
+end_define
+
+begin_comment
+comment|/* For scheduler specific use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_SCHED1
+value|0x00002
+end_define
+
+begin_comment
+comment|/* For scheduler specific use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_SCHED2
+value|0X00004
+end_define
+
+begin_comment
+comment|/* For scheduler specific use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_SCHED3
+value|0x00008
+end_define
+
+begin_comment
+comment|/* For scheduler specific use. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KEF_DIDRUN
 value|0x02000
 end_define
