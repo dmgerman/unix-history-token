@@ -1377,6 +1377,9 @@ operator|&
 name|MenuSyscons
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 literal|" Syscons, Font"
 block|,
@@ -1392,6 +1395,8 @@ operator|&
 name|MenuSysconsFont
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" Syscons, Keymap"
 block|,
@@ -1437,6 +1442,9 @@ operator|&
 name|MenuSysconsSaver
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 literal|" Syscons, Screenmap"
 block|,
@@ -1467,6 +1475,8 @@ operator|&
 name|MenuSysconsTtys
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" Time Zone"
 block|,
@@ -1976,6 +1986,43 @@ name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+literal|"Select a protocol type for your mouse"
+block|,
+literal|"If your mouse is attached to the bus mouse port, you should always choose\n"
+literal|"\"Auto\", regardless of the model and the brand of the mouse.  All other\n"
+literal|"protocol types are for serial mice and should not be used with the bus\n"
+literal|"mouse.  If you have a serial mouse and are not sure about its protocol,\n"
+literal|"you should also try \"Auto\".  It may not work for the serial mouse if the\n"
+literal|"mouse does not support the PnP standard.  But, it won't hurt.  Many\n"
+literal|"2-button serial mice are compatible with \"Microsoft\" or \"MouseMan\".\n"
+literal|"3-button serial mice may be compatible with \"MouseSystems\" or \"MouseMan\".\n"
+literal|"If the serial mouse has a wheel, it may be compatible with \"IntelliMouse\"."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"1 Auto"
+block|,
+literal|"Bus mouse or PnP serial mouse"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=auto"
+block|}
+block|,
+else|#
+directive|else
 literal|"Select a protocol type for your mouse"
 block|,
 literal|"If your mouse is attached to the PS/2 mouse port or the bus mouse port,\n"
@@ -2009,6 +2056,9 @@ name|VAR_MOUSED_TYPE
 literal|"=auto"
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* PC98 */
 block|{
 literal|"2 GlidePoint"
 block|,
@@ -2149,13 +2199,84 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
+ifdef|#
+directive|ifdef
+name|PC98
 name|DMenu
 name|MenuMousePort
-init|=
+operator|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Select your mouse port from the following menu"
+block|,
+literal|"The built-in pointing device of laptop/notebook computers is usually\n"
+literal|"a BusMouse style device."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"1 BusMouse"
+block|,
+literal|"PC-98x1 bus mouse (/dev/mse0)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_PORT
+literal|"=/dev/mse0"
+block|}
+block|,
+block|{
+literal|"2 COM1"
+block|,
+literal|"Serial mouse on COM1 (/dev/cuaa0)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_PORT
+literal|"=/dev/cuaa0"
+block|}
+block|,
+block|{
+literal|"3 COM2"
+block|,
+literal|"Serial mouse on COM2 (/dev/cuaa1)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_PORT
+literal|"=/dev/cuaa1"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+else|#
+directive|else
+name|DMenu
+name|MenuMousePort
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2266,13 +2387,13 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
+endif|#
+directive|endif
+comment|/* PC98 */
 name|DMenu
 name|MenuMouse
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -2380,13 +2501,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaCDROM
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2409,13 +2527,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaFloppy
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2436,13 +2551,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaDOS
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2469,13 +2581,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaFTP
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4073,13 +4182,10 @@ name|NULL
 block|}
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaTape
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4104,13 +4210,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNetworkDevice
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4137,17 +4240,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* Prototype KLD load menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuKLD
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -4165,17 +4262,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The media selection menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuMedia
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4299,17 +4390,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The distributions menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4486,13 +4571,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSubDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5105,11 +5187,11 @@ block|{
 name|NULL
 block|}
 block|}
-decl_stmt|,
+block|, }
+decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-unit|};
 name|DMenu
 name|MenuSrcDistributions
 init|=
@@ -7670,6 +7752,87 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_comment
+comment|/* IPL type menu */
+end_comment
+
+begin_decl_stmt
+name|DMenu
+name|MenuIPLType
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"overwrite me"
+block|,
+comment|/* will be disk specific label */
+literal|"If you want a FreeBSD Boot Manager, select \"BootMgr\".  If you would\n"
+literal|"prefer your Boot Manager to remain untouched then select \"None\".\n\n"
+block|,
+literal|"Press F1 to read about drive setup"
+block|,
+literal|"drives"
+block|,
+block|{
+block|{
+literal|"BootMgr"
+block|,
+literal|"Install the FreeBSD Boot Manager"
+block|,
+name|dmenuRadioCheck
+block|,
+name|dmenuSetValue
+block|,
+name|NULL
+block|,
+operator|&
+name|BootMgr
+block|}
+block|,
+block|{
+literal|"None"
+block|,
+literal|"Leave the IPL untouched"
+block|,
+name|dmenuRadioCheck
+block|,
+name|dmenuSetValue
+block|,
+name|NULL
+block|,
+operator|&
+name|BootMgr
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/* MBR type menu */
 end_comment
@@ -7716,9 +7879,6 @@ operator|&
 name|BootMgr
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|PC98
 block|{
 literal|"Standard"
 block|,
@@ -7742,8 +7902,6 @@ block|,
 literal|1
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"None"
 block|,
@@ -7774,6 +7932,15 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
 
 begin_comment
 comment|/* Final configuration menu */
@@ -10878,6 +11045,56 @@ block|,
 name|dmenuExit
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"2 Keymap"
+block|,
+literal|"Choose an alternate keyboard map"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsKeymap
+block|}
+block|,
+block|{
+literal|"3 Repeat"
+block|,
+literal|"Set the rate at which keys repeat"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsKeyrate
+block|}
+block|,
+block|{
+literal|"4 Saver"
+block|,
+literal|"Configure the screen saver"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsSaver
+block|}
+block|,
+else|#
+directive|else
 block|{
 literal|"2 Font"
 block|,
@@ -10968,6 +11185,8 @@ operator|&
 name|MenuSysconsTtys
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
@@ -11825,6 +12044,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_decl_stmt
 name|DMenu
 name|MenuSysconsKeyrate
@@ -12096,6 +12319,12 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_decl_stmt
 name|DMenu
@@ -12596,6 +12825,15 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
 
 begin_decl_stmt
 name|DMenu

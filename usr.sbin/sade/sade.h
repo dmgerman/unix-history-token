@@ -1977,6 +1977,28 @@ begin_comment
 comment|/* Fixit repair menu				*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuIPLType
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Type of IPL to write on the disk		*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|DMenu
@@ -1987,6 +2009,11 @@ end_decl_stmt
 begin_comment
 comment|/* Type of MBR to write on the disk		*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

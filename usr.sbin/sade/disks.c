@@ -898,7 +898,7 @@ operator|!
 name|cp
 condition|)
 block|{
-comment|/* Figure out what kind of MBR the user wants */
+comment|/* Figure out what kind of IPL the user wants */
 name|sprintf
 argument_list|(
 name|str
@@ -908,7 +908,7 @@ argument_list|,
 name|dname
 argument_list|)
 expr_stmt|;
-name|MenuMBRType
+name|MenuIPLType
 operator|.
 name|title
 operator|=
@@ -919,7 +919,7 @@ operator|=
 name|dmenuOpenSimple
 argument_list|(
 operator|&
-name|MenuMBRType
+name|MenuIPLType
 argument_list|,
 name|FALSE
 argument_list|)
@@ -946,7 +946,7 @@ expr_stmt|;
 else|else
 name|BootMgr
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -1016,7 +1016,7 @@ name|boot05_size
 expr_stmt|;
 return|return;
 case|case
-literal|2
+literal|1
 case|:
 default|default:
 break|break;
@@ -2611,11 +2611,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Don't trash the MBR if the first (and therefore only) chunk 		 * is marked for a truly dedicated disk (i.e., the disklabel 		 * starts at sector 0), even in cases where the user has 		 * requested booteasy or a "standard" MBR -- both would be 		 * fatal in this case. 		 */
-comment|/* 		 * Don't offer to update the MBR on this disk if the first 		 * "real" chunk looks like a FreeBSD "all disk" partition, 		 * or the disk is entirely FreeBSD. 		 */
 ifdef|#
 directive|ifdef
 name|PC98
+comment|/* 		 * Don't trash the IPL if the first (and therefore only) chunk 		 * is marked for a truly dedicated disk (i.e., the disklabel 		 * starts at sector 0), even in cases where the user has 		 * requested a FreeBSD Boot Manager -- both would be fatal in 		 * this case. 		 */
+comment|/* 		 * Don't offer to update the IPL on this disk if the first 		 * "real" chunk looks like a FreeBSD "all disk" partition, 		 * or the disk is entirely FreeBSD. 		 */
 if|if
 condition|(
 operator|(
@@ -2695,6 +2695,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* 		 * Don't trash the MBR if the first (and therefore only) chunk 		 * is marked for a truly dedicated disk (i.e., the disklabel 		 * starts at sector 0), even in cases where the user has 		 * requested booteasy or a "standard" MBR -- both would be 		 * fatal in this case. 		 */
+comment|/* 		 * Don't offer to update the MBR on this disk if the first 		 * "real" chunk looks like a FreeBSD "all disk" partition, 		 * or the disk is entirely FreeBSD. 		 */
 if|if
 condition|(
 operator|(
@@ -2843,8 +2845,11 @@ name|chunking
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 	     * Don't trash the MBR if the first (and therefore only) chunk 	     * is marked for a truly dedicated disk (i.e., the disklabel 	     * starts at sector 0), even in cases where the user has requested 	     * booteasy or a "standard" MBR -- both would be fatal in this case. 	     */
-comment|/* 	     * Don't offer to update the MBR on this disk if the first "real" 	     * chunk looks like a FreeBSD "all disk" partition, or the disk is 	     * entirely FreeBSD.  	     */
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* 	     * Don't trash the IPL if the first (and therefore only) chunk 	     * is marked for a truly dedicated disk (i.e., the disklabel 	     * starts at sector 0), even in cases where the user has requested 	     * a FreeBSD Boot Manager -- both would be fatal in this case. 	     */
+comment|/* 	     * Don't offer to update the IPL on this disk if the first "real" 	     * chunk looks like a FreeBSD "all disk" partition, or the disk is 	     * entirely FreeBSD.  	     */
 if|if
 condition|(
 operator|(
@@ -2882,9 +2887,6 @@ literal|"written"
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
 name|getBootMgr
 argument_list|(
 name|d
@@ -2927,8 +2929,49 @@ argument_list|,
 name|bootmenu_size
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 else|#
 directive|else
+comment|/* 	     * Don't trash the MBR if the first (and therefore only) chunk 	     * is marked for a truly dedicated disk (i.e., the disklabel 	     * starts at sector 0), even in cases where the user has requested 	     * booteasy or a "standard" MBR -- both would be fatal in this case. 	     */
+comment|/* 	     * Don't offer to update the MBR on this disk if the first "real" 	     * chunk looks like a FreeBSD "all disk" partition, or the disk is 	     * entirely FreeBSD.  	     */
+if|if
+condition|(
+operator|(
+name|d
+operator|->
+name|chunks
+operator|->
+name|part
+operator|->
+name|type
+operator|!=
+name|freebsd
+operator|)
+operator|||
+operator|(
+name|d
+operator|->
+name|chunks
+operator|->
+name|part
+operator|->
+name|offset
+operator|>
+literal|1
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|variable_cmp
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|,
+literal|"written"
+argument_list|)
+condition|)
+block|{
 name|getBootMgr
 argument_list|(
 name|d
@@ -2957,10 +3000,10 @@ argument_list|,
 name|mbrSize
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 endif|#
 directive|endif
-block|}
-block|}
 break|break;
 case|case
 literal|'Z'
