@@ -1615,6 +1615,8 @@ argument_list|(
 literal|"%s: %s missing compile command string.\n"
 argument_list|,
 name|fname
+argument_list|,
+name|this
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1663,6 +1665,8 @@ argument_list|(
 literal|"%s: %s missing clean file list.\n"
 argument_list|,
 name|fname
+argument_list|,
+name|this
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1711,6 +1715,8 @@ argument_list|(
 literal|"%s: %s missing compile command string.\n"
 argument_list|,
 name|fname
+argument_list|,
+name|this
 argument_list|)
 expr_stmt|;
 name|exit
