@@ -418,6 +418,8 @@ name|char
 modifier|*
 name|q
 init|=
+name|bootfile
+operator|=
 name|bootname
 decl_stmt|;
 if|if
