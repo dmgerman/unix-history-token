@@ -2284,7 +2284,7 @@ block|{
 case|case
 literal|' '
 case|:
-comment|/* 			 * ``If the space and + flags both appear, the space 			 * flag will be ignored.'' 			 *	-- ANSI X3J11 			 */
+comment|/*- 			 * ``If the space and + flags both appear, the space 			 * flag will be ignored.'' 			 *	-- ANSI X3J11 			 */
 if|if
 condition|(
 operator|!
@@ -2310,7 +2310,7 @@ goto|;
 case|case
 literal|'*'
 case|:
-comment|/* 			 * ``A negative field width argument is taken as a 			 * - flag followed by a positive field width.'' 			 *	-- ANSI X3J11 			 * They don't exclude field widths read from args. 			 */
+comment|/*- 			 * ``A negative field width argument is taken as a 			 * - flag followed by a positive field width.'' 			 *	-- ANSI X3J11 			 * They don't exclude field widths read from args. 			 */
 name|GETASTER
 argument_list|(
 name|width
@@ -2461,7 +2461,7 @@ goto|;
 case|case
 literal|'0'
 case|:
-comment|/* 			 * ``Note that 0 is taken as a flag, not as the 			 * beginning of a field width.'' 			 *	-- ANSI X3J11 			 */
+comment|/*- 			 * ``Note that 0 is taken as a flag, not as the 			 * beginning of a field width.'' 			 *	-- ANSI X3J11 			 */
 name|flags
 operator||=
 name|ZEROPAD
@@ -2810,7 +2810,7 @@ case|:
 case|case
 literal|'E'
 case|:
-comment|/* 			 * Grouping apply to %i, %d, %u, %f, %F, %g, %G 			 * conversion specifiers only. For other conversions 			 * behavior is undefined. 			 *	-- POSIX 			 */
+comment|/*- 			 * Grouping apply to %i, %d, %u, %f, %F, %g, %G 			 * conversion specifiers only. For other conversions 			 * behavior is undefined. 			 *	-- POSIX 			 */
 name|flags
 operator|&=
 operator|~
@@ -3347,7 +3347,7 @@ goto|;
 case|case
 literal|'p'
 case|:
-comment|/* 			 * ``The argument shall be a pointer to void.  The 			 * value of the pointer is converted to a sequence 			 * of printable characters, in an implementation- 			 * defined manner.'' 			 *	-- ANSI X3J11 			 */
+comment|/*- 			 * ``The argument shall be a pointer to void.  The 			 * value of the pointer is converted to a sequence 			 * of printable characters, in an implementation- 			 * defined manner.'' 			 *	-- ANSI X3J11 			 */
 name|ujval
 operator|=
 operator|(
@@ -3585,7 +3585,7 @@ name|sign
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 			 * ``... diouXx conversions ... if a precision is 			 * specified, the 0 flag will be ignored.'' 			 *	-- ANSI X3J11 			 */
+comment|/*- 			 * ``... diouXx conversions ... if a precision is 			 * specified, the 0 flag will be ignored.'' 			 *	-- ANSI X3J11 			 */
 name|number
 label|:
 if|if
@@ -3603,7 +3603,7 @@ operator|&=
 operator|~
 name|ZEROPAD
 expr_stmt|;
-comment|/* 			 * ``The result of converting a zero value with an 			 * explicit precision of zero is no characters.'' 			 *	-- ANSI X3J11 			 */
+comment|/*- 			 * ``The result of converting a zero value with an 			 * explicit precision of zero is no characters.'' 			 *	-- ANSI X3J11 			 */
 name|cp
 operator|=
 name|buf
