@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -284,7 +284,7 @@ operator|)
 operator|&
 name|tuba_tree
 argument_list|,
-literal|8
+literal|40
 argument_list|)
 expr_stmt|;
 name|timeout
