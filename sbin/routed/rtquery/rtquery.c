@@ -227,13 +227,6 @@ name|s
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|pgmname
-decl_stmt|;
-end_decl_stmt
-
 begin_union
 union|union
 block|{
@@ -563,13 +556,6 @@ argument_list|(
 name|HOPCNT_INFINITY
 argument_list|)
 expr_stmt|;
-name|pgmname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -718,9 +704,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s:"
-argument_list|,
-name|pgmname
+literal|"rtquery: %s:"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1155,12 +1139,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: [-np1v] [-r tgt_rt] [-w wtime]"
-literal|" [-a type=passwd] host1 [host2 ...]\n"
-literal|"or\t-t {on=filename|more|off|dump}"
-literal|" host1 [host2 ...]\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|pgmname
+literal|"usage: rtquery [-np1v] [-r addr] [-w timeout] [-a secret] host ..."
+argument_list|,
+literal|"       rtquery [-t op] host ..."
 argument_list|)
 expr_stmt|;
 name|exit
