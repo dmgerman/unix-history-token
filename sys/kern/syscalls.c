@@ -145,19 +145,9 @@ comment|/* 43 = getegid */
 literal|"profil"
 block|,
 comment|/* 44 = profil */
-ifdef|#
-directive|ifdef
-name|KTRACE
 literal|"ktrace"
 block|,
 comment|/* 45 = ktrace */
-else|#
-directive|else
-literal|"#45"
-block|,
-comment|/* 45 = ktrace */
-endif|#
-directive|endif
 literal|"sigaction"
 block|,
 comment|/* 46 = sigaction */

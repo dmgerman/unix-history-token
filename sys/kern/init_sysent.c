@@ -575,9 +575,6 @@ name|profil
 block|}
 block|,
 comment|/* 44 = profil */
-ifdef|#
-directive|ifdef
-name|KTRACE
 block|{
 literal|4
 block|,
@@ -589,21 +586,6 @@ name|ktrace
 block|}
 block|,
 comment|/* 45 = ktrace */
-else|#
-directive|else
-block|{
-literal|0
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|nosys
-block|}
-block|,
-comment|/* 45 = ktrace */
-endif|#
-directive|endif
 block|{
 literal|3
 block|,

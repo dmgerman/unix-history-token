@@ -637,12 +637,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTRACE
-end_ifdef
-
 begin_struct
 struct|struct
 name|ktrace_args
@@ -663,16 +657,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -3569,12 +3553,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTRACE
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|ktrace
@@ -3595,16 +3573,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -6257,22 +6225,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTRACE
-end_ifdef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct

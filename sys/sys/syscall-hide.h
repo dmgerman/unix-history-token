@@ -297,35 +297,12 @@ argument|profil
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTRACE
-end_ifdef
-
 begin_macro
 name|HIDE_BSD
 argument_list|(
 argument|ktrace
 argument_list|)
 end_macro
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|HIDE_BSD
-argument_list|(
-argument|ktrace
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|HIDE_POSIX
