@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whereis.c	8.1 (Berkeley) %G%"
+literal|"@(#)whereis.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,6 +199,15 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 comment|/* Retrieve the standard path. */
 name|mib
@@ -456,7 +465,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"whereis: program ...\n"
+literal|"usage: whereis program [...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
