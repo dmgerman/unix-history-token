@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.9 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.10 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.9 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.10 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1529,6 +1529,8 @@ decl_stmt|;
 if|if
 condition|(
 name|init
+operator|&&
+name|CheckAliases
 condition|)
 block|{
 comment|/* do parsing& compression of addresses */

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	5.9 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2805,6 +2805,18 @@ literal|'m'
 case|:
 comment|/* send to me too */
 name|MeToo
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* validate RHS in newaliases */
+name|CheckAliases
 operator|=
 name|atobool
 argument_list|(
