@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<alpha/pci/pcibus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<alpha/isa/isavar.h>
 end_include
 
@@ -573,34 +567,6 @@ name|t2_attach
 argument_list|)
 block|,
 comment|/* Bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_alloc_resource
-argument_list|,
-name|pci_alloc_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_release_resource
-argument_list|,
-name|pci_release_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_activate_resource
-argument_list|,
-name|pci_activate_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_deactivate_resource
-argument_list|,
-name|pci_deactivate_resource
-argument_list|)
-block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_setup_intr
@@ -1120,7 +1086,9 @@ expr_stmt|;
 name|busspace_isa_io
 operator|=
 operator|(
-name|kobj_t
+expr|struct
+name|alpha_busspace
+operator|*
 operator|)
 operator|&
 name|io_space
@@ -1128,7 +1096,9 @@ expr_stmt|;
 name|busspace_isa_mem
 operator|=
 operator|(
-name|kobj_t
+expr|struct
+name|alpha_busspace
+operator|*
 operator|)
 operator|&
 name|mem_space
@@ -1330,9 +1300,6 @@ argument_list|)
 expr_stmt|;
 comment|/* t2_num_hoses = 2; XXX not ready for this yet */
 block|}
-name|pci_init_resources
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|h

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<alpha/pci/pcibus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"alphapci_if.h"
 end_include
 
@@ -122,6 +128,9 @@ name|dev
 argument_list|,
 literal|"T2 PCI host bus adapter"
 argument_list|)
+expr_stmt|;
+name|pci_init_resources
+argument_list|()
 expr_stmt|;
 name|child
 operator|=
@@ -554,28 +563,28 @@ name|DEVMETHOD
 argument_list|(
 name|bus_alloc_resource
 argument_list|,
-name|bus_generic_alloc_resource
+name|pci_alloc_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_release_resource
 argument_list|,
-name|bus_generic_release_resource
+name|pci_release_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_activate_resource
 argument_list|,
-name|bus_generic_activate_resource
+name|pci_activate_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_deactivate_resource
 argument_list|,
-name|bus_generic_deactivate_resource
+name|pci_deactivate_resource
 argument_list|)
 block|,
 name|DEVMETHOD

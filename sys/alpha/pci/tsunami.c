@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<alpha/pci/pcibus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bwx.h>
 end_include
 
@@ -1047,7 +1041,9 @@ expr_stmt|;
 name|busspace_isa_io
 operator|=
 operator|(
-name|kobj_t
+expr|struct
+name|alpha_busspace
+operator|*
 operator|)
 operator|&
 name|io_space
@@ -1055,7 +1051,9 @@ expr_stmt|;
 name|busspace_isa_mem
 operator|=
 operator|(
-name|kobj_t
+expr|struct
+name|alpha_busspace
+operator|*
 operator|)
 operator|&
 name|mem_space
@@ -1151,9 +1149,6 @@ else|else
 name|tsunami_num_pchips
 operator|=
 literal|1
-expr_stmt|;
-name|pci_init_resources
-argument_list|()
 expr_stmt|;
 name|isa_init_intr
 argument_list|()

@@ -169,6 +169,10 @@ argument_list|,
 literal|"21271 PCI host bus adapter"
 argument_list|)
 expr_stmt|;
+name|pci_init_resources
+argument_list|()
+expr_stmt|;
+comment|/* XXX probably don't need */
 name|child
 operator|=
 name|device_add_child
@@ -361,7 +365,9 @@ block|{
 name|busspace_isa_io
 operator|=
 operator|(
-name|kobj_t
+expr|struct
+name|alpha_busspace
+operator|*
 operator|)
 operator|&
 name|sc
@@ -371,7 +377,9 @@ expr_stmt|;
 name|busspace_isa_mem
 operator|=
 operator|(
-name|kobj_t
+expr|struct
+name|alpha_busspace
+operator|*
 operator|)
 operator|&
 name|sc

@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<alpha/pci/pcibus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<alpha/isa/isavar.h>
 end_include
 
@@ -521,34 +515,6 @@ argument_list|(
 name|bus_print_child
 argument_list|,
 name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_alloc_resource
-argument_list|,
-name|pci_alloc_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_release_resource
-argument_list|,
-name|pci_release_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_activate_resource
-argument_list|,
-name|pci_activate_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_deactivate_resource
-argument_list|,
-name|pci_deactivate_resource
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1294,9 +1260,6 @@ literal|"2117x Core Logic chipset"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|pci_init_resources
-argument_list|()
-expr_stmt|;
 name|isa_init_intr
 argument_list|()
 expr_stmt|;
