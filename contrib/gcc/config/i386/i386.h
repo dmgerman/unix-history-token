@@ -595,6 +595,17 @@ begin_comment
 comment|/* Do not use red zone */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MASK_NO_ALIGN_LONG_STRINGS
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Do not align long strings specially */
+end_comment
+
 begin_comment
 comment|/* Use the floating point instructions */
 end_comment
@@ -1362,6 +1373,13 @@ name|TARGET_RED_ZONE
 value|(!(target_flags& MASK_NO_RED_ZONE))
 end_define
 
+begin_define
+define|#
+directive|define
+name|TARGET_NO_ALIGN_LONG_STRINGS
+value|(target_flags& MASK_NO_ALIGN_LONG_STRINGS)
+end_define
+
 begin_comment
 comment|/* WARNING: Do not mark empty strings for translation, as calling             gettext on an empty string does NOT return an empty             string. */
 end_comment
@@ -1387,7 +1405,7 @@ value|},	 	      \   { "rtd",			 MASK_RTD,				      \     N_("Alternate calling 
 comment|/* undocumented */
 value|},		      \   { "dll",			0,  0
 comment|/* undocumented */
-value|},		      \   { "align-stringops",		-MASK_NO_ALIGN_STROPS,			      \     N_("Align destination of the string operations") },			      \   { "no-align-stringops",	 MASK_NO_ALIGN_STROPS,			      \     N_("Do not align destination of the string operations") },		      \   { "inline-all-stringops",	 MASK_INLINE_ALL_STROPS,		      \     N_("Inline all known string operations") },				      \   { "no-inline-all-stringops",	-MASK_INLINE_ALL_STROPS,		      \     N_("Do not inline all known string operations") },			      \   { "push-args",		-MASK_NO_PUSH_ARGS,			      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-push-args",		MASK_NO_PUSH_ARGS,			      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "accumulate-outgoing-args",	(MASK_ACCUMULATE_OUTGOING_ARGS		      \ 				 | MASK_ACCUMULATE_OUTGOING_ARGS_SET),	      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-accumulate-outgoing-args",MASK_ACCUMULATE_OUTGOING_ARGS_SET,	      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "mmx",			 MASK_MMX | MASK_MMX_SET,		      \     N_("Support MMX built-in functions") },				      \   { "no-mmx",			 -MASK_MMX,				      \     N_("Do not support MMX built-in functions") },			      \   { "no-mmx",			 MASK_MMX_SET, "" },			      \   { "3dnow",                     MASK_3DNOW | MASK_3DNOW_SET,		      \     N_("Support 3DNow! built-in functions") },				      \   { "no-3dnow",                  -MASK_3DNOW, "" },			      \   { "no-3dnow",                  MASK_3DNOW_SET,			      \     N_("Do not support 3DNow! built-in functions") },			      \   { "sse",			 MASK_SSE | MASK_SSE_SET,		      \     N_("Support MMX and SSE built-in functions and code generation") },	      \   { "no-sse",			 -MASK_SSE, "" },	 		      \   { "no-sse",			 MASK_SSE_SET,				      \     N_("Do not support MMX and SSE built-in functions and code generation") },\   { "sse2",			 MASK_SSE2 | MASK_SSE2_SET,		      \     N_("Support MMX, SSE and SSE2 built-in functions and code generation") }, \   { "no-sse2",			 -MASK_SSE2, "" },			      \   { "no-sse2",			 MASK_SSE2_SET,				      \     N_("Do not support MMX, SSE and SSE2 built-in functions and code generation") },    \   { "128bit-long-double",	 MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 16") },					      \   { "96bit-long-double",	-MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 12") },					      \   { "64",			MASK_64BIT,				      \     N_("Generate 64bit x86-64 code") },					      \   { "32",			-MASK_64BIT,				      \     N_("Generate 32bit i386 code") },					      \   { "red-zone",			-MASK_NO_RED_ZONE,			      \     N_("Use red-zone in the x86-64 code") },				      \   { "no-red-zone",		MASK_NO_RED_ZONE,			      \     N_("Do not use red-zone in the x86-64 code") },			      \   SUBTARGET_SWITCHES							      \   { "", TARGET_DEFAULT, 0 }}
+value|},		      \   { "align-stringops",		-MASK_NO_ALIGN_STROPS,			      \     N_("Align destination of the string operations") },			      \   { "no-align-stringops",	 MASK_NO_ALIGN_STROPS,			      \     N_("Do not align destination of the string operations") },		      \   { "inline-all-stringops",	 MASK_INLINE_ALL_STROPS,		      \     N_("Inline all known string operations") },				      \   { "no-inline-all-stringops",	-MASK_INLINE_ALL_STROPS,		      \     N_("Do not inline all known string operations") },			      \   { "push-args",		-MASK_NO_PUSH_ARGS,			      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-push-args",		MASK_NO_PUSH_ARGS,			      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "accumulate-outgoing-args",	(MASK_ACCUMULATE_OUTGOING_ARGS		      \ 				 | MASK_ACCUMULATE_OUTGOING_ARGS_SET),	      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-accumulate-outgoing-args",MASK_ACCUMULATE_OUTGOING_ARGS_SET,	      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "mmx",			 MASK_MMX | MASK_MMX_SET,		      \     N_("Support MMX built-in functions") },				      \   { "no-mmx",			 -MASK_MMX,				      \     N_("Do not support MMX built-in functions") },			      \   { "no-mmx",			 MASK_MMX_SET, "" },			      \   { "3dnow",                     MASK_3DNOW | MASK_3DNOW_SET,		      \     N_("Support 3DNow! built-in functions") },				      \   { "no-3dnow",                  -MASK_3DNOW, "" },			      \   { "no-3dnow",                  MASK_3DNOW_SET,			      \     N_("Do not support 3DNow! built-in functions") },			      \   { "sse",			 MASK_SSE | MASK_SSE_SET,		      \     N_("Support MMX and SSE built-in functions and code generation") },	      \   { "no-sse",			 -MASK_SSE, "" },	 		      \   { "no-sse",			 MASK_SSE_SET,				      \     N_("Do not support MMX and SSE built-in functions and code generation") },\   { "sse2",			 MASK_SSE2 | MASK_SSE2_SET,		      \     N_("Support MMX, SSE and SSE2 built-in functions and code generation") }, \   { "no-sse2",			 -MASK_SSE2, "" },			      \   { "no-sse2",			 MASK_SSE2_SET,				      \     N_("Do not support MMX, SSE and SSE2 built-in functions and code generation") },    \   { "128bit-long-double",	 MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 16") },					      \   { "96bit-long-double",	-MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 12") },					      \   { "64",			MASK_64BIT,				      \     N_("Generate 64bit x86-64 code") },					      \   { "32",			-MASK_64BIT,				      \     N_("Generate 32bit i386 code") },					      \   { "red-zone",			-MASK_NO_RED_ZONE,			      \     N_("Use red-zone in the x86-64 code") },				      \   { "no-red-zone",		MASK_NO_RED_ZONE,			      \     N_("Do not use red-zone in the x86-64 code") },			      \   { "no-align-long-strings",	 MASK_NO_ALIGN_LONG_STRINGS,		      \     N_("Do not align long strings specially") },			      \   { "align-long-strings",	-MASK_NO_ALIGN_LONG_STRINGS,		      \     N_("Align strings longer than 30 on a 32-byte boundary") },		      \   SUBTARGET_SWITCHES							      \   { "", TARGET_DEFAULT, 0 }}
 end_define
 
 begin_ifdef

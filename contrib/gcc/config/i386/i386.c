@@ -47985,6 +47985,9 @@ argument_list|)
 operator|==
 name|STRING_CST
 operator|&&
+operator|!
+name|TARGET_NO_ALIGN_LONG_STRINGS
+operator|&&
 name|TREE_STRING_LENGTH
 argument_list|(
 name|exp
