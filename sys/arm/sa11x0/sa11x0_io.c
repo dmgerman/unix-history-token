@@ -134,9 +134,6 @@ name|sa11x0_bs_alloc
 block|,
 name|sa11x0_bs_free
 block|,
-comment|/* get kernel virtual address */
-name|sa11x0_bs_vaddr
-block|,
 comment|/* barrier */
 name|sa11x0_bs_barrier
 block|,
@@ -545,35 +542,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-modifier|*
-name|sa11x0_bs_vaddr
-parameter_list|(
-name|t
-parameter_list|,
-name|bsh
-parameter_list|)
-name|void
-modifier|*
-name|t
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
-name|bsh
 operator|)
 return|;
 block|}
