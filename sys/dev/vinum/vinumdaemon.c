@@ -465,6 +465,21 @@ expr_stmt|;
 comment|/* wake up the caller */
 break|break;
 case|case
+name|daemonrq_closedrive
+case|:
+comment|/* close a drive */
+name|close_drive
+argument_list|(
+name|request
+operator|->
+name|info
+operator|.
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* do it */
+break|break;
+case|case
 name|daemonrq_init
 case|:
 comment|/* initialize a plex */
@@ -474,6 +489,7 @@ name|daemonrq_revive
 case|:
 comment|/* revive a subdisk */
 comment|/* XXX */
+comment|/* FALLTHROUGH */
 default|default:
 name|log
 argument_list|(
