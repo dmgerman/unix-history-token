@@ -179,6 +179,72 @@ begin_comment
 comment|/* Phonogram */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_CTYPE_SWM
+value|0xe0000000L
+end_define
+
+begin_comment
+comment|/* Mask to get screen width data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CTYPE_SWS
+value|30
+end_define
+
+begin_comment
+comment|/* Bits to shift to get width */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CTYPE_SW0
+value|0x20000000L
+end_define
+
+begin_comment
+comment|/* 0 width character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CTYPE_SW1
+value|0x00000000L
+end_define
+
+begin_comment
+comment|/* 1 width character / default*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CTYPE_SW2
+value|0x80000000L
+end_define
+
+begin_comment
+comment|/* 2 width character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CTYPE_SW3
+value|0xc0000000L
+end_define
+
+begin_comment
+comment|/* 3 width character */
+end_comment
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|int
