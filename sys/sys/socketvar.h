@@ -47,7 +47,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * List of locks:  * (c)	const, inited in either socreate() or sonewconn()  * (m)	sb_mtx mutex  * (mr)	so_rcv.sb_mtx mutex  * (sg)	sigio_lock sx  * (sh)	sohead_lock sx  *  * Lock of so_rcv.sb_mtx can duplicate, provided that sohead_lock  * is exclusively locked.  *  * Brackets mean that this data is not protected yet.  */
+comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (c) locked by SOCKBUF_LOCK(&so->so_rcv).  * (d) locked by SOCKBUF_LOCK(&so->so_snd).  * (e) locked by ACCEPT_LOCK().  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  */
 end_comment
 
 begin_struct
@@ -61,7 +61,7 @@ comment|/* reference count */
 name|short
 name|so_type
 decl_stmt|;
-comment|/* generic type, see socket.h */
+comment|/* (a) generic type, see socket.h */
 name|short
 name|so_options
 decl_stmt|;
@@ -73,7 +73,7 @@ comment|/* time to linger while closing */
 name|short
 name|so_state
 decl_stmt|;
-comment|/* internal state flags SS_*, below */
+comment|/* internal state flags SS_* */
 name|int
 name|so_qstate
 decl_stmt|;
@@ -88,7 +88,7 @@ name|protosw
 modifier|*
 name|so_proto
 decl_stmt|;
-comment|/* protocol handle */
+comment|/* (a) protocol handle */
 comment|/*  * Variables for connection queuing.  * Socket where accepts occur is so_head in all subsidiary sockets.  * If so_head is 0, socket is not related to an accept.  * For head socket so_incomp queues partially completed connections,  * while so_comp is a queue of connections ready to be accepted.  * If a connection is aborted and it has so_head set, then  * it has to be pulled out of either so_incomp or so_comp.  * We allow connections to queue up based on current queue lengths  * and limit on number of queued connections for this socket.  */
 name|struct
 name|socket
