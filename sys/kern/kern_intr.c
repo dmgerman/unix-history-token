@@ -1685,7 +1685,7 @@ name|ok
 label|:
 endif|#
 directive|endif
-comment|/* 	 * If the interrupt thread is already running, then just mark this 	 * handler as being dead and let the ithread do the actual removal. 	 */
+comment|/* 	 * If the interrupt thread is already running, then just mark this 	 * handler as being dead and let the ithread do the actual removal. 	 * 	 * During a cold boot while cold is set, msleep() does not sleep, 	 * so we have to remove the handler here rather than letting the 	 * thread do it. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1701,6 +1701,9 @@ name|ithread
 operator|->
 name|it_td
 argument_list|)
+operator|&&
+operator|!
+name|cold
 condition|)
 block|{
 name|handler
