@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
 end_include
 
 begin_include
@@ -543,27 +537,6 @@ end_endif
 begin_comment
 comment|/* FIFO */
 end_comment
-
-begin_decl_stmt
-name|int
-name|maknode
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|nameidata
-operator|*
-operator|,
-expr|struct
-name|inode
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Vnode op for reading.  */
