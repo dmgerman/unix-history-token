@@ -2034,7 +2034,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|ip6_auto_flowlable
+name|ip6_auto_flowlabel
 operator|!=
 literal|0
 condition|)
