@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmmeter.h	4.4	%G%	*/
+comment|/*	vmmeter.h	4.5	%G%	*/
 end_comment
 
 begin_comment
@@ -51,6 +51,14 @@ name|unsigned
 name|v_pgout
 decl_stmt|;
 comment|/* pageouts */
+name|unsigned
+name|v_pgpgin
+decl_stmt|;
+comment|/* pages paged in */
+name|unsigned
+name|v_pgpgout
+decl_stmt|;
+comment|/* pages paged out */
 name|unsigned
 name|v_intrans
 decl_stmt|;
