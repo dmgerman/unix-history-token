@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	5.4 (Berkeley) %G%"
+literal|"@(#)screen.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,46 +626,6 @@ directive|endif
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
-name|cannot
-argument_list|(
-argument|s
-argument_list|)
-name|char
-operator|*
-name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|char
-name|message
-index|[
-literal|100
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|message
-argument_list|,
-literal|"WARNING: terminal cannot \"%s\""
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-name|message
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_comment
 comment|/*  * Get terminal capabilities via termcap.  */
 end_comment
@@ -1096,11 +1056,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|cannot
-argument_list|(
-literal|"clear to end of line"
-argument_list|)
-expr_stmt|;
 name|sc_eol_clear
 operator|=
 literal|""
@@ -1130,11 +1085,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|cannot
-argument_list|(
-literal|"clear screen"
-argument_list|)
-expr_stmt|;
 name|sc_clear
 operator|=
 literal|"\n\n"
@@ -1343,11 +1293,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|cannot
-argument_list|(
-literal|"home cursor"
-argument_list|)
-expr_stmt|;
 comment|/* 			 * This last resort for sc_home is supposed to 			 * be an up-arrow suggesting moving to the  			 * top of the "virtual screen". (The one in 			 * your imagination as you try to use this on 			 * a hard copy terminal.) 			 */
 name|sc_home
 operator|=
@@ -1421,11 +1366,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|cannot
-argument_list|(
-literal|"move cursor to lower left of screen"
-argument_list|)
-expr_stmt|;
 name|sc_lower_left
 operator|=
 literal|"\r"
@@ -1514,11 +1454,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|cannot
-argument_list|(
-literal|"scroll backwards"
-argument_list|)
-expr_stmt|;
 name|sc_addline
 operator|=
 literal|""
