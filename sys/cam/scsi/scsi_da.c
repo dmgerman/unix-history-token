@@ -1866,14 +1866,6 @@ literal|0
 condition|)
 block|{
 comment|/* Invalidate our pack information. */
-name|disk_invalidate
-argument_list|(
-operator|&
-name|softc
-operator|->
-name|disk
-argument_list|)
-expr_stmt|;
 name|softc
 operator|->
 name|flags

@@ -167,18 +167,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|disk_invalidate
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

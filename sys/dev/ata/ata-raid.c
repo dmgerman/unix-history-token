@@ -2242,14 +2242,6 @@ argument_list|(
 name|rdp
 argument_list|)
 expr_stmt|;
-name|disk_invalidate
-argument_list|(
-operator|&
-name|rdp
-operator|->
-name|disk
-argument_list|)
-expr_stmt|;
 name|disk_destroy
 argument_list|(
 name|rdp

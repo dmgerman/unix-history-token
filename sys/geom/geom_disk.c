@@ -1471,18 +1471,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|disk_invalidate
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
 specifier|static
 name|void
 name|g_kern_disks

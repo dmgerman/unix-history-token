@@ -1429,14 +1429,6 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
-name|disk_invalidate
-argument_list|(
-operator|&
-name|adp
-operator|->
-name|disk
-argument_list|)
-expr_stmt|;
 name|disk_destroy
 argument_list|(
 name|adp
