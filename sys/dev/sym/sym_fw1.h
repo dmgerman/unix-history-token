@@ -3943,7 +3943,7 @@ name|msg_received
 argument_list|)
 block|,
 comment|/* 	 *  We donnot handle 2 bytes messages from SCRIPTS. 	 *  So, let the C code deal with these ones too. 	 */
-name|SCR_INT
+name|SCR_JUMP
 operator|^
 name|IFFALSE
 argument_list|(
@@ -3955,7 +3955,10 @@ literal|0xf0
 argument_list|)
 argument_list|)
 block|,
-name|SIR_MSG_WEIRD
+name|PADDR_B
+argument_list|(
+name|msg_weird_seen
+argument_list|)
 block|,
 name|SCR_CLR
 argument_list|(

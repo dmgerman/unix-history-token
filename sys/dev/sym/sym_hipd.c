@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.6.2-20000614"
+value|"sym-1.6.4-20000701"
 end_define
 
 begin_comment
@@ -533,7 +533,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|u16
 name|_htole16
 parameter_list|(
@@ -552,7 +552,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|u32
 name|_htole32
 parameter_list|(
@@ -1116,7 +1116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  This one may be usefull.  */
+comment|/*  *  This one may be useful.  */
 end_comment
 
 begin_define
@@ -1649,7 +1649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Simple power of two buddy-like allocator.  *  *  This simple code is not intended to be fast, but to   *  provide power of 2 aligned memory allocations.  *  Since the SCRIPTS processor only supplies 8 bit arithmetic,   *  this allocator allows simple and fast address calculations    *  from the SCRIPTS code. In addition, cache line alignment   *  is guaranteed for power of 2 cache line size.  *  *  This allocator has been developped for the Linux sym53c8xx    *  driver, since this O/S does not provide naturally aligned   *  allocations.  *  It has the vertue to allow the driver to use private pages   *  of memory that will be useful if we ever need to deal with   *  IO MMU for PCI.  */
+comment|/*  *  Simple power of two buddy-like allocator.  *  *  This simple code is not intended to be fast, but to   *  provide power of 2 aligned memory allocations.  *  Since the SCRIPTS processor only supplies 8 bit arithmetic,   *  this allocator allows simple and fast address calculations    *  from the SCRIPTS code. In addition, cache line alignment   *  is guaranteed for power of 2 cache line size.  *  *  This allocator has been developped for the Linux sym53c8xx    *  driver, since this O/S does not provide naturally aligned   *  allocations.  *  It has the advantage of allowing the driver to use private   *  pages of memory that will be useful if we ever need to deal   *  with IO MMUs for PCI.  */
 end_comment
 
 begin_define
@@ -3330,7 +3330,7 @@ end_endif
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|m_pool_s
 modifier|*
 name|___get_dma_pool
@@ -5567,7 +5567,7 @@ value|(1<<1)
 end_define
 
 begin_comment
-comment|/*  *  Device quirks.  *  Some devices, for example the CHEETAH 2 LVD, disconnects without   *  saving the DATA POINTER then reconnect and terminates the IO.  *  On reselection, the automatic RESTORE DATA POINTER makes the   *  CURRENT DATA POINTER not point at the end of the IO.  *  This behaviour just breaks our calculation of the residual.  *  For now, we just force an AUTO SAVE on disconnection and will   *  fix that in a further driver version.  */
+comment|/*  *  Device quirks.  *  Some devices, for example the CHEETAH 2 LVD, disconnects without   *  saving the DATA POINTER then reselects and terminates the IO.  *  On reselection, the automatic RESTORE DATA POINTER makes the   *  CURRENT DATA POINTER not point at the end of the IO.  *  This behaviour just breaks our calculation of the residual.  *  For now, we just force an AUTO SAVE on disconnection and will   *  fix that in a further driver version.  */
 end_comment
 
 begin_define
@@ -6240,7 +6240,7 @@ begin_struct
 struct|struct
 name|sym_dsb
 block|{
-comment|/* 	 *  CCB header. 	 *  Also Assumed at offset 0 of the sym_ccb structure. 	 */
+comment|/* 	 *  CCB header. 	 *  Also assumed at offset 0 of the sym_ccb structure. 	 */
 comment|/*0*/
 name|struct
 name|sym_ccbh
@@ -6604,7 +6604,7 @@ name|rv_ccntl1
 decl_stmt|,
 name|rv_scntl4
 decl_stmt|;
-comment|/* 	 *  Target data used by the CPU. 	 */
+comment|/* 	 *  Target data. 	 */
 name|struct
 name|sym_tcb
 name|target
@@ -7475,7 +7475,7 @@ comment|/* SYM_CONF_GENERIC_SUPPORT */
 end_comment
 
 begin_comment
-comment|/*  *  Patch routine for firmware 2.  */
+comment|/*  *  Patch routine for firmware #2.  */
 end_comment
 
 begin_function
@@ -8132,7 +8132,7 @@ comment|/* SYM_CONF_GENERIC_SUPPORT */
 end_comment
 
 begin_comment
-comment|/*  *  Setup routine for firmware 2.  */
+comment|/*  *  Setup routine for firmware #2.  */
 end_comment
 
 begin_function
@@ -8443,11 +8443,16 @@ name|DEBUG_SCRIPT
 condition|)
 name|printf
 argument_list|(
-literal|"%x:<%x>\n"
+literal|"%d:<%x>\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|cur
 operator|-
 name|start
+argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -10295,7 +10300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Take into account this ccb in the freeze count.  *  The flag that tells user about avoids doing that   *  more than once for a ccb.  */
+comment|/*  *  Take into account this ccb in the freeze count.  */
 end_comment
 
 begin_function
@@ -10714,7 +10719,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  SYMBIOS chips allow burst lengths of 2, 4, 8, 16, 32, 64,  *  128 transfers. All chips support at least 16 transfers   *  bursts. The 825A, 875 and 895 chips support bursts of up   *  to 128 transfers and the 895A and 896 support bursts of up  *  to 64 transfers. All other chips support up to 16   *  transfers bursts.  *  *  For PCI 32 bit data transfers each transfer is a DWORD.  *  It is a QUADWORD (8 bytes) for PCI 64 bit data transfers.  *  Only the 896 is able to perform 64 bit data transfers.  *  *  We use log base 2 (burst length) as internal code, with   *  value 0 meaning "burst disabled".  */
+comment|/*  *  SYMBIOS chips allow burst lengths of 2, 4, 8, 16, 32, 64,  *  128 transfers. All chips support at least 16 transfers   *  bursts. The 825A, 875 and 895 chips support bursts of up   *  to 128 transfers and the 895A and 896 support bursts of up  *  to 64 transfers. All other chips support up to 16   *  transfers bursts.  *  *  For PCI 32 bit data transfers each transfer is a DWORD.  *  It is a QUADWORD (8 bytes) for PCI 64 bit data transfers.  *  *  We use log base 2 (burst length) as internal code, with   *  value 0 meaning "burst disabled".  */
 end_comment
 
 begin_comment
@@ -12019,7 +12024,7 @@ name|rv_stest2
 operator||=
 literal|0x20
 expr_stmt|;
-comment|/* 	 *  Set LED support from SCRIPTS. 	 *  Ignore this feature for boards known to use a  	 *  specific GPIO wiring and for the 895A or 896  	 *  that drive the LED directly. 	 */
+comment|/* 	 *  Set LED support from SCRIPTS. 	 *  Ignore this feature for boards known to use a  	 *  specific GPIO wiring and for the 895A, 896  	 *  and 1010 that drive the LED directly. 	 */
 if|if
 condition|(
 operator|(
@@ -13514,7 +13519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  The chip may have completed jobs. Look at the DONE QUEUE.  */
+comment|/*  *  The chip may have completed jobs. Look at the DONE QUEUE.  *  *  On architectures that may reorder LOAD/STORE operations,   *  a memory barrier may be needed after the reading of the   *  so-called `flag' and prior to dealing with the data.  */
 end_comment
 
 begin_function
@@ -13611,6 +13616,9 @@ condition|(
 name|cp
 condition|)
 block|{
+name|MEMORY_BARRIER
+argument_list|()
+expr_stmt|;
 name|sym_complete_ok
 argument_list|(
 name|np
@@ -14765,7 +14773,7 @@ name|kpc
 operator|<<=
 literal|1
 expr_stmt|;
-comment|/* 	 *  For earliest C10, the extra clocks does not apply  	 *  to CRC cycles, so it may be safe not to use them. 	 *  Note that this limits the lowest sync data transfer  	 *  to 5 Mega-transfers per second and may result in 	 *  using higher clock divisors. 	 */
+comment|/* 	 *  For earliest C10 revision 0, we cannot use extra  	 *  clocks for the setting of the SCSI clocking. 	 *  Note that this limits the lowest sync data transfer  	 *  to 5 Mega-transfers per second and may result in 	 *  using higher clock divisors. 	 */
 if|#
 directive|if
 literal|1
@@ -16632,7 +16640,7 @@ decl_stmt|;
 name|u_short
 name|sist
 decl_stmt|;
-comment|/* 	 *  interrupt on the fly ? 	 */
+comment|/* 	 *  interrupt on the fly ? 	 * 	 *  A `dummy read' is needed to ensure that the  	 *  clear of the INTF flag reaches the device  	 *  before the scanning of the DONE queue. 	 */
 name|istat
 operator|=
 name|INB
@@ -16664,9 +16672,6 @@ operator|->
 name|istat_sem
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
 name|istat
 operator|=
 name|INB
@@ -16675,8 +16680,6 @@ name|nc_istat
 argument_list|)
 expr_stmt|;
 comment|/* DUMMY READ */
-endif|#
-directive|endif
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -16821,6 +16824,10 @@ argument_list|(
 name|nc_dbc
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* 	 *  On paper, a memory barrier may be needed here. 	 *  And since we are paranoid ... :) 	 */
+name|MEMORY_BARRIER
+argument_list|()
 expr_stmt|;
 comment|/* 	 *  First, interrupts we want to service cleanly. 	 * 	 *  Phase mismatch (MA) is the most frequent interrupt  	 *  for chip earlier than the 896 and so we have to service  	 *  it as quickly as possible. 	 *  A SCSI parity error (PAR) may be combined with a phase  	 *  mismatch condition (MA). 	 *  Programmed interrupts (SIR) are used to call the C code  	 *  from SCRIPTS. 	 *  The single step interrupt (SSI) is not used in this  	 *  driver. 	 */
 if|if
@@ -17759,6 +17766,10 @@ condition|(
 name|phase
 operator|==
 literal|1
+operator|||
+name|phase
+operator|==
+literal|5
 condition|)
 block|{
 comment|/* Phase mismatch handled by SCRIPTS */
@@ -17956,6 +17967,14 @@ literal|7
 operator|)
 operator|!=
 literal|1
+operator|&&
+operator|(
+name|cmd
+operator|&
+literal|7
+operator|)
+operator|!=
+literal|5
 condition|)
 block|{
 name|u_char
@@ -18506,10 +18525,25 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* 	 *  check cmd against assumed interrupted script command. 	 */
+comment|/* 	 *  check cmd against assumed interrupted script command. 	 *  If dt data phase, the MOVE instruction hasn't bit 4 of  	 *  the phase. 	 */
 if|if
 condition|(
+operator|(
+operator|(
 name|cmd
+operator|&
+literal|2
+operator|)
+condition|?
+name|cmd
+else|:
+operator|(
+name|cmd
+operator|&
+operator|~
+literal|4
+operator|)
+operator|)
 operator|!=
 operator|(
 name|scr_to_cpu
@@ -18560,17 +18594,9 @@ empty_stmt|;
 comment|/* 	 *  if old phase not dataphase, leave here. 	 */
 if|if
 condition|(
-operator|(
 name|cmd
 operator|&
-literal|5
-operator|)
-operator|!=
-operator|(
-name|cmd
-operator|&
-literal|7
-operator|)
+literal|2
 condition|)
 block|{
 name|PRINT_ADDR
@@ -18614,7 +18640,7 @@ name|unexpected_phase
 goto|;
 block|}
 empty_stmt|;
-comment|/* 	 *  Choose the correct PM save area. 	 * 	 *  Look at the PM_SAVE SCRIPT if you want to understand  	 *  this stuff. The equivalent code is implemented in  	 *  SCRIPTS for the 895A and 896 that are able to handle  	 *  PM from the SCRIPTS processor. 	 */
+comment|/* 	 *  Choose the correct PM save area. 	 * 	 *  Look at the PM_SAVE SCRIPT if you want to understand  	 *  this stuff. The equivalent code is implemented in  	 *  SCRIPTS for the 895A, 896 and 1010 that are able to  	 *  handle PM from the SCRIPTS processor. 	 */
 name|hflags0
 operator|=
 name|INB
@@ -28466,7 +28492,7 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Get command, target and lun pointers. 	 */
+comment|/* 	 *  Get CAM command pointer. 	 */
 name|csio
 operator|=
 operator|&
@@ -30570,7 +30596,7 @@ block|}
 comment|/*  *  Set up data pointers used by SCRIPTS.  */
 specifier|static
 name|void
-name|__inline__
+name|__inline
 name|sym_setup_data_pointers
 parameter_list|(
 name|hcb_p
@@ -30995,6 +31021,7 @@ argument_list|,
 name|ccb
 argument_list|)
 expr_stmt|;
+comment|/* 	 *  When `#ifed 1', the code below makes the driver  	 *  panic on the first attempt to write to a SCSI device. 	 *  It is the first test we want to do after a driver  	 *  change that does not seem obviously safe. :) 	 */
 if|#
 directive|if
 literal|0
@@ -33331,6 +33358,215 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+comment|/*  *  Asynchronous notification handler.  */
+specifier|static
+name|void
+name|sym_async
+parameter_list|(
+name|void
+modifier|*
+name|cb_arg
+parameter_list|,
+name|u32
+name|code
+parameter_list|,
+name|struct
+name|cam_path
+modifier|*
+name|path
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|hcb_p
+name|np
+decl_stmt|;
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+decl_stmt|;
+name|u_int
+name|tn
+decl_stmt|;
+name|tcb_p
+name|tp
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
+name|sim
+operator|=
+operator|(
+expr|struct
+name|cam_sim
+operator|*
+operator|)
+name|cb_arg
+expr_stmt|;
+name|np
+operator|=
+operator|(
+name|hcb_p
+operator|)
+name|cam_sim_softc
+argument_list|(
+name|sim
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|AC_LOST_DEVICE
+case|:
+name|tn
+operator|=
+name|xpt_path_target_id
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tn
+operator|>=
+name|SYM_CONF_MAX_TARGET
+condition|)
+break|break;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|tn
+index|]
+expr_stmt|;
+name|tp
+operator|->
+name|to_reset
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|head
+operator|.
+name|sval
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|head
+operator|.
+name|wval
+operator|=
+name|np
+operator|->
+name|rv_scntl3
+expr_stmt|;
+name|tp
+operator|->
+name|head
+operator|.
+name|uval
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|current
+operator|.
+name|period
+operator|=
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|period
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|current
+operator|.
+name|offset
+operator|=
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|offset
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|current
+operator|.
+name|width
+operator|=
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|width
+operator|=
+name|BUS_8_BIT
+expr_stmt|;
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|current
+operator|.
+name|options
+operator|=
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|options
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*  *  Update transfer settings of a target.  */
 specifier|static
@@ -36801,7 +37037,7 @@ name|badlun_sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Prepare the bus address array that contains the bus  	 *  address of each target control bloc. 	 *  For now, assume all logical unit are wrong. :) 	 */
+comment|/* 	 *  Prepare the bus address array that contains the bus  	 *  address of each target control block. 	 *  For now, assume all logical units are wrong. :) 	 */
 for|for
 control|(
 name|i
@@ -37482,6 +37718,10 @@ name|path
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|ccb_setasync
+name|csa
+decl_stmt|;
 name|int
 name|err
 decl_stmt|,
@@ -37746,13 +37986,60 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
 comment|/* 	 *  Establish our async notification handler. 	 */
-block|{ 	struct ccb_setasync csa; 	xpt_setup_ccb(&csa.ccb_h, np->path, 5); 	csa.ccb_h.func_code = XPT_SASYNC_CB; 	csa.event_enable    = AC_LOST_DEVICE; 	csa.callback	    = sym_async; 	csa.callback_arg    = np->sim; 	xpt_action((union ccb *)&csa); 	}
-endif|#
-directive|endif
+name|xpt_setup_ccb
+argument_list|(
+operator|&
+name|csa
+operator|.
+name|ccb_h
+argument_list|,
+name|np
+operator|->
+name|path
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+name|csa
+operator|.
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_SASYNC_CB
+expr_stmt|;
+name|csa
+operator|.
+name|event_enable
+operator|=
+name|AC_LOST_DEVICE
+expr_stmt|;
+name|csa
+operator|.
+name|callback
+operator|=
+name|sym_async
+expr_stmt|;
+name|csa
+operator|.
+name|callback_arg
+operator|=
+name|np
+operator|->
+name|sim
+expr_stmt|;
+name|xpt_action
+argument_list|(
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+operator|&
+name|csa
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Start the chip now, without resetting the BUS, since   	 *  it seems that this must stay under control of CAM. 	 *  With LVD/SE capable chips and BUS in SE mode, we may  	 *  get a spurious SMBC interrupt. 	 */
 name|sym_init
 argument_list|(
