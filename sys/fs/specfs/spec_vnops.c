@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.6 (Berkeley) 4/9/94  * $Id: spec_vnops.c,v 1.16 1995/10/23 02:22:47 dyson Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.6 (Berkeley) 4/9/94  * $Id: spec_vnops.c,v 1.17 1995/11/09 08:16:15 bde Exp $  */
 end_comment
 
 begin_include
@@ -85,6 +85,24 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vnode_pager.h>
 end_include
 
 begin_include
@@ -653,23 +671,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vnode_pager.h>
-end_include
+begin_decl_stmt
+specifier|static
+name|void
+name|spec_getpages_iodone
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+name|bp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Trivial lookup routine that always fails.  */
@@ -1126,12 +1142,10 @@ decl_stmt|,
 name|on
 decl_stmt|,
 name|majordev
-decl_stmt|,
-argument_list|(
-operator|*
+decl_stmt|;
+name|d_ioctl_t
+modifier|*
 name|ioctl
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|int
 name|error
@@ -2746,25 +2760,10 @@ name|vp
 operator|->
 name|v_rdev
 decl_stmt|;
-name|int
-argument_list|(
-argument|*devclose
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+name|d_close_t
+modifier|*
+name|devclose
+decl_stmt|;
 name|int
 name|mode
 decl_stmt|,
@@ -3212,11 +3211,13 @@ specifier|static
 name|void
 name|spec_getpages_iodone
 parameter_list|(
+name|bp
+parameter_list|)
 name|struct
 name|buf
 modifier|*
 name|bp
-parameter_list|)
+decl_stmt|;
 block|{
 name|bp
 operator|->
@@ -3231,10 +3232,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * get page routine  */
-end_comment
 
 begin_function
 name|int
@@ -3252,9 +3249,16 @@ name|vm_offset_t
 name|kva
 decl_stmt|;
 name|int
+name|error
+decl_stmt|;
+name|int
 name|i
 decl_stmt|,
+name|pcount
+decl_stmt|,
 name|size
+decl_stmt|,
+name|s
 decl_stmt|;
 name|daddr_t
 name|blkno
@@ -3264,17 +3268,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|int
 name|error
-init|=
+operator|=
 literal|0
-decl_stmt|;
-name|int
-name|pcount
-decl_stmt|;
+expr_stmt|;
 name|pcount
 operator|=
 name|round_page
@@ -3286,7 +3283,7 @@ argument_list|)
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * calculate the size of the transfer 	 */
+comment|/* 	 * Calculate the size of the transfer. 	 */
 name|blkno
 operator|=
 operator|(
@@ -3306,7 +3303,7 @@ operator|)
 operator|/
 name|DEV_BSIZE
 expr_stmt|;
-comment|/* 	 * round up physical size for real devices 	 */
+comment|/* 	 * Round up physical size for real devices. 	 */
 name|size
 operator|=
 operator|(
@@ -3340,7 +3337,7 @@ name|bp
 operator|->
 name|b_data
 expr_stmt|;
-comment|/* 	 * and map the pages to be read into the kva 	 */
+comment|/* 	 * Map the pages to be read into the kva. 	 */
 name|pmap_qenter
 argument_list|(
 name|kva
@@ -3352,7 +3349,7 @@ argument_list|,
 name|pcount
 argument_list|)
 expr_stmt|;
-comment|/* build a minimal buffer header */
+comment|/* Build a minimal buffer header. */
 name|bp
 operator|->
 name|b_flags
@@ -3369,7 +3366,7 @@ name|b_iodone
 operator|=
 name|spec_getpages_iodone
 expr_stmt|;
-comment|/* B_PHYS is not set, but it is nice to fill this in */
+comment|/* B_PHYS is not set, but it is nice to fill this in. */
 name|bp
 operator|->
 name|b_proc
@@ -3464,7 +3461,7 @@ name|v_vnodepgsin
 operator|+=
 name|pcount
 expr_stmt|;
-comment|/* do the input */
+comment|/* Do the input. */
 name|VOP_STRATEGY
 argument_list|(
 name|bp
@@ -3478,17 +3475,17 @@ name|b_flags
 operator|&
 name|B_ASYNC
 condition|)
-block|{
 return|return
+operator|(
 name|VM_PAGER_PEND
+operator|)
 return|;
-block|}
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* we definitely need to be at splbio here */
+comment|/* We definitely need to be at splbio here. */
 while|while
 condition|(
 operator|(
@@ -3501,7 +3498,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|tsleep
 argument_list|(
 name|bp
@@ -3513,7 +3509,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -3539,10 +3534,7 @@ if|if
 condition|(
 operator|!
 name|error
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|ap
 operator|->
 name|a_count
@@ -3551,7 +3543,6 @@ name|pcount
 operator|*
 name|PAGE_SIZE
 condition|)
-block|{
 name|bzero
 argument_list|(
 operator|(
@@ -3572,8 +3563,6 @@ operator|->
 name|a_count
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|pmap_qremove
 argument_list|(
 name|kva
@@ -3581,7 +3570,7 @@ argument_list|,
 name|pcount
 argument_list|)
 expr_stmt|;
-comment|/* 	 * free the buffer header back to the swap buffer pool 	 */
+comment|/* 	 * Free the buffer header back to the swap buffer pool. 	 */
 name|relpbuf
 argument_list|(
 name|bp
@@ -3645,8 +3634,8 @@ operator|->
 name|a_reqpage
 condition|)
 block|{
-comment|/* 			 * whether or not to leave the page activated is up in 			 * the air, but we should put the page on a page queue 			 * somewhere. (it already is in the object). Result: 			 * It appears that emperical results show that 			 * deactivating pages is best. 			 */
-comment|/* 			 * just in case someone was asking for this page we 			 * now tell them that it is ok to use 			 */
+comment|/* 			 * Whether or not to leave the page activated is up in 			 * the air, but we should put the page on a page queue 			 * somewhere (it already is in the object).  Result: 			 * It appears that emperical results show that 			 * deactivating pages is best. 			 */
+comment|/* 			 * Just in case someone was asking for this page we 			 * now tell them that it is ok to use. 			 */
 if|if
 condition|(
 operator|!
@@ -3675,7 +3664,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|vnode_pager_freepage
 argument_list|(
 name|ap
@@ -3688,18 +3676,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|error
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"spec_getpages: I/O read error\n"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
