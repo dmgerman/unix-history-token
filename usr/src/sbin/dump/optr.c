@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.1 (Berkeley) %G%"
+literal|"@(#)optr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"dump.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -70,7 +76,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Query the operator; This fascist piece of code requires  *	an exact response.  *	It is intended to protect dump aborting by inquisitive  *	people banging on the console terminal to see what is  *	happening which might cause dump to croak, destroying  *	a large number of hours of work.  *  *	Every 2 minutes we reprint the message, alerting others  *	that dump needs attention.  */
+comment|/*  *	Query the operator; This previously-fascist piece of code  *	no longer requires an exact response.  *	It is intended to protect dump aborting by inquisitive  *	people banging on the console terminal to see what is  *	happening which might cause dump to croak, destroying  *	a large number of hours of work.  *  *	Every 2 minutes we reprint the message, alerting others  *	that dump needs attention.  */
 end_comment
 
 begin_decl_stmt
@@ -126,7 +132,7 @@ name|mytty
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -137,7 +143,9 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"fopen on /dev/tty fails\n"
+literal|"fopen on %s fails\n"
+argument_list|,
+name|_PATH_TTY
 argument_list|)
 expr_stmt|;
 name|abort
@@ -194,27 +202,19 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|strcmp
-argument_list|(
 name|replybuffer
-argument_list|,
-literal|"yes\n"
-argument_list|)
-operator|==
+index|[
 literal|0
-operator|)
+index|]
+operator|==
+literal|'y'
 operator|||
-operator|(
-name|strcmp
-argument_list|(
 name|replybuffer
-argument_list|,
-literal|"Yes\n"
-argument_list|)
-operator|==
+index|[
 literal|0
-operator|)
+index|]
+operator|==
+literal|'Y'
 condition|)
 block|{
 name|back
@@ -228,27 +228,19 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|strcmp
-argument_list|(
 name|replybuffer
-argument_list|,
-literal|"no\n"
-argument_list|)
-operator|==
+index|[
 literal|0
-operator|)
+index|]
+operator|==
+literal|'n'
 operator|||
-operator|(
-name|strcmp
-argument_list|(
 name|replybuffer
-argument_list|,
-literal|"No\n"
-argument_list|)
-operator|==
+index|[
 literal|0
-operator|)
+index|]
+operator|==
+literal|'N'
 condition|)
 block|{
 name|back
@@ -261,13 +253,21 @@ goto|;
 block|}
 else|else
 block|{
-name|msg
+name|fprintf
 argument_list|(
-literal|"\"Yes\" or \"No\"?\n"
+name|stderr
+argument_list|,
+literal|"  DUMP: \"Yes\" or \"No\"?\n"
 argument_list|)
 expr_stmt|;
-name|alarmcatch
-argument_list|()
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  DUMP: %s: (\"yes\" or \"no\") "
+argument_list|,
+name|question
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -310,6 +310,15 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+name|char
+name|lastmsg
+index|[
+literal|100
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *	Alert the console operator, and enable the alarm clock to  *	sleep for 2 minutes in case nobody comes to satisfy dump  */
 end_comment
@@ -323,20 +332,62 @@ begin_block
 block|{
 if|if
 condition|(
+name|notify
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|timeout
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  DUMP: %s: (\"yes\" or \"no\") "
+argument_list|,
+name|attnmessage
+argument_list|)
+expr_stmt|;
+else|else
+name|msgtail
+argument_list|(
+literal|"\7\7"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|timeout
 condition|)
+block|{
 name|msgtail
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|msg
+name|broadcast
 argument_list|(
-literal|"NEEDS ATTENTION: %s: (\"yes\" or \"no\") "
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* just print last msg */
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  DUMP: %s: (\"yes\" or \"no\") "
 argument_list|,
 name|attnmessage
 argument_list|)
 expr_stmt|;
+block|}
 name|signal
 argument_list|(
 name|SIGALRM
@@ -381,13 +432,6 @@ argument_list|)
 condition|)
 name|dumpabort
 argument_list|()
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|interrupt
-argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -446,7 +490,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"No entry in /etc/group for %s.\n"
+literal|"No group entry for %s.\n"
 argument_list|,
 name|OPGRENT
 argument_list|)
@@ -588,7 +632,7 @@ name|f_utmp
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -599,7 +643,9 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"Cannot open /etc/utmp\n"
+literal|"Cannot open %s\n"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 return|return;
@@ -792,31 +838,20 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
-name|c
-decl_stmt|,
-name|ch
-decl_stmt|;
-name|int
-name|msize
+name|lmsg
+init|=
+literal|1
 decl_stmt|;
 name|FILE
 modifier|*
 name|f_tty
 decl_stmt|;
-name|msize
-operator|=
-name|strlen
-argument_list|(
-name|message
-argument_list|)
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|t
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -853,8 +888,7 @@ name|fprintf
 argument_list|(
 name|f_tty
 argument_list|,
-literal|"\n
-literal|Message from the dump program to all operators at %d:%02d ...\r\n\n"
+literal|"\n\07\07\07Message from the dump program to all operators at %d:%02d ...\r\n\n  DUMP: NEEDS ATTENTION: "
 argument_list|,
 name|localclock
 operator|->
@@ -869,29 +903,50 @@ for|for
 control|(
 name|cp
 operator|=
-name|message
-operator|,
-name|c
-operator|=
-name|msize
+name|lastmsg
 init|;
-name|c
-operator|--
-operator|>
-literal|0
 condition|;
 name|cp
 operator|++
 control|)
 block|{
-name|ch
-operator|=
+if|if
+condition|(
 operator|*
 name|cp
+operator|==
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|lmsg
+condition|)
+block|{
+name|cp
+operator|=
+name|message
 expr_stmt|;
 if|if
 condition|(
-name|ch
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+break|break;
+name|lmsg
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+break|break;
+block|}
+if|if
+condition|(
+operator|*
+name|cp
 operator|==
 literal|'\n'
 condition|)
@@ -904,7 +959,8 @@ argument_list|)
 expr_stmt|;
 name|putc
 argument_list|(
-name|ch
+operator|*
+name|cp
 argument_list|,
 name|f_tty
 argument_list|)
@@ -1150,6 +1206,23 @@ expr_stmt|;
 name|fflush
 argument_list|(
 name|stderr
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|lastmsg
+argument_list|,
+name|fmt
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|,
+name|a4
+argument_list|,
+name|a5
 argument_list|)
 expr_stmt|;
 block|}
@@ -1445,7 +1518,7 @@ name|msg
 argument_list|(
 literal|"Can't open %s for dump table information.\n"
 argument_list|,
-name|FSTAB
+name|_PATH_FSTAB
 argument_list|)
 expr_stmt|;
 return|return;
