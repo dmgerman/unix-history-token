@@ -28,7 +28,7 @@ end_comment
 
 begin_function
 name|int
-name|G77_date_0
+name|G77_date_y2kbug_0
 parameter_list|(
 name|char
 modifier|*
@@ -45,9 +45,10 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-name|integer
+name|longint
 name|i__1
-decl_stmt|,
+decl_stmt|;
+name|integer
 name|i__2
 index|[
 literal|5
@@ -77,7 +78,7 @@ literal|24
 index|]
 decl_stmt|;
 specifier|extern
-name|integer
+name|longint
 name|G77_time_0
 parameter_list|()
 function_decl|;

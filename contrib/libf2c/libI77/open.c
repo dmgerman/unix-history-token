@@ -799,6 +799,10 @@ condition|)
 name|f_init
 argument_list|()
 expr_stmt|;
+name|f__external
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|a
@@ -1176,6 +1180,9 @@ name|buf
 argument_list|,
 literal|"fort.%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|a
 operator|->
 name|ounit
@@ -1844,6 +1851,9 @@ name|nbuf
 argument_list|,
 literal|"fort.%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;

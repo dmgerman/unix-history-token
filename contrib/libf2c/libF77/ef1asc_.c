@@ -143,14 +143,10 @@ operator|*
 name|lb
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__cplusplus
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
+comment|/* ignored return value */
 block|}
 end_function
 

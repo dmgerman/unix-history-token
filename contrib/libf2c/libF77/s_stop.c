@@ -165,18 +165,24 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__cplusplus
+comment|/* We cannot avoid (useless) compiler diagnostics here:		*/
+comment|/* some compilers complain if there is no return statement,	*/
+comment|/* and others complain that this one cannot be reached.		*/
 return|return
 literal|0
 return|;
 comment|/* NOT REACHED */
 block|}
-endif|#
-directive|endif
+ifdef|#
+directive|ifdef
+name|__cplusplus
 block|}
 end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

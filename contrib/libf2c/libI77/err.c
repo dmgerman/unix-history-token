@@ -991,9 +991,14 @@ name|stderr
 argument_list|,
 literal|"apparent state: unit %d "
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|f__curunit
 operator|-
 name|f__units
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -573,8 +573,13 @@ argument_list|()
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NON_UNIX_STDIO
 name|bad
 label|:
+endif|#
+directive|endif
 name|rc
 operator|=
 literal|1

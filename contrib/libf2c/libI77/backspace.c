@@ -209,6 +209,13 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|f
+operator|=
+name|b
+operator|->
+name|ufd
+expr_stmt|;
+comment|/* t_runc might change b->ufd */
 if|if
 condition|(
 name|f__nowreading

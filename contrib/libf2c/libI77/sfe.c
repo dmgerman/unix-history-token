@@ -225,23 +225,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|integer
-name|e_wdfe
-parameter_list|(
-name|Void
-parameter_list|)
-block|{
-name|f__init
-operator|=
-literal|1
-expr_stmt|;
-return|return
-name|en_fio
-argument_list|()
-return|;
-block|}
-end_function
-
 end_unit
 
