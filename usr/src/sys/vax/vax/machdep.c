@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.2	%H%	*/
+comment|/*	machdep.c	3.3	%H%	*/
 end_comment
 
 begin_include
@@ -108,9 +108,10 @@ comment|/* etc/ */
 literal|0x74696e69
 block|,
 comment|/* init */
-literal|0x006d762e
+literal|0x00000000
 block|,
-comment|/* .vm";  0 */
+comment|/* \0\0\0";  0 */
+comment|/* was .vm" */
 literal|0x00000014
 block|,
 comment|/* [&"init", */
