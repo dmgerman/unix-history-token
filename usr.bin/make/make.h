@@ -758,6 +758,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|Lst
+name|parseIncPath
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The list of directories to search when 				 * looking for includes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|Boolean
 name|compatMake
 decl_stmt|;

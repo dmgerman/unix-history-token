@@ -3527,10 +3527,6 @@ init|=
 name|p
 decl_stmt|;
 comment|/* makefile to read */
-specifier|extern
-name|Lst
-name|parseIncPath
-decl_stmt|;
 name|FILE
 modifier|*
 name|stream

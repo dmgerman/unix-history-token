@@ -2787,10 +2787,6 @@ case|case
 name|NotParallel
 case|:
 block|{
-specifier|extern
-name|int
-name|maxJobs
-decl_stmt|;
 name|maxJobs
 operator|=
 literal|1
