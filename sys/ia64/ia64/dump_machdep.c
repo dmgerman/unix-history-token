@@ -868,8 +868,6 @@ operator|=
 name|buf_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|(
 name|char
