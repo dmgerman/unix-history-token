@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.13 1995/11/14 20:33:57 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.14 1996/01/19 08:00:57 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -196,7 +196,11 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * Local port number conventions:  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).  * Ports> IPPORT_USERRESERVED are reserved  * for servers, not necessarily privileged.  */
+comment|/*  * Local port number conventions:  *  * When a user does a bind(2) or connect(2) with a port number of zero,  * a non-conflicting local port address is chosen.  * The default range is IPPORT_RESERVED through  * IPPORT_USERRESERVED, although that is settable by sysctl.  *  * A user may set the IPPROTO_IP option IP_PORTRANGE to change this  * default assignment range.  *  * The value IP_PORTRANGE_DEFAULT causes the default behavior.  *  * The value IP_PORTRANGE_HIGH changes the range of candidate port numbers  * into the "high" range.  These are reserved for client outbound connections  * which do not want to be filtered by any firewalls.  *  * The value IP_PORTRANGE_LOW changes the range to the "low" are  * that is (by convention) restricted to privileged processes.  This  * convention is based on "vouchsafe" principles only.  It is only secure  * if you trust the remote host to restrict these ports.  *  * The default range of ports and the high range can be changed by  * sysctl(3).  (net.inet.ip.port{hi}{first,last}_auto)  *  * Changing those values has bad security implications if you are  * using a a stateless firewall that is allowing packets outside of that  * range in order to allow transparent outgoing connections.  *  * Such a firewall configuration will generally depend on the use of these  * default values.  If you change them, you may find your Security  * Administrator looking for you with a heavy object.  */
+end_comment
+
+begin_comment
+comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).         (IP_PORTRANGE_LOW)  * Ports> IPPORT_USERRESERVED are reserved  * for servers, not necessarily privileged.  (IP_PORTRANGE_DEFAULT)  */
 end_comment
 
 begin_define
@@ -214,44 +218,22 @@ value|5000
 end_define
 
 begin_comment
-comment|/*  * Range of ports for automatic assignment to local addresses that  * have not explicitly specified an address.  *  * These can be overridden at kernel config time, and are used to init  * sysctl variables.  The sysctl variables can be changed at runtime.  */
+comment|/*  * Default local port range to use by setting IP_PORTRANGE_HIGH  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPPORT_FIRSTAUTO
-end_ifndef
+begin_define
+define|#
+directive|define
+name|IPPORT_HIFIRSTAUTO
+value|40000
+end_define
 
 begin_define
 define|#
 directive|define
-name|IPPORT_FIRSTAUTO
-value|20000
+name|IPPORT_HILASTAUTO
+value|44999
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPPORT_LASTAUTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IPPORT_LASTAUTO
-value|30000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Internet address (a structure for historical reasons)  */
@@ -793,6 +775,17 @@ begin_comment
 comment|/* unset RSVP per-vif socket */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_PORTRANGE
+value|19
+end_define
+
+begin_comment
+comment|/* int; range to choose for unspec port */
+end_comment
+
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment
@@ -851,6 +844,43 @@ comment|/* local IP address of interface */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Argument for IP_PORTRANGE:  * - which range to search when port is unspecified at bind() or connect()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_PORTRANGE_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* default range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_PORTRANGE_HIGH
+value|1
+end_define
+
+begin_comment
+comment|/* "high" - request firewall bypass */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_PORTRANGE_LOW
+value|2
+end_define
+
+begin_comment
+comment|/* "low" - vouchsafe security */
+end_comment
 
 begin_comment
 comment|/*  * Definitions for inet sysctl operations.  *  * Third level is protocol number.  * Fourth level is desired variable within that protocol.  */
