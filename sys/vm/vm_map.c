@@ -8943,8 +8943,6 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|VM_MIN_ADDRESS
