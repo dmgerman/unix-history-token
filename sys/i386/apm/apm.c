@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.65 1997/11/12 04:12:43 jdp Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.66 1997/12/04 02:40:00 imp Exp $  */
 end_comment
 
 begin_include
@@ -1701,11 +1701,37 @@ name|time
 operator|=
 name|tmp_time
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|APM_FIXUP_CALLTODO
+comment|/* Calculate the delta time suspended */
+name|timevalsub
+argument_list|(
+operator|&
+name|resume_time
+argument_list|,
+operator|&
+name|suspend_time
+argument_list|)
+expr_stmt|;
+comment|/* Fixup the calltodo list with the delta time. */
+name|adjust_timeout_calltodo
+argument_list|(
+operator|&
+name|resume_time
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* APM_FIXUP_CALLTODOK */
 name|splx
 argument_list|(
 name|pl
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|APM_FIXUP_CALLTODO
 name|second
 operator|=
 name|resume_time
@@ -1716,6 +1742,19 @@ name|suspend_time
 operator|.
 name|tv_sec
 expr_stmt|;
+else|#
+directive|else
+comment|/* APM_FIXUP_CALLTODO */
+comment|/*  	 * We've already calculated resume_time to be the delta between  	 * the suspend and the resume.  	 */
+name|second
+operator|=
+name|resume_time
+operator|.
+name|tv_sec
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* APM_FIXUP_CALLTODO */
 name|hour
 operator|=
 name|second
