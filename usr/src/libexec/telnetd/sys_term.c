@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.11 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -711,10 +711,6 @@ name|tcgetattr
 argument_list|(
 name|pty
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|termbuf
 argument_list|)
@@ -1035,10 +1031,6 @@ name|pty
 argument_list|,
 name|TCSADRAIN
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|termbuf
 argument_list|)

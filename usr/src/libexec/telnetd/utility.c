@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	5.5 (Berkeley) %G%"
+literal|"@(#)utility.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1524,6 +1524,21 @@ break|break;
 case|case
 literal|'d'
 case|:
+block|{
+name|char
+name|fmt
+index|[]
+init|=
+literal|"%l:% %P on %A, %d %B %Y"
+decl_stmt|;
+name|fmt
+index|[
+literal|4
+index|]
+operator|=
+literal|'M'
+expr_stmt|;
+comment|/* I *hate* SCCS... */
 operator|(
 name|void
 operator|)
@@ -1532,18 +1547,6 @@ argument_list|(
 operator|&
 name|t
 argument_list|)
-expr_stmt|;
-comment|/* SCCS *likes* utility.c... */
-name|fmt
-operator|=
-literal|"%l:% %P on %A, %d %B %Y"
-expr_stmt|;
-name|fmt
-index|[
-literal|4
-index|]
-operator|=
-literal|'M'
 expr_stmt|;
 operator|(
 name|void
@@ -1559,8 +1562,11 @@ argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
+name|localtime
+argument_list|(
 operator|&
 name|t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putstr
@@ -1569,6 +1575,7 @@ name|db
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 case|case
 literal|'%'
 case|:

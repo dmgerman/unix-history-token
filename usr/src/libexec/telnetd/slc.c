@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slc.c	5.5 (Berkeley) %G%"
+literal|"@(#)slc.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,6 +564,10 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|slcbuf
 argument_list|,
 literal|"%c%c%c%c"
@@ -685,6 +689,10 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|slcptr
 argument_list|,
 literal|"%c%c"
