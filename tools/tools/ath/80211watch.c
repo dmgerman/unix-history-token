@@ -1598,9 +1598,22 @@ break|break;
 case|case
 name|RTM_IEEE80211_JOIN
 case|:
+case|case
+name|RTM_IEEE80211_REJOIN
+case|:
 name|printf
 argument_list|(
-literal|"%s station join"
+literal|"%s station %sjoin"
+argument_list|,
+name|ifan
+operator|->
+name|ifna_what
+operator|==
+name|RTM_IEEE80211_REJOIN
+condition|?
+literal|"re"
+else|:
+literal|""
 argument_list|,
 name|ether_sprintf
 argument_list|(
