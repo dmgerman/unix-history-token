@@ -57,7 +57,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: ascmagic.c,v 1.2 1995/05/30 06:29:59 rgrimes Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,6 +312,36 @@ return|return
 literal|1
 return|;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nbytes
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+name|buf
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+comment|/* not all ASCII */
+block|}
 comment|/* look for tokens from names.h - this is expensive! */
 comment|/* make a copy of the buffer here because strtok() will destroy it */
 name|s
@@ -433,36 +463,6 @@ literal|1
 return|;
 block|}
 block|}
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nbytes
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|isascii
-argument_list|(
-name|buf
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-comment|/* not all ASCII */
 block|}
 comment|/* all else fails, but it is ASCII... */
 name|ckfputs
