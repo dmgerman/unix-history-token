@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.19 (Berkeley) %G%"
+literal|"@(#)mloop.c	3.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -180,9 +186,19 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|sun
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+comment|/* workaround for SunOS pty bug */
 while|while
 condition|(
 operator|--
