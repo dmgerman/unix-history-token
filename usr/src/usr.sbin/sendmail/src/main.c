@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.107 (Berkeley) %G%"
+literal|"@(#)main.c	8.108 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1514,6 +1514,20 @@ index|]
 argument_list|)
 expr_stmt|;
 end_for
+
+begin_comment
+comment|/* and prime the child environment */
+end_comment
+
+begin_expr_stmt
+name|setuserenv
+argument_list|(
+literal|"AGENT"
+argument_list|,
+literal|"sendmail"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	**  Save start and extent of argv for setproctitle. 	*/
@@ -3969,13 +3983,6 @@ expr_stmt|;
 comment|/* propogate some envariables into children */
 name|setuserenv
 argument_list|(
-literal|"AGENT"
-argument_list|,
-literal|"sendmail"
-argument_list|)
-expr_stmt|;
-name|setuserenv
-argument_list|(
 literal|"ISP"
 argument_list|,
 name|NULL
@@ -3989,29 +3996,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
-comment|/* guarantee non-empty environment to children */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|UserEnviron
-index|[
-literal|0
-index|]
-operator|==
-name|NULL
-condition|)
-name|setuserenv
-argument_list|(
-literal|"AGENT"
-argument_list|,
-literal|"sendmail"
-argument_list|)
-expr_stmt|;
 end_if
 
 begin_comment
@@ -6459,10 +6443,8 @@ init|=
 name|UserEnviron
 decl_stmt|;
 name|char
-name|buf
-index|[
-literal|100
-index|]
+modifier|*
+name|p
 decl_stmt|;
 if|if
 condition|(
@@ -6493,29 +6475,32 @@ argument_list|(
 name|envar
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|+
+name|p
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|xalloc
+argument_list|(
 name|strlen
 argument_list|(
 name|value
 argument_list|)
-operator|>
-sizeof|sizeof
-name|buf
-operator|-
+operator|+
+name|i
+operator|+
 literal|2
-condition|)
-return|return;
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
-name|buf
+name|p
 argument_list|,
 name|envar
 argument_list|)
 expr_stmt|;
-name|buf
+name|p
 index|[
 name|i
 operator|++
@@ -6526,7 +6511,7 @@ expr_stmt|;
 name|strcpy
 argument_list|(
 operator|&
-name|buf
+name|p
 index|[
 name|i
 index|]
@@ -6546,7 +6531,7 @@ argument_list|(
 operator|*
 name|evp
 argument_list|,
-name|buf
+name|p
 argument_list|,
 name|i
 argument_list|)
@@ -6568,10 +6553,7 @@ operator|*
 name|evp
 operator|++
 operator|=
-name|newstr
-argument_list|(
-name|buf
-argument_list|)
+name|p
 expr_stmt|;
 block|}
 elseif|else
@@ -6590,10 +6572,7 @@ operator|*
 name|evp
 operator|++
 operator|=
-name|newstr
-argument_list|(
-name|buf
-argument_list|)
+name|p
 expr_stmt|;
 operator|*
 name|evp
@@ -6601,6 +6580,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* make sure it is in our environment as well */
+name|putenv
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
