@@ -97,6 +97,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<parse_time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<roken.h>
 end_include
 
