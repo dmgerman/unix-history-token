@@ -444,18 +444,6 @@ name|zero
 init|=
 literal|0
 decl_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pps_data
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX doesn't newbus do this? */
 comment|/* retrieve the ppbus irq */
 name|BUS_READ_IVAR
 argument_list|(
