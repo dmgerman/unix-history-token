@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)open.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)open.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -75,6 +75,50 @@ ifndef|#
 directive|ifndef
 name|SMALL
 end_ifndef
+
+begin_comment
+comment|/*  * XXX avoid stdio... its a long story.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isupper
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= 'A'&& (c)<= 'Z')
+end_define
+
+begin_define
+define|#
+directive|define
+name|tolower
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) - 'A' + 'a')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isspace
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ' ' || (c) == '\t')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= '0'&& (c)<= '9')
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -1266,6 +1310,54 @@ block|}
 return|return
 operator|(
 name|unit
+operator|)
+return|;
+block|}
+comment|/*  * XXX more stdio-avoidance.  */
+specifier|static
+name|atoi
+argument_list|(
+argument|cp
+argument_list|)
+name|char
+operator|*
+name|cp
+expr_stmt|;
+block|{
+name|int
+name|val
+init|=
+literal|0
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|cp
+operator|<=
+literal|'9'
+condition|)
+name|val
+operator|=
+name|val
+operator|*
+literal|10
+operator|+
+operator|(
+operator|*
+name|cp
+operator|++
+operator|-
+literal|'0'
+operator|)
+expr_stmt|;
+return|return
+operator|(
+name|val
 operator|)
 return|;
 block|}
