@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tzsetup.c,v 1.11 1998/12/16 05:34:49 peter Exp $"
+literal|"$Id: tzsetup.c,v 1.12 1999/02/02 20:26:31 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3378,7 +3378,7 @@ argument_list|(
 literal|"Select local or UTC (Greenwich Mean Time) clock"
 argument_list|,
 literal|"Is this machine's CMOS clock set to UTC?  If it is set to local time,\n"
-literal|"please choose NO here!"
+literal|"or you don't know, please choose NO here!"
 argument_list|,
 literal|7
 argument_list|,
