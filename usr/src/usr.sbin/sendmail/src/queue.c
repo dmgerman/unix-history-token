@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.14 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.15 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.14 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.15 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1752,6 +1752,26 @@ condition|)
 name|printf
 argument_list|(
 literal|"Skipping queue run -- load average too high\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|forkflag
+operator|&&
+name|QueueIntvl
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setevent
+argument_list|(
+name|QueueIntvl
+argument_list|,
+name|runqueue
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 return|return;
