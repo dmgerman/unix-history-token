@@ -5725,22 +5725,12 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-name|def_linker_path
-index|[]
-init|=
-literal|"/boot/modules/;/modules/;/boot/kernel/"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
 name|linker_path
 index|[
 name|MAXPATHLEN
 index|]
 init|=
-literal|""
+literal|"/boot/modules/;/modules/;/boot/kernel/"
 decl_stmt|;
 end_decl_stmt
 
@@ -5768,11 +5758,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_STR_DECL
+name|TUNABLE_STR
 argument_list|(
 literal|"module_path"
-argument_list|,
-name|def_linker_path
 argument_list|,
 name|linker_path
 argument_list|,

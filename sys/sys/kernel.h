@@ -721,16 +721,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 parameter_list|(
 name|path
-parameter_list|,
-name|defval
 parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|static void __Tunable_ ## var (void *ignored)	\ {						\     TUNABLE_INT_FETCH((path), (defval), (var))	\ }						\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
+value|static void __Tunable_ ## var (void *ignored)		\ {							\ 	TUNABLE_INT_FETCH((path), (var));		\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL)
 end_define
 
 begin_define
@@ -740,29 +738,25 @@ name|TUNABLE_INT_FETCH
 parameter_list|(
 name|path
 parameter_list|,
-name|defval
-parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|if (!getenv_int((path),&(var)))		\        (var) = (defval);
+value|do {							\ 	getenv_int((path), (var));			\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TUNABLE_STR_DECL
+name|TUNABLE_STR
 parameter_list|(
 name|path
-parameter_list|,
-name|defval
 parameter_list|,
 name|var
 parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|static void __Tunable_ ## var (void *ignored)		\ {							\     TUNABLE_STR_FETCH((path), (defval), (var), (size))	\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
+value|static void __Tunable_ ## var (void *ignored)		\ {							\ 	TUNABLE_STR_FETCH((path), (var), (size));	\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL)
 end_define
 
 begin_define
@@ -772,14 +766,12 @@ name|TUNABLE_STR_FETCH
 parameter_list|(
 name|path
 parameter_list|,
-name|defval
-parameter_list|,
 name|var
 parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strncpy((var), tmp, (size));			\     (var)[(size) - 1] = 0;
+value|do {							\ 	char *tmp;					\ 	tmp = getenv((path));				\ 	if (tmp != NULL) {				\ 		strncpy((var), tmp, (size));		\ 		(var)[(size) - 1] = 0;			\ 	}						\ } while (0)
 end_define
 
 begin_struct

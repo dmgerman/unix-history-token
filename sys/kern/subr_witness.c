@@ -594,16 +594,17 @@ begin_decl_stmt
 specifier|static
 name|int
 name|witness_watch
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"debug.witness_watch"
 argument_list|,
-literal|1
-argument_list|,
+operator|&
 name|witness_watch
 argument_list|)
 expr_stmt|;
@@ -640,51 +641,48 @@ begin_comment
 comment|/*  * When DDB is enabled and witness_ddb is set to 1, it will cause the system to  * drop into kdebug() when:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|witness_ddb
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|WITNESS_DDB
 end_ifdef
 
-begin_expr_stmt
-name|TUNABLE_INT_DECL
-argument_list|(
-literal|"debug.witness_ddb"
-argument_list|,
-literal|1
-argument_list|,
+begin_decl_stmt
+name|int
 name|witness_ddb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_expr_stmt
-name|TUNABLE_INT_DECL
-argument_list|(
-literal|"debug.witness_ddb"
-argument_list|,
-literal|0
-argument_list|,
+begin_decl_stmt
+name|int
 name|witness_ddb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.witness_ddb"
+argument_list|,
+operator|&
+name|witness_ddb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -716,51 +714,48 @@ begin_comment
 comment|/* DDB */
 end_comment
 
-begin_decl_stmt
-name|int
-name|witness_skipspin
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|WITNESS_SKIPSPIN
 end_ifdef
 
-begin_expr_stmt
-name|TUNABLE_INT_DECL
-argument_list|(
-literal|"debug.witness_skipspin"
-argument_list|,
-literal|1
-argument_list|,
+begin_decl_stmt
+name|int
 name|witness_skipspin
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_expr_stmt
-name|TUNABLE_INT_DECL
-argument_list|(
-literal|"debug.witness_skipspin"
-argument_list|,
-literal|0
-argument_list|,
+begin_decl_stmt
+name|int
 name|witness_skipspin
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.witness_skipspin"
+argument_list|,
+operator|&
+name|witness_skipspin
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

@@ -367,6 +367,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nloop
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -781,8 +783,7 @@ name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.nloop"
 argument_list|,
-literal|1
-argument_list|,
+operator|&
 name|nloop
 argument_list|)
 expr_stmt|;

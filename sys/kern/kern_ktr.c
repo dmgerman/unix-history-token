@@ -277,16 +277,17 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|ktr_cpumask
+init|=
+name|KTR_CPUMASK
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"debug.ktr.cpumask"
 argument_list|,
-name|KTR_CPUMASK
-argument_list|,
+operator|&
 name|ktr_cpumask
 argument_list|)
 expr_stmt|;
@@ -316,16 +317,17 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|ktr_mask
+init|=
+name|KTR_MASK
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"debug.ktr.mask"
 argument_list|,
-name|KTR_MASK
-argument_list|,
+operator|&
 name|ktr_mask
 argument_list|)
 expr_stmt|;
@@ -403,16 +405,17 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ktr_verbose
+init|=
+name|KTR_VERBOSE_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"debug.ktr.verbose"
 argument_list|,
-name|KTR_VERBOSE_DEFAULT
-argument_list|,
+operator|&
 name|ktr_verbose
 argument_list|)
 expr_stmt|;
