@@ -1776,6 +1776,34 @@ begin_comment
 comment|/* system is dumping */
 end_comment
 
+begin_comment
+comment|/* D_TTY related functions */
+end_comment
+
+begin_decl_stmt
+name|d_kqfilter_t
+name|ttykqfilter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_poll_t
+name|ttypoll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_read_t
+name|ttyread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_write_t
+name|ttywrite
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
