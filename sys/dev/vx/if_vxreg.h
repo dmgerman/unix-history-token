@@ -269,17 +269,6 @@ value|0x100
 end_define
 
 begin_comment
-comment|/*  * some macros to acces long named fields  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BASE
-value|(sc->vx_io_addr)
-end_define
-
-begin_comment
 comment|/*  * Commands to read/write EEPROM trough EEPROM command register (Window 0,  * Offset 0xa)  */
 end_comment
 
