@@ -2205,6 +2205,24 @@ name|vfstype
 operator|=
 literal|"msdosfs"
 expr_stmt|;
+comment|/* Construct the name of the appropriate mount command */
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|execname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|execname
+argument_list|)
+argument_list|,
+literal|"mount_%s"
+argument_list|,
+name|vfstype
+argument_list|)
+expr_stmt|;
 name|argc
 operator|=
 literal|0
@@ -2215,7 +2233,7 @@ name|argc
 operator|++
 index|]
 operator|=
-name|vfstype
+name|execname
 expr_stmt|;
 name|mangle
 argument_list|(
@@ -2365,23 +2383,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Go find an executable. */
-operator|(
-name|void
-operator|)
-name|snprintf
-argument_list|(
-name|execname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|execname
-argument_list|)
-argument_list|,
-literal|"mount_%s"
-argument_list|,
-name|vfstype
-argument_list|)
-expr_stmt|;
 name|execvP
 argument_list|(
 name|execname
