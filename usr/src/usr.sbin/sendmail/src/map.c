@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.63 (Berkeley) %G%"
+literal|"@(#)map.c	8.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7187,12 +7187,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|domain
+operator|==
+name|NULL
+condition|)
+name|domain
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
 name|hbsize
 operator|>
-operator|(
 name|vsize
 operator|+
-operator|(
 operator|(
 name|int
 operator|)
@@ -7200,10 +7208,27 @@ name|strlen
 argument_list|(
 name|domain
 argument_list|)
-operator|)
-operator|)
+operator|+
+literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|domain
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|strcpy
+argument_list|(
+name|name
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|name
@@ -7266,13 +7291,11 @@ operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
 else|else
-block|{
 operator|*
 name|statp
 operator|=
 name|EX_UNAVAILABLE
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
