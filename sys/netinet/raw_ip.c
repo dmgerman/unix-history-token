@@ -1140,6 +1140,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IP_FW_ADD
+case|:
+case|case
 name|IP_FW_GET
 case|:
 if|if
