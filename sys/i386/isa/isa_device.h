@@ -178,6 +178,7 @@ name|idp
 parameter_list|)
 function_decl|;
 comment|/* setup driver for a device */
+specifier|const
 name|char
 modifier|*
 name|name
