@@ -8301,6 +8301,10 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|struct
+name|ifreq
+name|ifr
+decl_stmt|;
 name|ifa
 operator|=
 name|ifaddr_byindex
