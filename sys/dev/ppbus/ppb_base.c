@@ -51,6 +51,16 @@ directive|include
 file|<dev/ppbus/ppbio.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ppbus
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
