@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.28	82/04/28	*/
+comment|/*	if_imp.c	4.29	82/04/28	*/
 end_comment
 
 begin_include
@@ -823,8 +823,8 @@ condition|(
 name|sc
 operator|->
 name|imp_state
-operator|==
-name|IMPS_DOINGDOWN
+operator|<
+name|IMPS_INIT
 condition|)
 goto|goto
 name|drop
