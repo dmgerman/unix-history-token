@@ -8450,7 +8450,7 @@ literal|"rwhod_enable=YES"
 block|}
 block|,
 block|{
-literal|" SSHd"
+literal|" sshd"
 block|,
 literal|"This machine wants to run the SSH daemon"
 block|,
