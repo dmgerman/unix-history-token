@@ -508,7 +508,7 @@ name|ngpdg_recvspace
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum incoming Netgraph datagram size"
+literal|"Maximum space for incoming Netgraph datagrams"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
