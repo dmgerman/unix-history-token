@@ -61,6 +61,7 @@ argument_list|(
 name|i386
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
 name|mips
@@ -69,6 +70,12 @@ operator|&&
 name|defined
 argument_list|(
 name|MIPSEL
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
 argument_list|)
 end_if
 
@@ -563,6 +570,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|IEEE_8087
+ifdef|#
+directive|ifdef
+name|__i386__
 define|#
 directive|define
 name|word0
@@ -577,6 +587,27 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((unsigned long *)&x)[0]
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__ia64__
+define|#
+directive|define
+name|word0
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned int *)&x)[1]
+define|#
+directive|define
+name|word1
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned int *)&x)[0]
+endif|#
+directive|endif
 else|#
 directive|else
 define|#
