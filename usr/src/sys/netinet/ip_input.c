@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -798,6 +798,8 @@ operator|&&
 name|ip_dooptions
 argument_list|(
 name|ip
+argument_list|,
+name|ifp
 argument_list|)
 condition|)
 goto|goto
@@ -2218,18 +2220,26 @@ begin_comment
 comment|/*  * Do option processing on a datagram,  * possibly discarding it if bad options  * are encountered.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|ip_dooptions
 argument_list|(
-argument|ip
+name|ip
+argument_list|,
+name|ifp
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|ip
+operator|*
+name|ip
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|ip
+name|ifnet
 modifier|*
-name|ip
+name|ifp
 decl_stmt|;
 end_decl_stmt
 
@@ -3050,6 +3060,8 @@ argument_list|,
 name|type
 argument_list|,
 name|code
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -4416,6 +4428,8 @@ argument_list|,
 name|type
 argument_list|,
 name|code
+argument_list|,
+name|ifp
 argument_list|,
 name|dest
 argument_list|)

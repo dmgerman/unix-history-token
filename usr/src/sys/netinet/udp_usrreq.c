@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)udp_usrreq.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)udp_usrreq.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -165,6 +165,8 @@ begin_macro
 name|udp_input
 argument_list|(
 argument|m0
+argument_list|,
+argument|ifp
 argument_list|)
 end_macro
 
@@ -173,6 +175,14 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 end_decl_stmt
 
@@ -525,6 +535,8 @@ argument_list|,
 name|ICMP_UNREACH
 argument_list|,
 name|ICMP_UNREACH_PORT
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return;
