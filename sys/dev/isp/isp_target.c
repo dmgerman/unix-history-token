@@ -482,6 +482,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|RQSTYPE_CTIO3
+case|:
+case|case
 name|RQSTYPE_CTIO2
 case|:
 name|isp_get_ctio2
@@ -4593,7 +4596,7 @@ name|ct
 operator|->
 name|ct_flags
 operator|&
-name|CT_SENDSTATUS
+name|CT2_SENDSTATUS
 operator|)
 operator|==
 literal|0
@@ -4679,7 +4682,7 @@ name|ct
 operator|->
 name|ct_flags
 operator|&
-name|CT_SENDSTATUS
+name|CT2_SENDSTATUS
 condition|)
 block|{
 comment|/* 			 * Sent status and command complete. 			 * 			 * We're now really done with this command, so we 			 * punt to the platform dependent layers because 			 * only there can we do the appropriate command 			 * complete thread synchronization. 			 */
