@@ -178,7 +178,7 @@ parameter_list|(
 name|rp
 parameter_list|)
 define|\
-value|(((rp)->rc_flag& RC_INETADDR) ? AF_INET : AF_ISO)
+value|(((rp)->rc_flag& RC_NAM) ? (rp)->rc_nam->sa_family : AF_INET)
 end_define
 
 begin_comment
@@ -933,9 +933,8 @@ operator|.
 name|s_addr
 expr_stmt|;
 break|break;
-case|case
-name|AF_ISO
-case|:
+comment|/*	case AF_INET6:	*/
+comment|/*	case AF_ISO:	*/
 default|default:
 name|rp
 operator|->

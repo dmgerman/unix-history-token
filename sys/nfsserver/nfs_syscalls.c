@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -154,6 +160,29 @@ include|#
 directive|include
 file|<netinet/tcp.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -404,7 +433,7 @@ comment|/*  * NFS server system calls  */
 end_comment
 
 begin_comment
-comment|/*  * Nfs server psuedo system call for the nfsd's  * Based on the flag value it either:  * - adds a socket to the selection list  * - remains in the kernel as an nfsd  * - remains in the kernel as an nfsiod  */
+comment|/*  * Nfs server psuedo system call for the nfsd's  * Based on the flag value it either:  * - adds a socket to the selection list  * - remains in the kernel as an nfsd  * - remains in the kernel as an nfsiod  * For INET6 we suppose that nfsd provides only IN6P_BINDV6ONLY sockets  * and that mountd provides  *  - sockaddr with no IPv4-mapped addresses  *  - mask for both INET and INET6 families if there is IPv4-mapped overlap  */
 end_comment
 
 begin_ifndef
@@ -956,16 +985,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_domain
-operator|->
-name|dom_family
-operator|==
-name|AF_INET
-operator|&&
 name|so
 operator|->
 name|so_proto
@@ -1799,6 +1818,7 @@ operator|*
 operator|)
 name|nam
 expr_stmt|;
+comment|/* 			 * INET/INET6 - same code: 			 *    sin_port and sin6_port are at same offset 			 */
 name|port
 operator|=
 name|ntohs
@@ -1821,6 +1841,34 @@ operator|!=
 name|NFSPROC_NULL
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+comment|/* do not use ip6_sprintf: the nfs module should work without INET6 */
+name|char
+name|b6
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|ip6_sprintf
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|(sprintf(b6, "%x:%x:%x:%x:%x:%x:%x:%x", \ 		  (a)->s6_addr16[0], (a)->s6_addr16[1], \ 		  (a)->s6_addr16[2], (a)->s6_addr16[3], \ 		  (a)->s6_addr16[4], (a)->s6_addr16[5], \ 		  (a)->s6_addr16[6], (a)->s6_addr16[7]), \ 	  b6)
+endif|#
+directive|endif
 name|nd
 operator|->
 name|nd_procnum
@@ -1845,6 +1893,31 @@ name|printf
 argument_list|(
 literal|"NFS request from unprivileged port (%s:%d)\n"
 argument_list|,
+ifdef|#
+directive|ifdef
+name|INET6
+name|sin
+operator|->
+name|sin_family
+operator|==
+name|AF_INET6
+condition|?
+name|ip6_sprintf
+argument_list|(
+operator|&
+name|satosin6
+argument_list|(
+name|sin
+argument_list|)
+operator|->
+name|sin6_addr
+argument_list|)
+else|:
+undef|#
+directive|undef
+name|ip6_sprintf
+endif|#
+directive|endif
 name|inet_ntoa
 argument_list|(
 name|sin

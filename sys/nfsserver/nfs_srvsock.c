@@ -466,6 +466,14 @@ operator|=
 name|mreq
 expr_stmt|;
 comment|/* 	 * If this is a big reply, use a cluster else 	 * try and leave leading space for the lower level headers. 	 */
+name|mreq
+operator|->
+name|m_len
+operator|=
+literal|6
+operator|*
+name|NFSX_UNSIGNED
+expr_stmt|;
 name|siz
 operator|+=
 name|RPC_REPLYSIZ
@@ -494,7 +502,15 @@ name|mreq
 operator|->
 name|m_data
 operator|+=
+name|min
+argument_list|(
 name|max_hdr
+argument_list|,
+name|M_TRAILINGSPACE
+argument_list|(
+name|mreq
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|tl
 operator|=
@@ -505,14 +521,6 @@ argument_list|,
 name|u_int32_t
 operator|*
 argument_list|)
-expr_stmt|;
-name|mreq
-operator|->
-name|m_len
-operator|=
-literal|6
-operator|*
-name|NFSX_UNSIGNED
 expr_stmt|;
 name|bpos
 operator|=

@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|LOCKD_MSG_VERSION
-value|1
+value|2
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ name|lm_getlk
 decl_stmt|;
 comment|/* is this a F_GETLK request */
 name|struct
-name|sockaddr
+name|sockaddr_storage
 name|lm_addr
 decl_stmt|;
 comment|/* The address. */
