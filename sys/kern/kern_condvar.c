@@ -855,7 +855,6 @@ expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
-comment|/* proc_lock(p); */
 if|if
 condition|(
 name|sig
@@ -876,6 +875,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
@@ -898,8 +902,12 @@ name|rval
 operator|=
 name|ERESTART
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* proc_unlock(p); */
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -1393,7 +1401,6 @@ expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
-comment|/* proc_lock(p); */
 if|if
 condition|(
 name|sig
@@ -1414,6 +1421,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
@@ -1436,8 +1448,12 @@ name|rval
 operator|=
 name|ERESTART
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* proc_unlock(p); */
 ifdef|#
 directive|ifdef
 name|KTRACE
