@@ -40,14 +40,14 @@ begin_define
 define|#
 directive|define
 name|SEL_SEC
-value|0
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|SEL_USEC
-value|100000
+value|0
 end_define
 
 begin_endif
