@@ -19338,7 +19338,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/*  	if (auio.uio_resid != cnt&& (error == ERESTART || 	    error == EINTR || error == EWOULDBLOCK)) 		error = 0; 	*/
 name|cnt
 operator|-=
 name|auio
@@ -19737,7 +19736,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/*  	if (auio.uio_resid != cnt&& (error == ERESTART || 	    error == EINTR || error == EWOULDBLOCK)) 		error = 0; 	*/
 name|cnt
 operator|-=
 name|auio
