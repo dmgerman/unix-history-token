@@ -2325,6 +2325,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|__isthreaded
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -2338,11 +2345,6 @@ name|_fp
 parameter_list|)
 function|\
 block|{					\
-specifier|extern
-name|int
-name|__isthreaded
-decl_stmt|;
-block|\
 name|int
 name|_ret
 decl_stmt|;
@@ -2401,11 +2403,6 @@ name|_fp
 parameter_list|)
 function|\
 block|{					\
-specifier|extern
-name|int
-name|__isthreaded
-decl_stmt|;
-block|\
 name|int
 name|_ret
 decl_stmt|;
