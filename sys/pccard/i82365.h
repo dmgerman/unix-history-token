@@ -65,6 +65,10 @@ name|PCIC_CL6729
 value|5
 end_define
 
+begin_comment
+comment|/* Cirrus logic 6729 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -72,12 +76,20 @@ name|PCIC_VG468
 value|6
 end_define
 
+begin_comment
+comment|/* Vadem 468 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PCIC_VG469
 value|7
 end_define
+
+begin_comment
+comment|/* Vadem 469 */
+end_comment
 
 begin_define
 define|#
@@ -101,12 +113,6 @@ begin_comment
 comment|/* IBM KING PCMCIA Controller */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -114,10 +120,20 @@ name|PCIC_PC98
 value|10
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* NEC PC98 PCMCIA Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_TI1130
+value|11
+end_define
+
+begin_comment
+comment|/* TI PCI1130 CardBus */
+end_comment
 
 begin_comment
 comment|/*  *	Address of the controllers. Each controller can manage  *	two PCMCIA slots. Up to 8 slots are supported in total.  *	The PCIC controller is accessed via an index port and a  *	data port. The index port has the 8 bit address of the  *	register accessed via the data port. How I long for  *	real memory mapped I/O!  *	The top two bits of the index address are used to  *	identify the port number, and the lower 6 bits  *	select one of the 64 possible data registers.  */
@@ -138,18 +154,18 @@ begin_define
 define|#
 directive|define
 name|PCIC_DATA_0
-value|0x3E1
+value|(PCIC_INDEX_0 + 1)
 end_define
 
 begin_comment
-comment|/* data register, chips 0 and 1 */
+comment|/* data reg, chips 0 and 1 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCIC_INDEX_1
-value|0x3E2
+value|(PCIC_INDEX_0 + 2)
 end_define
 
 begin_comment
@@ -160,11 +176,11 @@ begin_define
 define|#
 directive|define
 name|PCIC_DATA_1
-value|0x3E3
+value|(PCIC_INDEX_1 + 1)
 end_define
 
 begin_comment
-comment|/* data register, chips 2 and 3 */
+comment|/* data reg, chips 2 and 3 */
 end_comment
 
 begin_comment
@@ -306,12 +322,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_MISC1
+value|0x16
+end_define
+
+begin_comment
+comment|/* PD672x: Misc control register 1 per slot */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_GLO_CTRL
 value|0x1e
 end_define
 
 begin_comment
 comment|/* Global Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MISC2
+value|0x1e
+end_define
+
+begin_comment
+comment|/* PD672x: Misc control register 2 per chip */
 end_comment
 
 begin_define
@@ -969,6 +1007,21 @@ comment|/* s/w card detect interrupt */
 end_comment
 
 begin_comment
+comment|/* For Misc. Control Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_SPKR_EN
+value|0x10
+end_define
+
+begin_comment
+comment|/* Cirrus PD672x: speaker enable */
+end_comment
+
+begin_comment
 comment|/* For Global Control register (PCIC_GLO_CTRL) */
 end_comment
 
@@ -1022,6 +1075,21 @@ directive|define
 name|PCIC_IRQ1_LEVEL
 value|0x10
 end_define
+
+begin_comment
+comment|/* For Misc. Control Register 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_LPDM_EN
+value|0x02
+end_define
+
+begin_comment
+comment|/* Cirrus PD672x: low power dynamic mode */
+end_comment
 
 begin_comment
 comment|/*  *	Mask of allowable interrupts.  *	Ints are 3,4,5,7,9,10,11,12,14,15  */
