@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.9.1.1 %G%"
+literal|"@(#)tmps.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -435,19 +435,6 @@ operator|=
 name|offset
 expr_stmt|;
 block|}
-name|nlp
-operator|=
-name|defnl
-argument_list|(
-literal|0
-argument_list|,
-name|VAR
-argument_list|,
-name|type
-argument_list|,
-name|offset
-argument_list|)
-expr_stmt|;
 name|nlp
 operator|->
 name|extra_flags
