@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.10 1998/05/28 09:29:48 phk Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.11 1998/06/21 18:00:34 dt Exp $  */
 end_comment
 
 begin_include
@@ -2682,8 +2682,10 @@ comment|/* This does not produce the correct results */
 block|cputime = PP(pp, p_uticks) + PP(pp, p_sticks) + PP(pp, p_iticks);
 endif|#
 directive|endif
+comment|/* This does not count interrupts */
 name|cputime
 operator|=
+operator|(
 name|PP
 argument_list|(
 name|pp
@@ -2691,9 +2693,13 @@ argument_list|,
 name|p_runtime
 argument_list|)
 operator|/
-literal|1000000
+literal|1000
+operator|+
+literal|500
+operator|)
+operator|/
+literal|1000
 expr_stmt|;
-comment|/* This does not count interrupts */
 comment|/* calculate the base for cpu percentages */
 name|pct
 operator|=
