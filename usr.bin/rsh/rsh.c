@@ -2334,7 +2334,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-46] [-nd%s]%s[-l login] [-t timeout] host [command]\n"
+literal|"usage: rsh [-46] [-ndK%s]%s[-l login] [-t timeout] host [command]\n"
 argument_list|,
 ifdef|#
 directive|ifdef
