@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sendmail.h"
 end_include
 
@@ -65,6 +59,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|DBM
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|DBM is no longer supported -- use NDBM instead.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|NEWDB
 end_ifdef
 
@@ -85,22 +96,11 @@ directive|ifdef
 name|NDBM
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DBM
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DBM
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<ndbm.h>
+end_include
 
 begin_endif
 endif|#
@@ -125,7 +125,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.38 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.39 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DBM
+name|NDBM
 end_ifdef
 
 begin_decl_stmt
@@ -146,7 +146,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.38 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.39 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.38 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.39 (Berkeley) %G% (without NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +198,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DBM
+name|NDBM
 end_ifdef
 
 begin_ifndef
@@ -246,20 +246,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DBM
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEWDB
-end_ifndef
-
 begin_typedef
 typedef|typedef
+union|union
+block|{
+ifdef|#
+directive|ifdef
+name|NDBM
+name|datum
+name|dbm
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NEWDB
+name|DBT
+name|dbt
+decl_stmt|;
+endif|#
+directive|endif
 struct|struct
 block|{
 name|char
@@ -270,31 +276,12 @@ name|int
 name|size
 decl_stmt|;
 block|}
-name|DBT
+name|xx
+struct|;
+block|}
+name|DBdatum
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|DBT
-name|fetch
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DBM */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -307,6 +294,25 @@ specifier|static
 name|DB
 modifier|*
 name|AliasDBptr
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NDBM
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|DBM
+modifier|*
+name|AliasDBMptr
 decl_stmt|;
 end_decl_stmt
 
@@ -521,9 +527,9 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|DBM
+name|NDBM
 argument_list|)
-name|DBT
+name|DBdatum
 name|rhs
 decl_stmt|,
 name|lhs
@@ -534,11 +540,15 @@ decl_stmt|;
 comment|/* create a key for fetch */
 name|lhs
 operator|.
+name|xx
+operator|.
 name|data
 operator|=
 name|name
 expr_stmt|;
 name|lhs
+operator|.
+name|xx
 operator|.
 name|size
 operator|=
@@ -569,9 +579,13 @@ name|AliasDBptr
 argument_list|,
 operator|&
 name|lhs
+operator|.
+name|dbt
 argument_list|,
 operator|&
 name|rhs
+operator|.
+name|dbt
 argument_list|,
 literal|0
 argument_list|)
@@ -586,53 +600,74 @@ return|return
 operator|(
 name|rhs
 operator|.
+name|dbt
+operator|.
 name|data
 operator|)
 return|;
 block|}
 ifdef|#
 directive|ifdef
-name|DBM
+name|NDBM
 else|else
 block|{
 name|rhs
+operator|.
+name|dbm
 operator|=
-name|fetch
+name|dbm_fetch
 argument_list|(
+name|AliasDBMptr
+argument_list|,
 name|lhs
+operator|.
+name|dbm
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|rhs
 operator|.
-name|data
+name|dbm
+operator|.
+name|dptr
 operator|)
 return|;
 block|}
 endif|#
 directive|endif
+comment|/* NDBM */
 else|#
 directive|else
+comment|/* not NEWDB */
 name|rhs
+operator|.
+name|dbm
 operator|=
-name|fetch
+name|dbm_fetch
 argument_list|(
+name|AliasDBMptr
+argument_list|,
 name|lhs
+operator|.
+name|dbm
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|rhs
 operator|.
-name|data
+name|dbm
+operator|.
+name|dptr
 operator|)
 return|;
 endif|#
 directive|endif
+comment|/* NEWDB */
 else|#
 directive|else
-comment|/* neither NEWDB nor DBM */
+comment|/* neither NEWDB nor NDBM */
 specifier|register
 name|STAB
 modifier|*
@@ -676,7 +711,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INITALIASES -- initialize for aliasing ** **	Very different depending on whether we are running DBM or not. ** **	Parameters: **		aliasfile -- location of aliases. **		init -- if set and if DBM, initialize the DBM files. ** **	Returns: **		none. ** **	Side Effects: **		initializes aliases: **		if DBM:  opens the database. **		if ~DBM: reads the aliases into the symbol table. */
+comment|/* **  INITALIASES -- initialize for aliasing ** **	Very different depending on whether we are running NDBM or not. ** **	Parameters: **		aliasfile -- location of aliases. **		init -- if set and if NDBM, initialize the NDBM files. ** **	Returns: **		none. ** **	Side Effects: **		initializes aliases: **		if NDBM:  opens the database. **		if ~NDBM: reads the aliases into the symbol table. */
 end_comment
 
 begin_define
@@ -724,7 +759,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DBM
+name|NDBM
 argument_list|)
 operator|||
 name|defined
@@ -820,7 +855,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DBM
+name|NDBM
 argument_list|)
 operator|||
 name|defined
@@ -881,10 +916,16 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DBM
-name|dbminit
+name|NDBM
+name|AliasDBMptr
+operator|=
+name|dbm_open
 argument_list|(
 name|aliasfile
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|DBMMODE
 argument_list|)
 expr_stmt|;
 else|#
@@ -906,9 +947,15 @@ directive|endif
 block|}
 else|#
 directive|else
-name|dbminit
+name|AliasDBMptr
+operator|=
+name|dbm_open
 argument_list|(
 name|aliasfile
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|DBMMODE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -960,6 +1007,22 @@ operator|->
 name|close
 argument_list|(
 name|AliasDBptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NDBM
+if|if
+condition|(
+name|AliasDBMptr
+operator|!=
+name|NULL
+condition|)
+name|dbm_close
+argument_list|(
+name|AliasDBMptr
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1017,9 +1080,15 @@ block|{
 ifdef|#
 directive|ifdef
 name|NDBM
-name|dbminit
+name|AliasDBMptr
+operator|=
+name|dbm_open
 argument_list|(
 name|aliasfile
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|DBMMODE
 argument_list|)
 expr_stmt|;
 else|#
@@ -1044,9 +1113,15 @@ directive|else
 ifdef|#
 directive|ifdef
 name|NDBM
-name|dbminit
+name|AliasDBMptr
+operator|=
+name|dbm_open
 argument_list|(
 name|aliasfile
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|DBMMODE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1060,7 +1135,7 @@ name|atcnt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	**  See if the DBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM. 	**	Note the unpalatable hack to see if the stat succeeded. 	*/
+comment|/* 	**  See if the NDBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM. 	**	Note the unpalatable hack to see if the stat succeeded. 	*/
 name|modtime
 operator|=
 name|stb
@@ -1225,7 +1300,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	**  If necessary, load the DBM file. 	**	If running without DBM, load the symbol table. 	*/
+comment|/* 	**  If necessary, load the NDBM file. 	**	If running without NDBM, load the symbol table. 	*/
 if|if
 condition|(
 name|init
@@ -1279,7 +1354,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* DBM */
+comment|/* NDBM */
 name|readaliases
 argument_list|(
 name|aliasfile
@@ -1291,7 +1366,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DBM */
+comment|/* NDBM */
 block|}
 end_block
 
@@ -1299,7 +1374,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		aliasfile -- the pathname of the alias file master. **		init -- if set, initialize the DBM stuff. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
+comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		aliasfile -- the pathname of the alias file master. **		init -- if set, initialize the NDBM stuff. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
 end_comment
 
 begin_expr_stmt
@@ -1392,6 +1467,15 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|NDBM
+name|DBM
+modifier|*
+name|dbmp
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|LOCKF
 name|struct
 name|flock
@@ -1450,7 +1534,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DBM
+name|NDBM
 argument_list|)
 operator|||
 name|defined
@@ -1592,7 +1676,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* DBM */
+comment|/* NDBM */
 comment|/* 	**  If initializing, create the new DBM files. 	*/
 if|if
 condition|(
@@ -1699,46 +1783,33 @@ endif|#
 directive|endif
 name|IF_MAKEDBMFILES
 block|{
-operator|(
-name|void
-operator|)
-name|strcpy
+name|dbmp
+operator|=
+name|dbm_open
 argument_list|(
-name|line
-argument_list|,
 name|aliasfile
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|line
 argument_list|,
-literal|".dir"
+name|O_RDWR
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
+argument_list|,
+name|DBMMODE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|close
-argument_list|(
-name|creat
-argument_list|(
-name|line
-argument_list|,
-name|DBMMODE
-argument_list|)
-argument_list|)
-operator|<
-literal|0
+name|dbmp
+operator|==
+name|NULL
 condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"cannot make %s"
+literal|"readaliases: cannot create %s.{dir,pag}"
 argument_list|,
-name|line
+name|aliasfile
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1753,65 +1824,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|line
-argument_list|,
-name|aliasfile
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|line
-argument_list|,
-literal|".pag"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|close
-argument_list|(
-name|creat
-argument_list|(
-name|line
-argument_list|,
-name|DBMMODE
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"cannot make %s"
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|oldsigint
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|dbminit
-argument_list|(
-name|aliasfile
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -2374,7 +2386,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DBM
+name|NDBM
 argument_list|)
 operator|||
 name|defined
@@ -2386,18 +2398,22 @@ condition|(
 name|init
 condition|)
 block|{
-name|DBT
+name|DBdatum
 name|key
 decl_stmt|,
 name|content
 decl_stmt|;
 name|key
 operator|.
+name|xx
+operator|.
 name|size
 operator|=
 name|lhssize
 expr_stmt|;
 name|key
+operator|.
+name|xx
 operator|.
 name|data
 operator|=
@@ -2407,11 +2423,15 @@ name|q_user
 expr_stmt|;
 name|content
 operator|.
+name|xx
+operator|.
 name|size
 operator|=
 name|rhssize
 expr_stmt|;
 name|content
+operator|.
+name|xx
 operator|.
 name|data
 operator|=
@@ -2430,9 +2450,13 @@ name|dbp
 argument_list|,
 operator|&
 name|key
+operator|.
+name|dbt
 argument_list|,
 operator|&
 name|content
+operator|.
+name|dbt
 argument_list|,
 literal|0
 argument_list|)
@@ -2454,20 +2478,41 @@ ifdef|#
 directive|ifdef
 name|IF_MAKEDBMFILES
 name|IF_MAKEDBMFILES
-name|store
-parameter_list|(
+if|if
+condition|(
+name|dbm_store
+argument_list|(
+name|dbmp
+argument_list|,
 name|key
-parameter_list|,
+operator|.
+name|dbm
+argument_list|,
 name|content
-parameter_list|)
-function_decl|;
+operator|.
+name|dbm
+argument_list|,
+name|DBM_REPLACE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"readaliases: dbm store (%s)"
+argument_list|,
+name|al
+operator|.
+name|q_user
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
 else|else
 endif|#
 directive|endif
-comment|/* DBM */
+comment|/* NDBM */
 block|{
 name|s
 operator|=
@@ -2517,7 +2562,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DBM
+name|NDBM
 argument_list|)
 operator|||
 name|defined
@@ -2530,16 +2575,20 @@ name|init
 condition|)
 block|{
 comment|/* add the distinquished alias "@" */
-name|DBT
+name|DBdatum
 name|key
 decl_stmt|;
 name|key
+operator|.
+name|xx
 operator|.
 name|size
 operator|=
 literal|2
 expr_stmt|;
 name|key
+operator|.
+name|xx
 operator|.
 name|data
 operator|=
@@ -2567,9 +2616,13 @@ name|dbp
 argument_list|,
 operator|&
 name|key
+operator|.
+name|dbt
 argument_list|,
 operator|&
 name|key
+operator|.
+name|dbt
 argument_list|,
 literal|0
 argument_list|)
@@ -2596,13 +2649,42 @@ ifdef|#
 directive|ifdef
 name|IF_MAKEDBMFILES
 name|IF_MAKEDBMFILES
-name|store
-parameter_list|(
+block|{
+if|if
+condition|(
+name|dbm_store
+argument_list|(
+name|dbmp
+argument_list|,
 name|key
-parameter_list|,
+operator|.
+name|dbm
+argument_list|,
 name|key
-parameter_list|)
-function_decl|;
+operator|.
+name|dbm
+argument_list|,
+name|DBM_REPLACE
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|dbm_error
+argument_list|(
+name|dbmp
+argument_list|)
+condition|)
+name|syserr
+argument_list|(
+literal|"readaliases: dbm close failure"
+argument_list|)
+expr_stmt|;
+name|dbm_close
+argument_list|(
+name|dbmp
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* restore the old signal */
@@ -2619,7 +2701,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DBM */
+comment|/* NDBM */
 comment|/* closing the alias file drops the lock */
 operator|(
 name|void
