@@ -723,7 +723,7 @@ name|strtok
 argument_list|(
 name|NULL
 argument_list|,
-literal|" \r\n"
+literal|"\r\n"
 argument_list|)
 expr_stmt|;
 if|if
