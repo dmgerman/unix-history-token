@@ -5340,6 +5340,7 @@ literal|0
 comment|/* DWARF will emit R_386_32 relocations in its 			     sections against symbols defined externally 			     in shared libraries.  We can't do anything 			     with them here.  */
 operator|||
 operator|(
+operator|(
 name|input_section
 operator|->
 name|flags
@@ -5348,6 +5349,17 @@ name|SEC_DEBUGGING
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_HASH_DEF_DYNAMIC
+operator|)
+operator|!=
+literal|0
+operator|)
 operator|)
 operator|)
 condition|)
@@ -5461,6 +5473,15 @@ operator|!
 name|info
 operator|->
 name|no_undefined
+operator|&&
+name|ELF_ST_VISIBILITY
+argument_list|(
+name|h
+operator|->
+name|other
+argument_list|)
+operator|==
+name|STV_DEFAULT
 condition|)
 name|relocation
 operator|=
@@ -5508,6 +5529,13 @@ operator|||
 name|info
 operator|->
 name|no_undefined
+operator|||
+name|ELF_ST_VISIBILITY
+argument_list|(
+name|h
+operator|->
+name|other
+argument_list|)
 operator|)
 argument_list|)
 operator|)
