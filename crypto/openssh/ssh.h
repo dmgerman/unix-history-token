@@ -1109,8 +1109,8 @@ begin_function_decl
 name|int
 name|ssh_connect
 parameter_list|(
+specifier|const
 name|char
-modifier|*
 modifier|*
 name|host
 parameter_list|,
