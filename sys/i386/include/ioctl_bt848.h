@@ -35,6 +35,20 @@ name|TUNERTYPE_WEUROPE
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|TUNERTYPE_MIN
+value|TUNERTYPE_NABCST
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNERTYPE_MAX
+value|TUNERTYPE_WEUROPE
+end_define
+
 begin_comment
 comment|/*  * constants for various tuner registers  */
 end_comment
@@ -333,6 +347,20 @@ name|BT848_SATVSTEPS
 value|512
 end_define
 
+begin_struct
+struct|struct
+name|eeProm
+block|{
+name|u_char
+name|bytes
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * XXX: this is a hack, should be in ioctl_meteor.h  * here to avoid touching that file for now...  */
 end_comment
@@ -545,6 +573,35 @@ end_define
 begin_comment
 comment|/* get U saturation */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_SCBARS
+value|_IOR('x', 43, int)
+end_define
+
+begin_comment
+comment|/* set colorbar */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_CCBARS
+value|_IOR('x', 44, int)
+end_define
+
+begin_comment
+comment|/* clear colorbar */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_EEPROM
+value|_IOR('x', 45, struct eeProm)
+end_define
 
 begin_comment
 comment|/*  * XXX: more bad magic,  *      we need to fix the METEORGINPUT to return something public  *      duplicate them here for now...  */
