@@ -1541,7 +1541,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object and object list.  *  *	The pagetables are not updated but will presumably fault the page  *	in if necessary, or if a kernel page the caller will at some point  *	enter the page into the kernel's pmap.  We are not allowed to block  *	here so we *can't* do this anyway.  *  *	The object and page must be locked, and must be splhigh.  *	This routine may not block.  */
+comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object and object list.  *  *	The pagetables are not updated but will presumably fault the page  *	in if necessary, or if a kernel page the caller will at some point  *	enter the page into the kernel's pmap.  We are not allowed to block  *	here so we *can't* do this anyway.  *  *	The object and page must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -1770,7 +1770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_remove:  *				NOTE: used by device pager as well -wfj  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list, but do not invalidate/terminate  *	the backing store.  *  *	The object and page must be locked, and at splhigh.  *	The underlying pmap entry (if any) is NOT removed here.  *	This routine may not block.  */
+comment|/*  *	vm_page_remove:  *				NOTE: used by device pager as well -wfj  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list, but do not invalidate/terminate  *	the backing store.  *  *	The object and page must be locked.  *	The underlying pmap entry (if any) is NOT removed here.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2026,7 +2026,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	The object must be locked.  *	This routine may not block.  *  *	Note: this routine will raise itself to splvm(), the caller need not.   *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  If the page is on the cache, we have to deactivate it  *	      or vm_page_dirty() will panic.  Dirty pages are not allowed  *	      on the cache.  */
+comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	The object must be locked.  *	This routine may not block.  *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  If the page is on the cache, we have to deactivate it  *	      or vm_page_dirty() will panic.  Dirty pages are not allowed  *	      on the cache.  */
 end_comment
 
 begin_function
@@ -2043,14 +2043,6 @@ name|vm_pindex_t
 name|new_pindex
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_remove
 argument_list|(
 name|m
@@ -2087,16 +2079,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_select_cache:  *  *	Find a page on the cache queue with color optimization.  As pages  *	might be found, but not applicable, they are deactivated.  This  *	keeps us from using potentially busy cached pages.  *  *	This routine must be called at splvm().  *	This routine may not block.  */
+comment|/*  *	vm_page_select_cache:  *  *	Find a page on the cache queue with color optimization.  As pages  *	might be found, but not applicable, they are deactivated.  This  *	keeps us from using potentially busy cached pages.  *  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2289,8 +2276,6 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|page_req
-decl_stmt|,
-name|s
 decl_stmt|;
 name|page_req
 operator|=
@@ -2369,11 +2354,6 @@ name|VM_ALLOC_SYSTEM
 expr_stmt|;
 block|}
 empty_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|loop
 label|:
 name|mtx_lock_spin
@@ -2479,11 +2459,6 @@ block|{
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2576,11 +2551,6 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -2606,7 +2576,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vm_page_alloc(): missing page on free queue\n"
+literal|"vm_page_alloc(): missing page on free queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2739,7 +2709,6 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * vm_page_insert() is safe prior to the splx().  Note also that 	 * inserting a page here does not insert it into the pmap (which 	 * could cause us to block allocating memory).  We cannot block  	 * anywhere. 	 */
 if|if
 condition|(
 operator|(
@@ -2775,11 +2744,6 @@ condition|)
 name|pagedaemon_wakeup
 argument_list|()
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|m
@@ -2799,14 +2763,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2878,11 +2834,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2897,14 +2848,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2944,11 +2887,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2964,9 +2902,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -2974,11 +2909,6 @@ name|vm_page_queue_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3072,16 +3002,11 @@ operator|=
 name|ACT_INIT
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_free_wakeup:  *  *	Helper routine for vm_page_free_toq() and vm_page_cache().  This  *	routine is called when a page has been added to the cache or free  *	queues.  *  *	This routine may not block.  *	This routine must be called at splvm()  */
+comment|/*  *	vm_page_free_wakeup:  *  *	Helper routine for vm_page_free_toq() and vm_page_cache().  This  *	routine is called when a page has been added to the cache or free  *	queues.  *  *	The page queues must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -3168,9 +3093,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|vpgqueues
 modifier|*
@@ -3190,11 +3112,6 @@ name|vm_page_queue_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
 expr_stmt|;
 name|cnt
 operator|.
@@ -3305,11 +3222,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|m
@@ -3360,7 +3272,7 @@ expr_stmt|;
 block|}
 name|panic
 argument_list|(
-literal|"vm_page_free: freeing wired page\n"
+literal|"vm_page_free: freeing wired page"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3564,11 +3476,6 @@ expr_stmt|;
 name|vm_page_free_wakeup
 argument_list|()
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3584,14 +3491,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3634,11 +3533,6 @@ argument_list|,
 name|PG_UNMANAGED
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3654,15 +3548,7 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 * Only bump the wire statistics if the page is not already wired, 	 * and only unqueue the page if it is on some queue (if it is unmanaged 	 * it is already off the queues). 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3737,11 +3623,6 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3760,14 +3641,6 @@ name|int
 name|activate
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3864,7 +3737,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"vm_page_unwire: invalid wire count: %d\n"
+literal|"vm_page_unwire: invalid wire count: %d"
 argument_list|,
 name|m
 operator|->
@@ -3872,11 +3745,6 @@ name|wire_count
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3897,9 +3765,6 @@ name|int
 name|athead
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3918,11 +3783,6 @@ operator|==
 name|PQ_INACTIVE
 condition|)
 return|return;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -4028,11 +3888,6 @@ name|v_inactive_count
 operator|++
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4260,9 +4115,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -4348,11 +4200,6 @@ name|pindex
 argument_list|)
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_pageq_remove_nowakeup
 argument_list|(
 name|m
@@ -4371,11 +4218,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_free_wakeup
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 end_function
