@@ -159,15 +159,19 @@ block|{
 struct|struct
 name|id_ts
 block|{
+comment|/* ICMP Timestamp */
 name|n_time
 name|its_otime
 decl_stmt|;
+comment|/* Originate */
 name|n_time
 name|its_rtime
 decl_stmt|;
+comment|/* Receive */
 name|n_time
 name|its_ttime
 decl_stmt|;
+comment|/* Transmit */
 block|}
 name|id_ts
 struct|;
