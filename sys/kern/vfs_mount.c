@@ -5385,16 +5385,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|VREF
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vput
 argument_list|(
 name|dvp
