@@ -941,7 +941,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|strncasecmp
+name|strcasecmp
 argument_list|(
 operator|*
 operator|(
@@ -951,8 +951,6 @@ literal|1
 operator|)
 argument_list|,
 literal|"return-rst"
-argument_list|,
-literal|10
 argument_list|)
 condition|)
 block|{
