@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.61 1998/08/23 20:16:34 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.62 1998/09/14 19:56:40 sos Exp $  */
 end_comment
 
 begin_comment
@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devicestat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -229,12 +235,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dkstat.h>
 end_include
 
 begin_include
@@ -712,16 +712,12 @@ name|wdparams
 name|dk_params
 decl_stmt|;
 comment|/* ESDI/IDE drive/controller parameters */
-name|int
-name|dk_dkunit
-decl_stmt|;
-comment|/* disk stats unit number */
 name|unsigned
 name|int
 name|dk_multi
 decl_stmt|;
 comment|/* multi transfers */
-name|u_int
+name|int
 name|dk_currentiosize
 decl_stmt|;
 comment|/* current io size */
@@ -741,6 +737,11 @@ modifier|*
 name|dk_dmacookie
 decl_stmt|;
 comment|/* handle for DMA services */
+name|struct
+name|devstat
+name|dk_stats
+decl_stmt|;
+comment|/* devstat entry */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2809,57 +2810,31 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|dk_ndrive
-operator|<
-name|DK_NDRIVE
-condition|)
-block|{
-name|sprintf
+comment|/* 			 * Export the drive to the devstat interface. 			 */
+name|devstat_add_entry
 argument_list|(
-name|dk_names
-index|[
-name|dk_ndrive
-index|]
+operator|&
+name|du
+operator|->
+name|dk_stats
 argument_list|,
-literal|"wd%d"
+literal|"wd"
 argument_list|,
 name|lunit
+argument_list|,
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_secsize
+argument_list|,
+name|DEVSTAT_NO_ORDERED_TAGS
+argument_list|,
+name|DEVSTAT_TYPE_DIRECT
+operator||
+name|DEVSTAT_TYPE_IF_IDE
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX we don't know the transfer rate of the 				 * drive.  Guess the maximum ISA rate of 				 * 4MB/sec.  `wpms' is words per _second_ 				 * according to iostat. 				 */
-name|dk_wpms
-index|[
-name|dk_ndrive
-index|]
-operator|=
-literal|4
-operator|*
-literal|1024
-operator|*
-literal|1024
-operator|/
-literal|2
-expr_stmt|;
-name|du
-operator|->
-name|dk_dkunit
-operator|=
-name|dk_ndrive
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|du
-operator|->
-name|dk_dkunit
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -3507,34 +3482,15 @@ name|dk_ctrlr
 argument_list|)
 expr_stmt|;
 comment|/* start controller */
-if|if
-condition|(
+comment|/* Tell devstat that we have started a transaction on this drive */
+name|devstat_start_transaction
+argument_list|(
+operator|&
 name|du
 operator|->
-name|dk_dkunit
-operator|>=
-literal|0
-condition|)
-block|{
-comment|/* 		 * XXX perhaps we should only count successful transfers. 		 */
-name|dk_xfer
-index|[
-name|du
-operator|->
-name|dk_dkunit
-index|]
-operator|++
+name|dk_stats
+argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX we can't count seeks correctly but we can do better 		 * than this.  E.g., assume that the geometry is correct 		 * and count 1 seek if the starting cylinder of this i/o 		 * differs from the starting cylinder of the previous i/o, 		 * or count 1 seek if the starting bn of this i/o doesn't 		 * immediately follow the ending bn of the previos i/o. 		 */
-name|dk_seek
-index|[
-name|du
-operator|->
-name|dk_dkunit
-index|]
-operator|++
-expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -4126,11 +4082,7 @@ argument|) { 				wdtest =
 literal|100
 argument|; 				printf(
 literal|"dummy wdunwedge\n"
-argument|); 				wdunwedge(du); 			} 		} 		if(du->dk_dkunit>=
-literal|0
-argument|) { 			dk_busy |=
-literal|1
-argument|<< du->dk_dkunit; 		}  		if ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) { 			wddma[du->dk_interface].wdd_dmaprep(du->dk_dmacookie, 					   (void *)((int)bp->b_data +  						    du->dk_skip * DEV_BSIZE), 					   du->dk_bc, 					   bp->b_flags& B_READ); 		} 		while (wdcommand(du, cylin, head, sector, count1, command) 		       !=
+argument|); 				wdunwedge(du); 			} 		}  		if ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) { 			wddma[du->dk_interface].wdd_dmaprep(du->dk_dmacookie, 					   (void *)((int)bp->b_data +  						    du->dk_skip * DEV_BSIZE), 					   du->dk_bc, 					   bp->b_flags& B_READ); 		} 		while (wdcommand(du, cylin, head, sector, count1, command) 		       !=
 literal|0
 argument|) { 			wderror(bp, du,
 literal|"wdstart: timeout waiting to give command"
@@ -4173,13 +4125,7 @@ argument|);
 comment|/* 		 * XXX what do we do now?  If we've just issued the command, 		 * then we can treat this failure the same as a command 		 * failure.  But if we are continuing a multi-sector write, 		 * the command was issued ages ago, so we can't simply 		 * restart it. 		 * 		 * XXX we waste a lot of time unnecessarily translating block 		 * numbers to cylin/head/sector for continued i/o's. 		 */
 argument|}  	count =
 literal|1
-argument|; 	if( du->dk_flags& DKFL_MULTI) { 		count = howmany(du->dk_bc, DEV_BSIZE); 		if( count> du->dk_multi) 			count = du->dk_multi; 		if( du->dk_currentiosize> count) 			du->dk_currentiosize = count; 	} 	if (!old_epson_note) { 		if (du->dk_flags& DKFL_32BIT) 			outsl(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(long)); 		else 			outsw(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(short)); 		} 	else 		epson_outsw(du->dk_port + wd_data, 		      (void *)((int)bp->b_data + du->dk_skip * DEV_BSIZE), 		      (count * DEV_BSIZE) / sizeof(short)); 		 	du->dk_bc -= DEV_BSIZE * count; 	if (du->dk_dkunit>=
-literal|0
-argument|) {
-comment|/* 		 * `wd's are blocks of 32 16-bit `word's according to 		 * iostat.  dk_wds[] is the one disk i/o statistic that 		 * we can record correctly. 		 * XXX perhaps we shouldn't record words for failed 		 * transfers. 		 */
-argument|dk_wds[du->dk_dkunit] += (count * DEV_BSIZE)>>
-literal|6
-argument|; 	} }
+argument|; 	if( du->dk_flags& DKFL_MULTI) { 		count = howmany(du->dk_bc, DEV_BSIZE); 		if( count> du->dk_multi) 			count = du->dk_multi; 		if( du->dk_currentiosize> count) 			du->dk_currentiosize = count; 	} 	if (!old_epson_note) { 		if (du->dk_flags& DKFL_32BIT) 			outsl(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(long)); 		else 			outsw(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(short)); 		} 	else 		epson_outsw(du->dk_port + wd_data, 		      (void *)((int)bp->b_data + du->dk_skip * DEV_BSIZE), 		      (count * DEV_BSIZE) / sizeof(short)); 		 	du->dk_bc -= DEV_BSIZE * count; }
 comment|/* Interrupt routine for the controller.  Acknowledge the interrupt, check for  * errors on the current operation, mark it done if necessary, and start  * the next request.  Also check for a partially done transfer, and  * continue with the next chunk if so.  */
 argument|void wdintr(int unit) { 	register struct	disk *du; 	register struct buf *bp; 	int dmastat =
 literal|0
@@ -4326,19 +4272,11 @@ argument|if( du->dk_flags& DKFL_32BIT) 			insl(du->dk_port + wd_data, 			     (v
 comment|/* XXX for obsolete fractional sector reads. */
 argument|while (chk< multisize) { 			insw(du->dk_port + wd_data,&dummy,
 literal|1
-argument|); 			chk += sizeof(short); 		}  		if (du->dk_dkunit>=
-literal|0
-argument|) 			dk_wds[du->dk_dkunit] += chk>>
-literal|6
-argument|; 	}
+argument|); 			chk += sizeof(short); 		}  	}
 comment|/* final cleanup on DMA */
 argument|if (((bp->b_flags& B_ERROR) ==
 literal|0
-argument|)&& ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		int iosize;  		iosize = du->dk_currentiosize * DEV_BSIZE;  		du->dk_bc -= iosize;  		if (du->dk_dkunit>=
-literal|0
-argument|) 			dk_wds[du->dk_dkunit] += iosize>>
-literal|6
-argument|; 	}  outt: 	if (wdtab[unit].b_active) { 		if ((bp->b_flags& B_ERROR) ==
+argument|)&& ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		int iosize;  		iosize = du->dk_currentiosize * DEV_BSIZE;  		du->dk_bc -= iosize;  	}  outt: 	if (wdtab[unit].b_active) { 		if ((bp->b_flags& B_ERROR) ==
 literal|0
 argument|) { 			du->dk_skip += du->dk_currentiosize;
 comment|/* add to successful sectors */
@@ -4376,11 +4314,9 @@ argument|; 		bp->b_resid = bp->b_bcount - du->dk_skip * DEV_BSIZE; 		wdutab[du->
 literal|0
 argument|; 		du->dk_skip =
 literal|0
-argument|; 		biodone(bp); 	}  	if(du->dk_dkunit>=
-literal|0
-argument|) { 		dk_busy&= ~(
-literal|1
-argument|<< du->dk_dkunit); 	}
+argument|;
+comment|/* Update device stats */
+argument|devstat_end_transaction(&du->dk_stats, 					bp->b_bcount - bp->b_resid, 					DEVSTAT_TAG_NONE, 					(bp->b_flags& B_READ) ? DEVSTAT_READ : DEVSTAT_WRITE);  		biodone(bp); 	}
 comment|/* controller idle */
 argument|wdtab[unit].b_active =
 literal|0
