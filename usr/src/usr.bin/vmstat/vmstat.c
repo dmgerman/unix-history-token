@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.23 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
 end_include
 
 begin_include
@@ -5015,7 +5021,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<vba/vbavar.h>
+file|<tahoe/vba/vbavar.h>
 end_include
 
 begin_comment
@@ -5234,7 +5240,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<hpdev/device.h>
+file|<hp300/dev/device.h>
 end_include
 
 begin_macro
@@ -5253,6 +5259,13 @@ specifier|register
 name|u_long
 name|hp
 decl_stmt|;
+specifier|static
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 name|struct
 name|hp_device
 name|hdev
@@ -5261,11 +5274,10 @@ name|struct
 name|driver
 name|hdrv
 decl_stmt|;
-specifier|static
 name|char
-name|buf
+name|name
 index|[
-name|BUFSIZ
+literal|10
 index|]
 decl_stmt|;
 name|hp
