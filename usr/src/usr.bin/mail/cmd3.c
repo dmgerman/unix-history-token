@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.19 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,20 +70,6 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
-argument_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|sigcont
-function_decl|)
-parameter_list|()
-init|=
-name|signal
-argument_list|(
-name|SIGCONT
-argument_list|,
-name|SIG_DFL
 argument_list|)
 function_decl|;
 name|char
@@ -167,16 +153,6 @@ argument_list|,
 name|sigint
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGCONT
-argument_list|,
-name|sigcont
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"!\n"
@@ -226,20 +202,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|sigcont
-function_decl|)
-parameter_list|()
-init|=
-name|signal
-argument_list|(
-name|SIGCONT
-argument_list|,
-name|SIG_DFL
-argument_list|)
-function_decl|;
 name|char
 modifier|*
 name|shell
@@ -287,16 +249,6 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|sigint
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGCONT
-argument_list|,
-name|sigcont
 argument_list|)
 expr_stmt|;
 name|putchar

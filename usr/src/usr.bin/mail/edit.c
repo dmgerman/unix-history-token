@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.10 (Berkeley) %G%"
+literal|"@(#)edit.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,20 +134,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
-name|sigcont
-function_decl|)
-parameter_list|()
-init|=
-name|signal
-argument_list|(
-name|SIGCONT
-argument_list|,
-name|SIG_DFL
-argument_list|)
-function_decl|;
 specifier|register
 name|int
 name|c
@@ -464,16 +450,6 @@ name|sigint
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGCONT
-argument_list|,
-name|sigcont
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
