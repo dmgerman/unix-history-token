@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $Id: libdisk.h,v 1.21 1996/03/24 18:55:39 joerg Exp $ * */
+comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $Id: libdisk.h,v 1.22 1996/04/29 06:45:33 jkh Exp $ * */
 end_comment
 
 begin_define
@@ -55,12 +55,6 @@ define|#
 directive|define
 name|DISK_ON_TRACK
 value|1
-if|#
-directive|if
-literal|0
-block|u_long		real_cyl; 	u_long		real_hd; 	u_long		real_sect;
-endif|#
-directive|endif
 name|u_long
 name|bios_cyl
 decl_stmt|;
@@ -292,22 +286,6 @@ begin_comment
 comment|/* Print the content of the tree to stdout  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|struct disk * Set_Phys_Geom(struct disk *disk, u_long cyl, u_long heads, u_long sects);
-comment|/* Use a different physical geometry.  Makes sense for ST506 disks only.  * The tree returned is read from the disk, using this geometry.  */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|Set_Bios_Geom
@@ -331,6 +309,22 @@ end_function_decl
 
 begin_comment
 comment|/* Set the geometry the bios uses.  */
+end_comment
+
+begin_function_decl
+name|void
+name|Sanitize_Bios_Geom
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|disk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set the bios geometry to something sane  */
 end_comment
 
 begin_function_decl
@@ -942,7 +936,7 @@ value|printf
 end_define
 
 begin_comment
-comment|/* TODO  *  * Need a error string mechanism from the functions instead of warn()  *  * Make sure only FreeBSD start at offset==0  *  * Collapse must align.  *  * Make Write_Disk(struct disk*)  *  * Consider booting from OnTrack'ed disks.  *  * Get Bios-geom, ST506& OnTrack from driver (or otherwise)  *  * Make Create_DWIM().  *  * Make Is_Unchanged(struct disk *d1, struct chunk *c1)  *  * don't rename slices unless we have to  *  *Sample output from tst01:  *  * Debug_Disk(wd0)  flags=0  real_geom=0/0/0  bios_geom=0/0/0  *>>        0x3d040          0    1411200    1411199 wd0      0 whole    0 0  *>>>>      0x3d080          0     960120     960119 wd0s1    3 freebsd  0 8  *>>>>>>    0x3d100          0      40960      40959 wd0s1a   5 part     0 0  *>>>>>>    0x3d180      40960     131072     172031 wd0s1b   5 part     0 0  *>>>>>>    0x3d1c0     172032     409600     581631 wd0s1e   5 part     0 0  *>>>>>>    0x3d200     581632     378488     960119 wd0s1f   5 part     0 0  *>>>>      0x3d140     960120       5670     965789 wd0s2    4 extended 0 8  *>>>>>>    0x3d2c0     960120         63     960182 -        6 unused   0 0  *>>>>>>    0x3d0c0     960183       5607     965789 wd0s5    2 fat      0 8  *>>>>      0x3d280     965790       1890     967679 wd0s3    1 foo      -2 8  *>>>>      0x3d300     967680     443520    1411199 wd0s4    3 freebsd  0 8  *>>>>>>    0x3d340     967680     443520    1411199 wd0s4a   5 part     0 0  *  * ^            ^           ^          ^          ^     ^      ^ ^        ^ ^  * level    chunkptr      start      size        end  name    type  subtype flags  *  * Underlying data structure:  *  *	Legend:  *<struct chunk> --> part  *			|  *			v next  *  *<wd0> --><wd0s1> --><wd0s1a>  *		     |           |  *		     |           v  *		     |<wd0s1b>  *		     |           |  *		     |           v  *		     |<wd0s1e>  *		     |           |  *		     |           v  *		     |<wd0s1f>  *		     |  *		     v  *<wd0s2> --><unused>  *		     |           |  *		     |           v  *		     |<wd0s5>  *		     |  *		     v  *<wd0s3>  *		     |  *		     v  *<wd0s4> --><wd0s4a>  *  *  */
+comment|/* TODO  *  * Need a error string mechanism from the functions instead of warn()  *  * Make sure only FreeBSD start at offset==0  *  * Collapse must align.  *  * Make Write_Disk(struct disk*)  *  * Consider booting from OnTrack'ed disks.  *  * Get Bios-geom, ST506& OnTrack from driver (or otherwise)  *  * Make Create_DWIM().  *  * Make Is_Unchanged(struct disk *d1, struct chunk *c1)  *  * don't rename slices unless we have to  *  *Sample output from tst01:  *  * Debug_Disk(wd0)  flags=0  bios_geom=0/0/0  *>>        0x3d040          0    1411200    1411199 wd0      0 whole    0 0  *>>>>      0x3d080          0     960120     960119 wd0s1    3 freebsd  0 8  *>>>>>>    0x3d100          0      40960      40959 wd0s1a   5 part     0 0  *>>>>>>    0x3d180      40960     131072     172031 wd0s1b   5 part     0 0  *>>>>>>    0x3d1c0     172032     409600     581631 wd0s1e   5 part     0 0  *>>>>>>    0x3d200     581632     378488     960119 wd0s1f   5 part     0 0  *>>>>      0x3d140     960120       5670     965789 wd0s2    4 extended 0 8  *>>>>>>    0x3d2c0     960120         63     960182 -        6 unused   0 0  *>>>>>>    0x3d0c0     960183       5607     965789 wd0s5    2 fat      0 8  *>>>>      0x3d280     965790       1890     967679 wd0s3    1 foo      -2 8  *>>>>      0x3d300     967680     443520    1411199 wd0s4    3 freebsd  0 8  *>>>>>>    0x3d340     967680     443520    1411199 wd0s4a   5 part     0 0  *  * ^            ^           ^          ^          ^     ^      ^ ^        ^ ^  * level    chunkptr      start      size        end  name    type  subtype flags  *  * Underlying data structure:  *  *	Legend:  *<struct chunk> --> part  *			|  *			v next  *  *<wd0> --><wd0s1> --><wd0s1a>  *		     |           |  *		     |           v  *		     |<wd0s1b>  *		     |           |  *		     |           v  *		     |<wd0s1e>  *		     |           |  *		     |           v  *		     |<wd0s1f>  *		     |  *		     v  *<wd0s2> --><unused>  *		     |           |  *		     |           v  *		     |<wd0s5>  *		     |  *		     v  *<wd0s3>  *		     |  *		     v  *<wd0s4> --><wd0s4a>  *  *  */
 end_comment
 
 end_unit

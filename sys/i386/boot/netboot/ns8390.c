@@ -3683,6 +3683,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|cnt
+operator|=
+literal|200
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3697,6 +3701,9 @@ name|D8390_ISR_RDC
 operator|)
 operator|!=
 name|D8390_ISR_RDC
+operator|&&
+operator|--
+name|cnt
 condition|)
 empty_stmt|;
 block|}
