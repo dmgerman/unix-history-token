@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -1006,6 +1006,13 @@ operator|-
 literal|1
 operator|)
 return|;
+name|fixcrlf
+argument_list|(
+name|buf
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 comment|/* log the input in the transcript for future error returns */
 if|if
 condition|(
@@ -1014,18 +1021,22 @@ operator|&&
 operator|!
 name|HoldErrs
 condition|)
-name|fputs
+name|nmessage
 argument_list|(
-name|buf
+name|Arpa_Info
 argument_list|,
-name|stdout
+literal|"%s"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
-name|fputs
+name|fprintf
 argument_list|(
-name|buf
-argument_list|,
 name|Xscript
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 comment|/* if continuation is required, we can go on */
@@ -1144,9 +1155,11 @@ operator|!
 name|HoldErrs
 operator|)
 condition|)
-name|printf
+name|nmessage
 argument_list|(
-literal|">>> %s\n"
+name|Arpa_Info
+argument_list|,
+literal|">>> %s"
 argument_list|,
 name|buf
 argument_list|)
