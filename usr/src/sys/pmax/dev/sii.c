@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	8.1 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	8.2 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -1493,7 +1493,7 @@ name|dmaddrl
 operator|=
 operator|(
 operator|(
-name|unsigned
+name|u_short
 operator|)
 name|SII_BUF_ADDR
 operator|>>
@@ -1506,7 +1506,7 @@ name|dmaddrh
 operator|=
 operator|(
 operator|(
-name|unsigned
+name|u_short
 operator|)
 name|SII_BUF_ADDR
 operator|>>
@@ -6512,7 +6512,7 @@ name|dmaddrl
 operator|=
 operator|(
 operator|(
-name|unsigned
+name|u_short
 operator|)
 name|SII_BUF_ADDR
 operator|>>
@@ -6525,7 +6525,7 @@ name|dmaddrh
 operator|=
 operator|(
 operator|(
-name|unsigned
+name|u_short
 operator|)
 name|SII_BUF_ADDR
 operator|>>
@@ -6791,7 +6791,7 @@ name|dmaddrl
 operator|=
 operator|(
 operator|(
-name|unsigned
+name|u_short
 operator|)
 name|SII_BUF_ADDR
 operator|>>
@@ -6804,7 +6804,7 @@ name|dmaddrh
 operator|=
 operator|(
 operator|(
-name|unsigned
+name|u_short
 operator|)
 name|SII_BUF_ADDR
 operator|>>
