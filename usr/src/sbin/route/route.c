@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.23 (Berkeley) %G%"
+literal|"@(#)route.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,6 +338,12 @@ begin_decl_stmt
 name|struct
 name|rt_metrics
 name|rt_metrics
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|rtm_inits
 decl_stmt|;
 end_decl_stmt
 
@@ -2332,6 +2338,10 @@ name|rmx_rttvar
 argument_list|)
 expr_stmt|;
 block|}
+name|rtm_inits
+operator||=
+name|flag
+expr_stmt|;
 if|if
 condition|(
 name|lockrest
@@ -4842,6 +4852,14 @@ operator|.
 name|rtm_rmx
 operator|=
 name|rt_metrics
+expr_stmt|;
+name|m_rtmsg
+operator|.
+name|m_rtm
+operator|.
+name|rtm_inits
+operator|=
+name|rtm_inits
 expr_stmt|;
 define|#
 directive|define
