@@ -1748,6 +1748,14 @@ name|ic_newstate
 operator|=
 name|wi_newstate
 expr_stmt|;
+name|ic
+operator|->
+name|ic_fixed_rate
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Auto */
 comment|/* Find available channels */
 name|buflen
 operator|=
@@ -6647,13 +6655,29 @@ if|if
 condition|(
 name|rate
 operator|==
-literal|10
+literal|4
+operator|*
+literal|2
 condition|)
 name|rate
 operator|=
 literal|11
 expr_stmt|;
 comment|/* 5.5Mbps */
+elseif|else
+if|if
+condition|(
+name|rate
+operator|==
+literal|5
+operator|*
+literal|2
+condition|)
+name|rate
+operator|=
+literal|22
+expr_stmt|;
+comment|/* 11Mbps */
 block|}
 else|else
 block|{
@@ -11063,17 +11087,42 @@ block|{
 case|case
 name|WI_LUCENT
 case|:
-if|if
+switch|switch
 condition|(
 name|rate
-operator|==
-literal|0
 condition|)
+block|{
+case|case
+literal|0
+case|:
+comment|/* auto == 11mbps auto */
 name|rate
 operator|=
 literal|3
 expr_stmt|;
-comment|/* auto */
+break|break;
+comment|/* case 1, 2 map to 1, 2*/
+case|case
+literal|5
+case|:
+comment|/* 5.5Mbps -> 4 */
+name|rate
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+case|case
+literal|11
+case|:
+comment|/* 11mbps -> 5 */
+name|rate
+operator|=
+literal|5
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 break|break;
 default|default:
 comment|/* Choose a bit according to this table. 		 * 		 * bit | data rate 		 * ----+------------------- 		 * 0   | 1Mbps 		 * 1   | 2Mbps 		 * 2   | 5.5Mbps 		 * 3   | 11Mbps 		 */
