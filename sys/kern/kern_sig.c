@@ -240,7 +240,7 @@ operator|*
 operator|,
 name|uid_t
 operator|,
-name|int
+name|pid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5378,10 +5378,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
+name|uid_t
 name|uid
 decl_stmt|;
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 block|{
