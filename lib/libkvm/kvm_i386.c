@@ -567,58 +567,5 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Translate a user virtual address to a physical address.  */
-end_comment
-
-begin_function
-name|int
-name|_kvm_uvatop
-parameter_list|(
-name|kvm_t
-modifier|*
-name|kd
-parameter_list|,
-specifier|const
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|u_long
-name|va
-parameter_list|,
-name|u_long
-modifier|*
-name|pa
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ISALIVE
-argument_list|(
-name|kd
-argument_list|)
-condition|)
-block|{
-comment|/* Not done yet */
-block|}
-else|else
-block|{
-comment|/* Not done yet */
-block|}
-return|return
-operator|(
-call|(
-name|off_t
-call|)
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 
