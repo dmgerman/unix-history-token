@@ -1944,9 +1944,6 @@ name|snoop
 modifier|*
 name|snp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|dev
