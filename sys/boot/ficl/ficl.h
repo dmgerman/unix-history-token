@@ -86,7 +86,7 @@ comment|/* ** ANS Forth requires false to be zero, and true to be the ones ** co
 define|#
 directive|define
 name|FICL_TRUE
-value|(0xffffffffL)
+value|(~(0L))
 define|#
 directive|define
 name|FICL_FALSE
