@@ -2544,6 +2544,11 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|ata_start
 argument_list|(
 name|stp
@@ -2551,11 +2556,6 @@ operator|->
 name|device
 operator|->
 name|channel
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}

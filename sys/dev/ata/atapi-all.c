@@ -299,6 +299,15 @@ operator|->
 name|support_dma
 argument_list|)
 expr_stmt|;
+name|ATA_SLEEPLOCK_CH
+argument_list|(
+name|atadev
+operator|->
+name|channel
+argument_list|,
+name|ATA_CONTROL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|atapi_dma
@@ -428,6 +437,13 @@ literal|1
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|ATA_UNLOCK_CH
+argument_list|(
+name|atadev
+operator|->
+name|channel
 argument_list|)
 expr_stmt|;
 if|if
@@ -950,12 +966,6 @@ operator|=
 name|ATA_PIO
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-comment|/* append onto controller queue and try to start controller */
 ifdef|#
 directive|ifdef
 name|ATAPI_DEBUG
@@ -998,6 +1008,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* append onto controller queue and try to start controller */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1033,6 +1049,11 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|ata_start
 argument_list|(
 name|atadev
@@ -1045,16 +1066,9 @@ if|if
 condition|(
 name|callback
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 comment|/* wait for request to complete */
 name|tsleep
 argument_list|(
@@ -1068,11 +1082,6 @@ argument_list|,
 literal|"atprq"
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|error
@@ -3474,12 +3483,6 @@ name|request
 operator|->
 name|device
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
 name|atadev
 operator|->
 name|channel
@@ -3592,6 +3595,13 @@ operator|++
 operator|<
 name|ATAPI_MAX_RETRIES
 condition|)
+block|{
+name|int
+name|s
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3606,6 +3616,12 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* retries all used up, return error */
@@ -3629,11 +3645,6 @@ argument_list|(
 name|atadev
 operator|->
 name|channel
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}

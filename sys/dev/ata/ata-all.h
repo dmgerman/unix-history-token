@@ -1815,6 +1815,60 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* macros for locking a channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_LOCK_CH
+parameter_list|(
+name|ch
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|atomic_cmpset_int(&(ch)->active, ATA_IDLE, (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SLEEPLOCK_CH
+parameter_list|(
+name|ch
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|while (!atomic_cmpset_int(&(ch)->active, ATA_IDLE, (value)))\ 	    tsleep((caddr_t)&(ch), PRIBIO, "atalck", 1);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_FORCELOCK_CH
+parameter_list|(
+name|ch
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|(ch)->active = value;
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_UNLOCK_CH
+parameter_list|(
+name|ch
+parameter_list|)
+define|\
+value|(ch)->active = ATA_IDLE
+end_define
+
+begin_comment
 comment|/* macros to hide busspace uglyness */
 end_comment
 
