@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.9 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -479,7 +479,7 @@ name|mbstat
 operator|.
 name|m_clusters
 operator|*
-name|CLBYTES
+name|MCLBYTES
 expr_stmt|;
 name|totfree
 operator|=
@@ -487,7 +487,7 @@ name|mbstat
 operator|.
 name|m_clfree
 operator|*
-name|CLBYTES
+name|MCLBYTES
 expr_stmt|;
 name|printf
 argument_list|(
