@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Sandro Sigala, Brescia, Italy.  * Copyright (c) 1997 Chris Shenton  * Copyright (c) 1995 S ren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: daemon_saver.c,v 1.9 1998/08/06 09:14:20 yokota Exp $  */
+comment|/*-  * Copyright (c) 1997 Sandro Sigala, Brescia, Italy.  * Copyright (c) 1997 Chris Shenton  * Copyright (c) 1995 S ren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: daemon_saver.c,v 1.10 1998/09/15 18:16:38 sos Exp $  */
 end_comment
 
 begin_include
@@ -79,7 +79,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|((u_short*)(Crtat + (y)*cur_console->xsize + (x)))
+value|(window + (y)*cur_console->xsize + (x))
 end_define
 
 begin_define
@@ -116,6 +116,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|messagelen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_short
+modifier|*
+name|window
 decl_stmt|;
 end_decl_stmt
 
@@ -883,11 +891,46 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|ISTEXTSC
+argument_list|(
+name|scp
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
 name|scrn_blanked
 operator|==
 literal|0
 condition|)
 block|{
+name|scp
+operator|->
+name|status
+operator||=
+name|SAVER_RUNNING
+expr_stmt|;
+name|window
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+call|(
+modifier|*
+name|biosvidsw
+operator|.
+name|adapter
+call|)
+argument_list|(
+name|scp
+operator|->
+name|adp
+argument_list|)
+operator|->
+name|va_window
+expr_stmt|;
 comment|/* clear the screen and set the border color */
 name|fillw
 argument_list|(
@@ -906,7 +949,7 @@ index|[
 literal|0x20
 index|]
 argument_list|,
-name|Crtat
+name|window
 argument_list|,
 name|scp
 operator|->
@@ -1517,6 +1560,13 @@ name|scrn_blanked
 operator|=
 literal|0
 expr_stmt|;
+name|scp
+operator|->
+name|status
+operator|&=
+operator|~
+name|SAVER_RUNNING
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -1539,17 +1589,6 @@ block|{
 name|int
 name|err
 decl_stmt|;
-if|if
-condition|(
-name|cur_console
-operator|->
-name|mode
-operator|>=
-name|M_VESA_BASE
-condition|)
-return|return
-name|ENODEV
-return|;
 name|messagelen
 operator|=
 name|strlen
