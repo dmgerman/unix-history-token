@@ -958,7 +958,7 @@ specifier|static
 name|int
 name|pci_do_powerstate
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -991,7 +991,7 @@ argument_list|,
 operator|&
 name|pci_do_powerstate
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"Enable setting the power states of the PCI devices.  This means that we\n\ set devices into D0 before probe/attach, and D3 if they fail to attach.  It\n\ also means we set devices into D3 state before shutdown."
 argument_list|)
