@@ -1674,13 +1674,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Listen for Incoming ATM Calls  *   * Called by an endpoint service in order to indicate its willingness to  * accept certain incoming calls.  The types of calls which the endpoint  * is prepared to accept are specified in the Atm_attributes parameter.  *  * For each call which meets the criteria specified by the endpoint, the  * endpoint service will receive an incoming call notification via the  * endpoint's ep_incoming() function.  *  * To cancel the listening connection, the endpoint user should invoke   * atm_cm_release().  *  * Arguments:  *	epp	pointer to endpoint definition structure  *	token	endpoint's listen instance token  *	ap	pointer to listening connection attributes  *	copp	pointer to location to return allocated connection block  *  * Returns:  *	0	listening connection installed  *	errno	listen failed - reason indicated  *  */
+comment|/*  * Listen for Incoming ATM Calls  *   * Called by an endpoint service in order to indicate its willingness to  * accept certain incoming calls.  The types of calls which the endpoint  * is prepared to accept are specified in the Atm_attributes parameter.  *  * For each call which meets the criteria specified by the endpoint, the  * endpoint service will receive an incoming call notification via the  * endpoint's ep_incoming() function.  *  * To cancel the listening connection, the endpoint user should invoke   * atm_cm_release().  *  * Arguments:  *	so	optional socket pointer -- if present, will set listen state  *	epp	pointer to endpoint definition structure  *	token	endpoint's listen instance token  *	ap	pointer to listening connection attributes  *	copp	pointer to location to return allocated connection block  *  * Returns:  *	0	listening connection installed  *	errno	listen failed - reason indicated  *  */
 end_comment
 
 begin_function
 name|int
 name|atm_cm_listen
 parameter_list|(
+name|so
+parameter_list|,
 name|epp
 parameter_list|,
 name|token
@@ -1689,6 +1691,11 @@ name|ap
 parameter_list|,
 name|copp
 parameter_list|)
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
 name|Atm_endpoint
 modifier|*
 name|epp
@@ -2161,11 +2168,42 @@ operator|*
 name|ap
 expr_stmt|;
 comment|/* 	 * Now try to register the listening connection 	 */
+if|if
+condition|(
+name|so
+operator|!=
+name|NULL
+condition|)
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|!=
+name|NULL
+condition|)
+name|err
+operator|=
+name|solisten_proto_check
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+goto|goto
+name|donex
+goto|;
 if|if
 condition|(
 name|atm_cm_match
@@ -2206,6 +2244,17 @@ argument_list|,
 name|co_next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|!=
+name|NULL
+condition|)
+name|solisten_proto
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|donex
 label|:
 operator|(
@@ -2214,6 +2263,17 @@ operator|)
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|so
+operator|!=
+name|NULL
+condition|)
+name|SOCK_UNLOCK
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 name|done

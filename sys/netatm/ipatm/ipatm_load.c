@@ -1498,6 +1498,8 @@ name|err
 operator|=
 name|atm_cm_listen
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|ipatm_endpt
 argument_list|,
