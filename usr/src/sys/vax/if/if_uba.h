@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.h	4.4	81/12/09	*/
+comment|/*	if_uba.h	4.5	82/02/03	*/
 end_comment
 
 begin_comment
@@ -78,6 +78,10 @@ name|short
 name|ifu_xswapd
 decl_stmt|;
 comment|/* mask of clusters swapped */
+name|short
+name|ifu_flags
+decl_stmt|;
+comment|/* used during uballoc's */
 name|struct
 name|mbuf
 modifier|*

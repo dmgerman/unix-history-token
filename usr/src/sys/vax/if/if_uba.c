@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.c	4.8	81/12/23	*/
+comment|/*	if_uba.c	4.9	82/02/03	*/
 end_comment
 
 begin_include
@@ -344,7 +344,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Setup either a ifrw structure by allocating UNIBUS map registers,  * a buffered data path, and initializing the fields of the ifrw structure  * to minimize run-time overhead.  */
+comment|/*  * Setup either a ifrw structure by allocating UNIBUS map registers,  * possibly a buffered data path, and initializing the fields of  * the ifrw structure to minimize run-time overhead.  */
 end_comment
 
 begin_expr_stmt
@@ -410,9 +410,9 @@ name|ifu
 operator|->
 name|ifu_hlen
 argument_list|,
-name|UBA_NEED16
-operator||
-name|UBA_NEEDBDP
+name|ifu
+operator|->
+name|ifu_flags
 argument_list|)
 expr_stmt|;
 if|if
