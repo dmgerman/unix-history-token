@@ -217,7 +217,7 @@ expr|struct
 name|pollfd
 operator|*
 operator|,
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4319,13 +4319,11 @@ name|p
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|poll_args
 modifier|*
@@ -4365,7 +4363,8 @@ init|=
 literal|0
 decl_stmt|,
 name|timo
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|nfds
 decl_stmt|;
 name|size_t
@@ -4383,9 +4382,6 @@ expr_stmt|;
 comment|/* 	 * This is kinda bogus.  We have fd limits, but that is not 	 * really related to the size of the pollfd array.  Make sure 	 * we let the process use at least FD_SETSIZE entries and at 	 * least enough for the current limits.  We want to be reasonably 	 * safe, but not overly restrictive. 	 */
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
 name|nfds
 operator|>
 name|p
@@ -4397,9 +4393,6 @@ index|]
 operator|.
 name|rlim_cur
 operator|&&
-operator|(
-name|u_int
-operator|)
 name|nfds
 operator|>
 name|FD_SETSIZE
@@ -4880,7 +4873,7 @@ name|pollfd
 modifier|*
 name|fds
 decl_stmt|;
-name|int
+name|u_int
 name|nfd
 decl_stmt|;
 block|{
