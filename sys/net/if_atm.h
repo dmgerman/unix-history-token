@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|ATM_DEVICE_PROATM25
-value|10
+value|12
 end_define
 
 begin_comment
@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|ATM_DEVICE_PROATM155
-value|11
+value|13
 end_define
 
 begin_comment
