@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.2 %G%"
+literal|"@(#)ascode.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,17 +287,16 @@ return|return;
 block|}
 if|if
 condition|(
-operator|(
 name|exp
 operator|&
 name|ACCA
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|atm
 operator|==
 name|AREG
-operator|)
 condition|)
 block|{
 name|yyerror
@@ -308,6 +307,32 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|atm
+operator|==
+name|AIMM
+operator|)
+operator|&&
+operator|!
+operator|(
+name|at
+operator|&
+name|ASTAR
+operator|)
+condition|)
+block|{
+name|yyerror
+argument_list|(
+literal|"arg %d, addressing an immediate operand"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 if|if
 condition|(
@@ -1174,7 +1199,7 @@ break|break;
 case|case
 name|AINCR
 case|:
-comment|/* (%r) */
+comment|/* (%r)+ */
 name|ap
 operator|->
 name|a_areg1
