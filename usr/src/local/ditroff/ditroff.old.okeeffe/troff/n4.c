@@ -82,6 +82,10 @@ name|nform
 operator|=
 literal|0
 expr_stmt|;
+name|lgf
+operator|++
+expr_stmt|;
+comment|/* don't catch ligatures */
 if|if
 condition|(
 operator|(
@@ -119,6 +123,10 @@ name|ch
 operator|=
 name|ii
 expr_stmt|;
+name|lgf
+operator|--
+expr_stmt|;
+comment|/* ok, catch `em again */
 if|if
 condition|(
 name|falsef
