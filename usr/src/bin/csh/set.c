@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.11 (Berkeley) %G%"
+literal|"@(#)set.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3102,7 +3102,10 @@ name|set
 argument_list|(
 name|cp
 argument_list|,
+name|Strsave
+argument_list|(
 name|STRNULL
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
