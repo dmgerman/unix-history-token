@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.3 (Berkeley) %G%"
+literal|"@(#)main.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -896,6 +896,7 @@ name|usage
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -953,8 +954,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -2193,7 +2194,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"               [-ghimnrs] [-f address_family] [-M core] [-N system]\n"
+literal|"       %s [-ghimnrs] [-f address_family] [-M core] [-N system]\n"
+argument_list|,
+name|prog
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2203,7 +2206,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"               [-n] [-I interface] [-M core] [-N system] [-w wait]\n"
+literal|"       %s [-n] [-I interface] [-M core] [-N system] [-w wait]\n"
+argument_list|,
+name|prog
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2213,7 +2218,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"               [-M core] [-N system] [-p protocol]\n"
+literal|"       %s [-M core] [-N system] [-p protocol]\n"
+argument_list|,
+name|prog
 argument_list|)
 expr_stmt|;
 name|exit
