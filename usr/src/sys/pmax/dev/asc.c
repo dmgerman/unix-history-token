@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -114,173 +114,12 @@ end_include
 begin_define
 define|#
 directive|define
-name|ASC_OFFSET_53C94
-value|0x0
-end_define
-
-begin_comment
-comment|/* from module base */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_OFFSET_DMAR
-value|0x40000
-end_define
-
-begin_comment
-comment|/* DMA Address Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_OFFSET_RAM
-value|0x80000
-end_define
-
-begin_comment
-comment|/* SRAM Buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_OFFSET_ROM
-value|0xc0000
-end_define
-
-begin_comment
-comment|/* Diagnostic ROM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_RAM_SIZE
-value|0x20000
-end_define
-
-begin_comment
-comment|/* 128k (32k*32) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|readback
 parameter_list|(
 name|a
 parameter_list|)
 value|{ register int foo; foo = (a); }
 end_define
-
-begin_comment
-comment|/*  * DMA Address Register  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_DMAR_MASK
-value|0x1ffff
-end_define
-
-begin_comment
-comment|/* 17 bits, 128k */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_DMAR_WRITE
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* DMA direction bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_DMA_ADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned)(x)& ASC_DMAR_MASK)
-end_define
-
-begin_comment
-comment|/*  * Synch xfer parameters, and timing conversions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MIN_PERIOD
-value|50
-end_define
-
-begin_comment
-comment|/* in 4 nsecs units */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_MIN_PERIOD25
-value|5
-end_define
-
-begin_comment
-comment|/* in CLKS/BYTE, 1 CLK = 40nsecs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_MIN_PERIOD12
-value|3
-end_define
-
-begin_comment
-comment|/* in CLKS/BYTE, 1 CLK = 80nsecs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_MAX_PERIOD25
-value|35
-end_define
-
-begin_comment
-comment|/* in CLKS/BYTE, 1 CLK = 40nsecs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_MAX_PERIOD12
-value|18
-end_define
-
-begin_comment
-comment|/* in CLKS/BYTE, 1 CLK = 80nsecs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASC_MAX_OFFSET
-value|15
-end_define
-
-begin_comment
-comment|/* pure number */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1501,13 +1340,6 @@ begin_comment
 comment|/* true if try neg. synchronous offset */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ASC_NCMD
-value|7
-end_define
-
 begin_comment
 comment|/*  * State kept for each active SCSI host interface (53C94).  */
 end_comment
@@ -1709,11 +1541,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_long
-name|asc_iobuf
-index|[
-literal|33792
-index|]
+name|asc_iomem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|asic_base
 decl_stmt|;
 end_decl_stmt
 
@@ -1798,8 +1635,8 @@ name|s
 decl_stmt|,
 name|i
 decl_stmt|;
-name|u_int
-name|bufadr
+name|int
+name|bufsiz
 decl_stmt|;
 if|if
 condition|(
@@ -1873,6 +1710,9 @@ case|:
 case|case
 name|DS_MAXINE
 case|:
+case|case
+name|DS_3MAXPLUS
+case|:
 if|if
 condition|(
 name|unit
@@ -1880,33 +1720,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|bufadr
-operator|=
-name|MACH_PHYS_TO_UNCACHED
-argument_list|(
-name|MACH_CACHED_TO_PHYS
-argument_list|(
-name|asc_iobuf
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bufadr
-operator|=
-operator|(
-name|bufadr
-operator|+
-name|NBPG
-operator|-
-literal|1
-operator|)
-operator|&
-operator|~
-operator|(
-name|NBPG
-operator|-
-literal|1
-operator|)
-expr_stmt|;
 name|asc
 operator|->
 name|buff
@@ -1915,7 +1728,14 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|bufadr
+name|MACH_PHYS_TO_UNCACHED
+argument_list|(
+name|asc_iomem
+argument_list|)
+expr_stmt|;
+name|bufsiz
+operator|=
+literal|8192
 expr_stmt|;
 operator|*
 operator|(
@@ -1924,9 +1744,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_DMAPTR
 argument_list|(
-name|KMIN_REG_SCSI_DMAPTR
+name|asic_base
 argument_list|)
 operator|)
 operator|=
@@ -1940,9 +1760,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_DMANPTR
 argument_list|(
-name|KMIN_REG_SCSI_DMANPTR
+name|asic_base
 argument_list|)
 operator|)
 operator|=
@@ -1956,9 +1776,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_SCR
 argument_list|(
-name|KMIN_REG_SCSI_SCR
+name|asic_base
 argument_list|)
 operator|)
 operator|=
@@ -2016,6 +1836,10 @@ operator|+
 name|ASC_OFFSET_RAM
 operator|)
 expr_stmt|;
+name|bufsiz
+operator|=
+name|PER_TGT_DMA_SIZE
+expr_stmt|;
 name|asc
 operator|->
 name|dma_start
@@ -2038,6 +1862,9 @@ condition|)
 block|{
 case|case
 name|DS_3MAX
+case|:
+case|case
+name|DS_3MAXPLUS
 case|:
 name|asc
 operator|->
@@ -2228,10 +2055,6 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Statically partition the DMA buffer between targets. 	 * This way we will eventually be able to attach/detach 	 * drives on-fly.  And 18k/target is plenty for normal use. 	 */
-define|#
-directive|define
-name|PER_TGT_DMA_SIZE
-value|((ASC_RAM_SIZE/7)& ~(sizeof(int)-1))
 comment|/* 	 * Give each target its own DMA buffer region. 	 * We may want to try ping ponging buffers later. 	 */
 for|for
 control|(
@@ -2260,7 +2083,7 @@ name|asc
 operator|->
 name|buff
 operator|+
-name|PER_TGT_DMA_SIZE
+name|bufsiz
 operator|*
 name|i
 expr_stmt|;
@@ -2273,7 +2096,7 @@ index|]
 operator|.
 name|dmaBufSize
 operator|=
-name|PER_TGT_DMA_SIZE
+name|bufsiz
 expr_stmt|;
 block|}
 name|printf
@@ -2515,12 +2338,13 @@ name|myid
 operator||
 name|ASC_CNFG1_P_CHECK
 expr_stmt|;
+comment|/* include ASC_CNFG2_SCSI2 if you want to allow SCSI II commands */
 name|regs
 operator|->
 name|asc_cnfg2
 operator|=
-comment|/* ASC_CNFG2_RFB | */
-name|ASC_CNFG2_SCSI2
+comment|/* ASC_CNFG2_RFB | ASC_CNFG2_SCSI2 | */
+name|ASC_CNFG2_EPL
 expr_stmt|;
 name|regs
 operator|->
@@ -4234,9 +4058,43 @@ argument_list|)
 expr_stmt|;
 return|return;
 default|default:
-goto|goto
-name|abort
-goto|;
+comment|/* 			 * On rare occasions my RZ24 does a disconnect during 			 * data in phase and the following seems to keep it 			 * happy. 			 * XXX Should a scsi disk ever do this?? 			 */
+name|asc
+operator|->
+name|script
+operator|=
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_RESEL
+index|]
+expr_stmt|;
+name|asc
+operator|->
+name|state
+operator|=
+name|ASC_STATE_RESEL
+expr_stmt|;
+name|state
+operator|->
+name|flags
+operator||=
+name|DISCONN
+expr_stmt|;
+name|regs
+operator|->
+name|asc_cmd
+operator|=
+name|ASC_CMD_ENABLE_SEL
+expr_stmt|;
+name|readback
+argument_list|(
+name|regs
+operator|->
+name|asc_cmd
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 block|}
 comment|/* check for reselect */
@@ -8091,9 +7949,9 @@ specifier|volatile
 name|u_int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_CSR
 argument_list|(
-name|KMIN_REG_CSR
+name|asic_base
 argument_list|)
 decl_stmt|;
 name|u_int
@@ -8115,9 +7973,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_SCR
 argument_list|(
-name|KMIN_REG_SCSI_SCR
+name|asic_base
 argument_list|)
 operator|)
 operator|=
@@ -8175,9 +8033,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_DMAPTR
 argument_list|(
-name|KMIN_REG_SCSI_DMAPTR
+name|asic_base
 argument_list|)
 operator|=
 name|ASIC_DMA_ADDR
@@ -8191,9 +8049,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_DMANPTR
 argument_list|(
-name|KMIN_REG_SCSI_DMANPTR
+name|asic_base
 argument_list|)
 operator|=
 name|ASIC_DMA_ADDR
@@ -8267,9 +8125,9 @@ specifier|volatile
 name|u_int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_CSR
 argument_list|(
-name|KMIN_REG_CSR
+name|asic_base
 argument_list|)
 decl_stmt|;
 name|int
@@ -8288,9 +8146,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_DMAPTR
 argument_list|(
-name|KMIN_REG_SCSI_DMAPTR
+name|asic_base
 argument_list|)
 operator|)
 operator|=
@@ -8304,9 +8162,9 @@ specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_DMANPTR
 argument_list|(
-name|KMIN_REG_SCSI_DMANPTR
+name|asic_base
 argument_list|)
 operator|)
 operator|=
@@ -8350,9 +8208,9 @@ operator|(
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_SCR
 argument_list|(
-name|KMIN_REG_SCSI_SCR
+name|asic_base
 argument_list|)
 operator|)
 condition|)
@@ -8397,9 +8255,9 @@ operator|(
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_SDR0
 argument_list|(
-name|KMIN_REG_SCSI_SDR0
+name|asic_base
 argument_list|)
 expr_stmt|;
 operator|*
@@ -8442,9 +8300,9 @@ operator|(
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_SDR1
 argument_list|(
-name|KMIN_REG_SCSI_SDR1
+name|asic_base
 argument_list|)
 expr_stmt|;
 operator|*
@@ -8458,6 +8316,12 @@ block|}
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_comment
 comment|/*  * Called by asic_intr() for scsi dma pointer update interrupts.  */
@@ -8506,9 +8370,9 @@ specifier|volatile
 name|u_int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_CSR
 argument_list|(
-name|KMIN_REG_CSR
+name|asic_base
 argument_list|)
 decl_stmt|;
 operator|*
@@ -8536,28 +8400,15 @@ name|dma_next
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-else|else
-name|next_phys
-operator|=
-name|MACH_CACHED_TO_PHYS
-argument_list|(
-name|asc_iobuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|(
 specifier|volatile
 name|int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_SCSI_DMANPTR
 argument_list|(
-name|KMIN_REG_SCSI_DMANPTR
+name|asic_base
 argument_list|)
 operator|=
 name|ASIC_DMA_ADDR
@@ -8570,6 +8421,11 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

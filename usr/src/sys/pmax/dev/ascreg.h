@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)ascreg.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)ascreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -13,6 +13,181 @@ end_comment
 
 begin_comment
 comment|/*  *	File: scsi_53C94.h  * 	Author: Alessandro Forin, Carnegie Mellon University  *	Date:	9/90  *  *	Defines for the NCR 53C94 ASC (SCSI interface)  * 	Some gotcha came from the "86C01/53C94 DMA lab work" written  * 	by Ken Stewart (NCR MED Logic Products Applications Engineer)  * 	courtesy of NCR.  Thanks Ken !  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_OFFSET_53C94
+value|0x0
+end_define
+
+begin_comment
+comment|/* from module base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_OFFSET_DMAR
+value|0x40000
+end_define
+
+begin_comment
+comment|/* DMA Address Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_OFFSET_RAM
+value|0x80000
+end_define
+
+begin_comment
+comment|/* SRAM Buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_OFFSET_ROM
+value|0xc0000
+end_define
+
+begin_comment
+comment|/* Diagnostic ROM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_RAM_SIZE
+value|0x20000
+end_define
+
+begin_comment
+comment|/* 128k (32k*32) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PER_TGT_DMA_SIZE
+value|((ASC_RAM_SIZE/7)& ~(sizeof(int)-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASC_NCMD
+value|7
+end_define
+
+begin_comment
+comment|/*  * DMA Address Register  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_DMAR_MASK
+value|0x1ffff
+end_define
+
+begin_comment
+comment|/* 17 bits, 128k */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_DMAR_WRITE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* DMA direction bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_DMA_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned)(x)& ASC_DMAR_MASK)
+end_define
+
+begin_comment
+comment|/*  * Synch xfer parameters, and timing conversions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MIN_PERIOD
+value|50
+end_define
+
+begin_comment
+comment|/* in 4 nsecs units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_MIN_PERIOD25
+value|5
+end_define
+
+begin_comment
+comment|/* in CLKS/BYTE, 1 CLK = 40nsecs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_MIN_PERIOD12
+value|3
+end_define
+
+begin_comment
+comment|/* in CLKS/BYTE, 1 CLK = 80nsecs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_MAX_PERIOD25
+value|35
+end_define
+
+begin_comment
+comment|/* in CLKS/BYTE, 1 CLK = 40nsecs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_MAX_PERIOD12
+value|18
+end_define
+
+begin_comment
+comment|/* in CLKS/BYTE, 1 CLK = 80nsecs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASC_MAX_OFFSET
+value|15
+end_define
+
+begin_comment
+comment|/* pure number */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -660,6 +660,35 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * For a remote console, wait a while for previous output to 	 * complete. 	 */
+if|if
+condition|(
+name|major
+argument_list|(
+name|cn_tab
+operator|.
+name|cn_dev
+argument_list|)
+operator|==
+name|DCDEV
+operator|&&
+name|cp
+operator|->
+name|pmax_unit
+operator|==
+literal|0
+operator|&&
+name|cn_tab
+operator|.
+name|cn_screen
+operator|==
+literal|0
+condition|)
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
 comment|/* reset chip */
 name|dcaddr
 operator|=
@@ -817,23 +846,6 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"dc%d at nexus0 csr 0x%x priority %d\n"
-argument_list|,
-name|cp
-operator|->
-name|pmax_unit
-argument_list|,
-name|cp
-operator|->
-name|pmax_addr
-argument_list|,
-name|cp
-operator|->
-name|pmax_pri
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Special handling for consoles. 	 */
 if|if
 condition|(
@@ -886,6 +898,11 @@ name|DCMOUSE_PORT
 expr_stmt|;
 name|MachEmptyWriteBuffer
 argument_list|()
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
 expr_stmt|;
 name|KBDReset
 argument_list|(
@@ -957,6 +974,11 @@ expr_stmt|;
 name|MachEmptyWriteBuffer
 argument_list|()
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|cn_tab
 operator|.
 name|cn_disabled
@@ -970,6 +992,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"dc%d at nexus0 csr 0x%x priority %d\n"
+argument_list|,
+name|cp
+operator|->
+name|pmax_unit
+argument_list|,
+name|cp
+operator|->
+name|pmax_addr
+argument_list|,
+name|cp
+operator|->
+name|pmax_pri
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1

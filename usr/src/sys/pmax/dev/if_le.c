@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -557,6 +557,13 @@ name|le_iomem
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|asic_base
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Test to see if device is present.  * Return true if found and initialized ok.  * If interface exists, make available by filling in network interface  * record.  System will initialize the interface when it is ready  * to accept packets.  */
 end_comment
@@ -712,6 +719,9 @@ case|:
 case|case
 name|DS_MAXINE
 case|:
+case|case
+name|DS_3MAXPLUS
+case|:
 if|if
 condition|(
 name|dp
@@ -741,9 +751,20 @@ expr|struct
 name|lereg1
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_SYS_LANCE
 argument_list|(
-name|KMIN_SYS_LANCE
+name|asic_base
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ASIC_SYS_ETHER_ADDRESS
+argument_list|(
+name|asic_base
 argument_list|)
 expr_stmt|;
 name|le
@@ -758,17 +779,6 @@ operator|)
 name|MACH_PHYS_TO_UNCACHED
 argument_list|(
 name|le_iomem
-argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|MACH_PHYS_TO_UNCACHED
-argument_list|(
-name|KMIN_SYS_ETHER_ADDRESS
 argument_list|)
 expr_stmt|;
 name|le
@@ -803,9 +813,9 @@ specifier|volatile
 name|u_int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_CSR
 argument_list|(
-name|KMIN_REG_CSR
+name|asic_base
 argument_list|)
 expr_stmt|;
 name|ldp
@@ -815,9 +825,9 @@ specifier|volatile
 name|u_int
 operator|*
 operator|)
-name|MACH_PHYS_TO_UNCACHED
+name|ASIC_REG_LANCE_DMAPTR
 argument_list|(
-name|KMIN_REG_LANCE_DMAPTR
+name|asic_base
 argument_list|)
 expr_stmt|;
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)xcfb.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)xcfb.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1007,9 +1007,6 @@ break|break;
 case|case
 name|QIOCKPCMD
 case|:
-ifdef|#
-directive|ifdef
-name|notyet
 block|{
 name|pmKpCmd
 modifier|*
@@ -1135,9 +1132,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* notyet */
 break|break;
 case|case
 name|QIOCADDR
@@ -1998,6 +1992,105 @@ decl_stmt|,
 name|y
 decl_stmt|;
 block|{
+specifier|register
+name|struct
+name|pmax_fb
+modifier|*
+name|fp
+init|=
+operator|&
+name|xcfbfb
+decl_stmt|;
+if|if
+condition|(
+name|y
+operator|<
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|min_cur_y
+operator|||
+name|y
+operator|>
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|max_cur_y
+condition|)
+name|y
+operator|=
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|max_cur_y
+expr_stmt|;
+if|if
+condition|(
+name|x
+operator|<
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|min_cur_x
+operator|||
+name|x
+operator|>
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|max_cur_x
+condition|)
+name|x
+operator|=
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|max_cur_x
+expr_stmt|;
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|cursor
+operator|.
+name|x
+operator|=
+name|x
+expr_stmt|;
+comment|/* keep track of real cursor */
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|cursor
+operator|.
+name|y
+operator|=
+name|y
+expr_stmt|;
+comment|/* position, indep. of mouse */
 name|ims332_write_register
 argument_list|(
 name|IMS332_REG_CURSOR_LOC
@@ -2257,9 +2350,13 @@ block|{
 name|out
 operator|=
 operator|(
+operator|(
 name|out
-operator|<<
+operator|>>
 literal|2
+operator|)
+operator|&
+literal|0x3fff
 operator|)
 operator||
 operator|(
@@ -2269,13 +2366,17 @@ operator|&
 literal|0x1
 operator|)
 operator|<<
-literal|1
+literal|15
 operator|)
 operator||
+operator|(
 operator|(
 name|bp
 operator|&
 literal|0x1
+operator|)
+operator|<<
+literal|14
 operator|)
 expr_stmt|;
 name|ap
@@ -2354,7 +2455,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialization  * (For some reason, X runs faster with the frame buffer cached?)  */
+comment|/*  * Initialization  */
 end_comment
 
 begin_function
@@ -2388,6 +2489,7 @@ name|isMono
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Or Cached? A comment in the Mach driver suggests that the X server 	 * runs faster in cached address space, but the X server is going 	 * to blow away the data cache whenever it updates the screen, so.. 	 */
 name|fp
 operator|->
 name|fr_addr
@@ -2396,19 +2498,31 @@ operator|(
 name|char
 operator|*
 operator|)
-name|MACH_PHYS_TO_CACHED
+name|MACH_PHYS_TO_UNCACHED
 argument_list|(
 name|XINE_PHYS_CFB_START
 operator|+
 name|VRAM_OFFSET
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Must be in Uncached space or the Xserver sees a stale version of 	 * the event queue and acts totally wacko. I don't understand this, 	 * since the R3000 uses a physical address cache? 	 */
 name|fp
 operator|->
 name|fbu
 operator|=
+operator|(
+expr|struct
+name|fbuaccess
+operator|*
+operator|)
+name|MACH_PHYS_TO_UNCACHED
+argument_list|(
+name|MACH_CACHED_TO_PHYS
+argument_list|(
 operator|&
 name|xcfbu
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|fp
 operator|->
@@ -2636,7 +2750,7 @@ name|scrInfo
 operator|.
 name|max_cur_x
 operator|=
-literal|1023
+literal|1008
 expr_stmt|;
 name|fp
 operator|->
@@ -2646,7 +2760,7 @@ name|scrInfo
 operator|.
 name|max_cur_y
 operator|=
-literal|767
+literal|752
 expr_stmt|;
 name|fp
 operator|->
