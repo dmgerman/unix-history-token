@@ -6916,6 +6916,9 @@ name|howmany
 argument_list|(
 name|fssize
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|secpercyl
 argument_list|)
 expr_stmt|;
