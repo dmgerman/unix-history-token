@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.80 1998/09/06 22:41:40 tegge Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.81 1998/10/08 16:15:22 kato Exp $  */
 end_comment
 
 begin_include
@@ -718,6 +718,12 @@ directive|if
 name|defined
 argument_list|(
 name|CHECK_POINTS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98
 argument_list|)
 end_if
 
@@ -7280,6 +7286,9 @@ argument_list|(
 name|boot_addr
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* save the current value of the warm-start vector */
 name|mpbioswarmvec
 operator|=
@@ -7306,6 +7315,8 @@ argument_list|(
 name|CMOS_DATA
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* record BSP in CPU map */
 name|all_cpus
 operator|=
@@ -7715,6 +7726,9 @@ operator|+
 name|UPAGES
 index|]
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* setup a vector to our boot code */
 operator|*
 operator|(
@@ -7759,6 +7773,8 @@ name|BIOS_WARM
 argument_list|)
 expr_stmt|;
 comment|/* 'warm-start' */
+endif|#
+directive|endif
 name|bootPTD
 operator|=
 name|myPTD
@@ -7867,6 +7883,9 @@ name|lapic
 operator|.
 name|version
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* restore the warmstart vector */
 operator|*
 operator|(
@@ -7891,6 +7910,8 @@ argument_list|,
 name|mpbiosreason
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Set up the idle context for the BSP.  Similar to above except 	 * that some was done by locore, some by pmap.c and some is implicit 	 * because the BSP is cpu#0 and the page is initially zero, and also 	 * because we can refer to variables by name on the BSP.. 	 */
 name|newptd
 operator|=
