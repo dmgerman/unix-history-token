@@ -659,23 +659,23 @@ name|u_int8_t
 modifier|*
 name|fs_contigdirs
 decl_stmt|;
-comment|/* # of contiguously allocated dirs */
+comment|/* (u) # of contig. allocated dirs */
 name|struct
 name|csum
 modifier|*
 name|fs_csp
 decl_stmt|;
-comment|/* cg summary info buffer for fs_cs */
+comment|/* (u) cg summary info buffer */
 name|int32_t
 modifier|*
 name|fs_maxcluster
 decl_stmt|;
-comment|/* max cluster in each cyl group */
+comment|/* (u) max cluster in each cyl group */
 name|u_int
 modifier|*
 name|fs_active
 decl_stmt|;
-comment|/* used by snapshots to track fs */
+comment|/* (u) used by snapshots to track fs */
 name|int32_t
 name|fs_old_cpc
 decl_stmt|;
@@ -699,7 +699,7 @@ name|struct
 name|csum_total
 name|fs_cstotal
 decl_stmt|;
-comment|/* cylinder summary information */
+comment|/* (u) cylinder summary information */
 name|ufs_time_t
 name|fs_time
 decl_stmt|;
@@ -719,11 +719,11 @@ comment|/* blk addr of cyl grp summary area */
 name|int64_t
 name|fs_pendingblocks
 decl_stmt|;
-comment|/* blocks in process of being freed */
+comment|/* (u) blocks being freed */
 name|int32_t
 name|fs_pendinginodes
 decl_stmt|;
-comment|/* inodes in process of being freed */
+comment|/* (u) inodes being freed */
 name|int32_t
 name|fs_snapinum
 index|[
@@ -1036,6 +1036,30 @@ parameter_list|(
 name|cg
 parameter_list|)
 value|(1<< ((cg) % (NBBY * sizeof(int))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACTIVESET
+parameter_list|(
+name|fs
+parameter_list|,
+name|cg
+parameter_list|)
+value|do {					\ 	if ((fs)->fs_active)						\ 		ACTIVECGNUM((fs), (cg)) |= ACTIVECGOFF((cg));		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACTIVECLEAR
+parameter_list|(
+name|fs
+parameter_list|,
+name|cg
+parameter_list|)
+value|do {					\ 	if ((fs)->fs_active)						\ 		ACTIVECGNUM((fs), (cg))&= ~ACTIVECGOFF((cg));		\ } while (0)
 end_define
 
 begin_comment
