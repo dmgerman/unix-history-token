@@ -4138,24 +4138,6 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_net
-argument_list|,
-name|AF_NETGRAPH
-argument_list|,
-name|graph
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"netgraph Family"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_graph

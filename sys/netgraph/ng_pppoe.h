@@ -411,6 +411,28 @@ begin_comment
 comment|/* pppoe session packets       */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_PPPOE_STUPID_DISC
+value|0x3c12
+end_define
+
+begin_comment
+comment|/* pppoe discovery packets 3com? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_PPPOE_STUPID_SESS
+value|0x3c13
+end_define
+
+begin_comment
+comment|/* pppoe session packets   3com? */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -506,6 +528,28 @@ end_define
 
 begin_comment
 comment|/* pppoe session packets       */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_PPPOE_STUPID_DISC
+value|0x123c
+end_define
+
+begin_comment
+comment|/* pppoe discovery packets 3com? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_PPPOE_STUPID_SESS
+value|0x133c
+end_define
+
+begin_comment
+comment|/* pppoe session packets   3com? */
 end_comment
 
 begin_endif
