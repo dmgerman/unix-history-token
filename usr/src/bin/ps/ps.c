@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.16 (Berkeley) %G%"
+literal|"@(#)ps.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,30 +45,6 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
 
 begin_include
 include|#
@@ -109,12 +85,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pte.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vm.h>
 end_include
 
@@ -139,6 +109,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<math.h>
 end_include
 
@@ -146,6 +134,24 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -604,7 +610,7 @@ name|char
 modifier|*
 name|psdb
 init|=
-literal|"/etc/psdatabase"
+name|_PATH_PSDATABASE
 decl_stmt|;
 end_decl_stmt
 
@@ -1387,9 +1393,14 @@ name|strncmp
 argument_list|(
 name|tptr
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
-literal|5
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -3030,7 +3041,7 @@ begin_block
 block|{
 name|kmemf
 operator|=
-literal|"/dev/kmem"
+name|_PATH_KMEM
 expr_stmt|;
 if|if
 condition|(
@@ -3047,7 +3058,7 @@ index|[
 literal|2
 index|]
 else|:
-literal|"/vmcore"
+name|_PATH_VMCORE
 expr_stmt|;
 name|kmem
 operator|=
@@ -3094,7 +3105,7 @@ else|else
 block|{
 name|memf
 operator|=
-literal|"/dev/mem"
+name|_PATH_MEM
 expr_stmt|;
 name|mem
 operator|=
@@ -3146,7 +3157,7 @@ index|[
 literal|3
 index|]
 else|:
-literal|"/dev/drum"
+name|_PATH_DRUM
 expr_stmt|;
 name|swap
 operator|=
@@ -3218,7 +3229,7 @@ index|[
 literal|1
 index|]
 else|:
-literal|"/vmunix"
+name|_PATH_UNIX
 expr_stmt|;
 if|if
 condition|(
@@ -4337,7 +4348,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|)
 operator|<
 literal|0
@@ -4345,7 +4356,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4377,7 +4388,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't open . in /dev\n"
+literal|"ps: can't open . in %s\n"
+argument_list|,
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4436,7 +4449,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ps: Can't malloc space for tty table\n"
+literal|"ps: can't malloc space for tty table\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -8839,6 +8852,9 @@ specifier|register
 name|int
 name|cp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 specifier|extern
 name|int
 name|_pw_stayopen
@@ -8847,6 +8863,8 @@ name|_pw_stayopen
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 operator|(
