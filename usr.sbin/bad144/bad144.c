@@ -96,6 +96,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -108,17 +120,6 @@ end_define
 
 begin_comment
 comment|/* number of retries on reading old sectors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAWPART
-value|"c"
-end_define
-
-begin_comment
-comment|/* disk partition containing badsector tables */
 end_comment
 
 begin_decl_stmt
@@ -134,13 +135,6 @@ decl_stmt|,
 name|nflag
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|compare
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|int
@@ -196,12 +190,6 @@ end_decl_stmt
 begin_decl_stmt
 name|daddr_t
 name|size
-decl_stmt|,
-name|getold
-argument_list|()
-decl_stmt|,
-name|badsn
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -222,20 +210,147 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|daddr_t
+name|sn
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|void
+name|blkzero
+name|__P
+argument_list|(
+operator|(
+name|int
+name|f
+operator|,
+name|daddr_t
+name|sn
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|compare
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|bt_bad
+operator|*
+name|b1
+operator|,
+expr|struct
+name|bt_bad
+operator|*
+name|b2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|daddr_t
+name|badsn
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|bt_bad
+operator|*
+name|bt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|daddr_t
+name|getold
+name|__P
+argument_list|(
+operator|(
+name|int
+name|f
+operator|,
+expr|struct
+name|dkbad
+operator|*
+name|bad
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|blkcopy
+name|__P
+argument_list|(
+operator|(
+name|int
+name|f
+operator|,
+name|daddr_t
+name|s1
+operator|,
+name|daddr_t
+name|s2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|Perror
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|op
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|shift
+name|__P
+argument_list|(
+operator|(
+name|int
+name|f
+operator|,
+name|int
+name|new
+operator|,
+name|int
+name|old
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|checkold
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|dkbad
+operator|*
+name|oldbad
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -489,7 +604,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s/r%s%s"
+literal|"%s/r%sc"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -497,8 +612,6 @@ name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-name|RAWPART
 argument_list|)
 expr_stmt|;
 else|else
@@ -675,7 +788,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Disk sector size too large/small (%d)\n"
+literal|"Disk sector size too large/small (%ld)\n"
 argument_list|,
 name|dp
 operator|->
@@ -692,15 +805,7 @@ name|size
 operator|=
 name|dp
 operator|->
-name|d_nsectors
-operator|*
-name|dp
-operator|->
-name|d_ntracks
-operator|*
-name|dp
-operator|->
-name|d_ncylinders
+name|d_secperunit
 expr_stmt|;
 name|argc
 operator|--
@@ -727,7 +832,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bad block information at sector %d in %s:\n"
+literal|"bad block information at sector %lu in %s:\n"
 argument_list|,
 name|sn
 argument_list|,
@@ -736,7 +841,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cartridge serial number: %d(10)\n"
+literal|"cartridge serial number: %ld(10)\n"
 argument_list|,
 name|oldbad
 operator|.
@@ -822,7 +927,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"sn=%d, cn=%d, tn=%d, sn=%d\n"
+literal|"sn=%lu, cn=%d, tn=%d, sn=%d\n"
 argument_list|,
 name|badsn
 argument_list|(
@@ -1032,7 +1137,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d: out of range [0,%d) for disk %s\n"
+literal|"%lu: out of range [0,%lu) for disk %s\n"
 argument_list|,
 name|sn
 argument_list|,
@@ -1298,7 +1403,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"write badsect file at %d\n"
+literal|"write badsect file at %ld\n"
 argument_list|,
 name|size
 operator|-
@@ -1410,6 +1515,112 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|i
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|f
+argument_list|,
+name|DIOCWLABEL
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|Perror
+argument_list|(
+literal|"ioctl DIOCWLABEL(1)"
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|d_flags
+operator||=
+name|D_BADSECT
+expr_stmt|;
+name|dp
+operator|->
+name|d_checksum
+operator|=
+literal|0
+expr_stmt|;
+name|dp
+operator|->
+name|d_checksum
+operator|=
+name|dkcksum
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|f
+argument_list|,
+literal|0
+argument_list|,
+name|L_SET
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|Perror
+argument_list|(
+literal|"lseek"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|f
+argument_list|,
+name|label
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|label
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|Perror
+argument_list|(
+literal|"read"
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|f
+argument_list|,
+name|DIOCWLABEL
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|Perror
+argument_list|(
+literal|"ioctl DIOCWLABEL(0)"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIOCSBAD
@@ -1459,6 +1670,9 @@ name|f
 parameter_list|,
 name|bad
 parameter_list|)
+name|int
+name|f
+decl_stmt|;
 name|struct
 name|dkbad
 modifier|*
@@ -1596,7 +1810,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"bad144: read bad sector file at sn %d"
+literal|"bad144: read bad sector file at sn %lu"
 argument_list|,
 name|sn
 argument_list|)
@@ -1633,12 +1847,17 @@ comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|checkold
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|oldbad
+parameter_list|)
+name|struct
+name|dkbad
+modifier|*
+name|oldbad
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -1654,6 +1873,8 @@ name|daddr_t
 name|sn
 decl_stmt|,
 name|lsn
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|errors
@@ -1667,7 +1888,7 @@ decl_stmt|;
 if|if
 condition|(
 name|oldbad
-operator|.
+operator|->
 name|bt_flag
 operator|!=
 name|DKBAD_MAGIC
@@ -1689,7 +1910,7 @@ block|}
 if|if
 condition|(
 name|oldbad
-operator|.
+operator|->
 name|bt_mbz
 operator|!=
 literal|0
@@ -1711,7 +1932,7 @@ block|}
 name|bt
 operator|=
 name|oldbad
-operator|.
+operator|->
 name|bt_bad
 expr_stmt|;
 for|for
@@ -1798,7 +2019,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sn=%d, cn=%d, tn=%d, sn=%d\n"
+literal|"sn=%lu, cn=%d, tn=%d, sn=%u\n"
 argument_list|,
 name|badsn
 argument_list|(
@@ -1901,7 +2122,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: bad sector file contains duplicates (sn %d)\n"
+literal|"bad144: bad sector file contains duplicates (sn %lu)\n"
 argument_list|,
 name|sn
 argument_list|)
@@ -1930,24 +2151,29 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Move the bad sector replacements  * to make room for the new bad sectors.  * new is the new number of bad sectors, old is the previous count.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|shift
-argument_list|(
-argument|f
-argument_list|,
-argument|new
-argument_list|,
-argument|old
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|f
+parameter_list|,
+name|new
+parameter_list|,
+name|old
+parameter_list|)
+name|int
+name|f
+decl_stmt|,
+name|new
+decl_stmt|,
+name|old
+decl_stmt|;
 block|{
 name|daddr_t
 name|repl
@@ -2068,7 +2294,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't copy replacement sector %d to %d\n"
+literal|"Can't copy replacement sector %ld to %ld\n"
 argument_list|,
 name|repl
 operator|-
@@ -2088,7 +2314,7 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -2101,26 +2327,24 @@ begin_comment
 comment|/*  *  Copy disk sector s1 to s2.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|blkcopy
-argument_list|(
-argument|f
-argument_list|,
-argument|s1
-argument_list|,
-argument|s2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|f
+parameter_list|,
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
+name|int
+name|f
+decl_stmt|;
 name|daddr_t
 name|s1
 decl_stmt|,
 name|s2
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|tries
@@ -2247,7 +2471,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: can't read sector, %d: "
+literal|"bad144: can't read sector, %lu: "
 argument_list|,
 name|s1
 argument_list|)
@@ -2301,7 +2525,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"copying %d to %d\n"
+literal|"copying %lu to %lu\n"
 argument_list|,
 name|s1
 argument_list|,
@@ -2334,7 +2558,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: can't write replacement sector, %d: "
+literal|"bad144: can't write replacement sector, %lu: "
 argument_list|,
 name|s2
 argument_list|)
@@ -2360,7 +2584,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -2369,22 +2593,20 @@ name|zbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|blkzero
-argument_list|(
-argument|f
-argument_list|,
-argument|sn
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|f
+parameter_list|,
+name|sn
+parameter_list|)
+name|int
+name|f
+decl_stmt|;
 name|daddr_t
 name|sn
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2462,7 +2684,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"zeroing %d\n"
+literal|"zeroing %lu\n"
 argument_list|,
 name|sn
 argument_list|)
@@ -2493,7 +2715,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: can't write replacement sector, %d: "
+literal|"bad144: can't write replacement sector, %lu: "
 argument_list|,
 name|sn
 argument_list|)
@@ -2509,25 +2731,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|compare
-argument_list|(
+parameter_list|(
 name|b1
-argument_list|,
+parameter_list|,
 name|b2
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|bt_bad
-operator|*
+modifier|*
 name|b1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|b2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -3513,21 +3736,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|Perror
-argument_list|(
-argument|op
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|op
+parameter_list|)
 name|char
 modifier|*
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -3547,7 +3765,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
