@@ -9838,7 +9838,11 @@ operator|!
 operator|(
 name|flags
 operator|&
+operator|(
 name|INTR_MPSAFE
+operator||
+name|INTR_FAST
+operator|)
 operator|)
 condition|)
 name|device_printf
