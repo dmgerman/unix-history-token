@@ -233,24 +233,22 @@ specifier|const
 name|char
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 name|int
 name|ch
 decl_stmt|,
 name|rval
 decl_stmt|;
-name|fcn
-operator|=
-name|NULL
-expr_stmt|;
 name|setlocale
 argument_list|(
 name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|fcn
+operator|=
+name|NULL
 expr_stmt|;
 name|dchar
 operator|=
@@ -876,10 +874,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|void
 name|c_cut
@@ -896,6 +890,7 @@ specifier|const
 name|char
 modifier|*
 name|fname
+name|__unused
 decl_stmt|;
 block|{
 name|int
@@ -907,10 +902,6 @@ name|char
 modifier|*
 name|pos
 decl_stmt|;
-name|fname
-operator|=
-name|NULL
-expr_stmt|;
 name|ch
 operator|=
 literal|0
@@ -1087,12 +1078,14 @@ name|lbuf
 decl_stmt|,
 modifier|*
 name|mlbuf
-init|=
-name|NULL
 decl_stmt|;
 name|size_t
 name|lbuflen
 decl_stmt|;
+name|mlbuf
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|sep
