@@ -402,6 +402,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pc/bios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/metadata.h>
 end_include
 
@@ -3480,24 +3486,6 @@ directive|define
 name|PHYSMAP_SIZE
 value|(2 * 8)
 end_define
-
-begin_struct
-struct|struct
-name|bios_smap
-block|{
-name|u_int64_t
-name|base
-decl_stmt|;
-name|u_int64_t
-name|length
-decl_stmt|;
-name|u_int32_t
-name|type
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
 
 begin_decl_stmt
 name|u_int
