@@ -6105,11 +6105,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|pmap_remove_all
 argument_list|(
 name|m
@@ -14127,11 +14122,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
-expr_stmt|;
-name|vm_page_busy
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|vm_page_unwire
 argument_list|(

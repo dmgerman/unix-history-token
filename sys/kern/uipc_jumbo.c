@@ -837,12 +837,6 @@ block|{
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_busy
-argument_list|(
-name|pg
-argument_list|)
-expr_stmt|;
-comment|/* vm_page_free wants pages to be busy*/
 name|vm_page_free
 argument_list|(
 name|pg

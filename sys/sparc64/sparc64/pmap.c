@@ -4777,11 +4777,6 @@ literal|"pmaprl"
 argument_list|)
 condition|)
 continue|continue;
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m

@@ -9017,11 +9017,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_busy
-argument_list|(
-name|pg
-argument_list|)
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|pg

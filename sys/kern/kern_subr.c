@@ -311,11 +311,6 @@ literal|"vm_pgmoveco"
 argument_list|)
 condition|)
 do|;
-name|vm_page_busy
-argument_list|(
-name|user_pg
-argument_list|)
-expr_stmt|;
 name|pmap_remove_all
 argument_list|(
 name|user_pg
@@ -439,11 +434,6 @@ operator|=
 name|kern_pg
 operator|->
 name|pindex
-expr_stmt|;
-name|vm_page_busy
-argument_list|(
-name|kern_pg
-argument_list|)
 expr_stmt|;
 name|vm_page_rename
 argument_list|(
