@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.20	82/01/14	*/
+comment|/*	subr_prf.c	4.21	82/01/16	*/
 end_comment
 
 begin_include
@@ -690,14 +690,16 @@ block|{
 name|int
 name|bootopt
 init|=
-name|panicstr
-condition|?
 name|RB_AUTOBOOT
-else|:
-name|RB_AUTOBOOT
-operator||
-name|RB_NOSYNC
 decl_stmt|;
+if|if
+condition|(
+name|panicstr
+condition|)
+name|bootopt
+operator||=
+name|RB_NOSYNC
+expr_stmt|;
 name|panicstr
 operator|=
 name|s
@@ -708,12 +710,6 @@ literal|"panic: %s\n"
 argument_list|,
 name|s
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
 expr_stmt|;
 name|boot
 argument_list|(

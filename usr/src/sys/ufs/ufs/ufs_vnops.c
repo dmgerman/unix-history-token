@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	4.15	81/11/18	*/
+comment|/*	ufs_vnops.c	4.16	82/01/16	*/
 end_comment
 
 begin_include
@@ -1172,7 +1172,9 @@ argument_list|)
 expr_stmt|;
 comment|/* remove unused sticky files from text table */
 name|update
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 for|for
 control|(
