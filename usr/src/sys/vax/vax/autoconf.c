@@ -642,6 +642,11 @@ name|pc_umaddr
 index|[
 name|i
 index|]
+argument_list|,
+name|UMEMmap
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 if|#
@@ -1621,6 +1626,8 @@ argument_list|,
 argument|vumem
 argument_list|,
 argument|pumem
+argument_list|,
+argument|memmap
 argument_list|)
 end_macro
 
@@ -1640,6 +1647,14 @@ name|caddr_t
 name|vumem
 decl_stmt|,
 name|pumem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pte
+modifier|*
+name|memmap
 decl_stmt|;
 end_decl_stmt
 
@@ -1904,10 +1919,7 @@ operator|*
 operator|)
 name|pumem
 argument_list|,
-name|UMEMmap
-index|[
-name|numuba
-index|]
+name|memmap
 argument_list|)
 expr_stmt|;
 if|#
