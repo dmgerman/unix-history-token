@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.69
+literal|3.70
 operator|%
 name|G
 operator|%
@@ -755,6 +755,10 @@ block|}
 block|}
 end_for
 
+begin_comment
+comment|/* 	**  If we have no substitution for the user name in the argument 	**  list, we know that we must supply the names otherwise -- and 	**  SMTP is the answer!! 	*/
+end_comment
+
 begin_if
 if|if
 condition|(
@@ -777,6 +781,7 @@ name|pvp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* send the initial SMTP protocol */
 name|i
 operator|=
 name|smtpinit
@@ -826,6 +831,7 @@ endif|QUEUE
 else|#
 directive|else
 else|SMTP
+comment|/* oops!  we don't implement SMTP */
 name|syserr
 argument_list|(
 literal|"SMTP style mailer"
@@ -2028,6 +2034,19 @@ specifier|auto
 name|int
 name|st
 decl_stmt|;
+comment|/* in the IPC case there is nothing to wait for */
+if|if
+condition|(
+name|pid
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EX_OK
+operator|)
+return|;
+comment|/* wait for the mailer process to die and collect status */
 while|while
 condition|(
 operator|(
@@ -2066,6 +2085,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* see if it died a horrid death */
 if|if
 condition|(
 operator|(
@@ -2097,6 +2117,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* normal death -- return status */
 name|i
 operator|=
 operator|(
@@ -2119,7 +2140,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  OPENMAILER -- open connection to mailer. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to pass to mailer. **		ctladdr -- controlling address for user. **		clever -- create a full duplex connection. **		pmfile -- pointer to mfile (to mailer) connection. **		prfile -- pointer to rfile (from mailer) connection. ** **	Returns: **		pid of mailer. **		-1 on error. ** **	Side Effects: **		creates a mailer in a subprocess. */
+comment|/* **  OPENMAILER -- open connection to mailer. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to pass to mailer. **		ctladdr -- controlling address for user. **		clever -- create a full duplex connection. **		pmfile -- pointer to mfile (to mailer) connection. **		prfile -- pointer to rfile (from mailer) connection. ** **	Returns: **		pid of mailer (> 0 ). **		-1 on error. **		zero on an IPC connection. ** **	Side Effects: **		creates a mailer in a subprocess. */
 end_comment
 
 begin_macro
@@ -2241,6 +2262,74 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DAEMON
+comment|/* 	**  Deal with the special case of mail handled through an IPC 	**  connection. 	**	In this case we don't actually fork.  We must be 	**	running SMTP for this to work.  We will return a 	**	zero pid to indicate that we are running IPC. 	*/
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|m
+operator|->
+name|m_mailer
+argument_list|,
+literal|"[IPC]"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|clever
+condition|)
+name|syserr
+argument_list|(
+literal|"non-clever IPC"
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|makeconnection
+argument_list|(
+name|pvp
+index|[
+literal|1
+index|]
+argument_list|,
+name|pmfile
+argument_list|,
+name|prfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|EX_OK
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+endif|DAEMON
 comment|/* create a pipe to shove the mail through */
 if|if
 condition|(
@@ -2317,6 +2406,7 @@ block|}
 endif|#
 directive|endif
 endif|SMTP
+comment|/* 	**  Actually fork the mailer process. 	**	DOFORK is clever about retrying. 	*/
 name|DOFORK
 argument_list|(
 name|XFORK
@@ -2330,6 +2420,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* failure */
 name|syserr
 argument_list|(
 literal|"Cannot fork"
@@ -2661,6 +2752,7 @@ endif|LOG
 endif|#
 directive|endif
 endif|VFORK
+comment|/* try to execute the mailer */
 name|execv
 argument_list|(
 name|m
