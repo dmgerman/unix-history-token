@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: popen.c,v 1.26 2001/04/25 01:46:26 lukem Exp $	*/
+comment|/*	$NetBSD: popen.c,v 1.28 2003/01/16 09:41:38 kleink Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: popen.c,v 1.26 2001/04/25 01:46:26 lukem Exp $"
+literal|"$NetBSD: popen.c,v 1.28 2003/01/16 09:41:38 kleink Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -912,7 +912,7 @@ name|pid_t
 name|pid
 decl_stmt|;
 name|sigset_t
-name|sigset
+name|nsigset
 decl_stmt|,
 name|osigset
 decl_stmt|;
@@ -952,13 +952,13 @@ expr_stmt|;
 name|sigemptyset
 argument_list|(
 operator|&
-name|sigset
+name|nsigset
 argument_list|)
 expr_stmt|;
 name|sigaddset
 argument_list|(
 operator|&
-name|sigset
+name|nsigset
 argument_list|,
 name|SIGINT
 argument_list|)
@@ -966,7 +966,7 @@ expr_stmt|;
 name|sigaddset
 argument_list|(
 operator|&
-name|sigset
+name|nsigset
 argument_list|,
 name|SIGQUIT
 argument_list|)
@@ -974,7 +974,7 @@ expr_stmt|;
 name|sigaddset
 argument_list|(
 operator|&
-name|sigset
+name|nsigset
 argument_list|,
 name|SIGHUP
 argument_list|)
@@ -984,7 +984,7 @@ argument_list|(
 name|SIG_BLOCK
 argument_list|,
 operator|&
-name|sigset
+name|nsigset
 argument_list|,
 operator|&
 name|osigset
