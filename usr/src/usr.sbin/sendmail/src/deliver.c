@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.36 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -811,7 +811,7 @@ if|if
 condition|(
 sizeof|sizeof
 name|tobuf
-operator|-
+operator|<
 operator|(
 name|strlen
 argument_list|(
@@ -827,8 +827,6 @@ argument_list|)
 operator|+
 literal|2
 operator|)
-operator|<
-literal|0
 condition|)
 break|break;
 if|if
