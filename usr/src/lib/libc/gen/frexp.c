@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)frexp.c	4.1 (Berkeley) %G% */
+comment|/* @(#)frexp.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
-comment|/* 	the call 		x = frexp(arg,&exp); 	must return a double fp quantity x which is<1.0 	and the corresponding binary exponent "exp". 	such that 		arg = x*2^exp */
+comment|/* 	the call 		x = frexp(arg,&exp); 	must return a double fp quantity x which is<1.0 	and the corresponding binary exponent "exp". 	such that 		arg = x*2^exp 	if the argument is 0.0, return 0.0 mantissa and 0 exponent. */
 end_comment
 
 begin_function
@@ -57,14 +57,14 @@ block|}
 if|if
 condition|(
 name|x
-operator|>
+operator|>=
 literal|1.0
 condition|)
 while|while
 condition|(
 name|x
-operator|>
-literal|1
+operator|>=
+literal|1.0
 condition|)
 block|{
 name|j
@@ -86,6 +86,10 @@ condition|(
 name|x
 operator|<
 literal|0.5
+operator|&&
+name|x
+operator|!=
+literal|0.0
 condition|)
 while|while
 condition|(
