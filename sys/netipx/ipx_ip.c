@@ -994,7 +994,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
