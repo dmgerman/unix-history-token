@@ -2925,6 +2925,12 @@ name|__NetBSD__
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2990,12 +2996,6 @@ end_define
 begin_comment
 comment|/* has uname(2) syscall */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_define
 define|#
