@@ -9424,25 +9424,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VBLK
-operator|||
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VCHR
-condition|)
-name|panic
-argument_list|(
-literal|"ufs_strategy: spec"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|bp
 operator|->
 name|b_blkno
