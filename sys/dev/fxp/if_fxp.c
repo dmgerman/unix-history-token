@@ -6933,6 +6933,13 @@ decl_stmt|;
 name|u_int8_t
 name|statack
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|gone
+condition|)
+return|return;
 name|FXP_LOCK
 argument_list|(
 name|sc
