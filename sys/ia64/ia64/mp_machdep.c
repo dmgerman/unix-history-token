@@ -123,6 +123,12 @@ directive|include
 file|<machine/sal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_function_decl
 name|void
 name|cpu_mp_add
