@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.12 (Berkeley) %G%"
+literal|"@(#)compress.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4243,6 +4243,21 @@ name|oldcode
 decl_stmt|,
 name|incode
 decl_stmt|;
+name|int
+name|n
+decl_stmt|,
+name|nwritten
+decl_stmt|,
+name|offset
+decl_stmt|;
+comment|/* Variables for buffered write */
+name|char
+name|buff
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+comment|/* Buffer for buffered write */
 comment|/*      * As above, initialize the first 256 entries in the table.      */
 name|maxcode
 operator|=
@@ -4314,25 +4329,21 @@ condition|)
 comment|/* EOF already? */
 return|return;
 comment|/* Get out of here */
-name|putchar
-argument_list|(
+comment|/* first code must be 8 bits = char */
+name|n
+operator|=
+literal|0
+expr_stmt|;
+name|buff
+index|[
+name|n
+operator|++
+index|]
+operator|=
 operator|(
 name|char
 operator|)
 name|finchar
-argument_list|)
-expr_stmt|;
-comment|/* first code must be 8 bits = char */
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|stdout
-argument_list|)
-condition|)
-comment|/* Crash if can't write */
-name|writeerr
-argument_list|()
 expr_stmt|;
 name|stackp
 operator|=
@@ -4494,13 +4505,76 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * And put them out in forward order 	 */
 do|do
-name|putchar
-argument_list|(
+block|{
+comment|/* 	     * About 60% of the time is spent in the putchar() call 	     * that appeared here.  It was originally 	     *		putchar ( *--stackp ); 	     * If we buffer the writes ourselves, we can go faster (about 	     * 30%). 	     * 	     * At this point, the next line is the next *big* time 	     * sink in the code.  It takes up about 10% of the time. 	     */
+name|buff
+index|[
+name|n
+operator|++
+index|]
+operator|=
 operator|*
 operator|--
 name|stackp
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|BUFSIZ
+condition|)
+block|{
+name|offset
+operator|=
+literal|0
+expr_stmt|;
+do|do
+block|{
+name|nwritten
+operator|=
+name|write
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|,
+operator|&
+name|buff
+index|[
+name|offset
+index|]
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nwritten
+operator|<=
+literal|0
+condition|)
+name|writeerr
+argument_list|()
+expr_stmt|;
+name|offset
+operator|+=
+name|nwritten
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|n
+operator|-=
+name|nwritten
+operator|)
+operator|>
+literal|0
+condition|)
+do|;
+block|}
+block|}
 do|while
 condition|(
 name|stackp
@@ -4551,21 +4625,56 @@ operator|=
 name|incode
 expr_stmt|;
 block|}
-name|fflush
+comment|/*      * Flush the stuff remaining in our buffer...      */
+name|offset
+operator|=
+literal|0
+expr_stmt|;
+do|do
+block|{
+name|nwritten
+operator|=
+name|write
+argument_list|(
+name|fileno
 argument_list|(
 name|stdout
+argument_list|)
+argument_list|,
+operator|&
+name|buff
+index|[
+name|offset
+index|]
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ferror
-argument_list|(
-name|stdout
-argument_list|)
+name|nwritten
+operator|<=
+literal|0
 condition|)
 name|writeerr
 argument_list|()
 expr_stmt|;
+name|offset
+operator|+=
+name|nwritten
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|n
+operator|-=
+name|nwritten
+operator|)
+operator|>
+literal|0
+condition|)
+do|;
 block|}
 comment|/*****************************************************************  * TAG( getcode )  *  * Read one code from the standard input.  If EOF, return -1.  * Inputs:  * 	stdin  * Outputs:  * 	code or -1 is returned.  */
 name|code_int
@@ -6601,7 +6710,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, Berkeley 5.12 %G%\n"
+literal|"%s, Berkeley 5.13 %G%\n"
 argument_list|,
 name|rcs_ident
 argument_list|)
