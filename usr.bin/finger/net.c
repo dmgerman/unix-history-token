@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: net.c,v 1.8 1997/07/02 06:34:50 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -472,7 +472,7 @@ name|msg
 operator|.
 name|msg_flags
 operator|=
-name|MSG_EOF
+literal|0
 expr_stmt|;
 comment|/* -l flag for remote fingerd  */
 if|if
@@ -594,7 +594,7 @@ argument_list|,
 operator|&
 name|msg
 argument_list|,
-name|MSG_EOF
+literal|0
 argument_list|)
 operator|<
 literal|0
