@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.26 1995/11/14 20:34:10 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.27 1995/12/02 19:37:59 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2992,6 +2992,9 @@ operator|->
 name|fw_next
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_ORDER_RULES
 name|addb4
 operator|=
 literal|0
@@ -3636,6 +3639,9 @@ return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* IPFIREWALL_ORDER_RULES */
 name|chtmp_prev
 operator|=
 name|chtmp
