@@ -1,6 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  VDMP: version 4.7				updated %G%  *  *  reads raster file created by cifplot and dumps it onto the  *  Varian or Versatec plotter.  *  Assumptions:  *	Input is from device 0.  *	plotter is already opened as device 1.  *	error output file is device 2.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)vdmp.c	5.1 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  *  reads raster file created by cifplot and dumps it onto the  *  Varian or Versatec plotter.  *  Assumptions:  *	Input is from device 0.  *	plotter is already opened as device 1.  *	error output file is device 2.  */
 end_comment
 
 begin_include
@@ -56,7 +85,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)vdmp.c	4.3\t6/24/83"
+literal|"@(#)vdmp.c	5.1\t5/15/85"
 decl_stmt|;
 end_decl_stmt
 
@@ -665,11 +694,13 @@ argument_list|,
 literal|"t%6.2f\t"
 argument_list|,
 operator|(
+name|double
+operator|)
 name|lines
 operator|/
-literal|200.0
+operator|(
+name|double
 operator|)
-operator|/
 name|PAGE_LINES
 argument_list|)
 expr_stmt|;
