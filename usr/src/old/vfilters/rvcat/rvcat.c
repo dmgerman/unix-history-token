@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rvcat.c	5.5 (Berkeley) %G%"
+literal|"@(#)rvcat.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1257,7 +1257,7 @@ comment|/*}*/
 literal|'\''
 block|,
 comment|/*' acute accent*/
-literal|'\`'
+literal|'`'
 block|,
 comment|/*` grave accent*/
 literal|'^'
