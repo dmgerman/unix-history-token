@@ -2294,9 +2294,6 @@ comment|/* psize    */
 literal|0
 block|,
 comment|/* flags    */
-operator|-
-literal|1
-comment|/* bmaj     */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -55,11 +55,6 @@ init|=
 literal|91
 block|,
 comment|/* major number for character device */
-name|VINUM_BDEV_MAJOR
-init|=
-literal|25
-block|,
-comment|/* and legacy major number for block device */
 name|ROUND_ROBIN_READPOL
 init|=
 operator|-
@@ -237,15 +232,6 @@ parameter_list|,
 name|t
 parameter_list|)
 value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			  | ((d& ~MASK (VINUM_VOL_WIDTH))			\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH))		\ 			  | (t<< VINUM_TYPE_SHIFT) )
-define|#
-directive|define
-name|VINUMRBDEV
-parameter_list|(
-name|d
-parameter_list|,
-name|t
-parameter_list|)
-value|makedev (VINUM_BDEV_MAJOR, VINUMRMINOR (d, t))
 comment|/* extract device type */
 define|#
 directive|define

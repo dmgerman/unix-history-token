@@ -2235,10 +2235,6 @@ name|D_TTY
 operator||
 name|D_KQFILTER
 block|,
-comment|/* bmaj */
-operator|-
-literal|1
-block|,
 comment|/* kqfilter */
 name|ttykqfilter
 block|, }

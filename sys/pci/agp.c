@@ -265,11 +265,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
-block|,
-comment|/* bmaj */
-operator|-
-literal|1
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

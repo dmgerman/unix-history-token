@@ -205,10 +205,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-literal|30
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

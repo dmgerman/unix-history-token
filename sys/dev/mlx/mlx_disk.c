@@ -153,13 +153,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|MLXD_BDEV_MAJOR
-value|27
-end_define
-
-begin_define
-define|#
-directive|define
 name|MLXD_CDEV_MAJOR
 value|131
 end_define
@@ -209,10 +202,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-name|MLXD_BDEV_MAJOR
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

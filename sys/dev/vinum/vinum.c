@@ -121,8 +121,6 @@ block|,
 name|vinumsize
 block|,
 name|D_DISK
-block|,
-name|VINUM_BDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -316,9 +316,6 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-literal|253
 block|, }
 decl_stmt|;
 end_decl_stmt

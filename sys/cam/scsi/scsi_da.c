@@ -979,13 +979,6 @@ name|DA_CDEV_MAJOR
 value|13
 end_define
 
-begin_define
-define|#
-directive|define
-name|DA_BDEV_MAJOR
-value|4
-end_define
-
 begin_comment
 comment|/* For 2.2-stable support */
 end_comment
@@ -1053,10 +1046,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-name|DA_BDEV_MAJOR
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

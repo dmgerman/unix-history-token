@@ -212,11 +212,7 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|,
-comment|/* bmaj */
-literal|254
-comment|/* XXX magic no-bdev */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -503,13 +503,6 @@ name|CD_CDEV_MAJOR
 value|15
 end_define
 
-begin_define
-define|#
-directive|define
-name|CD_BDEV_MAJOR
-value|6
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -1157,10 +1150,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-name|CD_BDEV_MAJOR
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -123,13 +123,6 @@ name|CDEV_MAJOR
 value|69
 end_define
 
-begin_define
-define|#
-directive|define
-name|BDEV_MAJOR
-value|19
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -175,10 +168,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-name|BDEV_MAJOR
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

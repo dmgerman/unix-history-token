@@ -163,13 +163,6 @@ name|CDEV_MAJOR
 value|102
 end_define
 
-begin_define
-define|#
-directive|define
-name|BDEV_MAJOR
-value|28
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_strategy_t
@@ -245,10 +238,7 @@ comment|/* flags */
 name|D_DISK
 operator||
 name|D_CANFREE
-block|,
-comment|/* bmaj */
-name|BDEV_MAJOR
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -196,13 +196,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|IDAD_BDEV_MAJOR
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
 name|IDAD_CDEV_MAJOR
 value|109
 end_define
@@ -252,10 +245,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-name|IDAD_BDEV_MAJOR
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

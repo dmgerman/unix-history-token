@@ -166,10 +166,7 @@ comment|/* flags */
 name|D_DISK
 operator||
 name|D_TRACKCLOSE
-block|,
-comment|/* bmaj */
-literal|32
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -166,11 +166,7 @@ comment|/* flags */
 name|D_TAPE
 operator||
 name|D_TRACKCLOSE
-block|,
-comment|/* bmaj */
-operator|-
-literal|1
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

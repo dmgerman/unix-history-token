@@ -371,9 +371,6 @@ comment|/* size */
 literal|0
 block|,
 comment|/* flags (no set flags) */
-operator|-
-literal|1
-comment|/* bmaj (no block dev) */
 block|}
 decl_stmt|;
 end_decl_stmt
