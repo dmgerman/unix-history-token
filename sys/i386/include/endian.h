@@ -164,10 +164,12 @@ directive|ifdef
 name|__GNUC__
 specifier|static
 name|__inline
-name|uint32_t
+name|unsigned
+name|int
 name|__uint16_swap_uint32
 parameter_list|(
-name|uint32_t
+name|unsigned
+name|int
 name|__x
 parameter_list|)
 block|{
@@ -181,10 +183,12 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|uint32_t
+name|unsigned
+name|int
 name|__uint8_swap_uint32
 parameter_list|(
-name|uint32_t
+name|unsigned
+name|int
 name|__x
 parameter_list|)
 block|{
@@ -249,10 +253,12 @@ end_return
 begin_function
 unit|}  static
 name|__inline
-name|uint16_t
+name|unsigned
+name|short
 name|__uint8_swap_uint16
 parameter_list|(
-name|uint16_t
+name|unsigned
+name|short
 name|__x
 parameter_list|)
 block|{
