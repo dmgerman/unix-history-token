@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)eval.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)eval.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,13 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -66,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -497,19 +510,16 @@ literal|2
 index|]
 argument_list|)
 condition|)
-name|oops
+name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|2
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -557,19 +567,16 @@ literal|2
 index|]
 argument_list|)
 condition|)
-name|oops
+name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|2
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1119,11 +1126,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|oops
+name|errx
 argument_list|(
-literal|"%s: major botch."
+literal|1
 argument_list|,
-literal|"eval"
+literal|"eval: major botch"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1473,9 +1480,11 @@ operator|!
 operator|*
 name|name
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"null definition."
+literal|1
+argument_list|,
+literal|"null definition"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1487,9 +1496,11 @@ argument_list|,
 name|defn
 argument_list|)
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"%s: recursive definition."
+literal|1
+argument_list|,
+literal|"%s: recursive definition"
 argument_list|,
 name|name
 argument_list|)
@@ -1658,8 +1669,10 @@ operator|!
 operator|*
 name|name
 condition|)
-name|oops
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"null definition"
 argument_list|)
 expr_stmt|;
@@ -1672,9 +1685,11 @@ argument_list|,
 name|defn
 argument_list|)
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"%s: recursive definition."
+literal|1
+argument_list|,
+literal|"%s: recursive definition"
 argument_list|,
 name|name
 argument_list|)
@@ -1961,9 +1976,11 @@ literal|1
 operator|==
 name|MAXINP
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"too many include files."
+literal|1
+argument_list|,
+literal|"too many include files"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2354,9 +2371,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"%s: cannot divert."
+literal|1
+argument_list|,
+literal|"%s: cannot divert"
 argument_list|,
 name|m4temp
 argument_list|)

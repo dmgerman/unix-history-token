@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)misc.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)misc.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -62,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -231,8 +244,10 @@ operator|=
 name|c
 expr_stmt|;
 else|else
-name|oops
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"too many characters pushed back"
 argument_list|)
 expr_stmt|;
@@ -317,8 +332,10 @@ operator|)
 operator|==
 name|endpbb
 condition|)
-name|oops
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"too many characters pushed back"
 argument_list|)
 expr_stmt|;
@@ -420,8 +437,10 @@ operator|=
 name|c
 expr_stmt|;
 else|else
-name|oops
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"string space overflow"
 argument_list|)
 expr_stmt|;
@@ -460,11 +479,11 @@ index|[
 name|n
 index|]
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"%s: diversion still active."
+literal|1
 argument_list|,
-literal|"undivert"
+literal|"undivert: diversion still active"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -509,9 +528,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"%s: cannot undivert."
+literal|1
+argument_list|,
+literal|"%s: cannot undivert"
 argument_list|,
 name|m4temp
 argument_list|)
@@ -569,9 +590,11 @@ literal|1
 condition|)
 endif|#
 directive|endif
-name|oops
+name|errx
 argument_list|(
-literal|"%s: cannot unlink."
+literal|1
+argument_list|,
+literal|"%s: cannot unlink"
 argument_list|,
 name|m4temp
 argument_list|)
@@ -589,9 +612,11 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-name|oops
+name|errx
 argument_list|(
-literal|"interrupted."
+literal|1
+argument_list|,
+literal|"interrupted"
 argument_list|)
 expr_stmt|;
 block|}
@@ -708,14 +733,11 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|oops
+name|err
 argument_list|(
-literal|"malloc: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 return|return
@@ -753,14 +775,11 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|oops
+name|err
 argument_list|(
-literal|"strdup: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"strdup"
 argument_list|)
 expr_stmt|;
 return|return
@@ -835,134 +854,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|oops
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|oops
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,19 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -90,13 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -385,17 +399,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* m4wrap string default..     */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of this program        */
 end_comment
 
 begin_decl_stmt
@@ -693,16 +696,6 @@ name|FILE
 modifier|*
 name|ifp
 decl_stmt|;
-name|progname
-operator|=
-name|basename
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|signal
@@ -925,16 +918,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|oops
+name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|p
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sp
@@ -1321,11 +1311,11 @@ operator|>
 operator|-
 literal|1
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"unexpected end of input"
+literal|1
 argument_list|,
-literal|""
+literal|"unexpected end of input"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1408,11 +1398,11 @@ name|l
 operator|==
 name|EOF
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"missing right quote"
+literal|1
 argument_list|,
-literal|""
+literal|"missing right quote"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1579,11 +1569,11 @@ name|sp
 operator|==
 name|STACKMAX
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"internal stack overflow"
+literal|1
 argument_list|,
-literal|""
+literal|"internal stack overflow"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1814,11 +1804,11 @@ name|tp
 operator|==
 name|etp
 condition|)
-name|oops
+name|errx
 argument_list|(
-literal|"token too long"
+literal|1
 argument_list|,
-literal|""
+literal|"token too long"
 argument_list|)
 expr_stmt|;
 operator|*

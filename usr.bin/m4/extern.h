@@ -399,22 +399,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|oops
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|pbnum
 name|__P
 argument_list|(
@@ -730,18 +714,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* as it says.. just a null. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* program name */
 end_comment
 
 begin_decl_stmt
