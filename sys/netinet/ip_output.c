@@ -1653,6 +1653,11 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
+name|ipstat
+operator|.
+name|ips_odropped
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
