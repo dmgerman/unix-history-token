@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.20 %G%"
+literal|"@(#)wwinit.c	3.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,8 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|termcap
+init|=
+literal|0
 decl_stmt|;
 specifier|extern
 name|char
