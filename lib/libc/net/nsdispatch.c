@@ -1346,7 +1346,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * The first time nsdispatch is called (during a process's lifetime,  * or after nsswitch.conf has been updated), nss_configure will  * prepare global data needed by NSS.  */
+comment|/*  * The first time nsdispatch is called (during a process's lifetime,  * or after nsswitch.conf has been updated), nss_configure will  * prepare global data needed by NSS.  */
 end_comment
 
 begin_function
@@ -2008,7 +2008,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* The placeholder is required, as a NULL handle  		 * represents an invalid module. 		 */
+comment|/* The placeholder is required, as a NULL handle 		 * represents an invalid module. 		 */
 name|mod
 operator|.
 name|handle
