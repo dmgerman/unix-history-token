@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	3.4.1.1	%G%"
+literal|"@(#)macro.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +345,37 @@ name|v
 expr_stmt|;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  MACVALUE -- return uninterpreted value of a macro. ** **	Parameters: **		n -- the name of the macro. ** **	Returns: **		The value of n. ** **	Side Effects: **		none. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|macvalue
+parameter_list|(
+name|n
+parameter_list|)
+name|char
+name|n
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|Macro
+index|[
+name|n
+operator|&
+literal|0177
+index|]
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
