@@ -1683,18 +1683,36 @@ index|]
 operator|)
 condition|)
 block|{
+name|newactive
+operator|=
+name|i
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|tz_active
+operator|!=
+name|newactive
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
 argument_list|,
-literal|"_AC%d: temperature %d> setpoint %d\n"
+literal|"_AC%d: temperature %d.%d>= setpoint %d.%d\n"
 argument_list|,
 name|i
 argument_list|,
+name|TZ_KELVTOC
+argument_list|(
 name|temp
+argument_list|)
 argument_list|,
+name|TZ_KELVTOC
+argument_list|(
 name|sc
 operator|->
 name|tz_zone
@@ -1704,11 +1722,9 @@ index|[
 name|i
 index|]
 argument_list|)
+argument_list|)
 expr_stmt|;
-name|newactive
-operator|=
-name|i
-expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* handle user override of active mode */
