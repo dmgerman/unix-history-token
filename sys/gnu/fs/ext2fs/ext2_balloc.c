@@ -602,6 +602,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ufs_getlbns
@@ -615,6 +616,9 @@ argument_list|,
 operator|&
 name|num
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -701,6 +705,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_alloc
@@ -723,6 +728,9 @@ argument_list|,
 operator|&
 name|newb
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -774,12 +782,16 @@ expr_stmt|;
 comment|/* 		 * Write synchronously so that indirect blocks 		 * never point at garbage. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bwrite
 argument_list|(
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ext2_blkfree
@@ -978,6 +990,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_alloc
@@ -1000,6 +1013,9 @@ argument_list|,
 operator|&
 name|newb
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|brelse
@@ -1058,12 +1074,16 @@ expr_stmt|;
 comment|/* 		 * Write synchronously so that indirect blocks 		 * never point at garbage. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bwrite
 argument_list|(
 name|nbp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ext2_blkfree
@@ -1161,6 +1181,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_alloc
@@ -1183,6 +1204,9 @@ argument_list|,
 operator|&
 name|newb
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|brelse

@@ -996,6 +996,7 @@ name|accessmode
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -1014,6 +1015,9 @@ expr|struct
 name|ufs_args
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1276,6 +1280,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1292,6 +1297,9 @@ name|p_ucred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -1454,12 +1462,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
 argument_list|(
 name|ndp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1572,6 +1584,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1586,6 +1599,9 @@ name|p_ucred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vput
@@ -2769,6 +2785,7 @@ expr_stmt|;
 comment|/* 	 * Step 2: re-read superblock from disk. 	 * constants have been adjusted for ext2 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bread
@@ -2784,6 +2801,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2877,6 +2897,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|compute_sb_data
@@ -2887,6 +2908,9 @@ name|es
 argument_list|,
 name|fs
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|brelse
@@ -3252,12 +3276,16 @@ decl_stmt|;
 comment|/* 	 * Disallow multiple mounts of the same device. 	 * Disallow mounting of a device that is currently in use 	 * (except for root, which might share swap device for miniroot). 	 * Flush out any old buffers remaining from a previous use. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vfs_mountedon
 argument_list|(
 name|devvp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3284,6 +3312,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vinvalbuf
@@ -3302,6 +3331,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3334,6 +3366,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_OPEN
@@ -3352,6 +3385,9 @@ name|FSCRED
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3410,6 +3446,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bread
@@ -3425,6 +3462,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4059,6 +4099,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_flushfiles
@@ -4069,6 +4110,9 @@ name|flags
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4356,6 +4400,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vflush
@@ -4368,6 +4413,9 @@ name|SKIPSYSTEM
 operator||
 name|flags
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4965,6 +5013,7 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_FSYNC
@@ -4977,6 +5026,9 @@ name|waitfor
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|allerror
 operator|=
@@ -5293,6 +5345,7 @@ expr_stmt|;
 comment|/* Allocate a new vnode/inode. */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getnewvnode
@@ -5306,6 +5359,9 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -5464,6 +5520,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bread
@@ -5496,6 +5553,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain. With mode 		 * still zero, it will be unlinked and returned to the free 		 * list by vput(). 		 */
@@ -5656,6 +5716,7 @@ expr_stmt|;
 comment|/* 	 * Initialize the vnode from the inode, check for aliases. 	 * Note that the underlying vnode may have changed. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ufs_vinit
@@ -5669,6 +5730,9 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vput

@@ -1262,6 +1262,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|UFS_BLKATOFF
@@ -1280,6 +1281,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1686,6 +1690,7 @@ block|{
 comment|/* 		 * Access for write is interpreted as allowing 		 * creation of files in the directory. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1700,6 +1705,9 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1953,6 +1961,7 @@ block|{
 comment|/* 		 * Write access to directory required to delete files. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1967,6 +1976,9 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2036,6 +2048,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_VGET
@@ -2051,6 +2064,9 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2148,6 +2164,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -2162,6 +2179,9 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2186,6 +2206,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_VGET
@@ -2201,6 +2222,9 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2262,6 +2286,7 @@ expr_stmt|;
 comment|/* race to get the inode */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_VGET
@@ -2277,6 +2302,9 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vn_lock
@@ -2365,6 +2393,7 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_VGET
@@ -2380,6 +2409,9 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2970,6 +3002,7 @@ expr_stmt|;
 comment|/* 	 * Get the block containing the space for the new directory entry. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|UFS_BLKATOFF
@@ -2989,6 +3022,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3349,6 +3385,7 @@ block|{
 comment|/* 		 * First entry in block: set d_ino to zero. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|UFS_BLKATOFF
@@ -3373,6 +3410,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3409,6 +3449,7 @@ block|}
 comment|/* 	 * Collapse new free space into previous entry. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|UFS_BLKATOFF
@@ -3439,6 +3480,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3535,6 +3579,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|UFS_BLKATOFF
@@ -3559,6 +3604,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4073,6 +4121,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_VGET
@@ -4088,6 +4137,9 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vp

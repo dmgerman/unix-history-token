@@ -943,6 +943,7 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|nbuf
 operator|=
 name|malloc
@@ -953,6 +954,9 @@ name|M_TTYS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|bcopy
@@ -1562,6 +1566,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|suser
@@ -1575,6 +1580,9 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(

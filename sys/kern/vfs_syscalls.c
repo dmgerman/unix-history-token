@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_syscalls.c	8.13 (Berkeley) 4/15/94  * $Id: vfs_syscalls.c,v 1.112 1999/01/05 18:49:55 eivind Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_syscalls.c	8.13 (Berkeley) 4/15/94  * $Id: vfs_syscalls.c,v 1.113 1999/01/24 06:28:37 bde Exp $  */
 end_comment
 
 begin_comment
@@ -502,6 +502,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -509,6 +510,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -871,6 +875,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vinvalbuf
@@ -889,6 +894,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -997,6 +1005,7 @@ directive|endif
 comment|/* COMPAT_43 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyinstr
@@ -1014,6 +1023,9 @@ name|MFSNAMELEN
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vput
@@ -1084,6 +1096,7 @@ block|}
 comment|/* Only load modules for root (very important!) */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|suser
@@ -1097,6 +1110,9 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vput
@@ -1798,6 +1814,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_START
@@ -1808,6 +1825,9 @@ literal|0
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|vrele
 argument_list|(
@@ -2148,6 +2168,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -2155,6 +2176,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3036,6 +3060,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -3043,6 +3068,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3201,6 +3229,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -3208,6 +3237,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3433,6 +3465,7 @@ name|sb
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -3451,6 +3484,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4049,6 +4085,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -4065,6 +4102,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4327,6 +4367,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|change_dir
@@ -4336,6 +4377,9 @@ name|nd
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4481,6 +4525,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|change_dir
@@ -4490,6 +4535,9 @@ name|nd
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -5075,6 +5123,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ADVLOCK
@@ -5093,6 +5142,9 @@ name|lf
 argument_list|,
 name|type
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(
@@ -5461,6 +5513,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -5468,6 +5521,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -5855,6 +5911,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -5862,6 +5919,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6107,6 +6167,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -6114,6 +6175,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6402,6 +6466,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyinstr
@@ -6419,6 +6484,9 @@ name|MAXPATHLEN
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -6448,6 +6516,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -6455,6 +6524,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -6787,6 +6859,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_WHITEOUT
@@ -6802,6 +6875,9 @@ name|ni_cnd
 argument_list|,
 name|DELETE
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|VOP_ABORTOP
 argument_list|(
@@ -6935,6 +7011,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -6942,6 +7019,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -7671,6 +7751,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -7678,6 +7759,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out1
@@ -7926,6 +8010,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -7933,6 +8018,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -8116,6 +8204,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -8123,6 +8212,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -8475,6 +8567,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -8482,6 +8575,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -8652,6 +8748,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -8659,6 +8756,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -8968,6 +9068,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -8975,6 +9076,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -9158,6 +9262,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -9165,6 +9270,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -9335,6 +9443,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -9342,6 +9451,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -9490,6 +9602,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -9497,6 +9610,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -9823,6 +9939,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -9830,6 +9947,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -9931,6 +10051,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -9949,6 +10070,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -10166,6 +10290,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -10173,6 +10298,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -10295,6 +10423,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -10302,6 +10431,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -10403,6 +10535,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -10421,6 +10554,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -10650,6 +10786,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -10657,6 +10794,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -10791,6 +10931,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -10798,6 +10939,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -10911,6 +11055,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -10929,6 +11074,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -11250,6 +11398,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -11274,6 +11423,9 @@ argument_list|(
 name|tv
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -11303,6 +11455,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -11310,6 +11463,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -11463,6 +11619,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -11487,6 +11644,9 @@ argument_list|(
 name|tv
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -11516,6 +11676,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -11523,6 +11684,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -11676,6 +11840,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -11700,6 +11865,9 @@ argument_list|(
 name|tv
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -11708,6 +11876,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -11726,6 +11895,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -11865,6 +12037,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -11872,6 +12045,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -12090,6 +12266,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -12108,6 +12285,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -12540,6 +12720,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -12558,6 +12739,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -12775,6 +12959,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -12782,6 +12967,9 @@ argument_list|(
 operator|&
 name|fromnd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -12843,6 +13031,7 @@ name|WILLBEDIR
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -12850,6 +13039,9 @@ argument_list|(
 operator|&
 name|tond
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* Translate error code for rename("dir1", "dir2/."). */
@@ -13391,6 +13583,7 @@ name|WILLBEDIR
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -13398,6 +13591,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -13668,6 +13864,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -13675,6 +13872,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -13974,6 +14174,7 @@ name|loff
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -13992,6 +14193,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -14620,6 +14824,7 @@ name|eofflag
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getvnode
@@ -14638,6 +14843,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -15211,6 +15419,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|namei
@@ -15218,6 +15427,9 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -15255,6 +15467,7 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -15270,6 +15483,9 @@ name|p_ucred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.36 1998/12/15 17:38:33 des Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.37 1999/01/21 08:29:05 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -3476,12 +3476,16 @@ expr_stmt|;
 comment|/* 		 * Check for jobs 		 */
 while|while
 condition|(
+operator|(
 name|aiocbe
 operator|=
 name|aio_selectjob
 argument_list|(
 name|aiop
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -4179,6 +4183,7 @@ name|curproc
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|rfork
@@ -4188,6 +4193,9 @@ argument_list|,
 operator|&
 name|rfa
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -5329,6 +5337,7 @@ name|ki
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|aiocbe
 operator|=
 name|TAILQ_FIRST
@@ -5336,6 +5345,9 @@ argument_list|(
 operator|&
 name|aio_freejobs
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -6057,6 +6069,7 @@ name|retryproc
 label|:
 if|if
 condition|(
+operator|(
 name|aiop
 operator|=
 name|TAILQ_FIRST
@@ -6064,6 +6077,9 @@ argument_list|(
 operator|&
 name|aio_freeproc
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -6709,6 +6725,7 @@ block|{
 comment|/* 		 * Get timespec struct 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -6729,6 +6746,9 @@ argument_list|,
 sizeof|sizeof
 name|ts
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
@@ -7678,6 +7698,7 @@ block|}
 comment|/* 	 * Get control block 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -7698,6 +7719,9 @@ argument_list|,
 sizeof|sizeof
 name|iocb
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -8059,6 +8083,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -8079,6 +8104,9 @@ argument_list|,
 sizeof|sizeof
 name|iocb
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error

@@ -208,6 +208,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bread
@@ -223,6 +224,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|brelse

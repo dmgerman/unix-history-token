@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_linker.c,v 1.22 1999/01/23 03:45:22 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_linker.c,v 1.23 1999/01/25 08:42:24 dfr Exp $  */
 end_comment
 
 begin_include
@@ -1856,12 +1856,16 @@ expr_stmt|;
 comment|/* 	     * Give the module a chance to veto the unload. 	     */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|module_unload
 argument_list|(
 name|mod
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|KLD_DPF
@@ -3074,6 +3078,7 @@ name|EPERM
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|suser
@@ -3087,6 +3092,9 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -3104,6 +3112,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyinstr
@@ -3121,6 +3130,9 @@ name|MAXPATHLEN
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -3163,6 +3175,7 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|linker_load_file
@@ -3172,6 +3185,9 @@ argument_list|,
 operator|&
 name|lf
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -3245,6 +3261,7 @@ name|EPERM
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|suser
@@ -3258,6 +3275,9 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -3404,6 +3424,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyinstr
@@ -3421,6 +3442,9 @@ name|MAXPATHLEN
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -3698,6 +3722,7 @@ expr_stmt|;
 comment|/*      * Check the version of the user's structure.      */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -3715,6 +3740,9 @@ argument_list|(
 name|version
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -3761,6 +3789,7 @@ name|MAXPATHLEN
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyout
@@ -3779,12 +3808,16 @@ index|]
 argument_list|,
 name|namelen
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
 goto|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyout
@@ -3804,12 +3837,16 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
 goto|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyout
@@ -3829,12 +3866,16 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
 goto|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyout
@@ -3854,12 +3895,16 @@ argument_list|(
 name|caddr_t
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
 goto|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyout
@@ -3879,6 +3924,9 @@ argument_list|(
 name|size_t
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4031,6 +4079,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -4050,6 +4099,9 @@ argument_list|(
 name|lookup
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4096,6 +4148,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyinstr
@@ -4110,6 +4163,9 @@ name|MAXPATHLEN
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out

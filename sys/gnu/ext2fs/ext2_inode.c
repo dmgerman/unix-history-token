@@ -259,6 +259,7 @@ name|i_e2fs
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|bread
@@ -293,6 +294,9 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|brelse
@@ -647,12 +651,16 @@ directive|if
 name|QUOTA
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|getinoquota
 argument_list|(
 name|oip
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -731,6 +739,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_balloc
@@ -750,6 +759,9 @@ name|bp
 argument_list|,
 name|aflags
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -850,6 +862,7 @@ name|B_SYNC
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_balloc
@@ -867,6 +880,9 @@ name|bp
 argument_list|,
 name|aflags
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2160,6 +2176,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_indirtrunc
@@ -2188,6 +2205,9 @@ argument_list|,
 operator|&
 name|blkcount
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|allerror
 operator|=
@@ -2248,6 +2268,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ext2_indirtrunc
@@ -2272,6 +2293,9 @@ argument_list|,
 operator|&
 name|blkcount
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|allerror
 operator|=

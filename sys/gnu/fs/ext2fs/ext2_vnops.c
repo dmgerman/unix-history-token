@@ -2204,6 +2204,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vn_lock
@@ -2214,6 +2215,9 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
@@ -2407,6 +2411,7 @@ name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|UFS_UPDATE
@@ -2415,6 +2420,9 @@ name|fvp
 argument_list|,
 literal|1
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|VOP_UNLOCK

@@ -357,6 +357,7 @@ directive|if
 name|QUOTA
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|chkdq
@@ -375,6 +376,9 @@ name|cred
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
