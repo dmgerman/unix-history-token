@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.2 (Berkeley) %G%"
+literal|"@(#)main.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,19 @@ name|underline
 operator|++
 expr_stmt|;
 continue|continue;
+ifdef|#
+directive|ifdef
+name|RMOTHERS
+case|case
+literal|'O'
+case|:
+name|rmothers
+operator|++
+expr_stmt|;
+continue|continue;
+endif|#
+directive|endif
+endif|RMOTHERS
 default|default:
 if|if
 condition|(
