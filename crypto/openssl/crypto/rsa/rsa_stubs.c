@@ -27,6 +27,16 @@ directive|include
 file|<openssl/rsa.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|VERBOSE_STUBS
+end_define
+
+begin_comment
+comment|/* undef if you don't want missing rsaref reported */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -52,16 +62,6 @@ directive|define
 name|RSAINTL_SHLIB
 value|"librsaINTL.so"
 end_define
-
-begin_define
-define|#
-directive|define
-name|VERBOSE_STUBS
-end_define
-
-begin_comment
-comment|/* undef if you don't want missing rsaref reported */
-end_comment
 
 begin_function
 specifier|static
