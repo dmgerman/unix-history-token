@@ -1722,6 +1722,10 @@ name|ATA_WDMA2
 value|0x22
 define|#
 directive|define
+name|ATA_UDMA
+value|0x40
+define|#
+directive|define
 name|ATA_UDMA2
 value|0x42
 define|#

@@ -5761,14 +5761,6 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 */
-case|case
-literal|0x4d68105a
-case|:
-comment|/* Promise TX2 ATA100 */
-case|case
-literal|0x6268105a
-case|:
-comment|/* Promise TX2v2 ATA100 */
 if|if
 condition|(
 operator|!
@@ -5797,6 +5789,57 @@ operator|)
 operator|)
 condition|)
 return|return;
+goto|goto
+name|out
+goto|;
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA100 */
+case|case
+literal|0x6268105a
+case|:
+comment|/* Promise TX2v2 ATA100 */
+case|case
+literal|0x4d69105a
+case|:
+comment|/* Promise ATA133 */
+name|outb
+argument_list|(
+name|rman_get_start
+argument_list|(
+name|scp
+operator|->
+name|r_bmio
+argument_list|)
+operator|+
+literal|0x01
+argument_list|,
+literal|0x0b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+name|rman_get_start
+argument_list|(
+name|scp
+operator|->
+name|r_bmio
+argument_list|)
+operator|+
+literal|0x03
+argument_list|)
+operator|&
+literal|0x20
+operator|)
+condition|)
+return|return
+literal|1
+return|;
 comment|/* FALLTHROUGH */
 name|out
 label|:
