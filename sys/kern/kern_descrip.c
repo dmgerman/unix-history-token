@@ -493,6 +493,7 @@ comment|/* A mutex to protect the association between a proc and filedesc. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|fdesc_mtx
