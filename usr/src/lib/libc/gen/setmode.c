@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setmode.c	5.4 (Berkeley) %G%"
+literal|"@(#)setmode.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,26 +160,39 @@ begin_function
 name|mode_t
 name|getmode
 parameter_list|(
-name|set
+name|bbox
 parameter_list|,
 name|omode
 parameter_list|)
-specifier|register
-name|struct
-name|bitcmd
+name|void
 modifier|*
-name|set
+name|bbox
 decl_stmt|;
 name|mode_t
 name|omode
 decl_stmt|;
 block|{
 specifier|register
+name|struct
+name|bitcmd
+modifier|*
+name|set
+decl_stmt|;
+specifier|register
 name|mode_t
 name|newmode
 decl_stmt|,
 name|value
 decl_stmt|;
+name|set
+operator|=
+operator|(
+expr|struct
+name|bitcmd
+operator|*
+operator|)
+name|bbox
+expr_stmt|;
 name|newmode
 operator|=
 name|omode
@@ -767,8 +780,7 @@ value|if (set>= endset) { \ 		register struct bitcmd *newset; \ 		setlen += SET_
 end_define
 
 begin_function
-name|struct
-name|bitcmd
+name|void
 modifier|*
 name|setmode
 parameter_list|(
@@ -809,6 +821,11 @@ name|permXbits
 decl_stmt|,
 name|setlen
 decl_stmt|;
+specifier|static
+name|int
+name|compress_mode
+parameter_list|()
+function_decl|;
 comment|/* 	 * Get a copy of the mask for the permissions that are mask relative. 	 * Flip the bits, we want what's not set. 	 */
 operator|(
 name|void
@@ -980,6 +997,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|void
+operator|*
+operator|)
 name|saveset
 operator|)
 return|;
@@ -1407,6 +1428,10 @@ endif|#
 directive|endif
 return|return
 operator|(
+operator|(
+name|void
+operator|*
+operator|)
 name|saveset
 operator|)
 return|;
