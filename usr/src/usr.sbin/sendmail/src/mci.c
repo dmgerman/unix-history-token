@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.7 (Berkeley) %G%"
+literal|"@(#)mci.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1213,6 +1213,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|MciCache
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i
