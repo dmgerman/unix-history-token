@@ -1498,7 +1498,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1507,6 +1507,10 @@ operator|&
 name|proc0
 argument_list|,
 name|PVM
+argument_list|,
+literal|"sched"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
