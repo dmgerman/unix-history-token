@@ -5858,7 +5858,7 @@ name|cr
 operator|==
 name|NULL
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"securelevel_gt: cr is NULL\n"
 argument_list|)
@@ -5946,7 +5946,7 @@ name|cr
 operator|==
 name|NULL
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"securelevel_gt: cr is NULL\n"
 argument_list|)
