@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mouse.h>
+file|<sys/mouse.h>
 end_include
 
 begin_include
