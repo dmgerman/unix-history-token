@@ -1370,6 +1370,13 @@ name|n
 decl_stmt|,
 name|addrs
 decl_stmt|;
+if|if
+condition|(
+name|iface
+operator|->
+name|in_addrs
+condition|)
+block|{
 name|addrs
 operator|=
 name|n
@@ -1414,6 +1421,7 @@ operator|=
 name|addrs
 expr_stmt|;
 comment|/* Don't bother realloc()ing - we have little to gain */
+block|}
 block|}
 end_function
 
