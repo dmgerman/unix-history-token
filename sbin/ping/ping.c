@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ping.c,v 1.39 1998/07/15 06:45:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -453,6 +453,20 @@ name|F_AUDIBLE
 value|0x2000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NPACKETS
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXUSRPACKETS
+value|100
+end_define
+
 begin_comment
 comment|/*  * MAX_DUP_CHK is the number of bits in received table, i.e. the maximum  * number of received sequence numbers we can keep track of.  Change 128  * to 8192 for complete accuracy...  */
 end_comment
@@ -616,12 +630,12 @@ begin_decl_stmt
 name|int
 name|interval
 init|=
-literal|1
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* interval between packets */
+comment|/* interval between packets, ms */
 end_comment
 
 begin_comment
@@ -1141,6 +1155,23 @@ name|npackets
 operator|=
 name|ultmp
 expr_stmt|;
+if|if
+condition|(
+name|uid
+operator|&&
+name|npackets
+operator|>
+name|MAXUSRPACKETS
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"you cannot send more than %d packets."
+argument_list|,
+name|MAXUSRPACKETS
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'d'
@@ -1155,8 +1186,7 @@ literal|'f'
 case|:
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|uid
 condition|)
 block|{
 name|errno
@@ -1191,18 +1221,20 @@ case|case
 literal|'i'
 case|:
 comment|/* wait between sending packets */
-name|ultmp
-operator|=
-name|strtoul
+block|{
+name|double
+name|t
+init|=
+name|strtod
 argument_list|(
 name|optarg
 argument_list|,
 operator|&
 name|ep
-argument_list|,
-literal|0
 argument_list|)
-expr_stmt|;
+operator|*
+literal|1000.0
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1212,10 +1244,14 @@ name|ep
 operator|==
 name|optarg
 operator|||
-name|ultmp
+name|t
 operator|>
+operator|(
+name|double
+operator|)
 name|INT_MAX
 condition|)
+block|{
 name|errx
 argument_list|(
 name|EX_USAGE
@@ -1225,14 +1261,40 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+block|}
 name|options
 operator||=
 name|F_INTERVAL
 expr_stmt|;
 name|interval
 operator|=
-name|ultmp
+operator|(
+name|int
+operator|)
+name|t
 expr_stmt|;
+if|if
+condition|(
+name|uid
+operator|&&
+name|interval
+operator|<
+literal|1000
+condition|)
+block|{
+name|errno
+operator|=
+name|EPERM
+expr_stmt|;
+name|err
+argument_list|(
+name|EX_NOPERM
+argument_list|,
+literal|"-i interval too short"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 literal|'I'
@@ -1404,6 +1466,23 @@ case|case
 literal|'s'
 case|:
 comment|/* size of packet to send */
+if|if
+condition|(
+name|uid
+condition|)
+block|{
+name|errno
+operator|=
+name|EPERM
+expr_stmt|;
+name|err
+argument_list|(
+name|EX_NOPERM
+argument_list|,
+literal|"-s flag"
+argument_list|)
+expr_stmt|;
+block|}
 name|ultmp
 operator|=
 name|strtoul
@@ -1535,6 +1614,18 @@ name|argv
 index|[
 name|optind
 index|]
+expr_stmt|;
+comment|/* 	 * If not root, infinite packets not allowed.  Limit to NPACKETS. 	 */
+if|if
+condition|(
+name|uid
+operator|&&
+operator|!
+name|npackets
+condition|)
+name|npackets
+operator|=
+name|NPACKETS
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -2476,12 +2567,18 @@ operator|.
 name|tv_sec
 operator|=
 name|interval
+operator|/
+literal|1000
 expr_stmt|;
 name|intvl
 operator|.
 name|tv_usec
 operator|=
-literal|0
+name|interval
+operator|%
+literal|1000
+operator|*
+literal|1000
 expr_stmt|;
 block|}
 name|pinger
