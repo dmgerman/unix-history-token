@@ -1245,6 +1245,8 @@ operator|=
 name|malloc
 argument_list|(
 name|dll
+operator|+
+literal|1
 argument_list|)
 operator|)
 operator|==
@@ -1255,6 +1257,15 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"malloc"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|disklist
+argument_list|,
+name|dll
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
