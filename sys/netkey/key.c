@@ -460,19 +460,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|key_freetables
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|key_gethashval
 name|__P
 argument_list|(
@@ -2452,6 +2439,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -2481,6 +2474,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * key_gethashval():  *      Determine keytable hash value.  ----------------------------------------------------------------------*/
