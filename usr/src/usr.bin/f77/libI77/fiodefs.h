@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|MXUNIT
-value|_NFILE
+value|100
 end_define
 
 begin_define
