@@ -925,6 +925,8 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -4145,6 +4147,9 @@ literal|18
 argument_list|,
 literal|"%#jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bz
 operator|->
 name|lowaddr
