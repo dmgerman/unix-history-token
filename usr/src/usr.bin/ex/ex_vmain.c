@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	7.10 (Berkeley) %G%"
+literal|"@(#)ex_vmain.c	7.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2385,9 +2385,6 @@ argument_list|(
 name|dosusp
 operator|==
 literal|0
-operator|||
-operator|!
-name|ldisc
 argument_list|)
 expr_stmt|;
 name|vsave
