@@ -1760,12 +1760,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1803,12 +1797,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1817,12 +1805,6 @@ name|retn
 goto|;
 block|}
 comment|/* 		 * Dereference the reference we just created.  This assumes 		 * that the object is associated with the vp. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|object
 operator|->
 name|ref_count
