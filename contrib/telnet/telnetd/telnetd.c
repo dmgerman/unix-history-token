@@ -1744,7 +1744,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" [-a (debug|other|user|valid|off|none)]\n\t"
+literal|" [-4] [-6] [-a (debug|other|user|valid|off|none)]\n\t"
 argument_list|)
 expr_stmt|;
 endif|#
