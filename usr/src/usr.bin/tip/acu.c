@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	4.11 (Berkeley) %G%"
+literal|"@(#)acu.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -656,7 +656,7 @@ return|return;
 if|if
 condition|(
 name|reason
-operator|!=
+operator|==
 name|NOSTR
 condition|)
 block|{
