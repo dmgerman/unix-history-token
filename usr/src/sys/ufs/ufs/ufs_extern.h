@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -320,6 +320,10 @@ operator|,
 name|int
 operator|,
 expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
 name|proc
 operator|*
 operator|)
@@ -340,6 +344,10 @@ operator|,
 name|u_int
 operator|,
 name|u_int
+operator|,
+expr|struct
+name|ucred
+operator|*
 operator|,
 expr|struct
 name|proc

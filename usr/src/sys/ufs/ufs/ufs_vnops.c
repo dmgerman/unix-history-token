@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.83 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.84 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -142,6 +142,10 @@ operator|,
 name|int
 operator|,
 expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
 name|proc
 operator|*
 operator|)
@@ -162,6 +166,10 @@ operator|,
 name|u_int
 operator|,
 name|u_int
+operator|,
+expr|struct
+name|ucred
+operator|*
 operator|,
 expr|struct
 name|proc
@@ -1331,6 +1339,8 @@ name|vap
 operator|->
 name|va_gid
 argument_list|,
+name|cred
+argument_list|,
 name|p
 argument_list|)
 condition|)
@@ -1531,6 +1541,8 @@ name|vap
 operator|->
 name|va_mode
 argument_list|,
+name|cred
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -1639,6 +1651,8 @@ name|vp
 parameter_list|,
 name|mode
 parameter_list|,
+name|cred
+parameter_list|,
 name|p
 parameter_list|)
 specifier|register
@@ -1651,22 +1665,18 @@ specifier|register
 name|int
 name|mode
 decl_stmt|;
+specifier|register
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
 specifier|register
 name|struct
 name|inode
@@ -1832,6 +1842,8 @@ name|uid
 parameter_list|,
 name|gid
 parameter_list|,
+name|cred
+parameter_list|,
 name|p
 parameter_list|)
 specifier|register
@@ -1845,6 +1857,11 @@ name|uid
 decl_stmt|;
 name|u_int
 name|gid
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 name|struct
 name|proc
@@ -1862,16 +1879,6 @@ name|VTOI
 argument_list|(
 name|vp
 argument_list|)
-decl_stmt|;
-specifier|register
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
 decl_stmt|;
 name|uid_t
 name|ouid
