@@ -6344,15 +6344,17 @@ operator|==
 name|dev
 condition|)
 block|{
-comment|/* 		 * If the child device doesn't have an interrupt routed 		 * and is deserving of an interrupt, try to assign it one. 		 */
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|SYS_RES_IRQ
+case|:
+comment|/* 			 * If the child device doesn't have an 			 * interrupt routed and is deserving of an 			 * interrupt, try to assign it one. 			 */
 if|if
 condition|(
-operator|(
-name|type
-operator|==
-name|SYS_RES_IRQ
-operator|)
-operator|&&
 operator|!
 name|PCI_INTERRUPT_VALID
 argument_list|(
@@ -6431,6 +6433,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+break|break;
+case|case
+name|SYS_RES_IOPORT
+case|:
+case|case
+name|SYS_RES_MEMORY
+case|:
+comment|/* 			 * Enable the I/O mode.  We should also be allocating 			 * resources too. XXX 			 */
+name|PCI_ENABLE_IO
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 return|return
