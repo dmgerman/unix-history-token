@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.5	81/03/09	*/
+comment|/*	vfs_lookup.c	4.6	81/04/28	*/
 end_comment
 
 begin_include
@@ -110,6 +110,15 @@ decl_stmt|;
 name|off_t
 name|eo
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CHAOS
+specifier|extern
+name|long
+name|cdevpath
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If name starts with '/' start from 	 * root; otherwise start from current dir. 	 */
 name|dp
 operator|=
@@ -214,6 +223,52 @@ operator|(
 name|dp
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|CHAOS
+if|if
+condition|(
+operator|(
+name|dp
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFCHR
+operator|&&
+operator|(
+name|cdevpath
+operator|&
+operator|(
+literal|1
+operator|<<
+name|major
+argument_list|(
+name|dp
+operator|->
+name|i_un
+operator|.
+name|i_rdev
+argument_list|)
+operator|)
+operator|)
+condition|)
+block|{
+name|u
+operator|.
+name|u_dirp
+operator|--
+expr_stmt|;
+return|return
+operator|(
+name|dp
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * If there is another component, 	 * Gather up name into 	 * users' dir buffer. 	 */
 name|cp
 operator|=
