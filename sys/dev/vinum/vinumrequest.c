@@ -3959,16 +3959,16 @@ name|bp
 operator|->
 name|b_flags
 operator|&
-name|B_WRITE
+name|B_READ
 condition|)
-comment|/* writing, */
+comment|/* reading, */
 name|set_sd_state
 argument_list|(
 name|sd
 operator|->
 name|sdno
 argument_list|,
-name|sd_stale
+name|sd_crashed
 argument_list|,
 name|setstate_force
 argument_list|)
@@ -3980,7 +3980,7 @@ name|sd
 operator|->
 name|sdno
 argument_list|,
-name|sd_crashed
+name|sd_stale
 argument_list|,
 name|setstate_force
 argument_list|)
