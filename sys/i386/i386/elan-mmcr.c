@@ -210,6 +210,12 @@ begin_comment
 comment|/* CPU_ELAN_PPS */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_SOEKRIS
+end_ifdef
+
 begin_decl_stmt
 name|u_int
 name|led_cookie
@@ -286,6 +292,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -314,12 +325,18 @@ name|buf
 index|[
 literal|32
 index|]
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_SOEKRIS
+name|char
 name|tmp
 index|[
 literal|10
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -622,6 +639,9 @@ name|v
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_SOEKRIS
 if|if
 condition|(
 name|buf
@@ -676,6 +696,8 @@ operator|~
 name|u
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|buf
@@ -784,6 +806,9 @@ break|break;
 endif|#
 directive|endif
 comment|/* CPU_ELAN_PPS */
+ifdef|#
+directive|ifdef
+name|CPU_SOEKRIS
 case|case
 literal|'l'
 case|:
@@ -893,6 +918,8 @@ name|i
 index|]
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'.'
 case|:
