@@ -566,12 +566,39 @@ parameter_list|)
 value|WRITE_CSR(sc, WXREG_IMASK, sc->wx_ienable)
 end_define
 
+begin_comment
+comment|/*  * Until we do a bit more work, we can get no bigger than MCLBYTES  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|WX_MAXMTU
 value|(WX_MAX_PKT_SIZE_JUMBO - sizeof (struct ether_header))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|WX_MAXMTU
+value|(MCLBYTES - sizeof (struct ether_header))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
