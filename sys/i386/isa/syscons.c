@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.181 1996/10/23 07:29:43 pst Exp $  */
+comment|/*-  * Copyright (c) 1992-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.182 1996/10/26 20:16:58 sos Exp $  */
 end_comment
 
 begin_include
@@ -3618,13 +3618,21 @@ name|cur_console
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*       * Loop while there is still input to get from the keyboard.      * I don't think this is nessesary, and it doesn't fix      * the Xaccel-2.1 keyboard hang, but it can't hurt.		XXX      */
+while|while
+condition|(
+operator|(
 name|c
 operator|=
 name|scgetc
 argument_list|(
 name|SCGETC_NONBLOCK
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NOKEY
+condition|)
+block|{
 name|cur_tty
 operator|=
 name|VIRTUAL_TTY
@@ -3691,11 +3699,6 @@ name|cur_tty
 operator|)
 expr_stmt|;
 break|break;
-case|case
-name|NOKEY
-case|:
-comment|/* nothing there */
-return|return;
 case|case
 name|FKEY
 case|:
@@ -3847,6 +3850,7 @@ name|cur_tty
 operator|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -8383,6 +8387,21 @@ init|=
 name|spltty
 argument_list|()
 decl_stmt|;
+comment|/*       * With release 2.1 of the Xaccel server, the keyboard is left      * hanging pretty often. Apparently the interrupt from the      * keyboard is lost, and I don't know why (yet).      * This Ugly hack calls scintr if input is ready and      * conveniently hides the problem.			XXX      */
+if|if
+condition|(
+name|inb
+argument_list|(
+name|KB_STAT
+argument_list|)
+operator|&
+name|KB_BUF_FULL
+condition|)
+name|scintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* should we just return ? */
 if|if
 condition|(
@@ -15228,10 +15247,7 @@ literal|0
 decl_stmt|;
 name|next_code
 label|:
-name|kbd_wait
-argument_list|()
-expr_stmt|;
-comment|/* first see if there is something in the keyboard port */
+comment|/* check if there is anything in the keyboard buffer */
 if|if
 condition|(
 name|inb
@@ -15241,6 +15257,12 @@ argument_list|)
 operator|&
 name|KB_BUF_FULL
 condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
 name|scancode
 operator|=
 name|inb
@@ -15248,6 +15270,7 @@ argument_list|(
 name|KB_DATA
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -16799,11 +16822,6 @@ argument_list|(
 literal|"manual escape to debugger"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NOKEY
-operator|)
-return|;
 else|#
 directive|else
 name|printf
