@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -31,12 +31,6 @@ modifier|*
 name|fts_child
 decl_stmt|;
 comment|/* linked list of children */
-name|struct
-name|_ftsent
-modifier|*
-name|fts_savelink
-decl_stmt|;
-comment|/* saved link if node had a cycle */
 name|struct
 name|_ftsent
 modifier|*
@@ -125,6 +119,12 @@ block|{
 name|struct
 name|_ftsent
 modifier|*
+name|fts_cycle
+decl_stmt|;
+comment|/* cycle node */
+name|struct
+name|_ftsent
+modifier|*
 name|fts_parent
 decl_stmt|;
 comment|/* parent directory */
@@ -133,7 +133,7 @@ name|_ftsent
 modifier|*
 name|fts_link
 decl_stmt|;
-comment|/* cycle or next file structure */
+comment|/* next file in directory */
 union|union
 block|{
 name|long
