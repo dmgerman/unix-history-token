@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -397,11 +397,17 @@ name|rcps
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup
 argument_list|(
 name|fileno

@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -390,6 +390,10 @@ name|q_paddr
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
 name|NULL
 argument_list|,
 operator|&
@@ -687,10 +691,6 @@ name|buf
 index|[
 name|MAXNAME
 index|]
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 extern|extern putheader(
 block|)

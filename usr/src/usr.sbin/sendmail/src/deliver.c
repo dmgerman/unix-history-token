@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.90
+literal|3.91
 operator|%
 name|G
 operator|%
@@ -2045,6 +2045,10 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|u_short
+name|port
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2064,7 +2068,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|i
+name|port
 operator|=
 name|atoi
 argument_list|(
@@ -2075,7 +2079,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|i
+name|port
 operator|=
 literal|0
 expr_stmt|;
@@ -2088,7 +2092,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|i
+name|port
 argument_list|,
 name|pmfile
 argument_list|,
@@ -3466,6 +3470,9 @@ name|obp
 operator|=
 name|obuf
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|obp
@@ -3812,6 +3819,9 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|obp

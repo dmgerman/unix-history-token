@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.17
+literal|3.18
 operator|%
 name|G
 operator|%
@@ -1454,11 +1454,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|char
-name|s1
-decl_stmt|,
-name|s2
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1479,9 +1474,9 @@ name|p
 operator|=
 name|index
 argument_list|(
-literal|'\n'
-argument_list|,
 name|l
+argument_list|,
+literal|'\n'
 argument_list|)
 expr_stmt|;
 if|if

@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -359,6 +359,9 @@ argument_list|(
 literal|"accept"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|s
@@ -407,7 +410,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_short
 name|port
 decl_stmt|;
 end_decl_stmt
