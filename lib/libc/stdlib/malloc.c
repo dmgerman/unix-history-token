@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.40 1998/09/19 20:55:36 alex Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.41 1998/09/20 01:07:50 alex Exp $  *  */
 end_comment
 
 begin_comment
@@ -66,6 +66,34 @@ define|#
 directive|define
 name|malloc_pageshift
 value|12U
+end_define
+
+begin_define
+define|#
+directive|define
+name|malloc_minsize
+value|16U
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|malloc_pageshift
+value|13U
 end_define
 
 begin_define
