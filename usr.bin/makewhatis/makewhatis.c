@@ -2692,6 +2692,15 @@ name|line
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sbuf_append
+argument_list|(
+name|whatis_proto
+argument_list|,
+literal|" "
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|xref
