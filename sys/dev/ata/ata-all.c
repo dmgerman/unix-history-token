@@ -2091,6 +2091,15 @@ name|error
 init|=
 name|ENOTTY
 decl_stmt|;
+if|if
+condition|(
+name|cmd
+operator|!=
+name|IOCATA
+condition|)
+return|return
+name|error
+return|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
