@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.29 (Berkeley) %G%"
+literal|"@(#)util.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2588,6 +2588,11 @@ specifier|register
 name|char
 name|svchar
 decl_stmt|;
+name|int
+name|slop
+init|=
+literal|0
+decl_stmt|;
 comment|/* strip out 0200 bits -- these can look like TELNET protocol */
 if|if
 condition|(
@@ -2697,6 +2702,8 @@ operator|(
 name|p
 operator|-
 name|l
+operator|+
+name|slop
 operator|)
 operator|>
 name|mci
@@ -2720,6 +2727,8 @@ name|mci_mailer
 operator|->
 name|m_linelimit
 operator|-
+name|slop
+operator|-
 literal|1
 index|]
 decl_stmt|;
@@ -2741,6 +2750,10 @@ literal|0
 index|]
 operator|==
 literal|'.'
+operator|&&
+name|slop
+operator|==
+literal|0
 operator|&&
 name|bitnset
 argument_list|(
@@ -2817,6 +2830,18 @@ operator|->
 name|mci_out
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|' '
+argument_list|,
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TrafficLogFile
@@ -2827,7 +2852,7 @@ name|fprintf
 argument_list|(
 name|TrafficLogFile
 argument_list|,
-literal|"%s!\n%05d>>> "
+literal|"%s!\n%05d>>>  "
 argument_list|,
 name|l
 argument_list|,
@@ -2844,6 +2869,10 @@ name|l
 operator|=
 name|q
 expr_stmt|;
+name|slop
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* output last part */
 if|if
@@ -2854,6 +2883,10 @@ literal|0
 index|]
 operator|==
 literal|'.'
+operator|&&
+name|slop
+operator|==
+literal|0
 operator|&&
 name|bitnset
 argument_list|(

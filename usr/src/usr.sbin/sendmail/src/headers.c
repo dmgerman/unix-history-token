@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.25 (Berkeley) %G%"
+literal|"@(#)headers.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3995,6 +3995,9 @@ decl_stmt|;
 name|int
 name|opos
 decl_stmt|;
+name|int
+name|omax
+decl_stmt|;
 name|bool
 name|firstone
 init|=
@@ -4061,6 +4064,32 @@ expr_stmt|;
 name|obp
 operator|+=
 name|opos
+expr_stmt|;
+name|omax
+operator|=
+literal|78
+expr_stmt|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_linelimit
+operator|-
+literal|2
+operator|<
+name|omax
+condition|)
+name|omax
+operator|=
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_linelimit
+operator|-
+literal|2
 expr_stmt|;
 comment|/* 	**  Run through the list of values. 	*/
 while|while
@@ -4369,7 +4398,7 @@ if|if
 condition|(
 name|opos
 operator|>
-literal|78
+name|omax
 operator|&&
 operator|!
 name|firstone
