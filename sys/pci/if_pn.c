@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_pn.c,v 1.48 1999/04/12 21:08:27 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_pn.c,v 1.49 1999/04/13 16:57:36 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -181,7 +181,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PN_PROMISC_BUG_WAR
+name|PN_RX_BUG_WAR
 end_define
 
 begin_include
@@ -203,7 +203,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_pn.c,v 1.48 1999/04/12 21:08:27 wpaul Exp $"
+literal|"$Id: if_pn.c,v 1.49 1999/04/13 16:57:36 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,13 +417,13 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PN_PROMISC_BUG_WAR
+name|PN_RX_BUG_WAR
 end_ifdef
 
 begin_decl_stmt
 specifier|static
 name|void
-name|pn_promisc_bug_war
+name|pn_rx_bug_war
 name|__P
 argument_list|(
 operator|(
@@ -4527,7 +4527,7 @@ name|phy_sts
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|PN_PROMISC_BUG_WAR
+name|PN_RX_BUG_WAR
 name|u_int32_t
 name|revision
 init|=
@@ -5149,7 +5149,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|PN_PROMISC_BUG_WAR
+name|PN_RX_BUG_WAR
 name|revision
 operator|=
 name|pci_conf_read
@@ -5182,13 +5182,13 @@ condition|)
 block|{
 name|sc
 operator|->
-name|pn_promisc_war
+name|pn_rx_war
 operator|=
 literal|1
 expr_stmt|;
 name|sc
 operator|->
-name|pn_promisc_buf
+name|pn_rx_buf
 operator|=
 name|malloc
 argument_list|(
@@ -5205,7 +5205,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|pn_promisc_buf
+name|pn_rx_buf
 operator|==
 name|NULL
 condition|)
@@ -5226,7 +5226,7 @@ else|else
 block|{
 name|sc
 operator|->
-name|pn_promisc_war
+name|pn_rx_war
 operator|=
 literal|0
 expr_stmt|;
@@ -6345,11 +6345,11 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PN_PROMISC_BUG_WAR
+name|PN_RX_BUG_WAR
 end_ifdef
 
 begin_comment
-comment|/*  * Grrrrr.  * Revision 33 of the PNIC chip has a terrible bug in it that manifests  * itself when you enable promiscuous mode. Sometimes instead of uploading  * one complete frame, it uploads its entire FIFO memory. The frame we  * want is at the end of this whole mess, but we never know exactly  * how much data has been uploaded, so finding it can be hard.  *  * There is only one way to do it reliably, and it's disgusting.  * Here's what we know:  *  * - We know there will always be somewhere between one and three extra  *   descriptors uploaded.  *  * - We know the desired received frame will always be at the end of the  *   total data upload.  *  * - We know the size of the desired received frame because it will be  *   provided in the length field of the status word in the last descriptor.  *  * Here's what we do:  *  * - When we allocate buffers for the receive ring, we bzero() them.  *   This means that we know that the buffer contents should be all  *   zeros, except for data uploaded by the chip.  *  * - We also force the PNIC chip to upload frames that include the  *   ethernet CRC at the end.  *  * - We gather all of the bogus frame data into a single buffer.  *  * - We then position a pointer at the end of this buffer and scan  *   backwards until we encounter the first non-zero byte of data.  *   This is the end of the received frame. We know we will encounter  *   some data at the end of the frame because the CRC will always be  *   there, so even if the sender transmits a packet of all zeros,  *   we won't be fooled.  *  * - We know the size of the actual received frame, so we subtract  *   that value from the current pointer location. This brings us  *   to the start of the actual received packet.  *  * - We copy this into an mbuf and pass it on, along with the actual  *   frame length.  *  * The performance hit is tremendous, but it beats dropping frames all  * the time.  */
+comment|/*  * Grrrrr.  * The PNIC chip has a terrible bug in it that manifests itself during  * periods of heavy activity. The exact mode of failure if difficult to  * pinpoint: sometimes it only happens in promiscuous mode, sometimes it  * will happen on slow machines. The bug is that sometimes instead of  * uploading one complete frame during reception, it uploads what looks  * like the entire contents of its FIFO memory. The frame we want is at  * the end of the whole mess, but we never know exactly how much data has  * been uploaded, so salvaging the frame is hard.  *  * There is only one way to do it reliably, and it's disgusting.  * Here's what we know:  *  * - We know there will always be somewhere between one and three extra  *   descriptors uploaded.  *  * - We know the desired received frame will always be at the end of the  *   total data upload.  *  * - We know the size of the desired received frame because it will be  *   provided in the length field of the status word in the last descriptor.  *  * Here's what we do:  *  * - When we allocate buffers for the receive ring, we bzero() them.  *   This means that we know that the buffer contents should be all  *   zeros, except for data uploaded by the chip.  *  * - We also force the PNIC chip to upload frames that include the  *   ethernet CRC at the end.  *  * - We gather all of the bogus frame data into a single buffer.  *  * - We then position a pointer at the end of this buffer and scan  *   backwards until we encounter the first non-zero byte of data.  *   This is the end of the received frame. We know we will encounter  *   some data at the end of the frame because the CRC will always be  *   there, so even if the sender transmits a packet of all zeros,  *   we won't be fooled.  *  * - We know the size of the actual received frame, so we subtract  *   that value from the current pointer location. This brings us  *   to the start of the actual received packet.  *  * - We copy this into an mbuf and pass it on, along with the actual  *   frame length.  *  * The performance hit is tremendous, but it beats dropping frames all  * the time.  */
 end_comment
 
 begin_define
@@ -6362,7 +6362,7 @@ end_define
 begin_function
 specifier|static
 name|void
-name|pn_promisc_bug_war
+name|pn_rx_bug_war
 parameter_list|(
 name|sc
 parameter_list|,
@@ -6401,13 +6401,13 @@ name|c
 operator|=
 name|sc
 operator|->
-name|pn_promisc_bug_save
+name|pn_rx_bug_save
 expr_stmt|;
 name|ptr
 operator|=
 name|sc
 operator|->
-name|pn_promisc_buf
+name|pn_rx_buf
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -6539,11 +6539,10 @@ name|ptr
 operator|==
 literal|0x00
 condition|)
-block|{
 name|ptr
 operator|--
 expr_stmt|;
-block|}
+comment|/* Round off. */
 if|if
 condition|(
 call|(
@@ -6570,13 +6569,13 @@ name|ptr
 operator|<
 name|sc
 operator|->
-name|pn_promisc_buf
+name|pn_rx_buf
 condition|)
 name|ptr
 operator|=
 name|sc
 operator|->
-name|pn_promisc_buf
+name|pn_rx_buf
 expr_stmt|;
 comment|/* 	 * Now copy the salvaged frame to the last mbuf and fake up 	 * the status word to make it look like a successful  	 * frame reception. 	 */
 name|m_copyback
@@ -6733,19 +6732,13 @@ name|pn_nextdesc
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|PN_PROMISC_BUG_WAR
-comment|/* 		 * XXX The PNIC seems to have a bug that manifests 		 * when the promiscuous mode bit is set: we have to 		 * watch for it and work around it. 		 */
+name|PN_RX_BUG_WAR
+comment|/* 		 * XXX The PNIC has a nasty receiver bug that manifests 	 	 * under certain conditions (sometimes only in promiscuous 		 * mode, sometimes only on slow machines even when not in 		 * promiscuous mode). We have to keep an eye out for the 		 * failure condition and employ a workaround to recover 		 * any mangled frames. 		 */
 if|if
 condition|(
 name|sc
 operator|->
-name|pn_promisc_war
-operator|&&
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
+name|pn_rx_war
 condition|)
 block|{
 if|if
@@ -6767,7 +6760,7 @@ name|PN_RXSTAT_FIRSTFRAG
 condition|)
 name|sc
 operator|->
-name|pn_promisc_bug_save
+name|pn_rx_bug_save
 operator|=
 name|cur_rx
 expr_stmt|;
@@ -6782,7 +6775,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|pn_promisc_bug_war
+name|pn_rx_bug_war
 argument_list|(
 name|sc
 argument_list|,
@@ -8723,7 +8716,18 @@ name|sc
 argument_list|,
 name|PN_BUSCTL
 argument_list|,
-name|PN_BURSTLEN_USECA
+name|PN_BUSCTL_MUSTBEONE
+operator||
+name|PN_BUSCTL_ARBITRATION
+argument_list|)
+expr_stmt|;
+name|PN_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PN_BUSCTL
+argument_list|,
+name|PN_BURSTLEN_16LONG
 argument_list|)
 expr_stmt|;
 switch|switch
