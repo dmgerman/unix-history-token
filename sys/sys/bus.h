@@ -2035,7 +2035,6 @@ comment|/*  * Functions for maintaining and checking consistency of  * bus infor
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|bus_data_generation_check
 parameter_list|(
@@ -2046,7 +2045,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|bus_data_generation_update
 parameter_list|(
