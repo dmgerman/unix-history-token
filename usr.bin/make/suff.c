@@ -4251,6 +4251,8 @@ name|junk
 decl_stmt|;
 name|size_t
 name|len
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|doFree

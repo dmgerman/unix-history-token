@@ -2184,6 +2184,10 @@ name|Boolean
 name|freeIt
 decl_stmt|;
 comment|/* 		     * If unescaped dollar sign not before the 		     * delimiter, assume it's a variable 		     * substitution and recurse. 		     */
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|cp2
 operator|=
 name|Var_Parse
@@ -3327,6 +3331,10 @@ decl_stmt|;
 name|Boolean
 name|freeIt
 decl_stmt|;
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|cp2
 operator|=
 name|Var_Parse
@@ -3586,6 +3594,10 @@ decl_stmt|;
 name|Boolean
 name|freeIt
 decl_stmt|;
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|cp2
 operator|=
 name|Var_Parse
@@ -5599,6 +5611,10 @@ name|char
 modifier|*
 name|rval
 decl_stmt|;
+name|rlen
+operator|=
+literal|0
+expr_stmt|;
 name|rval
 operator|=
 name|Var_Parse
@@ -7100,6 +7116,10 @@ name|expand
 condition|)
 continue|continue;
 block|}
+name|length
+operator|=
+literal|0
+expr_stmt|;
 name|val
 operator|=
 name|Var_Parse

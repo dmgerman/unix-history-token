@@ -310,6 +310,8 @@ block|{
 comment|/* 			 * Variable spec, so call the Var module to parse the 			 * puppy so we can safely advance beyond it... 			 */
 name|size_t
 name|length
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|freeIt
@@ -495,6 +497,8 @@ block|{
 comment|/* 				 * Variable spec, so call the Var module to 				 * parse the puppy so we can safely advance 				 * beyond it... 				 */
 name|size_t
 name|length
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|freeIt

@@ -692,6 +692,8 @@ name|cp2
 decl_stmt|;
 name|size_t
 name|len
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|doFree
@@ -1554,6 +1556,8 @@ name|op
 decl_stmt|;
 name|size_t
 name|varSpecLen
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|doFree
@@ -2014,6 +2018,8 @@ condition|)
 block|{
 name|size_t
 name|len
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|freeIt
@@ -2258,6 +2264,8 @@ condition|)
 block|{
 name|size_t
 name|len
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|freeIt
@@ -2823,6 +2831,10 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+name|length
+operator|=
+literal|0
+expr_stmt|;
 name|val
 operator|=
 name|Var_Parse

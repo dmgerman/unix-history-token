@@ -2110,6 +2110,8 @@ block|{
 comment|/* 		 * Must be a dynamic source (would have been expanded 		 * otherwise), so call the Var module to parse the puppy 		 * so we can safely advance beyond it...There should be 		 * no errors in this, as they would have been discovered 		 * in the initial Var_Subst and we wouldn't be here. 		 */
 name|size_t
 name|length
+init|=
+literal|0
 decl_stmt|;
 name|Boolean
 name|freeIt
