@@ -757,18 +757,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|ptvmmap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* poor name! */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|vm_offset_t
 name|virtual_avail
 decl_stmt|;
