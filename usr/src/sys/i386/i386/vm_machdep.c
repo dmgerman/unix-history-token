@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.3 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1989, 1990 William F. Jolitz  */
 end_comment
 
 begin_comment
@@ -82,6 +86,18 @@ include|#
 directive|include
 file|"dbg.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|load_cr3
+parameter_list|(
+name|s
+parameter_list|)
+value|{long phys; \ 	phys = (long)(s)
+comment|/*| 0x80000000 */
+value|;\ 	__asm ( "movl %0,%%eax; movl %%eax,%%cr3" : : "g" (phys) : "ax" ) ; }
+end_define
 
 begin_comment
 comment|/*  * Set a red zone in the kernel stack after the u. area.  */
@@ -291,8 +307,11 @@ endif|#
 directive|endif
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 block|}
@@ -482,8 +501,11 @@ name|tprot
 expr_stmt|;
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 return|return
@@ -562,8 +584,11 @@ expr_stmt|;
 block|}
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 block|}
@@ -728,8 +753,11 @@ do|;
 comment|/* short cut newptes */
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 block|}
@@ -824,8 +852,11 @@ expr_stmt|;
 block|}
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 block|}
@@ -888,6 +919,8 @@ index|[
 name|btop
 argument_list|(
 name|from
+operator|-
+literal|0xfe000000
 argument_list|)
 index|]
 expr_stmt|;
@@ -899,6 +932,8 @@ index|[
 name|btop
 argument_list|(
 name|to
+operator|-
+literal|0xfe000000
 argument_list|)
 index|]
 expr_stmt|;
@@ -941,8 +976,11 @@ expr_stmt|;
 block|}
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1655,9 +1693,8 @@ begin_block
 block|{
 return|return
 operator|(
-operator|(
-name|int
-operator|)
+name|ctob
+argument_list|(
 name|Usrptmap
 index|[
 name|btokmx
@@ -1665,16 +1702,20 @@ argument_list|(
 name|p
 operator|->
 name|p_p0br
-argument_list|)
 operator|+
 name|p
 operator|->
 name|p_szpt
+operator|*
+name|NPTEPG
+argument_list|)
 index|]
 operator|.
 name|pg_pfnum
+argument_list|)
 operator|)
 return|;
+comment|/*return((int)Usrptmap[btokmx(p->p_p0br) + p->p_szpt].pg_pfnum);*/
 block|}
 end_block
 
@@ -1733,13 +1774,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|pde
-argument_list|,
-name|NBPG
-argument_list|)
-expr_stmt|;
+comment|/*bzero(pde, NBPG); */
 comment|/* map kernel */
 name|pde
 operator|=
@@ -2053,6 +2088,14 @@ name|pg_pfnum
 expr_stmt|;
 comment|/*pg("pde %x pf %x", pde, *(int *)pde);*/
 block|}
+return|return
+operator|(
+name|initcr3
+argument_list|(
+name|p
+argument_list|)
+operator|)
+return|;
 block|}
 end_block
 
@@ -2569,8 +2612,11 @@ end_while
 begin_expr_stmt
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2786,8 +2832,11 @@ expr_stmt|;
 block|}
 name|load_cr3
 argument_list|(
-name|_cr3
-argument_list|()
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
 argument_list|)
 expr_stmt|;
 block|}
