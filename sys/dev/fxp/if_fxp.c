@@ -4072,15 +4072,35 @@ name|IFCAP_VLAN_MTU
 expr_stmt|;
 comment|/* the hw bits already set */
 comment|/* 	 * Let the system queue as many packets as we have available 	 * TX descriptors. 	 */
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|FXP_NTXCB
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_snd
 operator|.
-name|ifq_maxlen
+name|ifq_drv_maxlen
 operator|=
 name|FXP_NTXCB
 operator|-
 literal|1
+expr_stmt|;
+name|IFQ_SET_READY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
 expr_stmt|;
 comment|/*  	 * Hook our interrupt after all initialization is complete. 	 * XXX This driver has been tested with the INTR_MPSAFFE flag set 	 * however, ifp and its functions are not fully locked so MPSAFE 	 * should not be used unless you can handle potential data loss. 	 */
 name|error
@@ -6198,13 +6218,14 @@ expr_stmt|;
 comment|/* 	 * We're finished if there is nothing more to add to the list or if 	 * we're all filled up with buffers to transmit. 	 * NOTE: One TxCB is reserved to guarantee that fxp_mc_setup() can add 	 *       a NOP command when needed. 	 */
 while|while
 condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_head
-operator|!=
-name|NULL
+argument_list|)
 operator|&&
 name|sc
 operator|->
@@ -6216,7 +6237,7 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * Grab a packet to transmit. 		 */
-name|IF_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
@@ -6226,6 +6247,13 @@ argument_list|,
 name|mb_head
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mb_head
+operator|==
+name|NULL
+condition|)
+break|break;
 comment|/* 		 * Get pointer to next available tx desc. 		 */
 name|txp
 operator|=
@@ -7422,13 +7450,14 @@ block|}
 comment|/* 		 * Try to start more packets transmitting. 		 */
 if|if
 condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_head
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 name|fxp_start_body
 argument_list|(
