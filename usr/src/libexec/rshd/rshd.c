@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.3 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -442,6 +448,10 @@ name|struct
 name|hostent
 modifier|*
 name|hp
+decl_stmt|;
+name|struct
+name|hostent
+name|hostent
 decl_stmt|;
 name|short
 name|port
@@ -833,14 +843,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|error
-argument_list|(
-literal|"Host name for your address unknown\n"
-argument_list|)
+comment|/* 		 * Only the name is used below 		 */
+name|hp
+operator|=
+operator|&
+name|hostent
 expr_stmt|;
-name|exit
+name|hp
+operator|->
+name|h_name
+operator|=
+name|inet_ntoa
 argument_list|(
-literal|1
+name|fromp
+operator|->
+name|sin_addr
 argument_list|)
 expr_stmt|;
 block|}
