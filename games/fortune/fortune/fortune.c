@@ -359,6 +359,18 @@ end_comment
 
 begin_decl_stmt
 name|bool
+name|Fortunes_only
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* check only "fortunes" files */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|Wait
 init|=
 name|FALSE
@@ -1978,21 +1990,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* errors printed through form_file_list() */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-operator|>=
-literal|1
-condition|)
-name|print_file_list
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|Find_files
@@ -2007,6 +2004,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+elseif|else
+if|if
+condition|(
+name|Debug
+operator|>=
+literal|1
+condition|)
+name|print_file_list
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 ifndef|#
 directive|ifndef
 name|NO_REGEX
@@ -2118,7 +2131,13 @@ if|if
 condition|(
 name|Find_files
 condition|)
-return|return
+block|{
+name|Fortunes_only
+operator|=
+name|TRUE
+expr_stmt|;
+name|i
+operator|=
 name|add_file
 argument_list|(
 name|NO_PROB
@@ -2135,7 +2154,15 @@ name|File_tail
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|Fortunes_only
+operator|=
+name|FALSE
+expr_stmt|;
+return|return
+name|i
 return|;
+block|}
 else|else
 return|return
 name|add_file
@@ -2584,10 +2611,6 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
-name|was_malloc
-operator|=
-name|TRUE
-expr_stmt|;
 if|if
 condition|(
 name|Offend
@@ -2605,6 +2628,27 @@ expr_stmt|;
 name|path
 operator|=
 name|offensive
+expr_stmt|;
+name|offensive
+operator|=
+name|NULL
+expr_stmt|;
+name|was_malloc
+operator|=
+name|TRUE
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+name|stderr
+operator|,
+literal|"\ttrying \"%s\"\n"
+operator|,
+name|path
+operator|)
+argument_list|)
 expr_stmt|;
 name|file
 operator|=
@@ -2656,10 +2700,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|path
-operator|=
-name|offensive
-expr_stmt|;
 if|if
 condition|(
 name|was_malloc
@@ -2668,6 +2708,10 @@ name|free
 argument_list|(
 name|path
 argument_list|)
+expr_stmt|;
+name|path
+operator|=
+name|offensive
 expr_stmt|;
 name|offensive
 operator|=
@@ -3920,9 +3964,22 @@ operator|==
 literal|'o'
 operator|)
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+name|stderr
+operator|,
+literal|"FALSE (offending file)\n"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -3963,6 +4020,37 @@ operator|(
 name|stderr
 operator|,
 literal|"FALSE (file starts with '.')\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+if|if
+condition|(
+name|Fortunes_only
+operator|&&
+name|strncmp
+argument_list|(
+name|sp
+argument_list|,
+literal|"fortunes"
+argument_list|,
+literal|8
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+name|stderr
+operator|,
+literal|"FALSE (check fortunes only)\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4445,7 +4533,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune: probabilities sum to %d%%!\n"
+literal|"fortune: probabilities sum to %d%%> 100%%!\n"
 argument_list|,
 name|percent
 argument_list|)
@@ -4475,7 +4563,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune: no place to put residual probability (%d%%)\n"
+literal|"fortune: no place to put residual probability (%d%%< 100%%)\n"
 argument_list|,
 name|percent
 argument_list|)
@@ -4505,7 +4593,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune: no probability left to put in residual files\n"
+literal|"fortune: no probability left to put in residual files (100%%)\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6143,7 +6231,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|" (%s, %s, %s)\n"
+literal|" (%s, %s, %s)"
 operator|,
 name|STR
 argument_list|(
@@ -6166,6 +6254,13 @@ operator|->
 name|posfile
 argument_list|)
 operator|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
