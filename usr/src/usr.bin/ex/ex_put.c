@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	6.4 %G%"
+literal|"@(#)ex_put.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1019,6 +1019,11 @@ name|COLUMNS
 operator|==
 literal|0
 condition|)
+name|putch
+argument_list|(
+literal|'\r'
+argument_list|)
+operator|,
 name|putch
 argument_list|(
 literal|'\n'
@@ -2206,6 +2211,17 @@ literal|' '
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|&
+name|QUOTE
+condition|)
+comment|/* mjm: no sign extension on 3B */
+name|i
+operator|=
+literal|' '
+expr_stmt|;
+if|if
+condition|(
 name|insmode
 operator|&&
 name|ND
@@ -2494,6 +2510,25 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|OLD3BTTY
+comment|/* mjm */
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+comment|/* mjm: Fake "\n\r" for '\n' til fix in 3B firmware */
+name|putch
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+comment|/* mjm: vi does "stty -icanon" => -onlcr !! */
+endif|#
+directive|endif
 operator|*
 name|obp
 operator|++

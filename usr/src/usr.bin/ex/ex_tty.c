@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tty.c	6.2 %G%"
+literal|"@(#)ex_tty.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,14 +29,9 @@ begin_comment
 comment|/*  * Terminal type initialization routines,  * and calculation of flags at entry or after  * a shell escape which may change them.  */
 end_comment
 
-begin_decl_stmt
-name|short
-name|ospeed
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* short	ospeed = -1;	mjm: def also in tputs.c of termcap.a  */
+end_comment
 
 begin_macro
 name|gettmode
@@ -152,12 +147,15 @@ if|if
 condition|(
 name|ospeed
 operator|!=
+operator|(
 name|tty
 operator|.
 name|c_cflag
 operator|&
 name|CBAUD
+operator|)
 condition|)
+comment|/* mjm */
 name|value
 argument_list|(
 name|SLOWOPEN
@@ -451,6 +449,9 @@ name|XN
 block|,
 operator|&
 name|XT
+block|,
+operator|&
+name|XV
 block|,
 operator|&
 name|XX
@@ -1170,7 +1171,7 @@ name|sp
 decl_stmt|;
 name|namp
 operator|=
-literal|"ambsdadbeohchzinmincnsosulxbxnxtxx"
+literal|"ambsdadbeohchzinmincnsosulxbxnxtxvxx"
 expr_stmt|;
 name|fp
 operator|=

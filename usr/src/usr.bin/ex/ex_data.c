@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_data.c	6.1 %G%"
+literal|"@(#)ex_data.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,19 @@ block|,
 literal|'I'
 block|,
 comment|/* -mm macros */
+literal|'p'
+block|,
+literal|'p'
+block|,
+literal|'l'
+block|,
+literal|'p'
+block|,
+literal|'i'
+block|,
+literal|'p'
+block|,
+comment|/* -me macros */
 literal|'b'
 block|,
 literal|'p'
@@ -114,7 +127,16 @@ block|,
 literal|'H'
 block|,
 literal|'U'
+block|,
 comment|/* -mm macros */
+literal|'n'
+block|,
+literal|'h'
+block|,
+literal|'s'
+block|,
+literal|'h'
+comment|/* -me macros */
 block|}
 decl_stmt|;
 end_decl_stmt

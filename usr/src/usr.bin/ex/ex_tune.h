@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tune.h	6.2 %G%  */
+comment|/* sccs id:	@(#)ex_tune.h	7.1	%G%  */
 end_comment
 
 begin_comment
@@ -25,14 +25,14 @@ begin_define
 define|#
 directive|define
 name|EXRECOVER
-value|libpath(ex3.6recover)
+value|libpath(ex3.7recover)
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXPRESERVE
-value|libpath(ex3.6preserve)
+value|libpath(ex3.7preserve)
 end_define
 
 begin_ifndef
@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|EXSTRINGS
-value|libpath(ex3.6strings)
+value|libpath(ex3.7strings)
 end_define
 
 begin_endif
@@ -474,6 +474,10 @@ directive|define
 name|ATTN
 value|(-2)
 end_define
+
+begin_comment
+comment|/* mjm: (char) ??  */
+end_comment
 
 begin_define
 define|#

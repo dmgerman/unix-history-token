@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	6.4 %G%"
+literal|"@(#)ex.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,6 +582,10 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|tracbuf
+value|NULL
 if|if
 condition|(
 name|trace
@@ -593,6 +597,7 @@ argument_list|(
 literal|"Trace create error\n"
 argument_list|)
 expr_stmt|;
+else|else
 name|setbuf
 argument_list|(
 name|trace
@@ -1033,6 +1038,7 @@ name|fast
 operator|&&
 name|intty
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1089,6 +1095,15 @@ argument_list|)
 argument_list|,
 literal|"/.exrc"
 argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * Allow local .exrc too.  This loses if . is $HOME, 		 * but nobody should notice unless they do stupid things 		 * like putting a version command in .exrc.  Besides, 		 * they should be using EXINIT, not .exrc, right? 		 */
+name|source
+argument_list|(
+literal|".exrc"
 argument_list|,
 literal|1
 argument_list|)

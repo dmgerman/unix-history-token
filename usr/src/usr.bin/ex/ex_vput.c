@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vput.c	6.1 %G%"
+literal|"@(#)ex_vput.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1601,10 +1601,14 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* mjm: char --> int */
+end_comment
 
 begin_block
 block|{
@@ -2803,10 +2807,14 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* mjm: char --> int */
+end_comment
 
 begin_block
 block|{
@@ -3972,7 +3980,7 @@ operator|,
 name|outcol
 operator|++
 expr_stmt|;
-comment|/* 		 * CONCEPT braindamage in early models:  after a wraparound 		 * the next newline is eaten.  It's hungry so we just 		 * feed it now rather than worrying about it. 		 */
+comment|/* 		 * CONCEPT braindamage in early models:  after a wraparound 		 * the next newline is eaten.  It's hungry so we just 		 * feed it now rather than worrying about it. 		 * Fixed to use	return linefeed to work right 		 * on vt100/tab132 as well as concept. 		 */
 if|if
 condition|(
 name|XN
@@ -3983,11 +3991,22 @@ name|WCOLS
 operator|==
 literal|0
 condition|)
+block|{
+name|vputc
+argument_list|(
+literal|'\r'
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|vputc
 argument_list|(
 literal|'\n'
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -4529,10 +4548,14 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* mjm: char --> int */
+end_comment
 
 begin_block
 block|{
@@ -4556,6 +4579,28 @@ argument_list|(
 name|trace
 argument_list|,
 literal|"$"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|&
+name|QUOTE
+condition|)
+comment|/* mjm: for 3B (no sign extension) */
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"~%c"
+argument_list|,
+name|ctlof
+argument_list|(
+name|c
+operator|&
+name|TRIM
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops2.c	6.2 %G%"
+literal|"@(#)ex_vops2.c	6.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,7 @@ comment|/*  * Low level routines for operations sequences,  * and mostly, insert
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|vUA1
@@ -45,7 +46,12 @@ name|vUA2
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* mjm: extern; also in ex_vops.c */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|vUD1
@@ -54,6 +60,10 @@ modifier|*
 name|vUD2
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* mjm: extern; also in ex_vops.c */
+end_comment
 
 begin_comment
 comment|/*  * Obleeperate characters in hardcopy  * open with \'s.  */
@@ -411,10 +421,14 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|ch
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* mjm: char --> int */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -2727,11 +2741,32 @@ operator|!
 name|backsl
 condition|)
 block|{
+name|int
+name|cnt
+decl_stmt|;
 name|putchar
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|FIONREAD
+argument_list|,
+operator|&
+name|cnt
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|cnt
+operator|==
+literal|0
+condition|)
 name|flush
 argument_list|()
 expr_stmt|;

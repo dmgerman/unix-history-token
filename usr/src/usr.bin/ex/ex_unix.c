@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	6.1 %G%"
+literal|"@(#)ex_unix.c	6.1 10/18/80"
 decl_stmt|;
 end_decl_stmt
 
@@ -1020,10 +1020,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|ttymode
 name|f
 decl_stmt|;
+comment|/* mjm: was register */
 specifier|register
 name|int
 name|lines
@@ -1124,7 +1124,9 @@ index|]
 argument_list|)
 expr_stmt|;
 name|putfile
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(

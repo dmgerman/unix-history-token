@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_re.c	6.2 %G%"
+literal|"@(#)ex_re.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1697,6 +1697,17 @@ name|rp
 operator|++
 condition|)
 block|{
+comment|/* ^V<return> from vi to split lines */
+if|if
+condition|(
+name|c
+operator|==
+literal|'\r'
+condition|)
+name|c
+operator|=
+literal|'\n'
+expr_stmt|;
 if|if
 condition|(
 name|c

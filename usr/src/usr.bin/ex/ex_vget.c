@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vget.c	6.2 %G%"
+literal|"@(#)ex_vget.c	6.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,10 +47,14 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* mjm: char --> int */
+end_comment
 
 begin_block
 block|{
@@ -79,9 +83,10 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|char
+name|int
 name|c
 decl_stmt|;
+comment|/* mjm: char --> int */
 do|do
 block|{
 name|c
@@ -170,6 +175,9 @@ specifier|register
 name|char
 modifier|*
 name|colp
+decl_stmt|;
+name|int
+name|cnt
 decl_stmt|;
 define|#
 directive|define
@@ -314,6 +322,9 @@ name|again
 label|:
 if|if
 condition|(
+operator|(
+name|c
+operator|=
 name|read
 argument_list|(
 name|slevel
@@ -329,6 +340,7 @@ name|ch
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 operator|!=
 literal|1
 condition|)
@@ -1710,7 +1722,7 @@ name|fprintf
 argument_list|(
 name|trace
 argument_list|,
-literal|"fpk=0: return '%c'"
+literal|"fpk=0: will return '%c'"
 argument_list|,
 name|c
 argument_list|)
@@ -1718,6 +1730,37 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 						 * Nothing waiting.  Push back 						 * what we peeked at& return 						 * failure (c). 						 * 						 * We want to be able to undo 						 * commands, but it's nonsense 						 * to undo part of an insertion 						 * so if in input mode don't. 						 */
+ifdef|#
+directive|ifdef
+name|MDEBUG
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"Call macpush, b %d %d %d\n"
+argument_list|,
+name|b
+index|[
+literal|0
+index|]
+argument_list|,
+name|b
+index|[
+literal|1
+index|]
+argument_list|,
+name|b
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|macpush
 argument_list|(
 operator|&
@@ -1731,6 +1774,24 @@ operator|==
 name|arrows
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MDEBUG
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"return %d\n"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|c
@@ -1909,24 +1970,7 @@ condition|)
 return|return;
 ifdef|#
 directive|ifdef
-name|notdef
-if|if
-condition|(
-operator|!
-name|value
-argument_list|(
-name|UNDOMACRO
-argument_list|)
-condition|)
-name|canundo
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|TRACE
+name|MDEBUG
 if|if
 condition|(
 name|trace
@@ -2450,6 +2494,24 @@ name|int
 name|c
 decl_stmt|;
 comment|/* 	 * If the user has set notimeout, we wait forever for a key. 	 * If we are in a macro we do too, but since it's already 	 * buffered internally it will return immediately. 	 * In other cases we force this to die in 1 second. 	 * This is pretty reliable (VMUNIX rounds it to .5 - 1.5 secs, 	 * but UNIX truncates it to 0 - 1 secs) but due to system delays 	 * there are times when arrow keys or very fast typing get counted 	 * as separate.  notimeout is provided for people who dislike such 	 * nondeterminism. 	 */
+ifdef|#
+directive|ifdef
+name|MDEBUG
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"\nfastpeekkey: "
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|value
@@ -2469,11 +2531,34 @@ argument_list|,
 name|trapalarm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MDEBUG
+name|alarm
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"set alarm "
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|alarm
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|CATCH
 name|c
@@ -2520,7 +2605,7 @@ name|fprintf
 argument_list|(
 name|trace
 argument_list|,
-literal|"[TOUT]"
+literal|"[TIMEOUT]"
 argument_list|,
 name|c
 argument_list|)

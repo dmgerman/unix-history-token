@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops.c	6.3 %G%"
+literal|"@(#)ex_vops.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2199,10 +2199,14 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* mjm: char --> int */
+end_comment
 
 begin_decl_stmt
 specifier|register

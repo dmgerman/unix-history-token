@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)bcopy.c	6.1 %G%"
+literal|"@(#)bcopy.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,9 +79,14 @@ begin_block
 block|{
 while|while
 condition|(
+operator|(
 name|count
 operator|--
+operator|)
+operator|>
+literal|0
 condition|)
+comment|/* mjm */
 operator|*
 name|to
 operator|++

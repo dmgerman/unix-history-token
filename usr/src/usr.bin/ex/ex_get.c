@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_get.c	6.1 %G%"
+literal|"@(#)ex_get.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,6 +249,10 @@ index|[
 literal|128
 index|]
 expr_stmt|;
+name|struct
+name|stat
+name|statb
+decl_stmt|;
 name|c
 operator|=
 name|peekc
@@ -455,18 +459,14 @@ goto|goto
 name|top
 goto|;
 block|}
+comment|/* mjm:	if (read(0, (char *)&lastc, 1) != 1)	CHANGED and added else */
 if|if
 condition|(
 name|read
 argument_list|(
 literal|0
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|lastc
+specifier|inline
 argument_list|,
 literal|1
 argument_list|)
@@ -477,6 +477,16 @@ name|lastc
 operator|=
 name|EOF
 expr_stmt|;
+else|else
+comment|/* mjm: lastc is a short! */
+name|lastc
+operator|=
+specifier|inline
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* mjm: in rightmost 8 bits ! */
 return|return
 operator|(
 name|lastc

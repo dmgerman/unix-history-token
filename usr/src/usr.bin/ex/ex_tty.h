@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tty.h	6.1 %G%  */
+comment|/* sccs id:	@(#)ex_tty.h	7.1	%G%  */
 end_comment
 
 begin_comment
@@ -12,6 +12,7 @@ comment|/*  * Capabilities from termcap  *  * The description of terminals is a 
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|tspace
 index|[
@@ -25,6 +26,7 @@ comment|/* Space for capability strings */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|aoftspace
@@ -36,6 +38,7 @@ comment|/* Address of tspace for relocation */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|AL
@@ -47,6 +50,7 @@ comment|/* P* Add new blank line */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|BC
@@ -58,6 +62,7 @@ comment|/*    Back cursor */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|BT
@@ -69,6 +74,7 @@ comment|/* P  Back tab */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|CD
@@ -80,6 +86,7 @@ comment|/* P* Clear to end of display */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|CE
@@ -91,6 +98,7 @@ comment|/* P  Clear to end of line */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|CL
@@ -102,6 +110,7 @@ comment|/* P* Clear screen */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|CM
@@ -113,6 +122,7 @@ comment|/* P  Cursor motion */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|xCR
@@ -124,6 +134,7 @@ comment|/* P  Carriage return */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|DC
@@ -135,6 +146,7 @@ comment|/* P* Delete character */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|DL
@@ -146,6 +158,7 @@ comment|/* P* Delete line sequence */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|DM
@@ -157,6 +170,7 @@ comment|/*    Delete mode (enter)  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|DO
@@ -168,6 +182,7 @@ comment|/*    Down line sequence */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|ED
@@ -179,6 +194,7 @@ comment|/*    End delete mode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|EI
@@ -190,6 +206,7 @@ comment|/*    End insert mode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|F0
@@ -228,6 +245,7 @@ comment|/*    Strings sent by various function keys */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|HO
@@ -239,6 +257,7 @@ comment|/*    Home cursor */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|IC
@@ -250,6 +269,7 @@ comment|/* P  Insert character */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|IM
@@ -261,6 +281,7 @@ comment|/*    Insert mode (give as ':im=:' if 'ic' */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|IP
@@ -272,6 +293,7 @@ comment|/* P* Insert pad after char ins'd using IM+IE */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|KD
@@ -283,6 +305,7 @@ comment|/*    Keypad down arrow */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|KE
@@ -294,6 +317,7 @@ comment|/*    Keypad don't xmit */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|KH
@@ -305,6 +329,7 @@ comment|/*    Keypad home key */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|KL
@@ -316,6 +341,7 @@ comment|/*    Keypad left arrow */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|KR
@@ -327,6 +353,7 @@ comment|/*    Keypad right arrow */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|KS
@@ -338,6 +365,7 @@ comment|/*    Keypad start xmitting */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|KU
@@ -349,6 +377,7 @@ comment|/*    Keypad up arrow */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|LL
@@ -360,6 +389,7 @@ comment|/*    Quick to last line, column 0 */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|ND
@@ -371,6 +401,7 @@ comment|/*    Non-destructive space */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|xNL
@@ -382,6 +413,7 @@ comment|/*    Line feed (new line) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|PC
 decl_stmt|;
@@ -392,6 +424,7 @@ comment|/*    Pad character */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|SE
@@ -403,6 +436,7 @@ comment|/*    Standout end (may leave space) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|SF
@@ -414,6 +448,7 @@ comment|/* P  Scroll forwards */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|SO
@@ -425,6 +460,7 @@ comment|/*    Stand out begin (may leave space) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|SR
@@ -436,6 +472,7 @@ comment|/* P  Scroll backwards */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|TA
@@ -447,6 +484,7 @@ comment|/* P  Tab (other than ^I or with padding) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|TE
@@ -458,6 +496,7 @@ comment|/*    Terminal end sequence */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|TI
@@ -469,6 +508,7 @@ comment|/*    Terminal initial sequence */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|UP
@@ -480,6 +520,7 @@ comment|/*    Upline */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|VB
@@ -491,6 +532,7 @@ comment|/*    Visible bell */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|VE
@@ -502,6 +544,7 @@ comment|/*    Visual end sequence */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|VS
@@ -513,6 +556,7 @@ comment|/*    Visual start sequence */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|AM
 decl_stmt|;
@@ -523,6 +567,7 @@ comment|/* Automatic margins */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|BS
 decl_stmt|;
@@ -533,6 +578,7 @@ comment|/* Backspace works */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|CA
 decl_stmt|;
@@ -543,6 +589,7 @@ comment|/* Cursor addressible */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|DA
 decl_stmt|;
@@ -553,6 +600,7 @@ comment|/* Display may be retained above */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|DB
 decl_stmt|;
@@ -563,6 +611,7 @@ comment|/* Display may be retained below */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|EO
 decl_stmt|;
@@ -573,6 +622,7 @@ comment|/* Can erase overstrikes with ' ' */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|GT
 decl_stmt|;
@@ -583,6 +633,7 @@ comment|/* Gtty indicates tabs */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|HC
 decl_stmt|;
@@ -593,6 +644,7 @@ comment|/* Hard copy terminal */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|HZ
 decl_stmt|;
@@ -603,6 +655,7 @@ comment|/* Hazeltine ~ braindamage */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|IN
 decl_stmt|;
@@ -613,6 +666,7 @@ comment|/* Insert-null blessing */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|MI
 decl_stmt|;
@@ -623,6 +677,7 @@ comment|/* can move in insert mode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|NC
 decl_stmt|;
@@ -633,6 +688,7 @@ comment|/* No Cr - \r snds \r\n then eats \n (dm2500) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|NS
 decl_stmt|;
@@ -643,6 +699,7 @@ comment|/* No scroll - linefeed at bottom won't scroll */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|OS
 decl_stmt|;
@@ -653,6 +710,7 @@ comment|/* Overstrike works */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|UL
 decl_stmt|;
@@ -663,6 +721,7 @@ comment|/* Underlining works even though !os */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|XB
 decl_stmt|;
@@ -673,6 +732,7 @@ comment|/* Beehive (no escape key, simulate with f1) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|XN
 decl_stmt|;
@@ -683,6 +743,7 @@ comment|/* A newline gets eaten after wrap (concept) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|XT
 decl_stmt|;
@@ -693,6 +754,17 @@ comment|/* Tabs are destructive */
 end_comment
 
 begin_decl_stmt
+name|bool
+name|XV
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* VT100 - run AL and DL through tgoto */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|bool
 name|XX
 decl_stmt|;
@@ -715,6 +787,7 @@ comment|/*  * From the tty modes...  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|NONL
 decl_stmt|;
@@ -725,6 +798,7 @@ comment|/* Terminal can't hack linefeeds doing a CR */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|UPPERCASE
 decl_stmt|;
@@ -735,6 +809,7 @@ comment|/* Ick! */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|LINES
 decl_stmt|;
@@ -745,12 +820,14 @@ comment|/* Number of lines on screen */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|COLUMNS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|OCOLUMNS
 decl_stmt|;
@@ -761,6 +838,7 @@ comment|/* Save COLUMNS for a hack in open mode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|outcol
 decl_stmt|;
@@ -771,12 +849,14 @@ comment|/* Where the cursor is */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|outline
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|destcol
 decl_stmt|;
@@ -787,6 +867,7 @@ comment|/* Where the cursor should be */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|destline
 decl_stmt|;
@@ -807,6 +888,7 @@ comment|/* USG V3 */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|termio
 name|tty
@@ -839,6 +921,7 @@ comment|/* All others */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|sgttyb
 name|tty
@@ -871,6 +954,7 @@ comment|/* V7 */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|tchars
 name|ottyc
@@ -899,6 +983,7 @@ comment|/* Berkeley */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ltchars
 name|olttyc
@@ -922,6 +1007,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
 name|ttymode
 name|normf
 decl_stmt|;
@@ -932,6 +1018,7 @@ comment|/* Restore tty flags to this (someday) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|normtty
 decl_stmt|;
@@ -955,18 +1042,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|WBOT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|WECHO
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|costCM
 decl_stmt|;
@@ -977,6 +1067,7 @@ comment|/* # chars to output a typical CM, with padding etc. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|costSR
 decl_stmt|;
@@ -987,6 +1078,7 @@ comment|/* likewise */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|costAL
 decl_stmt|;
@@ -1076,6 +1168,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|maps
 name|arrows
@@ -1090,6 +1183,7 @@ comment|/* macro defs - 1st 5 built in */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|maps
 name|immacs
@@ -1104,6 +1198,7 @@ comment|/* for while in insert mode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|maps
 name|abbrevs
@@ -1118,6 +1213,7 @@ comment|/* for word abbreviations */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|ldisc
 decl_stmt|;
@@ -1128,6 +1224,7 @@ comment|/* line discipline for ucb tty driver */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|mapspace
 index|[
@@ -1137,6 +1234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|msnext
@@ -1148,6 +1246,7 @@ comment|/* next free location in mapspace */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|maphopcnt
 decl_stmt|;
@@ -1158,6 +1257,7 @@ comment|/* check for infinite mapping loops */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|anyabbrs
 decl_stmt|;
@@ -1168,6 +1268,7 @@ comment|/* true if abbr or unabbr has been done */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|ttynbuf
 index|[
@@ -1181,6 +1282,7 @@ comment|/* result of ttyname() */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|ttymesg
 decl_stmt|;

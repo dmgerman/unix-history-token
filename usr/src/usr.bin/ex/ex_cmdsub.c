@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	6.1 %G%"
+literal|"@(#)ex_cmdsub.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1133,6 +1133,10 @@ name|adt
 operator|=
 name|address
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2060,7 +2064,8 @@ name|fne
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|STDIO
+comment|/* mjm: was VMUNIX */
 comment|/* 	 * We have lots of room so we bring in stdio and do 	 * a binary search on the tags file. 	 */
 undef|#
 directive|undef
@@ -2290,7 +2295,8 @@ expr_stmt|;
 comment|/* null terminate filename */
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|STDIO
+comment|/* mjm: was VMUNIX */
 name|iof
 operator|=
 name|fopen
@@ -2413,7 +2419,8 @@ name|oglobp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|STDIO
+comment|/* mjm: was VMUNIX */
 name|mid
 operator|=
 operator|(
@@ -2543,7 +2550,8 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|STDIO
+comment|/* mjm: was VMUNIX */
 if|if
 condition|(
 operator|*
@@ -2575,7 +2583,8 @@ block|}
 comment|/* 			 * We found the tag.  Decode the line in the file. 			 */
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|STDIO
+comment|/* mjm: was VMUNIX */
 name|fclose
 argument_list|(
 name|iof
@@ -2921,7 +2930,8 @@ comment|/* end of "for each tag in file" */
 comment|/* 		 * No such tag in this file.  Close it and try the next. 		 */
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|STDIO
+comment|/* mjm: was VMUNIX */
 name|fclose
 argument_list|(
 name|iof
@@ -4389,9 +4399,10 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|char
+name|int
 name|c
 decl_stmt|;
+comment|/* mjm: char --> int */
 name|char
 modifier|*
 name|dname

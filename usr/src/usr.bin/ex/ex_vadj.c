@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vadj.c	6.2 %G%"
+literal|"@(#)ex_vadj.c	7.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1021,7 +1021,30 @@ name|p
 argument_list|,
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
+if|if
+condition|(
+name|XV
+condition|)
+name|vputp
+argument_list|(
+name|tgoto
+argument_list|(
+name|AL
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+argument_list|,
+name|WECHO
+operator|+
+literal|1
+operator|-
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 name|vputp
 argument_list|(
 name|AL
@@ -1057,7 +1080,32 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
+if|if
+condition|(
+name|XV
+condition|)
+name|vputp
+argument_list|(
+name|tgoto
+argument_list|(
+name|AL
+argument_list|,
+literal|0
+argument_list|,
+name|outline
+operator|+
+literal|1
+argument_list|)
+argument_list|,
+name|WECHO
+operator|+
+literal|1
+operator|-
+name|outline
+argument_list|)
+expr_stmt|;
+else|else
 name|vputp
 argument_list|(
 name|AL
@@ -2966,6 +3014,27 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
+name|XV
+condition|)
+name|vputp
+argument_list|(
+name|tgoto
+argument_list|(
+name|DL
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+argument_list|,
+name|WECHO
+operator|-
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 name|vputp
 argument_list|(
 name|DL

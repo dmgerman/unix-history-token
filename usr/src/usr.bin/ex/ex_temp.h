@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_temp.h	6.1 %G%  */
+comment|/* sccs id:	@(#)ex_temp.h	7.1	%G%  */
 end_comment
 
 begin_comment
@@ -176,6 +176,7 @@ comment|/*  * The editor uses three buffers into the temporary file (ed uses two
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|hitin2
 decl_stmt|;
@@ -186,6 +187,7 @@ comment|/* Last read hit was ibuff2 not ibuff */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|ichang2
 decl_stmt|;
@@ -196,6 +198,7 @@ comment|/* Have actually changed ibuff2 */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|ichanged
 decl_stmt|;
@@ -206,6 +209,7 @@ comment|/* Have actually changed ibuff */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|iblock
 decl_stmt|;
@@ -216,6 +220,7 @@ comment|/* Temp file block number of ibuff (or -1) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|iblock2
 decl_stmt|;
@@ -226,6 +231,7 @@ comment|/* Temp file block number of ibuff2 (or -1) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|ninbuf
 decl_stmt|;
@@ -236,6 +242,7 @@ comment|/* Number useful chars left in input buffer */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|nleft
 decl_stmt|;
@@ -246,6 +253,7 @@ comment|/* Number usable chars left in output buffer */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|oblock
 decl_stmt|;
@@ -262,6 +270,7 @@ name|VMUNIX
 end_ifndef
 
 begin_decl_stmt
+specifier|extern
 name|short
 name|tline
 decl_stmt|;
@@ -277,6 +286,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|tline
 decl_stmt|;
@@ -288,6 +298,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|ibuff
 index|[
@@ -297,6 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|ibuff2
 index|[
@@ -306,6 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|obuff
 index|[
@@ -362,9 +375,16 @@ index|]
 decl_stmt|;
 comment|/* Blocks where line pointers stashed */
 block|}
-name|H
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|header
+name|H
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
