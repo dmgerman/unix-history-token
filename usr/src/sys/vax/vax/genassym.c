@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)genassym.c	6.5 (Berkeley) %G% */
+comment|/*	genassym.c	6.6	85/04/22	*/
 end_comment
 
 begin_define
@@ -648,6 +648,7 @@ name|printf
 argument_list|(
 literal|"asm(\".set\tU_QSAVE,%d\");\n"
 argument_list|,
+operator|&
 name|up
 operator|->
 name|u_qsave
