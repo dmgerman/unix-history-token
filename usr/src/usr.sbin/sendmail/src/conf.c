@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.75 (Berkeley) %G%"
+literal|"@(#)conf.c	8.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7055,6 +7055,27 @@ else|#
 directive|else
 ifdef|#
 directive|ifdef
+name|_POSIX_CHOWN_RESTRICTED
+if|#
+directive|if
+name|_POSIX_CHOWN_RESTRICTED
+operator|==
+operator|-
+literal|1
+return|return
+name|FALSE
+return|;
+else|#
+directive|else
+return|return
+name|TRUE
+return|;
+endif|#
+directive|endif
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|_PC_CHOWN_RESTRICTED
 return|return
 name|fpathconf
@@ -7079,6 +7100,8 @@ directive|else
 return|return
 name|FALSE
 return|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
