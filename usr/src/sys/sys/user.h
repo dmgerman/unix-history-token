@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.15	82/08/08	*/
+comment|/*	user.h	4.16	82/08/24	*/
 end_comment
 
 begin_ifdef
@@ -56,7 +56,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The user structure.  * One allocated per process.  * Contains all per process data  * that doesn't need to be referenced  * while the process is swapped.  * The user block is UPAGES*NBPG bytes  * long; resides at virtual user  * loc 0x80000000-UPAGES*NBPG; contains the system  * stack per user; is cross referenced  * with the proc structure for the  * same process.  */
+comment|/*  * Per process structure containing data that  * isn't needed in core when the process is swapped out.  */
 end_comment
 
 begin_define
@@ -102,21 +102,12 @@ name|u_gid
 decl_stmt|;
 comment|/* effective group id */
 name|int
-name|u_grps
+name|u_groups
 index|[
-name|NGRPS
-operator|/
-operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|*
-literal|8
-operator|)
+name|NGROUPS
 index|]
 decl_stmt|;
-comment|/* group bit array */
+comment|/* groups, 0 terminated */
 name|short
 name|u_ruid
 decl_stmt|;
