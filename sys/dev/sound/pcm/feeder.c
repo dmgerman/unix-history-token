@@ -598,7 +598,7 @@ name|fc
 argument_list|,
 name|M_FEEDER
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
