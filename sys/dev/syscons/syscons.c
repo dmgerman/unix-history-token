@@ -8095,6 +8095,10 @@ name|status
 operator||=
 name|MOUSE_HIDDEN
 expr_stmt|;
+operator|++
+name|debugger
+expr_stmt|;
+comment|/* XXX */
 name|sc_switch_scr
 argument_list|(
 name|sc_console
@@ -8106,6 +8110,10 @@ operator|->
 name|index
 argument_list|)
 expr_stmt|;
+operator|--
+name|debugger
+expr_stmt|;
+comment|/* XXX */
 block|}
 block|}
 if|if
@@ -10864,6 +10872,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|debugger
+operator|==
+literal|0
+condition|)
 name|wakeup
 argument_list|(
 operator|(
@@ -11698,6 +11712,13 @@ name|switch_in_progress
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * XXX wakeup() calls mtx_lock(&sched_lock) which will hang if 	 * sched_lock is in an in-between state, e.g., when we stop at 	 * a breakpoint at fork_exit.  It has always been wrong to call 	 * wakeup() when the debugger is active.  In RELENG_4, wakeup() 	 * is supposed to be locked by splhigh(), but the debugger may 	 * be invoked at splhigh(). 	 */
+if|if
+condition|(
+name|debugger
+operator|==
+literal|0
+condition|)
 name|wakeup
 argument_list|(
 operator|(
@@ -11781,6 +11802,12 @@ name|spltty
 argument_list|()
 expr_stmt|;
 comment|/* wake up processes waiting for this vty */
+if|if
+condition|(
+name|debugger
+operator|==
+literal|0
+condition|)
 name|wakeup
 argument_list|(
 operator|(
