@@ -271,10 +271,17 @@ name|req
 operator|==
 name|PT_TRACE_ME
 condition|)
+block|{
 name|p
 operator|=
 name|curp
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -309,11 +316,18 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ESRCH
 operator|)
 return|;
+block|}
 comment|/* 	 * Permissions check 	 */
 switch|switch
 condition|(
@@ -341,15 +355,17 @@ name|curp
 operator|->
 name|p_pid
 condition|)
-return|return
-name|EINVAL
-return|;
-comment|/* Already traced */
-name|PROC_LOCK
+block|{
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+comment|/* Already traced */
 if|if
 condition|(
 name|p
@@ -368,11 +384,6 @@ return|return
 name|EBUSY
 return|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -390,9 +401,16 @@ name|NULL
 argument_list|)
 operator|)
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 comment|/* OK */
 break|break;
 case|case
@@ -474,11 +492,6 @@ case|:
 endif|#
 directive|endif
 comment|/* not being traced... */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -567,18 +580,23 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+comment|/* OK */
+break|break;
+default|default:
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* OK */
-break|break;
-default|default:
 return|return
 name|EINVAL
 return|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FIX_SSTEP
@@ -890,11 +908,6 @@ argument_list|(
 name|p
 operator|->
 name|p_oppid
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|proc_reparent

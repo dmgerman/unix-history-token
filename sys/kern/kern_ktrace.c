@@ -1592,6 +1592,11 @@ goto|goto
 name|done
 goto|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|descend

@@ -866,13 +866,18 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -896,6 +901,11 @@ operator|(
 name|EACCES
 operator|)
 return|;
+name|mp_fixme
+argument_list|(
+literal|"pfs_lockowner needs a lock"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|pfs

@@ -2476,17 +2476,6 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|!=
-name|NULL
-condition|)
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
 operator|==
 name|NULL
 operator|||

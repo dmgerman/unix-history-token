@@ -305,7 +305,7 @@ name|PFIND
 parameter_list|(
 name|pid
 parameter_list|)
-value|((pid) ? pfind(pid) :&proc0)
+value|(pfind(pid))
 end_define
 
 begin_decl_stmt

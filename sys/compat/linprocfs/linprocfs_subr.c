@@ -641,7 +641,17 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
+name|mp_fixme
+argument_list|(
+literal|"pfs_lockowner needs a lock"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|pfs
