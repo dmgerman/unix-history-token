@@ -52,7 +52,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.6 (Berkeley) %G%"
+literal|"@(#)lpr.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2430,6 +2430,14 @@ operator|*
 name|p1
 operator|++
 operator|=
+operator|(
+name|c
+operator|==
+literal|'\n'
+operator|)
+condition|?
+literal|' '
+else|:
 name|c
 expr_stmt|;
 name|len
