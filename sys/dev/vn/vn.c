@@ -803,14 +803,6 @@ name|vn
 operator|->
 name|sc_secsize
 expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_best
-operator|=
-name|vn
-operator|->
-name|sc_secsize
-expr_stmt|;
 if|if
 condition|(
 name|flags
