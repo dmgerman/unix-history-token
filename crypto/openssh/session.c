@@ -3893,6 +3893,23 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+comment|/* login(1) is only called if we execute the login shell */
+if|if
+condition|(
+name|options
+operator|.
+name|use_login
+operator|&&
+name|command
+operator|!=
+name|NULL
+condition|)
+name|options
+operator|.
+name|use_login
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
