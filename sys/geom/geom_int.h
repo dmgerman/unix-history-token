@@ -73,22 +73,6 @@ name|G_F_CTLDUMP
 value|128
 end_define
 
-begin_comment
-comment|/*  * Various internal actions are tracked by tagging g_event[s] onto  * an internal eventqueue.  */
-end_comment
-
-begin_enum
-enum|enum
-name|g_events
-block|{
-name|EV_CALL_ME
-block|,
-comment|/* func, arg */
-name|EV_LAST
-block|}
-enum|;
-end_enum
-
 begin_define
 define|#
 directive|define
@@ -100,10 +84,6 @@ begin_struct
 struct|struct
 name|g_event
 block|{
-name|enum
-name|g_events
-name|event
-decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|g_event
@@ -238,19 +218,6 @@ name|void
 name|g_event_init
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|g_post_event
-parameter_list|(
-name|enum
-name|g_events
-name|ev
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
