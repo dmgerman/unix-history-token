@@ -424,6 +424,7 @@ begin_function_decl
 name|void
 name|Var_Delete
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -438,6 +439,7 @@ begin_function_decl
 name|void
 name|Var_Set
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -456,6 +458,7 @@ begin_function_decl
 name|void
 name|Var_Append
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -474,6 +477,7 @@ begin_function_decl
 name|Boolean
 name|Var_Exists
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -489,6 +493,7 @@ name|char
 modifier|*
 name|Var_Value
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -543,6 +548,7 @@ name|char
 modifier|*
 name|Var_Subst
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
