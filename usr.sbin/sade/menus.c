@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.161 1998/03/15 17:10:11 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.162 1998/03/15 19:30:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2004,8 +2004,8 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select your mouse port from the following menu"
 block|,
-literal|"Please note that for PS/2 mice, you need to enable the psm driver\n"
-literal|"in the kernel configuration menu when installing for the first time."
+literal|"The built-in pointing device of laptop/notebook computers is usually\n"
+literal|"a PS/2 style device."
 block|,
 name|NULL
 block|,
@@ -2090,7 +2090,7 @@ block|,
 block|{
 literal|"PS/2"
 block|,
-literal|"PS/2 style mouse (must enable /dev/psm0)"
+literal|"PS/2 style mouse (/dev/psm0)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2119,14 +2119,16 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Please configure your mouse"
 block|,
-literal|"There are many different types of mice currently on the market,\n"
-literal|"but this configuration menu should at least narrow down the choices\n"
-literal|"somewhat.  Once you've done with the following menus, you can specify\n"
-literal|"\"/dev/sysmouse\" as your mouse device and \"SysMouse\" or \"MouseSystems\"\n"
-literal|"as mouse protocol when running the X configuration utility (see \n"
-literal|"Configuration menu)."
+literal|"You can cut and paste text in the text console by running the mouse\n"
+literal|"daemon.  Specify a port and a protocol type of your mouse and enable\n"
+literal|"the mouse daemon.  If you don't want this feature, select 4 to disable\n"
+literal|"the daemon.\n"
+literal|"Once you've enabled the mouse daemon, you can specify \"/dev/sysmouse\"\n"
+literal|"as your mouse device and \"SysMouse\" or \"MouseSystems\" as mouse\n"
+literal|"protocol when running the X configuration utility (see Configuration\n"
+literal|"menu)."
 block|,
-literal|"Choose 3 after selecting a protocol and a port."
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2134,7 +2136,7 @@ block|{
 block|{
 literal|"1 Type"
 block|,
-literal|"Select mouse protocol"
+literal|"Select mouse protocol type"
 block|,
 name|NULL
 block|,
@@ -2162,7 +2164,7 @@ name|MenuMousePort
 block|}
 block|,
 block|{
-literal|"3 Daemon"
+literal|"3 Enable"
 block|,
 literal|"Test and run the mouse daemon"
 block|,
@@ -2176,22 +2178,17 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"4 No mouse"
+literal|"4 Disable"
 block|,
-literal|"Clear mouse configuration"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariables
+literal|"Disable the mouse daemon"
 block|,
 name|NULL
 block|,
-name|VAR_MOUSED
-literal|"=NO, "
-name|VAR_MOUSED_TYPE
-literal|"=NO, "
-name|VAR_MOUSED_PORT
-literal|"="
+name|mousedDisable
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -8182,7 +8179,7 @@ name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
-literal|"keymap=lat-amer.iso"
+literal|"keymap=lat-amer"
 block|}
 block|,
 block|{
