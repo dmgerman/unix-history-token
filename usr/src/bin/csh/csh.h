@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -294,17 +294,6 @@ parameter_list|(
 name|d
 parameter_list|)
 value|((d.st_mode& S_IFMT) == S_IFDIR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIGN_EXTEND_CHAR
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)& 0x80 ? ((int) (a)) | 0xffffff00 : ((int) a)& 0x000000ff)
 end_define
 
 begin_typedef
@@ -664,6 +653,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|uid
+decl_stmt|,
+name|euid
 decl_stmt|;
 end_decl_stmt
 
@@ -674,6 +665,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|gid
+decl_stmt|,
+name|egid
 decl_stmt|;
 end_decl_stmt
 
