@@ -1177,9 +1177,9 @@ name|void
 name|dev_rel
 parameter_list|(
 name|struct
-name|cdev
+name|vnode
 modifier|*
-name|dev
+name|vp
 parameter_list|)
 function_decl|;
 end_function_decl
