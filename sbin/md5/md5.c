@@ -406,9 +406,9 @@ name|printf
 argument_list|(
 literal|"MD5 time trial. Digesting %d %d-byte blocks ..."
 argument_list|,
-name|TEST_BLOCK_LEN
-argument_list|,
 name|TEST_BLOCK_COUNT
+argument_list|,
+name|TEST_BLOCK_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Initialize block */
