@@ -810,6 +810,21 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
+comment|/* Convert error code into error return. */
+if|if
+condition|(
+name|bytes_read
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|bytes_read
+operator|)
+return|;
 if|if
 condition|(
 name|bytes_read
