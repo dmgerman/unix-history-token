@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.6.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -618,7 +618,7 @@ value|_IOW('t',10,struct sgttyb)
 end_define
 
 begin_comment
-comment|/* as above, but no flushtty */
+comment|/* as above, but no flushtty*/
 end_comment
 
 begin_define
@@ -1033,7 +1033,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* start/stop output on carrier intr */
+comment|/*start/stop output on carrier*/
 end_comment
 
 begin_define
@@ -1055,7 +1055,7 @@ value|0x00400000
 end_define
 
 begin_comment
-comment|/* SIGSTOP on background output */
+comment|/*SIGSTOP on background output*/
 end_comment
 
 begin_define
@@ -1148,6 +1148,115 @@ end_define
 begin_comment
 comment|/* no output flush on signal */
 end_comment
+
+begin_comment
+comment|/* POSIX line discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCGETA
+value|_IOR('t', 19, struct termios)
+end_define
+
+begin_comment
+comment|/* get termios struct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETA
+value|_IOW('t', 20, struct termios)
+end_define
+
+begin_comment
+comment|/* set termios struct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETAW
+value|_IOW('t', 21, struct termios)
+end_define
+
+begin_comment
+comment|/* drain output, set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETAF
+value|_IOW('t', 22, struct termios)
+end_define
+
+begin_comment
+comment|/* drn out, fls in, set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETAS
+value|_IOW('t', 23, struct termios)
+end_define
+
+begin_comment
+comment|/* SETA ign hdw state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETAWS
+value|_IOW('t', 24, struct termios)
+end_define
+
+begin_comment
+comment|/* SETAW ign hdw state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETAFS
+value|_IOW('t', 25, struct termios)
+end_define
+
+begin_comment
+comment|/* SETAF ign hdw state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCGETA
+value|TIOCGETA
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCSETA
+value|TIOCSETA
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCSETAW
+value|TIOCSETAW
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCSETAF
+value|TIOCSETAF
+end_define
 
 begin_comment
 comment|/* locals, from 127 down */
@@ -1376,7 +1485,7 @@ value|_IOW('t',117,struct ltchars)
 end_define
 
 begin_comment
-comment|/* set local special chars */
+comment|/* set local special chars*/
 end_comment
 
 begin_define
@@ -1387,7 +1496,7 @@ value|_IOR('t',116,struct ltchars)
 end_define
 
 begin_comment
-comment|/* get local special chars */
+comment|/* get local special chars*/
 end_comment
 
 begin_define
@@ -1696,12 +1805,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCSCTTY
+value|_IO('t', 97)
+end_define
+
+begin_comment
+comment|/* become controlling tty */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OTTYDISC
 value|0
 end_define
 
 begin_comment
-comment|/* old, v7 std tty driver */
+comment|/* termios ldisc */
 end_comment
 
 begin_define
@@ -1723,7 +1843,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* new tty discipline */
+comment|/* also termios ldisc */
 end_comment
 
 begin_define
