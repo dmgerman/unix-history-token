@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.21 1996/06/08 09:18:23 bde Exp $ */
+comment|/* $Id: scd.c,v 1.22 1996/06/18 01:22:30 bde Exp $ */
 end_comment
 
 begin_comment
@@ -5985,7 +5985,7 @@ name|unit
 argument_list|,
 name|CMD_SPIN_UP
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 literal|0
 argument_list|,

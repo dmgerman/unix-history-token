@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.30 1996/06/12 05:03:45 gpalmer Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.31 1996/06/25 20:30:30 bde Exp $  */
 end_comment
 
 begin_include
@@ -1422,7 +1422,7 @@ operator|<
 literal|0
 condition|)
 return|return
-name|NULL
+literal|0
 return|;
 comment|/* 	 * okay, we found a card, so set it up 	 */
 comment|/* 	 * Inhibit 16 bit memory delay. 	 * POINTETH.SYS apparently does this, for what reason I don't know. 	 */

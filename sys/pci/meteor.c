@@ -2545,7 +2545,7 @@ block|{
 name|vm_offset_t
 name|addr
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 name|addr
 operator|=
@@ -2566,7 +2566,7 @@ if|if
 condition|(
 name|addr
 operator|==
-name|NULL
+literal|0
 condition|)
 name|addr
 operator|=
@@ -2585,7 +2585,7 @@ if|if
 condition|(
 name|addr
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -3439,7 +3439,7 @@ expr_stmt|;
 else|else
 name|buf
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3477,7 +3477,7 @@ if|if
 condition|(
 name|buf
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|bzero
@@ -4397,7 +4397,7 @@ name|mtr
 operator|->
 name|bigbuf
 operator|==
-name|NULL
+literal|0
 condition|)
 comment|/* no frame buffer allocated (ioctl failed) */
 return|return
@@ -6386,7 +6386,7 @@ name|mtr
 operator|->
 name|bigbuf
 operator|==
-name|NULL
+literal|0
 condition|)
 comment|/* no frame buffer allocated */
 return|return
@@ -6464,7 +6464,7 @@ name|mtr
 operator|->
 name|bigbuf
 operator|==
-name|NULL
+literal|0
 condition|)
 comment|/* no frame buffer allocated */
 return|return
@@ -6602,7 +6602,7 @@ name|mtr
 operator|->
 name|bigbuf
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(
@@ -7169,7 +7169,7 @@ if|if
 condition|(
 name|buf
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|kmem_free
