@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.8 %G%"
+literal|"@(#)ascode.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1149,7 +1149,7 @@ argument_list|)
 condition|)
 name|yyerror
 argument_list|(
-literal|"%s: Branch too far: %d"
+literal|"%s: Branch too far(%db): try -J flag"
 argument_list|,
 name|ITABFETCH
 argument_list|(
@@ -1222,7 +1222,7 @@ argument_list|)
 condition|)
 name|yyerror
 argument_list|(
-literal|"%s: Branch too far: %d"
+literal|"%s: Branch too far(%db): try -J flag"
 argument_list|,
 name|ITABFETCH
 argument_list|(
