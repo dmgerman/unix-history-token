@@ -84,10 +84,26 @@ begin_comment
 comment|/* vnode references a volume */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NSHOULDFREE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* vnode should be removed from hash */
+end_comment
+
 begin_struct
 struct|struct
 name|nwnode
 block|{
+name|struct
+name|lock
+name|n_lock
+decl_stmt|;
+comment|/* Keep this first */
 name|LIST_ENTRY
 argument_list|(
 argument|nwnode
@@ -309,6 +325,11 @@ name|nmp
 parameter_list|,
 name|ncpfid
 name|fid
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|nwnode

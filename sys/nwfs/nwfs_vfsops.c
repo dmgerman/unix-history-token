@@ -1763,6 +1763,8 @@ operator|->
 name|n_root
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
 name|vget
 argument_list|(
 operator|*
@@ -1772,7 +1774,10 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|curproc
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+empty_stmt|;
 return|return
 literal|0
 return|;
