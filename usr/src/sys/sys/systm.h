@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.5	%G%	*/
+comment|/*	systm.h	4.6	%G%	*/
 end_comment
 
 begin_comment
@@ -414,14 +414,10 @@ specifier|extern
 struct|struct
 name|sysent
 block|{
-name|char
+name|int
 name|sy_narg
 decl_stmt|;
 comment|/* total number of arguments */
-name|char
-name|sy_nrarg
-decl_stmt|;
-comment|/* number of args in registers */
 name|int
 function_decl|(
 modifier|*
