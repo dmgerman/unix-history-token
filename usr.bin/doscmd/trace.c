@@ -91,7 +91,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Before exiting to VM86 mode:  * 1) Always set the trap flag.  * 2) If this is a POPF or IRET instruction, set the trap flag in the saved  *    flag state on the stack.  * On enterint from VM86 mode:  * 1) Restore the trap flag from our saved flag state.  * 2) If we just finished a POPF or IRET unstruction, patch the saved flag  *    state on the stack.  */
+comment|/*  * Before exiting to VM86 mode:  * 1) Always set the trap flag.  * 2) If this is a POPF or IRET instruction, set the trap flag in the saved  *    flag state on the stack.  * On entering from VM86 mode:  * 1) Restore the trap flag from our saved flag state.  * 2) If we just finished a POPF or IRET instruction, patch the saved flag  *    state on the stack.  */
 end_comment
 
 begin_decl_stmt

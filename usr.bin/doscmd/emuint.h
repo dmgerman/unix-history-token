@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 Helmut Wirth<hfwirth@ping.at>  * All rights res
 end_comment
 
 begin_comment
-comment|/*   * The emulator helper interrupt:  *  * Interrupt 0xFF is used by some emulator functions. It is a portal into  * the emulator and cannot be used by ordinary DOS applications directly  * The interrupt 0xFF is called by helper functions under DOS (such as  * the redirector interfcae and the EMS emulation).  * There are functions and subfunctions defined. (See emuint.c for details)  */
+comment|/*   * The emulator helper interrupt:  *  * Interrupt 0xFF is used by some emulator functions. It is a portal into  * the emulator and cannot be used by ordinary DOS applications directly  * The interrupt 0xFF is called by helper functions under DOS (such as  * the redirector interface and the EMS emulation).  * There are functions and subfunctions defined. (See emuint.c for details)  */
 end_comment
 
 begin_comment

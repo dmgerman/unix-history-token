@@ -42,7 +42,7 @@ file|"emuint.h"
 end_include
 
 begin_comment
-comment|/* The central entry point for the emulator interrupt. This is used by  * different special programs to call the emulator from VM86 space.   * Look at emuint.h for definitions and a list of the currently defined  * subfunctions.  * To call emuint from VM86 space do:  *	push ax		   Save original ax value (*must be done* !)  *	mov  ah, funcnum   Emuint function number to ah  *	mov  al, subfunc   Subfunction number, optional, depening on func  *	int  0xff		  *	..  *	..  * Emuint saves the function and subfunction numbers internally, then  * pops ax off the stack and calls the function handler with the original  * value in ax.  */
+comment|/* The central entry point for the emulator interrupt. This is used by  * different special programs to call the emulator from VM86 space.   * Look at emuint.h for definitions and a list of the currently defined  * subfunctions.  * To call emuint from VM86 space do:  *	push ax		   Save original ax value (*must be done* !)  *	mov  ah, funcnum   Emuint function number to ah  *	mov  al, subfunc   Subfunction number, optional, depending on func  *	int  0xff		  *	..  *	..  * Emuint saves the function and subfunction numbers internally, then  * pops ax off the stack and calls the function handler with the original  * value in ax.  */
 end_comment
 
 begin_function

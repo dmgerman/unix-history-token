@@ -1161,7 +1161,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* ACK recieved from keyboard */
+comment|/* ACK received from keyboard */
 end_comment
 
 begin_define
@@ -1172,7 +1172,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* RESEND recieved from keyboard */
+comment|/* RESEND received from keyboard */
 end_comment
 
 begin_define

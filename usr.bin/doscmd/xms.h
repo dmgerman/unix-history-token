@@ -56,7 +56,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* number of firts valid handle */
+comment|/* number of first valid handle */
 end_comment
 
 begin_define
@@ -230,7 +230,7 @@ value|0x12
 end_define
 
 begin_comment
-comment|/* New functions for values bigger than 65MB, not implented yet */
+comment|/* New functions for values bigger than 65MB, not implanted yet */
 end_comment
 
 begin_define
@@ -521,7 +521,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Handle management inside the emulator for extendend memory pages,   * invisible to DOS  */
+comment|/*  * Handle management inside the emulator for extended memory pages,   * invisible to DOS  */
 end_comment
 
 begin_typedef
@@ -546,7 +546,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Managment of UMB memory paragraphs (16 bytes). UMB blocks are  * directly accessible by VM86 applications and lie between 0xd0000 and  * 0xefff0 in VM86 memory space.   */
+comment|/*  * Management of UMB memory paragraphs (16 bytes). UMB blocks are  * directly accessible by VM86 applications and lie between 0xd0000 and  * 0xefff0 in VM86 memory space.   */
 end_comment
 
 begin_struct

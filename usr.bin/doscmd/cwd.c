@@ -1244,7 +1244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set DOS's idea of the CWD for drive to be where.  * Returns DOS errno on failuer.  */
+comment|/*  * Set DOS's idea of the CWD for drive to be where.  * Returns DOS errno on failure.  */
 end_comment
 
 begin_function
@@ -5135,7 +5135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * perfrom hokey DOS pattern matching.  pattern may contain the wild cards  * '*' and '?' only.  Follow the DOS convention that '?*', '*?' and '**' all  * are the same as '*'.  Also, allow '?' to match the blank padding in a  * name (hence, ???? matchs all of "a", "ab", "abc" and "abcd" but not "abcde")  * Return 1 if a match is found, 0 if not.  *   * XXX This appears to be severely busted! (no * handling - normal?)  */
+comment|/*  * perform hokey DOS pattern matching.  pattern may contain the wild cards  * '*' and '?' only.  Follow the DOS convention that '?*', '*?' and '**' all  * are the same as '*'.  Also, allow '?' to match the blank padding in a  * name (hence, ???? matchs all of "a", "ab", "abc" and "abcd" but not "abcde")  * Return 1 if a match is found, 0 if not.  *   * XXX This appears to be severely busted! (no * handling - normal?)  */
 end_comment
 
 begin_function

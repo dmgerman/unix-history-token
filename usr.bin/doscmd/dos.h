@@ -1570,7 +1570,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   14h    WORD    return code from last process termination (zerod after reading with AH=4Dh) */
+comment|/*   14h    WORD    return code from last process termination (set to 0 after reading with AH=4Dh) */
 end_comment
 
 begin_decl_stmt
@@ -3269,7 +3269,7 @@ comment|/* paragraphs */
 name|u_short
 name|max_memory
 decl_stmt|;
-comment|/* pargraphs */
+comment|/* paragraphs */
 name|u_short
 name|init_ss
 decl_stmt|;

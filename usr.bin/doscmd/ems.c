@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*   * EMS memory emulation  *  * To emulate Expanded Memory we use a DOS driver (emsdriv.sys) which  * routes calls to int 0x67 to this emulator routine. The main entry point  * is ems_entry(..). The emulator needs to be initialized before the first  * call. The first step of the initialization is done during program startup  * the second part is done during DOS boot, from a call of the DOS driver.  * The DOS driver is neccessary because DOS programs look for it to  * determine if EMS is available.  *  * To emulate a configurable amount of EMS memory we use a file created  * at startup with the size of the configured EMS memory. This file is  * mapped into the EMS window like any DOS memory manager would do, using  * mmap calls.  *  * The emulation follows the LIM EMS 4.0 standard. Not all functions of it  * are implemented yet. The "alter page map and jump" and "alter page map  * and call" functions are not implemented, because they are rather hard to  * do. (It would mean a call to the emulator executes a routine in EMS   * memory and returns to the emulator, the emulator switches the page map  * and then returns to the DOS program.) LINUX does not emulate this   * functions and I think they were very rarely used by DOS applications.  *  * Credits: To the writers of LINUX dosemu, I looked at their code  */
+comment|/*   * EMS memory emulation  *  * To emulate Expanded Memory we use a DOS driver (emsdriv.sys) which  * routes calls to int 0x67 to this emulator routine. The main entry point  * is ems_entry(..). The emulator needs to be initialized before the first  * call. The first step of the initialization is done during program startup  * the second part is done during DOS boot, from a call of the DOS driver.  * The DOS driver is necessary because DOS programs look for it to  * determine if EMS is available.  *  * To emulate a configurable amount of EMS memory we use a file created  * at startup with the size of the configured EMS memory. This file is  * mapped into the EMS window like any DOS memory manager would do, using  * mmap calls.  *  * The emulation follows the LIM EMS 4.0 standard. Not all functions of it  * are implemented yet. The "alter page map and jump" and "alter page map  * and call" functions are not implemented, because they are rather hard to  * do. (It would mean a call to the emulator executes a routine in EMS   * memory and returns to the emulator, the emulator switches the page map  * and then returns to the DOS program.) LINUX does not emulate this   * functions and I think they were very rarely used by DOS applications.  *  * Credits: To the writers of LINUX dosemu, I looked at their code  */
 end_comment
 
 begin_include
@@ -224,7 +224,7 @@ comment|/* Combined pointer for destination */
 name|u_long
 name|rest_len
 decl_stmt|;
-comment|/* Lenght to copy */
+comment|/* Length to copy */
 block|}
 struct|;
 end_struct
@@ -6345,7 +6345,7 @@ name|void
 modifier|*
 name|dstp
 decl_stmt|;
-comment|/* If source or both memory types are EMS, source determines the      * block lenght, else destination determines the block lenght      */
+comment|/* If source or both memory types are EMS, source determines the      * block length, else destination determines the block length      */
 if|if
 condition|(
 name|cdp
