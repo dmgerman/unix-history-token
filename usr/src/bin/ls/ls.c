@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.71 (Berkeley) %G%"
+literal|"@(#)ls.c	5.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,36 +140,6 @@ operator|*
 operator|,
 name|long
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|group_from_gid
-name|__P
-argument_list|(
-operator|(
-name|u_int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|user_from_uid
-name|__P
-argument_list|(
-operator|(
-name|u_int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
