@@ -417,8 +417,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATMIO_FLAG_ASYNC
+value|0x0800
+end_define
+
+begin_comment
+comment|/* async open/close */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATMIO_FLAGS
-value|"\020\2LLCSNAP\5NG\6HARP\11NORX\12NOTX\13PVC"
+value|"\020\2LLCSNAP\5NG\6HARP\11NORX\12NOTX\13PVC\14ASYNC"
 end_define
 
 begin_define
