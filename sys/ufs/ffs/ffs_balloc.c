@@ -482,6 +482,17 @@ operator|<
 name|NDADDR
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|B_METAONLY
+condition|)
+name|panic
+argument_list|(
+literal|"ffs_balloc: B_METAONLY for direct block"
+argument_list|)
+expr_stmt|;
 name|nb
 operator|=
 name|ip
@@ -1528,6 +1539,27 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* 	 * If asked only for the indirect block, then return it. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|B_METAONLY
+condition|)
+block|{
+operator|*
+name|ap
+operator|->
+name|a_bpp
+operator|=
+name|bp
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Get the data block, allocating if necessary. 	 */
 if|if

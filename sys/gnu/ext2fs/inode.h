@@ -148,6 +148,12 @@ modifier|*
 name|i_lockf
 decl_stmt|;
 comment|/* Head of byte-level lock list. */
+name|struct
+name|inode
+modifier|*
+name|i_copyonwrite
+decl_stmt|;
+comment|/* copy-on-write list */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
 name|int32_t
 name|i_count

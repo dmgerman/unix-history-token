@@ -2066,6 +2066,17 @@ begin_comment
 comment|/* Do all allocations synchronously. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|B_METAONLY
+value|0x04
+end_define
+
+begin_comment
+comment|/* Return indirect block buffer. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

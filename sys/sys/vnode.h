@@ -553,8 +553,15 @@ begin_comment
 comment|/* Allocate buffers in VM object */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VCOPYONWRITE
+value|0x04000
+end_define
+
 begin_comment
-comment|/* open for business    0x04000 */
+comment|/* vnode is doing copy-on-write */
 end_comment
 
 begin_define
@@ -1056,6 +1063,39 @@ end_define
 
 begin_comment
 comment|/* vop_revoke: revoke all aliases */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_WAIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* vn_start_write: sleep for suspend */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_NOWAIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* vn_start_write: don't sleep for suspend */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_XSLEEP
+value|0x0004
+end_define
+
+begin_comment
+comment|/* vn_start_write: just return after sleep */
 end_comment
 
 begin_define
@@ -2525,6 +2565,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|vn_finished_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|vn_isdisk
 name|__P
@@ -2775,8 +2830,65 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|vn_start_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+expr|struct
+name|mount
+operator|*
+operator|*
+name|mpp
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|dev_t
 name|vn_todev
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_write_suspend_wait
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_writechk
 name|__P
 argument_list|(
 operator|(
@@ -2844,15 +2956,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|vn_writechk
+name|void
+name|vfs_write_resume
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|mount
 operator|*
-name|vp
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vfs_write_suspend
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2868,6 +2995,20 @@ expr|struct
 name|vop_bwrite_args
 operator|*
 name|ap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vop_stdgetwritemount
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_getwritemount_args
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

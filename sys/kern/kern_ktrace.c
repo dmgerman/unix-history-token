@@ -2221,7 +2221,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -2230,6 +2229,11 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2374,6 +2378,16 @@ operator|->
 name|uio_resid
 expr_stmt|;
 block|}
+name|vn_start_write
+argument_list|(
+name|vp
+argument_list|,
+operator|&
+name|mp
+argument_list|,
+name|V_WAIT
+argument_list|)
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -2471,6 +2485,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|vn_finished_write
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 if|if

@@ -1065,6 +1065,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_COWINPROGRESS
+value|0x400000
+end_define
+
+begin_comment
+comment|/* Snapshot copy-on-write in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_DEADLKTREAT
 value|0x800000
 end_define

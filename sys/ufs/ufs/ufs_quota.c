@@ -4697,6 +4697,11 @@ name|struct
 name|uio
 name|auio
 decl_stmt|;
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -4750,6 +4755,16 @@ condition|)
 name|panic
 argument_list|(
 literal|"dqsync: file"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vn_write_suspend_wait
+argument_list|(
+name|dqvp
+argument_list|,
+name|V_WAIT
 argument_list|)
 expr_stmt|;
 if|if

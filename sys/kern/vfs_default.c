@@ -1754,6 +1754,44 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return our mount point, as we will take charge of the writes.  */
+end_comment
+
+begin_function
+name|int
+name|vop_stdgetwritemount
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_getwritemount_args
+comment|/* { 		struct vnode *a_vp; 		struct mount **a_mpp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+operator|*
+operator|(
+name|ap
+operator|->
+name|a_mpp
+operator|)
+operator|=
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_mount
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*   * vfs default ops  * used to fill the vfs fucntion table to get reasonable default return values.  */
 end_comment
 

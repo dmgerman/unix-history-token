@@ -813,11 +813,11 @@ name|ff_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
 name|struct
-name|fs
+name|mount
 modifier|*
-name|ff_fs
+name|ff_mnt
 decl_stmt|;
-comment|/* addr of superblock */
+comment|/* associated mount point */
 name|ufs_daddr_t
 name|ff_blkno
 decl_stmt|;
@@ -858,11 +858,11 @@ name|fb_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
 name|struct
-name|fs
+name|mount
 modifier|*
-name|fb_fs
+name|fb_mnt
 decl_stmt|;
-comment|/* addr of superblock */
+comment|/* associated mount point */
 name|off_t
 name|fb_oldsize
 decl_stmt|;
@@ -925,11 +925,11 @@ name|fx_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
 name|struct
-name|fs
+name|mount
 modifier|*
-name|fx_fs
+name|fx_mnt
 decl_stmt|;
-comment|/* addr of superblock */
+comment|/* associated mount point */
 block|}
 struct|;
 end_struct
