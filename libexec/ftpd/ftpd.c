@@ -12272,13 +12272,11 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|reply
+name|perror_reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"%s."
-argument_list|,
-name|path
+literal|"Get current directory"
 argument_list|)
 expr_stmt|;
 else|else
