@@ -172,11 +172,11 @@ begin_define
 define|#
 directive|define
 name|VINUM_SAVECONFIG
-value|_IOC(0, L, 72, 0)
+value|_IOW(L, 72, int)
 end_define
 
 begin_comment
-comment|/* release locks, update, write config to disk */
+comment|/* write config to disk */
 end_comment
 
 begin_define
