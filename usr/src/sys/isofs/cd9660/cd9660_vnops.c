@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isofs/cd9660/isofs_node.h>
+file|<isofs/cd9660/cd9660_node.h>
 end_include
 
 begin_include
@@ -128,7 +128,7 @@ comment|/*  * Mknod vnode call  *  Actually remap the device number  */
 end_comment
 
 begin_ifndef
-unit|isofs_mknod(ndp, vap, cred, p) 	struct nameidata *ndp; 	struct ucred *cred; 	struct vattr *vap; 	struct proc *p; {
+unit|cd9660_mknod(ndp, vap, cred, p) 	struct nameidata *ndp; 	struct ucred *cred; 	struct vattr *vap; 	struct proc *p; {
 ifndef|#
 directive|ifndef
 name|ISODEVMAP
@@ -177,7 +177,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_open
+name|cd9660_open
 parameter_list|(
 name|ap
 parameter_list|)
@@ -206,7 +206,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_close
+name|cd9660_close
 parameter_list|(
 name|ap
 parameter_list|)
@@ -234,7 +234,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|isofs_access
+name|cd9660_access
 argument_list|(
 argument|ap
 argument_list|)
@@ -260,7 +260,7 @@ block|}
 end_block
 
 begin_macro
-name|isofs_getattr
+name|cd9660_getattr
 argument_list|(
 argument|ap
 argument_list|)
@@ -530,7 +530,7 @@ comment|/*  * Vnode op for reading.  */
 end_comment
 
 begin_macro
-name|isofs_read
+name|cd9660_read
 argument_list|(
 argument|ap
 argument_list|)
@@ -1001,7 +1001,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_ioctl
+name|cd9660_ioctl
 parameter_list|(
 name|ap
 parameter_list|)
@@ -1031,7 +1031,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_select
+name|cd9660_select
 parameter_list|(
 name|ap
 parameter_list|)
@@ -1061,7 +1061,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_mmap
+name|cd9660_mmap
 parameter_list|(
 name|ap
 parameter_list|)
@@ -1090,7 +1090,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_seek
+name|cd9660_seek
 parameter_list|(
 name|ap
 parameter_list|)
@@ -1618,7 +1618,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_readdir
+name|cd9660_readdir
 parameter_list|(
 name|ap
 parameter_list|)
@@ -2050,7 +2050,7 @@ block|{
 case|case
 name|ISO_FTYPE_RRIP
 case|:
-name|isofs_rrip_getname
+name|cd9660_rrip_getname
 argument_list|(
 name|ep
 argument_list|,
@@ -2356,7 +2356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return target name of a symbolic link  * Shouldn't we get the parent vnode and read the data from there?  * This could eventually result in deadlocks in isofs_lookup.  * But otherwise the block read here is in the block buffer two times.  */
+comment|/*  * Return target name of a symbolic link  * Shouldn't we get the parent vnode and read the data from there?  * This could eventually result in deadlocks in cd9660_lookup.  * But otherwise the block read here is in the block buffer two times.  */
 end_comment
 
 begin_typedef
@@ -2385,7 +2385,7 @@ end_typedef
 
 begin_function
 name|int
-name|isofs_readlink
+name|cd9660_readlink
 parameter_list|(
 name|ap
 parameter_list|)
@@ -2630,7 +2630,7 @@ expr_stmt|;
 comment|/* 	 * Ok, we just gathering a symbolic name in SL record. 	 */
 if|if
 condition|(
-name|isofs_rrip_getsymname
+name|cd9660_rrip_getsymname
 argument_list|(
 name|dirp
 argument_list|,
@@ -2700,7 +2700,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_abortop
+name|cd9660_abortop
 parameter_list|(
 name|ap
 parameter_list|)
@@ -2752,7 +2752,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_lock
+name|cd9660_lock
 parameter_list|(
 name|ap
 parameter_list|)
@@ -2793,7 +2793,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_unlock
+name|cd9660_unlock
 parameter_list|(
 name|ap
 parameter_list|)
@@ -2830,7 +2830,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"isofs_unlock NOT LOCKED"
+literal|"cd9660_unlock NOT LOCKED"
 argument_list|)
 expr_stmt|;
 name|ISO_IUNLOCK
@@ -2850,7 +2850,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_islocked
+name|cd9660_islocked
 parameter_list|(
 name|ap
 parameter_list|)
@@ -2889,7 +2889,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_strategy
+name|cd9660_strategy
 parameter_list|(
 name|ap
 parameter_list|)
@@ -2952,7 +2952,7 @@ name|VCHR
 condition|)
 name|panic
 argument_list|(
-literal|"isofs_strategy: spec"
+literal|"cd9660_strategy: spec"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3096,7 +3096,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_print
+name|cd9660_print
 parameter_list|(
 name|ap
 parameter_list|)
@@ -3124,7 +3124,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_enotsupp
+name|cd9660_enotsupp
 parameter_list|()
 block|{
 return|return
@@ -3142,140 +3142,145 @@ end_comment
 begin_define
 define|#
 directive|define
-name|isofs_create
-value|((int (*) __P((struct  vop_create_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_mknod
-value|((int (*) __P((struct  vop_mknod_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_setattr
+name|cd9660_create
 define|\
-value|((int (*) __P((struct  vop_setattr_args *)))isofs_enotsupp)
+value|((int (*) __P((struct  vop_create_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_write
-value|((int (*) __P((struct  vop_write_args *)))isofs_enotsupp)
+name|cd9660_mknod
+value|((int (*) __P((struct  vop_mknod_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_fsync
+name|cd9660_setattr
+define|\
+value|((int (*) __P((struct  vop_setattr_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_write
+value|((int (*) __P((struct  vop_write_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_fsync
 value|((int (*) __P((struct  vop_fsync_args *)))nullop)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_remove
-value|((int (*) __P((struct  vop_remove_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_link
-value|((int (*) __P((struct  vop_link_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_rename
-value|((int (*) __P((struct  vop_rename_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_mkdir
-value|((int (*) __P((struct  vop_mkdir_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_rmdir
-value|((int (*) __P((struct  vop_rmdir_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_symlink
+name|cd9660_remove
 define|\
-value|((int (*) __P((struct vop_symlink_args *)))isofs_enotsupp)
+value|((int (*) __P((struct  vop_remove_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_pathconf
+name|cd9660_link
+value|((int (*) __P((struct  vop_link_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_rename
 define|\
-value|((int (*) __P((struct vop_pathconf_args *)))isofs_enotsupp)
+value|((int (*) __P((struct  vop_rename_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_advlock
+name|cd9660_mkdir
+value|((int (*) __P((struct  vop_mkdir_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_rmdir
+value|((int (*) __P((struct  vop_rmdir_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_symlink
 define|\
-value|((int (*) __P((struct vop_advlock_args *)))isofs_enotsupp)
+value|((int (*) __P((struct vop_symlink_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_blkatoff
+name|cd9660_pathconf
 define|\
-value|((int (*) __P((struct  vop_blkatoff_args *)))isofs_enotsupp)
+value|((int (*) __P((struct vop_pathconf_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_valloc
-value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_vfree
-value|((int (*) __P((struct  vop_vfree_args *)))isofs_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isofs_truncate
+name|cd9660_advlock
 define|\
-value|((int (*) __P((struct  vop_truncate_args *)))isofs_enotsupp)
+value|((int (*) __P((struct vop_advlock_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_update
-value|((int (*) __P((struct  vop_update_args *)))isofs_enotsupp)
+name|cd9660_blkatoff
+define|\
+value|((int (*) __P((struct  vop_blkatoff_args *)))cd9660_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|isofs_bwrite
-value|((int (*) __P((struct  vop_bwrite_args *)))isofs_enotsupp)
+name|cd9660_valloc
+value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_vfree
+value|((int (*) __P((struct  vop_vfree_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_truncate
+define|\
+value|((int (*) __P((struct  vop_truncate_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_update
+define|\
+value|((int (*) __P((struct  vop_update_args *)))cd9660_enotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cd9660_bwrite
+define|\
+value|((int (*) __P((struct  vop_bwrite_args *)))cd9660_enotsupp)
 end_define
 
 begin_comment
@@ -3287,7 +3292,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|isofs_vnodeop_p
+name|cd9660_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -3296,7 +3301,7 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|vnodeopv_entry_desc
-name|isofs_vnodeop_entries
+name|cd9660_vnodeop_entries
 index|[]
 init|=
 block|{
@@ -3311,7 +3316,7 @@ block|{
 operator|&
 name|vop_lookup_desc
 block|,
-name|isofs_lookup
+name|cd9660_lookup
 block|}
 block|,
 comment|/* lookup */
@@ -3319,7 +3324,7 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
-name|isofs_create
+name|cd9660_create
 block|}
 block|,
 comment|/* create */
@@ -3327,7 +3332,7 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
-name|isofs_mknod
+name|cd9660_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -3335,7 +3340,7 @@ block|{
 operator|&
 name|vop_open_desc
 block|,
-name|isofs_open
+name|cd9660_open
 block|}
 block|,
 comment|/* open */
@@ -3343,7 +3348,7 @@ block|{
 operator|&
 name|vop_close_desc
 block|,
-name|isofs_close
+name|cd9660_close
 block|}
 block|,
 comment|/* close */
@@ -3351,7 +3356,7 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
-name|isofs_access
+name|cd9660_access
 block|}
 block|,
 comment|/* access */
@@ -3359,7 +3364,7 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
-name|isofs_getattr
+name|cd9660_getattr
 block|}
 block|,
 comment|/* getattr */
@@ -3367,7 +3372,7 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
-name|isofs_setattr
+name|cd9660_setattr
 block|}
 block|,
 comment|/* setattr */
@@ -3375,7 +3380,7 @@ block|{
 operator|&
 name|vop_read_desc
 block|,
-name|isofs_read
+name|cd9660_read
 block|}
 block|,
 comment|/* read */
@@ -3383,7 +3388,7 @@ block|{
 operator|&
 name|vop_write_desc
 block|,
-name|isofs_write
+name|cd9660_write
 block|}
 block|,
 comment|/* write */
@@ -3391,7 +3396,7 @@ block|{
 operator|&
 name|vop_ioctl_desc
 block|,
-name|isofs_ioctl
+name|cd9660_ioctl
 block|}
 block|,
 comment|/* ioctl */
@@ -3399,7 +3404,7 @@ block|{
 operator|&
 name|vop_select_desc
 block|,
-name|isofs_select
+name|cd9660_select
 block|}
 block|,
 comment|/* select */
@@ -3407,7 +3412,7 @@ block|{
 operator|&
 name|vop_mmap_desc
 block|,
-name|isofs_mmap
+name|cd9660_mmap
 block|}
 block|,
 comment|/* mmap */
@@ -3415,7 +3420,7 @@ block|{
 operator|&
 name|vop_fsync_desc
 block|,
-name|isofs_fsync
+name|cd9660_fsync
 block|}
 block|,
 comment|/* fsync */
@@ -3423,7 +3428,7 @@ block|{
 operator|&
 name|vop_seek_desc
 block|,
-name|isofs_seek
+name|cd9660_seek
 block|}
 block|,
 comment|/* seek */
@@ -3431,7 +3436,7 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
-name|isofs_remove
+name|cd9660_remove
 block|}
 block|,
 comment|/* remove */
@@ -3439,7 +3444,7 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
-name|isofs_link
+name|cd9660_link
 block|}
 block|,
 comment|/* link */
@@ -3447,7 +3452,7 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
-name|isofs_rename
+name|cd9660_rename
 block|}
 block|,
 comment|/* rename */
@@ -3455,7 +3460,7 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
-name|isofs_mkdir
+name|cd9660_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -3463,7 +3468,7 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
-name|isofs_rmdir
+name|cd9660_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -3471,7 +3476,7 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
-name|isofs_symlink
+name|cd9660_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -3479,7 +3484,7 @@ block|{
 operator|&
 name|vop_readdir_desc
 block|,
-name|isofs_readdir
+name|cd9660_readdir
 block|}
 block|,
 comment|/* readdir */
@@ -3487,7 +3492,7 @@ block|{
 operator|&
 name|vop_readlink_desc
 block|,
-name|isofs_readlink
+name|cd9660_readlink
 block|}
 block|,
 comment|/* readlink */
@@ -3495,7 +3500,7 @@ block|{
 operator|&
 name|vop_abortop_desc
 block|,
-name|isofs_abortop
+name|cd9660_abortop
 block|}
 block|,
 comment|/* abortop */
@@ -3503,7 +3508,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|isofs_inactive
+name|cd9660_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -3511,7 +3516,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|isofs_reclaim
+name|cd9660_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -3519,7 +3524,7 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
-name|isofs_lock
+name|cd9660_lock
 block|}
 block|,
 comment|/* lock */
@@ -3527,7 +3532,7 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
-name|isofs_unlock
+name|cd9660_unlock
 block|}
 block|,
 comment|/* unlock */
@@ -3535,7 +3540,7 @@ block|{
 operator|&
 name|vop_bmap_desc
 block|,
-name|isofs_bmap
+name|cd9660_bmap
 block|}
 block|,
 comment|/* bmap */
@@ -3543,7 +3548,7 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
-name|isofs_strategy
+name|cd9660_strategy
 block|}
 block|,
 comment|/* strategy */
@@ -3551,7 +3556,7 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
-name|isofs_print
+name|cd9660_print
 block|}
 block|,
 comment|/* print */
@@ -3559,7 +3564,7 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
-name|isofs_islocked
+name|cd9660_islocked
 block|}
 block|,
 comment|/* islocked */
@@ -3567,7 +3572,7 @@ block|{
 operator|&
 name|vop_pathconf_desc
 block|,
-name|isofs_pathconf
+name|cd9660_pathconf
 block|}
 block|,
 comment|/* pathconf */
@@ -3575,7 +3580,7 @@ block|{
 operator|&
 name|vop_advlock_desc
 block|,
-name|isofs_advlock
+name|cd9660_advlock
 block|}
 block|,
 comment|/* advlock */
@@ -3583,7 +3588,7 @@ block|{
 operator|&
 name|vop_blkatoff_desc
 block|,
-name|isofs_blkatoff
+name|cd9660_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
@@ -3591,7 +3596,7 @@ block|{
 operator|&
 name|vop_valloc_desc
 block|,
-name|isofs_valloc
+name|cd9660_valloc
 block|}
 block|,
 comment|/* valloc */
@@ -3599,7 +3604,7 @@ block|{
 operator|&
 name|vop_vfree_desc
 block|,
-name|isofs_vfree
+name|cd9660_vfree
 block|}
 block|,
 comment|/* vfree */
@@ -3607,7 +3612,7 @@ block|{
 operator|&
 name|vop_truncate_desc
 block|,
-name|isofs_truncate
+name|cd9660_truncate
 block|}
 block|,
 comment|/* truncate */
@@ -3615,7 +3620,7 @@ block|{
 operator|&
 name|vop_update_desc
 block|,
-name|isofs_update
+name|cd9660_update
 block|}
 block|,
 comment|/* update */
@@ -3650,13 +3655,13 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|vnodeopv_desc
-name|isofs_vnodeop_opv_desc
+name|cd9660_vnodeop_opv_desc
 init|=
 block|{
 operator|&
-name|isofs_vnodeop_p
+name|cd9660_vnodeop_p
 block|,
-name|isofs_vnodeop_entries
+name|cd9660_vnodeop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3670,7 +3675,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|isofs_specop_p
+name|cd9660_specop_p
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -3679,7 +3684,7 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|vnodeopv_entry_desc
-name|isofs_specop_entries
+name|cd9660_specop_entries
 index|[]
 init|=
 block|{
@@ -3702,7 +3707,7 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
-name|isofs_create
+name|cd9660_create
 block|}
 block|,
 comment|/* create */
@@ -3710,7 +3715,7 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
-name|isofs_mknod
+name|cd9660_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -3734,7 +3739,7 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
-name|isofs_access
+name|cd9660_access
 block|}
 block|,
 comment|/* access */
@@ -3742,7 +3747,7 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
-name|isofs_getattr
+name|cd9660_getattr
 block|}
 block|,
 comment|/* getattr */
@@ -3750,7 +3755,7 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
-name|isofs_setattr
+name|cd9660_setattr
 block|}
 block|,
 comment|/* setattr */
@@ -3814,7 +3819,7 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
-name|isofs_remove
+name|cd9660_remove
 block|}
 block|,
 comment|/* remove */
@@ -3822,7 +3827,7 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
-name|isofs_link
+name|cd9660_link
 block|}
 block|,
 comment|/* link */
@@ -3830,7 +3835,7 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
-name|isofs_rename
+name|cd9660_rename
 block|}
 block|,
 comment|/* rename */
@@ -3838,7 +3843,7 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
-name|isofs_mkdir
+name|cd9660_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -3846,7 +3851,7 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
-name|isofs_rmdir
+name|cd9660_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -3854,7 +3859,7 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
-name|isofs_symlink
+name|cd9660_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -3886,7 +3891,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|isofs_inactive
+name|cd9660_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -3894,7 +3899,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|isofs_reclaim
+name|cd9660_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -3902,7 +3907,7 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
-name|isofs_lock
+name|cd9660_lock
 block|}
 block|,
 comment|/* lock */
@@ -3910,7 +3915,7 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
-name|isofs_unlock
+name|cd9660_unlock
 block|}
 block|,
 comment|/* unlock */
@@ -3927,7 +3932,7 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
-name|isofs_strategy
+name|cd9660_strategy
 block|}
 block|,
 comment|/* strategy */
@@ -3935,7 +3940,7 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
-name|isofs_print
+name|cd9660_print
 block|}
 block|,
 comment|/* print */
@@ -3943,7 +3948,7 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
-name|isofs_islocked
+name|cd9660_islocked
 block|}
 block|,
 comment|/* islocked */
@@ -3999,7 +4004,7 @@ block|{
 operator|&
 name|vop_update_desc
 block|,
-name|isofs_update
+name|cd9660_update
 block|}
 block|,
 comment|/* update */
@@ -4034,13 +4039,13 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|vnodeopv_desc
-name|isofs_specop_opv_desc
+name|cd9660_specop_opv_desc
 init|=
 block|{
 operator|&
-name|isofs_specop_p
+name|cd9660_specop_p
 block|,
-name|isofs_specop_entries
+name|cd9660_specop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4056,7 +4061,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|isofs_fifoop_p
+name|cd9660_fifoop_p
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -4065,7 +4070,7 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|vnodeopv_entry_desc
-name|isofs_fifoop_entries
+name|cd9660_fifoop_entries
 index|[]
 init|=
 block|{
@@ -4088,7 +4093,7 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
-name|isofs_create
+name|cd9660_create
 block|}
 block|,
 comment|/* create */
@@ -4096,7 +4101,7 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
-name|isofs_mknod
+name|cd9660_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -4120,7 +4125,7 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
-name|isofs_access
+name|cd9660_access
 block|}
 block|,
 comment|/* access */
@@ -4128,7 +4133,7 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
-name|isofs_getattr
+name|cd9660_getattr
 block|}
 block|,
 comment|/* getattr */
@@ -4136,7 +4141,7 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
-name|isofs_setattr
+name|cd9660_setattr
 block|}
 block|,
 comment|/* setattr */
@@ -4200,7 +4205,7 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
-name|isofs_remove
+name|cd9660_remove
 block|}
 block|,
 comment|/* remove */
@@ -4208,7 +4213,7 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
-name|isofs_link
+name|cd9660_link
 block|}
 block|,
 comment|/* link */
@@ -4216,7 +4221,7 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
-name|isofs_rename
+name|cd9660_rename
 block|}
 block|,
 comment|/* rename */
@@ -4224,7 +4229,7 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
-name|isofs_mkdir
+name|cd9660_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -4232,7 +4237,7 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
-name|isofs_rmdir
+name|cd9660_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -4240,7 +4245,7 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
-name|isofs_symlink
+name|cd9660_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -4272,7 +4277,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|isofs_inactive
+name|cd9660_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -4280,7 +4285,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|isofs_reclaim
+name|cd9660_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -4288,7 +4293,7 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
-name|isofs_lock
+name|cd9660_lock
 block|}
 block|,
 comment|/* lock */
@@ -4296,7 +4301,7 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
-name|isofs_unlock
+name|cd9660_unlock
 block|}
 block|,
 comment|/* unlock */
@@ -4320,7 +4325,7 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
-name|isofs_print
+name|cd9660_print
 block|}
 block|,
 comment|/* print */
@@ -4328,7 +4333,7 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
-name|isofs_islocked
+name|cd9660_islocked
 block|}
 block|,
 comment|/* islocked */
@@ -4384,7 +4389,7 @@ block|{
 operator|&
 name|vop_update_desc
 block|,
-name|isofs_update
+name|cd9660_update
 block|}
 block|,
 comment|/* update */
@@ -4419,13 +4424,13 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|vnodeopv_desc
-name|isofs_fifoop_opv_desc
+name|cd9660_fifoop_opv_desc
 init|=
 block|{
 operator|&
-name|isofs_fifoop_p
+name|cd9660_fifoop_p
 block|,
-name|isofs_fifoop_entries
+name|cd9660_fifoop_entries
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1025,7 +1025,7 @@ end_define
 
 begin_decl_stmt
 name|int
-name|isofs_mount
+name|cd9660_mount
 name|__P
 argument_list|(
 operator|(
@@ -1052,7 +1052,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_start
+name|cd9660_start
 name|__P
 argument_list|(
 operator|(
@@ -1072,7 +1072,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_unmount
+name|cd9660_unmount
 name|__P
 argument_list|(
 operator|(
@@ -1092,7 +1092,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_root
+name|cd9660_root
 name|__P
 argument_list|(
 operator|(
@@ -1111,7 +1111,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_quotactl
+name|cd9660_quotactl
 name|__P
 argument_list|(
 operator|(
@@ -1135,7 +1135,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_statfs
+name|cd9660_statfs
 name|__P
 argument_list|(
 operator|(
@@ -1157,7 +1157,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_sync
+name|cd9660_sync
 name|__P
 argument_list|(
 operator|(
@@ -1181,7 +1181,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_vget
+name|cd9660_vget
 name|__P
 argument_list|(
 operator|(
@@ -1202,7 +1202,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_fhtovp
+name|cd9660_fhtovp
 name|__P
 argument_list|(
 operator|(
@@ -1237,7 +1237,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_vptofh
+name|cd9660_vptofh
 name|__P
 argument_list|(
 operator|(
@@ -1255,7 +1255,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_init
+name|cd9660_init
 name|__P
 argument_list|(
 operator|(
@@ -1373,7 +1373,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_mountroot
+name|cd9660_mountroot
 name|__P
 argument_list|(
 operator|(
@@ -1389,7 +1389,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|isofs_vnodeop_p
+name|cd9660_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;

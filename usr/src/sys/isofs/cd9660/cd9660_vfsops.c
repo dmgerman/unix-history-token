@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isofs/cd9660/isofs_node.h>
+file|<isofs/cd9660/cd9660_node.h>
 end_include
 
 begin_function_decl
@@ -116,30 +116,30 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|vfsops
-name|isofs_vfsops
+name|cd9660_vfsops
 init|=
 block|{
-name|isofs_mount
+name|cd9660_mount
 block|,
-name|isofs_start
+name|cd9660_start
 block|,
-name|isofs_unmount
+name|cd9660_unmount
 block|,
-name|isofs_root
+name|cd9660_root
 block|,
-name|isofs_quotactl
+name|cd9660_quotactl
 block|,
-name|isofs_statfs
+name|cd9660_statfs
 block|,
-name|isofs_sync
+name|cd9660_sync
 block|,
-name|isofs_vget
+name|cd9660_vget
 block|,
-name|isofs_fhtovp
+name|cd9660_fhtovp
 block|,
-name|isofs_vptofh
+name|cd9660_vptofh
 block|,
-name|isofs_init
+name|cd9660_init
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -163,7 +163,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-name|isofs_mountroot
+name|cd9660_mountroot
 argument_list|()
 end_macro
 
@@ -231,7 +231,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"isofs_mountroot: can't setup bdevvp's"
+literal|"cd9660_mountroot: can't setup bdevvp's"
 argument_list|)
 expr_stmt|;
 name|mp
@@ -275,7 +275,7 @@ operator|->
 name|mnt_op
 operator|=
 operator|&
-name|isofs_vfsops
+name|cd9660_vfsops
 expr_stmt|;
 name|mp
 operator|->
@@ -332,7 +332,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|isofs_unmount
+name|cd9660_unmount
 argument_list|(
 name|mp
 argument_list|,
@@ -466,7 +466,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|isofs_statfs
+name|cd9660_statfs
 argument_list|(
 name|mp
 argument_list|,
@@ -508,7 +508,7 @@ comment|/*  * VFS Operations.  *  * mount system call  */
 end_comment
 
 begin_expr_stmt
-name|isofs_mount
+name|cd9660_mount
 argument_list|(
 name|mp
 argument_list|,
@@ -916,7 +916,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|isofs_statfs
+name|cd9660_statfs
 argument_list|(
 name|mp
 argument_list|,
@@ -1532,7 +1532,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|MOUNT_ISOFS
+name|MOUNT_CD9660
 expr_stmt|;
 name|mp
 operator|->
@@ -1645,7 +1645,7 @@ name|isomp
 operator|->
 name|rr_skip
 operator|=
-name|isofs_rrip_offset
+name|cd9660_rrip_offset
 argument_list|(
 name|rootp
 argument_list|,
@@ -1828,7 +1828,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|isofs_start
+name|cd9660_start
 argument_list|(
 argument|mp
 argument_list|,
@@ -1874,7 +1874,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_unmount
+name|cd9660_unmount
 parameter_list|(
 name|mp
 parameter_list|,
@@ -2064,7 +2064,7 @@ comment|/*  * Return root of a filesystem  */
 end_comment
 
 begin_macro
-name|isofs_root
+name|cd9660_root
 argument_list|(
 argument|mp
 argument_list|,
@@ -2245,7 +2245,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_quotactl
+name|cd9660_quotactl
 parameter_list|(
 name|mp
 parameter_list|,
@@ -2290,7 +2290,7 @@ comment|/*  * Get file system statistics.  */
 end_comment
 
 begin_macro
-name|isofs_statfs
+name|cd9660_statfs
 argument_list|(
 argument|mp
 argument_list|,
@@ -2350,7 +2350,7 @@ name|sbp
 operator|->
 name|f_type
 operator|=
-name|MOUNT_ISOFS
+name|MOUNT_CD9660
 expr_stmt|;
 name|sbp
 operator|->
@@ -2490,7 +2490,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_sync
+name|cd9660_sync
 parameter_list|(
 name|mp
 parameter_list|,
@@ -2537,7 +2537,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_vget
+name|cd9660_vget
 parameter_list|(
 name|mp
 parameter_list|,
@@ -2598,7 +2598,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_fhtovp
+name|cd9660_fhtovp
 parameter_list|(
 name|mp
 parameter_list|,
@@ -3142,7 +3142,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|isofs_vptofh
+name|cd9660_vptofh
 argument_list|(
 argument|vp
 argument_list|,

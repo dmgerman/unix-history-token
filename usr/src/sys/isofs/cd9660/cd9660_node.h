@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -304,7 +304,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|isofs_lookup
+name|cd9660_lookup
 name|__P
 argument_list|(
 operator|(
@@ -318,7 +318,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_open
+name|cd9660_open
 name|__P
 argument_list|(
 operator|(
@@ -332,7 +332,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_close
+name|cd9660_close
 name|__P
 argument_list|(
 operator|(
@@ -346,7 +346,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_access
+name|cd9660_access
 name|__P
 argument_list|(
 operator|(
@@ -360,7 +360,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_getattr
+name|cd9660_getattr
 name|__P
 argument_list|(
 operator|(
@@ -374,7 +374,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_read
+name|cd9660_read
 name|__P
 argument_list|(
 operator|(
@@ -388,7 +388,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_ioctl
+name|cd9660_ioctl
 name|__P
 argument_list|(
 operator|(
@@ -402,7 +402,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_select
+name|cd9660_select
 name|__P
 argument_list|(
 operator|(
@@ -416,7 +416,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_mmap
+name|cd9660_mmap
 name|__P
 argument_list|(
 operator|(
@@ -430,7 +430,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_seek
+name|cd9660_seek
 name|__P
 argument_list|(
 operator|(
@@ -444,7 +444,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_readdir
+name|cd9660_readdir
 name|__P
 argument_list|(
 operator|(
@@ -458,7 +458,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_abortop
+name|cd9660_abortop
 name|__P
 argument_list|(
 operator|(
@@ -472,7 +472,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_inactive
+name|cd9660_inactive
 name|__P
 argument_list|(
 operator|(
@@ -486,7 +486,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_reclaim
+name|cd9660_reclaim
 name|__P
 argument_list|(
 operator|(
@@ -500,7 +500,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_bmap
+name|cd9660_bmap
 name|__P
 argument_list|(
 operator|(
@@ -514,7 +514,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_lock
+name|cd9660_lock
 name|__P
 argument_list|(
 operator|(
@@ -528,7 +528,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_unlock
+name|cd9660_unlock
 name|__P
 argument_list|(
 operator|(
@@ -542,7 +542,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_strategy
+name|cd9660_strategy
 name|__P
 argument_list|(
 operator|(
@@ -556,7 +556,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_print
+name|cd9660_print
 name|__P
 argument_list|(
 operator|(
@@ -570,7 +570,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_islocked
+name|cd9660_islocked
 name|__P
 argument_list|(
 operator|(
@@ -584,7 +584,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|isofs_defattr
+name|cd9660_defattr
 name|__P
 argument_list|(
 operator|(
@@ -606,7 +606,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|isofs_deftstamp
+name|cd9660_deftstamp
 name|__P
 argument_list|(
 operator|(

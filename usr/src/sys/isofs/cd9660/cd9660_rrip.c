@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isofs/cd9660/isofs_node.h>
+file|<isofs/cd9660/cd9660_node.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<isofs/cd9660/isofs_rrip.h>
+file|<isofs/cd9660/cd9660_rrip.h>
 end_include
 
 begin_include
@@ -94,7 +94,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_attr
+name|cd9660_rrip_attr
 parameter_list|(
 name|p
 parameter_list|,
@@ -191,7 +191,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|isofs_rrip_defattr
+name|cd9660_rrip_defattr
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -213,7 +213,7 @@ argument_list|(
 literal|"RRIP without PX field?\n"
 argument_list|)
 expr_stmt|;
-name|isofs_defattr
+name|cd9660_defattr
 argument_list|(
 name|isodir
 argument_list|,
@@ -234,7 +234,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_slink
+name|cd9660_rrip_slink
 parameter_list|(
 name|p
 parameter_list|,
@@ -641,7 +641,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_altname
+name|cd9660_rrip_altname
 parameter_list|(
 name|p
 parameter_list|,
@@ -858,7 +858,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|isofs_rrip_defname
+name|cd9660_rrip_defname
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -959,7 +959,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_pclink
+name|cd9660_rrip_pclink
 parameter_list|(
 name|p
 parameter_list|,
@@ -1027,7 +1027,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_reldir
+name|cd9660_rrip_reldir
 parameter_list|(
 name|p
 parameter_list|,
@@ -1071,7 +1071,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_tstamp
+name|cd9660_rrip_tstamp
 parameter_list|(
 name|p
 parameter_list|,
@@ -1134,7 +1134,7 @@ operator|&
 name|ISO_SUSP_TSTAMP_MODIFY
 condition|)
 block|{
-name|isofs_tstamp_conv7
+name|cd9660_tstamp_conv7
 argument_list|(
 name|ptime
 argument_list|,
@@ -1182,7 +1182,7 @@ operator|&
 name|ISO_SUSP_TSTAMP_ACCESS
 condition|)
 block|{
-name|isofs_tstamp_conv7
+name|cd9660_tstamp_conv7
 argument_list|(
 name|ptime
 argument_list|,
@@ -1227,7 +1227,7 @@ name|flags
 operator|&
 name|ISO_SUSP_TSTAMP_ATTR
 condition|)
-name|isofs_tstamp_conv7
+name|cd9660_tstamp_conv7
 argument_list|(
 name|ptime
 argument_list|,
@@ -1284,7 +1284,7 @@ operator|&
 name|ISO_SUSP_TSTAMP_MODIFY
 condition|)
 block|{
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 argument_list|(
 name|ptime
 argument_list|,
@@ -1332,7 +1332,7 @@ operator|&
 name|ISO_SUSP_TSTAMP_ACCESS
 condition|)
 block|{
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 argument_list|(
 name|ptime
 argument_list|,
@@ -1377,7 +1377,7 @@ name|flags
 operator|&
 name|ISO_SUSP_TSTAMP_ATTR
 condition|)
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 argument_list|(
 name|ptime
 argument_list|,
@@ -1425,7 +1425,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|isofs_rrip_deftstamp
+name|cd9660_rrip_deftstamp
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -1441,7 +1441,7 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-name|isofs_deftstamp
+name|cd9660_deftstamp
 argument_list|(
 name|isodir
 argument_list|,
@@ -1462,7 +1462,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_device
+name|cd9660_rrip_device
 parameter_list|(
 name|p
 parameter_list|,
@@ -1570,7 +1570,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_idflag
+name|cd9660_rrip_idflag
 parameter_list|(
 name|p
 parameter_list|,
@@ -1610,7 +1610,7 @@ operator|&
 name|ISO_SUSP_RELDIR
 condition|)
 return|return
-name|isofs_rrip_reldir
+name|cd9660_rrip_reldir
 argument_list|(
 name|p
 argument_list|,
@@ -1630,7 +1630,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_cont
+name|cd9660_rrip_cont
 parameter_list|(
 name|p
 parameter_list|,
@@ -1691,7 +1691,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_stop
+name|cd9660_rrip_stop
 parameter_list|(
 name|p
 parameter_list|,
@@ -1726,7 +1726,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_extref
+name|cd9660_rrip_extref
 parameter_list|(
 name|p
 parameter_list|,
@@ -1827,7 +1827,7 @@ end_typedef
 begin_function
 specifier|static
 name|int
-name|isofs_rrip_loop
+name|cd9660_rrip_loop
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -2275,9 +2275,9 @@ block|{
 block|{
 literal|"PX"
 block|,
-name|isofs_rrip_attr
+name|cd9660_rrip_attr
 block|,
-name|isofs_rrip_defattr
+name|cd9660_rrip_defattr
 block|,
 name|ISO_SUSP_ATTR
 block|}
@@ -2285,9 +2285,9 @@ block|,
 block|{
 literal|"TF"
 block|,
-name|isofs_rrip_tstamp
+name|cd9660_rrip_tstamp
 block|,
-name|isofs_rrip_deftstamp
+name|cd9660_rrip_deftstamp
 block|,
 name|ISO_SUSP_TSTAMP
 block|}
@@ -2295,7 +2295,7 @@ block|,
 block|{
 literal|"PN"
 block|,
-name|isofs_rrip_device
+name|cd9660_rrip_device
 block|,
 literal|0
 block|,
@@ -2305,7 +2305,7 @@ block|,
 block|{
 literal|"RR"
 block|,
-name|isofs_rrip_idflag
+name|cd9660_rrip_idflag
 block|,
 literal|0
 block|,
@@ -2315,7 +2315,7 @@ block|,
 block|{
 literal|"CE"
 block|,
-name|isofs_rrip_cont
+name|cd9660_rrip_cont
 block|,
 literal|0
 block|,
@@ -2325,7 +2325,7 @@ block|,
 block|{
 literal|"ST"
 block|,
-name|isofs_rrip_stop
+name|cd9660_rrip_stop
 block|,
 literal|0
 block|,
@@ -2347,7 +2347,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|isofs_rrip_analyze
+name|cd9660_rrip_analyze
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -2397,7 +2397,7 @@ operator||
 name|ISO_SUSP_DEVICE
 expr_stmt|;
 return|return
-name|isofs_rrip_loop
+name|cd9660_rrip_loop
 argument_list|(
 name|isodir
 argument_list|,
@@ -2424,9 +2424,9 @@ block|{
 block|{
 literal|"NM"
 block|,
-name|isofs_rrip_altname
+name|cd9660_rrip_altname
 block|,
-name|isofs_rrip_defname
+name|cd9660_rrip_defname
 block|,
 name|ISO_SUSP_ALTNAME
 block|}
@@ -2434,7 +2434,7 @@ block|,
 block|{
 literal|"CL"
 block|,
-name|isofs_rrip_pclink
+name|cd9660_rrip_pclink
 block|,
 literal|0
 block|,
@@ -2446,7 +2446,7 @@ block|,
 block|{
 literal|"PL"
 block|,
-name|isofs_rrip_pclink
+name|cd9660_rrip_pclink
 block|,
 literal|0
 block|,
@@ -2458,7 +2458,7 @@ block|,
 block|{
 literal|"RE"
 block|,
-name|isofs_rrip_reldir
+name|cd9660_rrip_reldir
 block|,
 literal|0
 block|,
@@ -2468,7 +2468,7 @@ block|,
 block|{
 literal|"RR"
 block|,
-name|isofs_rrip_idflag
+name|cd9660_rrip_idflag
 block|,
 literal|0
 block|,
@@ -2478,7 +2478,7 @@ block|,
 block|{
 literal|"CE"
 block|,
-name|isofs_rrip_cont
+name|cd9660_rrip_cont
 block|,
 literal|0
 block|,
@@ -2488,7 +2488,7 @@ block|,
 block|{
 literal|"ST"
 block|,
-name|isofs_rrip_stop
+name|cd9660_rrip_stop
 block|,
 literal|0
 block|,
@@ -2510,7 +2510,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|isofs_rrip_getname
+name|cd9660_rrip_getname
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -2620,7 +2620,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|isofs_rrip_defname
+name|cd9660_rrip_defname
 argument_list|(
 name|isodir
 argument_list|,
@@ -2640,7 +2640,7 @@ operator|++
 expr_stmt|;
 block|}
 return|return
-name|isofs_rrip_loop
+name|cd9660_rrip_loop
 argument_list|(
 name|isodir
 argument_list|,
@@ -2667,7 +2667,7 @@ block|{
 block|{
 literal|"SL"
 block|,
-name|isofs_rrip_slink
+name|cd9660_rrip_slink
 block|,
 literal|0
 block|,
@@ -2677,7 +2677,7 @@ block|,
 block|{
 literal|"RR"
 block|,
-name|isofs_rrip_idflag
+name|cd9660_rrip_idflag
 block|,
 literal|0
 block|,
@@ -2687,7 +2687,7 @@ block|,
 block|{
 literal|"CE"
 block|,
-name|isofs_rrip_cont
+name|cd9660_rrip_cont
 block|,
 literal|0
 block|,
@@ -2697,7 +2697,7 @@ block|,
 block|{
 literal|"ST"
 block|,
-name|isofs_rrip_stop
+name|cd9660_rrip_stop
 block|,
 literal|0
 block|,
@@ -2719,7 +2719,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|isofs_rrip_getsymname
+name|cd9660_rrip_getsymname
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -2795,7 +2795,7 @@ name|ISO_SUSP_SLINK
 expr_stmt|;
 return|return
 operator|(
-name|isofs_rrip_loop
+name|cd9660_rrip_loop
 argument_list|(
 name|isodir
 argument_list|,
@@ -2821,7 +2821,7 @@ block|{
 block|{
 literal|"ER"
 block|,
-name|isofs_rrip_extref
+name|cd9660_rrip_extref
 block|,
 literal|0
 block|,
@@ -2831,7 +2831,7 @@ block|,
 block|{
 literal|"CE"
 block|,
-name|isofs_rrip_cont
+name|cd9660_rrip_cont
 block|,
 literal|0
 block|,
@@ -2841,7 +2841,7 @@ block|,
 block|{
 literal|"ST"
 block|,
-name|isofs_rrip_stop
+name|cd9660_rrip_stop
 block|,
 literal|0
 block|,
@@ -2867,7 +2867,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_rrip_offset
+name|cd9660_rrip_offset
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -2978,7 +2978,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|isofs_rrip_loop
+name|cd9660_rrip_loop
 argument_list|(
 name|isodir
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isofs/cd9660/isofs_node.h>
+file|<isofs/cd9660/cd9660_node.h>
 end_include
 
 begin_include
@@ -281,7 +281,7 @@ comment|/*  * Initialize hash links for inodes and dnodes.  */
 end_comment
 
 begin_macro
-name|isofs_init
+name|cd9660_init
 argument_list|()
 end_macro
 
@@ -904,7 +904,7 @@ name|VT_ISOFS
 argument_list|,
 name|mntp
 argument_list|,
-name|isofs_vnodeop_p
+name|cd9660_vnodeop_p
 argument_list|,
 operator|&
 name|nvp
@@ -1218,7 +1218,7 @@ operator|&
 name|bp2
 argument_list|)
 expr_stmt|;
-name|isofs_defattr
+name|cd9660_defattr
 argument_list|(
 name|isodir
 argument_list|,
@@ -1227,7 +1227,7 @@ argument_list|,
 name|bp2
 argument_list|)
 expr_stmt|;
-name|isofs_deftstamp
+name|cd9660_deftstamp
 argument_list|(
 name|isodir
 argument_list|,
@@ -1242,7 +1242,7 @@ name|ISO_FTYPE_RRIP
 case|:
 name|result
 operator|=
-name|isofs_rrip_analyze
+name|cd9660_rrip_analyze
 argument_list|(
 name|isodir
 argument_list|,
@@ -1302,7 +1302,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|isofs_fifoop_p
+name|cd9660_fifoop_p
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -1310,7 +1310,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|isofs_fifoop_p
+name|cd9660_fifoop_p
 expr_stmt|;
 else|#
 directive|else
@@ -1352,7 +1352,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|isofs_specop_p
+name|cd9660_specop_p
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -1389,7 +1389,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|isofs_specop_p
+name|cd9660_specop_p
 expr_stmt|;
 if|if
 condition|(
@@ -1602,7 +1602,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_inactive
+name|cd9660_inactive
 parameter_list|(
 name|ap
 parameter_list|)
@@ -1652,7 +1652,7 @@ literal|0
 condition|)
 name|vprint
 argument_list|(
-literal|"isofs_inactive: pushing active"
+literal|"cd9660_inactive: pushing active"
 argument_list|,
 name|vp
 argument_list|)
@@ -1697,7 +1697,7 @@ end_comment
 
 begin_function
 name|int
-name|isofs_reclaim
+name|cd9660_reclaim
 parameter_list|(
 name|ap
 parameter_list|)
@@ -1744,7 +1744,7 @@ literal|0
 condition|)
 name|vprint
 argument_list|(
-literal|"isofs_reclaim: pushing active"
+literal|"cd9660_reclaim: pushing active"
 argument_list|,
 name|vp
 argument_list|)
@@ -1997,7 +1997,7 @@ end_comment
 
 begin_function
 name|void
-name|isofs_defattr
+name|cd9660_defattr
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -2421,7 +2421,7 @@ end_comment
 
 begin_function
 name|void
-name|isofs_deftstamp
+name|cd9660_deftstamp
 parameter_list|(
 name|isodir
 parameter_list|,
@@ -2551,7 +2551,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 argument_list|(
 name|ap
 operator|->
@@ -2565,7 +2565,7 @@ operator|.
 name|iso_atime
 argument_list|)
 condition|)
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 argument_list|(
 name|ap
 operator|->
@@ -2582,7 +2582,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 argument_list|(
 name|ap
 operator|->
@@ -2611,7 +2611,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 argument_list|(
 name|ap
 operator|->
@@ -2650,7 +2650,7 @@ operator|!
 name|ap
 condition|)
 block|{
-name|isofs_tstamp_conv7
+name|cd9660_tstamp_conv7
 argument_list|(
 name|isodir
 operator|->
@@ -2703,7 +2703,7 @@ end_function
 
 begin_function
 name|int
-name|isofs_tstamp_conv7
+name|cd9660_tstamp_conv7
 parameter_list|(
 name|pi
 parameter_list|,
@@ -3012,7 +3012,7 @@ end_function
 begin_function
 specifier|static
 name|unsigned
-name|isofs_chars2ui
+name|cd9660_chars2ui
 parameter_list|(
 name|begin
 parameter_list|,
@@ -3064,7 +3064,7 @@ end_function
 
 begin_function
 name|int
-name|isofs_tstamp_conv17
+name|cd9660_tstamp_conv17
 parameter_list|(
 name|pi
 parameter_list|,
@@ -3094,7 +3094,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|isofs_chars2ui
+name|cd9660_chars2ui
 argument_list|(
 name|pi
 argument_list|,
@@ -3109,7 +3109,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|isofs_chars2ui
+name|cd9660_chars2ui
 argument_list|(
 name|pi
 operator|+
@@ -3124,7 +3124,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|isofs_chars2ui
+name|cd9660_chars2ui
 argument_list|(
 name|pi
 operator|+
@@ -3139,7 +3139,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|isofs_chars2ui
+name|cd9660_chars2ui
 argument_list|(
 name|pi
 operator|+
@@ -3154,7 +3154,7 @@ index|[
 literal|4
 index|]
 operator|=
-name|isofs_chars2ui
+name|cd9660_chars2ui
 argument_list|(
 name|pi
 operator|+
@@ -3169,7 +3169,7 @@ index|[
 literal|5
 index|]
 operator|=
-name|isofs_chars2ui
+name|cd9660_chars2ui
 argument_list|(
 name|pi
 operator|+
@@ -3190,7 +3190,7 @@ literal|16
 index|]
 expr_stmt|;
 return|return
-name|isofs_tstamp_conv7
+name|cd9660_tstamp_conv7
 argument_list|(
 name|buf
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)iso_rrip.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)iso_rrip.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -166,7 +166,7 @@ end_typedef
 
 begin_decl_stmt
 name|int
-name|isofs_rrip_analyze
+name|cd9660_rrip_analyze
 name|__P
 argument_list|(
 operator|(
@@ -191,7 +191,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_rrip_getname
+name|cd9660_rrip_getname
 name|__P
 argument_list|(
 operator|(
@@ -223,7 +223,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_rrip_getsymname
+name|cd9660_rrip_getsymname
 name|__P
 argument_list|(
 operator|(
@@ -251,7 +251,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isofs_rrip_offset
+name|cd9660_rrip_offset
 name|__P
 argument_list|(
 operator|(
