@@ -881,7 +881,11 @@ block|}
 empty_stmt|;
 if|if
 condition|(
-name|argc
+operator|!
+name|tcpflag
+operator|&&
+operator|!
+name|udpflag
 condition|)
 name|udpflag
 operator|=
