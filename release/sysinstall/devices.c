@@ -759,22 +759,6 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"ze"
-block|,
-literal|"IBM/National Semiconductor PCMCIA ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"zp"
-block|,
-literal|"3Com Etherlink III PCMCIA ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
 literal|"cuaa%d"
 block|,
 literal|"%s on device %s (COM%d)"
