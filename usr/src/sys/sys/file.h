@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	7.10 (Berkeley) %G%  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_include
 include|#
@@ -21,8 +15,14 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_comment
-comment|/*  * Kernel descriptor table entry;  * one for each open kernel vnode and socket.  */
+comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  */
 end_comment
 
 begin_struct
