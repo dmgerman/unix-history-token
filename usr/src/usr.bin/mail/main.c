@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.8 %G%"
+literal|"@(#)main.c	2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,15 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GETHOST
+name|inithost
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|GETHOST
 name|mypid
 operator|=
 name|getpid
