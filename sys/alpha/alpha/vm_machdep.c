@@ -793,57 +793,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_struct
-struct|struct
-name|md_store
-block|{
-name|struct
-name|pcb
-name|mds_pcb
-decl_stmt|;
-name|struct
-name|trapframe
-name|mds_frame
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void cpu_save_upcall(struct thread *td, struct kse *newkse) {  	newkse->ke_mdstorage = malloc(sizeof(struct md_store), M_TEMP, 	    M_WAITOK);
-comment|/* Note: use of M_WAITOK means it won't fail. */
-end_comment
-
-begin_comment
-comment|/* set up shortcuts in MI section */
-end_comment
-
-begin_comment
-unit|newkse->ke_pcb =&(((struct md_store *)(newkse->ke_mdstorage))->mds_pcb); 	newkse->ke_frame =&(((struct md_store *)(newkse->ke_mdstorage))->mds_frame);
-comment|/* Copy the upcall pcb. Kernel mode& fp regs are here. */
-end_comment
-
-begin_comment
-comment|/* XXXKSE this may be un-needed */
-end_comment
-
-begin_comment
-unit|bcopy(td->td_pcb, newkse->ke_pcb, sizeof(struct pcb));
-comment|/* This copies most of the user mode register values. */
-end_comment
-
-begin_endif
-unit|bcopy(td->td_frame, newkse->ke_frame, sizeof(struct trapframe)); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|cpu_set_upcall
@@ -1010,57 +959,6 @@ block|{
 comment|/* XXX */
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void cpu_set_args(struct thread *td, struct kse *ke) {
-comment|/* XXX 	suword((void *)(ke->ke_frame->tf_esp + sizeof(void *)), 	    (int)ke->ke_mailbox); */
-end_comment
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void cpu_free_kse_mdstorage(struct kse *kse) {  	free(kse->ke_mdstorage, M_TEMP); 	kse->ke_mdstorage = NULL; 	kse->ke_pcb = NULL; 	kse->ke_frame = NULL; }
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|int cpu_export_context(struct thread *td) {
-comment|/* XXXKSE */
-end_comment
-
-begin_comment
-unit|struct trapframe *frame; 	struct thread_mailbox *tm; 	struct trapframe *uframe; 	int error;  	frame = td->td_frame; 	tm = td->td_mailbox; 	uframe =&tm->ctx.tfrm.tf_tf; 	error = copyout(frame, uframe, sizeof(*frame));
-comment|/* 	 * "What about the fp regs?" I hear you ask.... XXXKSE 	 * Don't know where gs and "onstack" come from. 	 * May need to fiddle a few other values too. 	 */
-end_comment
-
-begin_endif
-unit|return (error); 	return (0); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void

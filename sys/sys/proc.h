@@ -1253,40 +1253,9 @@ define|#
 directive|define
 name|ke_endzero
 value|ke_dummy
-define|#
-directive|define
-name|ke_startcopy
-value|ke_endzero
 name|u_char
 name|ke_dummy
 decl_stmt|;
-define|#
-directive|define
-name|ke_endcopy
-value|ke_mdstorage
-name|void
-modifier|*
-name|ke_mdstorage
-decl_stmt|;
-comment|/* where we store the pcb and frame */
-name|struct
-name|pcb
-modifier|*
-name|ke_pcb
-decl_stmt|;
-comment|/* the pcb saved for the upcalls */
-name|struct
-name|trapframe
-modifier|*
-name|ke_frame
-decl_stmt|;
-comment|/* the upcall trapframe */
-name|void
-modifier|*
-name|mdkse
-decl_stmt|;
-comment|/* eventually you load from this in */
-comment|/* switch for our extension PCB x86 */
 block|}
 struct|;
 end_struct
