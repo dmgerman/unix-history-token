@@ -818,6 +818,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|lp
 operator|=
 name|strrchr
@@ -826,6 +827,9 @@ name|prog
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|comp
