@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sfe[] = "@(#)sfe.c	1.5";  *  * sequential formatted external routines  */
+comment|/* char id_sfe[] = "@(#)sfe.c	1.6";  *  * sequential formatted external routines  */
 end_comment
 
 begin_include
@@ -930,11 +930,12 @@ operator|)
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-name|F_ERBREC
-operator|)
-return|;
+name|cursor
+operator|=
+operator|-
+name|recpos
+expr_stmt|;
+comment|/* to BOR */
 name|n
 operator|=
 name|reclen
