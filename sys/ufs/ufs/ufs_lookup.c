@@ -3497,6 +3497,10 @@ name|dirbuf
 expr_stmt|;
 name|dsize
 operator|=
+name|ep
+operator|->
+name|d_ino
+condition|?
 name|DIRSIZ
 argument_list|(
 name|OFSFMT
@@ -3506,6 +3510,8 @@ argument_list|)
 argument_list|,
 name|ep
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|spacefree
 operator|=
@@ -3544,14 +3550,7 @@ operator|+
 name|loc
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|ep
-operator|->
-name|d_ino
-condition|)
-block|{
-comment|/* trim the existing slot */
+comment|/* Trim the existing slot (NB: dsize may be zero). */
 name|ep
 operator|->
 name|d_reclen
@@ -3575,14 +3574,40 @@ operator|+
 name|dsize
 operator|)
 expr_stmt|;
-block|}
-else|else
+comment|/* Read nep->d_reclen now as the bcopy() may clobber it. */
+name|loc
+operator|+=
+name|nep
+operator|->
+name|d_reclen
+expr_stmt|;
+if|if
+condition|(
+name|nep
+operator|->
+name|d_ino
+operator|==
+literal|0
+condition|)
 block|{
-comment|/* overwrite; nothing there; header is ours */
+comment|/* 			 * A mid-block unused entry. Such entries are 			 * never created by the kernel, but fsck_ffs 			 * can create them (and it doesn't fix them). 			 * 			 * Add up the free space, and initialise the 			 * relocated entry since we don't bcopy it. 			 */
 name|spacefree
 operator|+=
-name|dsize
+name|nep
+operator|->
+name|d_reclen
 expr_stmt|;
+name|ep
+operator|->
+name|d_ino
+operator|=
+literal|0
+expr_stmt|;
+name|dsize
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
 block|}
 name|dsize
 operator|=
@@ -3614,10 +3639,6 @@ operator|->
 name|i_dirhash
 operator|!=
 name|NULL
-operator|&&
-name|nep
-operator|->
-name|d_ino
 condition|)
 name|ufsdirhash_move
 argument_list|(
@@ -3629,7 +3650,15 @@ name|dp
 operator|->
 name|i_offset
 operator|+
-name|loc
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|nep
+operator|-
+name|dirbuf
+operator|)
 argument_list|,
 name|dp
 operator|->
@@ -3648,12 +3677,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|loc
-operator|+=
-name|nep
-operator|->
-name|d_reclen
-expr_stmt|;
 if|if
 condition|(
 name|DOINGSOFTDEP
@@ -3697,7 +3720,7 @@ name|dsize
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Update the pointer fields in the previous entry (if any), 	 * copy in the new entry, and write out the block. 	 */
+comment|/* 	 * Here, `ep' points to a directory entry containing `dsize' in-use 	 * bytes followed by `spacefree' unused bytes. If ep->d_ino == 0, 	 * then the entry is completely unused (dsize == 0). The value 	 * of ep->d_reclen is always indeterminate. 	 * 	 * Update the pointer fields in the previous entry (if any), 	 * copy in the new entry, and write out the block. 	 */
 if|if
 condition|(
 name|ep
