@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux.h>
+file|<machine/../linux/linux.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux_mib.h>
+file|<compat/linux/linux_mib.h>
 end_include
 
 begin_struct
