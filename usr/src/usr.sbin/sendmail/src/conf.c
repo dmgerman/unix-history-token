@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.115 (Berkeley) %G%"
+literal|"@(#)conf.c	8.116 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1134,7 +1134,7 @@ literal|"user"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MCF_OPTFILE
 argument_list|,
 name|map_parseargs
 argument_list|,

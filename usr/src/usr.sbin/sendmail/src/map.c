@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.35 (Berkeley) %G%"
+literal|"@(#)map.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,6 +576,18 @@ operator|->
 name|map_file
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MCF_OPTFILE
+argument_list|,
+name|map
+operator|->
+name|map_class
+operator|->
+name|map_cflags
+argument_list|)
 condition|)
 block|{
 name|syserr
