@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwhod.c,v 1.8 1998/12/17 11:05:57 des Exp $"
+literal|"$Id: rwhod.c,v 1.9 1999/01/11 05:27:37 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +295,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|quiet_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|iff_flag
+init|=
+name|IFF_POINTOPOINT
 decl_stmt|;
 end_decl_stmt
 
@@ -790,6 +798,23 @@ condition|)
 name|quiet_mode
 operator|=
 literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-p"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|iff_flag
+operator|=
+literal|0
 expr_stmt|;
 else|else
 name|usage
@@ -1630,7 +1655,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rwhod [-i] [-m [ttl]]\n"
+literal|"usage: rwhod [-i] [-p] [-l] [-m [ttl]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3312,7 +3337,7 @@ operator|)
 operator||
 name|IFF_BROADCAST
 operator||
-name|IFF_POINTOPOINT
+name|iff_flag
 operator|)
 operator|)
 operator|==
