@@ -16,6 +16,27 @@ name|_MACHINE_FLOAT_H_
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_function_decl
+name|__BEGIN_DECLS
+specifier|extern
+name|int
+name|__flt_rounds
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -31,12 +52,8 @@ begin_define
 define|#
 directive|define
 name|FLT_ROUNDS
-value|(-1)
+value|-1
 end_define
-
-begin_comment
-comment|/* indeterminate */
-end_comment
 
 begin_define
 define|#
@@ -53,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|DECIMAL_DIG
-value|21
+value|17
 end_define
 
 begin_comment
@@ -226,63 +243,63 @@ begin_define
 define|#
 directive|define
 name|LDBL_MANT_DIG
-value|64
+value|DBL_MANT_DIG
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_EPSILON
-value|1.0842021724855044340E-19L
+value|DBL_EPSILON
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_DIG
-value|18
+value|DBL_DIG
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MIN_EXP
-value|(-16381)
+value|DBL_MIN_EXP
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MIN
-value|3.3621031431120935063E-4932L
+value|DBL_MIN
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MIN_10_EXP
-value|(-4931)
+value|DBL_MIN_10_EXP
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MAX_EXP
-value|16384
+value|DBL_MAX_EXP
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MAX
-value|1.1897314953572317650E+4932L
+value|DBL_MAX
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MAX_10_EXP
-value|4932
+value|DBL_MAX_10_EXP
 end_define
 
 begin_endif
