@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.286 2004/02/23 12:02:33 markus Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20,7 +20,7 @@ end_expr_stmt
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$FreeBSD$"
+literal|"$OpenBSD: sshd.c,v 1.286 2004/02/23 12:02:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -366,15 +366,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Server configuration options. */
@@ -2269,7 +2260,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* XXX not ready, to heavy after chroot */
+comment|/* XXX not ready, too heavy after chroot */
 block|do_setusercontext(pw);
 else|#
 directive|else
@@ -3083,7 +3074,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sshd version %s, %s\n"
+literal|"%s, %s\n"
 argument_list|,
 name|SSH_VERSION
 argument_list|,
@@ -3097,125 +3088,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [options]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -f file    Configuration file (default %s)\n"
-argument_list|,
-name|_PATH_SERVER_CONFIG_FILE
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -d         Debugging mode (multiple -d means more debugging)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -i         Started from inetd\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -D         Do not fork into daemon mode\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t         Only test configuration file and keys\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -q         Quiet (no logging)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -p port    Listen on the specified port (default: 22)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -k seconds Regenerate server key every this many seconds (default: 3600)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -g seconds Grace period for authentication (default: 600)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -b bits    Size of server RSA key (default: 768 bits)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -h file    File from which to read host key (default: %s)\n"
-argument_list|,
-name|_PATH_HOST_KEY_FILE
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -u len     Maximum hostname length for utmp recording\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -4         Use IPv4 only\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -6         Use IPv6 only\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -o option  Process the option as if it was read from a configuration file.\n"
+literal|"usage: sshd [-46Ddeiqt] [-b bits] [-f config_file] [-g login_grace_time]\n"
+literal|"            [-h host_key_file] [-k key_gen_time] [-o option] [-p port] [-u len]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3446,6 +3320,33 @@ name|saved_argv
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+operator|&&
+name|setgroups
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|debug
+argument_list|(
+literal|"setgroups(): %.200s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Initialize configuration options to their default values. */
 name|initialize_server_options
 argument_list|(
@@ -3901,6 +3802,18 @@ operator|!
 name|inetd_flag
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_AIX
+comment|/* 	 * Unset KRB5CCNAME, otherwise the user's session may inherit it from 	 * root's environment 	 */
+name|unsetenv
+argument_list|(
+literal|"KRB5CCNAME"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _AIX */
 ifdef|#
 directive|ifdef
 name|_UNICOS
@@ -4649,19 +4562,6 @@ argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|HAVE_CYGWIN
-comment|/* Clear environment */
-name|environ
-index|[
-literal|0
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* ignore SIGPIPE */
 name|signal
 argument_list|(
@@ -5886,6 +5786,13 @@ break|break;
 block|}
 block|}
 comment|/* This is the child processing a new connection. */
+name|setproctitle
+argument_list|(
+literal|"%s"
+argument_list|,
+literal|"[accepted]"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a new session and process group since the 4.4BSD 	 * setlogin() affects the entire process group.  We don't 	 * want the child to be able to affect the parent. 	 */
 if|#
 directive|if

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: version.h,v 1.40 2004/02/23 15:16:46 markus Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $OpenBSD: version.h,v 1.40 2004/02/23 15:16:46 markus Exp $ */
 end_comment
 
 begin_ifndef

@@ -177,25 +177,6 @@ condition|)
 return|return
 literal|0
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_OSF_SIA
-argument_list|)
-comment|/* 	 * XXX: any reason this is before krb?  could be moved to 	 * sys_auth_passwd()?  -dt 	 */
-return|return
-name|auth_sia_password
-argument_list|(
-name|authctxt
-argument_list|,
-name|password
-argument_list|)
-operator|&&
-name|ok
-return|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|KRB5

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect2.c,v 1.134 2004/01/19 21:25:15 markus Exp $"
+literal|"$OpenBSD: sshconnect2.c,v 1.135 2004/03/05 10:53:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5091,6 +5091,11 @@ if|if
 condition|(
 operator|!
 name|found
+operator|&&
+operator|!
+name|options
+operator|.
+name|identities_only
 condition|)
 block|{
 name|id

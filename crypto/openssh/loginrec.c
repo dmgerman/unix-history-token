@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: loginrec.c,v 1.54 2004/02/10 05:49:35 dtucker Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -62,7 +62,7 @@ end_expr_stmt
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$FreeBSD$"
+literal|"$Id: loginrec.c,v 1.54 2004/02/10 05:49:35 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5005,7 +5005,7 @@ name|HAVE_LOGOUT
 name|char
 name|line
 index|[
-literal|8
+name|UT_LINESIZE
 index|]
 decl_stmt|;
 operator|(

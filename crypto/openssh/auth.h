@@ -188,6 +188,10 @@ name|char
 modifier|*
 name|krb5_ticket_file
 decl_stmt|;
+name|char
+modifier|*
+name|krb5_ccname
+decl_stmt|;
 endif|#
 directive|endif
 name|void

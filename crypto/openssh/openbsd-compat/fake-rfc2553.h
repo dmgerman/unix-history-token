@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-rfc2553.h,v 1.8 2004/02/10 02:05:41 dtucker Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id: fake-rfc2553.h,v 1.8 2004/02/10 02:05:41 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -468,6 +468,23 @@ ifndef|#
 directive|ifndef
 name|HAVE_GETADDRINFO
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|getaddrinfo
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|getaddrinfo
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -1152,7 +1152,7 @@ name|PRIVSEP
 argument_list|(
 name|start_pam
 argument_list|(
-name|user
+name|authctxt
 argument_list|)
 argument_list|)
 expr_stmt|;

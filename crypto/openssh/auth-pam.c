@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-pam.c,v 1.95 2004/02/17 12:20:08 dtucker Exp $"
+literal|"$Id: auth-pam.c,v 1.100 2004/04/18 01:00:26 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -172,6 +172,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|compat20
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|utmp_len
 decl_stmt|;
 end_decl_stmt
 
@@ -417,6 +424,11 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
+name|sshpam_thread_status
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 switch|switch
 condition|(
 operator|(
@@ -642,9 +654,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|Authctxt
 modifier|*
-name|force_pwchange
+name|sshpam_authctxt
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -699,7 +713,21 @@ argument_list|,
 name|reqd
 argument_list|)
 expr_stmt|;
-operator|*
+if|if
+condition|(
+name|sshpam_authctxt
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: PAM authctxt not initialized"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|sshpam_authctxt
+operator|->
 name|force_pwchange
 operator|=
 name|reqd
@@ -776,6 +804,9 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_POSIX_THREADS
 comment|/* Import variables set by do_pam_account */
 name|sshpam_account_status
 operator|=
@@ -930,6 +961,8 @@ block|}
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1539,6 +1572,19 @@ name|appdata_ptr
 operator|=
 name|ctxt
 expr_stmt|;
+if|if
+condition|(
+name|sshpam_authctxt
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: PAM authctxt not initialized"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|buffer_init
 argument_list|(
 operator|&
@@ -1605,7 +1651,8 @@ name|auth_fail
 goto|;
 if|if
 condition|(
-operator|*
+name|sshpam_authctxt
+operator|->
 name|force_pwchange
 condition|)
 block|{
@@ -1659,7 +1706,8 @@ argument_list|(
 operator|&
 name|buffer
 argument_list|,
-operator|*
+name|sshpam_authctxt
+operator|->
 name|force_pwchange
 argument_list|)
 expr_stmt|;
@@ -2094,16 +2142,11 @@ specifier|static
 name|int
 name|sshpam_init
 parameter_list|(
-specifier|const
-name|char
+name|Authctxt
 modifier|*
-name|user
+name|authctxt
 parameter_list|)
 block|{
-specifier|extern
-name|u_int
-name|utmp_len
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -2116,6 +2159,13 @@ name|pam_rhost
 decl_stmt|,
 modifier|*
 name|pam_user
+decl_stmt|,
+modifier|*
+name|user
+init|=
+name|authctxt
+operator|->
+name|user
 decl_stmt|;
 if|if
 condition|(
@@ -2196,6 +2246,10 @@ argument_list|,
 operator|&
 name|sshpam_handle
 argument_list|)
+expr_stmt|;
+name|sshpam_authctxt
+operator|=
+name|authctxt
 expr_stmt|;
 if|if
 condition|(
@@ -2377,8 +2431,6 @@ condition|(
 name|sshpam_init
 argument_list|(
 name|authctxt
-operator|->
-name|user
 argument_list|)
 operator|==
 operator|-
@@ -2417,15 +2469,6 @@ operator|*
 name|ctxt
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|force_pwchange
-operator|=
-operator|&
-operator|(
-name|authctxt
-operator|->
-name|force_pwchange
-operator|)
 expr_stmt|;
 comment|/* Start the authentication thread */
 if|if
@@ -2936,9 +2979,30 @@ return|;
 block|}
 name|error
 argument_list|(
-literal|"PAM: %s"
+literal|"PAM: %s for %s%.100s from %.100s"
 argument_list|,
 name|msg
+argument_list|,
+name|sshpam_authctxt
+operator|->
+name|valid
+condition|?
+literal|""
+else|:
+literal|"illegal user "
+argument_list|,
+name|sshpam_authctxt
+operator|->
+name|user
+argument_list|,
+name|get_remote_name_or_ip
+argument_list|(
+name|utmp_len
+argument_list|,
+name|options
+operator|.
+name|use_dns
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -3216,10 +3280,9 @@ begin_function
 name|void
 name|start_pam
 parameter_list|(
-specifier|const
-name|char
+name|Authctxt
 modifier|*
-name|user
+name|authctxt
 parameter_list|)
 block|{
 if|if
@@ -3238,7 +3301,7 @@ if|if
 condition|(
 name|sshpam_init
 argument_list|(
-name|user
+name|authctxt
 argument_list|)
 operator|==
 operator|-
