@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)wait.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)wait.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -20,16 +20,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|_WSTATUS
+name|_W_INT
 parameter_list|(
-name|x
+name|i
 parameter_list|)
-value|((x)& 0377)
+value|(i)
 end_define
-
-begin_comment
-comment|/* 0, _WSTOPPED, or signal */
-end_comment
 
 begin_else
 else|#
@@ -41,14 +37,26 @@ define|#
 directive|define
 name|_W_INT
 parameter_list|(
-name|x
+name|w
 parameter_list|)
-value|(*(int *)(x))
+value|(*(int *)&(w))
 end_define
 
 begin_comment
 comment|/* convert union wait to int */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WCOREFLAG
+value|0200
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -59,11 +67,6 @@ name|x
 parameter_list|)
 value|(_W_INT(x)& 0177)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -84,6 +87,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(_WSTATUS(x) == _WSTOPPED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WSTOPSIG
+parameter_list|(
+name|x
+parameter_list|)
+value|(_W_INT(x)>> 8)
 end_define
 
 begin_define
@@ -116,22 +129,6 @@ parameter_list|)
 value|(_WSTATUS(x) == 0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_POSIX_SOURCE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|WSTOPSIG
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)>> 8)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -139,27 +136,14 @@ name|WEXITSTATUS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> 8)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _POSIX_SOURCE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSTOPSIG
-parameter_list|(
-name|x
-parameter_list|)
 value|(_W_INT(x)>> 8)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -168,17 +152,29 @@ name|WCOREDUMP
 parameter_list|(
 name|x
 parameter_list|)
-value|(_W_INT(x)& 0200)
+value|(_W_INT(x)& WCOREFLAG)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WEXITSTATUS
+name|W_EXITCODE
 parameter_list|(
-name|x
+name|ret
+parameter_list|,
+name|sig
 parameter_list|)
-value|(_W_INT(x)>> 8)
+value|((ret)<< 8 | (sig))
+end_define
+
+begin_define
+define|#
+directive|define
+name|W_STOPCODE
+parameter_list|(
+name|sig
+parameter_list|)
+value|((sig)<< 8 | _WSTOPPED)
 end_define
 
 begin_endif
@@ -187,11 +183,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _POSIX_SOURCE */
-end_comment
-
-begin_comment
-comment|/*  * Option bits for the second argument of wait4.  WNOHANG causes the  * wait to not hang if there are no stopped or terminated processes, rather  * returning an error indication in this case (pid==0).  WUNTRACED  * indicates that the caller should receive status about untraced children  * which stop due to signals.  If children are stopped and a wait without  * this option is done, it is as though they were still running... nothing  * about them is returned.   By default, a blocking wait call will be  * aborted by receipt of a signal that is caught (POSIX); the option  * WSIGRESTART causes the call to restart instead of failing with error EINTR.  */
+comment|/*  * Option bits for the second argument of wait4.  WNOHANG causes the  * wait to not hang if there are no stopped or terminated processes, rather  * returning an error indication in this case (pid==0).  WUNTRACED  * indicates that the caller should receive status about untraced children  * which stop due to signals.  If children are stopped and a wait without  * this option is done, it is as though they were still running... nothing  * about them is returned.  */
 end_comment
 
 begin_define
@@ -223,22 +215,7 @@ name|_POSIX_SOURCE
 end_ifndef
 
 begin_comment
-comment|/* extensions/compat follow: */
-end_comment
-
-begin_comment
-comment|/* additional option bit for wait4: */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSIGRESTART
-value|4
-end_define
-
-begin_comment
-comment|/* restart wait if signal is received */
+comment|/* POSIX extensions and 4.2/4.3 compatability: */
 end_comment
 
 begin_comment
