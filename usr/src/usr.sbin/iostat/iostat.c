@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.1 (Berkeley) %G%"
+literal|"@(#)iostat.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,11 @@ decl_stmt|;
 name|long
 name|t
 decl_stmt|;
+name|int
+name|tohdr
+init|=
+literal|1
+decl_stmt|;
 name|nlist
 argument_list|(
 literal|"/vmunix"
@@ -343,6 +348,16 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+name|loop
+label|:
+if|if
+condition|(
+operator|--
+name|tohdr
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"      TTY"
@@ -423,8 +438,11 @@ argument_list|(
 literal|" us ni sy id\n"
 argument_list|)
 expr_stmt|;
-name|loop
-label|:
+name|tohdr
+operator|=
+literal|19
+expr_stmt|;
+block|}
 name|lseek
 argument_list|(
 name|mf
