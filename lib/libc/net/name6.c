@@ -2409,13 +2409,6 @@ operator|->
 name|h_name
 operator|!=
 name|NULL
-operator|&&
-operator|*
-name|hp
-operator|->
-name|h_name
-operator|!=
-literal|'\0'
 condition|)
 name|size
 operator|+=
@@ -2612,13 +2605,6 @@ operator|->
 name|h_name
 operator|!=
 name|NULL
-operator|&&
-operator|*
-name|hp
-operator|->
-name|h_name
-operator|!=
-literal|'\0'
 condition|)
 block|{
 name|nhp
