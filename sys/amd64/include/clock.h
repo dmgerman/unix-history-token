@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id$  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.24 1997/02/22 09:33:59 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,7 @@ end_define
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -26,6 +27,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 end_if
 
@@ -114,6 +122,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -122,6 +131,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 end_if
 
@@ -467,6 +483,7 @@ end_function
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -475,6 +492,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 end_if
 

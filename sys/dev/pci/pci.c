@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci.c,v 1.68 1997/03/25 19:12:08 se Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci.c,v 1.69 1997/04/23 19:43:20 se Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_if
 begin_comment
 comment|/*======================================================== ** **	#includes  and  declarations ** **======================================================== */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_smp.h"
+end_include
 
 begin_include
 include|#
@@ -145,13 +151,6 @@ include|#
 directive|include
 file|<pci/pci_ioctl.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|PCI_MAX_IRQ
-value|(16)
-end_define
 
 begin_comment
 comment|/*======================================================== ** **	Structs and Functions ** **======================================================== */
@@ -1287,6 +1286,25 @@ decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|u_char
+name|airq
+init|=
+literal|0xff
+decl_stmt|;
+name|u_char
+name|rirq
+init|=
+literal|0xff
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|pcici_t
 name|tag
 init|=
@@ -1377,6 +1395,63 @@ name|data
 argument_list|)
 expr_stmt|;
 comment|/* 		**	If it's zero, the isa irq number is unknown, 		**	and we cannot bind the pci interrupt. 		*/
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+if|if
+condition|(
+name|irq
+operator|&&
+operator|(
+name|irq
+operator|!=
+literal|0xff
+operator|)
+condition|)
+block|{
+name|airq
+operator|=
+name|get_pci_apic_irq
+argument_list|(
+name|bus
+argument_list|,
+name|dev
+argument_list|,
+name|pciint
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|airq
+operator|!=
+literal|0xff
+condition|)
+block|{
+comment|/* APIC IRQ exists */
+name|rirq
+operator|=
+name|irq
+expr_stmt|;
+comment|/* 're-directed' IRQ */
+name|irq
+operator|=
+name|airq
+expr_stmt|;
+comment|/* use APIC IRQ */
+block|}
+name|printf
+argument_list|(
+literal|"%d"
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|irq
@@ -1394,6 +1469,9 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 else|else
 name|printf
 argument_list|(
@@ -1413,6 +1491,48 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+if|if
+condition|(
+name|airq
+operator|!=
+literal|0xff
+condition|)
+block|{
+comment|/* APIC IRQ exists */
+name|data
+operator|=
+name|PCI_INTERRUPT_LINE_INSERT
+argument_list|(
+name|data
+argument_list|,
+name|airq
+argument_list|)
+expr_stmt|;
+name|pci_conf_write
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_INTERRUPT_REG
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+name|undirect_pci_irq
+argument_list|(
+name|rirq
+argument_list|)
+expr_stmt|;
+comment|/* free for ISA card */
+block|}
+endif|#
+directive|endif
+comment|/* APIC_IO */
 comment|/* 	**	Read the current mapping, 	**	and update the pcicb fields. 	*/
 for|for
 control|(

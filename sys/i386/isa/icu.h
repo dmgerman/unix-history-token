@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)icu.h	5.6 (Berkeley) 5/9/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)icu.h	5.6 (Berkeley) 5/9/91  *	$Id: icu.h,v 1.10 1997/02/22 09:36:13 peter Exp $  */
 end_comment
 
 begin_comment
@@ -25,6 +25,16 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|"opt_smp.h"
+end_include
+
+begin_comment
+comment|/* so we dont have to change EVERY file including icu.h */
+end_comment
+
 begin_comment
 comment|/*  * Interrupt "level" mechanism variables, masks, and macros  */
 end_comment
@@ -38,6 +48,211 @@ end_decl_stmt
 
 begin_comment
 comment|/* interrupt mask enable */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MACHINE_SMP_H_
+argument_list|)
+end_if
+
+begin_comment
+comment|/** XXX what a hack, its this or include<machine/smp.h>! */
+end_comment
+
+begin_decl_stmt
+name|void
+name|write_io_apic_mask24
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|u_int32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* i386/i386/mpapic.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MACHINE_SMP_H_ */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MULTIPLE_IOAPICS
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|MULTIPLE_IOAPICSXXX: cannot assume apic #0 in the following functions.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MULTIPLE_IOAPICS */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int32_t
+name|INTRGET
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|imen
+operator|&
+literal|0x00ffffff
+operator|)
+return|;
+comment|/* return our global copy */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|INTRSET
+parameter_list|(
+name|unsigned
+name|s
+parameter_list|)
+block|{
+name|write_io_apic_mask24
+argument_list|(
+literal|0
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|imen
+operator|=
+name|s
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|INTREN
+parameter_list|(
+name|unsigned
+name|s
+parameter_list|)
+block|{
+name|write_io_apic_mask24
+argument_list|(
+literal|0
+argument_list|,
+name|imen
+operator|&
+operator|~
+name|s
+argument_list|)
+expr_stmt|;
+name|imen
+operator|&=
+operator|~
+name|s
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|INTRDIS
+parameter_list|(
+name|unsigned
+name|s
+parameter_list|)
+block|{
+name|write_io_apic_mask24
+argument_list|(
+literal|0
+argument_list|,
+name|imen
+operator||
+name|s
+argument_list|)
+expr_stmt|;
+name|imen
+operator||=
+name|s
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|INTRMASK
+parameter_list|(
+name|msk
+parameter_list|,
+name|s
+parameter_list|)
+value|(msk |= (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTRUNMASK
+parameter_list|(
+name|msk
+parameter_list|,
+name|s
+parameter_list|)
+value|(msk&= ~(s))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* APIC_IO */
 end_comment
 
 begin_define
@@ -175,6 +390,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APIC_IO */
+end_comment
 
 begin_endif
 endif|#
@@ -372,6 +596,71 @@ begin_comment
 comment|/* 0-31 are processor exceptions */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/apic.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPI_INTS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* 32-47: ISA IRQ0-IRQ15, 48-55: IO APIC IRQ16-IRQ23, 56-59: LOCAL APIC IPI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_LEN
+value|28
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* 32-47: ISA IRQ0-IRQ15, 48-55: IO APIC IRQ16-IRQ23 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_LEN
+value|24
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IPI_INTS */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -381,6 +670,15 @@ end_define
 
 begin_comment
 comment|/* 32-47 are ISA interrupts */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APIC_IO */
 end_comment
 
 begin_endif

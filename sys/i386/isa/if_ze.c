@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.40 1997/02/22 09:36:37 peter Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.41 1997/03/24 11:32:55 bde Exp $  */
 end_comment
 
 begin_comment
@@ -94,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|"bpfilter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_smp.h"
 end_include
 
 begin_include
@@ -349,6 +355,36 @@ end_endif
 
 begin_comment
 comment|/* NAPM> 0 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mpapic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APIC_IO */
 end_comment
 
 begin_escape
@@ -2720,9 +2756,23 @@ name|isr
 decl_stmt|,
 name|imr
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|u_int
+name|imask
+decl_stmt|;
+else|#
+directive|else
 name|u_short
 name|imask
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 if|if
 condition|(
 operator|!
@@ -2813,6 +2863,19 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|imask
+operator|=
+name|INTRGET
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|imask
 operator|=
 name|inb
@@ -2827,6 +2890,9 @@ argument_list|(
 name|IO_ICU1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|log
 argument_list|(
 name|LOG_ERR
