@@ -24,7 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setruid.c	5.5 (Berkeley) 2/23/91"
+literal|"From: @(#)setruid.c	5.5 (Berkeley) 2/23/91"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +53,13 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|MESSAGE
+value|"warning: this program uses setruid, which doesn't do anything\r\n(but used to)\r\n"
+end_define
 
 begin_function
 name|int
@@ -65,6 +83,20 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|MESSAGE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|MESSAGE
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|setreuid
@@ -78,6 +110,14 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_asm
+asm|asm(".stabs \"warning: setruid function referenced\", 30, 0, 0, 0");
+end_asm
+
+begin_asm
+asm|asm(".stabs \"_setruid\", 1, 0, 0, 0");
+end_asm
 
 end_unit
 
