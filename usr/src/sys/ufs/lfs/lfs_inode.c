@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.81 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.82 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -449,7 +449,8 @@ name|ap
 decl_stmt|;
 block|{
 specifier|register
-name|INDIR
+name|struct
+name|indir
 modifier|*
 name|inp
 decl_stmt|;
@@ -506,7 +507,8 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|INDIR
+name|struct
+name|indir
 name|a
 index|[
 name|NIADDR
@@ -906,7 +908,8 @@ name|lastblock
 condition|;
 control|)
 block|{
-name|lfs_bmaparray
+comment|/* XXX use run length from bmap array to make this faster */
+name|ufs_bmaparray
 argument_list|(
 name|vp
 argument_list|,
@@ -919,6 +922,8 @@ name|a
 argument_list|,
 operator|&
 name|depth
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -991,7 +996,7 @@ case|:
 comment|/* An indirect block. */
 name|panic
 argument_list|(
-literal|"lfs_truncate: lfs_bmaparray returned depth 1"
+literal|"lfs_truncate: ufs_bmaparray returned depth 1"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -1391,6 +1396,8 @@ operator|=
 name|vp
 operator|->
 name|v_dirtyblkhd
+operator|.
+name|le_next
 init|;
 name|bp
 condition|;
@@ -1398,7 +1405,9 @@ name|bp
 operator|=
 name|bp
 operator|->
-name|b_blockf
+name|b_vnbufs
+operator|.
+name|qe_next
 control|)
 if|if
 condition|(
@@ -1523,8 +1532,14 @@ name|vinvalbuf
 argument_list|(
 name|vp
 argument_list|,
+operator|(
 name|length
 operator|>
+literal|0
+operator|)
+condition|?
+name|V_SAVE
+else|:
 literal|0
 argument_list|,
 name|ap
