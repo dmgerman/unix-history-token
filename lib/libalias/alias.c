@@ -1903,7 +1903,22 @@ argument|accumulate
 argument_list|,
 argument|ic->icmp_cksum
 argument_list|)
-comment|/* Alias address in IP header */
+comment|/*  * Alias address in IP header if it comes from the host  * the original TCP/UDP packet was destined for.  */
+if|if
+condition|(
+name|pip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|==
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+condition|)
+block|{
 name|DifferentialChecksum
 argument_list|(
 operator|&
@@ -1936,6 +1951,7 @@ name|ip_src
 operator|=
 name|alias_address
 expr_stmt|;
+block|}
 comment|/* Alias address and port number of original IP packet fragment contained in ICMP data section */
 name|ip
 operator|->
@@ -2049,7 +2065,22 @@ argument|accumulate
 argument_list|,
 argument|ic->icmp_cksum
 argument_list|)
-comment|/* Alias address in IP header */
+comment|/*  * Alias address in IP header if it comes from the host  * the original ICMP message was destined for.  */
+if|if
+condition|(
+name|pip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|==
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+condition|)
+block|{
 name|DifferentialChecksum
 argument_list|(
 operator|&
@@ -2082,6 +2113,7 @@ name|ip_src
 operator|=
 name|alias_address
 expr_stmt|;
+block|}
 comment|/* Alias address of original IP packet and sequence number of     embedded ICMP datagram */
 name|ip
 operator|->
