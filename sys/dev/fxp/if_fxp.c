@@ -622,6 +622,15 @@ literal|"Intel 82551QM Pro/100 M Mobile Connection"
 block|}
 block|,
 block|{
+literal|0x1064
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel 82562EZ (ICH6)"
+block|}
+block|,
+block|{
 literal|0x1209
 block|,
 operator|-
