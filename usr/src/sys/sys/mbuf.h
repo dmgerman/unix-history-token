@@ -423,10 +423,14 @@ define|\
 value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_type != MT_FREE) panic("mget"); (m)->m_type = t; \ 		  mbstat.m_mtypes[MT_FREE]--; mbstat.m_mtypes[t]++; \ 		  mfree = (m)->m_next; (m)->m_next = 0; \ 		  (m)->m_off = MMINOFF; } \ 	  else \ 		(m) = m_more(i, t); \ 	  splx(ms); }
 end_define
 
+begin_comment
+comment|/*  * Mbuf page cluster macros.  * MCLALLOC allocates mbuf page clusters.  * Note that it works only with a count of 1 at the moment.  * MCLGET adds such clusters to a normal mbuf.  * m->m_len is set to CLBYTES upon success.  * MCLFREE frees clusters allocated by MCLALLOC.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MCLGET
+name|MCLALLOC
 parameter_list|(
 name|m
 parameter_list|,
@@ -439,6 +443,47 @@ end_define
 begin_define
 define|#
 directive|define
+name|M_HASCL
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_off>= MSIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTOCL
+parameter_list|(
+name|m
+parameter_list|)
+value|((struct mbuf *)(mtod((m), int)&~CLOFSET))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCLGET
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|{ struct mbuf *p; \ 	  if (mclfree == 0) \ 		(void)m_clalloc(1, MPG_CLUSTERS); \ 	  MCLALLOC(p, 1); \ 	  if (p) { \ 		(m)->m_off = (int)p - (int)(m); \ 		(m)->m_len = CLBYTES; \ 	  } \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCLFREE
+parameter_list|(
+name|m
+parameter_list|)
+value|{ \ 	if (--mclrefcnt[mtocl(m)] == 0) \ 	    { (m)->m_next = mclfree;mclfree = (m);mbstat.m_clfree++;} \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
 name|MFREE
 parameter_list|(
 name|m
@@ -446,7 +491,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_type = MT_FREE; \ 	  if ((m)->m_off>= MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~CLOFSET); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); \ 	  splx(ms); \ 	  if (m_want) { \ 		  m_want = 0; \ 		  wakeup((caddr_t)&mfree); \ 	  } \ 	}
+value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_type = MT_FREE; \ 	  if (M_HASCL(m)) { \ 		(n) = MTOCL(m); \ 		MCLFREE(n); \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); \ 	  splx(ms); \ 	  if (m_want) { \ 		  m_want = 0; \ 		  wakeup((caddr_t)&mfree); \ 	  } \ 	}
 end_define
 
 begin_comment
