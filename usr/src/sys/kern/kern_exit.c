@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	6.7	85/04/14	*/
+comment|/*	kern_exit.c	6.8	85/05/22	*/
 end_comment
 
 begin_include
@@ -1518,16 +1518,6 @@ name|p
 operator|->
 name|p_cursig
 argument_list|)
-operator|)
-operator|!=
-literal|0
-operator|||
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|SOUSIG
 operator|)
 operator|!=
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	6.8	85/03/12	*/
+comment|/*	sys_generic.c	6.9	85/05/22	*/
 end_comment
 
 begin_include
@@ -757,18 +757,6 @@ name|u_procp
 operator|->
 name|p_cursig
 argument_list|)
-operator|)
-operator|!=
-literal|0
-operator|||
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SOUSIG
 operator|)
 operator|!=
 literal|0
