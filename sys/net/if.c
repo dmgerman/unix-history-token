@@ -2333,7 +2333,7 @@ name|ifp
 operator|->
 name|if_broadcastaddr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* reliably crash if used uninitialized */
 name|ifp
