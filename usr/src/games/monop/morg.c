@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)morg.c	5.3 (Berkeley) %G%"
+literal|"@(#)morg.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,39 +69,36 @@ comment|/*  3 */
 literal|"holdings"
 block|,
 comment|/*  4 */
-literal|"shell"
-block|,
-comment|/*  5 */
 literal|"mortgage"
 block|,
-comment|/*  6 */
+comment|/*  5 */
 literal|"unmortgage"
 block|,
-comment|/*  7 */
+comment|/*  6 */
 literal|"buy"
 block|,
-comment|/*  8 */
+comment|/*  7 */
 literal|"sell"
 block|,
-comment|/*  9 */
+comment|/*  8 */
 literal|"card"
 block|,
-comment|/* 10 */
+comment|/*  9 */
 literal|"pay"
 block|,
-comment|/* 11 */
+comment|/* 10 */
 literal|"trade"
 block|,
-comment|/* 12 */
+comment|/* 11 */
 literal|"resign"
 block|,
-comment|/* 13 */
+comment|/* 12 */
 literal|"save game"
 block|,
-comment|/* 14 */
+comment|/* 13 */
 literal|"restore game"
 block|,
-comment|/* 15 */
+comment|/* 14 */
 literal|0
 block|}
 decl_stmt|;
