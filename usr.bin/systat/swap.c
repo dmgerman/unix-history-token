@@ -324,6 +324,8 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msgbuf
 argument_list|)
 expr_stmt|;
