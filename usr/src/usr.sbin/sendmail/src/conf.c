@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.79 (Berkeley) %G%"
+literal|"@(#)conf.c	8.80 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2993,7 +2993,6 @@ name|fp
 init|=
 name|NULL
 decl_stmt|;
-operator|*
 name|avenrun
 operator|=
 literal|0.0
@@ -3027,7 +3026,7 @@ name|tTd
 argument_list|(
 literal|3
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 condition|)
 name|printf
@@ -3081,7 +3080,7 @@ name|tTd
 argument_list|(
 literal|3
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 condition|)
 name|printf
