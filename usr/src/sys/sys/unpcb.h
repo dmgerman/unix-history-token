@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	unpcb.h	5.1	82/08/01	*/
+comment|/*	unpcb.h	5.2	82/08/02	*/
 end_comment
 
 begin_comment
@@ -44,6 +44,16 @@ comment|/* link in unp_refs list */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|sotounpcb
+parameter_list|(
+name|so
+parameter_list|)
+value|((struct unpcb *)((so)->so_pcb))
+end_define
 
 end_unit
 
