@@ -106,12 +106,6 @@ name|new
 parameter_list|,
 specifier|const
 name|struct
-name|disk
-modifier|*
-name|old
-parameter_list|,
-specifier|const
-name|struct
 name|chunk
 modifier|*
 name|c1

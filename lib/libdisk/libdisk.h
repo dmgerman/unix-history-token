@@ -52,8 +52,8 @@ comment|/* the sector size to end sensing at */
 end_comment
 
 begin_enum
-specifier|const
 specifier|static
+specifier|const
 enum|enum
 name|platform
 block|{
@@ -948,11 +948,6 @@ name|Fill_Disklabel
 parameter_list|(
 name|struct
 name|disklabel
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|disk
 modifier|*
 parameter_list|,
 specifier|const

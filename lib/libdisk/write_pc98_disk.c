@@ -121,12 +121,6 @@ name|new
 parameter_list|,
 specifier|const
 name|struct
-name|disk
-modifier|*
-name|old
-parameter_list|,
-specifier|const
-name|struct
 name|chunk
 modifier|*
 name|c1
@@ -260,8 +254,6 @@ argument_list|(
 name|dl
 argument_list|,
 name|new
-argument_list|,
-name|old
 argument_list|,
 name|c1
 argument_list|)
@@ -612,8 +604,6 @@ argument_list|(
 name|fd
 argument_list|,
 name|d1
-argument_list|,
-name|old
 argument_list|,
 name|c1
 argument_list|)

@@ -216,8 +216,6 @@ name|dl
 argument_list|,
 name|new
 argument_list|,
-name|NULL
-argument_list|,
 name|c1
 argument_list|)
 expr_stmt|;
