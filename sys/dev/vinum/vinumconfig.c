@@ -13,16 +13,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<dev/vinum/vinumhdr.h>
 end_include
 
@@ -788,7 +778,7 @@ condition|(
 name|vol
 operator|->
 name|preferred_plex
-operator|>
+operator|>=
 literal|0
 condition|)
 comment|/* already had a facourite, */
@@ -1318,6 +1308,15 @@ expr_stmt|;
 comment|/* that crashes the subdisk */
 return|return;
 block|}
+name|sd
+operator|->
+name|sectorsize
+operator|=
+name|drive
+operator|->
+name|sectorsize
+expr_stmt|;
+comment|/* get sector size from drive */
 if|if
 condition|(
 name|drive
@@ -7300,7 +7299,7 @@ argument_list|)
 expr_stmt|;
 comment|/* set the state */
 break|break;
-comment|/* 	     * XXX experimental ideas.  These are not 	     * documented, and will not be until I 	     * decide they're worth keeping 	     */
+comment|/* 	     * XXX experimental ideas.  These are not 	     * documented, and will not be until I 	     * decide they're worth keeping. 	     */
 case|case
 name|kw_writethrough
 case|:
@@ -9421,6 +9420,59 @@ operator|=
 name|sd_stale
 expr_stmt|;
 comment|/* stale until proven otherwise */
+if|if
+condition|(
+name|plex
+operator|->
+name|sectorsize
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|sd
+operator|->
+name|sectorsize
+operator|!=
+name|plex
+operator|->
+name|sectorsize
+condition|)
+comment|/* incompatible sector sizes? */
+name|printf
+argument_list|(
+literal|"vinum: incompatible sector sizes.  "
+literal|"%s has %d bytes, %s has %d bytes.  Ignored.\n"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|sd
+operator|->
+name|sectorsize
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|,
+name|plex
+operator|->
+name|sectorsize
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* not set yet, */
+name|plex
+operator|->
+name|sectorsize
+operator|=
+name|sd
+operator|->
+name|sectorsize
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -9625,6 +9677,59 @@ operator|=
 name|plexno
 expr_stmt|;
 comment|/* note it in the plex */
+if|if
+condition|(
+name|vol
+operator|->
+name|sectorsize
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|plex
+operator|->
+name|sectorsize
+operator|!=
+name|vol
+operator|->
+name|sectorsize
+condition|)
+comment|/* incompatible sector sizes? */
+name|printf
+argument_list|(
+literal|"vinum: incompatible sector sizes.  "
+literal|"%s has %d, %s has %d.  Ignored.\n"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|,
+name|plex
+operator|->
+name|sectorsize
+argument_list|,
+name|vol
+operator|->
+name|name
+argument_list|,
+name|vol
+operator|->
+name|sectorsize
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* not set yet, */
+name|vol
+operator|->
+name|sectorsize
+operator|=
+name|plex
+operator|->
+name|sectorsize
+expr_stmt|;
 block|}
 block|}
 name|vol
@@ -9639,7 +9744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the global configuration.  * diskconfig is != 0 if we're reading in a config  * from disk.  In this case, we don't try to  * bring the devices up, though we will bring  * them down if there's some error which got  * missed when writing to disk.  */
+comment|/*  * Update the global configuration.  This is  * called after configuration changes.  *  * diskconfig is != 0 if we're reading in a config  * from disk.  In this case, we don't try to bring  * the devices up, though we will bring them down  * if there's some error which got missed when  * writing to disk.  */
 end_comment
 
 begin_function
