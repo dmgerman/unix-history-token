@@ -21,5 +21,12 @@ name|el
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|displayhist
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
