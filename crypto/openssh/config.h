@@ -8,11 +8,15 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.149 2003/03/10 00:38:10 djm Exp $ */
+comment|/* $Id: acconfig.h,v 1.166 2003/09/16 01:52:19 dtucker Exp $ */
 end_comment
 
 begin_comment
 comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1999-2003 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -36,6 +40,30 @@ comment|/* Please make your changes there */
 end_comment
 
 begin_comment
+comment|/* Define if your platform breaks doing a seteuid before a setuid */
+end_comment
+
+begin_comment
+comment|/* #undef SETEUID_BREAKS_SETUID */
+end_comment
+
+begin_comment
+comment|/* Define if your setreuid() is broken */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_SETREUID */
+end_comment
+
+begin_comment
+comment|/* Define if your setregid() is broken */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_SETREGID */
+end_comment
+
+begin_comment
 comment|/* Define to a Set Process Title type if your system is */
 end_comment
 
@@ -45,6 +73,10 @@ end_comment
 
 begin_comment
 comment|/* #undef SPT_TYPE */
+end_comment
+
+begin_comment
+comment|/* #undef SPT_PADCHAR */
 end_comment
 
 begin_comment
@@ -257,6 +289,14 @@ end_comment
 
 begin_comment
 comment|/* #undef WITH_AIXAUTHENTICATE */
+end_comment
+
+begin_comment
+comment|/* Define if your AIX loginfailed() function takes 4 arguments (AIX>= 5.2) */
+end_comment
+
+begin_comment
+comment|/* #undef AIX_LOGINFAILED_4ARG */
 end_comment
 
 begin_comment
@@ -635,6 +675,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define this is you want GSSAPI support in the version 2 protocol */
+end_comment
+
+begin_comment
+comment|/* #undef GSSAPI */
+end_comment
+
+begin_comment
 comment|/* Define if you want Kerberos 5 support */
 end_comment
 
@@ -648,22 +696,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HEIMDAL */
-end_comment
-
-begin_comment
-comment|/* Define if you want Kerberos 4 support */
-end_comment
-
-begin_comment
-comment|/* #undef KRB4 */
-end_comment
-
-begin_comment
-comment|/* Define if you want AFS support */
-end_comment
-
-begin_comment
-comment|/* #undef AFS */
 end_comment
 
 begin_comment
@@ -805,9 +837,12 @@ begin_comment
 comment|/* Set this to your mail directory if you don't have maillock.h */
 end_comment
 
-begin_comment
-comment|/* #undef MAIL_DIRECTORY */
-end_comment
+begin_define
+define|#
+directive|define
+name|MAIL_DIRECTORY
+value|"/var/mail"
+end_define
 
 begin_comment
 comment|/* Data types */
@@ -991,14 +1026,6 @@ value|"/var/run"
 end_define
 
 begin_comment
-comment|/* Use IPv4 for connection by default, IPv6 can still if explicity asked */
-end_comment
-
-begin_comment
-comment|/* #undef IPV4_DEFAULT */
-end_comment
-
-begin_comment
 comment|/* getaddrinfo is broken (if present) */
 end_comment
 
@@ -1079,6 +1106,14 @@ end_comment
 
 begin_comment
 comment|/* #undef BROKEN_ONE_BYTE_DIRENT_D_NAME */
+end_comment
+
+begin_comment
+comment|/* Define if your system has /etc/default/login */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ETC_DEFAULT_LOGIN */
 end_comment
 
 begin_comment
@@ -1192,18 +1227,6 @@ comment|/* #undef HAVE_STRICT_MKSTEMP */
 end_comment
 
 begin_comment
-comment|/* Setproctitle emulation */
-end_comment
-
-begin_comment
-comment|/* #undef SETPROCTITLE_STRATEGY */
-end_comment
-
-begin_comment
-comment|/* #undef SETPROCTITLE_PS_PADDING */
-end_comment
-
-begin_comment
 comment|/* Some systems put this outside of libc */
 end_comment
 
@@ -1215,11 +1238,59 @@ value|1
 end_define
 
 begin_comment
-comment|/* Pushing STREAMS modules incorrectly acquires a controlling TTY */
+comment|/* Define if sshd somehow reacquires a controlling TTY after setsid() */
 end_comment
 
 begin_comment
-comment|/* #undef STREAMS_PUSH_ACQUIRES_CTTY */
+comment|/* #undef SSHD_ACQUIRES_CTTY */
+end_comment
+
+begin_comment
+comment|/* Define if cmsg_type is not passed correctly */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_CMSG_TYPE */
+end_comment
+
+begin_comment
+comment|/* Strings used in /etc/passwd to denote locked account */
+end_comment
+
+begin_comment
+comment|/* #undef LOCKED_PASSWD_STRING */
+end_comment
+
+begin_comment
+comment|/* #undef LOCKED_PASSWD_PREFIX */
+end_comment
+
+begin_comment
+comment|/* #undef LOCKED_PASSWD_SUBSTR */
+end_comment
+
+begin_comment
+comment|/* Define if DNS support is to be activated */
+end_comment
+
+begin_comment
+comment|/* #undef DNS */
+end_comment
+
+begin_comment
+comment|/* Define if getrrsetbyname() exists */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETRRSETBYNAME */
+end_comment
+
+begin_comment
+comment|/* Define if HEADER.ad exists in arpa/nameser.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_HEADER_AD */
 end_comment
 
 begin_comment
@@ -1313,6 +1384,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if gai_strerror() returns const char * */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CONST_GAI_STRERROR_PROTO */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<crypt.h> header file. */
 end_comment
 
@@ -1376,6 +1455,14 @@ directive|define
 name|HAVE_FCHOWN
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<features.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FEATURES_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<floatingpoint.h> header file. */
@@ -1529,12 +1616,9 @@ begin_comment
 comment|/* Define to 1 if you have the `getrusage' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_GETRUSAGE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_GETRUSAGE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `gettimeofday' function. */
@@ -1629,6 +1713,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<gssapi.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<ia.h> header file. */
 end_comment
 
@@ -1692,14 +1784,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<krb.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_KRB_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
 end_comment
 
@@ -1713,22 +1797,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBCRYPT */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `des' library (-ldes). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBDES */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `des425' library (-ldes425). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBDES425 */
 end_comment
 
 begin_comment
@@ -1751,22 +1819,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `krb' library (-lkrb). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBKRB */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `krb4' library (-lkrb4). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBKRB4 */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `nsl' library (-lnsl). */
 end_comment
 
@@ -1784,14 +1836,6 @@ directive|define
 name|HAVE_LIBPAM
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `resolv' library (-lresolv). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBRESOLV */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `sectok' library (-lsectok). */
@@ -2017,6 +2061,14 @@ comment|/* #undef HAVE_OGETADDRINFO */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `openlog_r' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPENLOG_R */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `openpty' function. */
 end_comment
 
@@ -2035,6 +2087,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_PAM_GETENVLIST
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `pam_putenv' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PAM_PUTENV
 value|1
 end_define
 
@@ -2178,6 +2241,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setauthdb' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SETAUTHDB */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `setdtablesize' function. */
 end_comment
 
@@ -2268,6 +2339,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setregid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETREGID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `setresgid' function. */
 end_comment
 
@@ -2275,6 +2357,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SETRESGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setresuid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETRESUID
 value|1
 end_define
 
@@ -2564,6 +2657,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/audit.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_AUDIT_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/bitypes.h> header file. */
 end_comment
 
@@ -2640,6 +2741,14 @@ comment|/* #undef HAVE_SYS_STROPTS_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/strtio.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_STRTIO_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/sysmacros.h> header file. */
 end_comment
 
@@ -2699,6 +2808,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_TCGETPGRP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `tcsendbreak' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TCSENDBREAK
 value|1
 end_define
 
@@ -2855,6 +2975,17 @@ comment|/* #undef HAVE_VHANGUP */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<vis.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VIS_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `vsnprintf' function. */
 end_comment
 
@@ -2877,11 +3008,27 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `_getlong' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE__GETLONG */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `_getpty' function. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE__GETPTY */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `_getshort' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE__GETSHORT */
 end_comment
 
 begin_comment
