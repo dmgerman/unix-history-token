@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uscanner.c,v 1.9 2000/11/14 13:57:16 augustss Exp $	*/
+comment|/*	$NetBSD: uscanner.c,v 1.26 2001/12/31 12:15:22 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -514,6 +514,16 @@ block|{
 name|USB_VENDOR_HP
 block|,
 name|USB_PRODUCT_HP_5300C
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_HP
+block|,
+name|USB_PRODUCT_HP_5400C
 block|}
 block|,
 literal|0
