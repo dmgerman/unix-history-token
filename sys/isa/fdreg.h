@@ -205,6 +205,17 @@ begin_comment
 comment|/* FDC_500KBPS */
 end_comment
 
+begin_comment
+comment|/*  * this is the secret PIO data port (offset from base)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDC_YE_DATAPORT
+value|6
+end_define
+
 begin_define
 define|#
 directive|define

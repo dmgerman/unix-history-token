@@ -159,29 +159,6 @@ directive|include
 file|<isa/rtc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FDC_YE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|FDC_YE
-end_undef
-
-begin_warning
-warning|#
-directive|warning
-literal|"fix FDC_YE! - newbus casualty"
-end_warning
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* misuse a flag to identify format operation */
 end_comment
@@ -207,28 +184,6 @@ end_define
 begin_comment
 comment|/* pretend drive 0 to be there */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FDC_YE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FDC_IS_PCMCIA
-value|(1<< 1)
-end_define
-
-begin_comment
-comment|/* if successful probe, then it's 					   a PCMCIA device */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1014,35 +969,6 @@ begin_comment
 comment|/***********************************************************************\ * Throughout this file the following conventions will be used:		* * fd is a pointer to the fd_data struct for the drive in question	* * fdc is a pointer to the fdc_data struct for the controller		* * fdu is the floppy drive unit number					* * fdcu is the floppy controller unit number				* * fdsu is the floppy drive unit number on that controller. (sub-unit)	* \***********************************************************************/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FDC_YE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"card.h"
-end_include
-
-begin_function_decl
-specifier|static
-name|int
-name|yeattach
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* needed for ft driver, thus exported */
 end_comment
@@ -1350,23 +1276,12 @@ name|RESETCOMPLETE
 value|12
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FDC_YE
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|PIOREAD
 value|13
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1410,14 +1325,8 @@ literal|"IOTIMEDOUT"
 block|,
 literal|"RESETCOMPLETE"
 block|,
-ifdef|#
-directive|ifdef
-name|FDC_YE
 literal|"PIOREAD"
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1802,17 +1711,6 @@ name|bio_imask
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * this is the secret PIO data port (offset from base)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDC_YE_DATAPORT
-value|6
-end_define
 
 begin_comment
 comment|/*  *	Initialize the device - called from Slot manager.  */
@@ -3827,28 +3725,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|FDC_YE
-comment|/* 	 * don't succeed on probe; wait 	 * for PCCARD subsystem to do it 	 */
-if|if
-condition|(
-name|device_get_flags
-argument_list|(
-name|fdc
-operator|->
-name|fdc_dev
-argument_list|)
-operator|&
-name|FDC_IS_PCMCIA
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
 name|out
 label|:
 name|fdc_release_resources
@@ -5317,14 +5193,14 @@ name|fdcu
 operator|=
 name|fdcu
 expr_stmt|;
-comment|/* 	 * the FDC_PCMCIA flag is used to to indicate special PIO is used 	 * instead of DMA 	 */
+comment|/* 	 * the FDC_NODMA flag is used to to indicate special PIO is used 	 * instead of DMA 	 */
 name|fdc
 operator|->
 name|flags
 operator|=
 name|FDC_ATTACHED
 operator||
-name|FDC_PCMCIA
+name|FDC_NODMA
 expr_stmt|;
 name|fdc
 operator|->
@@ -7164,9 +7040,6 @@ name|fd
 operator|->
 name|fdc
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FDC_YE
 if|if
 condition|(
 name|fd
@@ -7188,17 +7061,11 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
-comment|/* 		 * I _refuse_ to use a goto 		 */
-name|biodone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
 name|fdblk
 operator|=
 literal|128
@@ -7668,12 +7535,6 @@ empty_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FDC_YE
-end_ifdef
-
 begin_comment
 comment|/*  * magic pseudo-DMA initialization for YE FDC. Sets count and  * direction  */
 end_comment
@@ -7683,13 +7544,16 @@ define|#
 directive|define
 name|SET_BCDR
 parameter_list|(
+name|fdc
+parameter_list|,
 name|wr
 parameter_list|,
 name|cnt
 parameter_list|,
 name|port
 parameter_list|)
-value|outb(port,(((cnt)-1)& 0xff)); \ 	outb(port+1,((wr ? 0x80 : 0) | ((((cnt)-1)>> 8)& 0x7f)))
+define|\
+value|bus_space_write_1(fdc->portt, fdc->porth, fdc->port_off + port,	 \ 	    ((cnt)-1)& 0xff);						 \ 	bus_space_write_1(fdc->portt, fdc->porth, fdc->port_off + port + 1, \ 	    ((wr ? 0x80 : 0) | ((((cnt)-1)>> 8)& 0x7f)));
 end_define
 
 begin_comment
@@ -7701,8 +7565,8 @@ specifier|static
 name|int
 name|fdcpio
 parameter_list|(
-name|fdcu_t
-name|fdcu
+name|fdc_p
+name|fdc
 parameter_list|,
 name|long
 name|flags
@@ -7723,22 +7587,6 @@ name|u_char
 operator|*
 operator|)
 name|addr
-decl_stmt|;
-name|fdc_p
-name|fdc
-init|=
-operator|&
-name|fdc_data
-index|[
-name|fdcu
-index|]
-decl_stmt|;
-name|int
-name|io
-init|=
-name|fdc
-operator|->
-name|baseport
 decl_stmt|;
 if|if
 condition|(
@@ -7771,16 +7619,28 @@ block|}
 empty_stmt|;
 name|SET_BCDR
 argument_list|(
+name|fdc
+argument_list|,
 literal|0
 argument_list|,
 name|count
 argument_list|,
-name|io
+literal|0
 argument_list|)
 expr_stmt|;
-name|insb
+name|bus_space_read_multi_1
 argument_list|(
-name|io
+name|fdc
+operator|->
+name|portt
+argument_list|,
+name|fdc
+operator|->
+name|porth
+argument_list|,
+name|fdc
+operator|->
+name|port_off
 operator|+
 name|FDC_YE_DATAPORT
 argument_list|,
@@ -7792,9 +7652,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|outsb
+name|bus_space_write_multi_1
 argument_list|(
-name|io
+name|fdc
+operator|->
+name|portt
+argument_list|,
+name|fdc
+operator|->
+name|porth
+argument_list|,
+name|fdc
+operator|->
+name|port_off
 operator|+
 name|FDC_YE_DATAPORT
 argument_list|,
@@ -7805,11 +7675,13 @@ argument_list|)
 expr_stmt|;
 name|SET_BCDR
 argument_list|(
+name|fdc
+argument_list|,
 literal|0
 argument_list|,
 name|count
 argument_list|,
-name|io
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7821,15 +7693,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FDC_YE */
-end_comment
 
 begin_comment
 comment|/***********************************************************************\ * The controller state machine.						* * if it returns a non zero value, it should be called again immediatly	* \***********************************************************************/
@@ -8717,9 +8580,6 @@ name|track
 operator|=
 name|b_cylinder
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FDC_YE
 if|if
 condition|(
 operator|!
@@ -8728,11 +8588,9 @@ name|fdc
 operator|->
 name|flags
 operator|&
-name|FDC_PCMCIA
+name|FDC_NODMA
 operator|)
 condition|)
-endif|#
-directive|endif
 name|isa_dmastart
 argument_list|(
 name|bp
@@ -8968,23 +8826,20 @@ condition|(
 name|format
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|FDC_YE
 if|if
 condition|(
 name|fdc
 operator|->
 name|flags
 operator|&
-name|FDC_PCMCIA
+name|FDC_NODMA
 condition|)
 operator|(
 name|void
 operator|)
 name|fdcpio
 argument_list|(
-name|fdcu
+name|fdc
 argument_list|,
 name|bp
 operator|->
@@ -9003,8 +8858,6 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* formatting */
 if|if
 condition|(
@@ -9088,28 +8941,25 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|FDC_YE
 if|if
 condition|(
 name|fdc
 operator|->
 name|flags
 operator|&
-name|FDC_PCMCIA
+name|FDC_NODMA
 condition|)
 block|{
 comment|/* 				 * this seems to be necessary even when 				 * reading data 				 */
 name|SET_BCDR
 argument_list|(
+name|fdc
+argument_list|,
 literal|1
 argument_list|,
 name|fdblk
 argument_list|,
-name|fdc
-operator|->
-name|baseport
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 				 * perform the write pseudo-DMA before 				 * the WRITE command is sent 				 */
@@ -9123,7 +8973,7 @@ name|void
 operator|)
 name|fdcpio
 argument_list|(
-name|fdcu
+name|fdc
 argument_list|,
 name|bp
 operator|->
@@ -9141,8 +8991,6 @@ name|fdblk
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|fd_cmd
@@ -9248,16 +9096,13 @@ operator|)
 return|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|FDC_YE
 if|if
 condition|(
 name|fdc
 operator|->
 name|flags
 operator|&
-name|FDC_PCMCIA
+name|FDC_NODMA
 condition|)
 comment|/* 			 * if this is a read, then simply await interrupt 			 * before performing PIO 			 */
 if|if
@@ -9267,7 +9112,7 @@ operator|&&
 operator|!
 name|fdcpio
 argument_list|(
-name|fdcu
+name|fdc
 argument_list|,
 name|bp
 operator|->
@@ -9293,10 +9138,7 @@ name|timeout
 argument_list|(
 name|fd_iotimeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|fdcu
+name|fdc
 argument_list|,
 name|hz
 argument_list|)
@@ -9310,8 +9152,6 @@ comment|/* will return later */
 block|}
 empty_stmt|;
 comment|/* 		 * write (or format) operation will fall through and 		 * await completion interrupt 		 */
-endif|#
-directive|endif
 name|fdc
 operator|->
 name|state
@@ -9337,9 +9177,6 @@ literal|0
 operator|)
 return|;
 comment|/* will return later */
-ifdef|#
-directive|ifdef
-name|FDC_YE
 case|case
 name|PIOREAD
 case|:
@@ -9349,7 +9186,7 @@ name|void
 operator|)
 name|fdcpio
 argument_list|(
-name|fdcu
+name|fdc
 argument_list|,
 name|bp
 operator|->
@@ -9373,8 +9210,6 @@ operator|=
 name|IOCOMPLETE
 expr_stmt|;
 comment|/* FALLTHROUGH */
-endif|#
-directive|endif
 case|case
 name|IOCOMPLETE
 case|:
@@ -9463,9 +9298,6 @@ comment|/* FALLTHROUGH */
 case|case
 name|IOTIMEDOUT
 case|:
-ifdef|#
-directive|ifdef
-name|FDC_YE
 if|if
 condition|(
 operator|!
@@ -9474,11 +9306,9 @@ name|fdc
 operator|->
 name|flags
 operator|&
-name|FDC_PCMCIA
+name|FDC_NODMA
 operator|)
 condition|)
-endif|#
-directive|endif
 name|isa_dmadone
 argument_list|(
 name|bp
