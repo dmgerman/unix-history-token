@@ -8968,6 +8968,11 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|fcp
@@ -9283,6 +9288,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sooptcopyout
