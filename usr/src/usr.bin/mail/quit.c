@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)quit.c	1.2 %G%"
+literal|"@(#)quit.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,8 @@ decl_stmt|,
 name|p
 decl_stmt|,
 name|modify
+decl_stmt|,
+name|autohold
 decl_stmt|;
 name|FILE
 modifier|*
@@ -340,6 +342,15 @@ operator||=
 name|MDELETED
 expr_stmt|;
 block|}
+name|autohold
+operator|=
+name|value
+argument_list|(
+literal|"hold"
+argument_list|)
+operator|!=
+name|NOSTR
+expr_stmt|;
 name|modify
 operator|=
 literal|0
@@ -374,6 +385,30 @@ name|mp
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|m_flag
+operator|&
+operator|(
+name|MSAVED
+operator||
+name|MDELETED
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+name|autohold
+condition|)
+name|mp
+operator|->
+name|m_flag
+operator||=
+name|MPRESERVE
+expr_stmt|;
 if|if
 condition|(
 operator|(
