@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	7.4 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3142,14 +3142,16 @@ name|rastate
 operator|=
 name|OPENRAW
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
 name|ra
 operator|->
 name|rastate
 operator|=
 name|OPENRAW
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|ra
