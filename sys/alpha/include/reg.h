@@ -339,7 +339,7 @@ name|dbreg
 block|{
 name|unsigned
 name|long
-name|wankage
+name|junk
 decl_stmt|;
 block|}
 struct|;
