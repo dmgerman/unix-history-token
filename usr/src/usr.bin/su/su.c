@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)su.c	4.5 (Berkeley) %G%"
+literal|"@(#)su.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -629,6 +629,15 @@ operator|=
 name|cleanenv
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|user
+argument_list|,
+literal|"root"
+argument_list|)
+condition|)
 name|setenv
 argument_list|(
 literal|"USER"
