@@ -1651,6 +1651,13 @@ condition|;
 operator|++
 name|p
 control|)
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\r'
+condition|)
 name|vputc
 argument_list|(
 name|lastc
@@ -1743,6 +1750,12 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
+condition|)
+if|if
+condition|(
+name|ch
+operator|!=
+literal|'\r'
 condition|)
 name|vputc
 argument_list|(
