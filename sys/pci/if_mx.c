@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_mx.c,v 1.27 1998/12/01 15:55:20 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_mx.c,v 1.28 1998/12/04 21:34:33 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -196,7 +196,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_mx.c,v 1.27 1998/12/01 15:55:20 wpaul Exp $"
+literal|"$Id: if_mx.c,v 1.28 1998/12/04 21:34:33 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5580,19 +5580,27 @@ literal|0xFF
 expr_stmt|;
 if|if
 condition|(
-name|rev
-operator|>
-name|MX_REVISION_98713
+name|t
+operator|->
+name|mx_did
+operator|==
+name|MX_DEVICEID_98713
 operator|&&
 name|rev
-operator|<
-name|MX_REVISION_98715
+operator|>=
+name|MX_REVISION_98713A
 condition|)
 name|t
 operator|++
 expr_stmt|;
 if|if
 condition|(
+name|t
+operator|->
+name|mx_did
+operator|==
+name|MX_DEVICEID_987x5
+operator|&&
 name|rev
 operator|>=
 name|MX_REVISION_98725
@@ -6108,6 +6116,21 @@ argument_list|)
 operator|&
 literal|0x0000FFFF
 expr_stmt|;
+name|pci_id
+operator|=
+operator|(
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|MX_PCI_VENDOR_ID
+argument_list|)
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0x0000FFFF
+expr_stmt|;
 if|if
 condition|(
 name|pci_id
@@ -6115,14 +6138,31 @@ operator|==
 name|MX_DEVICEID_98713
 operator|&&
 name|revision
-operator|==
-name|MX_REVISION_98713
+operator|<
+name|MX_REVISION_98713A
 condition|)
 name|sc
 operator|->
 name|mx_type
 operator|=
 name|MX_TYPE_98713
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pci_id
+operator|==
+name|MX_DEVICEID_98713
+operator|&&
+name|revision
+operator|>=
+name|MX_REVISION_98713A
+condition|)
+name|sc
+operator|->
+name|mx_type
+operator|=
+name|MX_TYPE_98713A
 expr_stmt|;
 else|else
 name|sc
