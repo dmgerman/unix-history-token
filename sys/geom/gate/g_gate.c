@@ -2436,6 +2436,14 @@ argument_list|(
 name|ggio
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Reset TDP_GEOM flag. 		 * There are pending events for sure, because we just created 		 * new provider and other classes want to taste it, but we 		 * cannot answer on I/O requests until we're here. 		 */
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_GEOM
+expr_stmt|;
 return|return
 operator|(
 name|error
