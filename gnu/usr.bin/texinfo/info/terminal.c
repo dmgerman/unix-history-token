@@ -2922,6 +2922,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !HAVE_TERMIO_H */
+name|terminal_begin_using_terminal
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
