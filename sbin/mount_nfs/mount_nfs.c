@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.23 1997/06/03 13:49:26 dfr Exp $"
+literal|"$Id: mount_nfs.c,v 1.24 1997/10/19 16:40:01 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3373,9 +3373,19 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|saddr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3462,9 +3472,19 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|saddr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strncpy
