@@ -880,6 +880,9 @@ operator|.
 name|ifi_noproto
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"\treceive timing: %lu usec\n"
@@ -902,6 +905,8 @@ operator|.
 name|ifi_xmittiming
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1024,6 +1029,12 @@ block|,
 literal|"Proprietary virtual interface"
 block|,
 literal|"Proprietary multiplexing"
+block|,
+literal|"Generic tunnel interface"
+block|,
+literal|"IPv6-to-IPv4 TCP relay capturing interface"
+block|,
+literal|"6to4 tunnel interface"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1060,7 +1071,7 @@ operator|<=
 literal|0
 operator|||
 name|type
-operator|>
+operator|>=
 name|NIFTYPES
 condition|)
 block|{
