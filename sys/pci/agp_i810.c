@@ -2611,6 +2611,8 @@ name|am_obj
 argument_list|,
 literal|0
 argument_list|,
+name|VM_ALLOC_NOBUSY
+operator||
 name|VM_ALLOC_WIRED
 operator||
 name|VM_ALLOC_ZERO
@@ -2625,9 +2627,6 @@ operator|->
 name|am_obj
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|mem
 operator|->
 name|am_physical
@@ -2636,14 +2635,6 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_wakeup
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 else|else
