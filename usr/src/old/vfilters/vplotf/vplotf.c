@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vplotf.c	5.1 (Berkeley) %G%"
+literal|"@(#)vplotf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2289,7 +2289,7 @@ name|labs
 parameter_list|(
 name|a
 parameter_list|)
-value|(a>= 0 ? a : -a)
+value|((a)>= 0 ? (a) : -(a))
 end_define
 
 begin_macro
