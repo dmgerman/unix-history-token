@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gnsys.c	5.5	%G%"
+literal|"@(#)gnsys.c	5.6	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|LSIZE
-value|128
+value|512
 end_define
 
 begin_comment
@@ -173,19 +173,33 @@ name|pre
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|dirp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"BAD DIRECTORY"
+literal|"opendir(%s) failed: %m"
 argument_list|,
+name|subdir
+argument_list|(
 name|dir
 argument_list|,
-literal|0
+name|pre
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -320,7 +334,18 @@ name|LSIZE
 operator|<=
 name|nitem
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: Increase LSIZE in gnsys.c"
+argument_list|,
+name|systname
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 name|closedir
 argument_list|(
@@ -423,19 +448,28 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|fp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-name|CANTOPEN
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|SYSFILE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|cfgets
@@ -455,11 +489,11 @@ condition|)
 block|{
 name|p
 operator|=
-name|index
+name|strpbrk
 argument_list|(
 name|line
 argument_list|,
-literal|' '
+literal|" \t"
 argument_list|)
 expr_stmt|;
 if|if
