@@ -2434,9 +2434,6 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
-name|g_waitidle
-argument_list|()
-expr_stmt|;
 name|nerror
 operator|=
 name|req

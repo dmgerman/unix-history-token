@@ -275,6 +275,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * If this thread tickled GEOM, we need to wait for the giggling to 	 * stop before we return to userland 	 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_GEOM
+condition|)
+name|g_waitidle
+argument_list|()
+expr_stmt|;
 comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 * Don't bother doing all the work if the stop bits are not set 	 * at this time.. If we miss it, we miss it.. no big deal. 	 */
 if|if
 condition|(
