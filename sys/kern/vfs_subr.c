@@ -7266,9 +7266,11 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-name|VI_LOCK
+name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
+argument_list|,
+literal|"bgetvp"
 argument_list|)
 expr_stmt|;
 name|vholdl
@@ -7309,11 +7311,6 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 block|}

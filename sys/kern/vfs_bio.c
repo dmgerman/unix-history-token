@@ -3283,6 +3283,14 @@ name|b_xflags
 operator||=
 name|BX_BKGRDMARKER
 expr_stmt|;
+comment|/* XXX The BX_ flags need to be protected as well */
+name|VI_LOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|)
+expr_stmt|;
 name|bgetvp
 argument_list|(
 name|bp
@@ -3290,6 +3298,13 @@ operator|->
 name|b_vp
 argument_list|,
 name|newbp
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
 argument_list|)
 expr_stmt|;
 name|newbp
@@ -9423,11 +9438,6 @@ goto|goto
 name|loop
 goto|;
 block|}
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Insert the buffer into the hash, so that it can 		 * be found by incore. 		 */
 name|bp
 operator|->
@@ -9450,6 +9460,11 @@ argument_list|(
 name|vp
 argument_list|,
 name|bp
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * set B_VMIO bit.  allocbuf() the buffer bigger.  Since the 		 * buffer size starts out as 0, B_CACHE will be set by 		 * allocbuf() for the VMIO case prior to it testing the 		 * backing store for validity. 		 */
