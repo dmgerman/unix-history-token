@@ -1491,7 +1491,14 @@ name|bp
 operator|->
 name|offset
 operator|&
-literal|0x03
+operator|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|-
+literal|1
+operator|)
 operator|)
 operator|!=
 literal|0
