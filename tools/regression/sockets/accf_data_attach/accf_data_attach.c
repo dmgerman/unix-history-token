@@ -116,11 +116,17 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
+operator|-
 literal|1
 argument_list|,
-literal|"socket"
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 1. After socket().  Should return EINVAL, since no accept 	 * filter should be attached. 	 */
@@ -166,35 +172,27 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"FAIL: getsockopt() after socket() "
-literal|"succeeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"FAIL: getsockopt() after socket() succeeded"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
 operator|!=
 name|EINVAL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: getsockopt() after socket() "
-literal|"failed with %d (%s)\n"
+literal|"FAIL: getsockopt() after socket() failed with "
+literal|"%d (%s)"
 argument_list|,
 name|errno
 argument_list|,
@@ -204,13 +202,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Step 2. Bind().  Ideally this will succeed. 	 */
 name|bzero
 argument_list|(
@@ -280,11 +271,17 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+operator|-
 literal|1
 argument_list|,
-literal|"bind"
+literal|"bind: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 3: After bind().  getsockopt() should return EINVAL, since no 	 *  accept filter should be attached. 	 */
@@ -319,34 +316,26 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"FAIL: getsockopt() after bind() succeeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"FAIL: getsockopt() after bind() succeeded"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
 operator|!=
 name|EINVAL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: getsockopt() after bind() failed "
-literal|"with %d (%s)\n"
+literal|"FAIL: getsockopt() after bind() failed with %d (%s)"
 argument_list|,
 name|errno
 argument_list|,
@@ -356,13 +345,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Step 4: Setsockopt() before listen().  Should fail, since it's not 	 * yet a listen() socket. 	 */
 name|bzero
 argument_list|(
@@ -409,22 +391,14 @@ name|ret
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"FAIL: setsockopt() before listen() "
-literal|"succeeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"FAIL: setsockopt() before listen() succeeded"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Step 5: Getsockopt() after pre-listen() setsockopt().  Should 	 * fail with EINVAL, since setsockopt() should have failed. 	 */
 name|len
 operator|=
@@ -456,35 +430,27 @@ name|ret
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"FAIL: getsockopt() after pre-listen() "
-literal|"setsockopt() succeeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"FAIL: getsockopt() after pre-listen() setsockopt() "
+literal|"succeeded"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
 operator|!=
 name|EINVAL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: pre-listen() getsockopt() failed "
-literal|"with %d (%s)\n"
+literal|"FAIL: pre-listen() getsockopt() failed with %d (%s)"
 argument_list|,
 name|errno
 argument_list|,
@@ -494,13 +460,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Step 6: listen(). 	 */
 if|if
 condition|(
@@ -514,11 +473,17 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+operator|-
 literal|1
 argument_list|,
-literal|"listen"
+literal|"listen: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 7: After listen().  This call to setsockopt() should succeed. 	 */
@@ -567,13 +532,13 @@ name|ret
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: setsockopt() after listen() failed "
-literal|"with %d (%s)\n"
+literal|"FAIL: setsockopt() after listen() failed with %d "
+literal|"(%s)"
 argument_list|,
 name|errno
 argument_list|,
@@ -583,13 +548,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|len
@@ -599,13 +557,13 @@ argument_list|(
 name|afa
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: setsockopt() after listen() returned "
-literal|"wrong size (%d vs expected %d)\n"
+literal|"FAIL: setsockopt() after listen() returned wrong "
+literal|"size (%d vs expected %d)"
 argument_list|,
 name|len
 argument_list|,
@@ -615,13 +573,6 @@ name|afa
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Step 8: After setsockopt().  Should succeed and identify 	 * ACCF_NAME. 	 */
 name|bzero
 argument_list|(
@@ -664,13 +615,13 @@ name|ret
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: getsockopt() after listen() "
-literal|"setsockopt() failed with %d (%s)\n"
+literal|"FAIL: getsockopt() after listen() setsockopt() "
+literal|"failed with %d (%s)"
 argument_list|,
 name|errno
 argument_list|,
@@ -680,13 +631,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|len
@@ -696,14 +640,13 @@ argument_list|(
 name|afa
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: getsockopt() after setsockopet() "
-literal|" after listen() returned wrong size (got %d expected "
-literal|"%d)\n"
+literal|"FAIL: getsockopt() after setsockopet()  after "
+literal|"listen() returned wrong size (got %d expected %d)"
 argument_list|,
 name|len
 argument_list|,
@@ -713,13 +656,6 @@ name|afa
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|strcmp
@@ -733,13 +669,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"FAIL: getsockopt() after setsockopt() "
-literal|"after listen() mismatch (got %s expected %s)\n"
+literal|"FAIL: getsockopt() after setsockopt() after "
+literal|"listen() mismatch (got %s expected %s)"
 argument_list|,
 name|afa
 operator|.
@@ -748,13 +684,6 @@ argument_list|,
 name|ACCF_NAME
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"PASS\n"
