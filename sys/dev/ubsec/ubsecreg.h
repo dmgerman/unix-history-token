@@ -70,6 +70,17 @@ begin_comment
 comment|/* Bluesteel Networks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_SUN
+value|0x108e
+end_define
+
+begin_comment
+comment|/* Sun Microsystems */
+end_comment
+
 begin_comment
 comment|/* Bluesteel Networks */
 end_comment
@@ -197,6 +208,32 @@ end_define
 
 begin_comment
 comment|/* 5823 */
+end_comment
+
+begin_comment
+comment|/* Sun Microsystems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_SUN_5821
+value|0x5454
+end_define
+
+begin_comment
+comment|/* Crypto 5821 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_SUN_SCA1K
+value|0x5455
+end_define
+
+begin_comment
+comment|/* Crypto 1K */
 end_comment
 
 begin_define
