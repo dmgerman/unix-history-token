@@ -379,13 +379,13 @@ name|kse
 modifier|*
 name|td_last_kse
 decl_stmt|;
-comment|/* Where it wants to be if possible */
+comment|/* Where it wants to be if possible. */
 name|struct
 name|kse
 modifier|*
 name|td_kse
 decl_stmt|;
-comment|/* and is now if running */
+comment|/* Current KSE if running. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -414,14 +414,14 @@ argument|thread
 argument_list|)
 name|td_blkq
 expr_stmt|;
-comment|/* (j) mutex queue. XXXKSE */
+comment|/* (j) Mutex queue. XXXKSE */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
 name|td_runq
 expr_stmt|;
-comment|/* (j) run queue(s). XXXKSE */
+comment|/* (j) Run queue(s). XXXKSE */
 define|#
 directive|define
 name|td_startzero
@@ -433,7 +433,7 @@ comment|/* (j) TDF_* flags. */
 name|int
 name|td_dupfd
 decl_stmt|;
-comment|/* (k) ret value from fdopen. XXX */
+comment|/* (k) Ret value from fdopen. XXX */
 name|void
 modifier|*
 name|td_wchan
@@ -519,7 +519,7 @@ name|pcb
 modifier|*
 name|td_pcb
 decl_stmt|;
-comment|/* (k) Kv addr of pcb and kstack. */
+comment|/* (k) Kernel VA of pcb and kstack. */
 name|struct
 name|callout
 name|td_slpcallout
@@ -536,11 +536,11 @@ name|vm_object
 modifier|*
 name|td_kstack_obj
 decl_stmt|;
-comment|/* (a) kstack object. */
+comment|/* (a) Kstack object. */
 name|vm_offset_t
 name|td_kstack
 decl_stmt|;
-comment|/* kstack mapped address */
+comment|/* Kernel VA of kstack. */
 block|}
 struct|;
 end_struct
@@ -608,7 +608,7 @@ name|int
 name|ke_flags
 decl_stmt|;
 comment|/* (j) KEF_* flags. */
-comment|/*u_int		ke_estcpu; */
+comment|/*u_int	ke_estcpu; */
 comment|/* (j) Time averaged val of cpticks. */
 name|int
 name|ke_cpticks
@@ -710,7 +710,7 @@ argument|kse
 argument_list|)
 name|kg_kseq
 expr_stmt|;
-comment|/* (ke_kglist) All KSEs */
+comment|/* (ke_kglist) All KSEs. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -718,7 +718,7 @@ argument|kse
 argument_list|)
 name|kg_rq
 expr_stmt|;
-comment|/* (ke_kgrlist) Runnable KSEs */
+comment|/* (ke_kgrlist) Runnable KSEs. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -726,7 +726,7 @@ argument|kse
 argument_list|)
 name|kg_iq
 expr_stmt|;
-comment|/* (ke_kgrlist) Idle KSEs */
+comment|/* (ke_kgrlist) Idle KSEs. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -742,7 +742,7 @@ argument|thread
 argument_list|)
 name|kg_runq
 expr_stmt|;
-comment|/* (td_runq)unbound RUNNABLE threads */
+comment|/* (td_runq) Unbound RUNNABLE threads */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -750,7 +750,7 @@ argument|thread
 argument_list|)
 name|kg_slpq
 expr_stmt|;
-comment|/* (td_runq)NONRUNNABLE threads. */
+comment|/* (td_runq) NONRUNNABLE threads. */
 define|#
 directive|define
 name|kg_startzero
@@ -758,11 +758,11 @@ value|kg_estcpu
 name|u_int
 name|kg_slptime
 decl_stmt|;
-comment|/* (j) how long completely blocked. */
+comment|/* (j) How long completely blocked. */
 name|u_int
 name|kg_estcpu
 decl_stmt|;
-comment|/* sum of the same field in kses */
+comment|/* Sum of the same field in KSEs. */
 define|#
 directive|define
 name|kg_endzero
@@ -792,15 +792,15 @@ value|kg_runnable
 name|int
 name|kg_runnable
 decl_stmt|;
-comment|/* # runnable threads on queue */
+comment|/* Num runnable threads on queue. */
 name|int
 name|kg_runq_kses
 decl_stmt|;
-comment|/* # kse's on runq. */
+comment|/* Num KSEs on runq. */
 name|int
 name|kg_kses
 decl_stmt|;
-comment|/* # kse's in group. */
+comment|/* Num KSEs in group. */
 block|}
 struct|;
 end_struct
@@ -835,7 +835,7 @@ argument|thread
 argument_list|)
 name|p_threads
 expr_stmt|;
-comment|/* (td_plist) threads. (shortcut) */
+comment|/* (td_plist) Threads. (shortcut) */
 name|struct
 name|ucred
 modifier|*
@@ -848,7 +848,7 @@ modifier|*
 name|p_fd
 decl_stmt|;
 comment|/* (b) Ptr to open files structure. */
-comment|/* accumulated stats for all KSEs? */
+comment|/* Accumulated stats for all KSEs? */
 name|struct
 name|pstats
 modifier|*
@@ -1041,7 +1041,7 @@ name|nlminfo
 modifier|*
 name|p_nlminfo
 decl_stmt|;
-comment|/* (?) only used by/for lockd */
+comment|/* (?) Only used by/for lockd. */
 name|void
 modifier|*
 name|p_aioinfo
@@ -1120,7 +1120,7 @@ name|user
 modifier|*
 name|p_uarea
 decl_stmt|;
-comment|/* was p_addr. changed to break stuff */
+comment|/* (k) Kernel VA of u-area (CPU) */
 name|u_short
 name|p_acflag
 decl_stmt|;
