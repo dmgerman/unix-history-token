@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.15 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,12 @@ operator|.
 name|id_func
 operator|=
 name|pass2check
+expr_stmt|;
+name|dino
+operator|.
+name|di_mode
+operator|=
+name|IFDIR
 expr_stmt|;
 name|dp
 operator|=
