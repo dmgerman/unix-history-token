@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* "superscsi" pseudo device.  * "superscsi" supports general SCSI utilities that can iterate  * over all SCSI targets, including those without device entry  * points.  *  * "superscsi" supports the SCIOCADDR ioctl to change the BUS, ID, LUN  * of the target so that you can get to all devices.  The only thing  * you can do to "superscsi" is open it, set the target, perform ioctl  * calls, and close it.  *  * Keep "superscsi" protected: you can drive a truck through the  * security hole if you don't.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  * $Id: ssc.c,v 1.5 1995/11/29 10:49:03 julian Exp $  */
+comment|/* "superscsi" pseudo device.  * "superscsi" supports general SCSI utilities that can iterate  * over all SCSI targets, including those without device entry  * points.  *  * "superscsi" supports the SCIOCADDR ioctl to change the BUS, ID, LUN  * of the target so that you can get to all devices.  The only thing  * you can do to "superscsi" is open it, set the target, perform ioctl  * calls, and close it.  *  * Keep "superscsi" protected: you can drive a truck through the  * security hole if you don't.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  * $Id: ssc.c,v 1.6 1995/11/29 14:41:03 julian Exp $  */
 end_comment
 
 begin_include
@@ -341,86 +341,8 @@ block|}
 end_function
 
 begin_comment
-comment|/* I've elected not to support any of these other entries.  There  * really is no good reason other than I'm not sure how you would use  * them.  */
+comment|/*  * I've elected not to support any other entries.  There really is no  * good reason other than I'm not sure how you would use them.  */
 end_comment
-
-begin_function
-name|void
-name|sscstrategy
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|int
-name|sscread
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|int
-name|ioflag
-parameter_list|)
-block|{
-return|return
-name|ENXIO
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|sscwrite
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|int
-name|ioflag
-parameter_list|)
-block|{
-return|return
-name|ENXIO
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|sscselect
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|which
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-name|ENXIO
-return|;
-block|}
-end_function
 
 begin_ifdef
 ifdef|#
@@ -438,9 +360,9 @@ name|sscopen
 block|,
 name|sscclose
 block|,
-name|sscread
+name|noread
 block|,
-name|sscwrite
+name|nowrite
 block|,
 comment|/*49*/
 name|sscioctl
@@ -452,11 +374,11 @@ block|,
 name|nodevtotty
 block|,
 comment|/* scsi super */
-name|sscselect
+name|noselect
 block|,
-name|nxmmap
+name|nommap
 block|,
-name|sscstrategy
+name|nostrategy
 block|}
 decl_stmt|;
 end_decl_stmt
