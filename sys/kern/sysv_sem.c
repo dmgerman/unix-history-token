@@ -5882,28 +5882,7 @@ name|error
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|EINTR
-expr_stmt|;
-goto|goto
-name|done2
-goto|;
-block|}
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"semop:  good morning!\n"
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* return code is checked below, after sem[nz]cnt-- */
 comment|/* 		 * Make sure that the semaphore still exists 		 */
 if|if
 condition|(
@@ -5960,6 +5939,29 @@ name|semptr
 operator|->
 name|semncnt
 operator|--
+expr_stmt|;
+comment|/* 		 * Is it really morning, or was our sleep interrupted? 		 * (Delayed check of msleep() return code because we 		 * need to decrement sem[nz]cnt either way.) 		 */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EINTR
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"semop:  good morning!\n"
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 name|done
