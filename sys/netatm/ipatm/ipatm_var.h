@@ -467,6 +467,15 @@ name|sockaddr_in
 name|ipp_dst
 decl_stmt|;
 comment|/* Destination's IP address */
+name|uint8_t
+name|ipp_traffic_type
+decl_stmt|;
+comment|/* CBR, UBR, ... */
+name|struct
+name|t_atm_traffic
+name|ipp_traffic
+decl_stmt|;
+comment|/* traffic parameters */
 block|}
 struct|;
 end_struct
