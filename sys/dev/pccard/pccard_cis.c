@@ -95,6 +95,13 @@ directive|include
 file|"card_if.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|pccard_cis_debug
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -107,14 +114,6 @@ directive|ifdef
 name|PCCARDCISDEBUG
 end_ifdef
 
-begin_decl_stmt
-name|int
-name|pccardcis_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -122,7 +121,7 @@ name|DPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
-value|if (pccardcis_debug) printf arg
+value|if (pccard_cis_debug) printf arg
 end_define
 
 begin_define
@@ -132,7 +131,7 @@ name|DEVPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
-value|if (pccardcis_debug) device_printf arg
+value|if (pccard_cis_debug) device_printf arg
 end_define
 
 begin_else
