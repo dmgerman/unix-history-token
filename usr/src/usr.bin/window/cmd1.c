@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.17 83/12/01"
+literal|"@(#)cmd1.c	3.18 83/12/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,8 @@ argument_list|,
 operator|&
 name|col
 argument_list|,
+name|row
+operator|>
 literal|1
 argument_list|,
 literal|0
