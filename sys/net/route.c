@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.c	8.2 (Berkeley) 11/15/93  *	$Id: route.c,v 1.34 1996/07/10 01:34:35 fenner Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.c	8.2 (Berkeley) 11/15/93  *	$Id: route.c,v 1.35 1996/08/24 03:11:13 peter Exp $  */
 end_comment
 
 begin_include
@@ -2085,59 +2085,6 @@ argument_list|(
 literal|"rtrequest: GATEWAY but no gateway"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * A host route with the destination equal to the gateway 		 * will interfere with keeping LLINFO in the routing 		 * table, so disallow it. 		 */
-if|if
-condition|(
-operator|(
-operator|(
-name|flags
-operator|&
-operator|(
-name|RTF_HOST
-operator||
-name|RTF_GATEWAY
-operator||
-name|RTF_LLINFO
-operator|)
-operator|)
-operator|==
-operator|(
-name|RTF_HOST
-operator||
-name|RTF_GATEWAY
-operator|)
-operator|)
-operator|&&
-operator|(
-name|dst
-operator|->
-name|sa_len
-operator|==
-name|gateway
-operator|->
-name|sa_len
-operator|)
-operator|&&
-operator|(
-name|bcmp
-argument_list|(
-name|dst
-argument_list|,
-name|gateway
-argument_list|,
-name|dst
-operator|->
-name|sa_len
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|senderr
-argument_list|(
-name|EADDRNOTAVAIL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2209,6 +2156,8 @@ name|flags
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|=
 name|rt_setgate
 argument_list|(
 name|rt
@@ -2226,7 +2175,7 @@ argument_list|)
 expr_stmt|;
 name|senderr
 argument_list|(
-name|ENOBUFS
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -3238,6 +3187,13 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * The route might already exist if this is an RTM_CHANGE 		 * or a routing redirect, so try to delete it. 		 */
+if|if
+condition|(
+name|rt_key
+argument_list|(
+name|rt0
+argument_list|)
+condition|)
 name|rtrequest
 argument_list|(
 name|RTM_DELETE
