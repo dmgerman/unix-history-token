@@ -367,6 +367,12 @@ operator|->
 name|kg_ksecount
 operator|++
 expr_stmt|;
+name|newkse
+operator|->
+name|k_flags
+operator||=
+name|KF_STARTED
+expr_stmt|;
 name|KSE_SCHED_UNLOCK
 argument_list|(
 name|curthread

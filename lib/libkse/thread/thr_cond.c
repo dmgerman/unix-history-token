@@ -580,6 +580,17 @@ operator|(
 name|rval
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|_kse_isthreaded
+argument_list|()
+condition|)
+name|_kse_setthreaded
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enter a loop waiting for a condition signal or broadcast 	 * to wake up this thread.  A loop is needed in case the waiting 	 * thread is interrupted by a signal to execute a signal handler. 	 * It is not (currently) possible to remain in the waiting queue 	 * while running a handler.  Instead, the thread is interrupted 	 * and backed out of the waiting queue prior to executing the 	 * signal handler. 	 */
 do|do
 block|{
@@ -1252,6 +1263,17 @@ operator|(
 name|rval
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|_kse_isthreaded
+argument_list|()
+condition|)
+name|_kse_setthreaded
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enter a loop waiting for a condition signal or broadcast 	 * to wake up this thread.  A loop is needed in case the waiting 	 * thread is interrupted by a signal to execute a signal handler. 	 * It is not (currently) possible to remain in the waiting queue 	 * while running a handler.  Instead, the thread is interrupted 	 * and backed out of the waiting queue prior to executing the 	 * signal handler. 	 */
 do|do
 block|{

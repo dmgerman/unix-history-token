@@ -165,14 +165,15 @@ name|pthread
 operator|->
 name|joiner
 expr_stmt|;
-name|pthread
-operator|->
-name|joiner
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|joiner
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|joiner
 operator|->
 name|kseg
@@ -180,6 +181,7 @@ operator|==
 name|pthread
 operator|->
 name|kseg
+operator|)
 condition|)
 block|{
 comment|/* 			 * We already own the scheduler lock for the joiner. 			 * Take advantage of that and make the joiner runnable. 			 */
@@ -237,20 +239,16 @@ argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;
-name|_thr_ref_delete
-argument_list|(
-name|curthread
-argument_list|,
-name|pthread
-argument_list|)
-expr_stmt|;
 comment|/* See if there is a thread waiting in pthread_join(): */
 if|if
 condition|(
+operator|(
 name|joiner
 operator|!=
 name|NULL
+operator|)
 operator|&&
+operator|(
 name|_thr_ref_add
 argument_list|(
 name|curthread
@@ -261,6 +259,7 @@ literal|0
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 comment|/* Lock the joiner before fiddling with it. */
@@ -328,6 +327,13 @@ name|joiner
 argument_list|)
 expr_stmt|;
 block|}
+name|_thr_ref_delete
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Return the completion status: */
 return|return

@@ -128,10 +128,6 @@ modifier|*
 name|lr_owner
 decl_stmt|;
 comment|/* only used for priority locks */
-name|long
-name|lr_waiting
-decl_stmt|;
-comment|/* non-zero when wakeup needed */
 specifier|volatile
 name|int
 name|lr_active
@@ -223,7 +219,7 @@ name|_LCK_GRANTED
 parameter_list|(
 name|lu
 parameter_list|)
-value|((lu)->lu_watchreq->lr_locked == 0)
+value|((lu)->lu_watchreq->lr_locked == 3)
 end_define
 
 begin_define
