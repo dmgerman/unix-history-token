@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.3 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1662,28 +1662,10 @@ argument_list|(
 literal|"553 Unbalanced ')'"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|delimptr
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|delimptr
+name|c
 operator|=
-name|p
+name|NOCHAR
 expr_stmt|;
-name|CurEnv
-operator|->
-name|e_to
-operator|=
-name|saveto
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 else|else
 name|cmntcnt
@@ -1731,29 +1713,12 @@ argument_list|(
 literal|"553 Unbalanced '>'"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|delimptr
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|delimptr
+name|c
 operator|=
-name|p
+name|NOCHAR
 expr_stmt|;
-name|CurEnv
-operator|->
-name|e_to
-operator|=
-name|saveto
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
+else|else
 name|anglecnt
 operator|--
 expr_stmt|;
