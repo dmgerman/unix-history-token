@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.8 1994/11/26 19:23:59 bde Exp $ */
+comment|/* $Id: if_ppp.c,v 1.9 1994/11/27 15:29:56 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1515,9 +1515,20 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
 name|ttywflush
 argument_list|(
 name|tp
+argument_list|)
+condition|)
+name|ttyflush
+argument_list|(
+name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 name|s
