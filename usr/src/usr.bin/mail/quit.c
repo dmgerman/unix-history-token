@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)quit.c	2.4 %G%"
+literal|"@(#)quit.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -834,7 +834,7 @@ name|fopen
 argument_list|(
 name|mbox
 argument_list|,
-literal|"w"
+literal|"r+"
 argument_list|)
 operator|)
 operator|==
@@ -1100,7 +1100,7 @@ name|fopen
 argument_list|(
 name|mailname
 argument_list|,
-literal|"w"
+literal|"r+"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1219,7 +1219,7 @@ name|fopen
 argument_list|(
 name|mailname
 argument_list|,
-literal|"w"
+literal|"r+"
 argument_list|)
 operator|)
 operator|==
