@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_proto.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_proto.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -64,10 +64,7 @@ file|<netiso/iso.h>
 end_include
 
 begin_decl_stmt
-name|int
-name|clnp_output
-argument_list|()
-decl_stmt|,
+name|void
 name|clnp_init
 argument_list|()
 decl_stmt|,
@@ -79,11 +76,22 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|clnp_output
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rclnp_input
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
-name|rclnp_input
-argument_list|()
-decl_stmt|,
 name|rclnp_output
 argument_list|()
 decl_stmt|,
@@ -107,19 +115,13 @@ name|int
 name|tp_ctloutput
 argument_list|()
 decl_stmt|,
-name|tpclnp_ctlinput
-argument_list|()
-decl_stmt|,
-name|tpclnp_input
-argument_list|()
-decl_stmt|,
 name|tp_usrreq
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|tp_init
 argument_list|()
 decl_stmt|,
@@ -135,7 +137,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+name|tpclnp_ctlinput
+argument_list|()
+decl_stmt|,
+name|tpclnp_input
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|cons_init
 argument_list|()
 decl_stmt|,
@@ -145,52 +157,64 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|isis_input
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|int
+name|void
+name|esis_init
+argument_list|()
+decl_stmt|,
 name|esis_input
 argument_list|()
 decl_stmt|,
 name|esis_ctlinput
 argument_list|()
-decl_stmt|,
-name|esis_init
-argument_list|()
-decl_stmt|,
-name|esis_usrreq
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|idrp_input
-argument_list|()
-decl_stmt|,
+name|esis_usrreq
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
 name|idrp_init
 argument_list|()
 decl_stmt|,
-name|idrp_usrreq
+name|idrp_input
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
+name|idrp_usrreq
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|cltp_init
+argument_list|()
+decl_stmt|,
 name|cltp_input
 argument_list|()
 decl_stmt|,
 name|cltp_ctlinput
 argument_list|()
-decl_stmt|,
-name|cltp_init
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|cltp_usrreq
 argument_list|()
 decl_stmt|,
@@ -212,21 +236,21 @@ argument_list|()
 decl_stmt|,
 name|tuba_ctloutput
 argument_list|()
-decl_stmt|,
-name|tuba_init
-argument_list|()
-decl_stmt|,
-name|tuba_tcpinput
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+name|tuba_init
+argument_list|()
+decl_stmt|,
 name|tuba_slowtimo
 argument_list|()
 decl_stmt|,
 name|tuba_fasttimo
+argument_list|()
+decl_stmt|,
+name|tuba_tcpinput
 argument_list|()
 decl_stmt|;
 end_decl_stmt
