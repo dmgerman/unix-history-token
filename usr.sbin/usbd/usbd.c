@@ -1764,7 +1764,7 @@ literal|7
 operator|+
 name|len
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 expr_stmt|;
 comment|/*   and end of word   */
