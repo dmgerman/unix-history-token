@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:03  rpd  *	$Id: boot.h,v 1.6 1995/01/25 21:37:39 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:03  rpd  *	$Id: boot.h,v 1.7 1995/04/14 21:26:49 joerg Exp $  */
 end_comment
 
 begin_include
@@ -111,13 +111,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|disklabel
 name|disklabel
@@ -135,7 +128,6 @@ name|ASM_ONLY
 end_if
 
 begin_function_decl
-specifier|extern
 name|void
 name|real_to_prot
 parameter_list|(
@@ -145,7 +137,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|prot_to_real
 parameter_list|(
@@ -160,7 +151,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-specifier|extern
 name|void
 name|startprog
 parameter_list|(
@@ -174,7 +164,7 @@ parameter_list|,
 name|int
 name|bootdev
 parameter_list|,
-comment|/* struct bootinfo * */
+comment|/* XXX struct bootinfo * */
 name|unsigned
 name|int
 name|bootinfo
@@ -183,40 +173,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|pbzero
 parameter_list|(
-name|unsigned
-name|char
+name|void
 modifier|*
 name|dst
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|count
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|pcpy
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|src
 parameter_list|,
-name|unsigned
-name|char
+name|void
 modifier|*
 name|dst
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|count
 parameter_list|)
 function_decl|;
@@ -227,32 +210,25 @@ comment|/* bios.S */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|biosread
 parameter_list|(
-name|unsigned
-name|char
+name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|short
+name|int
 name|cyl
 parameter_list|,
-name|unsigned
-name|char
+name|int
 name|head
 parameter_list|,
-name|unsigned
-name|char
+name|int
 name|sec
 parameter_list|,
-name|unsigned
-name|char
+name|int
 name|nsec
 parameter_list|,
-name|unsigned
-name|char
+name|void
 modifier|*
 name|offset
 parameter_list|)
@@ -260,18 +236,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|putc
 parameter_list|(
-name|char
+name|int
 name|c
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|getc
 parameter_list|(
@@ -281,7 +255,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ischar
 parameter_list|(
@@ -291,7 +264,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|get_diskinfo
 parameter_list|(
@@ -302,7 +274,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|memsize
 parameter_list|(
@@ -317,7 +288,6 @@ comment|/* boot.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|boot
 parameter_list|(
@@ -328,7 +298,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|loadprog
 parameter_list|(
@@ -339,7 +308,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|getbootdev
 parameter_list|(
@@ -355,7 +323,6 @@ comment|/* boot2.S */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|boot2
 parameter_list|(
@@ -369,7 +336,6 @@ comment|/* disk.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|devopen
 parameter_list|(
@@ -379,7 +345,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|devread
 parameter_list|(
@@ -389,7 +354,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|Bread
 parameter_list|(
@@ -403,7 +367,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|badsect
 parameter_list|(
@@ -421,7 +384,6 @@ comment|/* io.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|gateA20
 parameter_list|(
@@ -430,19 +392,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_extern
-extern|extern printf(const char *format
-operator|,
-extern|...
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|putchar
 parameter_list|(
@@ -453,7 +417,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|getchar
 parameter_list|(
@@ -464,7 +427,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|delay1ms
 parameter_list|(
@@ -474,7 +436,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|gets
 parameter_list|(
@@ -486,7 +447,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|strcmp
 parameter_list|(
@@ -504,7 +464,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|bcopy
 parameter_list|(
@@ -524,7 +483,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|twiddle
 parameter_list|(
@@ -538,7 +496,6 @@ comment|/* probe_keyboard.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|probe_keyboard
 parameter_list|(
@@ -552,18 +509,16 @@ comment|/* serial.S */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|serial_putc
 parameter_list|(
-name|char
+name|int
 name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|serial_getc
 parameter_list|(
@@ -573,7 +528,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|serial_ischar
 parameter_list|(
@@ -583,7 +537,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_serial
 parameter_list|(
@@ -597,7 +550,6 @@ comment|/* sys.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|xread
 parameter_list|(
@@ -612,7 +564,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|read
 parameter_list|(
@@ -627,7 +578,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|find
 parameter_list|(
@@ -639,7 +589,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|block_map
 parameter_list|(
@@ -650,7 +599,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|openrd
 parameter_list|(
