@@ -1744,9 +1744,6 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
-name|Elf_Addr
-name|relocbase
-decl_stmt|;
 name|Elf_Half
 modifier|*
 name|where32
