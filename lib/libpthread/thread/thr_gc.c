@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: uthread_gc.c,v 1.5 1999/07/05 00:35:18 jasone Exp $  *  * Garbage collector thread. Frees memory allocated for dead threads.  *  */
+comment|/*  * Copyright (c) 1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: uthread_gc.c,v 1.6 1999/07/06 00:25:37 jasone Exp $  *  * Garbage collector thread. Frees memory allocated for dead threads.  *  */
 end_comment
 
 begin_include
@@ -299,9 +299,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
 if|if
 condition|(
 name|pthread
@@ -313,12 +310,14 @@ operator|==
 name|PTHREAD_STACK_DEFAULT
 condition|)
 block|{
-comment|/* Default-size stack.  Cache it: */
+comment|/* 						 * Default-size stack.  Cache 						 * it: 						 */
 name|struct
 name|stack
 modifier|*
 name|spare_stack
-init|=
+decl_stmt|;
+name|spare_stack
+operator|=
 operator|(
 name|pthread
 operator|->
@@ -332,7 +331,7 @@ expr|struct
 name|stack
 argument_list|)
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -346,7 +345,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Non-standard stack size.  free() it outside the locks: */
+comment|/* 						 * Non-standard stack size.                                                  * free() it outside the locks. 						 */
 name|p_stack
 operator|=
 name|pthread
@@ -354,17 +353,6 @@ operator|->
 name|stack
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* 					 * Point to the stack that must 					 * be freed outside the locks: 					 */
-name|p_stack
-operator|=
-name|pthread
-operator|->
-name|stack
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 				 * Point to the thread structure that must 				 * be freed outside the locks: 				 */
 name|pthread_cln
@@ -392,9 +380,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
 if|if
 condition|(
 name|pthread
@@ -406,12 +391,14 @@ operator|==
 name|PTHREAD_STACK_DEFAULT
 condition|)
 block|{
-comment|/* Default-size stack.  Cache it: */
+comment|/* 						 * Default-size stack.  Cache 						 * it: 						 */
 name|struct
 name|stack
 modifier|*
 name|spare_stack
-init|=
+decl_stmt|;
+name|spare_stack
+operator|=
 operator|(
 name|pthread
 operator|->
@@ -425,7 +412,7 @@ expr|struct
 name|stack
 argument_list|)
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -439,7 +426,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Non-standard stack size.  free() it outside the locks: */
+comment|/* 						 * Non-standard stack size. 						 * free() it outside the locks: 						 */
 name|p_stack
 operator|=
 name|pthread
@@ -447,17 +434,6 @@ operator|->
 name|stack
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* 					 * Point to the stack that must 					 * be freed outside the locks: 					 */
-name|p_stack
-operator|=
-name|pthread
-operator|->
-name|stack
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 					 * NULL the stack pointer now 					 * that the memory has been freed:  					 */
 name|pthread
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_create.c,v 1.14 1999/07/05 00:35:17 jasone Exp $  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_create.c,v 1.15 1999/07/06 00:25:36 jasone Exp $  */
 end_comment
 
 begin_include
@@ -216,9 +216,6 @@ operator|!=
 name|NULL
 condition|)
 block|{ 		}
-ifdef|#
-directive|ifdef
-name|__i386__
 comment|/* Allocate memory for a default-size stack: */
 elseif|else
 if|if
@@ -236,7 +233,7 @@ modifier|*
 name|spare_stack
 decl_stmt|;
 comment|/* Allocate or re-use a default-size stack. */
-comment|/* Use the garbage collector mutex for synchronization 			 * of the spare stack list. 			 * 			 * XXX This may not be ideal. */
+comment|/* 			 * Use the garbage collector mutex for synchronization 			 * of the spare stack list. 			 */
 if|if
 condition|(
 name|pthread_mutex_lock
@@ -254,8 +251,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|!=
 operator|(
 name|spare_stack
 operator|=
@@ -265,6 +260,8 @@ operator|&
 name|_stackq
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* Use the spare stack. */
@@ -274,6 +271,22 @@ operator|&
 name|_stackq
 argument_list|,
 name|qe
+argument_list|)
+expr_stmt|;
+comment|/* Unlock the garbage collector mutex. */
+if|if
+condition|(
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot unlock gc mutex"
 argument_list|)
 expr_stmt|;
 name|stack
@@ -295,6 +308,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Unlock the garbage collector mutex. */
+if|if
+condition|(
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot unlock gc mutex"
+argument_list|)
+expr_stmt|;
 comment|/* Allocate a new stack. */
 name|stack
 operator|=
@@ -302,7 +331,7 @@ name|_next_stack
 operator|+
 name|PTHREAD_STACK_GUARD
 expr_stmt|;
-comment|/* Even if stack allocation fails, we don't want to try to use this location again, so unconditionally 				 * decrement _next_stack.  Under normal operating conditions, the most likely reason for an mmap() 				 * error is a stack overflow of the adjacent thread stack. */
+comment|/* 				 * Even if stack allocation fails, we don't want 				 * to try to use this location again, so 				 * unconditionally decrement _next_stack.  Under 				 * normal operating conditions, the most likely 				 * reason for an mmap() error is a stack 				 * overflow of the adjacent thread stack. 				 */
 name|_next_stack
 operator|-=
 operator|(
@@ -314,8 +343,6 @@ expr_stmt|;
 comment|/* Red zone: */
 if|if
 condition|(
-name|MAP_FAILED
-operator|==
 name|mmap
 argument_list|(
 name|_next_stack
@@ -331,6 +358,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|ret
@@ -347,8 +376,6 @@ comment|/* Stack: */
 elseif|else
 if|if
 condition|(
-name|MAP_FAILED
-operator|==
 name|mmap
 argument_list|(
 name|stack
@@ -359,13 +386,24 @@ name|PROT_READ
 operator||
 name|PROT_WRITE
 argument_list|,
+ifdef|#
+directive|ifdef
+name|__i386__
 name|MAP_STACK
 argument_list|,
+else|#
+directive|else
+name|MAP_ANON
+argument_list|,
+endif|#
+directive|endif
 operator|-
 literal|1
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|ret
@@ -386,24 +424,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Unlock the garbage collector mutex. */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot unlock gc mutex"
-argument_list|)
-expr_stmt|;
 block|}
-comment|/* The user wants a stack of a particular size.  Lets hope they really know what they want, and simply malloc the 		 * stack. */
+comment|/* 		 * The user wants a stack of a particular size.  Lets hope they 		 * really know what they want, and simply malloc the stack. 		 */
 elseif|else
 if|if
 condition|(
@@ -436,43 +458,6 @@ name|new_thread
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* Allocate memory for the stack: */
-elseif|else
-if|if
-condition|(
-operator|(
-name|stack
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|pattr
-operator|->
-name|stacksize_attr
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Insufficient memory to create a thread: */
-name|ret
-operator|=
-name|EAGAIN
-expr_stmt|;
-name|free
-argument_list|(
-name|new_thread
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* Check for errors: */
 if|if
 condition|(
