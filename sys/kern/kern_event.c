@@ -1877,14 +1877,6 @@ operator|=
 operator|&
 name|kqueueops
 expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|kq
-operator|->
-name|kq_head
-argument_list|)
-expr_stmt|;
 name|fp
 operator|->
 name|f_data
