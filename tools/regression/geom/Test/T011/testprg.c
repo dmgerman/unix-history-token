@@ -64,7 +64,8 @@ file|<geom/geom.h>
 end_include
 
 begin_function
-name|int
+name|void
+modifier|*
 name|thread_sim
 parameter_list|(
 name|void
