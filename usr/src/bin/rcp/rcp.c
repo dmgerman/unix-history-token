@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.7 83/07/03"
+literal|"@(#)rcp.c	4.8 83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,7 +648,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"rsh %s -L %s %s %s '%s:%s'</dev/null"
+literal|"rsh %s -L %s -n %s %s '%s:%s'"
 argument_list|,
 name|argv
 index|[
@@ -680,7 +680,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"rsh %s %s %s '%s:%s'</dev/null"
+literal|"rsh %s -n %s %s '%s:%s'"
 argument_list|,
 name|argv
 index|[
@@ -2228,6 +2228,8 @@ decl_stmt|,
 name|wrerr
 decl_stmt|,
 name|exists
+decl_stmt|,
+name|first
 decl_stmt|;
 name|off_t
 name|i
@@ -2337,8 +2339,14 @@ literal|1
 expr_stmt|;
 for|for
 control|(
+name|first
+operator|=
+literal|1
 init|;
 condition|;
+name|first
+operator|=
+literal|0
 control|)
 block|{
 name|cp
@@ -2503,11 +2511,32 @@ name|cp
 operator|!=
 literal|'D'
 condition|)
+block|{
+comment|/* 			 * Check for the case "rcp remote:foo\* local:bar". 			 * In this case, the line "No match." can be returned 			 * by the shell before the rcp command on the remote is 			 * executed so the ^Aerror_message convention isn't 			 * followed. 			 */
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|SCREWUP
 argument_list|(
 literal|"expected control record"
 argument_list|)
 expr_stmt|;
+block|}
 name|cp
 operator|++
 expr_stmt|;
