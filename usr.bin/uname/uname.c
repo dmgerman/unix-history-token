@@ -650,6 +650,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|NATIVE_SYSCTLNAME_GET
+parameter_list|(
+name|var
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|void						\ native_##var(void)				\ {						\ 	size_t len;				\ 	static char buf[1024];			\ 	char **varp =&(var);			\ 						\ 	if (sysctlbyname(name,&buf,&len, NULL,\ 	    0) == -1)				\ 		err(1, "sysctlbyname");
+end_define
+
+begin_define
+define|#
+directive|define
 name|NATIVE_SET
 define|\
 value|*varp = buf;				\ 	return;					\ }	struct __hack
@@ -832,13 +845,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-name|NATIVE_SYSCTL2_GET
+name|NATIVE_SYSCTLNAME_GET
 argument_list|(
 argument|ident
 argument_list|,
-argument|CTL_KERN
-argument_list|,
-argument|KERN_IDENT
+literal|"kern.ident"
 argument_list|)
 end_macro
 
