@@ -659,6 +659,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* 	 * If we didn't see EISA or ISA on a pci bridge, create some 	 * connection points now so they show up "on motherboard". 	 */
 if|if
 condition|(
@@ -704,6 +707,8 @@ name|child
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEV_MCA
