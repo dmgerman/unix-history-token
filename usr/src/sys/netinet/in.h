@@ -69,6 +69,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_ND
+value|77
+end_define
+
+begin_comment
+comment|/* UNOFFICIAL net disk proto */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_RAW
 value|255
 end_define
