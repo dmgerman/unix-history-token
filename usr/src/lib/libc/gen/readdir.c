@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c	5.5 (Berkeley) %G%"
+literal|"@(#)readdir.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +92,7 @@ name|dirp
 operator|->
 name|dd_size
 operator|=
-name|read
+name|getdirentries
 argument_list|(
 name|dirp
 operator|->
@@ -102,7 +102,14 @@ name|dirp
 operator|->
 name|dd_buf
 argument_list|,
-name|DIRBLKSIZ
+name|dirp
+operator|->
+name|dd_len
+argument_list|,
+operator|&
+name|dirp
+operator|->
+name|dd_seek
 argument_list|)
 expr_stmt|;
 if|if
@@ -178,7 +185,9 @@ name|dp
 operator|->
 name|d_reclen
 operator|>
-name|DIRBLKSIZ
+name|dirp
+operator|->
+name|dd_len
 operator|+
 literal|1
 operator|-
