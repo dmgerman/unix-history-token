@@ -3282,6 +3282,27 @@ operator|!
 name|done
 condition|)
 block|{
+name|char
+modifier|*
+name|yip
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|yip
+condition|)
+block|{
+name|yelp
+argument_list|(
+name|yip
+argument_list|)
+expr_stmt|;
+name|yip
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|clear
 argument_list|()
 expr_stmt|;
@@ -3687,10 +3708,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Invalid partition"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -3755,10 +3775,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Invalid partition"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -3798,10 +3817,9 @@ operator|!=
 name|FS_SWAP
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Invalid partition type"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -3819,10 +3837,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"No FreeBSD partition defined?"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4031,10 +4048,9 @@ name|l1
 operator|)
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Oh god, I'm so confused!"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4087,10 +4103,9 @@ operator|!
 name|l3
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Invalid size given"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4216,10 +4231,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Invalid partition"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4249,10 +4263,9 @@ operator|!=
 name|FS_SWAP
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Invalid partition type"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4269,10 +4282,9 @@ operator|.
 name|p_size
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Zero partition size"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4356,10 +4368,9 @@ operator|!=
 literal|'\r'
 condition|)
 block|{
-name|yelp
-argument_list|(
+name|yip
+operator|=
 literal|"Invalid directory name"
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4382,14 +4393,9 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|yip
+operator|=
 name|p
-condition|)
-name|yelp
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
