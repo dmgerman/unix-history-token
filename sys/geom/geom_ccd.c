@@ -1452,7 +1452,7 @@ condition|(
 name|bp
 operator|->
 name|bio_error
-operator|!=
+operator|==
 literal|0
 condition|)
 name|bp
