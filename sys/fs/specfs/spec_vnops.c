@@ -1413,13 +1413,6 @@ name|vp
 operator|->
 name|v_rdev
 expr_stmt|;
-name|dsw
-operator|=
-name|devsw
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|uio
 operator|=
 name|ap
