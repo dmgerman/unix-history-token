@@ -5,7 +5,7 @@ name|char
 name|sysn7_sccsid
 index|[]
 init|=
-literal|"	unix7sysn.h	1.1	82/05/12	"
+literal|"	unix7sysn.h	4.1	82/05/12	"
 decl_stmt|;
 end_decl_stmt
 

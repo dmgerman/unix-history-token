@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	dofloat.c	1.1	82/05/12	"
+literal|"	dofloat.c	4.1	82/05/12	"
 decl_stmt|;
 end_decl_stmt
 

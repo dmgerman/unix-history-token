@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	bcopy.c	1.1	82/05/12	"
+literal|"	bcopy.c	4.1	82/05/12	"
 decl_stmt|;
 end_decl_stmt
 

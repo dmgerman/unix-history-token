@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	runcompat.c	1.1	82/05/12	"
+literal|"	runcompat.c	4.1	82/05/12	"
 decl_stmt|;
 end_decl_stmt
 
