@@ -324,8 +324,8 @@ argument|bio
 argument_list|)
 name|queue
 expr_stmt|;
-name|daddr_t
-name|last_pblkno
+name|off_t
+name|last_offset
 decl_stmt|;
 name|struct
 name|bio

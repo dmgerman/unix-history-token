@@ -322,7 +322,7 @@ argument_list|)
 expr_stmt|;
 name|head
 operator|->
-name|last_pblkno
+name|last_offset
 operator|=
 literal|0
 expr_stmt|;
@@ -407,7 +407,7 @@ name|NULL
 condition|)
 name|head
 operator|->
-name|last_pblkno
+name|last_offset
 operator|=
 literal|0
 expr_stmt|;
@@ -427,11 +427,11 @@ argument_list|)
 condition|)
 name|head
 operator|->
-name|last_pblkno
+name|last_offset
 operator|=
 name|bp
 operator|->
-name|bio_pblkno
+name|bio_offset
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -686,11 +686,11 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_pblkno
+name|bio_offset
 operator|<
 name|bioq
 operator|->
-name|last_pblkno
+name|last_offset
 condition|)
 block|{
 name|bq
@@ -727,11 +727,11 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_pblkno
+name|bio_offset
 operator|<
 name|bq
 operator|->
-name|bio_pblkno
+name|bio_offset
 condition|)
 block|{
 name|bioq
@@ -775,16 +775,16 @@ argument_list|,
 name|bio_queue
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we lie between last_pblkno and bq, 			 * insert before bq. 			 */
+comment|/* 			 * If we lie between last_offset and bq, 			 * insert before bq. 			 */
 if|if
 condition|(
 name|bp
 operator|->
-name|bio_pblkno
+name|bio_offset
 operator|<
 name|bq
 operator|->
-name|bio_pblkno
+name|bio_offset
 condition|)
 block|{
 name|TAILQ_INSERT_BEFORE
@@ -805,11 +805,11 @@ if|if
 condition|(
 name|bp
 operator|->
-name|bio_pblkno
+name|bio_offset
 operator|>
 name|be
 operator|->
-name|bio_pblkno
+name|bio_offset
 condition|)
 block|{
 name|TAILQ_INSERT_AFTER
@@ -856,11 +856,11 @@ name|switch_point
 operator|||
 name|bp
 operator|->
-name|bio_pblkno
+name|bio_offset
 operator|<
 name|bn
 operator|->
-name|bio_pblkno
+name|bio_offset
 condition|)
 break|break;
 name|bq
