@@ -6,14 +6,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|FBSD_KGDB_X86_64_H
+name|FBSD_KGDB_AMD64_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|FBSD_KGDB_X86_64_H
+name|FBSD_KGDB_AMD64_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"fbsd-kgdb.h"
+end_include
 
 begin_endif
 endif|#
@@ -21,7 +27,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FBSD_KGDB_X86_64_H */
+comment|/* FBSD_KGDB_AMD64_H */
 end_comment
 
 end_unit
