@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.145 1998/10/31 17:38:46 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.146 1998/12/10 18:36:30 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1079,6 +1079,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|lastlabel
+decl_stmt|;
 name|int
 name|nfds
 decl_stmt|,
@@ -1435,6 +1440,7 @@ return|return
 name|EX_START
 return|;
 block|}
+comment|/* NOTE:  We may now have changed argv[1] via a ``set proctitle'' */
 if|if
 condition|(
 name|prompt
@@ -1569,6 +1575,23 @@ argument_list|,
 name|BringDownServer
 argument_list|)
 expr_stmt|;
+name|lastlabel
+operator|=
+name|argc
+operator|==
+literal|2
+condition|?
+name|bundle
+operator|->
+name|argv1
+else|:
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+expr_stmt|;
 for|for
 control|(
 name|arg
@@ -1588,18 +1611,21 @@ name|bundle_SetLabel
 argument_list|(
 name|bundle
 argument_list|,
-name|argv
-index|[
-name|argc
-operator|-
-literal|1
-index|]
+name|lastlabel
 argument_list|)
 expr_stmt|;
 name|system_Select
 argument_list|(
 name|bundle
 argument_list|,
+name|arg
+operator|==
+literal|1
+condition|?
+name|bundle
+operator|->
+name|argv1
+else|:
 name|argv
 index|[
 name|arg
@@ -1624,12 +1650,7 @@ name|bundle_SetLabel
 argument_list|(
 name|bundle
 argument_list|,
-name|argv
-index|[
-name|argc
-operator|-
-literal|1
-index|]
+name|lastlabel
 argument_list|)
 expr_stmt|;
 if|if
