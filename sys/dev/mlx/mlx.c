@@ -1276,7 +1276,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|mlx_donecmd
+name|mlx_work
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -1770,7 +1770,7 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|"Mylex %s, firmware %d.%d, %dMB RAM\n"
+literal|"Mylex %s, firmware %d.%02d, %dMB RAM\n"
 argument_list|,
 name|mlx_name_controller
 argument_list|(
@@ -1822,7 +1822,7 @@ condition|(
 name|sc
 operator|->
 name|mlx_fwminor
-operator|!=
+operator|<
 literal|51
 condition|)
 block|{
@@ -1832,7 +1832,7 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|" *** WARNING *** This firmware revision is NOT SUPPORTED\n"
+literal|" *** WARNING *** This firmware revision is not recommended\n"
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -1841,7 +1841,7 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|" *** WARNING *** Use revision 3.51 only\n"
+literal|" *** WARNING *** Use revision 3.51 or later\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1855,7 +1855,7 @@ condition|(
 name|sc
 operator|->
 name|mlx_fwminor
-operator|!=
+operator|<
 literal|6
 condition|)
 block|{
@@ -1865,7 +1865,7 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|" *** WARNING *** This firmware revision is NOT SUPPORTED\n"
+literal|" *** WARNING *** This firmware revision is not recommended\n"
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -1874,7 +1874,7 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|" *** WARNING *** Use revision 4.6 only\n"
+literal|" *** WARNING *** Use revision 4.06 or later\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2869,10 +2869,18 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 name|debug
 argument_list|(
 literal|"called"
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
 expr_stmt|;
 name|bufq_insert_tail
 argument_list|(
@@ -2888,6 +2896,11 @@ name|sc
 operator|->
 name|mlx_waitbufs
 operator|++
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|mlx_startio
 argument_list|(
@@ -6680,7 +6693,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|mlx_donecmd
+name|mlx_work
 argument_list|,
 name|mc
 argument_list|,
@@ -6758,7 +6771,15 @@ decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* spin until something prevents us from doing any work */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6831,6 +6852,11 @@ name|sc
 operator|->
 name|mlx_waitbufs
 operator|--
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* connect the buf to the command */
 name|mc
@@ -7050,7 +7076,17 @@ name|mc
 argument_list|)
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8182,7 +8218,7 @@ name|mc
 operator|->
 name|mc_slot
 expr_stmt|;
-comment|/* set impossible status so that a woken sleeper can tell the command is in progress */
+comment|/* mark the command as currently being processed */
 name|mc
 operator|->
 name|mc_status
@@ -8223,8 +8259,8 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|done
-operator|=
+if|if
+condition|(
 name|sc
 operator|->
 name|mlx_tryqueue
@@ -8233,7 +8269,26 @@ name|sc
 argument_list|,
 name|mc
 argument_list|)
+condition|)
+block|{
+name|done
+operator|=
+literal|1
 expr_stmt|;
+comment|/* move command to work queue */
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mlx_work
+argument_list|,
+name|mc
+argument_list|,
+name|mc_link
+argument_list|)
+expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -8341,11 +8396,6 @@ argument_list|(
 literal|"called"
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|mc
 operator|=
 name|NULL
@@ -8355,6 +8405,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* poll for a completed command's identifier and status */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -8405,19 +8460,6 @@ operator|=
 name|status
 expr_stmt|;
 comment|/* save status */
-comment|/* move completed command to 'done' queue */
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mlx_donecmd
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
 comment|/* free slot for reuse */
 name|sc
 operator|->
@@ -8550,7 +8592,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|mlx_donecmd
+name|mlx_work
 argument_list|)
 expr_stmt|;
 while|while
@@ -8585,9 +8627,19 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"mlx_donecmd list corrupt!"
+literal|"mlx_work list corrupt!"
 argument_list|)
 expr_stmt|;
+comment|/* Skip commands that are still busy */
+if|if
+condition|(
+name|mc
+operator|->
+name|mc_status
+operator|!=
+name|MLX_STATUS_BUSY
+condition|)
+block|{
 comment|/* 	 * Does the command have a completion handler? 	 */
 if|if
 condition|(
@@ -8604,7 +8656,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|mlx_donecmd
+name|mlx_work
 argument_list|,
 name|mc
 argument_list|,
@@ -8618,7 +8670,7 @@ argument_list|(
 name|mc
 argument_list|)
 expr_stmt|;
-comment|/*  	     * Is there a sleeper waiting on this command? 	     */
+comment|/*  		 * Is there a sleeper waiting on this command? 		 */
 block|}
 elseif|else
 if|if
@@ -8637,7 +8689,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|mlx_donecmd
+name|mlx_work
 argument_list|,
 name|mc
 argument_list|,
@@ -8651,10 +8703,11 @@ operator|->
 name|mc_private
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Leave the command for a caller that's polling for it. 	     */
+comment|/* 		 * Leave the command for a caller that's polling for it. 		 */
 block|}
 else|else
-block|{ 	}
+block|{ 	    }
+block|}
 name|mc
 operator|=
 name|nc
@@ -9881,6 +9934,14 @@ case|:
 name|submodel
 operator|=
 literal|"PJ"
+expr_stmt|;
+break|break;
+case|case
+literal|0x16
+case|:
+name|submodel
+operator|=
+literal|"PTL"
 expr_stmt|;
 break|break;
 default|default:
