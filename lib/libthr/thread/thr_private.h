@@ -208,8 +208,11 @@ directive|define
 name|THR_TRYLOCK
 parameter_list|(
 name|m
+parameter_list|,
+name|r
 parameter_list|)
-value|_umtxtrylock((m))
+define|\
+value|do {								\ 		(r) = umtx_trylock((m), curthread->thr_id);		\ 		if ((r) != 0&& (r) != EBUSY)				\ 			abort();					\ 	} while (0)
 end_define
 
 begin_define
@@ -2365,18 +2368,6 @@ begin_function_decl
 name|void
 name|_thread_sigunblock
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_umtxtrylock
-parameter_list|(
-name|struct
-name|umtx
-modifier|*
-name|lck
-parameter_list|)
 function_decl|;
 end_function_decl
 
