@@ -836,6 +836,8 @@ block|{
 name|snd_mtxlock
 argument_list|(
 name|mss
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -855,6 +857,8 @@ block|{
 name|snd_mtxunlock
 argument_list|(
 name|mss
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
