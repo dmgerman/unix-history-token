@@ -207,11 +207,11 @@ begin_define
 define|#
 directive|define
 name|CPU_MAXID
-value|9
+value|10
 end_define
 
 begin_comment
-comment|/* 9 valid machdep IDs */
+comment|/* valid machdep IDs */
 end_comment
 
 begin_define
