@@ -77,23 +77,6 @@ directive|include
 file|<security/pam_mod_misc.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|opttab
-name|other_options
-index|[]
-init|=
-block|{
-block|{
-name|NULL
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|PAM_EXTERN
 name|int
@@ -147,7 +130,7 @@ argument_list|(
 operator|&
 name|options
 argument_list|,
-name|other_options
+name|NULL
 argument_list|,
 name|argc
 argument_list|,
