@@ -3299,10 +3299,12 @@ argument_list|,
 name|args
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_ANYBODY
 argument_list|,
 name|sysctl_kern_proc_args
 argument_list|,
-literal|"Return process argument"
+literal|"Process argument list"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
