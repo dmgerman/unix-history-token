@@ -1454,13 +1454,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|vfs_timestamp
 argument_list|(
 operator|&
@@ -1534,9 +1532,6 @@ name|pipe_state
 operator||=
 name|PIPE_LWANT
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|tsleep
@@ -1557,15 +1552,18 @@ literal|"pipelk"
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|error
+operator|)
 return|;
-block|}
 block|}
 name|cpipe
 operator|->
@@ -1574,7 +1572,9 @@ operator||=
 name|PIPE_LOCK
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1895,9 +1895,7 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 break|break;
-block|}
 name|rpipe
 operator|->
 name|pipe_buffer
@@ -2101,7 +2099,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 			 * detect EOF condition 			 */
+comment|/* 			 * detect EOF condition 			 * read returns 0 on EOF, no need to set error 			 */
 if|if
 condition|(
 name|rpipe
@@ -2110,10 +2108,7 @@ name|pipe_state
 operator|&
 name|PIPE_EOF
 condition|)
-block|{
-comment|/* XXX error = ? */
 break|break;
-block|}
 comment|/* 			 * If the "write-side" has been blocked, wake it up now. 			 */
 if|if
 condition|(
@@ -2160,10 +2155,12 @@ name|f_flag
 operator|&
 name|FNONBLOCK
 condition|)
+block|{
 name|error
 operator|=
 name|EAGAIN
 expr_stmt|;
+block|}
 else|else
 block|{
 name|rpipe
@@ -2335,7 +2332,9 @@ name|rpipe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2428,12 +2427,6 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
 name|addr
 operator|=
 name|trunc_page
@@ -2447,6 +2440,12 @@ name|uio_iov
 operator|->
 name|iov_base
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
 init|;
 name|addr
 operator|<
@@ -2457,8 +2456,7 @@ operator|+=
 name|PAGE_SIZE
 operator|,
 name|i
-operator|+=
-literal|1
+operator|++
 control|)
 block|{
 name|vm_page_t
@@ -2521,7 +2519,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 block|}
 name|m
@@ -2693,7 +2693,9 @@ operator|+=
 name|size
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3295,7 +3297,9 @@ name|wpipe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|error1
 label|:
@@ -3305,7 +3309,9 @@ name|wpipe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3406,7 +3412,9 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 name|EPIPE
+operator|)
 return|;
 block|}
 comment|/* 	 * If it is advantageous to resize the pipe buffer, do 	 * so. 	 */
@@ -3496,7 +3504,9 @@ block|}
 else|else
 block|{
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -3600,9 +3610,7 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 break|break;
-block|}
 continue|continue;
 block|}
 endif|#
@@ -4089,20 +4097,13 @@ name|pipe_state
 operator||=
 name|PIPE_WANTW
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|tsleep
 argument_list|(
 name|wpipe
 argument_list|,
-operator|(
 name|PRIBIO
-operator|+
-literal|1
-operator|)
 operator||
 name|PCATCH
 argument_list|,
@@ -4110,13 +4111,14 @@ literal|"pipewr"
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 comment|/* 			 * If read side wants to go away, we just issue a signal 			 * to ourselves. 			 */
 if|if
 condition|(
@@ -4272,7 +4274,9 @@ name|wpipe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4936,7 +4940,9 @@ name|cr_gid
 expr_stmt|;
 comment|/* 	 * Left as 0: st_dev, st_ino, st_nlink, st_rdev, st_flags, st_gen. 	 * XXX (st_dev, st_ino) should be unique. 	 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5005,7 +5011,9 @@ name|cpipe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
