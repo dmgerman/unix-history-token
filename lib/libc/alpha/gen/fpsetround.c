@@ -30,12 +30,12 @@ file|<machine/fpu.h>
 end_include
 
 begin_function
-name|fp_rnd
+name|fp_rnd_t
 name|fpsetround
 parameter_list|(
 name|rnd_dir
 parameter_list|)
-name|fp_rnd
+name|fp_rnd_t
 name|rnd_dir
 decl_stmt|;
 block|{

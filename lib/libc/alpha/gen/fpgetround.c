@@ -30,7 +30,7 @@ file|<machine/fpu.h>
 end_include
 
 begin_function
-name|fp_rnd
+name|fp_rnd_t
 name|fpgetround
 parameter_list|()
 block|{

@@ -59,7 +59,7 @@ end_comment
 begin_decl_stmt
 name|__BEGIN_DECLS
 specifier|extern
-name|fp_rnd
+name|fp_rnd_t
 name|fpgetround
 name|__P
 argument_list|(
@@ -72,12 +72,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|fp_rnd
+name|fp_rnd_t
 name|fpsetround
 name|__P
 argument_list|(
 operator|(
-name|fp_rnd
+name|fp_rnd_t
 operator|)
 argument_list|)
 decl_stmt|;
