@@ -9,13 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)server.c	5.15 (Berkeley) 3/1/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)server.c	5.15 (Berkeley) 3/1/91"
+literal|"$Id"
 decl_stmt|;
 end_decl_stmt
 
@@ -5590,17 +5594,6 @@ name|ok
 label|:
 if|if
 condition|(
-name|userid
-condition|)
-name|setreuid
-argument_list|(
-name|userid
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|chown
 argument_list|(
 name|file
@@ -5643,17 +5636,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|userid
-condition|)
-name|setreuid
-argument_list|(
-literal|0
-argument_list|,
-name|userid
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
