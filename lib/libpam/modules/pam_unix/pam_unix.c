@@ -680,25 +680,6 @@ name|PAM_SUCCESS
 else|:
 name|PAM_AUTH_ERR
 expr_stmt|;
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_expire
-operator|&&
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|>=
-name|pwd
-operator|->
-name|pw_expire
-condition|)
-name|retval
-operator|=
-name|PAM_AUTH_ERR
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2213,6 +2194,9 @@ name|lc
 argument_list|)
 expr_stmt|;
 comment|/* Salt suitable for anything */
+name|srandomdev
+argument_list|()
+expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -2229,7 +2213,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|3
@@ -2273,7 +2257,7 @@ index|[
 literal|8
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
@@ -2287,7 +2271,7 @@ index|[
 literal|13
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
@@ -2301,7 +2285,7 @@ index|[
 literal|17
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
@@ -2315,7 +2299,7 @@ index|[
 literal|22
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
@@ -2783,6 +2767,9 @@ name|lc
 argument_list|)
 expr_stmt|;
 comment|/* Salt suitable for anything */
+name|srandomdev
+argument_list|()
+expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -2799,7 +2786,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|3
@@ -2843,7 +2830,7 @@ index|[
 literal|8
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
@@ -2857,7 +2844,7 @@ index|[
 literal|13
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
@@ -2871,7 +2858,7 @@ index|[
 literal|17
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
@@ -2885,7 +2872,7 @@ index|[
 literal|22
 index|]
 argument_list|,
-name|arc4random
+name|random
 argument_list|()
 argument_list|,
 literal|5
