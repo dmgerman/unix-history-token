@@ -58,7 +58,7 @@ file|<vm/vm_zone.h>
 end_include
 
 begin_comment
-comment|/*  * System initialization  *  * Note: domain initialization wants to take place on a per domain basis  * as a result of traversing a linker set.  Most likely, each domain  * want to call a registration function rather than being handled here  * in domaininit().  Probably this will look like:  *  * SYSINIT(unique, SI_SUB_PROTO_DOMAIN, SI_ORDER_ANY, domain_add, xxx)  *  * Where 'xxx' is replaced by the address of a parameter struct to be  * passed to the doamin_add() function.  */
+comment|/*  * System initialization  *  * Note: domain initialization takes place on a per domain basis  * as a result of traversing a SYSINIT linker set.  Most likely,  * each domain would want to call DOMAIN_SET(9) itself, which  * would cause the domain to be added just after domaininit()  * is called during startup.  *  * See DOMAIN_SET(9) for details on its use.  */
 end_comment
 
 begin_decl_stmt
