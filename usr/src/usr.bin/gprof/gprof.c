@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.14 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1543,6 +1543,64 @@ name|unsigned
 name|UNIT
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|SAMPLEDEBUG
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[openpfile] hdr.lowpc 0x%x hdr.highpc 0x%x hdr.ncnt %d\n"
+argument_list|,
+name|h
+operator|.
+name|lowpc
+argument_list|,
+name|h
+operator|.
+name|highpc
+argument_list|,
+name|h
+operator|.
+name|ncnt
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"[openpfile]   s_lowpc 0x%x   s_highpc 0x%x\n"
+argument_list|,
+name|s_lowpc
+argument_list|,
+name|s_highpc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"[openpfile]     lowpc 0x%x     highpc 0x%x\n"
+argument_list|,
+name|lowpc
+argument_list|,
+name|highpc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"[openpfile] sampbytes %d nsamples %d\n"
+argument_list|,
+name|sampbytes
+argument_list|,
+name|nsamples
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 return|return
 operator|(
 name|pfile
