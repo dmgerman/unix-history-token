@@ -185,6 +185,12 @@ operator|-
 literal|1
 condition|)
 block|{
+name|disk
+operator|->
+name|d_error
+operator|=
+literal|"truncated superblock"
+expr_stmt|;
 name|DEBUG
 argument_list|(
 name|NULL
@@ -296,6 +302,12 @@ argument_list|(
 literal|"no superblock found"
 argument_list|)
 expr_stmt|;
+name|disk
+operator|->
+name|d_error
+operator|=
+literal|"no superblock found"
+expr_stmt|;
 name|errno
 operator|=
 name|ENOENT
@@ -404,6 +416,12 @@ argument_list|(
 literal|"open"
 argument_list|)
 expr_stmt|;
+name|disk
+operator|->
+name|d_error
+operator|=
+literal|"failed to open disk"
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -432,6 +450,12 @@ name|DEBUG
 argument_list|(
 name|NULL
 argument_list|)
+expr_stmt|;
+name|disk
+operator|->
+name|d_error
+operator|=
+literal|"failed to write superblock"
 expr_stmt|;
 return|return
 operator|-
@@ -489,6 +513,12 @@ name|DEBUG
 argument_list|(
 name|NULL
 argument_list|)
+expr_stmt|;
+name|disk
+operator|->
+name|d_error
+operator|=
+literal|"failed to update a superblock"
 expr_stmt|;
 return|return
 operator|-

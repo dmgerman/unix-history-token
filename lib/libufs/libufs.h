@@ -149,6 +149,12 @@ comment|/* superblock as buffer */
 block|}
 name|d_sbunion
 union|;
+specifier|const
+name|char
+modifier|*
+name|d_error
+decl_stmt|;
+comment|/* human readable disk error */
 define|#
 directive|define
 name|d_fs
@@ -197,6 +203,21 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * error.c  */
+end_comment
+
+begin_function_decl
+name|void
+name|libufs_printerror
+parameter_list|(
+name|struct
+name|uufsd
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

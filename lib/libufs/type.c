@@ -315,6 +315,12 @@ argument_list|(
 literal|"open"
 argument_list|)
 expr_stmt|;
+name|disk
+operator|->
+name|d_error
+operator|=
+literal|"failed to open disk for reading"
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -361,6 +367,12 @@ operator|->
 name|d_ufs
 operator|=
 literal|0
+expr_stmt|;
+name|disk
+operator|->
+name|d_error
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
