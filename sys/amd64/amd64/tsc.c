@@ -222,6 +222,12 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP_TSC
+argument_list|)
 comment|/* 	 * We can not use the TSC in SMP mode, until we figure out a 	 * cheap (impossible), reliable and precise (yeah right!)  way 	 * to synchronize the TSCs of all the CPUs. 	 * Modern SMP hardware has the ACPI timer and we use that. 	 */
 return|return;
 endif|#
