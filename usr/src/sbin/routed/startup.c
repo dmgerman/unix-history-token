@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.2 (Berkeley) %G%"
+literal|"@(#)startup.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +327,16 @@ name|ifr_flags
 operator||
 name|IFF_INTERFACE
 expr_stmt|;
+comment|/* no one cares about software loopback interfaces */
+if|if
+condition|(
+name|ifs
+operator|.
+name|int_flags
+operator|&
+name|IFF_LOOPBACK
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -476,6 +486,40 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
+name|SIOCGIFMETRIC
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ifreq
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"ioctl (get metric)"
+argument_list|)
+expr_stmt|;
+else|else
+name|ifs
+operator|.
+name|int_metric
+operator|=
+name|ifreq
+operator|.
+name|ifr_metric
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
 name|SIOCGIFNETMASK
 argument_list|,
 operator|(
@@ -600,16 +644,6 @@ name|ifs
 operator|.
 name|int_subnetmask
 expr_stmt|;
-comment|/* no one cares about software loopback interfaces */
-if|if
-condition|(
-name|ifs
-operator|.
-name|int_net
-operator|==
-name|LOOPBACKNET
-condition|)
-continue|continue;
 name|ifp
 operator|=
 operator|(
@@ -737,12 +771,6 @@ name|ifr
 operator|->
 name|ifr_name
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|int_metric
-operator|=
-literal|0
 expr_stmt|;
 name|ifp
 operator|->
