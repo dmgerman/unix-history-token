@@ -638,6 +638,15 @@ name|pt
 operator|->
 name|pt_tty
 expr_stmt|;
+name|pt
+operator|->
+name|pt_tty
+operator|.
+name|t_timeout
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|ttyregister
 argument_list|(
 operator|&

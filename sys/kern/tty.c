@@ -1568,6 +1568,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX don't hang forever on output */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_timeout
+operator|<
+literal|0
+condition|)
 name|tp
 operator|->
 name|t_timeout
@@ -12019,6 +12027,13 @@ sizeof|sizeof
 expr|*
 name|tp
 argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_timeout
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|ttyregister
 argument_list|(
