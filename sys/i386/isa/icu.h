@@ -19,100 +19,6 @@ directive|define
 name|_I386_ISA_ICU_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_comment
-comment|/*  * Note:  *	Most of the SMP equivilants of the icu macros are coded  *	elsewhere in an MP-safe fashion.  *	In particular note that the 'imen' variable is opaque.  *	DO NOT access imen directly, use INTREN()/INTRDIS().  */
-end_comment
-
-begin_function_decl
-name|void
-name|INTREN
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|INTRDIS
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|apic_imen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* APIC interrupt mask enable */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|imen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* interrupt mask enable */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOCORE */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
-
-begin_comment
-comment|/*  * Note: The APIC uses different values for IRQxxx.  *	 Unfortunately many drivers use the 8259 values as indexes  *	 into tables, etc.  The APIC equivilants are kept as APIC_IRQxxx.  *	 The 8259 versions have to be used in SMP for legacy operation  *	 of the drivers.  */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
-
 begin_comment
 comment|/*  * Interrupt enable bits - in normal order of priority (which we change)  */
 end_comment
@@ -398,6 +304,17 @@ begin_comment
 comment|/* 0-31 are processor exceptions */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICU_LEN
+value|16
+end_define
+
+begin_comment
+comment|/* 32-47 are ISA interrupts */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -449,57 +366,6 @@ name|ICU_EOI
 value|0x20
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
-
-begin_comment
-comment|/* 32-47: ISA IRQ0-IRQ15, 48-63: IO APIC IRQ16-IRQ31 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICU_LEN
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|HWI_MASK
-value|0xffffffff
-end_define
-
-begin_comment
-comment|/* bits for h/w interrupts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NHWI
-value|32
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ICU_LEN
-value|16
-end_define
-
-begin_comment
-comment|/* 32-47 are ISA interrupts */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -511,28 +377,36 @@ begin_comment
 comment|/* bits for h/w interrupts */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NHWI
-value|16
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_function_decl
+name|void
+name|atpic_sched_ithd
+parameter_list|(
+name|struct
+name|intrframe
+name|iframe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atpic_startup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTRCNT_COUNT
-value|(1 + ICU_LEN + 2 * ICU_LEN)
-end_define
 
 begin_endif
 endif|#
