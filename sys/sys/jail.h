@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: jail.h,v 1.1 1999/04/28 11:38:03 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: jail.h,v 1.2 1999/05/16 10:51:52 phk Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -101,6 +101,10 @@ index|]
 decl_stmt|;
 name|u_int32_t
 name|pr_ip
+decl_stmt|;
+name|void
+modifier|*
+name|pr_linux
 decl_stmt|;
 block|}
 struct|;
