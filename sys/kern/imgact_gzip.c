@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.31 1997/09/02 20:05:34 bde Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.32 1997/12/14 19:36:24 jdp Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
 end_comment
 
 begin_include
@@ -1654,7 +1654,7 @@ name|gz
 operator|->
 name|virtual_offset
 expr_stmt|;
-name|bcopy
+name|copyout
 argument_list|(
 operator|&
 name|gz
@@ -1683,13 +1683,11 @@ name|gz
 operator|->
 name|file_offset
 operator|&&
-operator|(
 name|gz
 operator|->
 name|output
 operator|+
 name|siz
-operator|)
 operator|>
 name|gz
 operator|->
@@ -1778,7 +1776,7 @@ name|gz
 operator|->
 name|file_offset
 expr_stmt|;
-name|bcopy
+name|copyout
 argument_list|(
 name|p
 argument_list|,
