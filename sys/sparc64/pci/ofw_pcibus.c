@@ -729,7 +729,7 @@ name|func
 argument_list|,
 name|PCIR_LATTIMER
 argument_list|,
-name|imin
+name|min
 argument_list|(
 name|lat
 argument_list|,
@@ -743,7 +743,7 @@ block|}
 comment|/* 	 * Compute a value to write into the cache line size register. 	 * The role of the streaming cache is unclear in write invalidate 	 * transfers, so it is made sure that it's line size is always reached. 	 */
 name|clnsz
 operator|=
-name|imax
+name|max
 argument_list|(
 name|cache
 operator|.

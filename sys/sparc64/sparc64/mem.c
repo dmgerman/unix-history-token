@@ -364,7 +364,7 @@ operator|)
 expr_stmt|;
 name|cnt
 operator|=
-name|min
+name|ulmin
 argument_list|(
 name|cnt
 argument_list|,
@@ -375,7 +375,7 @@ argument_list|)
 expr_stmt|;
 name|cnt
 operator|=
-name|min
+name|ulmin
 argument_list|(
 name|cnt
 argument_list|,

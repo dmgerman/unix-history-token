@@ -268,7 +268,7 @@ name|PAGE_MASK
 expr_stmt|;
 name|cnt
 operator|=
-name|min
+name|ulmin
 argument_list|(
 name|cnt
 argument_list|,
