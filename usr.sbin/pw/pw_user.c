@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_user.c,v 1.27 1999/02/23 07:15:10 davidn Exp $"
+literal|"$Id: pw_user.c,v 1.28 1999/03/02 00:53:33 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,11 +169,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|randinit
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -486,6 +487,8 @@ block|,
 literal|"User&"
 block|,
 literal|"/bin/sh"
+block|,
+literal|0
 block|,
 literal|0
 block|,

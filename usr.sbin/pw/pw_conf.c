@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_conf.c,v 1.7 1997/10/10 06:23:36 charnier Exp $"
+literal|"$Id: pw_conf.c,v 1.8 1999/02/23 07:15:10 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,10 @@ literal|0
 block|,
 comment|/* Days until account expires */
 literal|0
+block|,
 comment|/* Days until password expires */
+literal|0
+comment|/* size of default_group array */
 block|}
 decl_stmt|;
 end_decl_stmt
