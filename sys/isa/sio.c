@@ -3535,6 +3535,13 @@ block|}
 block|,
 comment|/* USR3090 - USR ? */
 block|{
+literal|0x70917256
+block|,
+name|NULL
+block|}
+block|,
+comment|/* USR9170 - U.S. Robotics 56K FAX INT */
+block|{
 literal|0x90917256
 block|,
 name|NULL
