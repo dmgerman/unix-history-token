@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	6.1	83/07/29	*/
+comment|/*	dinode.h	6.2	84/02/15	*/
 end_comment
 
 begin_comment
@@ -698,6 +698,17 @@ begin_comment
 comment|/* someone waiting on file lock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IMOD
+value|0x400
+end_define
+
+begin_comment
+comment|/* inode has been modified */
+end_comment
+
 begin_comment
 comment|/* modes */
 end_comment
@@ -870,7 +881,21 @@ name|t2
 parameter_list|,
 name|waitfor
 parameter_list|)
-value|{ \ 	if (ip->i_flag&(IUPD|IACC|ICHG)) \ 		iupdat(ip, t1, t2, waitfor); \ }
+value|{ \ 	if (ip->i_flag&(IUPD|IACC|ICHG|IMOD)) \ 		iupdat(ip, t1, t2, waitfor); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITIMES
+parameter_list|(
+name|ip
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|)
+value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) \ 			(ip)->i_mtime = (t2)->tv_sec; \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
 end_define
 
 end_unit
