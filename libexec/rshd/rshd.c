@@ -510,7 +510,7 @@ block|{
 case|case
 literal|'a'
 case|:
-comment|/* ignored for compatability */
+comment|/* ignored for compatibility */
 break|break;
 case|case
 literal|'l'
