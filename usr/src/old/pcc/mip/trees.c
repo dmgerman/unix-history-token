@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.25 (Berkeley) %G%"
+literal|"@(#)trees.c	4.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,11 +783,38 @@ name|type
 operator|==
 name|ENUMTY
 condition|)
+block|{
+name|p
+operator|=
+name|block
+argument_list|(
+name|o
+argument_list|,
+name|l
+argument_list|,
+name|r
+argument_list|,
+name|INT
+argument_list|,
+literal|0
+argument_list|,
+name|INT
+argument_list|)
+expr_stmt|;
 name|chkpun
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|in
+operator|.
+name|op
+operator|=
+name|FREE
+expr_stmt|;
+block|}
 case|case
 name|ANDAND
 case|:
@@ -2006,9 +2033,6 @@ decl_stmt|,
 modifier|*
 name|tabnam
 decl_stmt|;
-specifier|register
-name|k
-expr_stmt|;
 name|int
 name|j
 decl_stmt|;
@@ -2095,7 +2119,7 @@ argument|if( stab[memi].sflags& SNONUNIQ ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|for( k=
+argument|register k; 						for( k=
 literal|0
 argument|; k<NCHNAM; ++k ){ 							if(*memnam++!=*tabnam) 								goto next; 							if(!*tabnam++) break; 							}
 else|#
