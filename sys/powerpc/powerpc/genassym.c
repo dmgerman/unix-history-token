@@ -206,14 +206,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|PC_DDBSAVE
+name|PC_DBSAVE
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|pcpu
 argument_list|,
-name|pc_ddbsave
+name|pc_dbsave
 argument_list|)
 argument_list|)
 expr_stmt|;
