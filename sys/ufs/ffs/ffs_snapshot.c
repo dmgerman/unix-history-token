@@ -5622,6 +5622,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|savedcbp
 operator|=
 name|cbp
@@ -5655,6 +5664,18 @@ name|i_effnlink
 operator|>
 literal|0
 condition|)
+block|{
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5678,6 +5699,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * If we have been unable to allocate a block in which to do 	 * the copy, then return non-zero so that the fragment will 	 * not be freed. Although space will be lost, the snapshot 	 * will stay consistent. 	 */
 return|return
@@ -6248,7 +6270,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_SHARED
+name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
