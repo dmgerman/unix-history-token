@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	6.5	84/08/29	*/
+comment|/*	ffs_alloc.c	6.6	84/09/28	*/
 end_comment
 
 begin_include
@@ -2126,9 +2126,14 @@ argument_list|)
 operator|.
 name|cs_nffree
 operator|<
+name|numfrags
+argument_list|(
+name|fs
+argument_list|,
 name|nsize
 operator|-
 name|osize
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2146,7 +2151,7 @@ argument_list|)
 expr_stmt|;
 name|bbase
 operator|=
-name|fragoff
+name|fragnum
 argument_list|(
 name|fs
 argument_list|,
@@ -2157,6 +2162,10 @@ if|if
 condition|(
 name|bbase
 operator|>
+name|fragnum
+argument_list|(
+name|fs
+argument_list|,
 operator|(
 name|bprev
 operator|+
@@ -2164,10 +2173,7 @@ name|frags
 operator|-
 literal|1
 operator|)
-operator|%
-name|fs
-operator|->
-name|fs_frag
+argument_list|)
 condition|)
 block|{
 comment|/* cannot extend across a block boundry */
@@ -3021,15 +3027,13 @@ name|norot
 goto|;
 block|}
 name|bpref
-operator|&=
-operator|~
-operator|(
+operator|=
+name|blknum
+argument_list|(
 name|fs
-operator|->
-name|fs_frag
-operator|-
-literal|1
-operator|)
+argument_list|,
+name|bpref
+argument_list|)
 expr_stmt|;
 name|bpref
 operator|=
@@ -4296,13 +4300,12 @@ name|bbase
 operator|=
 name|bno
 operator|-
-operator|(
-name|bno
-operator|%
+name|fragnum
+argument_list|(
 name|fs
-operator|->
-name|fs_frag
-operator|)
+argument_list|,
+name|bno
+argument_list|)
 expr_stmt|;
 comment|/* 		 * decrement the counts associated with the old frags 		 */
 name|blk
