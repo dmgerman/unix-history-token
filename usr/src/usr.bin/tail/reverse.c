@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reverse.c	5.2 (Berkeley) %G%"
+literal|"@(#)reverse.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +399,12 @@ operator|!
 operator|--
 name|off
 condition|)
+block|{
+operator|++
+name|p
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -408,8 +413,6 @@ condition|)
 name|WR
 argument_list|(
 name|p
-operator|+
-literal|1
 argument_list|,
 name|llen
 argument_list|)
