@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)heapsort.c	1.3 (Berkeley) 7/29/91"
+literal|"@(#)heapsort.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
