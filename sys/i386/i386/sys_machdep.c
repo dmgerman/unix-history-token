@@ -2108,7 +2108,7 @@ decl_stmt|;
 name|int
 name|old_ldt_len
 decl_stmt|;
-name|critical_t
+name|register_t
 name|savecrit
 decl_stmt|;
 if|if
@@ -2687,7 +2687,7 @@ block|}
 comment|/* Fill in range */
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|error
@@ -2744,7 +2744,7 @@ name|uap
 operator|->
 name|start
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)

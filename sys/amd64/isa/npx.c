@@ -1933,7 +1933,7 @@ name|union
 name|savefpu
 name|dummy
 decl_stmt|;
-name|critical_t
+name|register_t
 name|savecrit
 decl_stmt|;
 if|if
@@ -1945,7 +1945,7 @@ return|return;
 comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets fpcurthread = NULL as important side effects. 	 */
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|npxsave
@@ -1999,7 +1999,7 @@ expr_stmt|;
 name|start_emulating
 argument_list|()
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)
@@ -2023,12 +2023,12 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-name|critical_t
+name|register_t
 name|savecrit
 decl_stmt|;
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 if|if
@@ -2051,7 +2051,7 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)
@@ -2540,7 +2540,7 @@ name|int
 name|npxtrap
 parameter_list|()
 block|{
-name|critical_t
+name|register_t
 name|savecrit
 decl_stmt|;
 name|u_short
@@ -2580,7 +2580,7 @@ expr_stmt|;
 block|}
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Interrupt handling (for another interrupt) may have pushed the 	 * state to memory.  Fetch the relevant parts of the state from 	 * wherever they are. 	 */
@@ -2659,7 +2659,7 @@ else|else
 name|fnclex
 argument_list|()
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)
@@ -2699,7 +2699,7 @@ name|u_long
 modifier|*
 name|exstat
 decl_stmt|;
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 if|if
@@ -2742,7 +2742,7 @@ expr_stmt|;
 block|}
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|stop_emulating
@@ -2783,7 +2783,7 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)

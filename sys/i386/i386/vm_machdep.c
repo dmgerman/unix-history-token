@@ -401,7 +401,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_NPX
-name|int
+name|register_t
 name|savecrit
 decl_stmt|;
 endif|#
@@ -528,7 +528,7 @@ argument_list|()
 expr_stmt|;
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 if|if
@@ -550,7 +550,7 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)

@@ -456,7 +456,7 @@ name|int
 name|control
 parameter_list|)
 block|{
-name|critical_t
+name|register_t
 name|savecrit
 decl_stmt|;
 if|if
@@ -491,7 +491,7 @@ operator|)
 expr_stmt|;
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|ctl_shadow
@@ -521,7 +521,7 @@ operator|=
 literal|0
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)
@@ -660,7 +660,7 @@ name|int
 name|pmc
 parameter_list|)
 block|{
-name|critical_t
+name|register_t
 name|savecrit
 decl_stmt|;
 if|if
@@ -689,7 +689,7 @@ condition|)
 block|{
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|ctl_shadow
@@ -721,7 +721,7 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)
@@ -744,7 +744,7 @@ name|int
 name|pmc
 parameter_list|)
 block|{
-name|critical_t
+name|register_t
 name|savecrit
 decl_stmt|;
 if|if
@@ -773,7 +773,7 @@ condition|)
 block|{
 name|savecrit
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|pmc_shadow
@@ -808,7 +808,7 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|savecrit
 argument_list|)
