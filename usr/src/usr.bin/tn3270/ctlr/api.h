@@ -278,6 +278,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|unsigned
 name|char
 name|length
 decl_stmt|,
@@ -926,6 +927,11 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ibm032
+argument_list|)
 name|ah
 operator|,
 name|al
@@ -944,7 +950,7 @@ name|dl
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(sun) || defined(tahoe) */
+comment|/* defined(sun) || defined(tahoe) || defined(ibm032) */
 block|}
 struct|;
 end_struct
