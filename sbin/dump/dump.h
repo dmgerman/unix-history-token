@@ -646,6 +646,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ssize_t
+name|cread
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|nbytes
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|dumpino
 parameter_list|(
