@@ -1262,11 +1262,18 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"GPE query failed - %s\n"
 argument_list|,
@@ -1326,11 +1333,18 @@ name|AE_NOT_FOUND
 operator|)
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"evaluation of GPE query method %s failed - %s\n"
 argument_list|,
@@ -1855,11 +1869,18 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcWaitEventIntr called without EC lock!\n"
 argument_list|)
@@ -2010,11 +2031,18 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcWaitEvent called without EC lock!\n"
 argument_list|)
@@ -2184,11 +2212,18 @@ name|Status
 operator|!=
 name|AE_OK
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"timeout waiting for EC to respond to EC_COMMAND_QUERY\n"
 argument_list|)
@@ -2349,11 +2384,18 @@ argument_list|)
 operator|!=
 name|AE_OK
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcRequest: Unable to clear the EC GPE.\n"
 argument_list|)
@@ -2373,11 +2415,18 @@ argument_list|)
 operator|!=
 name|AE_OK
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcRequest: Unable to re-enable the EC GPE.\n"
 argument_list|)
@@ -2419,11 +2468,18 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcRead called without EC lock!\n"
 argument_list|)
@@ -2452,11 +2508,18 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcRead: Failed waiting for EC to process read command.\n"
 argument_list|)
@@ -2490,11 +2553,18 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcRead: Failed waiting for EC to send data.\n"
 argument_list|)
@@ -2553,11 +2623,18 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcWrite called without EC lock!\n"
 argument_list|)
@@ -2586,11 +2663,18 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcWrite: Failed waiting for EC to process write command.\n"
 argument_list|)
@@ -2624,11 +2708,18 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcRead: Failed waiting for EC to process address.\n"
 argument_list|)
@@ -2663,11 +2754,18 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|ec_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|)
 argument_list|,
 literal|"EcWrite: Failed waiting for EC to process data.\n"
 argument_list|)

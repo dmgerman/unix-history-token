@@ -289,17 +289,16 @@ else|:
 name|POWERPROFILE_ECONOMY
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s\n"
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"%s Line\n"
 argument_list|,
 operator|(
 name|sc
@@ -307,9 +306,9 @@ operator|->
 name|status
 operator|)
 condition|?
-literal|"On Line"
+literal|"On"
 else|:
-literal|"Off Line"
+literal|"Off"
 argument_list|)
 expr_stmt|;
 block|}
@@ -337,21 +336,20 @@ name|dev
 init|=
 name|context
 decl_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|"Notify %d\n"
 argument_list|,
 name|notify
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|notify

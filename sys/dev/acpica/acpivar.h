@@ -854,6 +854,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ACPI_VPRINT
+parameter_list|(
+name|dev
+parameter_list|,
+name|acpi_sc
+parameter_list|,
+name|x
+modifier|...
+parameter_list|)
+value|do {				\ 	if (acpi_get_verbose(acpi_sc))					\ 		device_printf(dev, x);					\ } while (0)
+end_define
+
 begin_function_decl
 specifier|extern
 name|BOOLEAN

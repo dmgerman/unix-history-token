@@ -147,7 +147,7 @@ name|dest
 parameter_list|,
 name|label
 parameter_list|)
-value|do {			\ 	tmp =&res->Package.Elements[idx];				\ 	if (tmp == NULL) {						\ 		device_printf(dev, "%s: PKG_GETINT idx = %d\n.",	\ 		    __func__, idx);					\ 		goto label;						\ 	}								\ 	if (tmp->Type != ACPI_TYPE_INTEGER)				\ 		goto label;						\ 	dest = tmp->Integer.Value;					\ } while (0)
+value|do {			\ 	tmp =&res->Package.Elements[idx];				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    __func__ ": PKG_GETINT error, idx = %d\n.", idx);	\ 		goto label;						\ 	}								\ 	if (tmp->Type != ACPI_TYPE_INTEGER)				\ 		goto label;						\ 	dest = tmp->Integer.Value;					\ } while (0)
 end_define
 
 begin_define
@@ -167,20 +167,7 @@ name|size
 parameter_list|,
 name|label
 parameter_list|)
-value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	if (tmp == NULL) {						\ 		device_printf(dev, "%s: PKG_GETSTR idx = %d\n.",	\ 		    __func__, idx);					\ 		goto label;						\ 	}								\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->Buffer.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[sizeof(dest)-1] = '\0';					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMBAT_DPRINT
-parameter_list|(
-name|dev
-parameter_list|,
-name|x
-modifier|...
-parameter_list|)
-value|do {					\ 	if (acpi_get_verbose(acpi_device_get_parent_softc(dev)))	\ 		device_printf(dev, x);					\ } while (0)
+value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    __func__ ": PKG_GETSTR error, idx = %d\n.", idx);	\ 		goto label;						\ 	}								\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->Buffer.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[sizeof(dest)-1] = '\0';					\ } while (0)
 end_define
 
 begin_struct
@@ -694,11 +681,16 @@ operator|!=
 name|AE_BUFFER_OVERFLOW
 condition|)
 block|{
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BST - %s\n"
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"couldn't find _BST - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -821,9 +813,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|"bst size changed to %d\n"
 argument_list|,
@@ -854,11 +851,16 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BST - %s\n"
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"couldn't find _BST - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -903,11 +905,16 @@ literal|4
 operator|)
 condition|)
 block|{
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"Battery status corrupted\n"
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"battery status corrupted\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1152,11 +1159,16 @@ operator|!=
 name|AE_BUFFER_OVERFLOW
 condition|)
 block|{
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BIF - %s\n"
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"couldn't find _BIF - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1279,9 +1291,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|"bif size changed to %d\n"
 argument_list|,
@@ -1312,11 +1329,16 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BIF - %s\n"
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"couldn't find _BIF - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1361,11 +1383,16 @@ literal|13
 operator|)
 condition|)
 block|{
-name|CMBAT_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"Battery info corrupted\n"
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"battery info corrupted\n"
 argument_list|)
 expr_stmt|;
 goto|goto

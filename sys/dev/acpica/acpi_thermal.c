@@ -89,19 +89,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TZ_DPRINT
-parameter_list|(
-name|dev
-parameter_list|,
-name|x
-modifier|...
-parameter_list|)
-value|do {					\ 	if (acpi_get_verbose(acpi_device_get_parent_softc(dev)))	\ 		device_printf(dev, x);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TZ_NOTIFY_TEMPERATURE
 value|0x80
 end_define
@@ -1723,11 +1710,18 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|tz_dev
+argument_list|)
 argument_list|,
 literal|"error fetching current temperature -- %s\n"
 argument_list|,
@@ -1825,11 +1819,18 @@ operator|!=
 name|newactive
 condition|)
 block|{
-name|TZ_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|tz_dev
+argument_list|)
 argument_list|,
 literal|"_AC%d: temperature %d.%d>= setpoint %d.%d\n"
 argument_list|,
@@ -2097,11 +2098,18 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|TZ_DPRINT
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|tz_dev
+argument_list|)
 argument_list|,
 literal|"switched from %s to %s: %d.%dC\n"
 argument_list|,
@@ -2492,11 +2500,18 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|tz_dev
+argument_list|)
 argument_list|,
 literal|"failed to activate %s - %s\n"
 argument_list|,
@@ -2516,11 +2531,18 @@ block|}
 block|}
 else|else
 block|{
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|tz_dev
+argument_list|)
 argument_list|,
 literal|"couldn't find %s\n"
 argument_list|,
@@ -2924,11 +2946,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|tz_dev
+argument_list|)
 argument_list|,
 literal|"unknown Notify event 0x%x\n"
 argument_list|,
@@ -3141,11 +3170,18 @@ name|status
 operator|!=
 name|AE_NOT_FOUND
 condition|)
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|tz_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|tz_dev
+argument_list|)
 argument_list|,
 literal|"can't evaluate %s._SCP - %s\n"
 argument_list|,

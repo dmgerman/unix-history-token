@@ -486,11 +486,13 @@ block|{
 case|case
 name|ACPI_POWER_BUTTON
 case|:
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|button_dev
+argument_list|,
+name|acpi_sc
 argument_list|,
 literal|"power button pressed\n"
 argument_list|,
@@ -512,11 +514,13 @@ break|break;
 case|case
 name|ACPI_SLEEP_BUTTON
 case|:
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|button_dev
+argument_list|,
+name|acpi_sc
 argument_list|,
 literal|"sleep button pressed\n"
 argument_list|,
@@ -607,11 +611,13 @@ block|{
 case|case
 name|ACPI_POWER_BUTTON
 case|:
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|button_dev
+argument_list|,
+name|acpi_sc
 argument_list|,
 literal|"wakeup by power button\n"
 argument_list|,
@@ -633,11 +639,13 @@ break|break;
 case|case
 name|ACPI_SLEEP_BUTTON
 case|:
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|button_dev
+argument_list|,
+name|acpi_sc
 argument_list|,
 literal|"wakeup by sleep button\n"
 argument_list|,

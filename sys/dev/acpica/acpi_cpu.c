@@ -1268,11 +1268,18 @@ name|p_cnt
 argument_list|)
 expr_stmt|;
 block|}
-name|device_printf
+name|ACPI_VPRINT
 argument_list|(
 name|sc
 operator|->
 name|cpu_dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|cpu_dev
+argument_list|)
 argument_list|,
 literal|"set speed to %d.%d%%\n"
 argument_list|,
