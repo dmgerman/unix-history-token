@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.6 (Berkeley) %G%"
+literal|"@(#)optr.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
 end_include
 
 begin_include
@@ -2226,7 +2232,7 @@ name|dt
 operator|->
 name|fs_freq
 operator|*
-name|DAY
+name|SECSPERDAY
 operator|)
 operator|)
 expr_stmt|;
