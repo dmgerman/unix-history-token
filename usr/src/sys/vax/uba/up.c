@@ -1,34 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 name|int
-name|trc
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|trcw
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|csdel0
 init|=
 literal|30
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|csdel1
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -50,20 +25,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|csdel3
-init|=
-literal|100
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|softas
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	%H%	3.9	%G%	*/
+comment|/*	%H%	3.10	%G%	*/
 end_comment
 
 begin_comment
@@ -1503,15 +1470,6 @@ name|dp
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|csdel1
-condition|)
-name|DELAY
-argument_list|(
-name|csdel1
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|didie
