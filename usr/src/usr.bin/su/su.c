@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.20 (Berkeley) %G%"
+literal|"@(#)su.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -719,26 +719,20 @@ argument_list|,
 literal|"Sorry\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_uid
-operator|==
-literal|0
-condition|)
 name|syslog
 argument_list|(
 name|LOG_AUTH
 operator||
 name|LOG_CRIT
 argument_list|,
-literal|"BAD SU %s on %s"
+literal|"BAD SU %s on %s to %s"
 argument_list|,
 name|username
 argument_list|,
 name|mytty
 argument_list|()
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 name|exit
@@ -775,7 +769,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"su: permission denied.\n"
+literal|"su: permission denied (shell).\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1103,26 +1097,20 @@ literal|"_su"
 else|:
 literal|"su"
 expr_stmt|;
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_uid
-operator|==
-literal|0
-condition|)
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"%s on %s"
+literal|"%s on %s to %s"
 argument_list|,
 name|username
 argument_list|,
 name|mytty
 argument_list|()
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1330,11 +1318,6 @@ name|krbtkfile
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|,
-name|pw_buf
-index|[
-name|_PASSWORD_LEN
-index|]
 decl_stmt|;
 name|char
 name|hostname
@@ -1430,42 +1413,6 @@ name|getuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* setuid(uid); */
-if|if
-condition|(
-name|read_pw_string
-argument_list|(
-name|pw_buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pw_buf
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-literal|"Kerberos password: "
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"su: error reading password.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1478,7 +1425,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* short lifetime for root tickets */
 if|if
 condition|(
 name|setuid
@@ -1508,12 +1454,20 @@ argument_list|(
 name|krbtkfile
 argument_list|)
 expr_stmt|;
-comment|/* POLICY: short ticket lifetime for root */
+comment|/* 	 * Little trick here -- if we are su'ing to root, 	 * we need to get a ticket for "xxx.root", where xxx represents 	 * the name of the person su'ing.  Otherwise (non-root case), 	 * we need to get a ticket for "yyy.", where yyy represents 	 * the name of the person being su'd to, and the instance is null 	 * 	 * Also: POLICY: short ticket lifetime for root 	 */
 name|kerno
 operator|=
 name|krb_get_pw_in_tkt
 argument_list|(
+operator|(
+name|uid
+operator|==
+literal|0
+condition|?
 name|username
+else|:
+name|user
+operator|)
 argument_list|,
 operator|(
 name|uid
@@ -1541,17 +1495,7 @@ else|:
 name|DEFAULT_TKT_LIFE
 operator|)
 argument_list|,
-name|pw_buf
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|pw_buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pw_buf
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1567,11 +1511,42 @@ name|kerno
 operator|==
 name|KDC_PR_UNKNOWN
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"principal unknown: %s.%s@%s\n"
+argument_list|,
+operator|(
+name|uid
+operator|==
+literal|0
+condition|?
+name|username
+else|:
+name|user
+operator|)
+argument_list|,
+operator|(
+name|uid
+operator|==
+literal|0
+condition|?
+literal|"root"
+else|:
+literal|""
+operator|)
+argument_list|,
+name|lrealm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1591,12 +1566,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: BAD Kerberos SU: %s on %s: %s"
+literal|"su: BAD Kerberos SU: %s on %s to %s: %s"
 argument_list|,
 name|username
 argument_list|,
 name|mytty
 argument_list|()
+argument_list|,
+name|user
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1754,12 +1731,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: %s on %s, tgt not verified"
+literal|"su: %s on %s to %s, TGT not verified"
 argument_list|,
 name|username
 argument_list|,
 name|mytty
 argument_list|()
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 block|}
@@ -1776,7 +1755,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Unable to use tgt: %s\n"
+literal|"Unable to use TGT: %s\n"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1790,12 +1769,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: failed su: %s on %s: %s"
+literal|"su: failed su: %s on %s to %s: %s"
 argument_list|,
 name|username
 argument_list|,
 name|mytty
 argument_list|()
+argument_list|,
+name|user
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1917,12 +1898,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: failed su: %s on %s: %s"
+literal|"su: failed su: %s on %s to %s: %s"
 argument_list|,
 name|username
 argument_list|,
 name|mytty
 argument_list|()
+argument_list|,
+name|user
 argument_list|,
 name|krb_err_txt
 index|[
