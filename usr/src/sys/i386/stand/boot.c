@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)boot.c	7.2 (Berkeley) %G%"
+literal|"@(#)boot.c	7.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,13 +86,6 @@ begin_comment
 comment|/*  * Boot program... arguments from lower-level bootstrap determine  * whether boot stops to ask for system name and which device  * boot comes from.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UNIX
-value|"/vmunix"
-end_define
-
 begin_decl_stmt
 name|char
 name|line
@@ -124,6 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|jmp_buf
 name|exception
 decl_stmt|;
