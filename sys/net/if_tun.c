@@ -263,12 +263,6 @@ directive|include
 file|<net/if_tun.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -292,11 +286,6 @@ name|if_tun
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -548,6 +537,17 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tun_devsw_installed
