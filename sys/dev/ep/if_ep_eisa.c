@@ -98,13 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_epreg.h>
+file|<i386/eisa/eisaconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/eisa/eisaconf.h>
+file|<dev/ep/if_epreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ep/if_epvar.h>
 end_include
 
 begin_define
