@@ -1654,7 +1654,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_state.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
+comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
 name|p
 operator|->
 name|p_state
