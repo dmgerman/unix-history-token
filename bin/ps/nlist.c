@@ -141,8 +141,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -172,8 +173,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -203,8 +205,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
