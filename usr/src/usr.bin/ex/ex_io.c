@@ -1680,6 +1680,7 @@ operator|!=
 literal|'r'
 operator|&&
 operator|(
+operator|(
 name|stbuf
 operator|.
 name|st_mode
@@ -1697,6 +1698,7 @@ literal|2
 argument_list|)
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 name|ovro
