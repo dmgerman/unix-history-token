@@ -337,8 +337,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|AIC_HASNEXUS
+name|AIC_RECONNECTING
 value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIC_HASNEXUS
+value|0x04
 end_define
 
 begin_define
