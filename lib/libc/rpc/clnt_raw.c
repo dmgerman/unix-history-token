@@ -255,7 +255,7 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1160,7 +1160,7 @@ decl_stmt|;
 name|u_int
 name|ui
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|str
 decl_stmt|;

@@ -303,7 +303,7 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2568,7 +2568,7 @@ decl_stmt|;
 name|u_int
 name|request
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|info
 decl_stmt|;
@@ -2779,10 +2779,6 @@ expr|struct
 name|timeval
 operator|*
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
 name|info
 argument_list|)
 condition|)
@@ -2872,10 +2868,6 @@ operator|(
 name|int
 operator|*
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
 name|info
 operator|=
 name|ct
@@ -2891,10 +2883,6 @@ operator|*
 operator|(
 expr|struct
 name|netbuf
-operator|*
-operator|)
-operator|(
-name|void
 operator|*
 operator|)
 name|info
@@ -2929,10 +2917,6 @@ comment|/* 		 * use the knowledge that xid is the 		 * first element in the call
 operator|*
 operator|(
 name|u_int32_t
-operator|*
-operator|)
-operator|(
-name|void
 operator|*
 operator|)
 name|info
@@ -2985,10 +2969,6 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
 name|info
 operator|)
 operator|+
@@ -3004,10 +2984,6 @@ comment|/* 		 * This RELIES on the information that, in the call body, 		 * the 
 operator|*
 operator|(
 name|u_int32_t
-operator|*
-operator|)
-operator|(
-name|void
 operator|*
 operator|)
 name|info
@@ -3068,10 +3044,6 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -3083,10 +3055,6 @@ comment|/* 		 * This RELIES on the information that, in the call body, 		 * the 
 operator|*
 operator|(
 name|u_int32_t
-operator|*
-operator|)
-operator|(
-name|void
 operator|*
 operator|)
 name|info
@@ -3145,10 +3113,6 @@ argument_list|(
 operator|*
 operator|(
 name|u_int32_t
-operator|*
-operator|)
-operator|(
-name|void
 operator|*
 operator|)
 name|info
