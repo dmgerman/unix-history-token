@@ -1414,15 +1414,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The YMF740 on some Intel motherboards requires a pretty 		 * hefty delay after this reset for some reason...  Otherwise: 		 * "pcm0: ac97 codec init failed" 		 * Maybe this is needed for all YMF740's? 		 * 400ms and 500ms here seem to work, 300ms does not. 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|type
-operator|==
-literal|8
-condition|)
+comment|/* 		 * The YMF740 on some Intel motherboards requires a pretty 		 * hefty delay after this reset for some reason...  Otherwise: 		 * "pcm0: ac97 codec init failed" 		 * Maybe this is needed for all YMF740's? 		 * 400ms and 500ms here seem to work, 300ms does not. 		 * 		 * do it for all chips -cg 		 */
 name|DELAY
 argument_list|(
 literal|400000
