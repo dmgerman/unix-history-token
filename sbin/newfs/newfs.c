@@ -145,6 +145,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -1140,20 +1146,28 @@ break|break;
 case|case
 literal|'s'
 case|:
-if|if
-condition|(
-operator|(
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|fssize
 operator|=
-name|atoi
+name|strtoimax
 argument_list|(
 name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
-operator|)
-operator|<=
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -1398,12 +1412,12 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: maximum file system size is %u"
+literal|"%s: maximum file system size is %jd"
 argument_list|,
 name|special
 argument_list|,
 call|(
-name|u_int
+name|off_t
 call|)
 argument_list|(
 name|mediasize
