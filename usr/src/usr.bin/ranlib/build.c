@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)build.c	5.5 (Berkeley) %G%"
+literal|"@(#)build.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<a.out.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<a.out.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -67,13 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ar.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -91,7 +85,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<archive.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"archive.h"
 end_include
 
 begin_decl_stmt
@@ -177,13 +177,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|symcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* symbol count */
+end_comment
+
+begin_decl_stmt
+name|long
+name|tsymlen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total string length */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|void
 name|rexec
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|symobj
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -246,6 +283,12 @@ name|pnext
 operator|=
 operator|&
 name|rhead
+expr_stmt|;
+name|symcnt
+operator|=
+name|tsymlen
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -404,26 +447,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_decl_stmt
-name|long
-name|symcnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* symbol count */
-end_comment
-
-begin_decl_stmt
-name|long
-name|tsymlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total string length */
-end_comment
 
 begin_comment
 comment|/*  * rexec  *	Read the exec structure; ignore any files that don't look  *	exactly right.  */
