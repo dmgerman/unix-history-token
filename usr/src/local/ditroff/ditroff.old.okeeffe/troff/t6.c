@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	t6.c	1.7	(Berkeley)	84/04/13	*/
+comment|/*	t6.c	1.8	(Berkeley)	85/04/30	*/
 end_comment
 
 begin_include
@@ -2924,6 +2924,18 @@ modifier|*
 name|c
 decl_stmt|;
 comment|/* it's already here to swap */
+if|if
+condition|(
+name|pos
+operator|==
+name|i
+condition|)
+return|return
+operator|(
+name|i
+operator|)
+return|;
+comment|/* already there, forget it */
 define|#
 directive|define
 name|ptrswap
@@ -3000,6 +3012,16 @@ name|pos
 argument_list|,
 name|shortname
 argument_list|)
+expr_stmt|;
+name|fontlab
+index|[
+name|i
+index|]
+operator|=
+name|fontlab
+index|[
+name|pos
+index|]
 expr_stmt|;
 comment|/* tell driver about the swap */
 name|shortname
