@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|PAM_MAX_OPTIONS
-value|20
+value|32
 end_define
 
 begin_struct
