@@ -3356,10 +3356,12 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-name|mtx_lock_spin
+name|mtx_assert
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3535,12 +3537,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
