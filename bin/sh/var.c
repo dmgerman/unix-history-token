@@ -1209,6 +1209,9 @@ modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|aflag
@@ -1261,9 +1264,8 @@ operator|&
 name|VREADONLY
 condition|)
 block|{
-name|size_t
 name|len
-init|=
+operator|=
 name|strchr
 argument_list|(
 name|s
@@ -1272,7 +1274,7 @@ literal|'='
 argument_list|)
 operator|-
 name|s
-decl_stmt|;
+expr_stmt|;
 name|error
 argument_list|(
 literal|"%.*s: is read only"
