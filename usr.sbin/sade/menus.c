@@ -9299,7 +9299,7 @@ block|,
 block|{
 literal|"Romania"
 block|,
-literal|"ntp.ip.ro"
+literal|"ticks.roedu.net"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9307,7 +9307,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.ip.ro"
+literal|"ntpdate_enable=YES,ntpdate_flags=ticks.roedu.net"
 block|}
 block|,
 block|{
