@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|IPL_VERSION
-value|"IP Filter: v3.4.9"
+value|"IP Filter: v3.4.12"
 end_define
 
 begin_endif

@@ -357,6 +357,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* (BSD>= 199306) || SOLARIS */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

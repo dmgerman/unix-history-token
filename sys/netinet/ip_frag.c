@@ -1256,7 +1256,8 @@ name|fr_frag_lock
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
@@ -1341,7 +1342,8 @@ name|fr_frag_lock
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
@@ -1789,7 +1791,18 @@ name|ipf
 operator|->
 name|ipfr_data
 expr_stmt|;
-comment|/* 		 * This is the last fragment for this packet. 		 */
+if|if
+condition|(
+name|nat
+operator|->
+name|nat_ifp
+operator|==
+name|fin
+operator|->
+name|fin_ifp
+condition|)
+block|{
+comment|/* 			 * This is the last fragment for this packet. 			 */
 if|if
 condition|(
 operator|(
@@ -1820,6 +1833,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
+else|else
+name|nat
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 name|nat

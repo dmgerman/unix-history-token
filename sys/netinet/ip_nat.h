@@ -363,7 +363,7 @@ name|struct
 name|nat
 modifier|*
 modifier|*
-name|nat_hstart
+name|nat_phnext
 index|[
 literal|2
 index|]
@@ -678,6 +678,26 @@ directive|define
 name|NAT_MAPBLK
 value|0x04
 end_define
+
+begin_comment
+comment|/* 0x100 reserved for FI_W_SPORT */
+end_comment
+
+begin_comment
+comment|/* 0x200 reserved for FI_W_DPORT */
+end_comment
+
+begin_comment
+comment|/* 0x400 reserved for FI_W_SADDR */
+end_comment
+
+begin_comment
+comment|/* 0x800 reserved for FI_W_DADDR */
+end_comment
+
+begin_comment
+comment|/* 0x1000 reserved for FI_W_NEWFR */
+end_comment
 
 begin_define
 define|#
@@ -1566,8 +1586,6 @@ name|u_short
 operator|*
 operator|,
 name|u_32_t
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1584,8 +1602,22 @@ name|u_short
 operator|*
 operator|,
 name|u_32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fix_datacksum
+name|__P
+argument_list|(
+operator|(
+name|u_short
+operator|*
 operator|,
-name|int
+name|u_32_t
 operator|)
 argument_list|)
 decl_stmt|;
