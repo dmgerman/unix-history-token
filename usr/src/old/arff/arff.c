@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.9 (Berkeley) 82/06/27"
+literal|"@(#)arff.c	4.10 (Berkeley) 82/06/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -4403,8 +4403,6 @@ operator|=
 name|timp
 operator|->
 name|tm_mday
-operator|+
-literal|1
 expr_stmt|;
 name|de
 operator|->
