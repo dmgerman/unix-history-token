@@ -432,13 +432,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|float
-name|hertz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|nintr
 decl_stmt|;
@@ -980,14 +973,6 @@ operator|)
 return|;
 block|}
 block|}
-name|hertz
-operator|=
-name|stathz
-condition|?
-name|stathz
-else|:
-name|hz
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1734,7 +1719,7 @@ name|GRAPHROW
 argument_list|,
 name|GRAPHCOL
 argument_list|,
-literal|"    . %% Sys    . %% User    . %% Nice    . %% Idle"
+literal|"  . %%Sys    . %%Intr   . %%User   . %%Nice   . %%Idle"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1995,6 +1980,8 @@ init|=
 block|{
 literal|'='
 block|,
+literal|'+'
+block|,
 literal|'>'
 block|,
 literal|'-'
@@ -2014,6 +2001,8 @@ index|]
 init|=
 block|{
 name|CP_SYS
+block|,
+name|CP_INTR
 block|,
 name|CP_USER
 block|,
@@ -2397,7 +2386,6 @@ name|f2
 operator|=
 literal|0.0
 expr_stmt|;
-comment|/*  	 * Last CPU state not calculated yet. 	 */
 for|for
 control|(
 name|c
@@ -2407,8 +2395,6 @@ init|;
 name|c
 operator|<
 name|CPUSTATES
-operator|-
-literal|1
 condition|;
 name|c
 operator|++
@@ -2451,28 +2437,15 @@ name|psiz
 expr_stmt|;
 if|if
 condition|(
-name|c
-operator|==
-literal|0
+name|f1
+operator|>
+literal|99.9
 condition|)
-name|putfloat
-argument_list|(
 name|f1
-argument_list|,
-name|GRAPHROW
-argument_list|,
-name|GRAPHCOL
-operator|+
-literal|1
-argument_list|,
-literal|5
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|)
+operator|=
+literal|99.9
 expr_stmt|;
-else|else
+comment|/* no room to display 100.0 */
 name|putfloat
 argument_list|(
 name|f1
@@ -2481,11 +2454,11 @@ name|GRAPHROW
 argument_list|,
 name|GRAPHCOL
 operator|+
-literal|12
+literal|10
 operator|*
 name|c
 argument_list|,
-literal|5
+literal|4
 argument_list|,
 literal|1
 argument_list|,

@@ -146,6 +146,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|double
+name|hertz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sampling frequency for cp_time and dk_time */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|naptime
 decl_stmt|,

@@ -731,6 +731,18 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
+literal|"interrupt|"
+argument_list|)
+expr_stmt|;
+name|mvwaddstr
+argument_list|(
+name|wnd
+argument_list|,
+name|row
+operator|++
+argument_list|,
+literal|0
+argument_list|,
 literal|"     idle|"
 argument_list|)
 expr_stmt|;
@@ -1214,16 +1226,12 @@ literal|1.0
 expr_stmt|;
 name|etime
 operator|/=
-operator|(
-name|float
-operator|)
-name|hz
+name|hertz
 expr_stmt|;
 name|row
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Last CPU state not calculated yet. 	 */
 for|for
 control|(
 name|i
@@ -1233,8 +1241,6 @@ init|;
 name|i
 operator|<
 name|CPUSTATES
-operator|-
-literal|1
 condition|;
 name|i
 operator|++
@@ -1504,10 +1510,7 @@ index|]
 expr_stmt|;
 name|atime
 operator|/=
-operator|(
-name|float
-operator|)
-name|hz
+name|hertz
 expr_stmt|;
 name|words
 operator|=

@@ -188,6 +188,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|double
+name|hertz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|c
 decl_stmt|;
@@ -610,6 +616,14 @@ name|stathz
 argument_list|,
 name|LONG
 argument_list|)
+expr_stmt|;
+name|hertz
+operator|=
+name|stathz
+condition|?
+name|stathz
+else|:
+name|hz
 expr_stmt|;
 call|(
 modifier|*
