@@ -391,13 +391,31 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|cdevsw_add
+name|make_dev
 argument_list|(
 operator|&
 name|iic_cdevsw
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+comment|/* XXX cleanup */
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"iic%d"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 literal|0
