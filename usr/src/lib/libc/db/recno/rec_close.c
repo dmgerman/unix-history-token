@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_close.c	5.5 (Berkeley) %G%"
+literal|"@(#)rec_close.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,25 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -124,6 +124,15 @@ name|internal
 expr_stmt|;
 name|rval
 operator|=
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RINMEM
+argument_list|)
+condition|?
+literal|0
+else|:
 name|t
 operator|->
 name|bt_rfp
@@ -225,17 +234,13 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_INMEM
-argument_list|)
-operator|||
-name|ISSET
-argument_list|(
-name|t
-argument_list|,
 name|BTF_RDONLY
+operator||
+name|BTF_RINMEM
 argument_list|)
 operator|||
-name|NOTSET
+operator|!
+name|ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -482,7 +487,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|UNSET
+name|CLR
 argument_list|(
 name|t
 argument_list|,
