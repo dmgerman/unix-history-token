@@ -170,6 +170,10 @@ name|char
 modifier|*
 name|termpath
 decl_stmt|;
+name|dummy
+operator|=
+name|NULL
+expr_stmt|;
 name|fname
 operator|=
 name|pathvec
