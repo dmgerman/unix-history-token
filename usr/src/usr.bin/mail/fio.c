@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.2 %G%"
+literal|"@(#)fio.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,7 +186,7 @@ name|cp
 operator|-
 name|linebuf
 operator|>=
-name|BUFSIZ
+name|LINESIZE
 operator|-
 literal|1
 condition|)
