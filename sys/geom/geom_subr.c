@@ -973,9 +973,14 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|g_nproviders
-operator|>
-literal|1
+name|strcmp
+argument_list|(
+name|pp
+operator|->
+name|name
+argument_list|,
+literal|"geom.ctl"
+argument_list|)
 condition|)
 name|g_post_event
 argument_list|(
