@@ -4851,7 +4851,7 @@ name|flags
 operator|&
 name|CCB_TRANS_CURRENT_SETTINGS
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
