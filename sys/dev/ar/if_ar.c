@@ -233,6 +233,12 @@ name|PPP_HEADER_LEN
 value|4
 end_define
 
+begin_decl_stmt
+name|devclass_t
+name|ar_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|ar_softc

@@ -229,12 +229,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|devclass_t
-name|ar_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
