@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: e_asinf.c,v 1.5 1997/02/22 15:09:58 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,7 +438,7 @@ operator|)
 expr_stmt|;
 name|s
 operator|=
-name|sqrtf
+name|__ieee754_sqrtf
 argument_list|(
 name|t
 argument_list|)
