@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	6.2	83/10/01	*/
+comment|/*	kern_clock.c	6.3	83/10/08	*/
 end_comment
 
 begin_include
@@ -626,6 +626,14 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_decl_stmt
+name|int
+name|dk_ndrive
+init|=
+name|DK_NDRIVE
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Gather statistics on resource utilization.  *  * We make a gross assumption: that the system has been in the  * state it is in (user state, kernel state, interrupt state,  * or idle state) for the entire last time interval, and  * update statistics accordingly.  */
