@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998,1999,2000 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -779,38 +779,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ATA device DMA access modes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_WDMA2
-value|0x22
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_UDMA2
-value|0x42
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_UDMA3
-value|0x43
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_UDMA4
-value|0x44
-end_define
-
-begin_comment
 comment|/* structure describing an ATA device */
 end_comment
 
@@ -844,6 +812,10 @@ name|int32_t
 name|bmaddr
 decl_stmt|;
 comment|/* bus master DMA port */
+name|int32_t
+name|chiptype
+decl_stmt|;
+comment|/* pciid of controller chip */
 name|void
 modifier|*
 name|dev_softc
@@ -870,24 +842,36 @@ decl_stmt|;
 comment|/* transfer mode for devices */
 define|#
 directive|define
-name|ATA_MODE_PIO
-value|0x00
-define|#
-directive|define
-name|ATA_MODE_WDMA2
-value|0x01
-define|#
-directive|define
-name|ATA_MODE_UDMA2
-value|0x02
-define|#
-directive|define
-name|ATA_MODE_UDMA3
-value|0x04
-define|#
-directive|define
-name|ATA_MODE_UDMA4
+name|ATA_PIO0
 value|0x08
+define|#
+directive|define
+name|ATA_PIO1
+value|0x09
+define|#
+directive|define
+name|ATA_PIO2
+value|0x0a
+define|#
+directive|define
+name|ATA_PIO3
+value|0x0b
+define|#
+directive|define
+name|ATA_PIO4
+value|0x0c
+define|#
+directive|define
+name|ATA_WDMA2
+value|0x22
+define|#
+directive|define
+name|ATA_UDMA2
+value|0x42
+define|#
+directive|define
+name|ATA_UDMA4
+value|0x44
 name|int32_t
 name|flags
 decl_stmt|;
@@ -1176,6 +1160,15 @@ begin_function_decl
 name|int8_t
 modifier|*
 name|ata_mode2str
+parameter_list|(
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int8_t
+name|ata_pio2mode
 parameter_list|(
 name|int32_t
 parameter_list|)

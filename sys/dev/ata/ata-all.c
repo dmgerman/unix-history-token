@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998,1999,2000 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -283,10 +283,6 @@ directive|define
 name|IOMASK
 value|0xfffffffc
 end_define
-
-begin_comment
-comment|/* XXX SOS 0xfffc */
-end_comment
 
 begin_comment
 comment|/* prototypes */
@@ -918,13 +914,13 @@ case|case
 literal|0x71998086
 case|:
 return|return
-literal|"Intel PIIX4 ATA controller"
+literal|"Intel PIIX4 ATA-33 controller"
 return|;
 case|case
 literal|0x522910b9
 case|:
 return|return
-literal|"AcerLabs Aladdin ATA controller"
+literal|"AcerLabs Aladdin ATA-33 controller"
 return|;
 case|case
 literal|0x05711106
@@ -940,7 +936,19 @@ literal|0x05861106
 argument_list|)
 condition|)
 return|return
-literal|"VIA 82C586 ATA controller"
+literal|"VIA 82C586 ATA-33 controller"
+return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x05961106
+argument_list|)
+condition|)
+return|return
+literal|"VIA 82C596 ATA-33 controller"
 return|;
 if|if
 condition|(
@@ -952,7 +960,7 @@ literal|0x06861106
 argument_list|)
 condition|)
 return|return
-literal|"VIA 82C686 ATA controller"
+literal|"VIA 82C686 ATA-66 controller"
 return|;
 return|return
 literal|"VIA Apollo ATA controller"
@@ -961,39 +969,33 @@ case|case
 literal|0x55131039
 case|:
 return|return
-literal|"SiS 5591 ATA controller"
+literal|"SiS 5591 ATA-33 controller"
 return|;
 case|case
 literal|0x74091022
 case|:
 return|return
-literal|"AMD 756 ATA controller"
+literal|"AMD 756 ATA-66 controller"
 return|;
 case|case
 literal|0x4d33105a
 case|:
 return|return
-literal|"Promise Ultra/33 ATA controller"
+literal|"Promise ATA-33 controller"
 return|;
 case|case
 literal|0x4d38105a
 case|:
 return|return
-literal|"Promise Ultra/66 ATA controller"
+literal|"Promise ATA-66 controller"
 return|;
 case|case
 literal|0x00041103
 case|:
 return|return
-literal|"HighPoint HPT366 ATA controller"
+literal|"HighPoint HPT366 ATA-66 controller"
 return|;
 comment|/* unsupported but known chipsets, generic DMA only */
-case|case
-literal|0x05961106
-case|:
-return|return
-literal|"VIA 82C596 ATA controller (generic mode)"
-return|;
 case|case
 literal|0x06401095
 case|:
@@ -1504,7 +1506,7 @@ block|{
 case|case
 literal|0x522910b9
 case|:
-comment|/* on the Aladdin activate the ATAPI FIFO */
+comment|/* Aladdin need to activate the ATAPI FIFO */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -1537,7 +1539,7 @@ case|:
 case|case
 literal|0x4d38105a
 case|:
-comment|/* the Promise's need burst mode to be turned on explicitly */
+comment|/* Promise's need burst mode to be turned on */
 name|outb
 argument_list|(
 name|bmaddr_1
@@ -1556,12 +1558,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x00041103
+case|:
+comment|/* HPT366 controller defaults */
+name|printf
+argument_list|(
+literal|"ata: HPT config %08x\n"
+argument_list|,
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x50
+argument_list|,
+literal|4
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x05711106
 case|:
 case|case
 literal|0x74091022
 case|:
-comment|/* the VIA 82C586, VIA 82C686& AMD 756 needs some sensible defaults */
+comment|/* VIA 82C586, 82C596, 82C686& AMD 756 default setup */
 comment|/* set prefetch, postwrite */
 name|pci_write_config
 argument_list|(
@@ -1709,6 +1730,12 @@ name|atadevices
 index|[
 name|lun
 index|]
+expr_stmt|;
+name|scp
+operator|->
+name|chiptype
+operator|=
+name|type
 expr_stmt|;
 if|if
 condition|(
@@ -1861,6 +1888,12 @@ name|atadevices
 index|[
 name|lun
 index|]
+expr_stmt|;
+name|scp
+operator|->
+name|chiptype
+operator|=
+name|type
 expr_stmt|;
 if|if
 condition|(
@@ -3005,7 +3038,89 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-comment|/* is this interrupt really for this channel */
+comment|/* check if this interrupt is for us (shared PCI interrupts) */
+switch|switch
+condition|(
+name|scp
+operator|->
+name|chiptype
+condition|)
+block|{
+case|case
+literal|0x00041103
+case|:
+comment|/* HighPoint HPT366 controller */
+if|if
+condition|(
+name|scp
+operator|->
+name|active
+operator|==
+name|ATA_IDLE
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+operator|(
+name|ata_dmastatus
+argument_list|(
+name|scp
+argument_list|)
+operator|&
+name|ATA_BMSTAT_INTERRUPT
+operator|)
+condition|)
+return|return;
+break|break;
+case|case
+literal|0x4d33105a
+case|:
+comment|/* Promise 33's */
+case|case
+literal|0x4d38105a
+case|:
+comment|/* Promise 66's */
+if|if
+condition|(
+operator|!
+operator|(
+name|inl
+argument_list|(
+operator|(
+name|pci_read_config
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|,
+literal|0x20
+argument_list|,
+literal|4
+argument_list|)
+operator|&
+name|IOMASK
+operator|)
+operator|+
+literal|0x1c
+argument_list|)
+operator|&
+operator|(
+operator|(
+name|scp
+operator|->
+name|unit
+operator|)
+condition|?
+literal|0x00004000
+else|:
+literal|0x00000400
+operator|)
+operator|)
+condition|)
+return|return;
+break|break;
+default|default:
 if|if
 condition|(
 operator|(
@@ -3027,6 +3142,7 @@ name|ATA_BMSTAT_INTERRUPT
 operator|)
 condition|)
 return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -3188,7 +3304,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-return|return;
+comment|/* return; SOS XXX */
 block|}
 name|scp
 operator|->
@@ -4715,31 +4831,49 @@ name|mode
 condition|)
 block|{
 case|case
-name|ATA_MODE_PIO
+name|ATA_PIO0
 case|:
 return|return
-literal|"PIO"
+literal|"PIO0"
 return|;
 case|case
-name|ATA_MODE_WDMA2
+name|ATA_PIO1
 case|:
 return|return
-literal|"DMA"
+literal|"PIO1"
 return|;
 case|case
-name|ATA_MODE_UDMA2
+name|ATA_PIO2
+case|:
+return|return
+literal|"PIO2"
+return|;
+case|case
+name|ATA_PIO3
+case|:
+return|return
+literal|"PIO3"
+return|;
+case|case
+name|ATA_PIO4
+case|:
+return|return
+literal|"PIO4"
+return|;
+case|case
+name|ATA_WDMA2
+case|:
+return|return
+literal|"WDMA2"
+return|;
+case|case
+name|ATA_UDMA2
 case|:
 return|return
 literal|"UDMA33"
 return|;
 case|case
-name|ATA_MODE_UDMA3
-case|:
-return|return
-literal|"UDMA3"
-return|;
-case|case
-name|ATA_MODE_UDMA4
+name|ATA_UDMA4
 case|:
 return|return
 literal|"UDMA66"
@@ -4747,6 +4881,54 @@ return|;
 default|default:
 return|return
 literal|"???"
+return|;
+block|}
+block|}
+end_function
+
+begin_function
+name|int8_t
+name|ata_pio2mode
+parameter_list|(
+name|int32_t
+name|pio
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|pio
+condition|)
+block|{
+default|default:
+case|case
+literal|0
+case|:
+return|return
+name|ATA_PIO0
+return|;
+case|case
+literal|1
+case|:
+return|return
+name|ATA_PIO1
+return|;
+case|case
+literal|2
+case|:
+return|return
+name|ATA_PIO2
+return|;
+case|case
+literal|3
+case|:
+return|return
+name|ATA_PIO3
+return|;
+case|case
+literal|4
+case|:
+return|return
+name|ATA_PIO4
 return|;
 block|}
 block|}
@@ -4762,6 +4944,13 @@ name|int32_t
 name|active
 parameter_list|)
 block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|8
+index|]
+decl_stmt|;
 switch|switch
 condition|(
 name|active
@@ -4808,10 +4997,17 @@ literal|"ATA_REINITING"
 operator|)
 return|;
 default|default:
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"0x%02x"
+argument_list|,
+name|active
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
-literal|"UNKNOWN"
-operator|)
+name|buf
 return|;
 block|}
 block|}
