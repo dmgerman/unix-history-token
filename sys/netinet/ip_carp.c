@@ -340,10 +340,12 @@ define|#
 directive|define
 name|sc_if
 value|sc_ac.ac_if
-define|#
-directive|define
+name|struct
+name|ifnet
+modifier|*
 name|sc_carpdev
-value|sc_ac.ac_if.if_carpdev
+decl_stmt|;
+comment|/* Pointer to parent interface */
 name|struct
 name|in_ifaddr
 modifier|*
