@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -132,6 +138,45 @@ name|new
 parameter_list|)
 value|(((curr)& ~MDF_ATTRMASK) | ((new)& MDF_ATTRMASK))
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mtrrs_disabled
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.disable_mtrrs"
+argument_list|,
+operator|&
+name|mtrrs_disabled
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|disable_mtrrs
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mtrrs_disabled
+argument_list|,
+literal|0
+argument_list|,
+literal|"Disable i686 MTRRs."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -3003,6 +3048,9 @@ block|{
 comment|/* Try for i686 MTRRs */
 if|if
 condition|(
+operator|!
+name|mtrrs_disabled
+operator|&&
 operator|(
 name|cpu_feature
 operator|&
