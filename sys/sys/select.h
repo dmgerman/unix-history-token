@@ -30,21 +30,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timespec.h>
+file|<sys/_sigset.h>
 end_include
-
-begin_comment
-comment|/*  * Other things required for this header which we do not presently implement:  *  * struct timeval (with suseconds_t)  * sigset_t  * fd_set (but we assume that it is defined)  * FD_* macros  */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/timespec.h>
 end_include
 
 begin_comment
-comment|/* XXX allowed but unnecessary pollution */
+comment|/*  * Other things required for this header which we do not presently implement:  *  * struct timeval (with suseconds_t)  * fd_set  * FD_* macros  *  * Temporarily get all of these things from<sys/types.h>, which has too  * much pollution to be used here but will do for now.  (Eventually, the  * latter two will move to this file and be included *from*<sys/types.h>  * in the BSD namespace.)  */
 end_comment
 
 begin_include
@@ -89,8 +85,7 @@ modifier|*
 name|__restrict
 parameter_list|,
 specifier|const
-name|struct
-name|__sigset
+name|sigset_t
 modifier|*
 name|__restrict
 parameter_list|)
