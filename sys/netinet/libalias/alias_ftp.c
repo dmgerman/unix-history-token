@@ -75,6 +75,17 @@ name|MAX_MESSAGE_SIZE
 value|128
 end_define
 
+begin_comment
+comment|/* FTP protocol flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAIT_CRLF
+value|0x01
+end_define
+
 begin_enum
 enum|enum
 name|ftp_message_type
@@ -214,6 +225,8 @@ decl_stmt|,
 name|tlen
 decl_stmt|,
 name|dlen
+decl_stmt|,
+name|pflags
 decl_stmt|;
 name|char
 modifier|*
@@ -294,16 +307,24 @@ operator|+=
 name|hlen
 expr_stmt|;
 comment|/*  * Check that data length is not too long and previous message was  * properly terminated with CRLF.  */
+name|pflags
+operator|=
+name|GetProtocolFlags
+argument_list|(
+name|link
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dlen
 operator|<=
 name|MAX_MESSAGE_SIZE
 operator|&&
-name|GetLastLineCrlfTermed
-argument_list|(
-name|link
-argument_list|)
+operator|(
+name|pflags
+operator|&
+name|WAIT_CRLF
+operator|)
 condition|)
 block|{
 name|ftp_message_type
@@ -426,11 +447,8 @@ name|ip_len
 argument_list|)
 expr_stmt|;
 comment|/* recalc tlen, pkt may have grown */
-name|SetLastLineCrlfTermed
-argument_list|(
-name|link
-argument_list|,
-operator|(
+if|if
+condition|(
 name|sptr
 index|[
 name|tlen
@@ -439,9 +457,7 @@ literal|2
 index|]
 operator|==
 literal|'\r'
-operator|)
 operator|&&
-operator|(
 name|sptr
 index|[
 name|tlen
@@ -450,7 +466,22 @@ literal|1
 index|]
 operator|==
 literal|'\n'
-operator|)
+condition|)
+name|pflags
+operator|&=
+operator|~
+name|WAIT_CRLF
+expr_stmt|;
+else|else
+name|pflags
+operator||=
+name|WAIT_CRLF
+expr_stmt|;
+name|SetProtocolFlags
+argument_list|(
+name|link
+argument_list|,
+name|pflags
 argument_list|)
 expr_stmt|;
 block|}

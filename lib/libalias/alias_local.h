@@ -873,7 +873,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|SetLastLineCrlfTermed
+name|SetProtocolFlags
 parameter_list|(
 name|struct
 name|alias_link
@@ -881,14 +881,14 @@ modifier|*
 name|_link
 parameter_list|,
 name|int
-name|_yes
+name|_pflags
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|GetLastLineCrlfTermed
+name|GetProtocolFlags
 parameter_list|(
 name|struct
 name|alias_link
