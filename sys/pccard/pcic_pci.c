@@ -2250,7 +2250,7 @@ value|0x44000000
 define|#
 directive|define
 name|CARDBUS_SYS_RES_MEMORY_END
-value|0xEFFFFFFF
+value|0xFFFFFFFF
 name|sc
 operator|->
 name|memres
