@@ -1055,12 +1055,6 @@ argument_list|,
 name|PI_REALTIME
 argument_list|)
 expr_stmt|;
-name|curthread
-operator|->
-name|td_base_pri
-operator|=
-name|PI_REALTIME
-expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1110,12 +1104,6 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
-expr_stmt|;
-name|curthread
-operator|->
-name|td_base_pri
-operator|=
-name|oldirql
 expr_stmt|;
 name|sched_prio
 argument_list|(

@@ -1780,14 +1780,6 @@ operator|==
 name|kg
 condition|)
 block|{
-name|curthread
-operator|->
-name|td_base_pri
-operator|=
-name|kg
-operator|->
-name|kg_user_pri
-expr_stmt|;
 name|sched_prio
 argument_list|(
 name|curthread

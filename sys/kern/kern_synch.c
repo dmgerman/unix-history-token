@@ -749,7 +749,7 @@ name|sig
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Adjust this thread's priority. 	 * 	 * XXX: do we need to save priority in td_base_pri? 	 */
+comment|/* 	 * Adjust this thread's priority. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
