@@ -1164,7 +1164,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"pkg_add %s%s"
+literal|"pkg_add %s'%s'"
 argument_list|,
 name|Verbose
 condition|?
