@@ -7496,7 +7496,7 @@ argument_list|(
 name|pa
 argument_list|)
 expr_stmt|;
-name|bzero
+name|cpu_block_zero
 argument_list|(
 operator|(
 name|void
@@ -7566,7 +7566,7 @@ argument_list|,
 name|TS_8K
 argument_list|)
 expr_stmt|;
-name|bzero
+name|cpu_block_zero
 argument_list|(
 operator|(
 name|void
@@ -7913,7 +7913,7 @@ argument_list|(
 name|pa
 argument_list|)
 expr_stmt|;
-name|bzero
+name|cpu_block_zero
 argument_list|(
 operator|(
 name|void
@@ -7983,7 +7983,7 @@ argument_list|,
 name|TS_8K
 argument_list|)
 expr_stmt|;
-name|bzero
+name|cpu_block_zero
 argument_list|(
 operator|(
 name|void
@@ -8169,7 +8169,7 @@ argument_list|(
 name|psrc
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|cpu_block_copy
 argument_list|(
 operator|(
 name|void
@@ -8570,7 +8570,7 @@ argument_list|,
 name|TS_8K
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|cpu_block_copy
 argument_list|(
 operator|(
 name|void
