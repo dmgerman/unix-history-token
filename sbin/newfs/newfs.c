@@ -2180,6 +2180,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-l enable multilabel MAC\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-n do not create .snap directory\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-m minimum free space %%\n"
 argument_list|)
 expr_stmt|;
