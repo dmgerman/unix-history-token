@@ -144,7 +144,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Threads are switched in and out, block on resources, and have temporary  * priorities inherited from their ksegs.  */
+comment|/*  * Threads are switched in and out, block on resources, have temporary  * priorities inherited from their ksegs, and use up cpu time.  */
 end_comment
 
 begin_function_decl
@@ -177,6 +177,18 @@ name|struct
 name|thread
 modifier|*
 name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|fixpt_t
+name|sched_pctcpu
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -248,7 +260,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * KSEs are moved on and off of run queues.  */
+comment|/*  * Threads are moved on and off of run queues  */
 end_comment
 
 begin_function_decl
@@ -274,6 +286,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* XXX Should be thread * */
+end_comment
+
 begin_function_decl
 name|void
 name|sched_clock
@@ -285,6 +301,77 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|sched_rem
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Binding makes cpu affinity permanent while pinning is used to temporarily  * hold a thread on a particular CPU.  */
+end_comment
+
+begin_function_decl
+name|void
+name|sched_bind
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sched_pin
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sched_unbind
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sched_unpin
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * These interfaces will eventually be removed.  */
+end_comment
 
 begin_function_decl
 name|void
@@ -316,34 +403,6 @@ name|struct
 name|kse
 modifier|*
 name|child
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sched_rem
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * and they use up cpu time.  */
-end_comment
-
-begin_function_decl
-name|fixpt_t
-name|sched_pctcpu
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
