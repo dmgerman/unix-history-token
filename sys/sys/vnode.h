@@ -3981,17 +3981,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vop_revoke
-parameter_list|(
-name|struct
-name|vop_revoke_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|vop_eopnotsupp
 parameter_list|(
 name|struct
