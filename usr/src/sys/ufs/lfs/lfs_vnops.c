@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.24	82/06/04	*/
+comment|/*	lfs_vnops.c	4.25	82/06/07	*/
 end_comment
 
 begin_ifdef
@@ -211,7 +211,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|irele
+name|iunlock
 argument_list|(
 name|ip
 argument_list|)
@@ -559,7 +559,7 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|irele
+name|iunlock
 argument_list|(
 name|ip
 argument_list|)
@@ -906,7 +906,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|irele
+name|iunlock
 argument_list|(
 name|ip
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.6	82/02/27	*/
+comment|/*	kern_resource.c	4.7	82/06/07	*/
 end_comment
 
 begin_include
@@ -199,7 +199,7 @@ name|acctp
 operator|=
 name|ip
 expr_stmt|;
-name|irele
+name|iunlock
 argument_list|(
 name|ip
 argument_list|)
@@ -510,7 +510,7 @@ name|i_size
 operator|=
 name|siz
 expr_stmt|;
-name|irele
+name|iunlock
 argument_list|(
 name|ip
 argument_list|)
