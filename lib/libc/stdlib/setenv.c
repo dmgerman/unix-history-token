@@ -123,7 +123,9 @@ modifier|*
 name|environ
 decl_stmt|;
 specifier|static
-name|int
+name|char
+modifier|*
+modifier|*
 name|alloced
 decl_stmt|;
 comment|/* if allocated space before */
@@ -248,6 +250,8 @@ empty_stmt|;
 if|if
 condition|(
 name|alloced
+operator|==
+name|environ
 condition|)
 block|{
 comment|/* just increase size */
@@ -295,6 +299,8 @@ operator|-
 literal|1
 operator|)
 return|;
+name|alloced
+operator|=
 name|environ
 operator|=
 name|p
@@ -337,10 +343,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|alloced
-operator|=
-literal|1
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|environ
@@ -356,6 +358,8 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|alloced
+operator|=
 name|environ
 operator|=
 name|p

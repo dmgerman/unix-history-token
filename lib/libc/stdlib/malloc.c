@@ -24,6 +24,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MALLOC_EXTRA_SANITY
+end_define
+
 begin_comment
 comment|/*  * What to use for Junk.  This is the byte value we use to fill with  * when the 'J' option is enabled.  */
 end_comment
