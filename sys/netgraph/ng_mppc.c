@@ -575,8 +575,6 @@ name|NULL
 block|,
 name|ng_mppc_rcvdata
 block|,
-name|ng_mppc_rcvdata
-block|,
 name|ng_mppc_disconnect
 block|,
 name|NULL
@@ -1455,6 +1453,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const
@@ -1682,6 +1686,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* XXX can we use a hook instead of ctrlpath? */
 name|ng_send_msg
 argument_list|(
 name|node
@@ -1691,6 +1696,10 @@ argument_list|,
 name|priv
 operator|->
 name|ctrlpath
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

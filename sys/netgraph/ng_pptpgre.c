@@ -929,8 +929,6 @@ name|NULL
 block|,
 name|ng_pptpgre_rcvdata
 block|,
-name|ng_pptpgre_rcvdata
-block|,
 name|ng_pptpgre_disconnect
 block|,
 name|ng_pptpgre_cmdlist
@@ -1540,6 +1538,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const

@@ -520,8 +520,6 @@ name|ng_udbp_connect
 block|,
 name|ng_udbp_rcvdata
 block|,
-name|ng_udbp_rcvdata
-block|,
 name|ng_udbp_disconnect
 block|,
 name|ng_udbp_cmdlist
@@ -1825,11 +1823,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|meta_p
-name|meta
-init|=
-name|NULL
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1913,7 +1906,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|NG_SEND_DATAQ
+name|NG_SEND_DATA_ONLY
 argument_list|(
 name|err
 argument_list|,
@@ -1922,8 +1915,6 @@ operator|->
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 block|}
@@ -2664,6 +2655,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const
@@ -2914,6 +2911,15 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+comment|/* probably not at splnet, force outward queueing */
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
+expr_stmt|;
 comment|/* be really amiable and just say "YUP that's OK by me! " */
 return|return
 operator|(

@@ -726,8 +726,6 @@ name|ng_lmc_connect
 block|,
 name|ng_lmc_rcvdata
 block|,
-name|ng_lmc_rcvdata
-block|,
 name|ng_lmc_disconnect
 block|,
 name|ng_lmc_cmdlist
@@ -2706,6 +2704,9 @@ condition|(
 name|accept
 condition|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|ms
 operator|->
 name|m_pkthdr
@@ -2722,15 +2723,15 @@ name|rcvif
 operator|=
 name|NULL
 expr_stmt|;
-name|ng_queue_data
+name|NG_SEND_DATA_ONLY
 argument_list|(
+name|error
+argument_list|,
 name|sc
 operator|->
 name|lmc_hook
 argument_list|,
 name|ms
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6074,6 +6075,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 name|int
@@ -6305,6 +6312,15 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+comment|/* We are probably not at splnet.. force outward queueing */
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
+expr_stmt|;
 comment|/* be really amiable and just say "YUP that's OK by me! " */
 return|return
 operator|(

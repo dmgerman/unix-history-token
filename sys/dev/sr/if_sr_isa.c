@@ -6998,6 +6998,9 @@ directive|ifndef
 name|NETGRAPH
 argument|struct ifnet *ifp;
 comment|/* network intf ctl table */
+else|#
+directive|else
+argument|int error;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
@@ -7162,7 +7165,7 @@ literal|11
 argument|]); 			}
 endif|#
 directive|endif
-argument|ng_queue_data(sc->hook, m, NULL); 			sc->ipackets++;
+argument|NG_SEND_DATA_ONLY(error, sc->hook, m); 			sc->ipackets++;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
@@ -9622,6 +9625,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 name|int
@@ -9847,6 +9856,15 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+comment|/* probably not at splnet, force outward queueing */
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
+expr_stmt|;
 comment|/* be really amiable and just say "YUP that's OK by me! " */
 return|return
 operator|(

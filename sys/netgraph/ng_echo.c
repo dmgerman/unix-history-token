@@ -105,8 +105,6 @@ name|NULL
 block|,
 name|nge_rcvdata
 block|,
-name|nge_rcvdata
-block|,
 name|nge_disconnect
 block|,
 name|NULL
@@ -223,6 +221,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 name|int

@@ -124,6 +124,17 @@ begin_comment
 comment|/* don't trust it! */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HK_QUEUE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* queue for later delivery */
+end_comment
+
 begin_comment
 comment|/*  * Structure of a node  */
 end_comment
@@ -534,6 +545,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 function_decl|;
 end_typedef
@@ -590,7 +607,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure of a node type  */
+comment|/*  * Structure of a node type  * If data is sent to the "rcvdata()" entrypoint then the system  * may decide to defer it until later by queing it with the normal netgraph  * input queuing system.  This is decidde by the HK_QUEUE flag being set in  * the flags word of the peer (receiving) hook. The dequeuing mechanism will  * ensure it is not requeued again.  * Note the input queueing system is to allow modules  * to 'release the stack' or to pass data across spl layers.  * The data will be redelivered as soon as the NETISR code runs  * which may be almost immediatly.  A node may also do it's own queueing  * for other reasons (e.g. device output queuing).  */
 end_comment
 
 begin_struct
@@ -645,12 +662,7 @@ name|ng_rcvdata_t
 modifier|*
 name|rcvdata
 decl_stmt|;
-comment|/* date comes here */
-name|ng_rcvdata_t
-modifier|*
-name|rcvdataq
-decl_stmt|;
-comment|/* or here if being queued */
+comment|/* data comes here */
 name|ng_disconnect_t
 modifier|*
 name|disconnect
@@ -688,54 +700,81 @@ define|#
 directive|define
 name|NG_SEND_DATA
 parameter_list|(
-name|error
+name|err
 parameter_list|,
 name|hook
 parameter_list|,
 name|m
 parameter_list|,
-name|a
+name|meta
 parameter_list|)
 define|\
-value|do {								\ 		(error) = ng_send_data((hook), (m), (a), NULL, NULL);	\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
+value|do {								\ 		(err) = ng_send_data((hook), (m), (meta),	\ 						NULL, NULL, NULL);	\ 		(m) = NULL;						\ 		(meta) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
-comment|/* Send  queued data packet with meta-data */
+comment|/* Send data packet with no meta-data */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NG_SEND_DATAQ
+name|NG_SEND_DATA_ONLY
 parameter_list|(
-name|error
+name|err
+parameter_list|,
+name|hook
+parameter_list|,
+name|m
+parameter_list|)
+define|\
+value|do {								\ 		(err) = ng_send_data((hook), (m), NULL,	\ 						NULL, NULL, NULL);	\ 		(m) = NULL;						\ 	} while (0)
+end_define
+
+begin_comment
+comment|/* Send data packet including a possible sync response pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_SEND_DATA_RESP
+parameter_list|(
+name|err
 parameter_list|,
 name|hook
 parameter_list|,
 name|m
 parameter_list|,
-name|a
+name|meta
+parameter_list|,
+name|rmsg
 parameter_list|)
 define|\
-value|do {								\ 		(error) = ng_send_dataq((hook), (m), (a), NULL, NULL);	\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
+value|do {								\ 		(err) = ng_send_data((hook), (m), (meta),	\ 					NULL, NULL, rmsg);		\ 		(m) = NULL;						\ 		(meta) = NULL;						\ 	} while (0)
 end_define
+
+begin_comment
+comment|/*  * Send data packet including a possible sync response pointer  * Allow the callee to replace the data and pass it back  * or to simply 'reject it' or 'keep it'  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_SEND_DATA_RET
 parameter_list|(
-name|error
+name|err
 parameter_list|,
 name|hook
 parameter_list|,
 name|m
 parameter_list|,
-name|a
+name|meta
+parameter_list|,
+name|rmsg
 parameter_list|)
 define|\
-value|do {								\ 		struct mbuf *rm = NULL;					\ 		meta_p ra = NULL;					\ 		(error) = ng_send_data((hook), (m), (a),&rm,&ra);	\ 		(m) = rm;						\ 		(a) = ra;						\ 	} while (0)
+value|do {								\ 		struct mbuf *rm = NULL;					\ 		meta_p rmeta = NULL;					\ 		(err) = ng_send_data((hook), (m), (meta),	\&rm,&rmeta, (rmsg));		\ 		(m) = rm;						\ 		(meta) = rmeta;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -747,10 +786,10 @@ define|#
 directive|define
 name|NG_FREE_META
 parameter_list|(
-name|a
+name|meta
 parameter_list|)
 define|\
-value|do {								\ 		if ((a)) {						\ 			FREE((a), M_NETGRAPH);				\ 			a = NULL;					\ 		}							\ 	} while (0)
+value|do {								\ 		if ((meta)) {						\ 			FREE((meta), M_NETGRAPH);			\ 			meta = NULL;					\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -764,10 +803,10 @@ name|NG_FREE_DATA
 parameter_list|(
 name|m
 parameter_list|,
-name|a
+name|meta
 parameter_list|)
 define|\
-value|do {								\ 		if ((m)) {						\ 			m_freem((m));					\ 			m = NULL;					\ 		}							\ 		NG_FREE_META((a));					\ 	} while (0)
+value|do {								\ 		if ((m)) {						\ 			m_freem((m));					\ 			m = NULL;					\ 		}							\ 		NG_FREE_META((meta));					\ 	} while (0)
 end_define
 
 begin_comment
@@ -1052,11 +1091,6 @@ name|node_p
 modifier|*
 name|dest
 parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|rtnp
-parameter_list|,
 name|hook_p
 modifier|*
 name|lasthook
@@ -1124,6 +1158,13 @@ specifier|const
 name|char
 modifier|*
 name|address
+parameter_list|,
+name|hook_p
+name|hook
+parameter_list|,
+name|char
+modifier|*
+name|retaddr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1172,34 +1213,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ng_send_dataq
-parameter_list|(
-name|hook_p
-name|hook
 parameter_list|,
 name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|meta_p
-name|meta
-parameter_list|,
-name|struct
-name|mbuf
+name|ng_mesg
 modifier|*
 modifier|*
-name|ret_m
-parameter_list|,
-name|meta_p
-modifier|*
-name|ret_meta
+name|resp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1220,6 +1239,13 @@ specifier|const
 name|char
 modifier|*
 name|address
+parameter_list|,
+name|hook_p
+name|hook
+parameter_list|,
+name|char
+modifier|*
+name|retaddr
 parameter_list|,
 name|struct
 name|ng_mesg

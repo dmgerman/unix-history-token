@@ -170,7 +170,7 @@ begin_define
 define|#
 directive|define
 name|NG_VERSION
-value|3
+value|4
 end_define
 
 begin_comment
@@ -381,6 +381,176 @@ end_define
 
 begin_comment
 comment|/* (optional) get/set text config */
+end_comment
+
+begin_comment
+comment|/*  * Flow control and intra node control messages.  * These are routed between nodes to allow flow control and to allow  * events to be passed around the graph.   * There will be some form of default handling for these but I   * do not yet know what it is..  */
+end_comment
+
+begin_comment
+comment|/* Generic message type cookie */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_FLOW_COOKIE
+value|851672669
+end_define
+
+begin_comment
+comment|/* temp for debugging */
+end_comment
+
+begin_comment
+comment|/* Upstream messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_LINK_IS_UP
+value|32
+end_define
+
+begin_comment
+comment|/* e.g. carrier found - no data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_LINK_IS_DOWN
+value|33
+end_define
+
+begin_comment
+comment|/* carrier lost, includes queue state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_HIGH_WATER_PASSED
+value|34
+end_define
+
+begin_comment
+comment|/* includes queue state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_LOW_WATER_PASSED
+value|35
+end_define
+
+begin_comment
+comment|/* includes queue state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_SYNC_QUEUE_STATE
+value|36
+end_define
+
+begin_comment
+comment|/* sync response from sending packet */
+end_comment
+
+begin_comment
+comment|/* Downstream messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_DROP_LINK
+value|41
+end_define
+
+begin_comment
+comment|/* drop DTR, etc. - stay in the graph */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_RAISE
+value|LINK		42
+end_define
+
+begin_comment
+comment|/* if you previously dropped it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_FLUSH_QUEUE
+value|43
+end_define
+
+begin_comment
+comment|/* no data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_GET_BANDWIDTH
+value|44
+end_define
+
+begin_comment
+comment|/* either real or measured */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_SET_XMIT_Q_LIMITS
+value|45
+end_define
+
+begin_comment
+comment|/* includes queue state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_GET_XMIT_Q_LIMITS
+value|46
+end_define
+
+begin_comment
+comment|/* returns queue state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_MICROMANAGE
+value|47
+end_define
+
+begin_comment
+comment|/* We want sync. queue state reply  					   for each packet sent down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_SET_FLOW_MANAGER
+value|48
+end_define
+
+begin_comment
+comment|/* send flow control here */
 end_comment
 
 begin_comment
@@ -789,6 +959,109 @@ parameter_list|(
 name|tiarraytype
 parameter_list|)
 value|{		\ 	{							\ 	  { "numtypes",&ng_parse_uint32_type	},	\ 	  { "typeinfo",		(tiarraytype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_struct
+struct|struct
+name|ngm_bandwidth
+block|{
+name|u_int64_t
+name|nominal_in
+decl_stmt|;
+name|u_int64_t
+name|seen_in
+decl_stmt|;
+name|u_int64_t
+name|nominal_out
+decl_stmt|;
+name|u_int64_t
+name|seen_out
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_BANDWIDTH_INFO
+parameter_list|()
+value|{			\ 	{							\ 	  { "nominal_in",&ng_parse_uint64_type	},	\ 	  { "seen_in",&ng_parse_uint64_type	},	\ 	  { "nominal_out",&ng_parse_uint64_type	},	\ 	  { "seen_out",&ng_parse_uint64_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/*  * Information about a node's 'output' queue.  * This is NOT the netgraph input queueing mechanism,  * but rather any queue the node may implement internally  * This has to consider ALTQ if we are to work with it.  * As far as I can see, ALTQ counts PACKETS, not bytes.  * If ALTQ has several queues and one has passed a watermark  * we should have the priority of that queue be real (and not -1)  * XXX ALTQ stuff is just an idea.....  */
+end_comment
+
+begin_struct
+struct|struct
+name|ngm_queue_state
+block|{
+name|u_int
+name|queue_priority
+decl_stmt|;
+comment|/* maybe only low-pri is full. -1 = all*/
+name|u_int
+name|max_queuelen_bytes
+decl_stmt|;
+name|u_int
+name|max_queuelen_packets
+decl_stmt|;
+name|u_int
+name|low_watermark
+decl_stmt|;
+name|u_int
+name|high_watermark
+decl_stmt|;
+name|u_int
+name|current
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_QUEUE_INFO
+parameter_list|()
+value|{				\ 	{							\ 	  { "max_queuelen_bytes",&ng_parse_uint_type	},	\ 	  { "max_queuelen_packets",&ng_parse_uint_type	},	\ 	  { "high_watermark",&ng_parse_uint_type	},	\ 	  { "low_watermark",&ng_parse_uint_type	},	\ 	  { "current",&ng_parse_uint_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* Tell a node who to send async flow control info to. */
+end_comment
+
+begin_struct
+struct|struct
+name|flow_manager
+block|{
+name|ng_ID_t
+name|id
+decl_stmt|;
+comment|/* unique identifier */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_GENERIC_FLOW_MANAGER_INFO
+parameter_list|()
+value|{			\ 	{							\ 	  { "id",&ng_parse_hint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment

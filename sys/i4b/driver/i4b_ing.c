@@ -1666,6 +1666,9 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1711,15 +1714,15 @@ operator|->
 name|sc_inpkt
 operator|++
 expr_stmt|;
-name|ng_queue_data
+name|NG_SEND_DATA_ONLY
 argument_list|(
+name|error
+argument_list|,
 name|sc
 operator|->
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2695,6 +2698,12 @@ argument_list|,
 name|meta_p
 operator|*
 name|ret_meta
+argument_list|,
+expr|struct
+name|ng_mesg
+operator|*
+operator|*
+name|resp
 argument_list|)
 else|#
 directive|else
@@ -2980,6 +2989,15 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+comment|/* probably not at splnet, force outward queueing */
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
+expr_stmt|;
 return|return
 operator|(
 literal|0

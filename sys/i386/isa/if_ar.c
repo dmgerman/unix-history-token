@@ -1310,8 +1310,6 @@ name|ngar_connect
 block|,
 name|ngar_rcvdata
 block|,
-name|ngar_rcvdata
-block|,
 name|ngar_disconnect
 block|,
 name|NULL
@@ -8415,6 +8413,14 @@ decl_stmt|;
 name|u_char
 name|rxstat
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NETGRAPH
+name|int
+name|error
+decl_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|ar_packet_avail
@@ -8640,15 +8646,15 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NETGRAPH */
-name|ng_queue_data
+name|NG_SEND_DATA_ONLY
 argument_list|(
+name|error
+argument_list|,
 name|sc
 operator|->
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|sc
@@ -10594,6 +10600,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 name|int
@@ -10819,6 +10831,15 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+comment|/* probably not at splnet, force outward queueing */
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
+expr_stmt|;
 comment|/* be really amiable and just say "YUP that's OK by me! " */
 return|return
 operator|(

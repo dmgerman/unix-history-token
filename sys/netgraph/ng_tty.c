@@ -448,6 +448,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|ng_connect_t
+name|ngt_connect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|ng_rcvdata_t
 name|ngt_rcvdata
 decl_stmt|;
@@ -564,9 +571,7 @@ name|ngt_newhook
 block|,
 name|NULL
 block|,
-name|NULL
-block|,
-name|ngt_rcvdata
+name|ngt_connect
 block|,
 name|ngt_rcvdata
 block|,
@@ -1658,17 +1663,15 @@ name|m
 operator|->
 name|m_pktdat
 expr_stmt|;
-name|error
-operator|=
-name|ng_queue_data
+name|NG_SEND_DATA_ONLY
 argument_list|(
+name|error
+argument_list|,
 name|sc
 operator|->
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2168,6 +2171,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * set the hooks into queueing mode (for outgoing packets)  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ngt_connect
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+block|{
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Disconnect the hook  */
 end_comment
 
@@ -2366,6 +2398,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const

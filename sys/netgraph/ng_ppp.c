@@ -1466,8 +1466,6 @@ name|NULL
 block|,
 name|ng_ppp_rcvdata
 block|,
-name|ng_ppp_rcvdata
-block|,
 name|ng_ppp_disconnect
 block|,
 name|ng_ppp_cmds
@@ -2601,8 +2599,6 @@ operator|&
 name|origNode
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -2641,9 +2637,14 @@ name|msg
 argument_list|,
 name|path
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 name|rptr
 argument_list|)
 return|;
+comment|/* XXX Archie, looks like you are using the wrong value for the ID here..  you can't use a node address as a node-ID any more..  But it may be that you can use the new 'hook' arg for ng_send_msg() to achieve a more efficient resuld than an ID anyhow. */
 block|}
 default|default:
 name|error
@@ -2719,6 +2720,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const
@@ -3665,6 +3672,8 @@ argument_list|,
 name|m
 argument_list|,
 name|meta
+argument_list|,
+name|resp
 argument_list|)
 expr_stmt|;
 if|if
@@ -3689,6 +3698,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|resp
 argument_list|)
 return|;
 return|return

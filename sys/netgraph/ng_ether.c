@@ -389,6 +389,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|ng_connect_t
+name|ng_ether_connect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|ng_rcvdata_t
 name|ng_ether_rcvdata
 decl_stmt|;
@@ -609,9 +616,7 @@ name|ng_ether_newhook
 block|,
 name|NULL
 block|,
-name|NULL
-block|,
-name|ng_ether_rcvdata
+name|ng_ether_connect
 block|,
 name|ng_ether_rcvdata
 block|,
@@ -795,7 +800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a packet that has come in on an interface.  * The Ethernet header has already been detached from the mbuf,  * so we have to put it back.  *  * NOTE: this function will get called at splimp()  */
+comment|/*  * Handle a packet that has come in on an ethernet interface.  * The Ethernet header has already been detached from the mbuf,  * so we have to put it back.  *  * NOTE: this function will get called at splimp()  */
 end_comment
 
 begin_function
@@ -826,11 +831,6 @@ name|node
 operator|->
 name|private
 decl_stmt|;
-name|meta_p
-name|meta
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -852,19 +852,16 @@ literal|0
 condition|)
 return|return;
 comment|/* Send out lower/orphan hook */
-operator|(
-name|void
-operator|)
-name|ng_queue_data
+name|NG_SEND_DATA_ONLY
 argument_list|(
+name|error
+argument_list|,
 name|priv
 operator|->
 name|lower
 argument_list|,
 operator|*
 name|mp
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 operator|*
@@ -950,6 +947,8 @@ operator|*
 name|mp
 argument_list|,
 name|meta
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* If we got a reflected packet back, handle it */
@@ -1742,6 +1741,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Hooks are attached, adjust to force queueing.  * We don't really care which hook it is.  * they should all be queuing for outgoing data.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ng_ether_connect
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+block|{
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Receive an incoming control message.  */
 end_comment
 
@@ -2300,6 +2328,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const

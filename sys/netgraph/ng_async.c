@@ -458,8 +458,6 @@ name|NULL
 block|,
 name|nga_rcvdata
 block|,
-name|nga_rcvdata
-block|,
 name|nga_disconnect
 block|,
 name|nga_cmdlist
@@ -835,6 +833,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const

@@ -738,8 +738,6 @@ name|NULL
 block|,
 name|ng_vjc_rcvdata
 block|,
-name|ng_vjc_rcvdata
-block|,
 name|ng_vjc_disconnect
 block|,
 name|ng_vjc_cmds
@@ -1660,6 +1658,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 specifier|const

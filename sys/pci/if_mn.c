@@ -2660,6 +2660,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 name|struct
@@ -3583,6 +3589,15 @@ operator|->
 name|stat
 operator|=
 literal|1
+expr_stmt|;
+comment|/* probably not at splnet, force outward queueing */
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
 expr_stmt|;
 return|return
 operator|(
@@ -5655,15 +5670,18 @@ operator|!
 name|err
 condition|)
 block|{
-name|ng_queue_data
+name|int
+name|error
+decl_stmt|;
+name|NG_SEND_DATA_ONLY
 argument_list|(
+name|error
+argument_list|,
 name|sch
 operator|->
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|sch
@@ -5671,10 +5689,6 @@ operator|->
 name|last_recv
 operator|=
 name|time_second
-expr_stmt|;
-name|m
-operator|=
-literal|0
 expr_stmt|;
 comment|/* we could be down by now... */
 if|if

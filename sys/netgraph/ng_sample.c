@@ -127,17 +127,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|ng_rcvdata_t
-name|ng_xxx_rcvdataq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* note these are both ng_rcvdata_t */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|ng_disconnect_t
 name|ng_xxx_disconnect
 decl_stmt|;
@@ -251,8 +240,6 @@ block|,
 name|ng_xxx_connect
 block|,
 name|ng_xxx_rcvdata
-block|,
-name|ng_xxx_rcvdataq
 block|,
 name|ng_xxx_disconnect
 block|,
@@ -1064,7 +1051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Receive data, and do something with it.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. the caller will never free m or meta, so  * if we use up this data or abort we must free BOTH of these.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time. (at which time it will be entered using ng_xxx_rcvdataq().  */
+comment|/*  * Receive data, and do something with it.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. the caller will never free m or meta, so  * if we use up this data or abort we must free BOTH of these.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
 end_comment
 
 begin_function
@@ -1092,104 +1079,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
-parameter_list|)
-block|{
-name|int
-name|dlci
-init|=
-operator|-
-literal|2
-decl_stmt|;
-if|if
-condition|(
-name|hook
-operator|->
-name|private
-condition|)
-block|{
-comment|/*  		 * If it's dlci 1023, requeue it so that it's handled 		 * at a lower priority. This is how a node decides to 		 * defer a data message. 		 */
-name|dlci
-operator|=
-operator|(
-operator|(
-expr|struct
-name|XXX_hookinfo
-operator|*
-operator|)
-name|hook
-operator|->
-name|private
-operator|)
-operator|->
-name|dlci
-expr_stmt|;
-if|if
-condition|(
-name|dlci
-operator|==
-literal|1023
-condition|)
-block|{
-return|return
-operator|(
-name|ng_queue_data
-argument_list|(
-name|hook
-operator|->
-name|peer
-argument_list|,
-name|m
-argument_list|,
-name|meta
-argument_list|)
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-name|ng_xxx_rcvdataq
-argument_list|(
-name|hook
-argument_list|,
-name|m
-argument_list|,
-name|meta
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Always accept the data. This version of rcvdata is called from the dequeueing routine.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|ng_xxx_rcvdataq
-parameter_list|(
-name|hook_p
-name|hook
 parameter_list|,
 name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|meta_p
-name|meta
-parameter_list|,
-name|struct
-name|mbuf
+name|ng_mesg
 modifier|*
 modifier|*
-name|ret_m
-parameter_list|,
-name|meta_p
-modifier|*
-name|ret_meta
+name|resp
 parameter_list|)
 block|{
 specifier|const
@@ -1265,10 +1160,10 @@ block|{
 comment|/* If received on a DLCI hook process for this 			 * channel and pass it to the downstream module. 			 * Normally one would add a multiplexing header at 			 * the front here */
 comment|/* M_PREPEND(....)	; */
 comment|/* mtod(m, xxxxxx)->dlci = dlci; */
-name|error
-operator|=
-name|ng_send_data
+name|NG_SEND_DATA
 argument_list|(
+name|error
+argument_list|,
 name|xxxp
 operator|->
 name|downstream_hook
@@ -1407,17 +1302,17 @@ comment|/*  * If this were a device node, the data may have been received in res
 end_comment
 
 begin_comment
-unit|devintr() { 	meta_p  meta = NULL;
-comment|/* whatever metadata we might imagine goes 				 * here */
-end_comment
-
-begin_comment
+unit|devintr() { 	int error; 				 * here */
 comment|/* get packet from device and send on */
 end_comment
 
 begin_comment
-unit|m = MGET(blah blah) 	    error = ng_queueit(upstream, m, meta);
-comment|/* see note above in 							 * xxx_rcvdata() */
+unit|m = MGET(blah blah) 	 	NG_SEND_DATA_ONLY(error, xxxp->upstream_hook.hook, m);
+comment|/* see note above in xxx_rcvdata() */
+end_comment
+
+begin_comment
+comment|/* and ng_xxx_connect() */
 end_comment
 
 begin_endif
@@ -1537,7 +1432,25 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
-comment|/* be really amiable and just say "YUP that's OK by me! " */
+if|#
+directive|if
+literal|0
+comment|/* 	 * If we were a driver running at other than splnet then 	 * we should set the QUEUE bit on the edge so that we 	 * will deliver by queing. 	 */
+block|if
+comment|/*it is the upstream hook */
+block|hook->peer->flags |= HK_QUEUE;
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* 	 * If for some reason we want incoming date to be queued 	 * by the NETISR system and delivered later we can set the same bit on 	 * OUR hook. (maybe to allow unwinding of the stack) 	 */
+block|if (hook->private) { 		int dlci;
+comment|/*  		 * If it's dlci 1023, requeue it so that it's handled 		 * at a lower priority. This is how a node decides to 		 * defer a data message. 		 */
+block|dlci = ((struct XXX_hookinfo *) hook->private)->dlci; 		if (dlci == 1023) { 			hook->flags |= HK_QUEUE; 		}
+endif|#
+directive|endif
+comment|/* otherwise be really amiable and just say "YUP that's OK by me! " */
 return|return
 operator|(
 literal|0
