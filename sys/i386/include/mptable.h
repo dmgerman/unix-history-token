@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.8 1997/05/05 22:56:27 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.9 1997/05/07 22:25:27 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -672,12 +672,12 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"MP FPS NOT FOUND, suggest use of 'mptable' program\n"
+literal|"MP FPS not found, can't continue!\n"
 argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"can't continue!\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1320,11 +1320,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"IO APIC setup failure\n"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* install an inter-CPU IPI for TLB invalidation */
 name|setidt
 argument_list|(
@@ -2520,11 +2527,18 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"MP Configuration Table Header MISSING!\n"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|cpu_apic_address
 operator|=
 operator|(
@@ -2660,9 +2674,14 @@ case|:
 comment|/* int_entry(position); */
 break|break;
 default|default:
-name|panic
+name|printf
 argument_list|(
 literal|"mpfps Base Table HOSED!\n"
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -2697,11 +2716,18 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"NO BSP found!\n"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* record # of APs found */
 name|mp_naps
 operator|=
@@ -3172,11 +3198,18 @@ operator|)
 operator|==
 name|NBUS
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"too many busses, increase 'NBUS'\n"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* encode the name into an index */
 for|for
 control|(
@@ -3236,13 +3269,20 @@ operator|)
 operator|==
 name|UNKNOWN_BUSTYPE
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"unknown bus type: '%s'\n"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|bus_data
 index|[
 name|x
@@ -3308,11 +3348,18 @@ operator|)
 operator|==
 name|NAPIC
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"too many APICs, increase 'NAPIC'\n"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|IO_TO_ID
 argument_list|(
 name|x
@@ -3432,11 +3479,18 @@ operator|)
 operator|==
 name|NINTR
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"too many INTs, increase 'NINTR'\n"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|io_apic_ints
 index|[
 name|x
@@ -4825,13 +4879,20 @@ operator|)
 operator|!=
 literal|0x02000000
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"Problem: can't control IO APIC ID, reg: 0x%08x\n"
+literal|"can't control IO APIC ID, reg: 0x%08x\n"
 argument_list|,
 name|ux
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|io_apic_id
 operator|=
 literal|2
@@ -4969,11 +5030,16 @@ break|break;
 comment|/* case 4: case 7:		   MCA NOT supported */
 default|default:
 comment|/* illegal/reserved */
-name|panic
+name|printf
 argument_list|(
 literal|"BAD default MP config: %d\n"
 argument_list|,
 name|type
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5092,9 +5158,14 @@ argument_list|(
 name|APIC_MIXED_MODE
 argument_list|)
 comment|/** FIXME: ??? */
-name|panic
+name|printf
 argument_list|(
 literal|"sorry, can't support type 2 default yet\n"
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5344,11 +5415,18 @@ argument_list|()
 operator|!=
 literal|'n'
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"bye-bye\n"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|CHECK_PRINT
 argument_list|(
