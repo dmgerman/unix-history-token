@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.27 1995/07/30 09:11:20 jkh Exp $"
+literal|"$Id: perform.c,v 1.28 1995/08/06 03:20:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,13 +451,41 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|stat
+argument_list|(
+name|pkg_fullname
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+name|FAIL
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Can't stat package file '%s'."
+argument_list|,
+name|pkg_fullname
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bomb
+goto|;
+block|}
 name|Home
 operator|=
 name|make_playpen
 argument_list|(
 name|PlayPen
 argument_list|,
-literal|0
+name|sb
+operator|.
+name|st_size
+operator|*
+literal|4
 argument_list|)
 expr_stmt|;
 name|where_to
@@ -687,30 +715,6 @@ goto|;
 block|}
 block|}
 comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 75%, so multiply by 4 for good measure. 	 */
-if|if
-condition|(
-name|stat
-argument_list|(
-name|pkg_fullname
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|==
-name|FAIL
-condition|)
-block|{
-name|whinge
-argument_list|(
-literal|"Can't stat package file '%s'."
-argument_list|,
-name|pkg_fullname
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bomb
-goto|;
-block|}
 if|if
 condition|(
 name|min_free
