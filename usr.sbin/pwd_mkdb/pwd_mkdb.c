@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.20 1997/10/10 06:27:07 charnier Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.15.2.5 1997/11/04 07:18:20 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1141,16 +1141,20 @@ operator|=
 name|R_NOOVERWRITE
 expr_stmt|;
 block|}
+if|if
+condition|(
 call|(
-name|void
-call|)
-argument_list|(
 name|pw_db
 operator|->
 name|close
-argument_list|)
+call|)
 argument_list|(
 name|pw_db
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"close pw_db"
 argument_list|)
 expr_stmt|;
 name|method
@@ -2262,9 +2266,8 @@ operator|&&
 name|makeold
 condition|)
 comment|/* copy comments */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|oldfp
@@ -2272,6 +2275,13 @@ argument_list|,
 literal|"%s\n"
 argument_list|,
 name|line
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"write old"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2324,9 +2334,8 @@ operator|.
 name|pw_gid
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|oldfp
@@ -2368,6 +2377,13 @@ argument_list|,
 name|pwd
 operator|.
 name|pw_shell
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"write old"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2512,12 +2528,18 @@ argument_list|(
 name|oldfp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|oldfp
+argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|"close old"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2537,12 +2559,18 @@ operator||
 name|S_IWUSR
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|"close fp"
 argument_list|)
 expr_stmt|;
 comment|/* Install as the real password files. */
