@@ -789,15 +789,13 @@ decl_stmt|,
 modifier|*
 name|shell
 decl_stmt|;
-name|union
-name|wait
-name|pstat
-decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
 name|int
 name|omask
+decl_stmt|,
+name|pstat
 decl_stmt|;
 name|sig_t
 name|intsave
@@ -952,10 +950,6 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|pstat
 argument_list|,
@@ -1001,8 +995,6 @@ operator|-
 literal|1
 else|:
 name|pstat
-operator|.
-name|w_status
 operator|)
 return|;
 block|}
