@@ -2272,12 +2272,6 @@ index|[
 name|STE_TX_LIST_CNT
 index|]
 decl_stmt|;
-name|u_int8_t
-name|ste_pad
-index|[
-name|STE_MIN_FRAMELEN
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2300,11 +2294,6 @@ name|struct
 name|ste_chain
 modifier|*
 name|ste_next
-decl_stmt|;
-name|struct
-name|ste_chain
-modifier|*
-name|ste_prev
 decl_stmt|;
 name|u_int32_t
 name|ste_phys
@@ -2423,8 +2412,10 @@ decl_stmt|;
 name|int
 name|ste_if_flags
 decl_stmt|;
-name|int
-name|ste_tx_prev_idx
+name|struct
+name|ste_chain
+modifier|*
+name|ste_tx_prev
 decl_stmt|;
 name|struct
 name|ste_list_data
