@@ -599,8 +599,7 @@ argument_list|,
 literal|0x54
 argument_list|,
 name|word54
-operator|&
-operator|~
+operator||
 operator|(
 literal|0x1000
 operator|<<
@@ -626,18 +625,13 @@ return|return;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|udmamode
-operator|>=
-literal|4
-condition|)
-block|{
-name|int16_t
-name|word54
-decl_stmt|;
-name|word54
-operator|=
+comment|/* make sure eventual ATA100 mode from the BIOS is disabled */
+name|pci_write_config
+argument_list|(
+name|parent
+argument_list|,
+literal|0x54
+argument_list|,
 name|pci_read_config
 argument_list|(
 name|parent
@@ -646,14 +640,6 @@ literal|0x54
 argument_list|,
 literal|2
 argument_list|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|parent
-argument_list|,
-literal|0x54
-argument_list|,
-name|word54
 operator|&
 operator|~
 operator|(
@@ -665,7 +651,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* FALLTHROUGH */
 case|case
 literal|0x24118086
@@ -872,18 +857,13 @@ return|return;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|udmamode
-operator|>=
-literal|2
-condition|)
-block|{
-name|int16_t
-name|word54
-decl_stmt|;
-name|word54
-operator|=
+comment|/* make sure eventual ATA66 mode from the BIOS is disabled */
+name|pci_write_config
+argument_list|(
+name|parent
+argument_list|,
+literal|0x54
+argument_list|,
 name|pci_read_config
 argument_list|(
 name|parent
@@ -892,14 +872,6 @@ literal|0x54
 argument_list|,
 literal|2
 argument_list|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|parent
-argument_list|,
-literal|0x54
-argument_list|,
-name|word54
 operator|&
 operator|~
 operator|(
@@ -911,7 +883,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* FALLTHROUGH */
 case|case
 literal|0x71118086
@@ -1103,6 +1074,32 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* make sure eventual ATA33 mode from the BIOS is disabled */
+name|pci_write_config
+argument_list|(
+name|parent
+argument_list|,
+literal|0x48
+argument_list|,
+name|pci_read_config
+argument_list|(
+name|parent
+argument_list|,
+literal|0x48
+argument_list|,
+literal|4
+argument_list|)
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|devno
+operator|)
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|0x70108086
