@@ -9745,8 +9745,12 @@ name|SF_SNAPSHOT
 operator|)
 operator|&&
 operator|(
+operator|(
 name|flags
 operator|&
+name|LK_TYPE_MASK
+operator|)
+operator|==
 name|LK_SHARED
 operator|)
 condition|)
@@ -9754,7 +9758,7 @@ block|{
 name|flags
 operator|&=
 operator|~
-name|LK_SHARED
+name|LK_TYPE_MASK
 expr_stmt|;
 name|flags
 operator||=
