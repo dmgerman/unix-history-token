@@ -4,7 +4,7 @@ comment|/*-  * Copyright 1999, 2000 John D. Polstra.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * Thread locking implementation for the dynamic linker.  *  * We use the "simple, non-scalable reader-preference lock" from:  *  *   J. M. Mellor-Crummey and M. L. Scott. "Scalable Reader-Writer  *   Synchronization for Shared-Memory Multiprocessors." 3rd ACM Symp. on  *   Principles and Practice of Parallel Programming, April 1991.  *  * In this algorithm the lock is a single word.  Its low-order bit is  * set when a writer holds the lock.  The remaining high-order bits  * contain a count of readers desiring the lock.  The algorithm requires  * atomic "compare_and_store" and "add" operations, which we implement  * using assembly language sequences in "rtld_start.S".  *  * These are spinlocks.  When spinning we call nanosleep() for 1  * microsecond each time around the loop.  This will most likely yield  * the CPU to other threads (including, we hope, the lockholder) allowing  * them to make some progress.  */
+comment|/*  * Thread locking implementation for the dynamic linker.  *  * We use the "simple, non-scalable reader-preference lock" from:  *  *   J. M. Mellor-Crummey and M. L. Scott. "Scalable Reader-Writer  *   Synchronization for Shared-Memory Multiprocessors." 3rd ACM Symp. on  *   Principles and Practice of Parallel Programming, April 1991.  *  * In this algorithm the lock is a single word.  Its low-order bit is  * set when a writer holds the lock.  The remaining high-order bits  * contain a count of readers desiring the lock.  The algorithm requires  * atomic "compare_and_store" and "add" operations, which we implement  * using assembly language sequences in "rtld_start.S".  */
 end_comment
 
 begin_include
@@ -88,25 +88,6 @@ block|}
 name|Lock
 typedef|;
 end_typedef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|timespec
-name|usec
-init|=
-block|{
-literal|0
-block|,
-literal|1000
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 usec. */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -309,14 +290,8 @@ name|lock
 operator|&
 name|WAFLAG
 condition|)
-name|nanosleep
-argument_list|(
-operator|&
-name|usec
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
+empty_stmt|;
+comment|/* Spin */
 block|}
 end_function
 
@@ -381,14 +356,6 @@ name|SIG_SETMASK
 argument_list|,
 operator|&
 name|tmp_oldsigmask
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|nanosleep
-argument_list|(
-operator|&
-name|usec
 argument_list|,
 name|NULL
 argument_list|)
