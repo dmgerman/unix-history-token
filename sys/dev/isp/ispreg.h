@@ -5937,7 +5937,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP2100_NVRAM_NODE_NAME
+name|ISP2200_NVRAM_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
@@ -6032,6 +6032,16 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(c)[80]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2200_HBA_FEATURES
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)[232] | ((c)[233]<< 8)
 end_define
 
 begin_endif

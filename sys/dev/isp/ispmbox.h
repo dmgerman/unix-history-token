@@ -472,6 +472,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_FEATURE_FAST_POST
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_FEATURE_LVD_NOTIFY
 value|0x2
 end_define
@@ -479,8 +486,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_FEATURE_FAST_POST
-value|0x1
+name|FW_FEATURE_RIO_32BIT
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_FEATURE_RIO_16BIT
+value|0x8
 end_define
 
 begin_define

@@ -8,6 +8,10 @@ comment|/*  * Machine and OS Independent Target Mode Code for the Qlogic SCSI/FC
 end_comment
 
 begin_comment
+comment|/*  * Bug fixes gratefully acknowledged from:  *	Oded Kedem<oded@kashya.com>  */
+end_comment
+
+begin_comment
 comment|/*  * Include header file appropriate for platform we're building on.  */
 end_comment
 
@@ -3212,6 +3216,14 @@ operator|->
 name|na_flags
 operator|=
 name|NAFC_RCOUNT
+expr_stmt|;
+name|na
+operator|->
+name|na_status
+operator|=
+name|inp
+operator|->
+name|in_status
 expr_stmt|;
 if|if
 condition|(

@@ -1124,9 +1124,16 @@ name|at_scclun
 decl_stmt|;
 comment|/* SCC Lun or reserved */
 name|u_int16_t
+name|at_wwpn
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* WWPN of initiator */
+name|u_int16_t
 name|at_reserved2
 index|[
-literal|10
+literal|6
 index|]
 decl_stmt|;
 name|u_int16_t

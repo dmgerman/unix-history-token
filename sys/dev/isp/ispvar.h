@@ -309,7 +309,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|const
 name|u_int16_t
 modifier|*
 name|dv_ispfw
@@ -1431,8 +1430,13 @@ literal|8
 decl_stmt|,
 comment|/* input clock */
 range|:
-literal|5
+literal|4
 decl_stmt|,
+name|isp_port
+range|:
+literal|1
+decl_stmt|,
+comment|/* 23XX only */
 name|isp_failed
 range|:
 literal|1
@@ -1583,6 +1587,22 @@ name|u_int16_t
 name|isp_lastmbxcmd
 decl_stmt|;
 comment|/* last mbox command sent */
+specifier|volatile
+name|u_int16_t
+name|isp_mbxwrk0
+decl_stmt|;
+specifier|volatile
+name|u_int16_t
+name|isp_mbxwrk1
+decl_stmt|;
+specifier|volatile
+name|u_int16_t
+name|isp_mbxwrk2
+decl_stmt|;
+name|void
+modifier|*
+name|isp_mbxworkp
+decl_stmt|;
 comment|/* 	 * Active commands are stored here, indexed by handle functions. 	 */
 name|XS_T
 modifier|*
@@ -2837,7 +2857,7 @@ comment|/* log all debug messages (target) */
 end_comment
 
 begin_comment
-comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	INLINE		-	platform specific define for 'inline' functions  *  *	ISP_DMA_ADDR_T	-	platform specific dma address coookie- basically  *				the largest integer that can hold the 32 or  *				64 bit value appropriate for the QLogic's DMA  *				addressing. Defaults to u_int32_t.  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	STRNCAT(dstbuf, size, srcbuf)		strncat  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default Port WWN  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(struct ispsoftc *)	FC Node WWN to use  *	ISP_PORTWWN(struct ispsoftc *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *  *	ISP_IOXPUT_8(struct ispsoftc *, u_int8_t srcval, u_int8_t *dstptr)  *	ISP_IOXPUT_16(struct ispsoftc *, u_int16_t srcval, u_int16_t *dstptr)  *	ISP_IOXPUT_32(struct ispsoftc *, u_int32_t srcval, u_int32_t *dstptr)  *  *	ISP_IOXGET_8(struct ispsoftc *, u_int8_t *srcptr, u_int8_t dstrval)  *	ISP_IOXGET_16(struct ispsoftc *, u_int16_t *srcptr, u_int16_t dstrval)  *	ISP_IOXGET_32(struct ispsoftc *, u_int32_t *srcptr, u_int32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(struct ispsoftc *, u_int16_t *)  */
+comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	INLINE		-	platform specific define for 'inline' functions  *  *	ISP_DMA_ADDR_T	-	platform specific dma address coookie- basically  *				the largest integer that can hold the 32 or  *				64 bit value appropriate for the QLogic's DMA  *				addressing. Defaults to u_int32_t.  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	STRNCAT(dstbuf, size, srcbuf)		strncat  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *  *	FC_SCRATCH_ACQUIRE(struct ispsoftc *)	acquire lock on FC scratch area  *	FC_SCRATCH_RELEASE(struct ispsoftc *)	acquire lock on FC scratch area  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default Port WWN  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(struct ispsoftc *)	FC Node WWN to use  *	ISP_PORTWWN(struct ispsoftc *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *  *	ISP_IOXPUT_8(struct ispsoftc *, u_int8_t srcval, u_int8_t *dstptr)  *	ISP_IOXPUT_16(struct ispsoftc *, u_int16_t srcval, u_int16_t *dstptr)  *	ISP_IOXPUT_32(struct ispsoftc *, u_int32_t srcval, u_int32_t *dstptr)  *  *	ISP_IOXGET_8(struct ispsoftc *, u_int8_t *srcptr, u_int8_t dstrval)  *	ISP_IOXGET_16(struct ispsoftc *, u_int16_t *srcptr, u_int16_t dstrval)  *	ISP_IOXGET_32(struct ispsoftc *, u_int32_t *srcptr, u_int32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(struct ispsoftc *, u_int16_t *)  */
 end_comment
 
 begin_endif

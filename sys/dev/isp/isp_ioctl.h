@@ -114,21 +114,21 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uint8_t
+name|u_int8_t
 name|isp_stat_version
 decl_stmt|;
-name|uint8_t
+name|u_int8_t
 name|isp_type
 decl_stmt|;
 comment|/* (ro) reflects chip type */
-name|uint8_t
+name|u_int8_t
 name|isp_revision
 decl_stmt|;
 comment|/* (ro) reflects chip version */
-name|uint8_t
+name|u_int8_t
 name|unused1
 decl_stmt|;
-name|uint32_t
+name|u_int32_t
 name|unused2
 decl_stmt|;
 comment|/* 	 * Statistics Counters 	 */
@@ -168,7 +168,7 @@ define|#
 directive|define
 name|ISP_FPCCHIWAT
 value|7
-name|uint64_t
+name|u_int64_t
 name|isp_stats
 index|[
 name|ISP_NSTATS
