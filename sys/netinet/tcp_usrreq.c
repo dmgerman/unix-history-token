@@ -3297,7 +3297,9 @@ operator|->
 name|iss
 operator|=
 name|tcp_new_isn
-argument_list|()
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 name|tcp_sendseqinit
 argument_list|(
@@ -3758,7 +3760,9 @@ operator|->
 name|iss
 operator|=
 name|tcp_new_isn
-argument_list|()
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 name|tcp_sendseqinit
 argument_list|(

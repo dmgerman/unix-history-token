@@ -215,59 +215,6 @@ begin_comment
 comment|/* global connection count */
 end_comment
 
-begin_comment
-comment|/*  * Increment for tcp_iss each second.  * This is designed to increment at the standard 250 KB/s,  * but with a random component averaging 128 KB.  * We also increment tcp_iss by a quarter of this amount  * each time we use the value for a new connection.  * If defined, the tcp_random18() macro should produce a  * number in the range [0-0x3ffff] that is hard to predict.  *   * The variable tcp_iss and tcp_random18() are only used  * by sequence number generation scheme 0.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tcp_random18
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|tcp_random18
-parameter_list|()
-value|(arc4random()& 0x3ffff)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|TCP_ISSINCR
-value|(122*1024 + tcp_random18())
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|tcp_seq
-name|tcp_iss
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TCP_ISSINCR
-value|(250*1024)
-end_define
-
-begin_comment
-comment|/* increment for tcp_iss each second */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
