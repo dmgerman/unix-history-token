@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -22,12 +22,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_CLOCK_T_
+value|unsigned long
+end_define
+
+begin_comment
+comment|/* clock() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_PTRDIFF_T_
 value|int
 end_define
 
 begin_comment
 comment|/* ptr1 - ptr2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_
+value|unsigned int
+end_define
+
+begin_comment
+comment|/* sizeof() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_TIME_T_
+value|long
+end_define
+
+begin_comment
+comment|/* time() */
 end_comment
 
 begin_define
@@ -50,17 +83,6 @@ end_define
 
 begin_comment
 comment|/* wchar_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_SIZE_T_
-value|unsigned int
-end_define
-
-begin_comment
-comment|/* sizeof() */
 end_comment
 
 begin_ifndef
