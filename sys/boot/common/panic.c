@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: panic.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From: $NetBSD: panic.c,v 1.2 1997/03/22 01:48:36 thorpej Exp $  */
+comment|/*  * $Id: panic.c,v 1.2 1998/09/17 23:52:02 msmith Exp $  * From: $NetBSD: panic.c,v 1.2 1997/03/22 01:48:36 thorpej Exp $  */
 end_comment
 
 begin_comment
@@ -62,14 +62,6 @@ name|va_end
 argument_list|(
 name|ap
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Press a key to reboot\n"
-argument_list|)
-expr_stmt|;
-name|getchar
-argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
