@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpsubs.c	5.6 (Berkeley) %G%"
+literal|"@(#)tftpsubs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tftpsubs.h"
 end_include
 
 begin_define
@@ -184,6 +196,7 @@ comment|/* putbuf: previous char (cr check) */
 end_comment
 
 begin_function_decl
+specifier|static
 name|struct
 name|tftphdr
 modifier|*
@@ -233,6 +246,7 @@ comment|/* read-ahead */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|tftphdr
 modifier|*
@@ -304,48 +318,31 @@ begin_comment
 comment|/* Have emptied current buffer by sending to net and getting ack.    Free it and return next buffer filled with data.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|readit
-argument_list|(
-argument|file
-argument_list|,
-argument|dpp
-argument_list|,
-argument|convert
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|,
+name|dpp
+parameter_list|,
+name|convert
+parameter_list|)
 name|FILE
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* file opened for read */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|tftphdr
 modifier|*
 modifier|*
 name|dpp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|convert
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* if true, convert to ascii */
-end_comment
-
-begin_block
 block|{
 name|struct
 name|bf
@@ -394,7 +391,8 @@ name|convert
 argument_list|)
 expr_stmt|;
 comment|/* fill it */
-comment|/*      assert(b->counter != BF_FREE);  /* check */
+comment|/*      assert(b->counter != BF_FREE);*/
+comment|/* check */
 operator|*
 name|dpp
 operator|=
@@ -414,43 +412,29 @@ operator|->
 name|counter
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * fill the input buffer, doing ascii conversions if requested  * conversions are  lf -> cr,lf  and cr -> cr, nul  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|read_ahead
-argument_list|(
-argument|file
-argument_list|,
-argument|convert
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|,
+name|convert
+parameter_list|)
 name|FILE
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* file opened for read */
-end_comment
-
-begin_decl_stmt
 name|int
 name|convert
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* if true, convert to ascii */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -649,48 +633,39 @@ name|th_data
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Update count associated with the buffer, get new buffer    from the queue.  Calls write_behind only if next buffer not    available.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|writeit
-argument_list|(
-argument|file
-argument_list|,
-argument|dpp
-argument_list|,
-argument|ct
-argument_list|,
-argument|convert
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|,
+name|dpp
+parameter_list|,
+name|ct
+parameter_list|,
+name|convert
+parameter_list|)
 name|FILE
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|tftphdr
 modifier|*
 modifier|*
 name|dpp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
+name|ct
+decl_stmt|,
 name|convert
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|bfs
 index|[
@@ -720,6 +695,9 @@ operator|!=
 name|BF_FREE
 condition|)
 comment|/* if not free */
+operator|(
+name|void
+operator|)
 name|write_behind
 argument_list|(
 name|file
@@ -758,35 +736,27 @@ name|ct
 return|;
 comment|/* this is a lie of course */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Output a buffer to a file, converting from netascii if requested.  * CR,NUL -> CR  and CR,LF => LF.  * Note spec is undefined if we get CR as last byte of file or a  * CR followed by anything else.  In this case we leave it alone.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|write_behind
-argument_list|(
-argument|file
-argument_list|,
-argument|convert
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|,
+name|convert
+parameter_list|)
 name|FILE
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|convert
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -988,7 +958,7 @@ return|return
 name|count
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* When an error has occurred, it is possible that the two sides  * are out of synch.  Ie: that what I think is the other side's  * response to packet N is really their response to packet N-1.  *  * So, to try to prevent that, we flush all the input queued up  * for us on the network connection on our host.  *  * We return the number of packets we flushed (mostly for reporting  * when trace is active).  */
