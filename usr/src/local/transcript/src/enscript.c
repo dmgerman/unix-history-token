@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)enscript.c	1.5 (Berkeley) %G%"
+literal|"@(#)enscript.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2387,8 +2387,11 @@ literal|0
 expr_stmt|;
 name|VOID
 name|PageEject
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+name|InitPage
+argument_list|()
+decl_stmt|;
 name|level
 operator|++
 expr_stmt|;
@@ -2577,9 +2580,18 @@ operator|<=
 literal|0
 operator|)
 condition|)
+block|{
 name|PageEject
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pagepending
+condition|)
+name|InitPage
+argument_list|()
+expr_stmt|;
+block|}
 name|col
 operator|=
 literal|1
@@ -2588,6 +2600,9 @@ name|ShowChar
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+name|col
+operator|++
 expr_stmt|;
 name|level
 operator|--
