@@ -2783,6 +2783,9 @@ name|int
 name|npxdna
 parameter_list|()
 block|{
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2821,6 +2824,14 @@ literal|"npxdna"
 argument_list|)
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|stop_emulating
 argument_list|()
 expr_stmt|;
@@ -2853,6 +2864,11 @@ name|curpcb
 argument_list|)
 operator|->
 name|pcb_savefpu
+argument_list|)
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
