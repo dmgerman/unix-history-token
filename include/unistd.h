@@ -1380,7 +1380,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* void	 swab(const void *__restrict, void *__restrict, ssize_t); */
+comment|/* void	 swab(const void * __restrict, void * __restrict, ssize_t); */
 end_comment
 
 begin_function_decl
