@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fs.h	4.8	83/03/21	*/
+comment|/*	fs.h	6.1	83/07/29	*/
 end_comment
 
 begin_comment

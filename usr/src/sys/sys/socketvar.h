@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.19	82/07/24	*/
+comment|/*	socketvar.h	6.1	83/07/29	*/
 end_comment
 
 begin_comment

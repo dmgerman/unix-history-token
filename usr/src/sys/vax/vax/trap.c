@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.29	83/06/26	*/
+comment|/*	trap.c	6.1	83/07/29	*/
 end_comment
 
 begin_include
