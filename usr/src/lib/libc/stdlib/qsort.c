@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qsort.c	5.12 (Berkeley) %G%"
+literal|"@(#)qsort.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -926,18 +926,19 @@ operator|)
 operator|>
 name|es
 condition|)
-block|{
-comment|/* 		 * To decrease the stack space we iterate here rather than  		 * recurse. 		 */
-name|n
-operator|=
+name|qsort
+argument_list|(
+name|a
+argument_list|,
 name|r
 operator|/
 name|es
+argument_list|,
+name|es
+argument_list|,
+name|cmp
+argument_list|)
 expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -950,21 +951,25 @@ operator|)
 operator|>
 name|es
 condition|)
-name|qsort
-argument_list|(
+block|{
+comment|/* Iterate rather than recurse to save stack space */
+name|a
+operator|=
 name|pn
 operator|-
 name|r
-argument_list|,
+expr_stmt|;
+name|n
+operator|=
 name|r
 operator|/
 name|es
-argument_list|,
-name|es
-argument_list|,
-name|cmp
-argument_list|)
 expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
+comment|/*		qsort(pn - r, r / es, es, cmp);*/
 block|}
 end_block
 
