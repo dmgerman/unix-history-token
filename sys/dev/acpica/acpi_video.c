@@ -146,13 +146,10 @@ decl_stmt|;
 name|ACPI_HANDLE
 name|handle
 decl_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|acpi_video_output
-argument_list|)
+name|struct
+name|acpi_video_output_queue
 name|vid_outputs
-expr_stmt|;
+decl_stmt|;
 name|eventhandler_tag
 name|vid_pwr_evh
 decl_stmt|;
@@ -357,16 +354,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
-name|vid_check_requirements
-parameter_list|(
-name|ACPI_HANDLE
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|vid_set_switch_policy
 parameter_list|(
@@ -487,35 +474,35 @@ begin_define
 define|#
 directive|define
 name|DOS_SWITCH_MASK
-value|((UINT32)3)
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOS_SWITCH_BY_OSPM
-value|((UINT32)0)
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOS_SWITCH_BY_BIOS
-value|((UINT32)1)
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOS_SWITCH_LOCKED
-value|((UINT32)2)
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOS_BRIGHTNESS_BY_BIOS
-value|((UINT32)1<< 2)
+value|(1<< 2)
 end_define
 
 begin_comment
@@ -526,42 +513,42 @@ begin_define
 define|#
 directive|define
 name|DOD_DEVID_MASK
-value|((UINT32)0xffff)
+value|0xffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOD_DEVID_MONITOR
-value|((UINT32)0x0100)
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOD_DEVID_PANEL
-value|((UINT32)0x0110)
+value|0x0110
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOD_DEVID_TV
-value|((UINT32)0x0200)
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOD_BIOS
-value|((UINT32)1<< 16)
+value|(1<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOD_NONVGA
-value|((UINT32)1<< 17)
+value|(1<< 17)
 end_define
 
 begin_define
@@ -583,7 +570,7 @@ define|#
 directive|define
 name|DOD_HEAD_ID_MASK
 define|\
-value|((((UINT32)1<< DOD_HEAD_ID_BITS) - 1)<< DOD_HEAD_ID_SHIFT)
+value|(((1<< DOD_HEAD_ID_BITS) - 1)<< DOD_HEAD_ID_SHIFT)
 end_define
 
 begin_comment
@@ -612,35 +599,35 @@ begin_define
 define|#
 directive|define
 name|DCS_EXISTS
-value|((UINT32)1<< 0)
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DCS_ACTIVE
-value|((UINT32)1<< 1)
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DCS_READY
-value|((UINT32)1<< 2)
+value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DCS_FUNCTIONAL
-value|((UINT32)1<< 3)
+value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DCS_ATTACHED
-value|((UINT32)1<< 4)
+value|(1<< 4)
 end_define
 
 begin_comment
@@ -651,35 +638,35 @@ begin_define
 define|#
 directive|define
 name|DSS_INACTIVE
-value|((UINT32)0)
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|DSS_ACTIVE
-value|((UINT32)1<< 0)
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DSS_ACTIVITY
-value|((UINT32)1<< 0)
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DSS_SETNEXT
-value|((UINT32)1<< 30)
+value|(1<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DSS_COMMIT
-value|((UINT32)1<< 31)
+value|(1<< 31)
 end_define
 
 begin_decl_stmt
@@ -787,6 +774,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sysctl_ctx_list
 name|acpi_video_sysctl_ctx
@@ -794,6 +782,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sysctl_oid
 modifier|*
@@ -932,19 +921,15 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|err
-init|=
-name|ENXIO
-decl_stmt|;
 name|ACPI_HANDLE
-name|handle
+name|devh
+decl_stmt|,
+name|h
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
-name|ACPI_LOCK
-expr_stmt|;
-name|handle
+name|ACPI_OBJECT_TYPE
+name|t_dos
+decl_stmt|;
+name|devh
 operator|=
 name|acpi_get_handle
 argument_list|(
@@ -953,18 +938,57 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acpi_disabled
 argument_list|(
 literal|"video"
 argument_list|)
-operator|&&
-name|vid_check_requirements
+operator|||
+name|ACPI_FAILURE
 argument_list|(
-name|handle
+name|AcpiGetHandle
+argument_list|(
+name|devh
+argument_list|,
+literal|"_DOD"
+argument_list|,
+operator|&
+name|h
 argument_list|)
+argument_list|)
+operator|||
+name|ACPI_FAILURE
+argument_list|(
+name|AcpiGetHandle
+argument_list|(
+name|devh
+argument_list|,
+literal|"_DOS"
+argument_list|,
+operator|&
+name|h
+argument_list|)
+argument_list|)
+operator|||
+name|ACPI_FAILURE
+argument_list|(
+name|AcpiGetType
+argument_list|(
+name|h
+argument_list|,
+operator|&
+name|t_dos
+argument_list|)
+argument_list|)
+operator|||
+name|t_dos
+operator|!=
+name|ACPI_TYPE_METHOD
 condition|)
-block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -972,16 +996,9 @@ argument_list|,
 literal|"ACPI video extension"
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|ACPI_UNLOCK
-expr_stmt|;
 return|return
 operator|(
-name|err
+literal|0
 operator|)
 return|;
 block|}
@@ -1006,16 +1023,12 @@ name|acpi_video_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|ACPI_LOCK
 expr_stmt|;
 name|acpi_sc
 operator|=
@@ -1131,8 +1144,6 @@ argument_list|,
 name|DOS_SWITCH_BY_OSPM
 argument_list|)
 expr_stmt|;
-name|ACPI_UNLOCK
-expr_stmt|;
 name|acpi_video_power_profile
 argument_list|(
 name|sc
@@ -1168,16 +1179,12 @@ decl_stmt|,
 modifier|*
 name|vn
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|ACPI_LOCK
 expr_stmt|;
 name|vid_set_switch_policy
 argument_list|(
@@ -1244,8 +1251,6 @@ name|vo
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_UNLOCK
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1268,16 +1273,12 @@ name|acpi_video_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|ACPI_LOCK
 expr_stmt|;
 name|vid_set_switch_policy
 argument_list|(
@@ -1287,8 +1288,6 @@ name|handle
 argument_list|,
 name|DOS_SWITCH_BY_BIOS
 argument_list|)
-expr_stmt|;
-name|ACPI_UNLOCK
 expr_stmt|;
 return|return
 operator|(
@@ -1339,8 +1338,6 @@ name|dss_p
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|sc
 operator|=
 name|context
@@ -1563,8 +1560,6 @@ name|acpi_video_output
 modifier|*
 name|vo
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
 name|sc
 operator|=
 name|context
@@ -1585,8 +1580,6 @@ operator|!=
 name|POWER_PROFILE_ECONOMY
 condition|)
 return|return;
-name|ACPI_LOCK
-expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|vo
@@ -1631,8 +1624,6 @@ name|vo_fullpower
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_UNLOCK
-expr_stmt|;
 block|}
 end_function
 
@@ -1742,8 +1733,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|vid_enum_outputs
 argument_list|(
 name|sc
@@ -1925,7 +1914,10 @@ name|snprintf
 argument_list|(
 name|name
 argument_list|,
-literal|64
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -2340,15 +2332,9 @@ literal|"found %s(%x)"
 argument_list|,
 name|desc
 argument_list|,
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
 name|adr
 operator|&
 name|DOD_DEVID_MASK
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2377,10 +2363,6 @@ name|printf
 argument_list|(
 literal|", head #%d\n"
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
 operator|(
 name|adr
 operator|&
@@ -2389,11 +2371,12 @@ operator|)
 operator|>>
 name|DOD_HEAD_ID_SHIFT
 argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|vo
+operator|)
 return|;
 block|}
 end_function
@@ -2412,8 +2395,6 @@ name|ACPI_HANDLE
 name|handle
 parameter_list|)
 block|{
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 if|if
 condition|(
 name|vo
@@ -2542,8 +2523,6 @@ name|acpi_video_output_queue
 modifier|*
 name|voqh
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 if|if
 condition|(
 name|vo
@@ -2741,10 +2720,6 @@ name|state
 decl_stmt|,
 name|err
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
-name|ACPI_LOCK
-expr_stmt|;
 name|vo
 operator|=
 operator|(
@@ -2834,8 +2809,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|ACPI_UNLOCK
-expr_stmt|;
 return|return
 operator|(
 name|err
@@ -2868,10 +2841,6 @@ name|preset
 decl_stmt|,
 name|err
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
-name|ACPI_LOCK
-expr_stmt|;
 name|vo
 operator|=
 operator|(
@@ -2922,6 +2891,7 @@ name|power_profile_get_state
 argument_list|()
 operator|==
 name|POWER_PROFILE_ECONOMY
+operator|)
 condition|?
 name|vo
 operator|->
@@ -2930,7 +2900,6 @@ else|:
 name|vo
 operator|->
 name|vo_fullpower
-operator|)
 expr_stmt|;
 name|level
 operator|=
@@ -3043,8 +3012,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|ACPI_UNLOCK
-expr_stmt|;
 return|return
 operator|(
 name|err
@@ -3076,10 +3043,6 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
-name|ACPI_LOCK
-expr_stmt|;
 name|vo
 operator|=
 operator|(
@@ -3129,6 +3092,7 @@ operator|(
 name|arg2
 operator|==
 name|POWER_PROFILE_ECONOMY
+operator|)
 condition|?
 operator|&
 name|vo
@@ -3139,7 +3103,6 @@ operator|&
 name|vo
 operator|->
 name|vo_fullpower
-operator|)
 expr_stmt|;
 name|level
 operator|=
@@ -3208,9 +3171,11 @@ name|vo
 operator|->
 name|vo_levels
 index|[
+operator|(
 name|arg2
 operator|==
 name|POWER_PROFILE_ECONOMY
+operator|)
 condition|?
 name|BCL_ECONOMY
 else|:
@@ -3268,8 +3233,6 @@ name|level
 expr_stmt|;
 name|out
 label|:
-name|ACPI_UNLOCK
-expr_stmt|;
 return|return
 operator|(
 name|err
@@ -3298,10 +3261,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
-name|ACPI_LOCK
-expr_stmt|;
 name|vo
 operator|=
 operator|(
@@ -3370,78 +3329,9 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|ACPI_UNLOCK
-expr_stmt|;
 return|return
 operator|(
 name|err
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|vid_check_requirements
-parameter_list|(
-name|ACPI_HANDLE
-name|handle
-parameter_list|)
-block|{
-name|ACPI_HANDLE
-name|h_dod
-decl_stmt|,
-name|h_dos
-decl_stmt|;
-name|ACPI_OBJECT_TYPE
-name|t_dos
-decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
-comment|/* check for _DOD, _DOS methods */
-return|return
-operator|(
-name|ACPI_SUCCESS
-argument_list|(
-name|AcpiGetHandle
-argument_list|(
-name|handle
-argument_list|,
-literal|"_DOD"
-argument_list|,
-operator|&
-name|h_dod
-argument_list|)
-argument_list|)
-operator|&&
-name|ACPI_SUCCESS
-argument_list|(
-name|AcpiGetHandle
-argument_list|(
-name|handle
-argument_list|,
-literal|"_DOS"
-argument_list|,
-operator|&
-name|h_dos
-argument_list|)
-argument_list|)
-operator|&&
-name|ACPI_SUCCESS
-argument_list|(
-name|AcpiGetType
-argument_list|(
-name|h_dos
-argument_list|,
-operator|&
-name|t_dos
-argument_list|)
-argument_list|)
-operator|&&
-name|t_dos
-operator|==
-name|ACPI_TYPE_METHOD
 operator|)
 return|;
 block|}
@@ -3462,8 +3352,6 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|status
 operator|=
 name|acpi_SetInteger
@@ -3743,8 +3631,6 @@ name|struct
 name|enum_callback_arg
 name|argset
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|dod_buf
 operator|.
 name|Length
@@ -3998,8 +3884,6 @@ decl_stmt|,
 modifier|*
 name|levels
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|bcl_buf
 operator|.
 name|Length
@@ -4283,8 +4167,6 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|status
 operator|=
 name|acpi_SetInteger
@@ -4338,8 +4220,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|status
 operator|=
 name|acpi_GetInteger
@@ -4399,8 +4279,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|status
 operator|=
 name|acpi_GetInteger
@@ -4458,8 +4336,6 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|status
 operator|=
 name|acpi_SetInteger
