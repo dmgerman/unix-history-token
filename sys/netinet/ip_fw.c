@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.3 1997/05/15 04:20:17 archie Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.58 1997/06/02 05:02:36 julian Exp $  */
 end_comment
 
 begin_comment
@@ -1469,10 +1469,6 @@ operator|->
 name|ip_hl
 operator|)
 decl_stmt|;
-name|char
-modifier|*
-name|cmd
-decl_stmt|;
 name|int
 name|count
 decl_stmt|;
@@ -1933,6 +1929,8 @@ name|struct
 name|ip_fw
 modifier|*
 name|rule
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|ip
@@ -1958,11 +1956,20 @@ operator|.
 name|rcvif
 decl_stmt|;
 name|u_short
+name|offset
+init|=
+operator|(
+name|ip
+operator|->
+name|ip_off
+operator|&
+name|IP_OFFMASK
+operator|)
+decl_stmt|;
+name|u_short
 name|src_port
 decl_stmt|,
 name|dst_port
-decl_stmt|,
-name|offset
 decl_stmt|;
 comment|/* 	 * Go down the chain, looking for enlightment 	 */
 for|for
@@ -2051,6 +2058,7 @@ comment|/* If src-addr doesn't match, not this rule. */
 if|if
 condition|(
 operator|(
+operator|(
 name|f
 operator|->
 name|fw_flg
@@ -2059,7 +2067,9 @@ name|IP_FW_F_INVSRC
 operator|)
 operator|!=
 literal|0
+operator|)
 operator|^
+operator|(
 operator|(
 name|ip
 operator|->
@@ -2079,11 +2089,13 @@ operator|->
 name|fw_src
 operator|.
 name|s_addr
+operator|)
 condition|)
 continue|continue;
 comment|/* If dest-addr doesn't match, not this rule. */
 if|if
 condition|(
+operator|(
 operator|(
 name|f
 operator|->
@@ -2093,7 +2105,9 @@ name|IP_FW_F_INVDST
 operator|)
 operator|!=
 literal|0
+operator|)
 operator|^
+operator|(
 operator|(
 name|ip
 operator|->
@@ -2113,6 +2127,7 @@ operator|->
 name|fw_dst
 operator|.
 name|s_addr
+operator|)
 condition|)
 continue|continue;
 comment|/* Interface check */
@@ -2281,24 +2296,13 @@ operator|->
 name|fw_prot
 condition|)
 continue|continue;
-comment|/* Get fragment offset (if any) */
-name|offset
-operator|=
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
-expr_stmt|;
 define|#
 directive|define
 name|PULLUP_TO
 parameter_list|(
 name|len
 parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len)			\&& (*m = m_pullup(*m, (len))) == 0) {	\ 				    goto bogusfrag;			\ 			    }						\ 			    *pip = ip = mtod(*m, struct ip *);		\ 			} while (0)
+value|do {						\ 			    if ((*m)->m_len< (len)			\&& (*m = m_pullup(*m, (len))) == 0) {	\ 				    goto bogusfrag;			\ 			    }						\ 			    *pip = ip = mtod(*m, struct ip *);		\ 			    offset = (ip->ip_off& IP_OFFMASK);		\ 			} while (0)
 comment|/* Protocol specific checks */
 switch|switch
 condition|(
@@ -2581,6 +2585,9 @@ condition|)
 continue|continue;
 break|break;
 block|}
+undef|#
+directive|undef
+name|PULLUP_TO
 name|bogusfrag
 label|:
 if|if
