@@ -182,13 +182,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_PERL
-value|0x80000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_ALL
 value|0xFFFFF
 end_define
@@ -506,7 +499,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|( DIST_BASE | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PERL )
+value|( DIST_BASE | DIST_DOC | DIST_MANPAGES | DIST_DICT )
 end_define
 
 begin_define

@@ -5589,29 +5589,6 @@ name|DIST_LOCAL
 block|}
 block|,
 block|{
-literal|" perl"
-block|,
-literal|"The Perl distribution"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_PERL
-block|}
-block|,
-block|{
 literal|" X.Org"
 block|,
 literal|"The X.Org distribution"
