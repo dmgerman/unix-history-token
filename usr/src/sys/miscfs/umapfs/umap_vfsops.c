@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	7.1 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	7.2 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_comment
-comment|/*  * Umap Layer  * (See mount_umap(8) for a descritpion of this layer.)  */
+comment|/*  * Umap Layer  * (See mount_umap(8) for a description of this layer.)  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<umapfs/umap.h>
+file|<miscfs/umapfs/umap.h>
 end_include
 
 begin_comment
