@@ -605,15 +605,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define the versions we target for compliance. */
+comment|/* Define the POSIX.2 version we target for compliance. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_POSIX_VERSION
-value|200112L
-end_define
 
 begin_define
 define|#

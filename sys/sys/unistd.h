@@ -252,6 +252,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Define the POSIX.1 version we target for compliance. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_POSIX_VERSION
+value|200112L
+end_define
+
+begin_comment
 comment|/* access function */
 end_comment
 
