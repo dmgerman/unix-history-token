@@ -1197,7 +1197,11 @@ name|void
 modifier|*
 name|ret
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -1218,6 +1222,12 @@ argument_list|,
 name|boundary
 argument_list|,
 name|kernel_map
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
