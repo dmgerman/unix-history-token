@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.1 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,7 +530,7 @@ end_block
 begin_macro
 name|setifflags
 argument_list|(
-argument|name
+argument|vname
 argument_list|,
 argument|value
 argument_list|)
@@ -539,7 +539,7 @@ end_macro
 begin_decl_stmt
 name|char
 modifier|*
-name|name
+name|vname
 decl_stmt|;
 end_decl_stmt
 
@@ -617,7 +617,7 @@ literal|0
 condition|)
 name|Perror
 argument_list|(
-name|name
+name|vname
 argument_list|)
 expr_stmt|;
 block|}
