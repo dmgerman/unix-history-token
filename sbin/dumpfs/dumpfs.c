@@ -1853,6 +1853,26 @@ argument_list|(
 literal|"newfs "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_volname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|"-L %s "
+argument_list|,
+name|fs
+operator|->
+name|fs_volname
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"-O %d "
