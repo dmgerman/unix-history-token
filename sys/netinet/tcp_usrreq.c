@@ -1445,13 +1445,23 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * tcp_sendspace and tcp_recvspace are the default send and receive window  * sizes, respectively.  These are obsolescent (this information should  * be set by the route).  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_SMALLSPACE
+end_ifdef
+
 begin_decl_stmt
 name|u_long
 name|tcp_sendspace
 init|=
 literal|1024
 operator|*
-literal|8
+literal|4
 decl_stmt|;
 end_decl_stmt
 
@@ -1461,9 +1471,39 @@ name|tcp_recvspace
 init|=
 literal|1024
 operator|*
-literal|8
+literal|4
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|u_long
+name|tcp_sendspace
+init|=
+literal|1024
+operator|*
+literal|16
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|tcp_recvspace
+init|=
+literal|1024
+operator|*
+literal|16
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Attach TCP protocol to socket, allocating  * internet protocol control block, tcp control block,  * bufer space, and entering LISTEN state if to accept connections.  */
