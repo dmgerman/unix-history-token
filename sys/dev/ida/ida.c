@@ -935,28 +935,30 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
+comment|/* parent	*/
 name|ida
 operator|->
 name|parent_dmat
 argument_list|,
-comment|/*alignment*/
+comment|/* alignment	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*filter*/
+comment|/* filter	*/
 name|NULL
 argument_list|,
-comment|/*filterarg*/
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
+comment|/* maxsize	*/
 name|IDA_QCB_MAX
 operator|*
 sizeof|sizeof
@@ -965,19 +967,19 @@ expr|struct
 name|ida_hardware_qcb
 argument_list|)
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 literal|1
 argument_list|,
-comment|/*maxsegsz*/
+comment|/* maxsegsz	*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 literal|0
 argument_list|,
-comment|/*lockfunc*/
+comment|/* lockfunc	*/
 name|busdma_lock_mutex
 argument_list|,
-comment|/*lockarg*/
+comment|/* lockarg	*/
 operator|&
 name|Giant
 argument_list|,
@@ -1001,44 +1003,45 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
+comment|/* parent 	*/
 name|ida
 operator|->
 name|parent_dmat
 argument_list|,
-comment|/*alignment*/
+comment|/* alignment	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*filter*/
+comment|/* filter	*/
 name|NULL
 argument_list|,
-comment|/*filterarg*/
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
-comment|/*maxsize*/
+comment|/* maxsize	*/
 name|MAXBSIZE
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 name|IDA_NSEG
 argument_list|,
-comment|/*maxsegsz*/
+comment|/* maxsegsz	*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 literal|0
 argument_list|,
-comment|/*lockfunc*/
+comment|/* lockfunc	*/
 name|busdma_lock_mutex
 argument_list|,
-comment|/*lockarg*/
+comment|/* lockarg	*/
 operator|&
 name|Giant
 argument_list|,
