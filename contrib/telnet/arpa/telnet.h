@@ -1398,7 +1398,7 @@ begin_define
 define|#
 directive|define
 name|SLC_NAMELIST
-value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR", \ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP", \ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2",	\ 			"MCL", "MCR", "MCWL", "MCWR", "MCBOL",		\ 			"MCEOL", "INSRT", "OVER", "ECR", "EWR",		\ 			"EBOL", "EEOL",					\ 			0
+value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR",	\ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP",	\ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2",	\ 			"MCL", "MCR", "MCWL", "MCWR", "MCBOL",		\ 			"MCEOL", "INSRT", "OVER", "ECR", "EWR",		\ 			"EBOL", "EEOL",					\ 			0
 end_define
 
 begin_ifdef
