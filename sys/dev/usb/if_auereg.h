@@ -959,6 +959,11 @@ decl_stmt|;
 name|usbd_interface_handle
 name|aue_iface
 decl_stmt|;
+name|struct
+name|aue_type
+modifier|*
+name|aue_info
+decl_stmt|;
 name|int
 name|aue_ed
 index|[
