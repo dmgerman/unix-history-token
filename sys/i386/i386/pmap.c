@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id$  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.4 1993/09/30 23:16:17 rgrimes Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pmap.c,v 1.4 1993/09/30 23:16:17 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -554,7 +554,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* PAGE_SIZE / I386_PAGE_SIZE */
+comment|/* PAGE_SIZE / NBPG */
 end_comment
 
 begin_decl_stmt
@@ -656,7 +656,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *	Bootstrap the system enough to run with virtual memory.  *	Map the kernel's code and data, and allocate the system page table.  *  *	On the I386 this is called after mapping has already been enabled  *	and just syncs the pmap module with what has already been done.  *	[We can't call it easily with mapping off since the kernel is not  *	mapped with PA == VA, hence we would have to relocate every address  *	from the linked base (virtual) address 0xFE000000 to the actual  *	(physical) address starting relative to 0]  */
+comment|/*  *	Bootstrap the system enough to run with virtual memory.  *	Map the kernel's code and data, and allocate the system page table.  *  *	On the I386 this is called after mapping has already been enabled  *	and just syncs the pmap module with what has already been done.  *	[We can't call it easily with mapping off since the kernel is not  *	mapped with PA == VA, hence we would have to relocate every address  *	from the linked base (virtual) address KERNBASE to the actual  *	(physical) address starting relative to 0]  */
 end_comment
 
 begin_function_decl
@@ -761,7 +761,7 @@ name|i386pagesperpage
 operator|=
 name|PAGE_SIZE
 operator|/
-name|I386_PAGE_SIZE
+name|NBPG
 expr_stmt|;
 comment|/* 	 * Initialize protection array. 	 */
 name|i386_protection_init
@@ -872,7 +872,7 @@ name|pd_entry_t
 operator|*
 operator|)
 operator|(
-literal|0xfe000000
+name|KERNBASE
 operator|+
 name|IdlePTD
 operator|)
@@ -910,7 +910,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|v = (c)va; va += ((n)*I386_PAGE_SIZE); p = pte; pte += (n);
+value|v = (c)va; va += ((n)*NBPG); p = pte; pte += (n);
 name|va
 operator|=
 name|virtual_avail
@@ -1107,7 +1107,7 @@ operator|=
 operator|(
 name|vm_offset_t
 operator|)
-literal|0xfe000000
+name|KERNBASE
 operator|+
 name|KPTphys
 comment|/* *NBPG */
@@ -1514,13 +1514,7 @@ name|pm_pdir
 operator|+
 name|KPTDI_FIRST
 argument_list|,
-operator|(
-name|KPTDI_LAST
-operator|-
-name|KPTDI_FIRST
-operator|+
-literal|1
-operator|)
+name|NKPDE
 operator|*
 literal|4
 argument_list|)
@@ -2244,7 +2238,7 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
-comment|/*TBIS(va + ix * I386_PAGE_SIZE);*/
+comment|/*TBIS(va + ix * NBPG);*/
 block|}
 do|while
 condition|(
@@ -3020,7 +3014,7 @@ argument_list|,
 name|i386prot
 argument_list|)
 expr_stmt|;
-comment|/*TBIS(va + ix * I386_PAGE_SIZE);*/
+comment|/*TBIS(va + ix * NBPG);*/
 block|}
 do|while
 condition|(
@@ -3777,11 +3771,11 @@ expr_stmt|;
 comment|/*TBIS(va);*/
 name|npte
 operator|+=
-name|I386_PAGE_SIZE
+name|NBPG
 expr_stmt|;
 name|va
 operator|+=
-name|I386_PAGE_SIZE
+name|NBPG
 expr_stmt|;
 block|}
 do|while
@@ -5758,7 +5752,7 @@ comment|/*TBIS(va);*/
 block|}
 name|va
 operator|+=
-name|I386_PAGE_SIZE
+name|NBPG
 expr_stmt|;
 name|pte
 operator|++
@@ -6207,7 +6201,7 @@ name|kernel_pmap
 operator|&&
 name|va
 operator|<
-literal|0xfe000000
+name|KERNBASE
 condition|)
 continue|continue;
 if|if
