@@ -30,6 +30,13 @@ name|_PATH_PROJECT
 value|".project"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_PUBLICKEY
+value|".publickey"
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -387,6 +387,20 @@ argument_list|(
 literal|"No Plan.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|show_text
+argument_list|(
+name|pn
+operator|->
+name|dir
+argument_list|,
+name|_PATH_PUBLICKEY
+argument_list|,
+literal|"Public key"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
