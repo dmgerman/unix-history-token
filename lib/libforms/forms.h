@@ -153,6 +153,9 @@ name|char
 modifier|*
 name|input
 decl_stmt|;
+name|int
+name|limit
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -195,9 +198,6 @@ name|y
 decl_stmt|;
 name|int
 name|x
-decl_stmt|;
-name|int
-name|disp_width
 decl_stmt|;
 name|int
 name|width

@@ -200,7 +200,11 @@ name|malloc
 argument_list|(
 name|field
 operator|->
-name|width
+name|field
+operator|.
+name|input
+operator|->
+name|limit
 argument_list|)
 expr_stmt|;
 if|if
@@ -458,6 +462,20 @@ argument_list|(
 name|form
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|form
+operator|->
+name|current_field
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|F_CANCEL
+operator|)
+return|;
 switch|switch
 condition|(
 name|form
@@ -503,6 +521,16 @@ case|case
 name|F_TEXT
 case|:
 default|default:
+name|print_status
+argument_list|(
+literal|"Error, current field is invalid"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|F_CANCEL
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -705,7 +733,7 @@ name|x
 argument_list|,
 name|field
 operator|->
-name|disp_width
+name|width
 argument_list|,
 name|field
 operator|->
@@ -793,7 +821,7 @@ name|x
 argument_list|,
 name|field
 operator|->
-name|disp_width
+name|width
 argument_list|,
 name|field
 operator|->
@@ -831,7 +859,7 @@ name|x
 argument_list|,
 name|field
 operator|->
-name|disp_width
+name|width
 argument_list|,
 name|field
 operator|->
@@ -908,7 +936,7 @@ name|x
 argument_list|,
 name|field
 operator|->
-name|disp_width
+name|width
 argument_list|,
 name|field
 operator|->
@@ -994,7 +1022,7 @@ name|x
 argument_list|,
 name|field
 operator|->
-name|disp_width
+name|width
 argument_list|,
 name|field
 operator|->
@@ -1545,7 +1573,7 @@ name|int
 name|x
 parameter_list|,
 name|int
-name|disp_width
+name|width
 parameter_list|,
 name|char
 modifier|*
@@ -1592,7 +1620,7 @@ operator|)
 return|;
 while|while
 condition|(
-name|disp_width
+name|width
 operator|--
 condition|)
 block|{
@@ -1777,11 +1805,11 @@ decl_stmt|;
 define|#
 directive|define
 name|DISPOFF
-value|((len< field->disp_width) ? 0 : len - field->disp_width)
+value|((len< field->width) ? 0 : len - field->width)
 define|#
 directive|define
 name|CURSPOS
-value|((len< field->disp_width) ? len : field->disp_width)
+value|((len< field->width) ? len : field->width)
 name|len
 operator|=
 name|strlen
@@ -1886,7 +1914,7 @@ name|x
 argument_list|,
 name|field
 operator|->
-name|disp_width
+name|width
 argument_list|,
 name|field
 operator|->
@@ -2179,7 +2207,7 @@ operator|++
 operator|==
 name|field
 operator|->
-name|disp_width
+name|width
 condition|)
 block|{
 operator|++
@@ -2206,7 +2234,11 @@ name|len
 operator|<
 name|field
 operator|->
-name|width
+name|field
+operator|.
+name|input
+operator|->
+name|limit
 operator|)
 condition|)
 block|{
@@ -2265,7 +2297,7 @@ name|cursor
 operator|>
 name|field
 operator|->
-name|disp_width
+name|width
 condition|)
 block|{
 operator|++
@@ -2298,7 +2330,7 @@ name|x
 argument_list|,
 name|field
 operator|->
-name|disp_width
+name|width
 argument_list|,
 name|field
 operator|->
