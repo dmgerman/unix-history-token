@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.17 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1640,6 +1640,7 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+block|}
 name|code
 operator|=
 literal|421
@@ -1649,7 +1650,6 @@ operator|(
 literal|4
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
