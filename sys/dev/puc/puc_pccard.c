@@ -95,8 +95,9 @@ name|puc_device_description
 name|rscom_devices
 init|=
 block|{
-literal|"RS-com 2 port"
+literal|"ARGOSY SP320 Dual port serial PCMCIA"
 block|,
+comment|/* http://www.argosy.com.tw/product/sp320.htm */
 name|NULL
 block|,
 block|{
@@ -201,15 +202,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|printf
-argument_list|(
-literal|"puc_pccard_probe<%s><%s>\n"
-argument_list|,
-name|vendor
-argument_list|,
-name|product
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
