@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.91
+literal|3.92
 operator|%
 name|G
 operator|%
@@ -786,19 +786,6 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
-if|if
-condition|(
-name|tempfail
-condition|)
-block|{
-name|to
-operator|->
-name|q_flags
-operator||=
-name|QQUEUEUP
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* 		**  Check to see that these people are allowed to 		**  talk to each other. 		*/
 if|if
 condition|(
@@ -975,7 +962,6 @@ else|else
 endif|#
 directive|endif
 endif|QUEUE
-block|{
 name|to
 operator|->
 name|q_flags
@@ -991,7 +977,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|#
 directive|else
@@ -1011,6 +996,8 @@ condition|(
 name|bitset
 argument_list|(
 name|QBADADDR
+operator||
+name|QQUEUEUP
 argument_list|,
 name|to
 operator|->
