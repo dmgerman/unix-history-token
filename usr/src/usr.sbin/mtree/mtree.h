@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -42,6 +42,10 @@ name|off_t
 name|st_size
 decl_stmt|;
 comment|/* size */
+name|time_t
+name|st_mtime
+decl_stmt|;
+comment|/* last modification time */
 name|u_long
 name|cksum
 decl_stmt|;
@@ -113,62 +117,67 @@ comment|/* file type */
 define|#
 directive|define
 name|F_CKSUM
-value|0x001
+value|0x0001
 comment|/* check sum */
 define|#
 directive|define
 name|F_DONE
-value|0x002
+value|0x0002
 comment|/* directory done */
 define|#
 directive|define
 name|F_GROUP
-value|0x004
+value|0x0004
 comment|/* group */
 define|#
 directive|define
 name|F_IGN
-value|0x008
+value|0x0008
 comment|/* ignore */
 define|#
 directive|define
 name|F_MAGIC
-value|0x010
+value|0x0010
 comment|/* name has magic chars */
 define|#
 directive|define
 name|F_MODE
-value|0x020
+value|0x0020
 comment|/* mode */
 define|#
 directive|define
 name|F_NLINK
-value|0x040
+value|0x0040
 comment|/* number of links */
 define|#
 directive|define
 name|F_OWNER
-value|0x080
+value|0x0080
 comment|/* owner */
 define|#
 directive|define
 name|F_SIZE
-value|0x100
+value|0x0100
 comment|/* size */
 define|#
 directive|define
 name|F_SLINK
-value|0x200
+value|0x0200
 comment|/* link count */
 define|#
 directive|define
+name|F_TIME
+value|0x0400
+comment|/* modification time */
+define|#
+directive|define
 name|F_TYPE
-value|0x400
+value|0x0800
 comment|/* file type */
 define|#
 directive|define
 name|F_VISIT
-value|0x800
+value|0x1000
 comment|/* file visited */
 name|u_short
 name|flags

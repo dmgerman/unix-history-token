@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.11 (Berkeley) %G%"
+literal|"@(#)create.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,6 +715,22 @@ operator|->
 name|fts_statb
 operator|.
 name|st_size
+argument_list|)
+expr_stmt|;
+name|LABEL
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"time=%ld"
+argument_list|,
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_mtime
 argument_list|)
 expr_stmt|;
 if|if

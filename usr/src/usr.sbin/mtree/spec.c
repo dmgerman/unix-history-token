@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.11 (Berkeley) %G%"
+literal|"@(#)spec.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -773,6 +773,19 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+name|F_TIME
+case|:
+name|ip
+operator|->
+name|st_mtime
+operator|=
+name|atol
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|F_TYPE
 case|:
 switch|switch
@@ -1177,6 +1190,21 @@ condition|)
 return|return
 operator|(
 name|F_TYPE
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"time"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|F_TIME
 operator|)
 return|;
 break|break;

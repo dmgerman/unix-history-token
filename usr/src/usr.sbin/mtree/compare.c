@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compare.c	5.6 (Berkeley) %G%"
+literal|"@(#)compare.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -691,6 +697,62 @@ name|slink
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|s
+operator|->
+name|flags
+operator|&
+name|F_TIME
+operator|&&
+name|s
+operator|->
+name|st_mtime
+operator|!=
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_mtime
+condition|)
+block|{
+name|LABEL
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n\tmodification time (%.24s, "
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|s
+operator|->
+name|st_mtime
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%.24s)"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_mtime
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
