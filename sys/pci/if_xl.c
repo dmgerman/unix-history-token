@@ -8590,11 +8590,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"xl%d: can't map mbuf\n"
+literal|"xl%d: can't map mbuf (error %d)\n"
 argument_list|,
 name|sc
 operator|->
 name|xl_unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -10362,8 +10364,38 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|&&
+name|error
+operator|!=
+name|EFBIG
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m_head
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xl%d: can't map mbuf (error %d)\n"
+argument_list|,
+name|sc
+operator|->
+name|xl_unit
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Handle special case: we used up all 63 fragments, 	 * but we have more mbufs left in the chain. Copy the 	 * data into an mbuf cluster. Note that we don't 	 * bother clearing the values in the other fragment 	 * pointers/counters; it wouldn't gain us anything, 	 * and would waste cycles. 	 */
-comment|/* 	 * XXX It's not really possible to tell if the error 	 * we got was because we had more than 63 mbufs. 	 */
 if|if
 condition|(
 name|error
@@ -10392,6 +10424,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|m_head
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"xl%d: no memory for tx list\n"
@@ -10440,6 +10477,11 @@ block|{
 name|m_freem
 argument_list|(
 name|m_new
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m_head
 argument_list|)
 expr_stmt|;
 name|printf
@@ -10559,11 +10601,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"xl%d: can't map mbuf\n"
+literal|"xl%d: can't map mbuf (error %d)\n"
 argument_list|,
 name|sc
 operator|->
 name|xl_unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -10754,6 +10798,9 @@ decl_stmt|,
 modifier|*
 name|start_tx
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -10857,6 +10904,23 @@ name|xl_cdata
 operator|.
 name|xl_tx_free
 expr_stmt|;
+comment|/* Pack the data into the descriptor. */
+name|error
+operator|=
+name|xl_encap
+argument_list|(
+name|sc
+argument_list|,
+name|cur_tx
+argument_list|,
+name|m_head
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+continue|continue;
 name|sc
 operator|->
 name|xl_cdata
@@ -10872,16 +10936,6 @@ operator|->
 name|xl_next
 operator|=
 name|NULL
-expr_stmt|;
-comment|/* Pack the data into the descriptor. */
-name|xl_encap
-argument_list|(
-name|sc
-argument_list|,
-name|cur_tx
-argument_list|,
-name|m_head
-argument_list|)
 expr_stmt|;
 comment|/* Chain it together. */
 if|if
@@ -11136,6 +11190,8 @@ modifier|*
 name|start_tx
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|idx
 decl_stmt|;
 name|sc
@@ -11254,6 +11310,8 @@ name|idx
 index|]
 expr_stmt|;
 comment|/* Pack the data into the descriptor. */
+name|error
+operator|=
 name|xl_encap
 argument_list|(
 name|sc
@@ -11263,6 +11321,11 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+continue|continue;
 comment|/* Chain it together. */
 if|if
 condition|(
