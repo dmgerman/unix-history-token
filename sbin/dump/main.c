@@ -1562,6 +1562,66 @@ argument_list|,
 sizeof|sizeof
 name|snapname
 argument_list|,
+literal|"%s/.snap"
+argument_list|,
+name|mntpt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|stat
+argument_list|(
+name|snapname
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|<
+literal|0
+operator|)
+operator|||
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"WARNING: %s %s\n"
+argument_list|,
+literal|"-L requested but snapshot location"
+argument_list|,
+name|snapname
+argument_list|)
+expr_stmt|;
+name|msg
+argument_list|(
+literal|"         %s: %s\n"
+argument_list|,
+literal|"is not a directory"
+argument_list|,
+literal|"dump downgraded, -L ignored"
+argument_list|)
+expr_stmt|;
+name|snapdump
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|snprintf
+argument_list|(
+name|snapname
+argument_list|,
+sizeof|sizeof
+name|snapname
+argument_list|,
 literal|"%s/.snap/dump_snapshot"
 argument_list|,
 name|mntpt
@@ -1684,6 +1744,7 @@ operator|.
 name|st_mtime
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
