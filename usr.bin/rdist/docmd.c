@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
 end_include
 
@@ -2534,6 +2540,11 @@ argument_list|,
 literal|"%s -oi -t"
 argument_list|,
 name|_PATH_SENDMAIL
+argument_list|)
+expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"IFS"
 argument_list|)
 expr_stmt|;
 name|pf
