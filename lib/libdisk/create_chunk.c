@@ -465,7 +465,7 @@ name|char
 name|order
 index|[]
 init|=
-literal|"efghabd"
+literal|"defghab"
 decl_stmt|;
 if|if
 condition|(
