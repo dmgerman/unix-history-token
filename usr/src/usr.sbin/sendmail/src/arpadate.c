@@ -56,7 +56,7 @@ operator|)
 name|arpadate
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -113,6 +113,11 @@ name|struct
 name|tm
 modifier|*
 name|localtime
+parameter_list|()
+function_decl|;
+specifier|extern
+name|bool
+name|fconvert
 parameter_list|()
 function_decl|;
 ifdef|#
@@ -608,12 +613,15 @@ return|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/* convert foreign identifications to some ARPA interpretable form */
+comment|/* **  FCONVERT -- convert foreign timezones to ARPA timezones ** **	This routine is essentially from Teus Hagen. ** **	Parameters: **		a -- timezone as returned from UNIX. **		b -- place to put ARPA-style timezone. ** **	Returns: **		TRUE -- if a conversion was made (and b was filled in). **		FALSE -- if this is not a recognized local time. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
-comment|/* with dst we put the time zone one hour ahead */
+comment|/* UNIX to arpa conversion table */
 end_comment
 
 begin_struct
@@ -629,7 +637,14 @@ modifier|*
 name|f_to
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|foreign
+name|Foreign
 index|[]
 init|=
 block|{
@@ -653,7 +668,7 @@ block|,
 literal|" GMT"
 block|}
 block|,
-comment|/* western europe, and what for australia? */
+comment|/* western europe */
 block|{
 literal|"eet dst"
 block|,
@@ -679,31 +694,26 @@ block|,
 name|NULL
 block|}
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_function
+name|bool
 name|fconvert
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -714,38 +724,18 @@ decl_stmt|;
 specifier|register
 name|char
 modifier|*
-name|ptr
+name|p
 decl_stmt|;
-extern|extern makelower(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* for news:	for ( ptr = a; *ptr; ptr++ ) 		if ( isupper(*ptr) ) 			*ptr = tolower( *ptr ); */
-end_comment
-
-begin_expr_stmt
 name|makelower
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|euptr
 operator|=
-operator|&
-name|foreign
-index|[
-literal|0
-index|]
+name|Foreign
 init|;
 name|euptr
 operator|->
@@ -756,6 +746,7 @@ condition|;
 name|euptr
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|strcmp
@@ -770,7 +761,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ptr
+name|p
 operator|=
 name|euptr
 operator|->
@@ -779,14 +770,14 @@ expr_stmt|;
 while|while
 condition|(
 operator|*
-name|ptr
+name|p
 condition|)
 operator|*
 name|b
 operator|++
 operator|=
 operator|*
-name|ptr
+name|p
 operator|++
 expr_stmt|;
 operator|*
@@ -795,17 +786,19 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-literal|1
+operator|(
+name|TRUE
+operator|)
 return|;
 block|}
-end_for
-
-begin_return
+block|}
 return|return
-literal|0
+operator|(
+name|FALSE
+operator|)
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 
