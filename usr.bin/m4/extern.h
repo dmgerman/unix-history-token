@@ -966,10 +966,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|char
-modifier|*
 name|null
+index|[]
 decl_stmt|;
 end_decl_stmt
 

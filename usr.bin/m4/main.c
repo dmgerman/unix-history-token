@@ -355,10 +355,9 @@ comment|/* diversion index..	       */
 end_comment
 
 begin_decl_stmt
-specifier|const
 name|char
-modifier|*
 name|null
+index|[]
 init|=
 literal|""
 decl_stmt|;
@@ -2775,10 +2774,7 @@ name|p
 operator|->
 name|defn
 operator|=
-name|xstrdup
-argument_list|(
 name|null
-argument_list|)
 expr_stmt|;
 name|p
 operator|->
