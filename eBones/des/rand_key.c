@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1993 Eric Young - see README for more details */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: rand_key.c,v 1.2 1994/07/19 19:22:04 g89r4222 Exp $  */
+comment|/*-  *	$Id: rand_key.c,v 1.1.1.1 1994/09/30 14:49:51 csgr Exp $  */
 end_comment
 
 begin_include
@@ -238,6 +238,15 @@ name|des_cblock
 operator|*
 operator|)
 name|data
+argument_list|)
+expr_stmt|;
+name|des_set_odd_parity
+argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
+name|key
 argument_list|)
 expr_stmt|;
 name|bcopy
