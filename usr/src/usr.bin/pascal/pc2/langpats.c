@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.4 %G%"
+literal|"@(#)langpats.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ block|,
 block|{
 literal|"4,_IN\n"
 block|,
-literal|"	clrl	r0\n\ 	popr	$0x1e\n\ 	subl2	r2,r1\n\ 	cmpl	r1,r3\n\ 	jgtru	1f\n\ 	jbc	r1,(r4),1f\n\ 	incl	r0\n\ 1:\n"
+literal|"	popr	$0x1e\n\ 	clrl	r0\n\ 	subl2	r2,r1\n\ 	cmpl	r1,r3\n\ 	jgtru	1f\n\ 	jbc	r1,(r4),1f\n\ 	incl	r0\n\ 1:\n"
 block|}
 block|}
 struct|;
