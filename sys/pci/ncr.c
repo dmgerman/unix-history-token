@@ -7448,6 +7448,7 @@ comment|/*========================================================== ** ** **	Fi
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ncr_script_fill
 parameter_list|(
@@ -14234,6 +14235,7 @@ break|break;
 block|}
 block|}
 comment|/*========================================================== ** ** **	Complete execution of a SCSI command. **	Signal completion to the generic SCSI driver. ** ** **========================================================== */
+specifier|static
 name|void
 name|ncr_complete
 parameter_list|(
@@ -14794,6 +14796,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*========================================================== ** ** **	Signal all (or one) control block done. ** ** **========================================================== */
+specifier|static
 name|void
 name|ncr_wakeup
 parameter_list|(
@@ -15238,6 +15241,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/*========================================================== ** ** **	Start NCR chip. ** ** **========================================================== */
+specifier|static
 name|void
 name|ncr_init
 parameter_list|(
@@ -17358,6 +17362,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*========================================================== ** ** **	ncr chip exception handler. ** ** **========================================================== */
+specifier|static
 name|void
 name|ncr_exception
 parameter_list|(
@@ -18495,6 +18500,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*========================================================== ** **	ncr chip exception handler for selection timeout ** **========================================================== ** **	There seems to be a bug in the 53c810. **	Although a STO-Interrupt is pending, **	it continues executing script commands. **	But it will fail and interrupt (IID) on **	the next instruction where it's looking **	for a valid phase. ** **---------------------------------------------------------- */
+specifier|static
 name|void
 name|ncr_int_sto
 parameter_list|(
@@ -19787,6 +19793,7 @@ literal|1
 operator|)
 return|;
 block|}
+specifier|static
 name|void
 name|ncr_int_sir
 parameter_list|(
@@ -21584,6 +21591,7 @@ operator|)
 return|;
 block|}
 comment|/*========================================================== ** ** **	Release one control block ** ** **========================================================== */
+specifier|static
 name|void
 name|ncr_free_nccb
 parameter_list|(

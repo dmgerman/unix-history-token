@@ -9739,6 +9739,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|amd_EnDisableCE
 parameter_list|(
@@ -9823,6 +9824,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|amd_EEpromOutDI
 parameter_list|(

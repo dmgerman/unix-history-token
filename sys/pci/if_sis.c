@@ -6434,6 +6434,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sis_rxeoc
 parameter_list|(

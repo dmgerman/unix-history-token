@@ -1640,6 +1640,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dc_eeprom_width
 parameter_list|(
@@ -4914,6 +4915,7 @@ comment|/*  * 21143-style RX filter setup routine. Filter programming is done by
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dc_setfilt_21143
 parameter_list|(
@@ -5310,6 +5312,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dc_setfilt_admtek
 parameter_list|(
@@ -5595,6 +5598,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dc_setfilt_asix
 parameter_list|(
@@ -5962,6 +5966,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dc_setfilt_xircom
 parameter_list|(
@@ -8546,6 +8551,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dc_read_srom
 parameter_list|(

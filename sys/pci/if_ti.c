@@ -6774,6 +6774,7 @@ comment|/*  * The Tigon 2 firmware has a new way to add/delete multicast address
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ti_add_mcast
 parameter_list|(
@@ -6964,6 +6965,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ti_del_mcast
 parameter_list|(
