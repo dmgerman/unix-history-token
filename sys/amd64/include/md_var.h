@@ -171,25 +171,6 @@ end_struct_decl
 
 begin_function_decl
 name|void
-name|bcopyb
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|from
-parameter_list|,
-name|void
-modifier|*
-name|to
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|busdma_swi
 parameter_list|(
 name|void
