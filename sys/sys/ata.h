@@ -739,20 +739,6 @@ name|ATADETACH
 value|_IOW('a',  6, int)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ATAACOUSTIC
-value|_IOWR('a',  7, int);
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATASLEEP
-value|_IOWR('a',  8, struct ata_sleep)
-end_define
-
 begin_endif
 endif|#
 directive|endif
