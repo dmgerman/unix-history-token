@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.12 %G%"
+literal|"@(#)sccs.c	1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
