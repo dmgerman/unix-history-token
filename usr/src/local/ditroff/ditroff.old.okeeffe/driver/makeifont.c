@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Font description file producer:  David Slattengren  * Taken from vfontinfo by Andy Hertzfeld  4/79  *  *	Use:  mkfnt [ -nNAME ]  [ -smial ]  [ "-xs1,s2[;s1,s2...]" ]  *		[ "-ys1,s2[;s1,s2...]" ]  [ -p# ]  [ -r# ]  [ -ddir ]  font  *  *	Mkfnt takes the font named "font" and produces a ditroff description  *	file from it.  The -n option takes the 1 or 2 letter troff name to put  *	the description (default = XX).  The -s, -m, -i, -a options select a  *	different character mapping than for a "roman" font.  s = special;  *	m = math;  i = italics;  a = ascii.  The -l option tells if the font  *	has ligatures.  *  *	Both -x and -y options allow character name mapping.  A semi-colon  *	separated list of comma-separated character-name pairs follows the  *	x or y.  Notice that there are no spaces in the -x or -y command.  It  *	is also IMPORTANT to enclose these arguments in double quotes to stop  *	the cshell from interpretting the contents.  A -x pair REPLACES the  *	definition for s1 by s2.  A -y pair creates a synonym for s1 and calls  *	it s2.  -x and -y MUST be sent after -s, -m, -i, or -a  if one of them  *	is used.  Some synonyms are defaulted.  To remove a synonym or char-  *	acter, leave out s2.  *  *	The -p# option tells what point size the DESC file has  *	as it's "unitwidth" argument (default: 36).  The -r# option is the  *	resolution of the device (default: 240, in units/inch).  The -d option  *	tells where to find fonts (default: /usr/src/local/imagen/fonts/raster).  */
+comment|/* Font description file producer for imagen fonts:  David Slattengren  * Taken from vfontinfo by Andy Hertzfeld  4/79  *  *	Use:  mifnt [ -nNAME ]  [ -smial ]  [ "-xs1,s2[;s1,s2...]" ]  *		[ "-ys1,s2[;s1,s2...]" ]  [ -p# ]  [ -r# ]  [ -ddir ]  font  *  *	Mkfnt takes the font named "font" and produces a ditroff description  *	file from it.  The -n option takes the 1 or 2 letter troff name to put  *	the description (default = XX).  The -s, -m, -i, -a options select a  *	different character mapping than for a "roman" font.  s = special;  *	m = math;  i = italics;  a = ascii.  The -l option tells if the font  *	has ligatures.  *  *	Both -x and -y options allow character name mapping.  A semi-colon  *	separated list of comma-separated character-name pairs follows the  *	x or y.  Notice that there are no spaces in the -x or -y command.  It  *	is also IMPORTANT to enclose these arguments in single quotes to stop  *	the cshell from interpretting the contents.  A -x pair REPLACES the  *	definition for s1 by s2.  A -y pair creates a synonym for s1 and calls  *	it s2.  -x and -y MUST be sent after -s, -m, -i, or -a  if one of them  *	is used.  Some synonyms are defaulted.  To remove a synonym or char-  *	acter, leave out s2.  *  *	The -p# option tells what point size the DESC file has  *	as it's "unitwidth" argument (default: 40).  The -r# option is the  *	resolution of the device (default: 240, in units/inch).  The -d option  *	tells where to find fonts (default: /usr/src/local/imagen/fonts/raster).  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makeifont.c	1.2	(Berkeley)	%G%"
+literal|"@(#)makeifont.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -961,7 +961,7 @@ literal|"]"
 block|,
 literal|"^"
 block|,
-literal|"_"
+literal|"em"
 block|,
 literal|"`"
 block|,
@@ -1383,7 +1383,7 @@ literal|""
 block|,
 literal|""
 block|,
-literal|"/"
+literal|""
 block|,
 literal|""
 block|,
