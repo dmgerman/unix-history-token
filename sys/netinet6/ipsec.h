@@ -429,7 +429,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* discarding packet */
+comment|/* discard the packet */
 end_comment
 
 begin_define
@@ -440,7 +440,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* through IPsec engine */
+comment|/* bypass IPsec engine */
 end_comment
 
 begin_define
@@ -451,7 +451,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* do IPsec */
+comment|/* pass to IPsec */
 end_comment
 
 begin_define
@@ -953,7 +953,9 @@ name|ipseclog
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (ipsec_debug) log x; } while (0)
+value|do { if (ipsec_debug) log x; } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_struct_decl
@@ -1048,7 +1050,6 @@ operator|(
 expr|struct
 name|socket
 operator|*
-name|so
 operator|,
 expr|struct
 name|inpcbpolicy
@@ -1103,19 +1104,14 @@ operator|(
 expr|struct
 name|inpcb
 operator|*
-name|inp
 operator|,
 name|int
-name|optname
 operator|,
 name|caddr_t
-name|request
 operator|,
 name|size_t
-name|len
 operator|,
 name|int
-name|priv
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1131,19 +1127,15 @@ operator|(
 expr|struct
 name|inpcb
 operator|*
-name|inpcb
 operator|,
 name|caddr_t
-name|request
 operator|,
 name|size_t
-name|len
 operator|,
 expr|struct
 name|mbuf
 operator|*
 operator|*
-name|mp
 operator|)
 argument_list|)
 decl_stmt|;

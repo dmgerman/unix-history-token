@@ -352,7 +352,6 @@ operator|,
 expr|struct
 name|sockopt
 operator|*
-name|sopt
 operator|)
 argument_list|)
 decl_stmt|;
@@ -703,7 +702,9 @@ parameter_list|,
 name|mp
 parameter_list|)
 define|\
-value|do {								\ 	if (hp) {							\ 		struct ip6_ext *eh = (struct ip6_ext *)(hp);		\ 		error = ip6_copyexthdr((mp), (caddr_t)(hp), 		\ 				       ((eh)->ip6e_len + 1)<< 3);	\ 		if (error)						\ 			goto freehdrs;					\ 	}								\     } while (0)
+value|do {								\ 	if (hp) {							\ 		struct ip6_ext *eh = (struct ip6_ext *)(hp);		\ 		error = ip6_copyexthdr((mp), (caddr_t)(hp),		\ 		    ((eh)->ip6e_len + 1)<< 3);				\ 		if (error)						\ 			goto freehdrs;					\ 	}								\     } while (
+comment|/*CONSTCOND*/
+value|0)
 name|bzero
 argument_list|(
 operator|&
@@ -1388,7 +1389,9 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {\ 	if (m) {\ 		if (!hdrsplit) \ 			panic("assumption failed: hdr not split"); \ 		*mtod((m), u_char *) = *(p);\ 		*(p) = (i);\ 		p = mtod((m), u_char *);\ 		(m)->m_next = (mp)->m_next;\ 		(mp)->m_next = (m);\ 		(mp) = (m);\ 	}\     } while (0)
+value|do {\ 	if (m) {\ 		if (!hdrsplit) \ 			panic("assumption failed: hdr not split"); \ 		*mtod((m), u_char *) = *(p);\ 		*(p) = (i);\ 		p = mtod((m), u_char *);\ 		(m)->m_next = (mp)->m_next;\ 		(mp)->m_next = (m);\ 		(mp) = (m);\ 	}\     } while (
+comment|/*CONSTCOND*/
+value|0)
 comment|/* 		 * result: IPv6 hbh dest1 rthdr dest2 payload 		 * m will point to IPv6 header.  mprev will point to the 		 * extension header prior to dest2 (rthdr in the above case). 		 */
 name|MAKE_CHAIN
 argument_list|(
@@ -1586,7 +1589,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|ENOENT
 case|:
@@ -1623,7 +1626,7 @@ empty_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * If there is a routing header, replace destination address field 	 * with the first hop of the routing header. 	 */
+comment|/* 	 * If there is a routing header, replace the destination address field 	 * with the first hop of the routing header. 	 */
 if|if
 condition|(
 name|exthdrs
@@ -2182,7 +2185,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|ENOENT
 case|:
@@ -4416,7 +4419,7 @@ operator|.
 name|ip6e_dest2
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 name|bad
 label|:
 name|m_freem
@@ -5378,7 +5381,7 @@ if|if
 condition|(
 name|error
 operator|!=
-literal|0
+name|NULL
 condition|)
 break|break;
 name|error
@@ -5395,7 +5398,7 @@ if|if
 condition|(
 name|error
 operator|!=
-literal|0
+name|NULL
 condition|)
 break|break;
 name|error
@@ -5531,7 +5534,9 @@ parameter_list|(
 name|bit
 parameter_list|)
 define|\
-value|do { \ 	if (optval) \ 		in6p->in6p_flags |= (bit); \ 	else \ 		in6p->in6p_flags&= ~(bit); \ } while (0)
+value|do { \ 	if (optval) \ 		in6p->in6p_flags |= (bit); \ 	else \ 		in6p->in6p_flags&= ~(bit); \ } while (
+comment|/*CONSTCOND*/
+value|0)
 define|#
 directive|define
 name|OPTBIT
@@ -6610,7 +6615,7 @@ if|if
 condition|(
 name|error
 operator|!=
-literal|0
+name|NULL
 condition|)
 break|break;
 name|error
@@ -6627,7 +6632,7 @@ if|if
 condition|(
 name|error
 operator|!=
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6679,7 +6684,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 if|if
 condition|(
 name|error
@@ -7351,7 +7356,9 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|do {\ 	if (src->type) {\ 		int hlen =\ 			(((struct ip6_ext *)src->type)->ip6e_len + 1)<< 3;\ 		dst->type = malloc(hlen, M_IP6OPT, canwait);\ 		if (dst->type == NULL&& canwait == M_NOWAIT)\ 			goto bad;\ 		bcopy(src->type, dst->type, hlen);\ 	}\ } while (0)
+value|do {\ 	if (src->type) {\ 		int hlen = (((struct ip6_ext *)src->type)->ip6e_len + 1)<< 3;\ 		dst->type = malloc(hlen, M_IP6OPT, canwait);\ 		if (dst->type == NULL&& canwait == M_NOWAIT)\ 			goto bad;\ 		bcopy(src->type, dst->type, hlen);\ 	}\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_function
@@ -7811,7 +7818,6 @@ name|td
 init|=
 name|curthread
 decl_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|im6o
@@ -10343,7 +10349,7 @@ name|dst
 operator|->
 name|sin6_family
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

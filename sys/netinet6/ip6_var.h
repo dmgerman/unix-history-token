@@ -352,7 +352,7 @@ comment|/* total packets reassembled ok */
 name|u_quad_t
 name|ip6s_fragmented
 decl_stmt|;
-comment|/* datagrams sucessfully fragmented */
+comment|/* datagrams successfully fragmented */
 name|u_quad_t
 name|ip6s_ofragments
 decl_stmt|;
@@ -1377,7 +1377,6 @@ operator|,
 expr|struct
 name|sockopt
 operator|*
-name|sopt
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1567,14 +1566,11 @@ expr|struct
 name|mbuf
 operator|*
 operator|*
-name|mp
 operator|,
 name|int
 operator|*
-name|offp
 operator|,
 name|int
-name|proto
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1608,12 +1604,10 @@ operator|(
 expr|struct
 name|socket
 operator|*
-name|so
 operator|,
 expr|struct
 name|sockopt
 operator|*
-name|sopt
 operator|)
 argument_list|)
 decl_stmt|;

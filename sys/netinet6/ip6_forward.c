@@ -430,7 +430,7 @@ block|}
 endif|#
 directive|endif
 comment|/* IPSEC */
-comment|/* 	 * Do not forward packets to multicast destination (should be handled 	 * by ip6_mforward(). 	 * Do not forward packets with unspecified source.  It was discussed 	 * in July 2000, on ipngwg mailing list. 	 */
+comment|/* 	 * Do not forward packets to multicast destination (should be handled 	 * by ip6_mforward(). 	 * Do not forward packets with unspecified source.  It was discussed 	 * in July 2000, on the ipngwg mailing list. 	 */
 if|if
 condition|(
 operator|(
@@ -884,7 +884,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|ENOENT
 case|:
@@ -946,7 +946,7 @@ operator|!
 name|srcrt
 condition|)
 block|{
-comment|/* 		 * ip6_forward_rt.ro_dst.sin6_addr is equal to ip6->ip6_dst 		 */
+comment|/* ip6_forward_rt.ro_dst.sin6_addr is equal to ip6->ip6_dst */
 if|if
 condition|(
 name|ip6_forward_rt
@@ -1887,9 +1887,6 @@ block|{
 case|case
 literal|0
 case|:
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|type
@@ -1906,8 +1903,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 goto|goto
 name|freecopy
 goto|;

@@ -119,12 +119,12 @@ modifier|*
 name|ia6_ifpr
 decl_stmt|;
 comment|/* back pointer to ifprefix */
+comment|/* back pointer to the ND prefix (for autoconfigured addresses only) */
 name|struct
 name|nd_prefix
 modifier|*
 name|ia6_ndpr
 decl_stmt|;
-comment|/* back pointer to the ND prefix 				     * (for autoconfigured addresses only) 				     */
 block|}
 struct|;
 end_struct
@@ -1442,7 +1442,9 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|do {								\ 	if ((ifp)&& (ifp)->if_index<= if_index		\&& (ifp)->if_index< in6_ifstatmax			\&& in6_ifstat&& in6_ifstat[(ifp)->if_index]) {	\ 		in6_ifstat[(ifp)->if_index]->tag++;		\ 	}							\ } while (0)
+value|do {								\ 	if ((ifp)&& (ifp)->if_index<= if_index		\&& (ifp)->if_index< in6_ifstatmax			\&& in6_ifstat&& in6_ifstat[(ifp)->if_index]) {	\ 		in6_ifstat[(ifp)->if_index]->tag++;		\ 	}							\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_decl_stmt
@@ -1489,6 +1491,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* MALLOC_DECLARE */
+end_comment
+
+begin_comment
 comment|/*  * Macro for finding the internet address structure (in6_ifaddr) corresponding  * to a given interface (ifnet structure).  */
 end_comment
 
@@ -1506,7 +1512,9 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in6_ifaddr *ia; */
 define|\
-value|do {									\ 	struct ifaddr *ifa;						\ 	for (ifa = (ifp)->if_addrlist.tqh_first; ifa; ifa = ifa->ifa_list.tqe_next) {	\ 		if (!ifa->ifa_addr)					\ 			continue;					\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (0)
+value|do {									\ 	struct ifaddr *ifa;						\ 	for (ifa = (ifp)->if_addrlist.tqh_first; ifa; ifa = ifa->ifa_list.tqe_next) {	\ 		if (!ifa->ifa_addr)					\ 			continue;					\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_endif
@@ -2022,15 +2030,12 @@ operator|(
 expr|struct
 name|in6_addr
 operator|*
-name|p1
 operator|,
 expr|struct
 name|in6_addr
 operator|*
-name|p2
 operator|,
 name|int
-name|len
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2045,10 +2050,8 @@ operator|(
 expr|struct
 name|in6_addr
 operator|*
-name|maskp
 operator|,
 name|int
-name|len
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2063,18 +2066,14 @@ operator|(
 expr|struct
 name|socket
 operator|*
-name|so
 operator|,
 name|u_long
-name|cmd
 operator|,
 name|caddr_t
-name|data
 operator|,
 expr|struct
 name|ifnet
 operator|*
-name|ifp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2087,12 +2086,10 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|iilen
 operator|,
 expr|struct
 name|in6_ifaddr
 operator|*
-name|ia
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2105,12 +2102,10 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|iilen
 operator|,
 expr|struct
 name|in6_ifaddr
 operator|*
-name|ia
 operator|)
 argument_list|)
 decl_stmt|;

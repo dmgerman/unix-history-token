@@ -1261,7 +1261,7 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/*ENOBUFS*/
+comment|/* ENOBUFS */
 block|}
 name|m_copydata
 argument_list|(
@@ -1315,7 +1315,7 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 argument_list|,
-comment|/*nothing*/
+comment|/* nothing */
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1363,7 +1363,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ip6stat
@@ -1629,7 +1629,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * The following check is not documented in specs.  A malicious 	 * party may be able to use IPv4 mapped addr to confuse tcp/udp stack 	 * and bypass security checks (act as if it was from 127.0.0.1 by using 	 * IPv6 src ::ffff:127.0.0.1).	Be cautious. 	 * 	 * This check chokes if we are in an SIIT cloud.  As none of BSDs 	 * support IPv4-less kernel compilation, we cannot support SIIT 	 * environment at all.  So, it makes more sense for us to reject any 	 * malicious packets for non-SIIT environment, than try to do a 	 * partical support for SIIT environment. 	 */
+comment|/* 	 * The following check is not documented in specs.  A malicious 	 * party may be able to use IPv4 mapped addr to confuse tcp/udp stack 	 * and bypass security checks (act as if it was from 127.0.0.1 by using 	 * IPv6 src ::ffff:127.0.0.1).  Be cautious. 	 * 	 * This check chokes if we are in an SIIT cloud.  As none of BSDs 	 * support IPv4-less kernel compilation, we cannot support SIIT 	 * environment at all.  So, it makes more sense for us to reject any 	 * malicious packets for non-SIIT environment, than try to do a 	 * partial support for SIIT environment. 	 */
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -1813,16 +1813,6 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* this case seems to be unnecessary. (jinmei, 20010401) */
-comment|/* 	 * We use rt->rt_ifp to determine if the address is ours or not. 	 * If rt_ifp is lo0, the address is ours. 	 * The problem here is, rt->rt_ifp for fe80::%lo0/64 is set to lo0, 	 * so any address under fe80::%lo0/64 will be mistakenly considered 	 * local.  The special case is supplied to handle the case properly 	 * by actually looking at interface addresses 	 * (using in6ifa_ifpwithaddr). 	 */
-block|if ((m->m_pkthdr.rcvif->if_flags& IFF_LOOPBACK) != 0&& 	    IN6_IS_ADDR_LINKLOCAL(&ip6->ip6_dst)) { 		if (!in6ifa_ifpwithaddr(m->m_pkthdr.rcvif,&ip6->ip6_dst)) { 			icmp6_error(m, ICMP6_DST_UNREACH, 			    ICMP6_DST_UNREACH_ADDR, 0);
-comment|/* m is already freed */
-block|return; 		}  		ours = 1; 		deliverifp = m->m_pkthdr.rcvif; 		goto hbhcheck; 	}
-endif|#
-directive|endif
 comment|/* 	 * Multicast check 	 */
 if|if
 condition|(
@@ -1922,13 +1912,6 @@ name|hbhcheck
 goto|;
 block|}
 comment|/* 	 *  Unicast check 	 */
-switch|switch
-condition|(
-name|ip6_ours_check_algorithm
-condition|)
-block|{
-default|default:
-comment|/* 		 * XXX: I intentionally broke our indentation rule here, 		 *      since this switch-case is just for measurement and 		 *      therefore should soon be removed. 		 */
 if|if
 condition|(
 name|ip6_forward_rt
@@ -2291,9 +2274,7 @@ name|bad
 goto|;
 block|}
 block|}
-block|}
-comment|/* XXX indentation (see above) */
-comment|/* 	 * FAITH(Firewall Aided Internet Translator) 	 */
+comment|/* 	 * FAITH (Firewall Aided Internet Translator) 	 */
 if|if
 condition|(
 name|ip6_keepfaith
@@ -2500,7 +2481,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Note that if a valid jumbo payload option is 			 * contained, ip6_hoptops_input() must set a valid 			 * (non-zero) payload length to the variable plen.  			 */
+comment|/* 			 * Note that if a valid jumbo payload option is 			 * contained, ip6_hopopts_input() must set a valid 			 * (non-zero) payload length to the variable plen. 			 */
 name|ip6stat
 operator|.
 name|ip6s_badoptions
@@ -4416,6 +4397,7 @@ condition|(
 operator|*
 name|mp
 condition|)
+block|{
 name|mp
 operator|=
 operator|&
@@ -4426,6 +4408,7 @@ operator|)
 operator|->
 name|m_next
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4475,6 +4458,7 @@ condition|(
 operator|*
 name|mp
 condition|)
+block|{
 name|mp
 operator|=
 operator|&
@@ -4485,6 +4469,7 @@ operator|)
 operator|->
 name|m_next
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * IPV6_HOPOPTS socket option. We require super-user privilege 	 * for the option, but it might be too strict, since there might 	 * be some hop-by-hop options which can be returned to normal user. 	 * See RFC 2292 section 6. 	 */
 if|if
@@ -4502,7 +4487,7 @@ operator|&&
 name|privileged
 condition|)
 block|{
-comment|/* 		 * Check if a hop-by-hop options header is contatined in the 		 * received packet, and if so, store the options as ancillary 		 * data. Note that a hop-by-hop options header must be 		 * just after the IPv6 header, which fact is assured through 		 * the IPv6 input processing. 		 */
+comment|/* 		 * Check if a hop-by-hop options header is contatined in the 		 * received packet, and if so, store the options as ancillary 		 * data. Note that a hop-by-hop options header must be 		 * just after the IPv6 header, which is assured through the 		 * IPv6 input processing. 		 */
 name|struct
 name|ip6_hdr
 modifier|*
@@ -4653,7 +4638,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 			 * XXX: We copy whole the header even if a jumbo 			 * payload option is included, which option is to 			 * be removed before returning in the RFC 2292. 			 * Note: this constraint is removed in 2292bis. 			 */
+comment|/* 			 * XXX: We copy the whole header even if a 			 * jumbo payload option is included, the option which 			 * is to be removed before returning according to 			 * RFC2292. 			 * Note: this constraint is removed in 2292bis. 			 */
 operator|*
 name|mp
 operator|=
@@ -4676,6 +4661,7 @@ condition|(
 operator|*
 name|mp
 condition|)
+block|{
 name|mp
 operator|=
 operator|&
@@ -4686,6 +4672,7 @@ operator|)
 operator|->
 name|m_next
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|PULLDOWN_TEST
@@ -5083,6 +5070,7 @@ name|IPPROTO_DSTOPTS
 case|:
 if|if
 condition|(
+operator|!
 operator|(
 name|in6p
 operator|->
@@ -5090,11 +5078,9 @@ name|in6p_flags
 operator|&
 name|IN6P_DSTOPTS
 operator|)
-operator|==
-literal|0
 condition|)
 break|break;
-comment|/* 				 * We also require super-user privilege for 				 * the option. 				 * See the comments on IN6_HOPOPTS. 				 */
+comment|/* 				 * We also require super-user privilege for 				 * the option.  See comments on IN6_HOPOPTS. 				 */
 if|if
 condition|(
 operator|!
@@ -6194,8 +6180,10 @@ block|{
 name|struct
 name|m_tag
 modifier|*
-name|tag
-init|=
+name|mtag
+decl_stmt|;
+name|mtag
+operator|=
 name|m_tag_find
 argument_list|(
 name|m
@@ -6204,14 +6192,14 @@ name|PACKET_TAG_IPV6_INPUT
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|tag
+name|mtag
 condition|)
 block|{
-name|tag
+name|mtag
 operator|=
 name|m_tag_get
 argument_list|(
@@ -6228,23 +6216,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tag
+name|mtag
 condition|)
 name|m_tag_prepend
 argument_list|(
 name|m
 argument_list|,
-name|tag
+name|mtag
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|tag
+name|mtag
 condition|)
 name|bzero
 argument_list|(
-name|tag
+name|mtag
 operator|+
 literal|1
 argument_list|,
@@ -6256,7 +6244,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|tag
+name|mtag
 condition|?
 operator|(
 expr|struct
@@ -6264,7 +6252,7 @@ name|ip6aux
 operator|*
 operator|)
 operator|(
-name|tag
+name|mtag
 operator|+
 literal|1
 operator|)
@@ -6291,8 +6279,10 @@ block|{
 name|struct
 name|m_tag
 modifier|*
-name|tag
-init|=
+name|mtag
+decl_stmt|;
+name|mtag
+operator|=
 name|m_tag_find
 argument_list|(
 name|m
@@ -6301,9 +6291,9 @@ name|PACKET_TAG_IPV6_INPUT
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
-name|tag
+name|mtag
 condition|?
 operator|(
 expr|struct
@@ -6311,7 +6301,7 @@ name|ip6aux
 operator|*
 operator|)
 operator|(
-name|tag
+name|mtag
 operator|+
 literal|1
 operator|)
@@ -6336,8 +6326,10 @@ block|{
 name|struct
 name|m_tag
 modifier|*
-name|tag
-init|=
+name|mtag
+decl_stmt|;
+name|mtag
+operator|=
 name|m_tag_find
 argument_list|(
 name|m
@@ -6346,16 +6338,16 @@ name|PACKET_TAG_IPV6_INPUT
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|tag
+name|mtag
 condition|)
 name|m_tag_delete
 argument_list|(
 name|m
 argument_list|,
-name|tag
+name|mtag
 argument_list|)
 expr_stmt|;
 block|}

@@ -1134,7 +1134,6 @@ operator|,
 expr|struct
 name|inpcb
 operator|*
-name|pcb
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1160,7 +1159,6 @@ operator|,
 expr|struct
 name|in6pcb
 operator|*
-name|pcb
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1202,7 +1200,6 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
-name|m
 operator|,
 expr|struct
 name|secpolicyindex
@@ -1249,7 +1246,6 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
-name|m
 operator|,
 expr|struct
 name|secpolicyindex
@@ -1327,7 +1323,6 @@ operator|(
 expr|struct
 name|secpolicy
 operator|*
-name|src
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1344,19 +1339,14 @@ expr|struct
 name|secpolicy
 operator|*
 operator|*
-name|pcb_sp
 operator|,
 name|int
-name|optname
 operator|,
 name|caddr_t
-name|request
 operator|,
 name|size_t
-name|len
 operator|,
 name|int
-name|priv
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1372,13 +1362,11 @@ operator|(
 expr|struct
 name|secpolicy
 operator|*
-name|pcb_sp
 operator|,
 expr|struct
 name|mbuf
 operator|*
 operator|*
-name|mp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2219,7 +2207,7 @@ name|spidx
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Make an index to look for a policy. */
+comment|/* make an index to look for a policy */
 operator|*
 name|error
 operator|=
@@ -3027,7 +3015,7 @@ name|spidx
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Make an index to look for a policy. */
+comment|/* make an index to look for a policy */
 operator|*
 name|error
 operator|=
@@ -6737,7 +6725,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec4_set_policy: invalid direction=%u\n"
+literal|"ipsec4_get_policy: invalid direction=%u\n"
 operator|,
 name|xpl
 operator|->
@@ -7161,7 +7149,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec6_set_policy: invalid direction=%u\n"
+literal|"ipsec6_get_policy: invalid direction=%u\n"
 operator|,
 name|xpl
 operator|->
@@ -8014,6 +8002,7 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
+comment|/* XXX should be panic ? -> No, there may be error. */
 if|if
 condition|(
 name|sp
@@ -8023,7 +8012,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* XXX should be panic ? 				 * -> No, there may be error. */
 name|result
 operator|=
 name|ipsec_in_reject
@@ -10054,7 +10042,7 @@ comment|/* INET6 */
 end_comment
 
 begin_comment
-comment|/*  * Check the variable replay window.  * ipsec_chkreplay() performs replay check before ICV verification.  * ipsec_updatereplay() updates replay bitmap.  This must be called after  * ICV verification (it also performs replay check, which is usually done  * beforehand).  * 0 (zero) is returned if packet disallowed, 1 if packet permitted.  *  * based on RFC 2401.  */
+comment|/*  * Check the variable replay window.  * ipsec_chkreplay() performs replay check before ICV verification.  * ipsec_updatereplay() updates replay bitmap.  This must be called after  * ICV verification (it also performs replay check, which is usually done  * beforehand).  * 0 (zero) is returned if packet disallowed, 1 if packet permitted.  *  * based on RFC 2401.  *  * XXX need to update for 64bit sequence number - 2401bis  */
 end_comment
 
 begin_function
@@ -10209,11 +10197,9 @@ expr_stmt|;
 comment|/* this packet already seen ? */
 if|if
 condition|(
-operator|(
 name|replay
 operator|->
 name|bitmap
-operator|)
 index|[
 name|fr
 index|]
@@ -10240,7 +10226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * check replay counter whether to update or not.  * OUT:	0:	OK  *	1:	NG  */
+comment|/*  * check replay counter whether to update or not.  * OUT:	0:	OK  *	1:	NG  * XXX need to update for 64bit sequence number - 2401bis  */
 end_comment
 
 begin_function
@@ -10363,11 +10349,9 @@ operator|->
 name|wsize
 argument_list|)
 expr_stmt|;
-operator|(
 name|replay
 operator|->
 name|bitmap
-operator|)
 index|[
 name|frlast
 index|]
@@ -10419,11 +10403,9 @@ operator|->
 name|wsize
 argument_list|)
 expr_stmt|;
-operator|(
 name|replay
 operator|->
 name|bitmap
-operator|)
 index|[
 name|frlast
 index|]
@@ -10445,11 +10427,9 @@ operator|->
 name|wsize
 argument_list|)
 expr_stmt|;
-operator|(
 name|replay
 operator|->
 name|bitmap
-operator|)
 index|[
 name|frlast
 index|]
@@ -10497,11 +10477,9 @@ expr_stmt|;
 comment|/* this packet already seen ? */
 if|if
 condition|(
-operator|(
 name|replay
 operator|->
 name|bitmap
-operator|)
 index|[
 name|fr
 index|]
@@ -10520,11 +10498,9 @@ return|return
 literal|1
 return|;
 comment|/* mark as seen */
-operator|(
 name|replay
 operator|->
 name|bitmap
-operator|)
 index|[
 name|fr
 index|]
@@ -16061,7 +16037,7 @@ operator|&
 name|M_EXT
 condition|)
 block|{
-comment|/* 			 * Make a copy only if there are more than one 			 * references to the cluster. 			 * XXX: is this approach effective? 			 */
+comment|/* 			 * Make a copy only if there is more than one 			 * references to the cluster. 			 * XXX: is this approach effective? 			 */
 if|if
 condition|(
 name|n
@@ -16407,12 +16383,12 @@ block|{
 name|struct
 name|m_tag
 modifier|*
-name|tag
+name|mtag
 decl_stmt|;
 while|while
 condition|(
 operator|(
-name|tag
+name|mtag
 operator|=
 name|m_tag_find
 argument_list|(
@@ -16430,7 +16406,7 @@ name|m_tag_delete
 argument_list|(
 name|m
 argument_list|,
-name|tag
+name|mtag
 argument_list|)
 expr_stmt|;
 block|}
@@ -16461,14 +16437,14 @@ block|{
 name|struct
 name|m_tag
 modifier|*
-name|tag
+name|mtag
 decl_stmt|;
 name|struct
 name|ipsec_history
 modifier|*
 name|p
 decl_stmt|;
-name|tag
+name|mtag
 operator|=
 name|m_tag_get
 argument_list|(
@@ -16485,7 +16461,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tag
+name|mtag
 operator|==
 name|NULL
 condition|)
@@ -16500,7 +16476,7 @@ name|ipsec_history
 operator|*
 operator|)
 operator|(
-name|tag
+name|mtag
 operator|+
 literal|1
 operator|)
@@ -16532,7 +16508,7 @@ name|m_tag_prepend
 argument_list|(
 name|m
 argument_list|,
-name|tag
+name|mtag
 argument_list|)
 expr_stmt|;
 return|return
@@ -16564,9 +16540,9 @@ block|{
 name|struct
 name|m_tag
 modifier|*
-name|tag
+name|mtag
 decl_stmt|;
-name|tag
+name|mtag
 operator|=
 name|m_tag_find
 argument_list|(
@@ -16579,7 +16555,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tag
+name|mtag
 operator|==
 name|NULL
 condition|)
@@ -16608,7 +16584,7 @@ name|ipsec_history
 operator|*
 operator|)
 operator|(
-name|tag
+name|mtag
 operator|+
 literal|1
 operator|)

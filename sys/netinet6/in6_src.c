@@ -918,14 +918,6 @@ name|rt_ifa
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 		 * xxx The followings are necessary? (kazu) 		 * I don't think so. 		 * It's for SO_DONTROUTE option in IPv4.(jinmei) 		 */
-block|if (ia6 == 0) { 			struct sockaddr_in6 sin6 = {sizeof(sin6), AF_INET6, 0};  			sin6->sin6_addr = *dst;  			ia6 = ifatoia6(ifa_ifwithdstaddr(sin6tosa(&sin6))); 			if (ia6 == 0) 				ia6 = ifatoia6(ifa_ifwithnet(sin6tosa(&sin6))); 			if (ia6 == 0) 				return (0); 			return (&satosin6(&ia6->ia_addr)->sin6_addr); 		}
-endif|#
-directive|endif
-comment|/* 0 */
 if|if
 condition|(
 name|ia6
@@ -1437,7 +1429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * generate kernel-internal form (scopeid embedded into s6_addr16[1]).  * If the address scope of is link-local, embed the interface index in the  * address.  The routine determines our precedence  * between advanced API scope/interface specification and basic API  * specification.  *  * this function should be nuked in the future, when we get rid of  * embedded scopeid thing.  *  * XXX actually, it is over-specification to return ifp against sin6_scope_id.  * there can be multiple interfaces that belong to a particular scope zone  * (in specification, we have 1:N mapping between a scope zone and interfaces).  * we may want to change the function to return something other than ifp.  */
+comment|/*  * Generate kernel-internal form (scopeid embedded into s6_addr16[1]).  * If the address scope of is link-local, embed the interface index in the  * address.  The routine determines our precedence  * between advanced API scope/interface specification and basic API  * specification.  *  * This function should be nuked in the future, when we get rid of embedded  * scopeid thing.  *  * XXX actually, it is over-specification to return ifp against sin6_scope_id.  * there can be multiple interfaces that belong to a particular scope zone  * (in specification, we have 1:N mapping between a scope zone and interfaces).  * we may want to change the function to return something other than ifp.  */
 end_comment
 
 begin_function
@@ -1679,7 +1671,7 @@ argument_list|(
 name|scopeid
 argument_list|)
 expr_stmt|;
-comment|/*XXX assignment to 16bit from 32bit variable */
+comment|/* XXX assignment to 16bit from 32bit variable */
 name|in6
 operator|->
 name|s6_addr16
@@ -1863,7 +1855,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * just clear the embedded scope identifer.  * XXX: currently used for bsdi4 only as a supplement function.  */
+comment|/*  * just clear the embedded scope identifier.  * XXX: currently used for bsdi4 only as a supplement function.  */
 end_comment
 
 begin_function

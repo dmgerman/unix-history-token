@@ -207,7 +207,9 @@ name|rule
 parameter_list|,
 name|n
 parameter_list|)
-value|do {				\ 					  (rule)->fw_nports&= ~0x0f;	\ 					  (rule)->fw_nports |= (n);	\ 					} while (0)
+value|do {				\ 					  (rule)->fw_nports&= ~0x0f;	\ 					  (rule)->fw_nports |= (n);	\ 					} while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -229,7 +231,9 @@ name|rule
 parameter_list|,
 name|n
 parameter_list|)
-value|do {				\ 					  (rule)->fw_nports&= ~0xf0;	\ 					  (rule)->fw_nports |= (n)<< 4;\ 					} while (0)
+value|do {				\ 					  (rule)->fw_nports&= ~0xf0;	\ 					  (rule)->fw_nports |= (n)<< 4;\ 					} while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -519,7 +523,7 @@ comment|/* All possible flag bits mask		*/
 end_comment
 
 begin_comment
-comment|/*   * Flags for the 'fw_ipflg' field, for comparing values of ip and its protocols. */
+comment|/*  * Flags for the 'fw_ipflg' field, for comparing values of ip and its protocols. */
 end_comment
 
 begin_define

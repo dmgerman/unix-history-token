@@ -495,7 +495,9 @@ name|dprintf
 parameter_list|(
 name|a
 parameter_list|)
-value|do {						\ 				if (fw6_debug)				\ 					printf a;			\ 			} while (0)
+value|do {						\ 				if (fw6_debug)				\ 					printf a;			\ 			} while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -3065,7 +3067,9 @@ name|PULLUP_TO
 parameter_list|(
 name|len
 parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len)			\&& (*m = m_pullup(*m, (len))) == 0) {	\ 				    goto dropit;			\ 			    }						\ 			    *pip6 = ip6 = mtod(*m, struct ip6_hdr *);	\ 			} while (0)
+value|do {						\ 			    if ((*m)->m_len< (len)			\&& (*m = m_pullup(*m, (len))) == 0) {	\ 				    goto dropit;			\ 			    }						\ 			    *pip6 = ip6 = mtod(*m, struct ip6_hdr *);	\ 			} while (
+comment|/*CONSTCOND*/
+value|0)
 comment|/* Protocol specific checks */
 switch|switch
 condition|(
@@ -3710,6 +3714,10 @@ block|{
 case|case
 name|IPV6_FW_REJECT_RST
 case|:
+if|#
+directive|if
+literal|1
+comment|/* not tested */
 block|{
 name|struct
 name|tcphdr
@@ -4006,6 +4014,8 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 default|default:
 comment|/* Send an ICMP unreachable using code */
 if|if
@@ -6373,7 +6383,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-name|__func__
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 name|printf

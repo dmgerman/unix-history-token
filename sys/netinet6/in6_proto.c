@@ -1327,7 +1327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* router renumbering prefix 				 * walk list every 5 sec.    */
+comment|/* router renumbering prefix 				 * walk list every 5 sec. */
 end_comment
 
 begin_decl_stmt

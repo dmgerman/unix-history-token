@@ -132,7 +132,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_NETINET6_IN6_GIF_H_*/
+comment|/* _NETINET6_IN6_GIF_H_ */
 end_comment
 
 end_unit

@@ -16,7 +16,11 @@ comment|/*	BSDI ip_mroute.c,v 2.10 1996/11/14 00:29:52 jch Exp	*/
 end_comment
 
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenenr, PARC, April 1994  *  * MROUTING Revision: 3.5.1.2 + PIM-SMv2 (pimd) Support  */
+comment|/*  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992, 1993  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)ip_mroute.c 8.2 (Berkeley) 11/15/93  */
+end_comment
+
+begin_comment
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1994  *  * MROUTING Revision: 3.5.1.2 + PIM-SMv2 (pimd) Support  */
 end_comment
 
 begin_include
@@ -630,7 +634,9 @@ name|g
 parameter_list|,
 name|rt
 parameter_list|)
-value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	mrt6stat.mrt6s_mfc_lookups++; \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		mrt6stat.mrt6s_mfc_misses++; \ 	} \ } while (0)
+value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	mrt6stat.mrt6s_mfc_lookups++; \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		mrt6stat.mrt6s_mfc_misses++; \ 	} \ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_comment
@@ -649,8 +655,10 @@ parameter_list|,
 name|delta
 parameter_list|)
 value|do { \ 	    int xxs; \ 		\ 	    delta = (a).tv_usec - (b).tv_usec; \ 	    if ((xxs = (a).tv_sec - (b).tv_sec)) { \ 	       switch (xxs) { \ 		      case 2: \ 			  delta += 1000000; \
-comment|/* fall through */
-value|\ 		      case 1: \ 			  delta += 1000000; \ 			  break; \ 		      default: \ 			  delta += (1000000 * xxs); \ 	       } \ 	    } \ } while (0)
+comment|/* FALLTHROUGH */
+value|\ 		      case 1: \ 			  delta += 1000000; \ 			  break; \ 		      default: \ 			  delta += (1000000 * xxs); \ 	       } \ 	    } \ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -5190,7 +5198,9 @@ name|mifp
 parameter_list|,
 name|m
 parameter_list|)
-value|do {				\ 		if ((mifp)->m6_flags& MIFF_REGISTER)		\ 		    register_send((ip6), (mifp), (m));		\ 		else						\ 		    phyint_send((ip6), (mifp), (m));		\ } while (0)
+value|do {				\ 	if ((mifp)->m6_flags& MIFF_REGISTER)			\ 		register_send((ip6), (mifp), (m));		\ 	else							\ 		phyint_send((ip6), (mifp), (m));		\ } while (
+comment|/*CONSTCOND*/
+value|0)
 comment|/* 	 * Don't forward if it didn't arrive from the parent mif 	 * for its origin. 	 */
 name|mifi
 operator|=
@@ -5692,6 +5702,7 @@ operator|,
 name|mifi
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|IF_ISSET
@@ -5816,6 +5827,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -7420,7 +7432,7 @@ name|dst
 operator|.
 name|sin6_family
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* prepare the register head to send to the mrouting daemon */

@@ -741,7 +741,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|bcopy
 argument_list|(
 name|seed0
@@ -751,7 +750,6 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* copy the right-most 64-bits of the given address */
 comment|/* XXX assumption on the size of IFID */
 name|bcopy
@@ -922,7 +920,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * RFC 3041 3.2.1. (4) 	 * Take the rightmost 64-bits of the MD5 digest and save them in 	 * stable storage as the history value to be used in the next 	 * iteration of the algorithm.  	 */
+comment|/* 	 * RFC 3041 3.2.1. (4) 	 * Take the rightmost 64-bits of the MD5 digest and save them in 	 * stable storage as the history value to be used in the next 	 * iteration of the algorithm. 	 */
 name|bcopy
 argument_list|(
 operator|&
@@ -1776,8 +1774,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"%s: ifid: "
-literal|"%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n"
+literal|"%s: ifid: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n"
 operator|,
 name|if_name
 argument_list|(
@@ -2085,8 +2082,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -2199,7 +2198,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * XXX: When the interface does not support IPv6, this call 		 * would fail in the SIOCSIFADDR ioctl.  I believe the 		 * notification is rather confusing in this case, so just 		 * supress it.  (jinmei@kame.net 20010130) 		 */
+comment|/* 		 * XXX: When the interface does not support IPv6, this call 		 * would fail in the SIOCSIFADDR ioctl.  I believe the 		 * notification is rather confusing in this case, so just 		 * suppress it.  (jinmei@kame.net 20010130) 		 */
 if|if
 condition|(
 name|error
@@ -2290,7 +2289,7 @@ operator||=
 name|IN6_IFF_TENTATIVE
 expr_stmt|;
 block|}
-comment|/* 	 * Make the link-local prefix (fe80::/64%link) as on-link. 	 * Since we'd like to manage prefixes separately from addresses, 	 * we make an ND6 prefix structure for the link-local prefix, 	 * and add it to the prefix list as a never-expire prefix. 	 * XXX: this change might affect some existing code base... 	 */
+comment|/* 	 * Make the link-local prefix (fe80::%link/64) as on-link. 	 * Since we'd like to manage prefixes separately from addresses, 	 * we make an ND6 prefix structure for the link-local prefix, 	 * and add it to the prefix list as a never-expire prefix. 	 * XXX: this change might affect some existing code base... 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -3347,7 +3346,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|IFT_BRIDGE
-comment|/*OpenBSD 2.8*/
+comment|/* OpenBSD 2.8, NetBSD 1.6 */
 case|case
 name|IFT_BRIDGE
 case|:
@@ -3660,7 +3659,7 @@ condition|)
 return|return;
 block|}
 block|}
-comment|/* 	 * assign a link-local address, if there's none.  	 */
+comment|/* 	 * assign a link-local address, if there's none. 	 */
 if|if
 condition|(
 name|ip6_auto_linklocal
@@ -4194,8 +4193,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"%s: didn't unlink in6ifaddr from "
-literal|"list\n"
+literal|"%s: didn't unlink in6ifaddr from list\n"
 operator|,
 name|if_name
 argument_list|(

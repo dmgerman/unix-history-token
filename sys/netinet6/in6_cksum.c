@@ -121,12 +121,6 @@ name|byte_swapped
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int srcifid = 0, dstifid = 0;
-endif|#
-directive|endif
 name|struct
 name|ip6_hdr
 modifier|*
@@ -242,12 +236,6 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (IN6_IS_SCOPE_LINKLOCAL(&ip6->ip6_src)) { 		srcifid = ip6->ip6_src.s6_addr16[1]; 		ip6->ip6_src.s6_addr16[1] = 0; 	} 	if (IN6_IS_SCOPE_LINKLOCAL(&ip6->ip6_dst)) { 		dstifid = ip6->ip6_dst.s6_addr16[1]; 		ip6->ip6_dst.s6_addr16[1] = 0; 	}
-endif|#
-directive|endif
 name|w
 operator|=
 operator|(
@@ -451,12 +439,6 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (srcifid) 		ip6->ip6_src.s6_addr16[1] = srcifid; 	if (dstifid) 		ip6->ip6_dst.s6_addr16[1] = dstifid;
-endif|#
-directive|endif
 comment|/* 	 * Secondly calculate a summary of the first mbuf excluding offset. 	 */
 while|while
 condition|(
