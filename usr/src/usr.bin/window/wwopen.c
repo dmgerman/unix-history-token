@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwopen.c	3.9 83/08/26"
+literal|"@(#)wwopen.c	3.10 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,8 +50,6 @@ name|struct
 name|ww
 modifier|*
 name|w
-init|=
-literal|0
 decl_stmt|;
 specifier|register
 name|i
@@ -241,18 +239,6 @@ operator|.
 name|nr
 argument_list|)
 expr_stmt|;
-name|w
-operator|->
-name|ww_pty
-operator|=
-name|w
-operator|->
-name|ww_tty
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* closing by mistake is still safe */
 if|if
 condition|(
 name|flags
@@ -260,12 +246,6 @@ operator|&
 name|WWO_PTY
 condition|)
 block|{
-name|w
-operator|->
-name|ww_haspty
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|wwgetpty
@@ -278,6 +258,12 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|w
+operator|->
+name|ww_haspty
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|wwsettty
@@ -839,6 +825,13 @@ operator|->
 name|ww_nvis
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|ww_haspty
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -859,6 +852,7 @@ operator|->
 name|ww_pty
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 operator|(
