@@ -665,23 +665,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|digi_modhandler
-parameter_list|(
-name|module_t
-name|_mod
-parameter_list|,
-name|int
-name|_event
-parameter_list|,
-name|void
-modifier|*
-name|_arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|digi_attach
 parameter_list|(
 name|struct
