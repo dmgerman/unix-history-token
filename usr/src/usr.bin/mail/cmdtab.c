@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	2.1 %G%"
+literal|"@(#)cmdtab.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,9 @@ name|endifcmd
 argument_list|()
 decl_stmt|,
 name|mboxit
+argument_list|()
+decl_stmt|,
+name|clobber
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -778,6 +781,18 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|"clobber"
+block|,
+name|clobber
+block|,
+name|M
+operator||
+name|RAWLIST
+block|,
+literal|0
+block|,
+literal|1
 block|,
 literal|0
 block|,
