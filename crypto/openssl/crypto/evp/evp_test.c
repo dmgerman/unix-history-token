@@ -478,6 +478,9 @@ name|cn
 parameter_list|,
 name|int
 name|encdec
+parameter_list|,
+name|int
+name|multiplier
 parameter_list|)
 block|{
 name|EVP_CIPHER_CTX
@@ -637,6 +640,11 @@ argument_list|,
 literal|"EncryptInit failed\n"
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|test1_exit
 argument_list|(
 literal|10
@@ -667,6 +675,8 @@ argument_list|,
 name|plaintext
 argument_list|,
 name|pn
+operator|*
+name|multiplier
 argument_list|)
 condition|)
 block|{
@@ -675,6 +685,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Encrypt failed\n"
+argument_list|)
+expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|test1_exit
@@ -707,6 +722,11 @@ argument_list|,
 literal|"EncryptFinal failed\n"
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|test1_exit
 argument_list|(
 literal|7
@@ -720,6 +740,8 @@ operator|+
 name|outl2
 operator|!=
 name|cn
+operator|*
+name|multiplier
 condition|)
 block|{
 name|fprintf
@@ -821,6 +843,11 @@ argument_list|,
 literal|"DecryptInit failed\n"
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|test1_exit
 argument_list|(
 literal|11
@@ -851,6 +878,8 @@ argument_list|,
 name|ciphertext
 argument_list|,
 name|cn
+operator|*
+name|multiplier
 argument_list|)
 condition|)
 block|{
@@ -859,6 +888,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Decrypt failed\n"
+argument_list|)
+expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|test1_exit
@@ -891,6 +925,11 @@ argument_list|,
 literal|"DecryptFinal failed\n"
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|test1_exit
 argument_list|(
 literal|7
@@ -904,6 +943,8 @@ operator|+
 name|outl2
 operator|!=
 name|cn
+operator|*
+name|multiplier
 condition|)
 block|{
 name|fprintf
@@ -1035,6 +1076,9 @@ name|cn
 parameter_list|,
 name|int
 name|encdec
+parameter_list|,
+name|int
+name|multiplier
 parameter_list|)
 block|{
 specifier|const
@@ -1078,6 +1122,8 @@ argument_list|,
 name|cn
 argument_list|,
 name|encdec
+argument_list|,
+name|multiplier
 argument_list|)
 expr_stmt|;
 return|return
@@ -1209,6 +1255,11 @@ argument_list|,
 literal|"DigestInit failed\n"
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|EXIT
 argument_list|(
 literal|100
@@ -1234,6 +1285,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"DigestUpdate failed\n"
+argument_list|)
+expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|EXIT
@@ -1262,6 +1318,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"DigestFinal failed\n"
+argument_list|)
+expr_stmt|;
+name|ERR_print_errors_fp
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|EXIT
@@ -1539,6 +1600,11 @@ name|pn
 decl_stmt|,
 name|cn
 decl_stmt|;
+name|int
+name|multiplier
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1699,6 +1765,42 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|strchr
+argument_list|(
+name|cipher
+argument_list|,
+literal|'*'
+argument_list|)
+condition|)
+block|{
+name|p
+operator|=
+name|cipher
+expr_stmt|;
+name|sstrsep
+argument_list|(
+operator|&
+name|p
+argument_list|,
+literal|"*"
+argument_list|)
+expr_stmt|;
+name|multiplier
+operator|=
+name|atoi
+argument_list|(
+name|sstrsep
+argument_list|(
+operator|&
+name|p
+argument_list|,
+literal|"*"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 name|test_cipher
 argument_list|(
@@ -1721,6 +1823,8 @@ argument_list|,
 name|cn
 argument_list|,
 name|encdec
+argument_list|,
+name|multiplier
 argument_list|)
 operator|&&
 operator|!

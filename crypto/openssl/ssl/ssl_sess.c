@@ -426,6 +426,8 @@ init|=
 literal|0
 decl_stmt|;
 do|do
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|id
@@ -433,7 +435,12 @@ argument_list|,
 operator|*
 name|id_len
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 do|while
 condition|(
 name|SSL_has_matching_session_id

@@ -347,6 +347,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|SKM_sk_is_sorted
+parameter_list|(
+name|type
+parameter_list|,
+name|st
+parameter_list|)
+define|\
+value|((int (*)(const STACK_OF(type) *))sk_is_sorted)(st)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SKM_ASN1_SET_OF_d2i
 parameter_list|(
 name|type
@@ -781,6 +794,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|SKM_sk_is_sorted
+parameter_list|(
+name|type
+parameter_list|,
+name|st
+parameter_list|)
+define|\
+value|sk_is_sorted(st)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SKM_ASN1_SET_OF_d2i
 parameter_list|(
 name|type
@@ -1113,6 +1139,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ACCESS_DESCRIPTION_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ACCESS_DESCRIPTION, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ASN1_GENERALSTRING_new
 parameter_list|(
 name|st
@@ -1320,6 +1356,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(ASN1_GENERALSTRING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ASN1_GENERALSTRING_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ASN1_GENERALSTRING, (st))
 end_define
 
 begin_define
@@ -1537,6 +1583,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ASN1_INTEGER_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ASN1_INTEGER, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ASN1_OBJECT_new
 parameter_list|(
 name|st
@@ -1744,6 +1800,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(ASN1_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ASN1_OBJECT_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ASN1_OBJECT, (st))
 end_define
 
 begin_define
@@ -1961,6 +2027,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ASN1_STRING_TABLE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ASN1_STRING_TABLE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ASN1_TYPE_new
 parameter_list|(
 name|st
@@ -2168,6 +2244,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(ASN1_TYPE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ASN1_TYPE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ASN1_TYPE, (st))
 end_define
 
 begin_define
@@ -2385,6 +2471,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ASN1_VALUE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ASN1_VALUE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_BIO_new
 parameter_list|(
 name|st
@@ -2592,6 +2688,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(BIO, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_BIO_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(BIO, (st))
 end_define
 
 begin_define
@@ -2809,6 +2915,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_CONF_IMODULE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CONF_IMODULE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_CONF_MODULE_new
 parameter_list|(
 name|st
@@ -3016,6 +3132,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(CONF_MODULE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CONF_MODULE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CONF_MODULE, (st))
 end_define
 
 begin_define
@@ -3233,6 +3359,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_CONF_VALUE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CONF_VALUE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_CRYPTO_EX_DATA_FUNCS_new
 parameter_list|(
 name|st
@@ -3440,6 +3576,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(CRYPTO_EX_DATA_FUNCS, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CRYPTO_EX_DATA_FUNCS_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CRYPTO_EX_DATA_FUNCS, (st))
 end_define
 
 begin_define
@@ -3657,6 +3803,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_CRYPTO_dynlock_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CRYPTO_dynlock, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_DIST_POINT_new
 parameter_list|(
 name|st
@@ -3864,6 +4020,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(DIST_POINT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_DIST_POINT_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(DIST_POINT, (st))
 end_define
 
 begin_define
@@ -4081,6 +4247,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ENGINE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ENGINE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ENGINE_CLEANUP_ITEM_new
 parameter_list|(
 name|st
@@ -4288,6 +4464,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(ENGINE_CLEANUP_ITEM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ENGINE_CLEANUP_ITEM_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(ENGINE_CLEANUP_ITEM, (st))
 end_define
 
 begin_define
@@ -4505,6 +4691,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_GENERAL_NAME_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(GENERAL_NAME, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_APREQBODY_new
 parameter_list|(
 name|st
@@ -4712,6 +4908,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(KRB5_APREQBODY, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_APREQBODY_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_APREQBODY, (st))
 end_define
 
 begin_define
@@ -4929,6 +5135,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_AUTHDATA_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_AUTHDATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_AUTHENTBODY_new
 parameter_list|(
 name|st
@@ -5136,6 +5352,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(KRB5_AUTHENTBODY, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_AUTHENTBODY_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_AUTHENTBODY, (st))
 end_define
 
 begin_define
@@ -5353,6 +5579,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_CHECKSUM_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_CHECKSUM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_ENCDATA_new
 parameter_list|(
 name|st
@@ -5560,6 +5796,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(KRB5_ENCDATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_ENCDATA_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_ENCDATA, (st))
 end_define
 
 begin_define
@@ -5777,6 +6023,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_ENCKEY_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_ENCKEY, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_PRINCNAME_new
 parameter_list|(
 name|st
@@ -5984,6 +6240,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(KRB5_PRINCNAME, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_PRINCNAME_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_PRINCNAME, (st))
 end_define
 
 begin_define
@@ -6201,6 +6467,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_TKTBODY_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(KRB5_TKTBODY, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_MIME_HEADER_new
 parameter_list|(
 name|st
@@ -6408,6 +6684,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(MIME_HEADER, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_MIME_HEADER_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(MIME_HEADER, (st))
 end_define
 
 begin_define
@@ -6625,6 +6911,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_MIME_PARAM_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(MIME_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_NAME_FUNCS_new
 parameter_list|(
 name|st
@@ -6832,6 +7128,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(NAME_FUNCS, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_NAME_FUNCS_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(NAME_FUNCS, (st))
 end_define
 
 begin_define
@@ -7049,6 +7355,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_OCSP_CERTID_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(OCSP_CERTID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_OCSP_ONEREQ_new
 parameter_list|(
 name|st
@@ -7256,6 +7572,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(OCSP_ONEREQ, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_ONEREQ_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(OCSP_ONEREQ, (st))
 end_define
 
 begin_define
@@ -7473,6 +7799,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_OCSP_SINGLERESP_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(OCSP_SINGLERESP, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_PKCS12_SAFEBAG_new
 parameter_list|(
 name|st
@@ -7680,6 +8016,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(PKCS12_SAFEBAG, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_PKCS12_SAFEBAG_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(PKCS12_SAFEBAG, (st))
 end_define
 
 begin_define
@@ -7897,6 +8243,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_PKCS7_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(PKCS7, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_PKCS7_RECIP_INFO_new
 parameter_list|(
 name|st
@@ -8104,6 +8460,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(PKCS7_RECIP_INFO, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_PKCS7_RECIP_INFO_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(PKCS7_RECIP_INFO, (st))
 end_define
 
 begin_define
@@ -8321,6 +8687,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_PKCS7_SIGNER_INFO_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(PKCS7_SIGNER_INFO, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_POLICYINFO_new
 parameter_list|(
 name|st
@@ -8528,6 +8904,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(POLICYINFO, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICYINFO_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(POLICYINFO, (st))
 end_define
 
 begin_define
@@ -8745,6 +9131,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_POLICYQUALINFO_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(POLICYQUALINFO, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_SSL_CIPHER_new
 parameter_list|(
 name|st
@@ -8952,6 +9348,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(SSL_CIPHER, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_SSL_CIPHER_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(SSL_CIPHER, (st))
 end_define
 
 begin_define
@@ -9169,6 +9575,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_SSL_COMP_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(SSL_COMP, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_SXNETID_new
 parameter_list|(
 name|st
@@ -9376,6 +9792,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(SXNETID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_SXNETID_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(SXNETID, (st))
 end_define
 
 begin_define
@@ -9593,6 +10019,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_UI_STRING_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(UI_STRING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_new
 parameter_list|(
 name|st
@@ -9800,6 +10236,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(X509, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509, (st))
 end_define
 
 begin_define
@@ -10017,6 +10463,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509V3_EXT_METHOD_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509V3_EXT_METHOD, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_ALGOR_new
 parameter_list|(
 name|st
@@ -10224,6 +10680,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(X509_ALGOR, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_ALGOR_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_ALGOR, (st))
 end_define
 
 begin_define
@@ -10441,6 +10907,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_ATTRIBUTE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_ATTRIBUTE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_CRL_new
 parameter_list|(
 name|st
@@ -10648,6 +11124,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(X509_CRL, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_CRL_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_CRL, (st))
 end_define
 
 begin_define
@@ -10865,6 +11351,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_EXTENSION_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_EXTENSION, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_INFO_new
 parameter_list|(
 name|st
@@ -11072,6 +11568,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(X509_INFO, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_INFO_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_INFO, (st))
 end_define
 
 begin_define
@@ -11289,6 +11795,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_LOOKUP_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_LOOKUP, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_NAME_new
 parameter_list|(
 name|st
@@ -11496,6 +12012,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(X509_NAME, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_NAME_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_NAME, (st))
 end_define
 
 begin_define
@@ -11713,6 +12239,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_NAME_ENTRY_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_NAME_ENTRY, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_OBJECT_new
 parameter_list|(
 name|st
@@ -11920,6 +12456,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(X509_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_OBJECT_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_OBJECT, (st))
 end_define
 
 begin_define
@@ -12137,6 +12683,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_PURPOSE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_PURPOSE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_REVOKED_new
 parameter_list|(
 name|st
@@ -12349,6 +12905,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_REVOKED_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_REVOKED, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_TRUST_new
 parameter_list|(
 name|st
@@ -12556,6 +13122,16 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_sort(X509_TRUST, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_TRUST_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_TRUST, (st))
 end_define
 
 begin_define

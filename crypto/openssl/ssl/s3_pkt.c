@@ -3134,7 +3134,7 @@ name|SSL_R_DATA_BETWEEN_CCS_AND_FINISHED
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 comment|/* If the other end has shut down, throw anything we read away 	 * (even in 'peek' mode) */
@@ -3605,7 +3605,7 @@ name|SSL_R_BAD_HELLO_REQUEST
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 if|if
@@ -4133,7 +4133,7 @@ name|SSL3_MT_CCS
 operator|)
 condition|)
 block|{
-name|i
+name|al
 operator|=
 name|SSL_AD_ILLEGAL_PARAMETER
 expr_stmt|;
@@ -4145,7 +4145,7 @@ name|SSL_R_BAD_CHANGE_CIPHER_SPEC
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 comment|/* Check we have a cipher to change to */
@@ -4162,7 +4162,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|i
+name|al
 operator|=
 name|SSL_AD_UNEXPECTED_MESSAGE
 expr_stmt|;
@@ -4174,7 +4174,7 @@ name|SSL_R_CCS_RECEIVED_EARLY
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 name|rr

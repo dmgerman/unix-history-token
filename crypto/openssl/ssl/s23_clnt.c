@@ -810,13 +810,21 @@ name|s3
 operator|->
 name|client_random
 expr_stmt|;
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|p
 argument_list|,
 name|SSL3_RANDOM_SIZE
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|/* Do the message type and length last */
 name|d
 operator|=
@@ -1086,6 +1094,8 @@ argument_list|,
 name|SSL3_RANDOM_SIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 operator|&
@@ -1104,7 +1114,13 @@ operator|)
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|memcpy
 argument_list|(
 name|p

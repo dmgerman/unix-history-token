@@ -39,6 +39,12 @@ begin_comment
 comment|/* Actually there is no reason to insist that 'generator' be a generator.  * It's just as OK (and in some sense better) to use a generator of the  * order-q subgroup.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function
 name|DH
 modifier|*
@@ -442,6 +448,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -60,6 +60,18 @@ directive|error
 error|SHA is disabled.
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_FIPS
+argument_list|)
+define|#
+directive|define
+name|FIPS_SHA_SIZE_T
+value|unsigned long
+endif|#
+directive|endif
 comment|/*  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  * ! SHA_LONG has to be at least 32 bits wide. If it's wider, then !  * ! SHA_LONG_LOG2 has to be defined along.                        !  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  */
 if|#
 directive|if

@@ -358,6 +358,22 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|t
+operator|=
+operator|*
+name|timer
+expr_stmt|;
+comment|/* The following is extracted from the DEC C header time.h */
+comment|/* **  Beginning in OpenVMS Version 7.0 mktime, time, ctime, strftime **  have two implementations.  One implementation is provided **  for compatibility and deals with time in terms of local time, **  the other __utc_* deals with time in terms of UTC. */
+comment|/* We use the same conditions as in said time.h to check if we should    assume that t contains local time (and should therefore be adjusted)    or UTC (and should therefore be left untouched). */
+if|#
+directive|if
+name|__CRTL_VER
+operator|<
+literal|70000000
+operator|||
+name|defined
+name|_VMS_V6_SOURCE
 comment|/* Get the numerical value of the equivalence string */
 name|status
 operator|=
@@ -368,31 +384,12 @@ argument_list|)
 expr_stmt|;
 comment|/* and use it to move time to GMT */
 name|t
-operator|=
-operator|*
-name|timer
-operator|-
+operator|-=
 name|status
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* then convert the result to the time structure */
-ifndef|#
-directive|ifndef
-name|OPENSSL_THREADS
-name|ts
-operator|=
-operator|(
-expr|struct
-name|tm
-operator|*
-operator|)
-name|localtime
-argument_list|(
-operator|&
-name|t
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* Since there was no gmtime_r() to do this stuff for us, 		   we have to do it the hard way. */
 block|{
 comment|/* The VMS epoch is the astronomical Smithsonian date, 		   if I remember correctly, which is November 17, 1858. 		   Furthermore, time is measure in thenths of microseconds 		   and stored in quadwords (64 bit integers).  unix_epoch 		   below is January 1st 1970 expressed as a VMS time.  The 		   following code was used to get this number:  		   #include<stdio.h> 		   #include<stdlib.h> 		   #include<lib$routines.h> 		   #include<starlet.h>  		   main() 		   { 		     unsigned long systime[2]; 		     unsigned short epoch_values[7] = 		       { 1970, 1, 1, 0, 0, 0, 0 };  		     lib$cvt_vectim(epoch_values, systime);  		     printf("%u %u", systime[0], systime[1]); 		   } 		*/
@@ -601,8 +598,6 @@ name|ts
 operator|=
 name|result
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 endif|#

@@ -11,6 +11,24 @@ begin_comment
 comment|/*  * This is a generic 32 bit "collector" for message digest algorithms.  * Whenever needed it collects input character stream into chunks of  * 32 bit values and invokes a block function that performs actual hash  * calculations.  *  * Porting guide.  *  * Obligatory macros:  *  * DATA_ORDER_IS_BIG_ENDIAN or DATA_ORDER_IS_LITTLE_ENDIAN  *	this macro defines byte order of input stream.  * HASH_CBLOCK  *	size of a unit chunk HASH_BLOCK operates on.  * HASH_LONG  *	has to be at lest 32 bit wide, if it's wider, then  *	HASH_LONG_LOG2 *has to* be defined along  * HASH_CTX  *	context structure that at least contains following  *	members:  *		typedef struct {  *			...  *			HASH_LONG	Nl,Nh;  *			HASH_LONG	data[HASH_LBLOCK];  *			int		num;  *			...  *			} HASH_CTX;  * HASH_UPDATE  *	name of "Update" function, implemented here.  * HASH_TRANSFORM  *	name of "Transform" function, implemented here.  * HASH_FINAL  *	name of "Final" function, implemented here.  * HASH_BLOCK_HOST_ORDER  *	name of "block" function treating *aligned* input message  *	in host byte order, implemented externally.  * HASH_BLOCK_DATA_ORDER  *	name of "block" function treating *unaligned* input message  *	in original (data) byte order, implemented externally (it  *	actually is optional if data and host are of the same  *	"endianess").  * HASH_MAKE_STRING  *	macro convering context variables to an ASCII hash string.  *  * Optional macros:  *  * B_ENDIAN or L_ENDIAN  *	defines host byte-order.  * HASH_LONG_LOG2  *	defaults to 2 if not states otherwise.  * HASH_LBLOCK  *	assumed to be HASH_CBLOCK/4 if not stated otherwise.  * HASH_BLOCK_DATA_ORDER_ALIGNED  *	alternative "block" function capable of treating  *	aligned input message in original (data) order,  *	implemented externally.  *  * MD5 example:  *  *	#define DATA_ORDER_IS_LITTLE_ENDIAN  *  *	#define HASH_LONG		MD5_LONG  *	#define HASH_LONG_LOG2		MD5_LONG_LOG2  *	#define HASH_CTX		MD5_CTX  *	#define HASH_CBLOCK		MD5_CBLOCK  *	#define HASH_LBLOCK		MD5_LBLOCK  *	#define HASH_UPDATE		MD5_Update  *	#define HASH_TRANSFORM		MD5_Transform  *	#define HASH_FINAL		MD5_Final  *	#define HASH_BLOCK_HOST_ORDER	md5_block_host_order  *	#define HASH_BLOCK_DATA_ORDER	md5_block_data_order  *  *<appro@fy.chalmers.se>  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1871,6 +1889,32 @@ name|cp
 init|=
 name|end
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+name|FIPS_mode
+argument_list|()
+operator|&&
+operator|!
+name|FIPS_md5_allowed
+argument_list|()
+condition|)
+block|{
+name|FIPSerr
+argument_list|(
+name|FIPS_F_HASH_FINAL
+argument_list|,
+name|FIPS_R_NON_FIPS_METHOD
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* c->num should definitly have room for at least one more byte. */
 name|p
 operator|=

@@ -1104,7 +1104,7 @@ argument_list|,
 literal|"1\n"
 argument_list|)
 expr_stmt|;
-comment|/* make sure the Perl script fed by bc notices 	                      * the failure, see test_bn in test/Makefile.ssl*/
+comment|/* make sure the Perl script fed by bc notices 	                      * the failure, see test_bn in test/Makefile */
 name|BIO_flush
 argument_list|(
 name|out

@@ -19,15 +19,38 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_NUMBER
-value|0x0090704fL
+value|0x0090705FL
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 0.9.7d 17 Mar 2004"
+value|"OpenSSL 0.9.7e-fips 25 Oct 2004"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_VERSION_TEXT
+value|"OpenSSL 0.9.7e 25 Oct 2004"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

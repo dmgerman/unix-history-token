@@ -769,8 +769,15 @@ name|SSL_HIGH
 value|0x00000080L
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSL_FIPS
+value|0x00000100L
+end_define
+
 begin_comment
-comment|/* we have used 000000ff - 24 bits left to go */
+comment|/* we have used 000001ff - 23 bits left to go */
 end_comment
 
 begin_comment

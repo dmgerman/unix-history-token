@@ -281,6 +281,10 @@ name|SSL_TXT_HIGH
 value|"HIGH"
 define|#
 directive|define
+name|SSL_TXT_FIPS
+value|"FIPS"
+define|#
+directive|define
 name|SSL_TXT_kFZA
 value|"kFZA"
 define|#

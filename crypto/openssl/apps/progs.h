@@ -551,6 +551,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|prime_main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1067,6 +1083,14 @@ block|,
 literal|"rand"
 block|,
 name|rand_main
+block|}
+block|,
+block|{
+name|FUNC_TYPE_GENERAL
+block|,
+literal|"prime"
+block|,
+name|prime_main
 block|}
 block|,
 ifndef|#

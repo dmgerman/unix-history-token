@@ -195,50 +195,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* VMS below version 7.0 doesn't have strcasecmp() */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_SYS_VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|strcasecmp
-parameter_list|(
-name|str1
-parameter_list|,
-name|str2
-parameter_list|)
-value|VMS_strcasecmp((str1),(str2))
-end_define
-
-begin_function_decl
-name|int
-name|VMS_strcasecmp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|str1
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str2
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -281,6 +237,14 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|in_FIPS_mode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -299,6 +263,13 @@ specifier|extern
 name|BIO
 modifier|*
 name|bio_err
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|in_FIPS_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +316,13 @@ specifier|extern
 name|BIO
 modifier|*
 name|bio_err
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|in_FIPS_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -1354,6 +1332,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|rand_serial
+parameter_list|(
+name|BIGNUM
+modifier|*
+name|b
+parameter_list|,
+name|ASN1_INTEGER
+modifier|*
+name|ai
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|CA_DB
 modifier|*
 name|load_index
@@ -1563,6 +1556,13 @@ define|#
 directive|define
 name|APP_PASS_LEN
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|SERIAL_RAND_BITS
+value|64
 end_define
 
 begin_endif
