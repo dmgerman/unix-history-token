@@ -765,17 +765,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED0
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* --available -- */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_INPANIC
 value|0x00000002
 end_define
