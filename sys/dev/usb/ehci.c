@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  */
+comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.66 2004/06/30 03:11:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.67 2004/07/06 04:18:05 mycroft Exp $  *	$NetBSD: ehci.c,v 1.68 2004/07/09 05:07:06 mycroft Exp $  *	$NetBSD: ehci.c,v 1.69 2004/07/17 20:12:02 mycroft Exp $  */
 end_comment
 
 begin_comment
@@ -2600,16 +2600,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|EOWRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|EHCI_USBSTS
-argument_list|,
-name|intrs
-argument_list|)
-expr_stmt|;
-comment|/* Acknowledge */
 name|eintrs
 operator|=
 name|intrs
@@ -2656,6 +2646,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBSTS
+argument_list|,
+name|intrs
+argument_list|)
+expr_stmt|;
+comment|/* Acknowledge */
 name|sc
 operator|->
 name|sc_bus
@@ -3501,8 +3501,6 @@ name|sqtd
 decl_stmt|;
 name|u_int32_t
 name|status
-init|=
-literal|0
 decl_stmt|,
 name|nstatus
 decl_stmt|;
@@ -3643,6 +3641,14 @@ endif|#
 directive|endif
 comment|/* The transfer is done, compute actual length and status. */
 name|actlen
+operator|=
+literal|0
+expr_stmt|;
+name|nstatus
+operator|=
+literal|0
+expr_stmt|;
+name|status
 operator|=
 literal|0
 expr_stmt|;
@@ -9295,14 +9301,7 @@ parameter_list|(
 name|usbd_xfer_handle
 name|xfer
 parameter_list|)
-block|{
-name|xfer
-operator|->
-name|hcpriv
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -9526,14 +9525,7 @@ parameter_list|(
 name|usbd_xfer_handle
 name|xfer
 parameter_list|)
-block|{
-name|xfer
-operator|->
-name|hcpriv
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
@@ -10147,8 +10139,6 @@ endif|#
 directive|endif
 name|qtdstatus
 operator|=
-name|htole32
-argument_list|(
 name|EHCI_QTD_ACTIVE
 operator||
 name|EHCI_QTD_SET_PID
@@ -10166,7 +10156,6 @@ literal|3
 argument_list|)
 comment|/* IOC set below */
 comment|/* BYTES set below */
-argument_list|)
 expr_stmt|;
 name|mps
 operator|=
@@ -10448,9 +10437,12 @@ name|nomem
 goto|;
 name|nextphys
 operator|=
+name|htole32
+argument_list|(
 name|next
 operator|->
 name|physaddr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -10570,10 +10562,7 @@ name|qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htole32
-argument_list|(
 name|nextphys
-argument_list|)
 expr_stmt|;
 name|cur
 operator|->
@@ -10581,10 +10570,10 @@ name|qtd
 operator|.
 name|qtd_status
 operator|=
-name|qtdstatus
-operator||
 name|htole32
 argument_list|(
+name|qtdstatus
+operator||
 name|EHCI_QTD_SET_BYTES
 argument_list|(
 name|curlen
