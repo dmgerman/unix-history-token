@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lock.c,v 1.1 1994/04/18 23:41:52 paulus Exp $"
+literal|"$Id: lock.c,v 1.2 1994/09/25 02:32:04 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,11 +113,19 @@ directive|ifndef
 name|LOCK_DIR
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
