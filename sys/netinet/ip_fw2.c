@@ -14797,7 +14797,7 @@ literal|"enabled"
 argument_list|,
 else|#
 directive|else
-literal|"disabled"
+literal|"loadable"
 argument_list|,
 endif|#
 directive|endif
