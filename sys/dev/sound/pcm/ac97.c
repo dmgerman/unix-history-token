@@ -150,7 +150,8 @@ index|[
 name|AC97_NAMELEN
 index|]
 decl_stmt|;
-name|void
+name|struct
+name|mtx
 modifier|*
 name|lock
 decl_stmt|;
@@ -1805,7 +1806,7 @@ modifier|*
 name|codec
 parameter_list|)
 block|{
-comment|/* Determine what AUXOUT really means, it can be:  	 * 	 * 1. Headphone out. 	 * 2. 4-Channel Out 	 * 3. True line level out (effectively master volume). 	 * 	 * See Sections 5.2.1 and 5.27 for AUX_OUT Options in AC97r2.{2,3}. 	 */
+comment|/* Determine what AUXOUT really means, it can be: 	 * 	 * 1. Headphone out. 	 * 2. 4-Channel Out 	 * 3. True line level out (effectively master volume). 	 * 	 * See Sections 5.2.1 and 5.27 for AUX_OUT Options in AC97r2.{2,3}. 	 */
 if|if
 condition|(
 name|codec
@@ -1815,7 +1816,7 @@ operator|&
 name|AC97_CAP_HEADPHONE
 condition|)
 block|{
-comment|/* XXX We should probably check the AUX_OUT initial value.  		 * Leave AC97_MIX_AUXOUT - SOUND_MIXER_MONITOR relationship */
+comment|/* XXX We should probably check the AUX_OUT initial value. 		 * Leave AC97_MIX_AUXOUT - SOUND_MIXER_MONITOR relationship */
 return|return;
 block|}
 elseif|else
@@ -1855,7 +1856,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Master volume is/maybe fixed in h/w, not sufficiently  		 * clear in spec to blat SOUND_MIXER_MASTER. */
+comment|/* Master volume is/maybe fixed in h/w, not sufficiently 		 * clear in spec to blat SOUND_MIXER_MASTER. */
 name|codec
 operator|->
 name|mix

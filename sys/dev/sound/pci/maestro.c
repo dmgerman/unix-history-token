@@ -224,7 +224,8 @@ name|ac97_info
 modifier|*
 name|codec
 decl_stmt|;
-name|void
+name|struct
+name|mtx
 modifier|*
 name|lock
 decl_stmt|;

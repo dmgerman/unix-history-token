@@ -192,7 +192,8 @@ index|[
 name|IRQ_MAX
 index|]
 decl_stmt|;
-name|void
+name|struct
+name|mtx
 modifier|*
 name|lock
 decl_stmt|;

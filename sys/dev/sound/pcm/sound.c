@@ -111,7 +111,8 @@ name|sysctl_oid
 modifier|*
 name|sysctl_tree_top
 decl_stmt|;
-name|void
+name|struct
+name|mtx
 modifier|*
 name|lock
 decl_stmt|;

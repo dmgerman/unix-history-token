@@ -198,7 +198,8 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
 decl_stmt|;
-name|void
+name|struct
+name|mtx
 modifier|*
 name|lock
 decl_stmt|;
