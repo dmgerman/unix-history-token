@@ -824,12 +824,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I386_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|u_int
+name|tsc_present
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Not static; other parts of the kernel 				 * Need to know this */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|u_int
 name|tsc_present
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
