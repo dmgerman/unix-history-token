@@ -179,6 +179,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/emul.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -2400,7 +2406,7 @@ argument_list|(
 expr|struct
 name|frame
 argument_list|,
-name|f_pad
+name|fr_pad
 index|[
 literal|6
 index|]
