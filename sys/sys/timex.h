@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Modification history timex.h  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  */
+comment|/*  * Modification history timex.h  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  */
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ comment|/* MSDOS */
 end_comment
 
 begin_comment
-comment|/*  * The following defines establish the engineering parameters of the  * phase-lock loop (PLL) model used in the kernel implementation. These  * parameters have been carefully chosen by analysis for good stability  * and wide dynamic range.  *  * The hz variable is defined in the kernel build environment. It  * establishes the timer interrupt frequency, 100 Hz for the SunOS  * kernel, 256 Hz for the Ultrix kernel and 1024 Hz for the OSF/1  * kernel. SHIFT_HZ expresses the same value as the nearest power of two  * in order to avoid hardware multiply operations.  *  * SHIFT_KG and SHIFT_KF establish the damping of the PLL and are chosen  * for a slightly underdamped convergence characteristic.  *  * MAXTC establishes the maximum time constant of the PLL. With the  * SHIFT_KG and SHIFT_KF values given and a time constant range from  * zero to MAXTC, the PLL will converge in 15 minutes to 16 hours,  * respectively.  */
+comment|/*  * The following defines establish the engineering parameters of the  * phase-lock loop (PLL) model used in the kernel implementation. These  * parameters have been carefully chosen by analysis for good stability  * and wide dynamic range.  *  * The hz variable is defined in the kernel build environment. It  * establishes the timer interrupt frequency, 100 Hz for the SunOS  * kernel, 256 Hz for the Ultrix kernel and 1024 Hz for the OSF/1  * kernel. SHIFT_HZ expresses the same value as the nearest power of two  * in order to avoid hardware multiply operations.  *  * SHIFT_KG and SHIFT_KF establish the damping of the PLL and are chosen  * for a slightly underdamped convergence characteristic. SHIFT_KH  * establishes the damping of the FLL and is chosen by wisdom and black  * art.  *  * MAXTC establishes the maximum time constant of the PLL. With the  * SHIFT_KG and SHIFT_KF values given and a time constant range from  * zero to MAXTC, the PLL will converge in 15 minutes to 16 hours,  * respectively.  */
 end_comment
 
 begin_define
@@ -83,7 +83,18 @@ value|16
 end_define
 
 begin_comment
-comment|/* frequency factor (shift) */
+comment|/* PLL frequency factor (shift) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHIFT_KH
+value|2
+end_define
+
+begin_comment
+comment|/* FLL frequency factor (shift) */
 end_comment
 
 begin_define
@@ -105,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|SHIFT_SCALE
-value|23
+value|22
 end_define
 
 begin_comment
@@ -153,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|MAXPHASE
-value|128000L
+value|512000L
 end_define
 
 begin_comment
@@ -170,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|MAXFREQ
-value|(100L<< SHIFT_USEC)
+value|(512L<< SHIFT_USEC)
 end_define
 
 begin_comment
@@ -197,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|MAXFREQ
-value|(200L<< SHIFT_USEC)
+value|(512L<< SHIFT_USEC)
 end_define
 
 begin_comment
@@ -441,6 +452,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|STA_FLL
+value|0x0008
+end_define
+
+begin_comment
+comment|/* select frequency-lock mode (rw) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|STA_INS
 value|0x0010
 end_define
@@ -469,6 +491,17 @@ end_define
 
 begin_comment
 comment|/* clock unsynchronized (rw) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STA_FREQHOLD
+value|0x0080
+end_define
+
+begin_comment
+comment|/* hold frequency (rw) */
 end_comment
 
 begin_define

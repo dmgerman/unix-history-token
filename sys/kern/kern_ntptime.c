@@ -4,11 +4,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Modification history kern_ntptime.c  *  * 24 Mar 94	David L. Mills  *	Revised syscall interface to include new variables for PPS  *	time discipline.  *  * 14 Feb 94	David L. Mills  *	Added code for external clock  *  * 28 Nov 93	David L. Mills  *	Revised frequency scaling to conform with adjusted parameters  *  * 17 Sep 93	David L. Mills  *	Created file  */
+comment|/*  * Modification history kern_ntptime.c  *  * 24 Sep 94	David L. Mills  *	Tightened code at exits.  *  * 24 Mar 94	David L. Mills  *	Revised syscall interface to include new variables for PPS  *	time discipline.  *  * 14 Feb 94	David L. Mills  *	Added code for external clock  *  * 28 Nov 93	David L. Mills  *	Revised frequency scaling to conform with adjusted parameters  *  * 17 Sep 93	David L. Mills  *	Created file  */
 end_comment
 
 begin_comment
-comment|/*  * ntp_gettime(), ntp_adjtime() - precision time interface for SunOS  * 4.1.1 and 4.1.3  *  * These routines consitute the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. The ntp_gettime() routine  * provides the time, maximum error (synch distance) and estimated error  * (dispersion) to client user application programs. The ntp_adjtime()  * routine is used by the NTP daemon to adjust the system clock to an  * externally derived time. The time offset and related variables set by  * this routine are used by hardclock() to adjust the phase and  * frequency of the phase-lock loop which controls the system clock.  */
+comment|/*  * ntp_gettime(), ntp_adjtime() - precision time interface for SunOS  * V4.1.1 and V4.1.3  *  * These routines consitute the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. The ntp_gettime() routine  * provides the time, maximum error (synch distance) and estimated error  * (dispersion) to client user application programs. The ntp_adjtime()  * routine is used by the NTP daemon to adjust the system clock to an  * externally derived time. The time offset and related variables set by  * this routine are used by hardclock() to adjust the phase and  * frequency of the phase-lock loop which controls the system clock.  */
 end_comment
 
 begin_include
