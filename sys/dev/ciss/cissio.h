@@ -364,8 +364,8 @@ range|:
 literal|2
 decl_stmt|;
 block|}
-name|PeripDev
 name|__packed
+name|PeripDev
 struct|;
 struct|struct
 block|{
@@ -383,8 +383,8 @@ range|:
 literal|2
 decl_stmt|;
 block|}
-name|LogDev
 name|__packed
+name|LogDev
 struct|;
 struct|struct
 block|{
@@ -409,17 +409,17 @@ range|:
 literal|2
 decl_stmt|;
 block|}
-name|LogUnit
 name|__packed
+name|LogUnit
 struct|;
 block|}
 name|SCSI3Addr_struct
 typedef|;
 end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|PhysDevAddr
 block|{
 name|u_int32_t
 name|TargetId
@@ -444,12 +444,13 @@ index|]
 decl_stmt|;
 block|}
 name|__packed
-struct|;
-end_struct
+name|PhysDevAddr_struct
+typedef|;
+end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|LogDevAddr
 block|{
 name|u_int32_t
 name|VolId
@@ -469,8 +470,9 @@ index|]
 decl_stmt|;
 block|}
 name|__packed
-struct|;
-end_struct
+name|LogDevAddr_struct
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -488,22 +490,21 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|struct
-name|PhysDevAddr
+name|PhysDevAddr_struct
 name|PhysDev
 decl_stmt|;
-name|struct
-name|LogDevAddr
+name|LogDevAddr_struct
 name|LogDev
 decl_stmt|;
 block|}
+name|__packed
 name|LUNAddr_struct
 typedef|;
 end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|RequestBlock
 block|{
 name|u_int8_t
 name|CDBLen
@@ -526,8 +527,8 @@ range|:
 literal|2
 decl_stmt|;
 block|}
-name|Type
 name|__packed
+name|Type
 struct|;
 name|u_int16_t
 name|Timeout
@@ -540,13 +541,6 @@ index|]
 decl_stmt|;
 block|}
 name|__packed
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|RequestBlock
 name|RequestBlock_struct
 typedef|;
 end_typedef
@@ -570,8 +564,8 @@ name|u_int32_t
 name|ErrorInfo
 decl_stmt|;
 block|}
-name|Common_Info
 name|__packed
+name|Common_Info
 struct|;
 struct|struct
 block|{
@@ -591,17 +585,18 @@ name|u_int32_t
 name|offense_value
 decl_stmt|;
 block|}
-name|Invalid_Cmd
 name|__packed
+name|Invalid_Cmd
 struct|;
 block|}
+name|__packed
 name|MoreErrInfo_struct
 typedef|;
 end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|ErrorInfo
 block|{
 name|u_int8_t
 name|ScsiStatus
@@ -626,20 +621,13 @@ index|]
 decl_stmt|;
 block|}
 name|__packed
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ErrorInfo
 name|ErrorInfo_struct
 typedef|;
 end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|IOCTL_Command
 block|{
 name|LUNAddr_struct
 name|LUN_info
@@ -664,13 +652,6 @@ decl_stmt|;
 comment|/* 4 */
 block|}
 name|__packed
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|IOCTL_Command
 name|IOCTL_Command_struct
 typedef|;
 end_typedef

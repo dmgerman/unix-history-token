@@ -427,8 +427,8 @@ name|u_int32_t
 name|error_info
 decl_stmt|;
 block|}
-name|common_info
 name|__packed
+name|common_info
 struct|;
 struct|struct
 block|{
@@ -448,8 +448,8 @@ name|u_int32_t
 name|offense_value
 decl_stmt|;
 block|}
-name|invalid_command
 name|__packed
+name|invalid_command
 struct|;
 block|}
 name|additional_error_info
