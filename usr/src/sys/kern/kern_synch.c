@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	6.8	85/06/02	*/
+comment|/*	kern_synch.c	6.9	85/06/07	*/
 end_comment
 
 begin_include
@@ -1217,12 +1217,6 @@ name|sq_tailp
 operator|=
 name|q
 expr_stmt|;
-name|p
-operator|->
-name|p_slptime
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1245,6 +1239,12 @@ name|updatepri
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_slptime
+operator|=
+literal|0
 expr_stmt|;
 name|p
 operator|->
@@ -1315,6 +1315,12 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|p
+operator|->
+name|p_slptime
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 name|q
