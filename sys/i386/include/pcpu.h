@@ -128,14 +128,10 @@ name|segment_descriptor
 modifier|*
 name|gd_tss_gdt
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USER_LDT
 name|int
 name|gd_currentldt
 decl_stmt|;
-endif|#
-directive|endif
+comment|/* only used for USER_LDT */
 ifdef|#
 directive|ifdef
 name|SMP
