@@ -707,6 +707,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|norotate
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't rotate */
+end_comment
+
+begin_decl_stmt
+name|int
 name|nosignal
 decl_stmt|;
 end_decl_stmt
@@ -2896,6 +2908,9 @@ condition|(
 name|ent
 operator|->
 name|rotate
+operator|&&
+operator|!
+name|norotate
 condition|)
 block|{
 if|if
@@ -3521,7 +3536,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:d:f:nrsvCD:FR:"
+literal|"a:d:f:nrsvCD:FNR:"
 argument_list|)
 operator|)
 operator|!=
@@ -3622,6 +3637,13 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|norotate
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'R'
 case|:
 name|rotatereq
@@ -3640,6 +3662,23 @@ literal|'m'
 case|:
 comment|/* Used by OpenBSD for "monitor mode" */
 default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|force
+operator|&&
+name|norotate
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Only one of -F and -N may be specified."
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
@@ -3982,7 +4021,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newsyslog [-CFnrsv] [-a directory] [-d directory] [-f config-file]\n"
+literal|"usage: newsyslog [-CFNnrsv] [-a directory] [-d directory] [-f config-file]\n"
 literal|"                 [ [-R requestor] filename ... ]\n"
 argument_list|)
 expr_stmt|;
