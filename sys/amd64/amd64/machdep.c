@@ -7360,6 +7360,14 @@ name|mcp
 operator|->
 name|mc_ss
 expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_flags
+operator||=
+name|PCB_FULLCTX
+expr_stmt|;
 return|return
 operator|(
 literal|0
