@@ -991,28 +991,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* if we have had errors sofar, drop out now */
-if|if
-condition|(
-name|Error
-operator|&&
-name|ExitStat
-operator|==
-name|EX_OK
-condition|)
-name|ExitStat
-operator|=
-name|EX_USAGE
-expr_stmt|;
-if|if
-condition|(
-name|ExitStat
-operator|!=
-name|EX_OK
-condition|)
-name|finis
-argument_list|()
-expr_stmt|;
 comment|/* 	** Scan argv and deliver the message to everyone. 	*/
 for|for
 control|(
@@ -1035,6 +1013,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* if we have had errors sofar, drop out now */
+if|if
+condition|(
+name|Error
+operator|&&
+name|ExitStat
+operator|==
+name|EX_OK
+condition|)
+name|ExitStat
+operator|=
+name|EX_USAGE
+expr_stmt|;
+if|if
+condition|(
+name|ExitStat
+operator|!=
+name|EX_OK
+condition|)
+name|finis
+argument_list|()
+expr_stmt|;
 comment|/* 	**  See if we have anyone to send to at all. 	*/
 if|if
 condition|(
