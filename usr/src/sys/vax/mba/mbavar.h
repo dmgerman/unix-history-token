@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.10	81/02/26	*/
+comment|/*	mbavar.h	4.11	81/02/26	*/
 end_comment
 
 begin_comment
@@ -814,10 +814,6 @@ name|mh_actl
 decl_stmt|;
 comment|/* tail of queue to transfer */
 block|}
-name|mba_hd
-index|[
-literal|4
-index|]
 struct|;
 end_struct
 
@@ -1045,6 +1041,16 @@ name|NMBA
 operator|>
 literal|0
 end_if
+
+begin_decl_stmt
+name|struct
+name|mba_hd
+name|mba_hd
+index|[
+name|NMBA
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_extern
 extern|extern	Xmba0int(
