@@ -1095,6 +1095,10 @@ name|SCB_ABORT
 init|=
 literal|0x1000
 block|,
+name|SCB_UNTAGGEDQ
+init|=
+literal|0x2000
+block|,
 name|SCB_ACTIVE
 init|=
 literal|0x4000
@@ -1141,6 +1145,11 @@ name|pending_links
 expr_stmt|;
 name|ahc_io_ctx_t
 name|io_ctx
+decl_stmt|;
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc_softc
 decl_stmt|;
 name|scb_flag
 name|flags
