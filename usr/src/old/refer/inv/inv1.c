@@ -675,6 +675,10 @@ else|:
 literal|"w"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|keepkey
+condition|)
 name|fd
 operator|=
 name|keepkey
