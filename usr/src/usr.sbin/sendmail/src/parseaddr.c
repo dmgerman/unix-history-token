@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.13 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6340,6 +6340,15 @@ comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	
 if|if
 condition|(
 name|canonical
+operator|||
+name|bitnset
+argument_list|(
+name|M_NOCOMMENT
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 name|fancy
 operator|=
