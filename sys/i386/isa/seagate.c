@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.8.4.1 1995/08/08 12:29:36 jkh Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.8.4.2 1995/08/31 06:36:08 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -665,7 +665,7 @@ modifier|*
 name|data
 decl_stmt|;
 comment|/* position in data buffer so far */
-name|int32
+name|int32_t
 name|datalen
 decl_stmt|;
 comment|/* bytes remaining to transfer */
@@ -1013,7 +1013,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32
+name|int32_t
 name|sea_scsi_cmd
 parameter_list|(
 name|struct
@@ -1026,7 +1026,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32
+name|u_int32_t
 name|sea_adapter_info
 parameter_list|(
 name|int
@@ -2531,7 +2531,7 @@ comment|/*  * Return some information to the caller about  * the adapter and its
 end_comment
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|sea_adapter_info
 parameter_list|(
 name|int
@@ -2686,7 +2686,7 @@ comment|/*  * Start a scsi operation given the command and the data address.  * 
 end_comment
 
 begin_function
-name|int32
+name|int32_t
 name|sea_scsi_cmd
 parameter_list|(
 name|struct

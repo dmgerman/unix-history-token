@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2. The name  * of the author may not be used to endorse or promote products derived from  * this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO  * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * if_epreg.h,v 1.4 1994/11/13 10:12:37 gibbs Exp Modified by:  *  October 2, 1994   Modified by: Andres Vega Garcia   INRIA - Sophia Antipolis, France  e-mail: avega@sophia.inria.fr  finger: avega@pax.inria.fr   */
+comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2. The name  * of the author may not be used to endorse or promote products derived from  * this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO  * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * if_epreg.h,v 1.4 1994/11/13 10:12:37 gibbs Exp Modified by:  *  October 2, 1994   Modified by: Andres Vega Garcia   INRIA - Sophia Antipolis, France  e-mail: avega@sophia.inria.fr  finger: avega@pax.inria.fr   */
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.7 1995/04/10 21:25:06 jkh Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.11 1996/02/06 18:50:42 wollman Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -85,6 +85,10 @@ name|u_short
 name|ep_connectors
 decl_stmt|;
 comment|/* Connectors on this card.	 */
+name|u_char
+name|ep_connector
+decl_stmt|;
+comment|/* Configured connector.	 */
 name|int
 name|stat
 decl_stmt|;
@@ -109,6 +113,19 @@ define|#
 directive|define
 name|F_ACCESS_32_BITS
 value|0x100
+name|struct
+name|ep_board
+modifier|*
+name|epb
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+name|struct
+name|kern_devconf
+modifier|*
+name|kdc
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|EP_LOCAL_STATS
@@ -132,6 +149,38 @@ name|rx_overrunl
 decl_stmt|;
 endif|#
 directive|endif
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ep_board
+block|{
+name|int
+name|epb_addr
+decl_stmt|;
+comment|/* address of this board */
+name|char
+name|epb_used
+decl_stmt|;
+comment|/* was this entry already used for configuring ? */
+comment|/* data from EEPROM for later use */
+name|u_short
+name|eth_addr
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Ethernet address */
+name|u_short
+name|prod_id
+decl_stmt|;
+comment|/* product ID */
+name|u_short
+name|res_cfg
+decl_stmt|;
+comment|/* resource configuration */
 block|}
 struct|;
 end_struct
@@ -242,6 +291,17 @@ name|EP_ID_PORT
 value|0x100
 end_define
 
+begin_define
+define|#
+directive|define
+name|EP_IOSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* 16 bytes of I/O space used. */
+end_comment
+
 begin_comment
 comment|/*  * some macros to acces long named fields  */
 end_comment
@@ -347,7 +407,7 @@ value|outw(BASE+EP_COMMAND, WINDOW_SELECT|(x))
 end_define
 
 begin_comment
-comment|/**************************************************************************  *									  *  * These define the EEPROM data structure.  They are used in the probe  * function to verify the existance of the adapter after having sent  * the ID_Sequence.  *  * There are others but only the ones we use are defined here.  *  **************************************************************************/
+comment|/**************************************************************************  *									  *  * These define the EEPROM data structure.  They are used in the probe  * function to verify the existence of the adapter after having sent  * the ID_Sequence.  *  * There are others but only the ones we use are defined here.  *  **************************************************************************/
 end_comment
 
 begin_define
@@ -1512,23 +1572,115 @@ name|RX_BYTES_MASK
 value|(u_short) (0x07ff)
 end_define
 
-begin_comment
-comment|/* EISA support */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ep_board
+name|ep_board
+index|[]
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|EP_EISA_START
-value|0x1000
-end_define
+begin_decl_stmt
+specifier|extern
+name|int
+name|ep_boards
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|EP_EISA_W0
-value|0x0c80
-end_define
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|ep_unit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ep_softc
+modifier|*
+name|ep_alloc
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+expr|struct
+name|ep_board
+operator|*
+name|epb
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ep_free
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ep_softc
+operator|*
+name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ep_intr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ep_attach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ep_softc
+operator|*
+name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int16_t
+name|get_e
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ep_softc
+operator|*
+name|sc
+operator|,
+name|int
+name|offset
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
