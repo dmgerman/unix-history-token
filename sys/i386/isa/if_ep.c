@@ -896,6 +896,10 @@ case|case
 literal|0x4057
 case|:
 comment|/* 3C574 */
+case|case
+literal|0x0201
+case|:
+comment|/* 3C574BT */
 name|epb
 operator|->
 name|mii_trans
@@ -1091,6 +1095,10 @@ name|ep_connectors
 operator|&
 literal|7
 operator|)
+condition|)
+if|if
+condition|(
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
