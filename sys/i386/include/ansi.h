@@ -16,7 +16,7 @@ name|_MACHINE_ANSI_H_
 end_define
 
 begin_comment
-comment|/*  * Types which are fundamental to the implementation and must be declared  * in more than one standard header are defined here.  Standard headers  * then use:  *	#ifdef	_BSD_SIZE_T_  *	typedef	_BSD_SIZE_T_	size_t;  *	#undef	_BSD_SIZE_T_  *	#endif  */
+comment|/*  * Types which are fundamental to the implementation and may appear in  * more than one standard header are defined here.  Standard headers  * then use:  *	#ifdef	_BSD_SIZE_T_  *	typedef	_BSD_SIZE_T_	size_t;  *	#undef	_BSD_SIZE_T_  *	#endif  */
 end_comment
 
 begin_define
