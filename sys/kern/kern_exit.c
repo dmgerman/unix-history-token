@@ -894,6 +894,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX tp should be locked. */
+name|PGRPSESS_XUNLOCK
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -901,6 +904,9 @@ name|ttywait
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|PGRPSESS_XLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 				 * The tty could have been revoked 				 * if we blocked. 				 */
 if|if
