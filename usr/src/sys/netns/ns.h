@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -290,7 +290,7 @@ begin_struct
 struct|struct
 name|sockaddr_ns
 block|{
-name|short
+name|u_short
 name|sns_family
 decl_stmt|;
 name|struct
@@ -300,7 +300,7 @@ decl_stmt|;
 name|char
 name|sns_zero
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}
