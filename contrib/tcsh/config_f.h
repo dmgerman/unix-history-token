@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/config_f.h,v 3.22 1999/05/11 13:07:42 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/config_f.h,v 3.23 2000/06/11 02:14:10 kim Exp $ */
 end_comment
 
 begin_comment
@@ -198,6 +198,11 @@ operator|||
 name|defined
 argument_list|(
 name|_OSD_POSIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__MVS__
 argument_list|)
 end_if
 

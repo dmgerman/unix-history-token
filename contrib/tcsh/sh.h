@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.88 2000/06/10 22:06:27 kim Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.h,v 3.93 2000/11/19 20:50:43 christos Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 end_ifdef
 
 begin_define
@@ -77,7 +77,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_endif
@@ -134,7 +134,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|WINNT_NATIVE
 end_ifndef
 
 begin_define
@@ -162,7 +162,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*!WINNT */
+comment|/*!WINNT_NATIVE */
 end_comment
 
 begin_comment
@@ -433,7 +433,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|WINNT_NATIVE
 end_ifndef
 
 begin_define
@@ -452,7 +452,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_define
@@ -471,7 +471,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_comment
@@ -815,7 +815,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|WINNT
+name|WINNT_NATIVE
 argument_list|)
 end_if
 
@@ -848,7 +848,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __EMX__ || WINNT */
+comment|/* __EMX__ || WINNT_NATIVE */
 end_comment
 
 begin_endif
@@ -969,7 +969,10 @@ literal|0
 operator|)
 operator|&&
 operator|!
-name|WINNT
+name|defined
+argument_list|(
+name|WINNT_NATIVE
+argument_list|)
 end_if
 
 begin_include
@@ -984,7 +987,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (POSIX || SYSVREL> 0)&& !WINNT */
+comment|/* (POSIX || SYSVREL> 0)&& !WINNT_NATIVE */
 end_comment
 
 begin_ifdef
@@ -1026,7 +1029,13 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|WINNT
+name|WINNT_NATIVE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MVS__
 argument_list|)
 end_if
 
@@ -1042,7 +1051,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MINIX&& !_VMS_POSIX&& !WINNT */
+comment|/* !_MINIX&& !_VMS_POSIX&& !WINNT_NATIVE&& !__MVS__ */
 end_comment
 
 begin_include
@@ -1119,6 +1128,12 @@ operator|!
 name|defined
 argument_list|(
 name|_SX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MVS__
 argument_list|)
 end_if
 
@@ -1200,7 +1215,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|WINNT_NATIVE
 end_ifndef
 
 begin_ifndef
@@ -1351,7 +1366,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_ifdef
@@ -1386,7 +1401,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|WINNT
+name|WINNT_NATIVE
 argument_list|)
 end_if
 
@@ -1555,7 +1570,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* POSIX&& !WINNT */
+comment|/* POSIX&& !WINNT_NATIVE */
 end_comment
 
 begin_if
@@ -1685,7 +1700,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|WINNT
+name|WINNT_NATIVE
 argument_list|)
 end_if
 
@@ -1785,6 +1800,12 @@ argument_list|(
 name|_SX
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MVS__
+argument_list|)
 end_if
 
 begin_include
@@ -1826,7 +1847,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|WINNT
+name|WINNT_NATIVE
 argument_list|)
 operator|&&
 operator|!
@@ -1848,7 +1869,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MINIX&& !COHERENT&& !supermax&& !WINNT&& !defined(IRIS4D) */
+comment|/* !_MINIX&& !COHERENT&& !supermax&& !WINNT_NATIVE&& !defined(IRIS4D) */
 end_comment
 
 begin_if
@@ -2056,7 +2077,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|WINNT_NATIVE
 end_ifndef
 
 begin_include
@@ -2077,7 +2098,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_ifdef
@@ -2263,6 +2284,31 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SS_SIZE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_SS_MAXSIZE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|INET6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2522,6 +2568,42 @@ name|bool
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * ASCII vs. EBCDIC  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|'Z'
+operator|-
+literal|'A'
+operator|==
+literal|25
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IS_ASCII
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IS_ASCII
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -2531,7 +2613,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|WINNT_NATIVE
 end_ifndef
 
 begin_ifndef
@@ -2668,7 +2750,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !WINNT */
+comment|/* !WINNT_NATIVE */
 end_comment
 
 begin_typedef
@@ -3673,6 +3755,12 @@ begin_comment
 comment|/* Error message from scanner/parser */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD4_4
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -3683,6 +3771,18 @@ end_decl_stmt
 begin_comment
 comment|/* Error from C library routines */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|exitset
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
@@ -4598,23 +4698,23 @@ name|type
 decl_stmt|;
 define|#
 directive|define
-name|I_SEEK
-value|-1
+name|TCSH_I_SEEK
+value|0
 comment|/* Invalid seek */
 define|#
 directive|define
-name|A_SEEK
-value|0
+name|TCSH_A_SEEK
+value|1
 comment|/* Alias seek */
 define|#
 directive|define
-name|F_SEEK
-value|1
+name|TCSH_F_SEEK
+value|2
 comment|/* File seek */
 define|#
 directive|define
-name|E_SEEK
-value|2
+name|TCSH_E_SEEK
+value|3
 comment|/* Eval seek */
 union|union
 block|{
@@ -5262,7 +5362,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 end_ifdef
 
 begin_decl_stmt
@@ -5287,7 +5387,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT*/
+comment|/* WINNT_NATIVE*/
 end_comment
 
 begin_struct
@@ -6560,7 +6660,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|WINNT_NATIVE
 end_ifndef
 
 begin_ifdef
@@ -6830,7 +6930,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_define
@@ -6867,7 +6967,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_comment

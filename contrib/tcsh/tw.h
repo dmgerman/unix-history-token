@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/tw.h,v 3.20 1997/10/02 16:36:35 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/tw.h,v 3.21 2000/07/04 19:45:02 christos Exp $ */
 end_comment
 
 begin_comment
@@ -273,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|FILSIZ
-value|512
+value|BUFSIZE
 end_define
 
 begin_comment

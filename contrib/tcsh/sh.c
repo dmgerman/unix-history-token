@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.c,v 3.90 2000/01/14 22:57:27 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.c,v 3.92 2000/11/11 23:03:35 christos Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: sh.c,v 3.90 2000/01/14 22:57:27 christos Exp $"
+literal|"$Id: sh.c,v 3.92 2000/11/11 23:03:35 christos Exp $"
 argument_list|)
 end_macro
 
@@ -122,7 +122,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 end_ifdef
 
 begin_decl_stmt
@@ -142,7 +142,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_decl_stmt
@@ -368,6 +368,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|insource
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|exitset
 init|=
 literal|0
 decl_stmt|;
@@ -742,13 +750,13 @@ directive|endif
 comment|/* BSDSIGS */
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 name|nt_init
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 if|#
 directive|if
 name|defined
@@ -983,7 +991,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 block|{
 name|char
 modifier|*
@@ -1010,7 +1018,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 name|t
 operator|=
 name|t
@@ -3004,7 +3012,7 @@ expr_stmt|;
 comment|/* For $$ */
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 block|{
 name|char
 modifier|*
@@ -3055,7 +3063,7 @@ comment|/* For<< */
 block|}
 else|#
 directive|else
-comment|/* !WINNT */
+comment|/* !WINNT_NATIVE */
 name|shtemp
 operator|=
 name|Strspl
@@ -3068,7 +3076,7 @@ expr_stmt|;
 comment|/* For<< */
 endif|#
 directive|endif
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 comment|/*      * Record the interrupt states from the parent process. If the parent is      * non-interruptible our hand must be forced or we (and our children) won't      * be either. Our children inherit termination from our parent. We catch it      * only if we are the login shell.      */
 ifdef|#
 directive|ifdef
@@ -3220,6 +3228,116 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TCF */
+comment|/*      * dspkanji/dspmbyte autosetting      */
+comment|/* PATCH IDEA FROM Issei.Suzuki VERY THANKS */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DSPMBYTE
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NLS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|LC_CTYPE
+argument_list|)
+if|if
+condition|(
+operator|(
+operator|(
+name|tcp
+operator|=
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|||
+operator|(
+name|tcp
+operator|=
+name|getenv
+argument_list|(
+literal|"LANG"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|!
+name|adrof
+argument_list|(
+name|CHECK_MBYTEVAR
+argument_list|)
+condition|)
+block|{
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|tcp
+operator|=
+name|getenv
+argument_list|(
+literal|"LANG"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|adrof
+argument_list|(
+name|CHECK_MBYTEVAR
+argument_list|)
+condition|)
+block|{
+endif|#
+directive|endif
+name|autoset_dspmbyte
+argument_list|(
+name|str2short
+argument_list|(
+name|tcp
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WINNT_NATIVE
+argument_list|)
+elseif|else
+if|if
+condition|(
+operator|!
+name|adrof
+argument_list|(
+name|CHECK_MBYTEVAR
+argument_list|)
+condition|)
+name|nt_autoset_dspmbyte
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* WINNT_NATIVE */
+endif|#
+directive|endif
 comment|/*      * Process the arguments.      *       * Note that processing of -v/-x is actually delayed till after script      * processing.      *       * We set the first character of our name to be '-' if we are a shell       * running interruptible commands.  Many programs which examine ps'es       * use this to filter such shells out.      */
 name|argc
 operator|--
@@ -4820,6 +4938,9 @@ name|setexit
 argument_list|()
 expr_stmt|;
 comment|/* PWP */
+name|exitset
+operator|++
+expr_stmt|;
 name|haderr
 operator|=
 literal|0
@@ -5151,66 +5272,6 @@ endif|#
 directive|endif
 comment|/* SIG_WINDOW */
 block|}
-comment|/*      * dspkanji/dspmbyte autosetting      */
-comment|/* PATCH IDEA FROM Issei.Suzuki VERY THANKS */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DSPMBYTE
-argument_list|)
-if|if
-condition|(
-operator|(
-name|tcp
-operator|=
-name|getenv
-argument_list|(
-literal|"LANG"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-operator|&&
-operator|!
-name|adrof
-argument_list|(
-name|CHECK_MBYTEVAR
-argument_list|)
-condition|)
-block|{
-name|autoset_dspmbyte
-argument_list|(
-name|str2short
-argument_list|(
-name|tcp
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WINNT
-argument_list|)
-elseif|else
-if|if
-condition|(
-operator|!
-name|adrof
-argument_list|(
-name|CHECK_MBYTEVAR
-argument_list|)
-condition|)
-name|nt_autoset_dspmbyte
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* WINNT */
-endif|#
-directive|endif
 comment|/*      * Now are ready for the -v and -x flags      */
 if|if
 condition|(
@@ -5303,9 +5364,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|untty
 parameter_list|()
@@ -5357,9 +5415,6 @@ endif|#
 directive|endif
 comment|/* BSDJOBS */
 block|}
-end_function
-
-begin_function
 name|void
 name|importpath
 parameter_list|(
@@ -5516,7 +5571,7 @@ break|break;
 block|}
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 elseif|else
 if|if
 condition|(
@@ -5532,7 +5587,7 @@ literal|'/'
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 name|dp
 operator|++
 expr_stmt|;
@@ -5557,13 +5612,7 @@ name|VAR_READWRITE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Source to the file which is the catenation of the argument names.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|srccat
@@ -5579,9 +5628,6 @@ decl_stmt|,
 decl|*
 name|dp
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 if|if
 condition|(
@@ -5636,7 +5682,7 @@ name|rv
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 name|ep
 operator|=
 name|cp
@@ -5672,7 +5718,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 name|ep
 operator|=
 name|Strspl
@@ -5721,13 +5767,7 @@ name|rv
 return|;
 block|}
 block|}
-end_block
-
-begin_comment
 comment|/*  * Source to a file putting the file descriptor in a safe place (> 2).  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|srcfile
@@ -5814,13 +5854,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Save the shell state, and establish new argument vector, and new input  * fd.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|st_save
@@ -5854,9 +5888,6 @@ decl|*
 modifier|*
 name|av
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|st
 operator|->
@@ -6113,13 +6144,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Restore the shell to a saved state  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|st_restore
@@ -6366,13 +6391,7 @@ name|STRargv
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Source to a unit.  If onlyown it must be our file or our group or  * we don't chance it.	This occurs on ".cshrc"s and the like.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|srcunit
@@ -7371,7 +7390,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|WINNT
+name|WINNT_NATIVE
 argument_list|)
 operator|(
 name|void
@@ -7381,7 +7400,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_VMS_POSIX&& !WINNT */
+comment|/* !_VMS_POSIX&& !WINNT_NATIVE */
 comment|/*      * If we have an active "onintr" then we search for the label. Note that if      * one does "onintr -" then we shan't be interruptible so we needn't worry      * about that here.      */
 if|if
 condition|(
@@ -7764,7 +7783,7 @@ name|feobp
 operator|&&
 name|aret
 operator|==
-name|F_SEEK
+name|TCSH_F_SEEK
 condition|)
 name|printprompt
 argument_list|(
@@ -9250,13 +9269,13 @@ directive|endif
 comment|/* NLS_CATALOGS */
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 name|nt_cleanup
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 name|_exit
 argument_list|(
 name|i

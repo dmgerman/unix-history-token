@@ -93,7 +93,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 end_ifdef
 
 begin_pragma
@@ -113,7 +113,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
 
 begin_define
@@ -2809,10 +2809,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|DIR
 modifier|*
 name|dirp
