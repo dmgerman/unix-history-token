@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.45 (Berkeley) %G%"
+literal|"@(#)conf.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3106,6 +3106,13 @@ begin_comment
 comment|/* BSDI 1.0 doesn't do PS_STRINGS as we expect */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PROCTITLEPAD
+value|'\0'
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -3150,6 +3157,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PROCTITLEPAD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PROCTITLEPAD
+value|' '
+end_define
 
 begin_endif
 endif|#
@@ -3393,7 +3418,7 @@ operator|*
 name|p
 operator|++
 operator|=
-literal|' '
+name|PROCTITLEPAD
 expr_stmt|;
 endif|#
 directive|endif
