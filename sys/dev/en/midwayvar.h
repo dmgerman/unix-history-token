@@ -494,6 +494,13 @@ name|EN_MAXNRX
 index|]
 struct|;
 comment|/* recv info */
+name|u_int8_t
+name|macaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* card unique mac address */
 comment|/* stats */
 name|u_int32_t
 name|vtrash

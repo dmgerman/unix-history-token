@@ -58,6 +58,31 @@ begin_comment
 comment|/* freebsd doesn't define _KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_ATM_PVCEXT
+end_ifndef
+
+begin_comment
+comment|/*  * ATM_PVCEXT enables PVC extention: VP/VC shaping  * and PVC shadow interfaces.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_PVCEXT
+end_define
+
+begin_comment
+comment|/* enable pvc extention */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -198,6 +223,28 @@ begin_comment
 comment|/* use the LLC SNAP encoding (iff aal5) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATM_PVCEXT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATM_PH_INERNAL
+value|0x20
+end_define
+
+begin_comment
+comment|/* reserve for kernel internal use */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -290,6 +337,109 @@ end_define
 
 begin_comment
 comment|/* disable */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATM_PVCEXT
+end_ifdef
+
+begin_comment
+comment|/* structure to control PVC transmitter */
+end_comment
+
+begin_struct
+struct|struct
+name|pvctxreq
+block|{
+comment|/* first entry must be compatible with struct ifreq */
+name|char
+name|pvc_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
+name|struct
+name|atm_pseudohdr
+name|pvc_aph
+decl_stmt|;
+comment|/* (flags) + vpi:vci */
+name|struct
+name|atm_pseudohdr
+name|pvc_joint
+decl_stmt|;
+comment|/* for vp shaping: another vc 					   to share the shaper */
+name|int
+name|pvc_pcr
+decl_stmt|;
+comment|/* peak cell rate (shaper value) */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* use ifioctl for now */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSPVCTX
+value|_IOWR('i', 95, struct pvctxreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGPVCTX
+value|_IOWR('i', 96, struct pvctxreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSPVCSIF
+value|_IOWR('i', 97, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGPVCSIF
+value|_IOWR('i', 98, struct ifreq)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATM_PH_PVCSIF
+value|ATM_PH_INERNAL
+end_define
+
+begin_comment
+comment|/* pvc shadow interface */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATM_PVCEXT */
 end_comment
 
 begin_comment
@@ -421,6 +571,76 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATM_PVCEXT
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|shadow2if
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|pvc_attach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pvc_setaph
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|atm_pseudohdr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

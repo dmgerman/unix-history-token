@@ -341,6 +341,17 @@ begin_comment
 comment|/*  * prom& phy: not defined here  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MID_ADPMACOFF
+value|0xffc0
+end_define
+
+begin_comment
+comment|/* mac address offset (adaptec only) */
+end_comment
+
 begin_comment
 comment|/*  * midway regs  (byte offsets from en_base)  */
 end_comment
