@@ -2853,14 +2853,14 @@ name|cardbus_pickup_maps
 argument_list|(
 name|cbdev
 argument_list|,
-name|child
+name|dev
 argument_list|)
 expr_stmt|;
 name|cardbus_alloc_resources
 argument_list|(
 name|cbdev
 argument_list|,
-name|child
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
