@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_generic.c,v 1.3 1995/10/22 14:51:12 phk Exp $"
+literal|"$Id: clnt_generic.c,v 1.4 1996/08/12 14:00:18 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,26 +225,8 @@ name|sin_port
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|memcpy
 argument_list|(
-name|sin
-operator|.
-name|sin_zero
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sin
-operator|.
-name|sin_zero
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|h
-operator|->
-name|h_addr
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -253,6 +235,10 @@ operator|&
 name|sin
 operator|.
 name|sin_addr
+argument_list|,
+name|h
+operator|->
+name|h_addr
 argument_list|,
 name|h
 operator|->
@@ -349,22 +335,13 @@ name|NULL
 operator|)
 return|;
 block|}
-name|tv
-operator|.
-name|tv_sec
-operator|=
-literal|25
-expr_stmt|;
-name|clnt_control
-argument_list|(
-name|client
-argument_list|,
-name|CLSET_TIMEOUT
-argument_list|,
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX do we need this? */
+block|tv.tv_sec = 25; 		tv.tv_usec = 0; 		clnt_control(client, CLSET_TIMEOUT,&tv);
+endif|#
+directive|endif
 break|break;
 case|case
 name|IPPROTO_TCP
@@ -401,28 +378,13 @@ name|NULL
 operator|)
 return|;
 block|}
-name|tv
-operator|.
-name|tv_sec
-operator|=
-literal|25
-expr_stmt|;
-name|tv
-operator|.
-name|tv_usec
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
-name|clnt_control
-argument_list|(
-name|client
-argument_list|,
-name|CLSET_TIMEOUT
-argument_list|,
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
+comment|/* XXX do we need this? */
+block|tv.tv_sec = 25; 		tv.tv_usec = 0; 		clnt_control(client, CLSET_TIMEOUT,&tv);
+endif|#
+directive|endif
 break|break;
 default|default:
 name|rpc_createerr
