@@ -3818,6 +3818,11 @@ argument_list|,
 name|GENCTL_SOFT_RESET
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500
+argument_list|)
+expr_stmt|;
 comment|/* Workaround for Application Note 7-15 */
 for|for
 control|(
