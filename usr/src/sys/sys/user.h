@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.6	81/03/03	*/
+comment|/*	user.h	4.7	81/04/24	*/
 end_comment
 
 begin_ifdef
@@ -456,6 +456,10 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* see<sys/limit.h> */
+name|unsigned
+name|u_vsave
+decl_stmt|;
+comment|/* saved previous fault page number */
 name|int
 name|u_stack
 index|[
