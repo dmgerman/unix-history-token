@@ -2289,6 +2289,30 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 		 * We can't continue with a size of 0 because we pass 		 * it to realloc() (via _kvm_realloc()), and passing 0 		 * to realloc() results in undefined behavior. 		 */
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * XXX: We should probably return an invalid, 			 * but non-NULL, pointer here so any client 			 * program trying to dereference it will 			 * crash.  However, _kvm_freeprocs() calls 			 * free() on kd->procbase if it isn't NULL, 			 * and free()'ing a junk pointer isn't good. 			 * Then again, _kvm_freeprocs() isn't used 			 * anywhere . . . 			 */
+name|kd
+operator|->
+name|procbase
+operator|=
+name|_kvm_malloc
+argument_list|(
+name|kd
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+goto|goto
+name|liveout
+goto|;
+block|}
 do|do
 block|{
 name|size
@@ -2394,6 +2418,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 		 * We have to check the size again because sysctl() 		 * may "round up" oldlenp if oldp is NULL; hence it 		 * might've told us that there was data to get when 		 * there really isn't any. 		 */
 if|if
 condition|(
 name|size
@@ -2442,6 +2467,8 @@ literal|0
 operator|)
 return|;
 block|}
+name|liveout
+label|:
 name|nprocs
 operator|=
 name|size
