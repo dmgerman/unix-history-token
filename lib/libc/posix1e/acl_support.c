@@ -225,7 +225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _posix1e_acl_sort -- sort ACL entries in POSIX.1e-formatted ACLs  * Give the opportunity to fail, althouh we don't currently have a way  * to fail.  */
+comment|/*  * _posix1e_acl_sort -- sort ACL entries in POSIX.1e-formatted ACLs  * Give the opportunity to fail, although we don't currently have a way  * to fail.  */
 end_comment
 
 begin_function
@@ -856,8 +856,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|g
+operator|==
+name|NULL
 condition|)
 name|i
 operator|=
