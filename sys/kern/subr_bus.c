@@ -3984,7 +3984,16 @@ name|result
 operator|>
 literal|0
 condition|)
+block|{
+name|device_set_driver
+argument_list|(
+name|child
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 	 * A priority lower than SUCCESS, remember the best matching 	 * driver. Initialise the value of pri for the first match. 	 */
 if|if
 condition|(
