@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -117,6 +117,24 @@ define|#
 directive|define
 name|FS_MAXCONTIG
 value|16
+end_define
+
+begin_comment
+comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the file system  * is run at between 95% and 100% full; thus the minimum default  * value of fs_minfree is 5%. However, to get good clustering  * performance, 10% is a better choice. hence we use 10% as our  * default value. With 10% free space, fragmentation is not a  * problem, so we choose to optimize for time.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINFREE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULTOPT
+value|FS_OPTTIME
 end_define
 
 begin_comment
