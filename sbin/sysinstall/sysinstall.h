@@ -184,28 +184,28 @@ begin_define
 define|#
 directive|define
 name|COPYRIGHT_FILE
-value|"/COPYRIGHT.gz"
+value|"/COPYRIGHT"
 end_define
 
 begin_define
 define|#
 directive|define
 name|README_FILE
-value|"/README.gz"
+value|"/README"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HELPME_FILE
-value|"/DISKSPACE.FAQ.gz"
+value|"/DISKSPACE.FAQ"
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELNOTES_FILE
-value|"/RELNOTES.FreeBSD.gz"
+value|"/RELNOTES.FreeBSD"
 end_define
 
 begin_ifndef
