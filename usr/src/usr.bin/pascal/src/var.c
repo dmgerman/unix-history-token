@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.3 (Berkeley) %G%"
+literal|"@(#)var.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1479,11 +1479,19 @@ name|alignment
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_block
 block|{
@@ -1526,7 +1534,7 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 end_endif
 
 begin_ifdef
