@@ -215,6 +215,20 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* 6byte CDBs special case 0 length to be 256 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CDB6_LEN
+parameter_list|(
+name|len
+parameter_list|)
+value|((len) == 0 ? 256 : len)
+end_define
+
+begin_comment
 comment|/*  * This type defines actions to be taken when a particular sense code is  * received.  Right now, these flags are only defined to take up 16 bits,  * but can be expanded in the future if necessary.  */
 end_comment
 
