@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"malloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filedesc.h"
 end_include
 
 begin_ifdef
@@ -93,6 +99,23 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+decl_stmt|;
+comment|/* pointer to file descriptor state */
 specifier|register
 name|char
 modifier|*
@@ -155,6 +178,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_dvp
@@ -354,9 +383,9 @@ literal|0
 expr_stmt|;
 name|dp
 operator|=
-name|ndp
+name|fdp
 operator|->
-name|ni_cdir
+name|fd_cdir
 expr_stmt|;
 name|VREF
 argument_list|(
@@ -436,9 +465,9 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|ndp
+name|fdp
 operator|->
-name|ni_rdir
+name|fd_rdir
 operator|)
 operator|==
 name|NULL
@@ -788,9 +817,9 @@ if|if
 condition|(
 name|dp
 operator|==
-name|ndp
+name|fdp
 operator|->
-name|ni_rdir
+name|fd_rdir
 operator|||
 name|dp
 operator|==

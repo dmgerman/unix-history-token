@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.48 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.49 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -736,42 +736,6 @@ argument_list|)
 expr_stmt|;
 name|newndp
 operator|->
-name|ni_cdir
-operator|=
-name|ndp
-operator|->
-name|ni_cdir
-expr_stmt|;
-name|VREF
-argument_list|(
-name|newndp
-operator|->
-name|ni_cdir
-argument_list|)
-expr_stmt|;
-name|newndp
-operator|->
-name|ni_rdir
-operator|=
-name|ndp
-operator|->
-name|ni_rdir
-expr_stmt|;
-if|if
-condition|(
-name|newndp
-operator|->
-name|ni_rdir
-condition|)
-name|VREF
-argument_list|(
-name|newndp
-operator|->
-name|ni_rdir
-argument_list|)
-expr_stmt|;
-name|newndp
-operator|->
 name|ni_cred
 operator|=
 name|ndp
@@ -807,26 +771,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|vrele
-argument_list|(
-name|ndp
-operator|->
-name|ni_cdir
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ndp
-operator|->
-name|ni_rdir
-condition|)
-name|vrele
-argument_list|(
-name|ndp
-operator|->
-name|ni_rdir
-argument_list|)
-expr_stmt|;
 name|crfree
 argument_list|(
 name|ndp

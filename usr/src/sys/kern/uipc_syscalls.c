@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.20 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filedesc.h"
 end_include
 
 begin_include
@@ -84,15 +90,6 @@ begin_comment
 comment|/*  * System call interface to the socket abstraction.  */
 end_comment
 
-begin_function_decl
-name|struct
-name|file
-modifier|*
-name|getsock
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -100,10 +97,6 @@ name|fileops
 name|socketops
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|socket
@@ -154,6 +147,15 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
+name|struct
 name|socket
 modifier|*
 name|so
@@ -174,6 +176,8 @@ name|error
 operator|=
 name|falloc
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|fp
 argument_list|,
@@ -230,12 +234,12 @@ name|protocol
 argument_list|)
 condition|)
 block|{
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|fd
-index|]
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
@@ -330,7 +334,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -344,23 +347,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -470,7 +473,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -479,23 +481,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -695,10 +697,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_macro
 name|accept1
 argument_list|(
@@ -815,23 +813,23 @@ operator|(
 name|error
 operator|)
 return|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1010,6 +1008,8 @@ name|error
 operator|=
 name|falloc
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|fp
 argument_list|,
@@ -1290,7 +1290,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -1312,23 +1311,23 @@ name|error
 decl_stmt|,
 name|s
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1542,10 +1541,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_macro
 name|socketpair
 argument_list|(
@@ -1598,6 +1593,16 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -1682,6 +1687,8 @@ name|error
 operator|=
 name|falloc
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|fp1
 argument_list|,
@@ -1735,6 +1742,8 @@ name|error
 operator|=
 name|falloc
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|fp2
 argument_list|,
@@ -1887,15 +1896,15 @@ name|f_count
 operator|=
 literal|0
 expr_stmt|;
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|sv
 index|[
 literal|1
 index|]
-index|]
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
@@ -1914,15 +1923,15 @@ name|f_count
 operator|=
 literal|0
 expr_stmt|;
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|sv
 index|[
 literal|0
 index|]
-index|]
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
@@ -1953,10 +1962,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|sendto
@@ -2022,6 +2027,9 @@ decl_stmt|;
 name|struct
 name|iovec
 name|aiov
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|msg
 operator|.
@@ -2089,6 +2097,8 @@ return|return
 operator|(
 name|sendit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -2112,10 +2122,6 @@ ifdef|#
 directive|ifdef
 name|COMPAT_43
 end_ifdef
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|osend
@@ -2233,6 +2239,8 @@ return|return
 operator|(
 name|sendit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -2257,10 +2265,6 @@ directive|define
 name|MSG_COMPAT
 value|0x8000
 end_define
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|osendmsg
@@ -2468,6 +2472,8 @@ name|error
 operator|=
 name|sendit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -2509,10 +2515,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|sendmsg
@@ -2730,6 +2732,8 @@ name|error
 operator|=
 name|sendit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -2767,18 +2771,26 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|sendit
 argument_list|(
-argument|s
+name|p
 argument_list|,
-argument|mp
+name|s
 argument_list|,
-argument|flags
+name|mp
 argument_list|,
-argument|retsize
+name|flags
+argument_list|,
+name|retsize
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -2806,7 +2818,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -2851,21 +2862,21 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -3167,9 +3178,7 @@ if|if
 condition|(
 name|KTRPOINT
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|,
 name|KTR_GENIO
 argument_list|)
@@ -3296,9 +3305,7 @@ name|EPIPE
 condition|)
 name|psignal
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|,
 name|SIGPIPE
 argument_list|)
@@ -3337,9 +3344,7 @@ literal|0
 condition|)
 name|ktrgenio
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_tracep
 argument_list|,
@@ -3472,10 +3477,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|recvfrom
@@ -3650,6 +3651,8 @@ return|return
 operator|(
 name|recvit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -3676,10 +3679,6 @@ ifdef|#
 directive|ifdef
 name|COMPAT_43
 end_ifdef
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|orecv
@@ -3799,6 +3798,8 @@ return|return
 operator|(
 name|recvit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -3820,10 +3821,6 @@ end_block
 
 begin_comment
 comment|/*  * Old recvmsg.  This code takes advantage of the fact that the old msghdr  * overlays the new one, missing only the flags, and with the (old) access  * rights where the control fields are now.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -4041,6 +4038,8 @@ name|error
 operator|=
 name|recvit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -4126,10 +4125,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_macro
 name|recvmsg
@@ -4372,6 +4367,8 @@ name|error
 operator|=
 name|recvit
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|s
@@ -4444,18 +4441,26 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|recvit
 argument_list|(
-argument|s
+name|p
 argument_list|,
-argument|mp
+name|s
 argument_list|,
-argument|namelenp
+name|mp
 argument_list|,
-argument|retsize
+name|namelenp
+argument_list|,
+name|retsize
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -4487,7 +4492,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -4536,21 +4540,21 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -4663,9 +4667,7 @@ if|if
 condition|(
 name|KTRPOINT
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|,
 name|KTR_GENIO
 argument_list|)
@@ -4809,9 +4811,7 @@ literal|0
 condition|)
 name|ktrgenio
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_tracep
 argument_list|,
@@ -5267,23 +5267,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -5385,23 +5385,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -5601,23 +5601,23 @@ name|valsize
 decl_stmt|,
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -5836,6 +5836,16 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -5903,6 +5913,8 @@ name|error
 operator|=
 name|falloc
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|rf
 argument_list|,
@@ -5954,6 +5966,8 @@ name|error
 operator|=
 name|falloc
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|wf
 argument_list|,
@@ -6026,15 +6040,15 @@ name|f_count
 operator|=
 literal|0
 expr_stmt|;
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|retval
 index|[
 literal|1
 index|]
-index|]
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
@@ -6046,15 +6060,15 @@ name|f_count
 operator|=
 literal|0
 expr_stmt|;
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|retval
 index|[
 literal|0
 index|]
-index|]
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
@@ -6322,7 +6336,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -6344,23 +6357,23 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|fdes
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -6806,7 +6819,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -6828,23 +6840,23 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|fdes
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -7295,23 +7307,39 @@ return|;
 block|}
 end_block
 
-begin_function
+begin_macro
+name|getsock
+argument_list|(
+argument|fdp
+argument_list|,
+argument|fdes
+argument_list|,
+argument|fpp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fdes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|file
 modifier|*
-name|getsock
-parameter_list|(
-name|fdes
-parameter_list|,
-name|errp
-parameter_list|)
-name|int
-name|fdes
-decl_stmt|,
-decl|*
-name|errp
+modifier|*
+name|fpp
 decl_stmt|;
-end_function
+end_decl_stmt
 
 begin_block
 block|{
@@ -7328,33 +7356,28 @@ name|unsigned
 operator|)
 name|fdes
 operator|>=
-name|NOFILE
+name|fdp
+operator|->
+name|fd_maxfiles
 operator|||
 operator|(
 name|fp
 operator|=
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|fdes
-index|]
+argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|*
-name|errp
-operator|=
-name|EBADF
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EBADF
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|fp
@@ -7363,21 +7386,19 @@ name|f_type
 operator|!=
 name|DTYPE_SOCKET
 condition|)
-block|{
-operator|*
-name|errp
-operator|=
+return|return
+operator|(
 name|ENOTSOCK
+operator|)
+return|;
+operator|*
+name|fpp
+operator|=
+name|fp
 expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|fp
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.21 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filedesc.h"
 end_include
 
 begin_include
@@ -2665,6 +2677,18 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_fd
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|int
 name|i
@@ -2737,7 +2761,9 @@ condition|(
 name|newfds
 operator|>
 name|ufavail
-argument_list|()
+argument_list|(
+name|fdp
+argument_list|)
 condition|)
 block|{
 for|for
@@ -2795,6 +2821,8 @@ if|if
 condition|(
 name|ufalloc
 argument_list|(
+name|fdp
+argument_list|,
 literal|0
 argument_list|,
 operator|&
@@ -2811,12 +2839,12 @@ operator|=
 operator|*
 name|rp
 expr_stmt|;
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|f
-index|]
+argument_list|)
 operator|=
 name|fp
 expr_stmt|;
@@ -2864,6 +2892,18 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_fd
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|cmsghdr
@@ -2992,14 +3032,16 @@ name|unsigned
 operator|)
 name|fd
 operator|>=
-name|NOFILE
+name|fdp
+operator|->
+name|fd_maxfiles
 operator|||
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|fd
-index|]
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -3039,17 +3081,17 @@ control|)
 block|{
 name|fp
 operator|=
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|rp
-index|]
+argument_list|)
 expr_stmt|;
 operator|*
 name|rp

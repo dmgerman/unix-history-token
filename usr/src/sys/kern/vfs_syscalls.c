@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.61 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.62 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filedesc.h"
 end_include
 
 begin_include
@@ -91,22 +97,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|mount
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -820,22 +828,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|unmount
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -1183,22 +1193,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|sync
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1307,22 +1319,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|quotactl
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -1459,22 +1473,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|statfs
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -1650,22 +1666,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|fstatfs
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -1720,9 +1738,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -1816,22 +1834,24 @@ begin_comment
 comment|/*  * get statistics on all filesystems  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|getfsstat
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -2084,22 +2104,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|fchdir
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2136,6 +2158,16 @@ name|u_nd
 decl_stmt|;
 specifier|register
 name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
+specifier|register
+name|struct
 name|vnode
 modifier|*
 name|vp
@@ -2154,9 +2186,7 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|fdp
 argument_list|,
 name|uap
 operator|->
@@ -2234,14 +2264,14 @@ argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|ndp
+name|fdp
 operator|->
-name|ni_cdir
+name|fd_cdir
 argument_list|)
 expr_stmt|;
-name|ndp
+name|fdp
 operator|->
-name|ni_cdir
+name|fd_cdir
 operator|=
 name|vp
 expr_stmt|;
@@ -2261,22 +2291,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|chdir
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2311,6 +2343,16 @@ operator|&
 name|u
 operator|.
 name|u_nd
+decl_stmt|;
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
 decl_stmt|;
 name|int
 name|error
@@ -2355,14 +2397,14 @@ argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|ndp
+name|fdp
 operator|->
-name|ni_cdir
+name|fd_cdir
 argument_list|)
 expr_stmt|;
-name|ndp
+name|fdp
 operator|->
-name|ni_cdir
+name|fd_cdir
 operator|=
 name|ndp
 operator|->
@@ -2384,22 +2426,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|chroot
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2434,6 +2478,16 @@ operator|&
 name|u
 operator|.
 name|u_nd
+decl_stmt|;
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
 decl_stmt|;
 name|int
 name|error
@@ -2499,22 +2553,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ndp
+name|fdp
 operator|->
-name|ni_rdir
+name|fd_rdir
 operator|!=
 name|NULL
 condition|)
 name|vrele
 argument_list|(
-name|ndp
+name|fdp
 operator|->
-name|ni_rdir
+name|fd_rdir
 argument_list|)
 expr_stmt|;
-name|ndp
+name|fdp
 operator|->
-name|ni_rdir
+name|fd_rdir
 operator|=
 name|ndp
 operator|->
@@ -2627,22 +2681,24 @@ begin_comment
 comment|/*  * Open system call.  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|open
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -2686,6 +2742,16 @@ name|u_nd
 decl_stmt|;
 specifier|register
 name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
+specifier|register
+name|struct
 name|file
 modifier|*
 name|fp
@@ -2716,6 +2782,8 @@ name|error
 operator|=
 name|falloc
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|nfp
 argument_list|,
@@ -2749,9 +2817,9 @@ operator|->
 name|crtmode
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|fdp
+operator|->
+name|fd_cmask
 operator|)
 operator|&
 literal|07777
@@ -2828,6 +2896,8 @@ name|error
 operator|=
 name|dupfdopen
 argument_list|(
+name|fdp
+argument_list|,
 name|indx
 argument_list|,
 name|p
@@ -2862,12 +2932,12 @@ name|error
 operator|=
 name|EINTR
 expr_stmt|;
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|indx
-index|]
+argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
@@ -3053,22 +3123,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|mknod
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -3270,9 +3342,11 @@ literal|07777
 operator|)
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_cmask
 expr_stmt|;
 name|vattr
 operator|.
@@ -3361,22 +3435,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|mkfifo
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -3546,9 +3622,11 @@ literal|07777
 operator|)
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_cmask
 expr_stmt|;
 name|RETURN
 argument_list|(
@@ -3579,22 +3657,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|link
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -3875,22 +3955,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|symlink
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -4079,9 +4161,11 @@ operator|=
 literal|0777
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_cmask
 expr_stmt|;
 name|error
 operator|=
@@ -4120,22 +4204,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|unlink
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -4341,22 +4427,24 @@ begin_comment
 comment|/*  * Seek system call  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|lseek
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -4400,6 +4488,16 @@ name|ni_cred
 decl_stmt|;
 specifier|register
 name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
+specifier|register
+name|struct
 name|file
 modifier|*
 name|fp
@@ -4420,19 +4518,21 @@ name|uap
 operator|->
 name|fdes
 operator|>=
-name|NOFILE
+name|fdp
+operator|->
+name|fd_maxfiles
 operator|||
 operator|(
 name|fp
 operator|=
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|uap
 operator|->
 name|fdes
-index|]
+argument_list|)
 operator|)
 operator|==
 name|NULL
@@ -4558,22 +4658,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|saccess
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -4835,22 +4937,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|stat
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -5004,22 +5108,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|lstat
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -5173,22 +5279,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|readlink
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -5411,22 +5519,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|chflags
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -5593,22 +5703,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|fchflags
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -5659,9 +5771,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -5762,22 +5874,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|chmod
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -5946,22 +6060,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|fchmod
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -6012,9 +6128,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -6117,22 +6233,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|chown
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -6310,22 +6428,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|fchown
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -6379,9 +6499,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -6490,22 +6610,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|utimes
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -6720,22 +6842,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|truncate
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -6929,22 +7053,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ftruncate
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -6995,9 +7121,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -7125,22 +7251,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|fsync
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -7184,9 +7312,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -7255,22 +7383,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|rename
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -7672,22 +7802,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|mkdir
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -7853,9 +7985,11 @@ literal|0777
 operator|)
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_cmask
 expr_stmt|;
 name|error
 operator|=
@@ -7895,22 +8029,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|rmdir
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -8111,22 +8247,24 @@ begin_comment
 comment|/*  * Read a block of directory entries in a file system independent format  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|getdirentries
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -8195,9 +8333,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|u
-operator|.
-name|u_ofile
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -8412,7 +8550,7 @@ name|uap
 argument_list|,
 name|retval
 argument_list|)
-decl|register struct
+decl|struct
 name|proc
 modifier|*
 name|p
@@ -8441,16 +8579,26 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
 operator|*
 name|retval
 operator|=
-name|u
-operator|.
-name|u_cmask
+name|fdp
+operator|->
+name|fd_cmask
 expr_stmt|;
-name|u
-operator|.
-name|u_cmask
+name|fdp
+operator|->
+name|fd_cmask
 operator|=
 name|uap
 operator|->
@@ -8474,22 +8622,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|revoke
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -8693,7 +8843,7 @@ end_block
 begin_macro
 name|getvnode
 argument_list|(
-argument|ofile
+argument|fdp
 argument_list|,
 argument|fdes
 argument_list|,
@@ -8703,10 +8853,9 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|file
+name|filedesc
 modifier|*
-name|ofile
-index|[]
+name|fdp
 decl_stmt|;
 end_decl_stmt
 
@@ -8739,15 +8888,19 @@ name|unsigned
 operator|)
 name|fdes
 operator|>=
-name|NOFILE
+name|fdp
+operator|->
+name|fd_maxfiles
 operator|||
 operator|(
 name|fp
 operator|=
-name|ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|fdes
-index|]
+argument_list|)
 operator|)
 operator|==
 name|NULL

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filedesc.h"
 end_include
 
 begin_include
@@ -193,6 +199,12 @@ name|struct
 name|pgrp
 modifier|*
 name|pg
+decl_stmt|;
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
 decl_stmt|;
 name|int
 name|s
@@ -529,18 +541,72 @@ operator|.
 name|u_nd
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_cmask
+comment|/* 	 * Create the file descriptor table for process 0. 	 */
+name|fdp
+operator|=
+operator|(
+expr|struct
+name|filedesc
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|fdp
+argument_list|)
+argument_list|,
+name|M_FILE
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|fdp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|filedesc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_fd
+operator|=
+name|fdp
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_refcnt
+operator|=
+literal|1
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_cmask
 operator|=
 name|cmask
 expr_stmt|;
-name|u
-operator|.
-name|u_lastfile
+name|fdp
+operator|->
+name|fd_lastfile
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_maxfiles
+operator|=
+name|NDFILE
 expr_stmt|;
 for|for
 control|(
@@ -768,7 +834,7 @@ argument_list|(
 literal|"cannot mount root"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get vnode for '/'. 	 * Setup rootdir and u.u_cdir to point to it. 	 */
+comment|/* 	 * Get vnode for '/'. 	 * Setup rootdir and fdp->fd_cdir to point to it. 	 */
 if|if
 condition|(
 name|VFS_ROOT
@@ -784,17 +850,17 @@ argument_list|(
 literal|"cannot find root vnode"
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_cdir
+name|fdp
+operator|->
+name|fd_cdir
 operator|=
 name|rootdir
 expr_stmt|;
 name|VREF
 argument_list|(
-name|u
-operator|.
-name|u_cdir
+name|fdp
+operator|->
+name|fd_cdir
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -802,9 +868,9 @@ argument_list|(
 name|rootdir
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_rdir
+name|fdp
+operator|->
+name|fd_rdir
 operator|=
 name|NULL
 expr_stmt|;
