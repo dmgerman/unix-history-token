@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.24	82/08/22	*/
+comment|/*	tty_pty.c	4.25	82/09/12	*/
 end_comment
 
 begin_comment
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_if
