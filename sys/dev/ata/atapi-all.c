@@ -914,6 +914,12 @@ name|flags
 expr_stmt|;
 name|request
 operator|->
+name|error
+operator|=
+name|EINPROGRESS
+expr_stmt|;
+name|request
+operator|->
 name|timeout
 operator|=
 name|timeout
@@ -1106,7 +1112,15 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* wait for request to complete */
+comment|/* only sleep when command is in progress */
+if|if
+condition|(
+name|request
+operator|->
+name|error
+operator|==
+name|EINPROGRESS
+condition|)
 name|tsleep
 argument_list|(
 operator|(
