@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.26 (Berkeley) %G%"
+literal|"@(#)trees.c	4.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2593,7 +2593,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|PRTDCON
-argument|prtdcon( p ) register NODE *p; { 	int o = p->in.op, i;  	if( o == DCON || o == FCON ){ 		locctr( DATA ); 		defalign( o == DCON ? ALDOUBLE : ALFLOAT ); 		deflab( i = getlab() ); 		if( o == FCON ) 			fincode( p->fpn.fval, SZFLOAT ); 		else 			fincode( p->dpn.dval, SZDOUBLE ); 		p->tn.lval =
+argument|prtdcon( p ) register NODE *p; { 	int o = p->in.op, i;  	if( o == DCON || o == FCON ){ 		(void) locctr( DATA ); 		defalign( o == DCON ? ALDOUBLE : ALFLOAT ); 		deflab( i = getlab() ); 		if( o == FCON ) 			fincode( p->fpn.fval, SZFLOAT ); 		else 			fincode( p->dpn.dval, SZDOUBLE ); 		p->tn.lval =
 literal|0
 argument|; 		p->tn.rval = -i; 		p->in.type = (o == DCON ? DOUBLE : FLOAT); 		p->in.op = NAME; 		} 	}
 endif|#
@@ -2614,7 +2614,7 @@ argument|if( !reached ){ 		werror(
 literal|"statement not reached"
 argument|); 		reached =
 literal|1
-argument|; 		} 	p = optim(p); 	walkf( p, prtdcon ); 	locctr( PROG ); 	ecode( p ); 	tfree(p); 	}
+argument|; 		} 	p = optim(p); 	walkf( p, prtdcon ); 	(void) locctr( PROG ); 	ecode( p ); 	tfree(p); 	}
 ifdef|#
 directive|ifdef
 name|STDPRTREE
@@ -2690,13 +2690,13 @@ argument|else if( p->tn.rval>=
 literal|0
 argument|){
 comment|/* copy name from exname */
-argument|register char *cp; 			register i; 			cp = exname( stab[p->tn.rval].sname );
+argument|register char *cp; 			cp = exname( stab[p->tn.rval].sname );
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|for( i=
+argument|{ 				register i; 				for( i=
 literal|0
-argument|; i<NCHNAM; ++i ) p->in.name[i] = *cp++;
+argument|; i<NCHNAM; ++i ) 					p->in.name[i] = *cp++; 			}
 else|#
 directive|else
 argument|p->in.name = tstr(cp);
