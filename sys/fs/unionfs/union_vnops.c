@@ -4841,6 +4841,20 @@ name|cn_flags
 operator||=
 name|DOWHITEOUT
 expr_stmt|;
+if|if
+condition|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|DOWHITEOUT
+condition|)
+comment|/* XXX fs corruption */
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|VOP_REMOVE
@@ -5962,6 +5976,20 @@ name|cn_flags
 operator||=
 name|DOWHITEOUT
 expr_stmt|;
+if|if
+condition|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|DOWHITEOUT
+condition|)
+comment|/* XXX fs corruption */
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|VOP_RMDIR
