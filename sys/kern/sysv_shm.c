@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -1969,6 +1975,11 @@ block|}
 else|else
 block|{
 comment|/* 		 * This is just a hint to vm_map_find() about where to 		 * put it. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|attach_va
 operator|=
 name|round_page
@@ -1980,11 +1991,19 @@ name|p
 operator|->
 name|p_vmspace
 operator|->
-name|vm_taddr
+name|vm_daddr
 operator|+
-name|maxtsiz
-operator|+
-name|maxdsiz
+name|lim_max
+argument_list|(
+name|p
+argument_list|,
+name|RLIMIT_DATA
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
