@@ -2038,11 +2038,11 @@ operator|)
 return|;
 comment|/* Sun returns ENOMEM? */
 case|case
-name|KERN_FAILURE
+name|KERN_INVALID_ARGUMENT
 case|:
 return|return
 operator|(
-name|EIO
+name|EBUSY
 operator|)
 return|;
 default|default:

@@ -7642,7 +7642,7 @@ operator|->
 name|end
 expr_stmt|;
 block|}
-comment|/* 	 * Make a first pass to check for holes. 	 */
+comment|/* 	 * Make a first pass to check for user-wired memory and holes. 	 */
 for|for
 control|(
 name|current
@@ -7664,11 +7664,15 @@ control|)
 block|{
 if|if
 condition|(
+name|invalidate
+operator|&&
+operator|(
 name|current
 operator|->
 name|eflags
 operator|&
-name|MAP_ENTRY_IS_SUB_MAP
+name|MAP_ENTRY_USER_WIRED
+operator|)
 condition|)
 block|{
 name|vm_map_unlock_read
