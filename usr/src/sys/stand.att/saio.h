@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)saio.h	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)saio.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../ufs/fs.h"
+file|<ufs/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/dinode.h"
+file|<ufs/dinode.h>
 end_include
 
 begin_include
@@ -34,6 +34,12 @@ name|UNIX
 value|"/vmunix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -41,8 +47,13 @@ name|NULL
 value|0
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Io block: includes an dinode, cells for the use of seek, etc.,  * and a buffer.  */
+comment|/* I/O block */
 end_comment
 
 begin_struct
@@ -52,7 +63,7 @@ block|{
 name|int
 name|i_flgs
 decl_stmt|;
-comment|/* see F_ below */
+comment|/* flags (see F_*) */
 name|int
 name|i_adapt
 decl_stmt|;
@@ -73,11 +84,6 @@ name|daddr_t
 name|i_boff
 decl_stmt|;
 comment|/* block offset on device */
-name|struct
-name|dinode
-name|i_ino
-decl_stmt|;
-comment|/* dinode, if file */
 name|daddr_t
 name|i_cyloff
 decl_stmt|;
@@ -98,7 +104,7 @@ name|char
 modifier|*
 name|i_ma
 decl_stmt|;
-comment|/* memory address of i/o buffer */
+comment|/* memory address of I/O buffer */
 name|int
 name|i_cc
 decl_stmt|;
@@ -121,14 +127,19 @@ index|[
 name|MAXBSIZE
 index|]
 decl_stmt|;
-comment|/* i/o buffer */
+comment|/* I/O buffer */
+name|struct
+name|dinode
+name|i_ino
+decl_stmt|;
+comment|/* dinode, if file */
 union|union
 block|{
+comment|/* file system super block info */
 name|struct
 name|fs
 name|ui_fs
 decl_stmt|;
-comment|/* file system super block info */
 name|char
 name|dummy
 index|[
@@ -138,6 +149,14 @@ decl_stmt|;
 block|}
 name|i_un
 union|;
+define|#
+directive|define
+name|i_fs
+value|i_un.ui_fs
+define|#
+directive|define
+name|i_bus
+value|i_adapt
 block|}
 struct|;
 end_struct
@@ -145,19 +164,23 @@ end_struct
 begin_define
 define|#
 directive|define
-name|i_fs
-value|i_un.ui_fs
+name|SOPEN_MAX
+value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|i_bus
-value|i_adapt
-end_define
+begin_decl_stmt
+specifier|extern
+name|struct
+name|iob
+name|iob
+index|[
+name|SOPEN_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* codes for sector header word 1 */
+comment|/* Codes for sector header word 1 */
 end_comment
 
 begin_define
@@ -191,6 +214,10 @@ end_define
 
 begin_comment
 comment|/* skip sector flag */
+end_comment
+
+begin_comment
+comment|/* I/O flag values */
 end_comment
 
 begin_define
@@ -282,7 +309,7 @@ comment|/* Severe burnin (no retries, no ECC) */
 end_comment
 
 begin_comment
-comment|/* io types */
+comment|/* I/O types */
 end_comment
 
 begin_define
@@ -347,22 +374,12 @@ name|F_TYPEMASK
 value|0xff00
 end_define
 
-begin_define
-define|#
-directive|define
-name|READ
-value|F_READ
-end_define
-
-begin_define
-define|#
-directive|define
-name|WRITE
-value|F_WRITE
-end_define
+begin_comment
+comment|/* I/O type mask */
+end_comment
 
 begin_comment
-comment|/*  * Lseek call.  */
+comment|/* Lseek values */
 end_comment
 
 begin_define
@@ -377,7 +394,7 @@ comment|/* absolute offset */
 end_comment
 
 begin_comment
-comment|/*  * Device switch.  */
+comment|/* Device switch */
 end_comment
 
 begin_struct
@@ -487,24 +504,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|NFILES
-value|4
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|iob
-name|iob
-index|[
-name|NFILES
-index|]
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 
