@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.13 %G%"
+literal|"@(#)c21.c 4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,8 +721,26 @@ goto|;
 case|case
 literal|0
 case|:
-name|clearuse
-argument_list|()
+comment|/* 		 * Be conservative -- if we don't know what it is, then we 		 *	assume that it can set anything. 		 */
+for|for
+control|(
+name|r
+operator|=
+literal|0
+init|;
+name|r
+operator|<
+name|NUSE
+condition|;
+operator|++
+name|r
+control|)
+name|uses
+index|[
+name|r
+index|]
+operator|=
+name|p
 expr_stmt|;
 break|break;
 case|case

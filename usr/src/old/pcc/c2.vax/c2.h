@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	c2.h	4.7	83/08/11	*/
+comment|/*	c2.h	4.8	85/01/16	*/
 end_comment
 
 begin_comment
@@ -541,6 +541,34 @@ define|#
 directive|define
 name|JBSS
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|JCC
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|JCS
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|JVC
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|JVS
+value|23
 end_define
 
 begin_comment
