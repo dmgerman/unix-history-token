@@ -364,6 +364,10 @@ literal|"perl5"
 block|,
 literal|"Utilities/modules for the PERL5 language."
 block|,
+literal|"picobsd"
+block|,
+literal|"Ports to support PicoBSD."
+block|,
 literal|"pilot"
 block|,
 literal|"Software support for the 3Com Palm Pilot(tm) series."
