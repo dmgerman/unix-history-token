@@ -4060,6 +4060,25 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|dummy_disconnect
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Control and data socket type descriptors  */
 end_comment
@@ -4088,7 +4107,7 @@ name|pru_control_notsupp
 block|,
 name|ngc_detach
 block|,
-name|NULL
+name|dummy_disconnect
 block|,
 comment|/* disconnect */
 name|pru_listen_notsupp
@@ -4143,7 +4162,7 @@ name|pru_control_notsupp
 block|,
 name|ngd_detach
 block|,
-name|NULL
+name|dummy_disconnect
 block|,
 comment|/* disconnect */
 name|pru_listen_notsupp
