@@ -8087,7 +8087,7 @@ operator|=
 name|mac_test_reflect_mbuf_icmp
 block|,
 operator|.
-name|mpo_reflect_mbuf_icmp
+name|mpo_reflect_mbuf_tcp
 operator|=
 name|mac_test_reflect_mbuf_tcp
 block|,
