@@ -58,7 +58,17 @@ name|attr
 operator|==
 name|NULL
 operator|)
-operator|||
+condition|)
+block|{
+comment|/* Return an invalid argument: */
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|contentionscope
 operator|!=
@@ -71,34 +81,13 @@ operator|!=
 name|PTHREAD_SCOPE_SYSTEM
 operator|)
 condition|)
-comment|/* Return an invalid argument: */
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|contentionscope
-operator|==
-name|PTHREAD_SCOPE_SYSTEM
-condition|)
-comment|/* We don't support system wide contention: */
-ifdef|#
-directive|ifdef
-name|NOT_YET
+block|{
+comment|/* We don't support PTHREAD_SCOPE_SYSTEM. */
 name|ret
 operator|=
 name|ENOTSUP
 expr_stmt|;
-else|#
-directive|else
-name|ret
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-endif|#
-directive|endif
+block|}
 else|else
 operator|(
 operator|*

@@ -70,6 +70,28 @@ name|NULL
 operator|)
 operator|||
 operator|(
+name|policy
+operator|<
+name|SCHED_FIFO
+operator|)
+operator|||
+operator|(
+name|policy
+operator|>
+name|SCHED_RR
+operator|)
+condition|)
+block|{
+comment|/* Return an invalid argument error: */
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
 name|param
 operator|->
 name|sched_priority
@@ -84,25 +106,15 @@ name|sched_priority
 operator|>
 name|PTHREAD_MAX_PRIORITY
 operator|)
-operator|||
-operator|(
-name|policy
-operator|<
-name|SCHED_FIFO
-operator|)
-operator|||
-operator|(
-name|policy
-operator|>
-name|SCHED_RR
-operator|)
 condition|)
-comment|/* Return an invalid argument error: */
+block|{
+comment|/* Return an unsupported value error. */
 name|ret
 operator|=
-name|EINVAL
+name|ENOTSUP
 expr_stmt|;
 comment|/* Find the thread in the list of active threads: */
+block|}
 elseif|else
 if|if
 condition|(
