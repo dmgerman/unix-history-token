@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.6 82/12/25"
+literal|"@(#)rshd.c	4.7 83/01/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -1419,25 +1419,13 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|int
-name|done
-init|=
-literal|1
-operator|+
-literal|1
-decl_stmt|;
-name|ioctl
+name|shutdown
 argument_list|(
 name|s
 argument_list|,
-name|SIOCDONE
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|done
+literal|1
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|readfrom

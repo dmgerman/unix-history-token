@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.14 82/12/29"
+literal|"@(#)telnetd.c	4.15 83/01/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -2625,11 +2625,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|how
-init|=
-literal|2
-decl_stmt|;
 name|rmut
 argument_list|()
 expr_stmt|;
@@ -2637,14 +2632,11 @@ name|vhangup
 argument_list|()
 expr_stmt|;
 comment|/* XXX */
-name|ioctl
+name|shutdown
 argument_list|(
 name|net
 argument_list|,
-name|SIOCDONE
-argument_list|,
-operator|&
-name|how
+literal|2
 argument_list|)
 expr_stmt|;
 name|kill
