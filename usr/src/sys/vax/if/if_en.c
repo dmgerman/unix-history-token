@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.32	82/02/03	*/
+comment|/*	if_en.c	4.33	82/02/05	*/
 end_comment
 
 begin_include
@@ -765,7 +765,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|btop
+name|btoc
 argument_list|(
 name|ENMTU
 argument_list|)
