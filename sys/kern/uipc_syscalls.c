@@ -9060,6 +9060,24 @@ expr_stmt|;
 block|}
 name|done
 label|:
+comment|/* 	 * If there was no error we have to clear p->p_retval[0] 	 * because it may have been set by writev. 	 */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|uap
