@@ -611,6 +611,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|isipv6addr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|list_vertical
 name|__P
