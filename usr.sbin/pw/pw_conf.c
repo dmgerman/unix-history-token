@@ -285,7 +285,7 @@ literal|"\n# Root directory in which $HOME directory is created\n"
 block|,
 literal|"\n# Colon separated list of directories containing valid shells\n"
 block|,
-literal|"\n# Space separated list of available shells (without paths)\n"
+literal|"\n# Comma separated list of available shells (without paths)\n"
 block|,
 literal|"\n# Default shell (without path)\n"
 block|,
