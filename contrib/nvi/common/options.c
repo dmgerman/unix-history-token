@@ -1665,7 +1665,7 @@ name|OI
 argument_list|(
 name|O_ESCAPETIME
 argument_list|,
-literal|"escapetime=1"
+literal|"escapetime=3"
 argument_list|)
 expr_stmt|;
 name|OI
