@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.60 (Berkeley) %G%"
+literal|"@(#)ls.c	5.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,6 +1151,7 @@ condition|(
 name|f_listdir
 condition|)
 return|return;
+comment|/* 	 * If not recursing down this tree and don't need stat info, just get 	 * the names. 	 */
 name|ch_options
 operator|=
 operator|!
@@ -1286,7 +1287,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 			 * If not recursing down this tree and don't need stat 			 * info, just get the names. 			 */
 name|display
 argument_list|(
 name|p
