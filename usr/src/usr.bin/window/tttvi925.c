@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David Barto at Celerity Computer Corp.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tttvi925.c	3.5 (Berkeley) %G%"
+literal|"@(#)tttvi925.c	3.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|"tt.h"
 end_include
 
 begin_comment
-comment|/*  * Televideo 925 as emulated by Microterm.  *  * From David Barto<sdcsvax!celerity!barto>.  */
+comment|/*  * Televideo 925 as emulated by Microterm.  */
 end_comment
 
 begin_define
