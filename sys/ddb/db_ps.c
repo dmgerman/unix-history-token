@@ -300,12 +300,6 @@ argument_list|,
 name|p
 operator|->
 name|p_comm
-condition|?
-name|p
-operator|->
-name|p_comm
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
@@ -404,12 +398,6 @@ argument_list|,
 name|p
 operator|->
 name|p_comm
-condition|?
-name|p
-operator|->
-name|p_comm
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 block|}
