@@ -18,39 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLB_SLOT_COUNT
-value|64
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TLB_SLOT_TSB_KERNEL_MIN
-value|62
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TLB_SLOT_KERNEL
-value|63
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TLB_DAR_SLOT_SHIFT
 value|(3)
 end_define
