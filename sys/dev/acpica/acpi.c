@@ -4131,7 +4131,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Power system off using ACPI...\n"
+literal|"Powering system off using ACPI\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4201,7 +4201,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Terminate ACPI\n"
+literal|"Shutting down ACPI\n"
 argument_list|)
 expr_stmt|;
 name|AcpiTerminate
