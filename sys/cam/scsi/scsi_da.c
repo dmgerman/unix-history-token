@@ -645,7 +645,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Sony Memory Stick adapter MSAC-US1, 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 */
+comment|/* 		 * Sony Memory Stick adapter MSAC-US1, 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 * Sony PCG-C1VJ Internal Memory Stick Slot (MSC-U01) also 		 * has this quirk.  Make all sony MS* products use this 		 * quirk.  Reported by: TERAMOTO Masahiro 		 *<teramoto@comm.eng.osaka-u.ac.jp> (PR 23378). 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -653,7 +653,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"Sony"
 block|,
-literal|"MSAC-US1"
+literal|"MS*"
 block|,
 literal|"*"
 block|}
