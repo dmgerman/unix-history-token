@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.39 1998/10/13 08:24:40 dg Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.40 1999/01/21 08:29:04 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -1126,15 +1126,6 @@ decl_stmt|,
 name|flags
 decl_stmt|;
 name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
-name|struct
 name|shmid_ds
 modifier|*
 name|shmseg
@@ -1265,7 +1256,7 @@ name|error
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|shmseg
@@ -1682,15 +1673,6 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
-name|struct
 name|shmid_ds
 modifier|*
 name|shmseg
@@ -1731,7 +1713,7 @@ name|error
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|shmseg
@@ -1931,15 +1913,6 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
-name|struct
 name|shmid_ds
 name|inbuf
 decl_stmt|;
@@ -1980,7 +1953,7 @@ name|error
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|shmseg
@@ -2031,7 +2004,7 @@ name|error
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|shmseg
@@ -2140,7 +2113,7 @@ name|error
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|shmseg
@@ -2278,15 +2251,6 @@ name|shmid_ds
 modifier|*
 name|shmseg
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2351,7 +2315,7 @@ name|error
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|shmseg

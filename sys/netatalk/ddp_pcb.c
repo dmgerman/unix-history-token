@@ -1262,16 +1262,9 @@ name|sat_port
 operator|<
 name|ATPORT_RESERVED
 operator|&&
-name|suser_xxx
+name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 condition|)
 block|{

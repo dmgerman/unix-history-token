@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_ipc.c,v 1.9 1999/01/30 12:21:48 phk Exp $ */
+comment|/*	$Id: sysv_ipc.c,v 1.10 1999/04/27 11:16:15 phk Exp $ */
 end_comment
 
 begin_comment
@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ucred.h>
 end_include
 
@@ -55,23 +61,23 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Check for ipc permission  *  * XXX: Should pass proc argument so that we can pass   * XXX: proc->p_acflag to suser_xxx()  */
+comment|/*  * Check for ipc permission  */
 end_comment
 
 begin_function
 name|int
 name|ipcperm
 parameter_list|(
-name|cred
+name|p
 parameter_list|,
 name|perm
 parameter_list|,
 name|mode
 parameter_list|)
 name|struct
-name|ucred
+name|proc
 modifier|*
-name|cred
+name|p
 decl_stmt|;
 name|struct
 name|ipc_perm
@@ -82,17 +88,20 @@ name|int
 name|mode
 decl_stmt|;
 block|{
+name|struct
+name|ucred
+modifier|*
+name|cred
+init|=
+name|p
+operator|->
+name|p_ucred
+decl_stmt|;
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
-name|cred
-argument_list|,
-operator|(
-name|u_short
-operator|*
-operator|)
-name|NULL
+name|p
 argument_list|)
 condition|)
 return|return

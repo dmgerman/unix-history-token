@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.20 1999/04/21 13:30:01 sada Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.21 1999/04/27 11:16:16 phk Exp $ */
 end_comment
 
 begin_comment
@@ -906,15 +906,6 @@ name|uap
 operator|->
 name|buf
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
 name|int
 name|rval
 decl_stmt|,
@@ -1082,7 +1073,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|msqptr
@@ -1200,7 +1191,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|msqptr
@@ -1255,14 +1246,9 @@ condition|)
 block|{
 name|eval
 operator|=
-name|suser_xxx
+name|suser
 argument_list|(
-name|cred
-argument_list|,
-operator|&
 name|p
-operator|->
-name|p_acflag
 argument_list|)
 expr_stmt|;
 if|if
@@ -1414,7 +1400,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|msqptr
@@ -1704,7 +1690,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|msqptr
@@ -2112,15 +2098,6 @@ name|segs_needed
 decl_stmt|,
 name|eval
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
 specifier|register
 name|struct
 name|msqid_ds
@@ -2268,7 +2245,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|msqptr
@@ -3448,15 +3425,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
 specifier|register
 name|struct
 name|msqid_ds
@@ -3609,7 +3577,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|msqptr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.21 1998/03/30 09:50:41 phk Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.22 1998/12/14 08:34:55 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -1608,7 +1608,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -1770,7 +1770,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -1911,7 +1911,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -1984,7 +1984,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -2039,7 +2039,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -2094,7 +2094,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -2149,7 +2149,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -2262,7 +2262,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -2317,7 +2317,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -2415,7 +2415,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
@@ -2740,7 +2740,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|sema
@@ -3334,15 +3334,6 @@ name|suptr
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3450,7 +3441,7 @@ name|eval
 operator|=
 name|ipcperm
 argument_list|(
-name|cred
+name|p
 argument_list|,
 operator|&
 name|semaptr
