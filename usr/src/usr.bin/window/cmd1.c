@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	1.6 83/07/28"
+literal|"@(#)cmd1.c	1.7 83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -889,16 +889,16 @@ literal|0
 case|:
 name|execl
 argument_list|(
-literal|"/bin/csh"
+name|shell
 argument_list|,
-literal|"csh"
+name|shellname
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"exec(csh)"
+name|shell
 argument_list|)
 expr_stmt|;
 name|exit
