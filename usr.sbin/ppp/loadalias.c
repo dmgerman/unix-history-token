@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: $  */
+comment|/*  * $Id: loadalias.c,v 1.8 1997/10/26 01:03:01 brian Exp $  */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"id.h"
 end_include
 
 begin_include
@@ -235,7 +241,7 @@ name|env
 condition|)
 if|if
 condition|(
-name|OrigUid
+name|ID0realuid
 argument_list|()
 operator|==
 literal|0

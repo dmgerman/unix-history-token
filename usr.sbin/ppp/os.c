@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.29 1997/10/29 01:19:47 brian Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.30 1997/11/08 00:28:10 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"id.h"
 end_include
 
 begin_include
@@ -276,7 +282,7 @@ name|addr
 decl_stmt|;
 name|s
 operator|=
-name|socket
+name|ID0socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -413,7 +419,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|s
 argument_list|,
@@ -724,7 +730,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|s
 argument_list|,
@@ -769,7 +775,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|s
 argument_list|,
@@ -817,7 +823,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|s
 argument_list|,
@@ -847,7 +853,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|s
 argument_list|,
@@ -1374,7 +1380,7 @@ name|IFF_UP
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|s
 argument_list|,
@@ -1607,7 +1613,7 @@ argument_list|)
 expr_stmt|;
 name|tun_out
 operator|=
-name|open
+name|ID0open
 argument_list|(
 name|devname
 argument_list|,
@@ -1854,7 +1860,7 @@ name|IFF_UP
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|s
 argument_list|,

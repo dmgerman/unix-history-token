@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: log.c,v 1.17 1997/10/26 01:03:05 brian Exp $  */
+comment|/*  * $Id: log.c,v 1.18 1997/11/04 01:17:00 brian Exp $  */
 end_comment
 
 begin_include
@@ -92,6 +92,8 @@ block|,
 literal|"Debug"
 block|,
 literal|"HDLC"
+block|,
+literal|"ID0"
 block|,
 literal|"IPCP"
 block|,

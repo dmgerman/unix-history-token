@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: $  */
+comment|/*  * $Id: server.c,v 1.6 1997/10/26 01:03:39 brian Exp $  */
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"id.h"
 end_include
 
 begin_include
@@ -265,7 +271,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|socket
+name|ID0socket
 argument_list|(
 name|PF_LOCAL
 argument_list|,
@@ -379,7 +385,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|unlink
+name|ID0unlink
 argument_list|(
 name|name
 argument_list|)
@@ -417,7 +423,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|unlink
+name|ID0unlink
 argument_list|(
 name|name
 argument_list|)
@@ -519,7 +525,7 @@ return|;
 block|}
 name|s
 operator|=
-name|socket
+name|ID0socket
 argument_list|(
 name|PF_INET
 argument_list|,
@@ -720,7 +726,7 @@ condition|(
 name|rm
 condition|)
 block|{
-name|unlink
+name|ID0unlink
 argument_list|(
 name|rm
 argument_list|)

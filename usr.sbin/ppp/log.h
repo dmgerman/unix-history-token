@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: log.h,v 1.14 1997/10/26 01:03:06 brian Exp $  */
+comment|/*  * $Id: log.h,v 1.15 1997/11/04 01:17:01 brian Exp $  */
 end_comment
 
 begin_define
@@ -77,50 +77,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|LogIPCP
+name|LogID0
 value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLCP
+name|LogIPCP
 value|(10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLINK
+name|LogLCP
 value|(11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLQM
+name|LogLINK
 value|(12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogPHASE
+name|LogLQM
 value|(13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogTCPIP
+name|LogPHASE
 value|(14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogTUN
+name|LogTCPIP
 value|(15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LogTUN
+value|(16)
 end_define
 
 begin_comment
@@ -131,14 +138,14 @@ begin_define
 define|#
 directive|define
 name|LogMAXCONF
-value|(15)
+value|(16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogWARN
-value|(16)
+value|(17)
 end_define
 
 begin_comment
@@ -149,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|LogERROR
-value|(17)
+value|(18)
 end_define
 
 begin_comment
@@ -160,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|LogALERT
-value|(18)
+value|(19)
 end_define
 
 begin_comment
@@ -171,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|LogMAX
-value|(18)
+value|(19)
 end_define
 
 begin_comment

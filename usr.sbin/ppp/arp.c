@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.15 1997/09/10 02:20:27 brian Exp $  *  */
+comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.16 1997/10/26 01:02:03 brian Exp $  *  */
 end_comment
 
 begin_comment
@@ -125,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"id.h"
 end_include
 
 begin_include
@@ -274,12 +280,9 @@ return|return
 literal|0
 return|;
 block|}
-if|if
-condition|(
-operator|(
 name|routes
 operator|=
-name|socket
+name|ID0socket
 argument_list|(
 name|PF_ROUTE
 argument_list|,
@@ -287,7 +290,10 @@ name|SOCK_RAW
 argument_list|,
 name|AF_INET
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|routes
 operator|<
 literal|0
 condition|)
@@ -531,12 +537,9 @@ operator|=
 operator|++
 name|rtm_seq
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|routes
 operator|=
-name|socket
+name|ID0socket
 argument_list|(
 name|PF_ROUTE
 argument_list|,
@@ -544,7 +547,10 @@ name|SOCK_RAW
 argument_list|,
 name|AF_INET
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|routes
 operator|<
 literal|0
 condition|)
@@ -780,7 +786,7 @@ name|ATF_PUBL
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|unit
 argument_list|,
@@ -879,7 +885,7 @@ name|hisaddr
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|unit
 argument_list|,

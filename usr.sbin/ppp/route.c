@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.21 1997/11/08 00:28:11 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.22 1997/11/09 03:22:49 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"id.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"route.h"
 end_include
 
@@ -201,6 +207,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|cmdstr
 decl_stmt|;
 name|u_long
 modifier|*
@@ -210,9 +219,21 @@ name|struct
 name|sockaddr_in
 name|rtdata
 decl_stmt|;
+name|cmdstr
+operator|=
+operator|(
+name|cmd
+operator|==
+name|RTM_ADD
+condition|?
+literal|"Add"
+else|:
+literal|"Delete"
+operator|)
+expr_stmt|;
 name|s
 operator|=
-name|socket
+name|ID0socket
 argument_list|(
 name|PF_ROUTE
 argument_list|,
@@ -573,6 +594,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0
+case|:
+name|LogPrintf
+argument_list|(
+name|LogTCPIP
+argument_list|,
+literal|"%s route failed: %s\n"
+argument_list|,
+name|cmdstr
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ENOBUFS
 case|:
 default|default:
@@ -580,7 +619,9 @@ name|LogPrintf
 argument_list|(
 name|LogTCPIP
 argument_list|,
-literal|"Add/Del route failed: %s\n"
+literal|"%s route failed: %s\n"
+argument_list|,
+name|cmdstr
 argument_list|,
 name|strerror
 argument_list|(
@@ -599,9 +640,11 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"wrote %d: dst = %x, gateway = %x\n"
+literal|"wrote %d: cmd = %s, dst = %x, gateway = %x\n"
 argument_list|,
-name|nb
+name|wb
+argument_list|,
+name|cmdstr
 argument_list|,
 name|dst
 operator|.
