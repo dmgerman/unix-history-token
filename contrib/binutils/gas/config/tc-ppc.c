@@ -20402,11 +20402,15 @@ name|shift
 operator|==
 literal|0
 operator|&&
+operator|(
 name|operand
 operator|->
 name|insert
 operator|==
 name|NULL
+operator|||
+name|ppc_xcoff64
+operator|)
 operator|&&
 name|fixP
 operator|->

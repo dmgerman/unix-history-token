@@ -859,6 +859,10 @@ operator|-
 operator|(
 name|bfd_vma
 operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
 name|u
 operator|.
 name|u_ar0

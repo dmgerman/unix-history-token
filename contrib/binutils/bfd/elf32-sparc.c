@@ -7260,6 +7260,10 @@ name|outrel
 decl_stmt|;
 name|boolean
 name|skip
+decl_stmt|,
+name|relocate
+init|=
+name|false
 decl_stmt|;
 comment|/* When generating a shared object, these relocations                  are copied into the output file to be resolved at run                  time.  */
 if|if
@@ -7389,6 +7393,27 @@ operator|-
 literal|1
 condition|)
 name|skip
+operator|=
+name|true
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|outrel
+operator|.
+name|r_offset
+operator|==
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|2
+condition|)
+name|skip
+operator|=
+name|true
+operator|,
+name|relocate
 operator|=
 name|true
 expr_stmt|;
@@ -7813,6 +7838,11 @@ operator|->
 name|reloc_count
 expr_stmt|;
 comment|/* This reloc will be computed at runtime, so there's no                  need to do anything now.  */
+if|if
+condition|(
+operator|!
+name|relocate
+condition|)
 continue|continue;
 block|}
 break|break;

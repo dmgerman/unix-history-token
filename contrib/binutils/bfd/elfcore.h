@@ -780,6 +780,35 @@ name|phindex
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the machine architecture.  Do this before processing the      program headers since we need to know the architecture type      when processing the notes of some systems' core files.  */
+if|if
+condition|(
+operator|!
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|ebd
+operator|->
+name|arch
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+comment|/* It's OK if this fails for the generic target.  */
+if|if
+condition|(
+name|ebd
+operator|->
+name|elf_machine_code
+operator|!=
+name|EM_NONE
+condition|)
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* Process each program header.  */
 for|for
 control|(
@@ -813,35 +842,6 @@ name|int
 operator|)
 name|phindex
 argument_list|)
-condition|)
-goto|goto
-name|fail
-goto|;
-block|}
-comment|/* Set the machine architecture.  */
-if|if
-condition|(
-operator|!
-name|bfd_default_set_arch_mach
-argument_list|(
-name|abfd
-argument_list|,
-name|ebd
-operator|->
-name|arch
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-comment|/* It's OK if this fails for the generic target.  */
-if|if
-condition|(
-name|ebd
-operator|->
-name|elf_machine_code
-operator|!=
-name|EM_NONE
 condition|)
 goto|goto
 name|fail

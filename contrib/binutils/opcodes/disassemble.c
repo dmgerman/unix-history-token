@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Select disassembly routine for specified architecture.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Select disassembly routine for specified architecture.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -198,6 +198,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARCH_or32
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARCH_pdp11
 end_define
 
@@ -283,6 +289,12 @@ begin_define
 define|#
 directive|define
 name|ARCH_z8k
+end_define
+
+begin_define
+define|#
+directive|define
+name|INCLUDE_SHMEDIA
 end_define
 
 begin_endif
@@ -762,6 +774,31 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|ARCH_or32
+case|case
+name|bfd_arch_or32
+case|:
+if|if
+condition|(
+name|bfd_big_endian
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+name|disassemble
+operator|=
+name|print_insn_big_or32
+expr_stmt|;
+else|else
+name|disassemble
+operator|=
+name|print_insn_little_or32
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|ARCH_pdp11
 case|case
 name|bfd_arch_pdp11
@@ -857,6 +894,39 @@ name|ARCH_sh
 case|case
 name|bfd_arch_sh
 case|:
+ifdef|#
+directive|ifdef
+name|INCLUDE_SHMEDIA
+if|if
+condition|(
+name|bfd_get_mach
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|bfd_mach_sh5
+condition|)
+block|{
+if|if
+condition|(
+name|bfd_big_endian
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+name|disassemble
+operator|=
+name|print_insn_sh64
+expr_stmt|;
+else|else
+name|disassemble
+operator|=
+name|print_insn_sh64l
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|bfd_big_endian

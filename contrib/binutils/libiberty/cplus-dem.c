@@ -4051,6 +4051,10 @@ operator|=
 name|cplus_demangle_v3
 argument_list|(
 name|mangled
+argument_list|,
+name|work
+operator|->
+name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -19890,6 +19894,8 @@ init|=
 name|DMGL_PARAMS
 operator||
 name|DMGL_ANSI
+operator||
+name|DMGL_VERBOSE
 decl_stmt|;
 end_decl_stmt
 
@@ -19970,6 +19976,7 @@ name|char
 modifier|*
 name|result
 decl_stmt|;
+comment|/* For command line args, also try to demangle type encodings.  */
 name|result
 operator|=
 name|cplus_demangle
@@ -19977,6 +19984,8 @@ argument_list|(
 name|mangled_name
 argument_list|,
 name|flags
+operator||
+name|DMGL_TYPES
 argument_list|)
 expr_stmt|;
 if|if

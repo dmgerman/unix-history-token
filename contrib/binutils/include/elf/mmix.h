@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MMIX support for BFD.    Copyright (C) 2001 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MMIX support for BFD.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -387,7 +387,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* A global register and an offset, equivalent of the expression.  */
+comment|/* A global register and an offset, the global register (allocated at      link time) contents plus the offset made equivalent to the relocation      expression at link time.  The relocation must point at the Y field of      an instruction.  */
 end_comment
 
 begin_macro
@@ -458,6 +458,18 @@ define|#
 directive|define
 name|MMIX_REG_CONTENTS_SECTION_NAME
 value|".MMIX.reg_contents"
+end_define
+
+begin_comment
+comment|/* At link time, a section by this name is created, expected to be    included in MMIX_REG_CONTENTS_SECTION_NAME in the output.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMIX_LD_ALLOCATED_REG_CONTENTS_SECTION_NAME
+define|\
+value|".MMIX.reg_contents.linker_allocated"
 end_define
 
 begin_comment
@@ -588,6 +600,71 @@ directive|define
 name|MMO_SEC_DEBUGGING
 value|0x10000
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_ARCH_SIZE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_mmix_prepare_linker_allocated_gregs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_mmix_finalize_linker_allocated_gregs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_mmix_check_all_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

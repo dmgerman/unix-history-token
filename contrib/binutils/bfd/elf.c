@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF executable support for BFD.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF executable support for BFD.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  SECTION 	ELF backends  	BFD support for ELF formats is being worked on. 	Currently, the best supported back ends are for sparc and i386 	(running svr4 or Solaris 2).  	Documentation of the internals of the support code still needs 	to be written.  The code is changing quickly enough that we 	haven't bothered yet.  */
+comment|/*  SECTION      	ELF backends  	BFD support for ELF formats is being worked on. 	Currently, the best supported back ends are for sparc and i386 	(running svr4 or Solaris 2).  	Documentation of the internals of the support code still needs 	to be written.  The code is changing quickly enough that we 	haven't bothered yet.  */
 end_comment
 
 begin_comment
@@ -10973,6 +10973,7 @@ literal|0
 operator|&&
 operator|(
 operator|(
+operator|(
 name|asect
 operator|->
 name|flags
@@ -10984,6 +10985,17 @@ name|SEC_HAS_CONTENTS
 operator|)
 operator|)
 operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|asect
+operator|->
+name|flags
+operator|&
+name|SEC_NEVER_LOAD
+operator|)
+operator|!=
 literal|0
 operator|)
 condition|)
@@ -19835,10 +19847,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
 literal|"elf_symbol_from_bfd_symbol 0x%.8lx, name = %s, sym num = %d, flags = 0x%.8lx%s\n"
-argument_list|)
 argument_list|,
 operator|(
 name|long

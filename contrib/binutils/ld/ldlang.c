@@ -1025,19 +1025,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|reset_memory_regions
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|gc_section_callback
 name|PARAMS
 argument_list|(
@@ -1454,6 +1441,16 @@ modifier|*
 name|entry_symbol
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|entry_section
+init|=
+literal|".text"
 decl_stmt|;
 end_decl_stmt
 
@@ -14093,7 +14090,7 @@ name|bfd_get_section_by_name
 argument_list|(
 name|output_bfd
 argument_list|,
-literal|".text"
+name|entry_section
 argument_list|)
 expr_stmt|;
 if|if
@@ -15835,9 +15832,8 @@ comment|/* Reset the current counters in the regions.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|reset_memory_regions
+name|lang_reset_memory_regions
 parameter_list|()
 block|{
 name|lang_memory_region_type
@@ -16427,7 +16423,7 @@ name|relax_again
 decl_stmt|;
 do|do
 block|{
-name|reset_memory_regions
+name|lang_reset_memory_regions
 argument_list|()
 expr_stmt|;
 name|relax_again
@@ -19688,7 +19684,7 @@ begin_function
 name|struct
 name|bfd_elf_version_expr
 modifier|*
-name|lang_new_vers_regex
+name|lang_new_vers_pattern
 parameter_list|(
 name|orig
 parameter_list|,
@@ -20544,7 +20540,7 @@ condition|)
 block|{
 name|greg
 operator|=
-name|lang_new_vers_regex
+name|lang_new_vers_pattern
 argument_list|(
 name|greg
 argument_list|,
@@ -20590,7 +20586,7 @@ expr_stmt|;
 block|}
 name|lreg
 operator|=
-name|lang_new_vers_regex
+name|lang_new_vers_pattern
 argument_list|(
 name|NULL
 argument_list|,

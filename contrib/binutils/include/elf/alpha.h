@@ -406,6 +406,19 @@ begin_comment
 comment|/* Adjust by program base */
 end_comment
 
+begin_comment
+comment|/* Like BRADDR, but assert that the source and target object file      share the same GP value, and adjust the target address for       STO_ALPHA_STD_GPLOAD.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_BRSGP
+argument_list|,
+literal|28
+argument_list|)
+end_macro
+
 begin_macro
 name|END_RELOC_NUMBERS
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF 2 support.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     Adapted from gdb/dwarf2read.c by Gavin Koch of Cygnus Solutions    (gavin@cygnus.com).     From the dwarf2read.c header:    Adapted by Gary Funck (gary@intrepid.com), Intrepid Technology,    Inc.  with support from Florida State University (under contract    with the Ada Joint Program Office), and Silicon Graphics, Inc.    Initial contribution by Brent Benson, Harris Computer Systems, Inc.,    based on Fred Fish's (Cygnus Support) implementation of DWARF 1    support in dwarfread.c  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DWARF 2 support.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Adapted from gdb/dwarf2read.c by Gavin Koch of Cygnus Solutions    (gavin@cygnus.com).     From the dwarf2read.c header:    Adapted by Gary Funck (gary@intrepid.com), Intrepid Technology,    Inc.  with support from Florida State University (under contract    with the Ada Joint Program Office), and Silicon Graphics, Inc.    Initial contribution by Brent Benson, Harris Computer Systems, Inc.,    based on Fred Fish's (Cygnus Support) implementation of DWARF 1    support in dwarfread.c  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -2217,7 +2217,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Abbrev offset (%u) greater than or equal to abbrev size (%u)."
+literal|"Dwarf Error: Abbrev offset (%u) greater than or equal to .debug_abbrev size (%u)."
 argument_list|)
 argument_list|,
 name|offset
@@ -4125,7 +4125,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Line offset (%u) greater than or equal to line size (%u)."
+literal|"Dwarf Error: Line offset (%u) greater than or equal to .debug_line size (%u)."
 argument_list|)
 argument_list|,
 name|unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sparc.c -- Assemble for the SPARC    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.    This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-sparc.c -- Assemble for the SPARC    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002    Free Software Foundation, Inc.    This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -55,6 +55,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Some ancient Sun C compilers would not take such hex constants as    unsigned, and would end up sign-extending them to form an offsetT,    so use these constants instead.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|U0xffffffff
+value|((((unsigned long) 1<< 16)<< 16) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|U0x80000000
+value|((((unsigned long) 1<< 16)<< 15))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -3723,7 +3741,7 @@ operator|(
 operator|(
 name|val
 operator|&
-literal|0xffffffff
+name|U0xffffffff
 operator|)
 operator|^
 name|sign
@@ -4177,7 +4195,7 @@ operator|>
 operator|(
 name|offsetT
 operator|)
-literal|0xffffffff
+name|U0xffffffff
 operator|)
 condition|)
 name|as_warn
@@ -4211,7 +4229,7 @@ operator|-
 operator|(
 name|offsetT
 operator|)
-literal|0x80000000
+name|U0x80000000
 operator|||
 name|the_insn
 operator|.
@@ -4222,7 +4240,7 @@ operator|>
 operator|(
 name|offsetT
 operator|)
-literal|0xffffffff
+name|U0xffffffff
 operator|)
 condition|)
 name|as_warn
@@ -4582,7 +4600,7 @@ operator|-
 operator|(
 name|offsetT
 operator|)
-literal|0x80000000
+name|U0x80000000
 operator|||
 name|the_insn
 operator|.
@@ -4593,7 +4611,7 @@ operator|>
 operator|(
 name|offsetT
 operator|)
-literal|0xffffffff
+name|U0xffffffff
 operator|)
 condition|)
 name|as_warn
@@ -4827,7 +4845,7 @@ name|SIGNEXT32
 parameter_list|(
 name|x
 parameter_list|)
-value|((((x)& 0xffffffff) ^ 0x80000000) - 0x80000000)
+value|((((x)& U0xffffffff) ^ U0x80000000) - U0x80000000)
 name|lower32
 operator|=
 name|SIGNEXT32

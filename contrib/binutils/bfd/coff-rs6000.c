@@ -14537,9 +14537,13 @@ decl_stmt|;
 name|bfd_byte
 modifier|*
 name|string_table
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|st_tmp
+init|=
+name|NULL
 decl_stmt|;
 name|bfd_size_type
 name|string_table_size

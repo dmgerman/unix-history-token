@@ -8557,7 +8557,7 @@ comment|/* xgettext: c-format */
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: ERROR: compiled for APCS-%d whereas target %s uses APCS-%d"
+literal|"ERROR: %s is compiled for APCS-%d, whereas %s is compiled for APCS-%d"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -8628,7 +8628,7 @@ name|msg
 operator|=
 name|_
 argument_list|(
-literal|"%s: ERROR: passes floats in float registers whereas target %s uses integer registers"
+literal|"ERROR: %s passes floats in float registers, whereas %s passes them in integer registers"
 argument_list|)
 expr_stmt|;
 else|else
@@ -8637,7 +8637,7 @@ name|msg
 operator|=
 name|_
 argument_list|(
-literal|"%s: ERROR: passes floats in integer registers whereas target %s uses float registers"
+literal|"ERROR: %s passes floats in integer registers, whereas %s passes them in float registers"
 argument_list|)
 expr_stmt|;
 name|_bfd_error_handler
@@ -8694,7 +8694,7 @@ name|msg
 operator|=
 name|_
 argument_list|(
-literal|"%s: ERROR: compiled as position independent code, whereas target %s is absolute position"
+literal|"ERROR: %s is compiled as position independent code, whereas target %s is absolute position"
 argument_list|)
 expr_stmt|;
 else|else
@@ -8703,7 +8703,7 @@ name|msg
 operator|=
 name|_
 argument_list|(
-literal|"%s: ERROR: compiled as absolute position code, whereas target %s is position independent"
+literal|"ERROR: %s is compiled as absolute position code, whereas target %s is position independent"
 argument_list|)
 expr_stmt|;
 name|_bfd_error_handler
@@ -8819,7 +8819,7 @@ name|msg
 operator|=
 name|_
 argument_list|(
-literal|"Warning: input file %s supports interworking, whereas %s does not."
+literal|"Warning: %s supports interworking, whereas %s does not"
 argument_list|)
 expr_stmt|;
 else|else
@@ -8828,7 +8828,7 @@ name|msg
 operator|=
 name|_
 argument_list|(
-literal|"Warning: input file %s does not support interworking, whereas %s does."
+literal|"Warning: %s does not support interworking, whereas %s does"
 argument_list|)
 expr_stmt|;
 name|_bfd_error_handler
@@ -9215,7 +9215,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"Warning: Not setting interworking flag of %s, since it has already been specified as non-interworking"
+literal|"Warning: Not setting interworking flag of %s since it has already been specified as non-interworking"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9441,7 +9441,7 @@ comment|/* xgettext:c-format */
 name|_bfd_error_handler
 argument_list|(
 operator|(
-literal|"Warning: Clearing the interworking bit of %s, because the non-interworking code in %s has been copied into it"
+literal|"\ Warning: Clearing the interworking flag of %s because non-interworking code in %s has been linked with it"
 operator|)
 argument_list|,
 name|bfd_get_filename

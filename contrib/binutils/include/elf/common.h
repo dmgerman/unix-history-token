@@ -1390,6 +1390,17 @@ value|17
 end_define
 
 begin_comment
+comment|/* (Depreciated) Temporary number for the OpenRISC processor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_OR32
+value|0x8472
+end_define
+
+begin_comment
 comment|/* Cygnus M32R ELF backend.  Written in the absence of an ABI.  */
 end_comment
 

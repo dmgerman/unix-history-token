@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -7351,9 +7351,17 @@ name|fixup_ptr
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|TC_A29K
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TC_OR32
+argument_list|)
 if|if
 condition|(
 name|fixup_ptr
@@ -7987,6 +7995,56 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TC_OR32
+argument_list|)
+comment|/* The or32 has a special kludge for the high 16 bit 			 reloc.  Two relocations are emited, R_IHIHALF, 			 and R_IHCONST. The second one doesn't contain a 			 symbol, but uses the value for offset.  */
+if|if
+condition|(
+name|intr
+operator|.
+name|r_type
+operator|==
+name|R_IHIHALF
+condition|)
+block|{
+comment|/* Now emit the second bit.  */
+name|intr
+operator|.
+name|r_type
+operator|=
+name|R_IHCONST
+expr_stmt|;
+name|intr
+operator|.
+name|r_symndx
+operator|=
+name|fix_ptr
+operator|->
+name|fx_addnumber
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|bfd_coff_swap_reloc_out
+argument_list|(
+name|abfd
+argument_list|,
+operator|&
+name|intr
+argument_list|,
+name|ext_ptr
+argument_list|)
+expr_stmt|;
+name|ext_ptr
+operator|++
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 name|fix_ptr
 operator|=
@@ -8329,6 +8387,9 @@ directive|ifndef
 name|TC_A29K
 ifndef|#
 directive|ifndef
+name|TC_OR32
+ifndef|#
+directive|ifndef
 name|COFF_NOLOAD_PROBLEM
 comment|/* Apparently the SVR3 linker (and exec syscall) and UDI 		 mondfe progrem are confused by noload sections.  */
 name|s
@@ -8337,6 +8398,8 @@ name|s_flags
 operator||=
 name|STYP_NOLOAD
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
@@ -16776,6 +16839,11 @@ name|defined
 argument_list|(
 name|TC_M88K
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TC_OR32
+argument_list|)
 comment|/* This really should be handled in the linker, but 		     backward compatibility forbids.  */
 name|add_number
 operator|+=
@@ -16947,6 +17015,12 @@ operator|!
 name|defined
 argument_list|(
 name|TC_A29K
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TC_OR32
 argument_list|)
 comment|/* This adjustment is not correct on the m88k, for which the 	     linker does all the computation.  */
 name|add_number
