@@ -1272,7 +1272,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Network MPSAFE temporary workarounds.  When debug_mpsafenet  * is 1 the network is assumed to operate without Giant on the  * input path and protocols that require Giant must collect it  * on entry.  When 0 Giant is grabbed in the network interface  * ISR's and in the netisr path and there is no need to grab  * the Giant lock.  Note that, unlike GIANT_PICKUP() and  * GIANT_DROP(), these macros directly wrap mutex operations  * without special recursion handling.  *  * This mechanism is intended as temporary until everything of  * importance is properly locked.  */
+comment|/*  * Network MPSAFE temporary workarounds.  When debug_mpsafenet  * is 1 the network is assumed to operate without Giant on the  * input path and protocols that require Giant must collect it  * on entry.  When 0 Giant is grabbed in the network interface  * ISR's and in the netisr path and there is no need to grab  * the Giant lock.  Note that, unlike GIANT_PICKUP() and  * GIANT_DROP(), these macros directly wrap mutex operations  * without special recursion handling.  *  * This mechanism is intended as temporary until everything of  * importance is properly locked.  Note: the semantics for  * NET_{LOCK,UNLOCK}_GIANT() are not the same as DROP_GIANT()  * and PICKUP_GIANT(), as they are plain mutex operations  * without a recursion counter.  */
 end_comment
 
 begin_decl_stmt
