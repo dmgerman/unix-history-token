@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	5.3 (Berkeley) %G%"
+literal|"@(#)trap.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,7 +653,7 @@ name|SIGTTOU
 case|:
 if|if
 condition|(
-name|jflag
+name|mflag
 condition|)
 name|action
 operator|=
@@ -699,7 +699,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|jflag
+name|mflag
 operator|&&
 operator|(
 name|signo
@@ -1107,12 +1107,6 @@ begin_comment
 comment|/*  * Controls whether the shell is interactive or not.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|is_interactive
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|setinteractive
@@ -1120,6 +1114,10 @@ parameter_list|(
 name|on
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|is_interactive
+decl_stmt|;
 if|if
 condition|(
 name|on
@@ -1191,9 +1189,11 @@ operator|.
 name|loc
 argument_list|)
 condition|)
+block|{
 goto|goto
 name|l1
 goto|;
+block|}
 if|if
 condition|(
 name|setjmp
@@ -1203,9 +1203,11 @@ operator|.
 name|loc
 argument_list|)
 condition|)
+block|{
 goto|goto
 name|l2
 goto|;
+block|}
 name|handler
 operator|=
 operator|&
