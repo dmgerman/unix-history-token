@@ -52,6 +52,9 @@ decl_stmt|;
 name|u_int
 name|ih_irq
 decl_stmt|;
+name|u_int
+name|ih_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -100,6 +103,8 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
