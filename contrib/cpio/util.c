@@ -3168,7 +3168,7 @@ name|fprintf
 argument_list|(
 name|tty_out
 argument_list|,
-literal|"Found end of tape.  Load next tape and press RETURN. "
+literal|"Found end of volume.  Load next volume and press RETURN. "
 argument_list|)
 expr_stmt|;
 else|else
@@ -3176,7 +3176,7 @@ name|fprintf
 argument_list|(
 name|tty_out
 argument_list|,
-literal|"Found end of tape.  To continue, type device/file name when ready.\n"
+literal|"Found end of volume.  To continue, type device/file name when ready.\n"
 argument_list|)
 expr_stmt|;
 name|fflush
