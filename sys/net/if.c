@@ -3054,6 +3054,7 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|getmicrotime
 argument_list|(
 operator|&
@@ -3062,6 +3063,12 @@ operator|->
 name|if_lastchange
 argument_list|)
 expr_stmt|;
+name|rt_ifmsg
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
