@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtreg.h	6.1	83/07/29	*/
+comment|/*	mtreg.h	6.2	84/09/25	*/
 end_comment
 
 begin_comment
@@ -591,6 +591,17 @@ end_define
 
 begin_comment
 comment|/* mask for interrupt code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTER_FAILCODE
+value|0176000
+end_define
+
+begin_comment
+comment|/* failure code */
 end_comment
 
 begin_comment
