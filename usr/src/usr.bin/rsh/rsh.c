@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	4.10 84/12/17"
+literal|"@(#)rsh.c	4.11 85/03/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1307,7 +1307,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|char
 name|signo
 decl_stmt|;
 end_decl_stmt
@@ -1321,10 +1321,6 @@ name|write
 argument_list|(
 name|rfd2
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|signo
 argument_list|,
