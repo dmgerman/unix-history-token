@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.82 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.83 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/specdev.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/namei.h>
 end_include
 
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<miscfs/specfs/specdev.h>
 end_include
 
 begin_decl_stmt
