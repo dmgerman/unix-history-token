@@ -3285,7 +3285,7 @@ argument_list|,
 argument|fle1
 argument_list|)
 block|{
-comment|/* 		 * When cache size has not reached CACHELOWAT yet, we keep both 		 * inactive and active flows in cache. Doing this, we reduce number 		 * of exports, since many inactive flows may wake up and continue 		 * their life. However, we make an exclusion for scans. It is very 		 * rare situation that inactive 1-packet flow will wake up. 		 * When cache has reached CACHELOWAT, we expire all inactive flows, 		 * until cache gets of sane size. 		 *  		 * When this record's refcount is> 0, we skip it. (XXX) 		 */
+comment|/* 		 * When cache size has not reached CACHELOWAT yet, we keep both 		 * inactive and active flows in cache. Doing this, we reduce number 		 * of exports, since many inactive flows may wake up and continue 		 * their life. However, we make an exclusion for scans. It is very 		 * rare situation that inactive 1-packet flow will wake up. 		 * When cache has reached CACHELOWAT, we expire all inactive flows, 		 * until cache gets of sane size. 		 */
 if|if
 condition|(
 name|used
