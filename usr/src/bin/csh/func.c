@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	5.7 (Berkeley) %G%"
+literal|"@(#)func.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5315,57 +5315,6 @@ argument_list|(
 literal|0
 argument_list|,
 name|shpgrp
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-name|FSHTTY
-argument_list|,
-name|TIOCGETD
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|oldisc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|oldisc
-operator|!=
-name|NTTYDISC
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Switching to new tty driver...\n"
-argument_list|)
-expr_stmt|;
-name|ldisc
-operator|=
-name|NTTYDISC
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-name|FSHTTY
-argument_list|,
-name|TIOCSETD
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|ldisc
 argument_list|)
 expr_stmt|;
 block|}
