@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_psim.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -663,11 +669,25 @@ argument_list|)
 operator|!=
 literal|4
 condition|)
+ifndef|#
+directive|ifndef
+name|PSIM
 name|printf
 argument_list|(
 literal|"nexus_probe: can't get interrupt-controller"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|pic
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/iobus/opic"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|sc_pic
