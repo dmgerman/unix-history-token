@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	biz31.c	4.1	81/05/09	*/
+comment|/*	biz31.c	4.2	81/09/17	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|BIZCOMP
+name|BIZ1031
 end_if
 
 begin_define
@@ -55,7 +55,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Dial up on a BIZCOMP with either  * 	tone dialing (mod = "f")  *	pulse dialing (mod = "w")  */
+comment|/*  * Dial up on a BIZCOMP Model 1031 with either  * 	tone dialing (mod = "f")  *	pulse dialing (mod = "w")  */
 end_comment
 
 begin_function
@@ -281,7 +281,7 @@ if|if
 condition|(
 name|timeout
 condition|)
-name|biz_disconnect
+name|biz31_disconnect
 argument_list|()
 expr_stmt|;
 comment|/* insurance */
@@ -294,7 +294,7 @@ block|}
 end_block
 
 begin_macro
-name|bizw_dialer
+name|biz31w_dialer
 argument_list|(
 argument|num
 argument_list|,
@@ -328,7 +328,7 @@ block|}
 end_block
 
 begin_macro
-name|bizf_dialer
+name|biz31f_dialer
 argument_list|(
 argument|num
 argument_list|,
@@ -362,7 +362,7 @@ block|}
 end_block
 
 begin_macro
-name|biz_disconnect
+name|biz31_disconnect
 argument_list|()
 end_macro
 
@@ -393,7 +393,7 @@ block|}
 end_block
 
 begin_macro
-name|biz_abort
+name|biz31_abort
 argument_list|()
 end_macro
 
@@ -551,7 +551,7 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|biz_abort
+name|biz31_abort
 argument_list|)
 expr_stmt|;
 name|timeout
