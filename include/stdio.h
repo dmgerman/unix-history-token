@@ -1562,27 +1562,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FILE
-modifier|*
-name|zopen
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|__END_DECLS
 comment|/*  * This is a #define because the function is used internally and  * (unlike vfscanf) the name __svfscanf is guaranteed not to collide  * with a user function when _ANSI_SOURCE or _POSIX_SOURCE is defined.  */
 define|#
