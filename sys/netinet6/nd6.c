@@ -2921,8 +2921,8 @@ condition|(
 name|ln
 operator|->
 name|ln_state
-operator|==
-name|ND6_LLINFO_INCOMPLETE
+operator|<
+name|ND6_LLINFO_REACHABLE
 condition|)
 return|return;
 name|ln
