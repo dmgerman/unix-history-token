@@ -327,24 +327,6 @@ directive|include
 file|<machine/unwind.h>
 end_include
 
-begin_function_decl
-name|void
-name|ia64_probe_sapics
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|map_pal_code
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef

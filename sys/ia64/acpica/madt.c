@@ -10,19 +10,6 @@ file|"acpi.h"
 end_include
 
 begin_function_decl
-name|void
-name|cpu_mp_add
-parameter_list|(
-name|uint
-parameter_list|,
-name|uint
-parameter_list|,
-name|uint
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|sapic
 modifier|*
