@@ -2710,6 +2710,8 @@ name|error
 decl_stmt|;
 name|u_long
 name|irq
+init|=
+literal|0
 decl_stmt|;
 name|driver_intr_t
 modifier|*
@@ -3177,6 +3179,13 @@ name|intr
 operator|=
 name|pcic_pci_intr
 expr_stmt|;
+name|irq
+operator|=
+name|rman_get_start
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3270,10 +3279,6 @@ name|sc
 operator|->
 name|slot_poll
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|,
 name|hz
@@ -3333,10 +3338,7 @@ name|sc
 operator|->
 name|irq
 operator|=
-name|rman_get_start
-argument_list|(
-name|r
-argument_list|)
+name|irq
 expr_stmt|;
 if|if
 condition|(
@@ -3355,10 +3357,6 @@ name|INTR_TYPE_AV
 argument_list|,
 name|intr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|,
 operator|&
