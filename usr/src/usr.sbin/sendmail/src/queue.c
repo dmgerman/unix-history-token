@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.74
+literal|3.75
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.74
+literal|3.75
 operator|%
 name|G
 operator|%
@@ -2836,7 +2836,7 @@ case|:
 comment|/* sender name */
 name|printf
 argument_list|(
-literal|"%8d %.16s %.45s"
+literal|"%8ld %.16s %.45s"
 argument_list|,
 name|dfsize
 argument_list|,
