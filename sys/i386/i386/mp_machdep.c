@@ -3723,7 +3723,11 @@ argument_list|(
 name|io_int
 argument_list|)
 operator|*
+operator|(
 name|nintrs
+operator|+
+literal|1
+operator|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -4021,7 +4025,11 @@ literal|0
 init|;
 name|x
 operator|<
+operator|(
 name|nintrs
+operator|+
+literal|1
+operator|)
 condition|;
 operator|++
 name|x
@@ -5388,6 +5396,72 @@ block|}
 name|fix_id_to_io_mapping
 argument_list|()
 expr_stmt|;
+comment|/* detect and fix broken Compaq MP table */
+if|if
+condition|(
+name|apic_int_type
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"APIC_IO: MP table broken: 8259->APIC entry missing!\n"
+argument_list|)
+expr_stmt|;
+name|io_apic_ints
+index|[
+name|nintrs
+index|]
+operator|.
+name|int_type
+operator|=
+literal|3
+expr_stmt|;
+comment|/* ExtInt */
+name|io_apic_ints
+index|[
+name|nintrs
+index|]
+operator|.
+name|int_vector
+operator|=
+literal|0xff
+expr_stmt|;
+comment|/* Unassigned */
+comment|/* XXX fixme, set src bus id etc, but it doesn't seem to hurt */
+name|io_apic_ints
+index|[
+name|nintrs
+index|]
+operator|.
+name|dst_apic_id
+operator|=
+name|IO_TO_ID
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|io_apic_ints
+index|[
+name|nintrs
+index|]
+operator|.
+name|dst_apic_int
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Pin 0 */
+name|nintrs
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_function
 
