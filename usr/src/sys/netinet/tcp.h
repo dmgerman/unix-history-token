@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.20 82/01/17 */
+comment|/* tcp.h 1.21 82/01/18 */
 end_comment
 
 begin_typedef
@@ -138,7 +138,7 @@ value|65
 end_define
 
 begin_comment
-comment|/* bytes: 65, 4, seq#, data */
+comment|/* bytes: 65, 8, seq#, data, markseq */
 end_comment
 
 begin_define

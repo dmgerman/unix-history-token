@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.15	82/01/17	*/
+comment|/*	tcp_var.h	4.16	82/01/18	*/
 end_comment
 
 begin_comment
@@ -186,6 +186,10 @@ name|char
 name|t_oobflags
 decl_stmt|;
 comment|/* have some */
+name|char
+name|t_iobc
+decl_stmt|;
+comment|/* input character */
 define|#
 directive|define
 name|TCPOOB_HAVEDATA
@@ -201,14 +205,14 @@ define|#
 directive|define
 name|TCPOOB_NEEDACK
 value|0x04
-name|char
-name|t_iobc
-decl_stmt|;
-comment|/* input character */
 name|u_char
 name|t_iobseq
 decl_stmt|;
 comment|/* input receive sequence number */
+name|tcp_seq
+name|t_oobmark
+decl_stmt|;
+comment|/* output mark position */
 name|char
 name|t_oobc
 decl_stmt|;
