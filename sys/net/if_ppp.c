@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.48 1997/10/18 00:56:22 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.49 1997/10/18 01:20:23 peter Exp $ */
 end_comment
 
 begin_comment
@@ -46,42 +46,6 @@ define|#
 directive|define
 name|PPP_COMPRESS
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPP_FILTER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"bpfilter.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPFILTER
-operator|==
-literal|0
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"PPP_FILTER requires bpf"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -160,29 +124,6 @@ include|#
 directive|include
 file|<net/netisr.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPP_FILTER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -267,6 +208,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PPP_FILTER
+argument_list|)
+operator|&&
+name|NBPFILTER
+operator|==
+literal|0
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"PPP_FILTER requires bpf"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -287,12 +252,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<net/ppp_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_ppp.h>
 end_include
 
@@ -300,12 +259,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_pppvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
 end_include
 
 begin_comment
@@ -1141,7 +1094,7 @@ operator||
 name|IFF_RUNNING
 operator|)
 expr_stmt|;
-name|gettime
+name|microtime
 argument_list|(
 operator|&
 name|sc
