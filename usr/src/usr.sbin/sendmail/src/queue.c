@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.46 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.47 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.46 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.47 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1973,10 +1973,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* exit without the usual cleanup */
-name|exit
-argument_list|(
-name|ExitStat
-argument_list|)
+name|e
+operator|->
+name|e_id
+operator|=
+name|NULL
+expr_stmt|;
+name|finis
+argument_list|()
 expr_stmt|;
 block|}
 end_block

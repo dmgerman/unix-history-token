@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.38 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.37		%G%"
+literal|"@(#)sendmail.h	5.38		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1656,6 +1656,10 @@ name|short
 name|mci_exitstat
 decl_stmt|;
 comment|/* exit status from last connection */
+name|short
+name|mci_state
+decl_stmt|;
+comment|/* SMTP state */
 name|FILE
 modifier|*
 name|mci_in
@@ -1670,10 +1674,6 @@ name|int
 name|mci_pid
 decl_stmt|;
 comment|/* process id of subordinate proc */
-name|short
-name|mci_state
-decl_stmt|;
-comment|/* SMTP state */
 name|char
 modifier|*
 name|mci_phase
@@ -1685,6 +1685,11 @@ modifier|*
 name|mci_mailer
 decl_stmt|;
 comment|/* ptr to the mailer for this conn */
+name|char
+modifier|*
+name|mci_host
+decl_stmt|;
+comment|/* host name */
 name|time_t
 name|mci_lastuse
 decl_stmt|;

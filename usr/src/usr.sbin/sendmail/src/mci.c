@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	5.3 (Berkeley) %G%"
+literal|"@(#)mci.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,6 +393,17 @@ operator|&=
 operator|~
 name|MCIF_CACHED
 expr_stmt|;
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Closing connection to %s"
+argument_list|,
+name|mci
+operator|->
+name|mci_host
+argument_list|)
+expr_stmt|;
 comment|/* only uses the envelope to flush the transcript file */
 if|if
 condition|(
@@ -497,10 +508,13 @@ name|MCI
 modifier|*
 name|mci
 decl_stmt|;
-name|mci
+specifier|register
+name|STAB
+modifier|*
+name|s
+decl_stmt|;
+name|s
 operator|=
-operator|&
-operator|(
 name|stab
 argument_list|(
 name|host
@@ -513,9 +527,21 @@ name|m_mno
 argument_list|,
 name|ST_ENTER
 argument_list|)
-operator|)
+expr_stmt|;
+name|mci
+operator|=
+operator|&
+name|s
 operator|->
 name|s_mci
+expr_stmt|;
+name|mci
+operator|->
+name|mci_host
+operator|=
+name|s
+operator|->
+name|s_name
 expr_stmt|;
 if|if
 condition|(
