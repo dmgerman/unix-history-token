@@ -1168,21 +1168,24 @@ operator|=
 operator|*
 name|nodep
 expr_stmt|;
-comment|/* Start timer by faking a timeout event */
-operator|(
-operator|*
-name|nodep
-operator|)
-operator|->
-name|refs
-operator|++
-expr_stmt|;
-name|ng_bridge_timeout
+comment|/* Start timer; timer is always running while node is alive */
+name|callout_reset
 argument_list|(
-operator|*
-name|nodep
+operator|&
+name|priv
+operator|->
+name|timer
+argument_list|,
+name|hz
+argument_list|,
+name|ng_bridge_timeout
+argument_list|,
+name|priv
+operator|->
+name|node
 argument_list|)
 expr_stmt|;
+comment|/* Done */
 return|return
 operator|(
 literal|0
@@ -3065,6 +3068,7 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+comment|/* 	 * Shut down everything except the timer. There's no way to 	 * avoid another possible timeout event (it may have already 	 * been dequeued), so we can't free the node yet. 	 */
 name|ng_unname
 argument_list|(
 name|node
@@ -3114,24 +3118,7 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
-name|FREE
-argument_list|(
-name|priv
-argument_list|,
-name|M_NETGRAPH
-argument_list|)
-expr_stmt|;
-name|node
-operator|->
-name|private
-operator|=
-name|NULL
-expr_stmt|;
-name|ng_unref
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
+comment|/* NG_INVALID flag is now set so node will be freed at next timeout */
 return|return
 operator|(
 literal|0
@@ -3973,7 +3960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  */
+comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  *  * If the node has the NG_INVALID flag set, our job is to kill it.  */
 end_comment
 
 begin_function
@@ -4013,7 +4000,7 @@ decl_stmt|;
 name|int
 name|linkNum
 decl_stmt|;
-comment|/* Avoid race condition with ng_bridge_shutdown() */
+comment|/* If node was shut down, this is the final lingering timeout */
 name|s
 operator|=
 name|splnet
@@ -4030,12 +4017,21 @@ name|NG_INVALID
 operator|)
 operator|!=
 literal|0
-operator|||
-name|priv
-operator|==
-name|NULL
 condition|)
 block|{
+name|FREE
+argument_list|(
+name|priv
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|node
+operator|->
+name|private
+operator|=
+name|NULL
+expr_stmt|;
 name|ng_unref
 argument_list|(
 name|node
