@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.10	(Berkeley)	83/03/27"
+literal|"@(#)tape.c	3.11	(Berkeley)	83/04/17"
 decl_stmt|;
 end_decl_stmt
 
