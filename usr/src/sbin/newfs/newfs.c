@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.26 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -767,8 +767,7 @@ name|argv
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|strcmp
+name|strstr
 argument_list|(
 name|progname
 argument_list|,
