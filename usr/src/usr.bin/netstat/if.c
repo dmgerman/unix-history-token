@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	4.2 82/10/06"
+literal|"@(#)if.c	4.3 82/10/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,7 +167,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %-5.5s %-8.8s  %-12.12s %-7.7s %-5.5s %-7.7s %-5.5s"
+literal|"%-5.5s %-5.5s %-10.10s  %-12.12s %-7.7s %-5.5s %-7.7s %-5.5s"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -229,6 +229,13 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+name|struct
+name|in_addr
+name|in
+decl_stmt|,
+name|inet_makeaddr
+argument_list|()
+decl_stmt|;
 name|klseek
 argument_list|(
 name|kmem
@@ -344,15 +351,24 @@ name|ifnet
 operator|.
 name|if_addr
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%-8.8s  "
-argument_list|,
-name|routename
+name|in
+operator|=
+name|inet_makeaddr
 argument_list|(
 name|ifnet
 operator|.
 name|if_net
+argument_list|,
+name|INADDR_ANY
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-10.10s  "
+argument_list|,
+name|routename
+argument_list|(
+name|in
 argument_list|)
 argument_list|)
 expr_stmt|;
