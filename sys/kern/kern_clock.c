@@ -256,20 +256,6 @@ begin_comment
 comment|/* Some of these don't belong here, but it's easiest to concentrate them. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|BETTER_CLOCK
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|long
 name|cp_time
@@ -278,26 +264,6 @@ name|CPUSTATES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|long
-name|cp_time
-index|[
-name|CPUSTATES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|long
