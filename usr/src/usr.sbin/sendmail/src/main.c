@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.33	%G%"
+literal|"@(#)main.c	3.34	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* don't return content of letter to sender */
+end_comment
+
+begin_decl_stmt
+name|int
+name|OldUmask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* umask when called */
 end_comment
 
 begin_decl_stmt
@@ -573,6 +583,13 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+name|OldUmask
+operator|=
+name|umask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1386,9 +1403,6 @@ argument_list|,
 name|safecf
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|V6
 name|p
 operator|=
 name|getenv
@@ -1454,9 +1468,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|V6
 name|initaliases
 argument_list|(
 name|AliasFile
@@ -1552,7 +1563,7 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* 	locname = getname(); 	if (locname == NULL || locname[0] == '\0') 	{ 		extern struct passwd *getpwuid(); 		int uid;  		uid = getuid(); # ifdef V6 		uid&= 0377; # endif 		pw = getpwuid(uid); 		if (pw == NULL) 			syserr("Who are you? (uid=%d)", uid); 		else 			p = pw->pw_name; 	} 	else 	{ 		extern struct passwd *getpwnam();  		pw = getpwnam(p); 		if (pw == NULL) 			syserr("Who are you? (name=%s)", p); 	} 	if (p == NULL || p[0] == '\0' || pw == NULL) 		finis();  	realname = p;  	/* extract full name from passwd file */
+comment|/* 	locname = getname(); 	if (locname == NULL || locname[0] == '\0') 	{ 		extern struct passwd *getpwuid(); 		int uid;  		uid = getruid(); 		pw = getpwuid(uid); 		if (pw == NULL) 			syserr("Who are you? (uid=%d)", uid); 		else 			p = pw->pw_name; 	} 	else 	{ 		extern struct passwd *getpwnam();  		pw = getpwnam(p); 		if (pw == NULL) 			syserr("Who are you? (name=%s)", p); 	} 	if (p == NULL || p[0] == '\0' || pw == NULL) 		finis();  	realname = p;  	/* extract full name from passwd file */
 if|if
 condition|(
 operator|(
