@@ -11819,6 +11819,24 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Enable memory arbiter. */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|!=
+name|BGE_ASICREV_BCM5705
+condition|)
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MARB_MODE
+argument_list|,
+name|BGE_MARBMODE_ENABLE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Prevent PXE restart: write a magic number to the 	 * general communications memory at 0xB50. 	 */
 name|bge_writemem_ind
 argument_list|(
@@ -11920,24 +11938,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Enable memory arbiter. */
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_asicrev
-operator|!=
-name|BGE_ASICREV_BCM5705
-condition|)
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MARB_MODE
-argument_list|,
-name|BGE_MARBMODE_ENABLE
-argument_list|)
-expr_stmt|;
 comment|/* Fix up byte swapping */
 name|CSR_WRITE_4
 argument_list|(
