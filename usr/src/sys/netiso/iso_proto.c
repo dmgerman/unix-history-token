@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_proto.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_proto.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -133,6 +133,9 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|tp_init
+argument_list|()
+decl_stmt|,
+name|tp_fasttimo
 argument_list|()
 decl_stmt|,
 name|tp_slowtimo
@@ -385,7 +388,7 @@ name|tp_usrreq
 block|,
 name|tp_init
 block|,
-literal|0
+name|tp_fasttimo
 block|,
 name|tp_slowtimo
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_stat.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_stat.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -226,6 +226,12 @@ name|ts_Ccan_act
 decl_stmt|;
 name|u_long
 name|ts_Ccan_inact
+decl_stmt|;
+name|u_long
+name|ts_Fdelack
+decl_stmt|;
+name|u_long
+name|ts_Fpruned
 decl_stmt|;
 name|u_long
 name|ts_concat_rcvd

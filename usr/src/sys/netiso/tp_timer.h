@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,6 +59,16 @@ comment|/* incremental time */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SET_DELACK
+parameter_list|(
+name|t
+parameter_list|)
+value|{\     (t)->tp_flags |= TPF_DELACK; \     if ((t)->tp_fasttimeo == 0)\ 	{ (t)->tp_fasttimeo = tp_ftimeolist; tp_ftimeolist = (t); } }
+end_define
 
 begin_endif
 endif|#

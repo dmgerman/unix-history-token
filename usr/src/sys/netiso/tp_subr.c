@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2791,6 +2791,11 @@ function_decl|0
 block|)
 empty_stmt|;
 name|ENDTRACE
+name|SET_DELACK
+parameter_list|(
+name|tpcb
+parameter_list|)
+function_decl|;
 name|sbappend
 argument_list|(
 operator|&
@@ -2804,7 +2809,7 @@ name|E
 operator|.
 name|e_data
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|SEQ_INC
 argument_list|(
 name|tpcb
@@ -3133,7 +3138,7 @@ block|}
 end_else
 
 begin_comment
-comment|/* 	 * an ack should be sent when at least one of the 	 * following holds: 	 * a) the TPDU that just arrived represents the 	 *    full window last advertised, or 	 * b) when seq X arrives [ where 	 * 		X = last_sent_uwe - 1/2 last_lcredit_sent  	 * 		(the packet representing 1/2 the last advertised window) ] 	 * 		and lcredit at the time of X arrival>  last_lcredit_sent/2 	 * 		In other words, if the last ack sent advertised cdt=8 and uwe = 8 	 * 		then when seq 4 arrives I'd like to send a new ack 	 * 		iff the credit at the time of 4's arrival is> 4. 	 * 		The other end thinks it has cdt of 4 so if local cdt 	 * 		is still 4 there's no point in sending an ack, but if 	 * 		my credit has increased because the receiver has taken 	 * 		some data out of the buffer (soreceive doesn't notify 	 * 		me until the SYSTEM CALL finishes), I'd like to tell 	 * 		the other end.   	 */
+comment|/* there were some comments of historical interest here. */
 end_comment
 
 begin_block
