@@ -1633,6 +1633,11 @@ control|)
 block|{
 name|asprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|iov
 index|[
