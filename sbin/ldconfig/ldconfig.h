@@ -23,6 +23,16 @@ file|<sys/cdefs.h>
 end_include
 
 begin_decl_stmt
+name|int
+name|insecure
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -i flag, needed here for elfhints.c */
+end_comment
+
+begin_decl_stmt
 name|__BEGIN_DECLS
 name|void
 name|list_elf_hints

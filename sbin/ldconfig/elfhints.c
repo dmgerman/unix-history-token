@@ -121,6 +121,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -200,6 +202,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|trusted
 parameter_list|)
 block|{
 name|struct
@@ -210,6 +215,15 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Do some security checks */
+if|if
+condition|(
+operator|!
+name|trusted
+operator|&&
+operator|!
+name|insecure
+condition|)
+block|{
 if|if
 condition|(
 name|stat
@@ -244,7 +258,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: not owned by root"
+literal|"%s: ignoring directory not owned by root"
 argument_list|,
 name|name
 argument_list|)
@@ -272,6 +286,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 for|for
 control|(
@@ -822,6 +837,8 @@ argument_list|(
 name|hintsfile
 argument_list|,
 name|sp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1088,6 +1105,8 @@ argument_list|(
 name|hintsfile
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1201,6 +1220,8 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
