@@ -552,6 +552,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The load order is First so bktr_mem loads (and initialises) before bktr */
+end_comment
+
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
@@ -561,7 +565,7 @@ name|bktr_mem_mod
 argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt
