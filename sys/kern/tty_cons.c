@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -365,6 +371,16 @@ end_decl_stmt
 begin_comment
 comment|/* represents the device private info */
 end_comment
+
+begin_function_decl
+name|void
+name|cndebug
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|CONS_DRIVER
@@ -1711,7 +1727,10 @@ decl_stmt|;
 name|openflag
 operator|=
 name|flag
+operator||
+name|FWRITE
 expr_stmt|;
+comment|/* XXX */
 name|cn_is_open
 operator|=
 literal|1
@@ -1800,7 +1819,7 @@ name|cnd
 operator|->
 name|cnd_vp
 argument_list|,
-name|mode
+name|openflag
 argument_list|,
 name|td
 operator|->
