@@ -733,11 +733,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|nextbyint
+name|nearbyint
 parameter_list|(
 name|x
 parameter_list|)
-value|__tg_simple(x, nextbyint)
+value|__tg_simple(x, nearbyint)
 end_define
 
 begin_define
