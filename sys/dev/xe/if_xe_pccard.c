@@ -1397,6 +1397,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* Maybe Paralon Techologies, Inc */
 name|PCMCIA_CARD
 argument_list|(
 name|INTEL
