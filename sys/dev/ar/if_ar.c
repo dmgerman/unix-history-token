@@ -3270,9 +3270,6 @@ comment|/* NETGRAPH */
 name|top_arstart
 label|:
 comment|/* 	 * See if we have space for more packets. 	 */
-ifndef|#
-directive|ifndef
-name|NETGRAPH
 if|if
 condition|(
 name|sc
@@ -3282,6 +3279,9 @@ operator|==
 name|AR_TX_BLOCKS
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NETGRAPH
 name|ifp
 operator|->
 name|if_flags
