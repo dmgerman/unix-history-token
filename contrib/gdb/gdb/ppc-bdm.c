@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote target communications for the Macraigor Systems BDM Wiggler    talking to a Motorola PPC 8xx ADS board    Copyright 1996, 1997 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote target communications for the Macraigor Systems BDM Wiggler    talking to a Motorola PPC 8xx ADS board    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"gdbcmd.h"
 end_include
 
@@ -90,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"serial.h"
 end_include
 
@@ -105,70 +93,70 @@ directive|include
 file|"ocd.h"
 end_include
 
-begin_decl_stmt
+begin_include
+include|#
+directive|include
+file|"ppc-tdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
+begin_function_decl
 specifier|static
 name|void
 name|bdm_ppc_open
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|name
-operator|,
+parameter_list|,
 name|int
 name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|int
+name|ptid_t
 name|bdm_ppc_wait
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|,
-expr|struct
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|,
+name|struct
 name|target_waitstatus
-operator|*
+modifier|*
 name|target_status
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bdm_ppc_fetch_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|regno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bdm_ppc_store_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|regno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -186,7 +174,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*#define BDM_NUM_REGS 71*/
+comment|/*#define BDM_NUM_REGS 71 */
 end_comment
 
 begin_define
@@ -267,17 +255,13 @@ specifier|static
 name|void
 name|bdm_ppc_open
 parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|watchdogaddr
@@ -324,21 +308,17 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|bdm_ppc_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|target_status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|target_status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|stop_reason
@@ -368,7 +348,7 @@ operator|=
 name|TARGET_SIGNAL_INT
 expr_stmt|;
 return|return
-name|inferior_pid
+name|inferior_ptid
 return|;
 block|}
 name|target_status
@@ -391,7 +371,7 @@ block|fprintf_unfiltered (gdb_stdout, "ecr = 0x%x, der = 0x%x\n", ecr, der);   }
 endif|#
 directive|endif
 return|return
-name|inferior_pid
+name|inferior_ptid
 return|;
 block|}
 end_function
@@ -412,7 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Read the remote registers into regs.    Fetch register REGNO, or all registers if REGNO == -1     The Wiggler uses the following codes to access the registers:     0 -> 1023		SPR 0 -> 1023 	0 - SPR 0 - MQ 	1 - SPR 1 - XER 	8 - SPR 8 - LR 	9 - SPR 9 - CTR (known as cnt in GDB) 	26 - SPR 26 - SRR0 - pc    1024 -> 2047		DCR 0 -> DCR 1023 (IBM PPC 4xx only)    2048 -> 2079		R0 -> R31    2080 -> 2143		FP0 -> FP31 (64 bit regs) (IBM PPC 5xx only)    2144			CR (known as cnd in GDB)    2145			FPCSR    2146			MSR (known as ps in GDB)  */
+comment|/* Read the remote registers into regs.    Fetch register REGNO, or all registers if REGNO == -1     The Wiggler uses the following codes to access the registers:     0 -> 1023            SPR 0 -> 1023    0 - SPR 0 - MQ    1 - SPR 1 - XER    8 - SPR 8 - LR    9 - SPR 9 - CTR (known as cnt in GDB)    26 - SPR 26 - SRR0 - pc    1024 -> 2047         DCR 0 -> DCR 1023 (IBM PPC 4xx only)    2048 -> 2079         R0 -> R31    2080 -> 2143         FP0 -> FP31 (64 bit regs) (IBM PPC 5xx only)    2144                 CR (known as cnd in GDB)    2145                 FPCSR    2146                 MSR (known as ps in GDB)  */
 end_comment
 
 begin_function
@@ -420,11 +400,9 @@ specifier|static
 name|void
 name|bdm_ppc_fetch_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -607,7 +585,12 @@ condition|(
 operator|(
 name|first_regno
 operator|==
-name|MQ_REGNUM
+name|gdbarch_tdep
+argument_list|(
+name|current_gdbarch
+argument_list|)
+operator|->
+name|ppc_mq_regnum
 operator|)
 operator|||
 operator|(
@@ -817,11 +800,9 @@ specifier|static
 name|void
 name|bdm_ppc_store_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -930,7 +911,12 @@ condition|(
 operator|(
 name|i
 operator|!=
-name|MQ_REGNUM
+name|gdbarch_tdep
+argument_list|(
+name|current_gdbarch
+argument_list|)
+operator|->
+name|ppc_mq_regnum
 operator|)
 operator|&&
 operator|(
@@ -964,7 +950,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       else if (i == MQ_REGNUM)         printf("don't write invalid reg %d (MQ_REGNUM)\n", bdm_regno);       else         printf("don't write invalid reg %d\n", bdm_regno); */
+comment|/*    else if (i == gdbarch_tdep (current_gdbarch)->ppc_mq_regnum)    printf("don't write invalid reg %d (PPC_MQ_REGNUM)\n", bdm_regno);    else    printf("don't write invalid reg %d\n", bdm_regno);  */
 block|}
 block|}
 end_function
@@ -1306,12 +1292,6 @@ name|NULL
 expr_stmt|;
 name|bdm_ppc_ops
 operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|bdm_ppc_ops
-operator|.
 name|to_stratum
 operator|=
 name|process_stratum
@@ -1380,7 +1360,9 @@ end_comment
 begin_function
 name|void
 name|_initialize_bdm_ppc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_bdm_ppc_ops
 argument_list|()

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Parser for GNU CHILL (CCITT High-Level Language)  -*- C -*-    Copyright (C) 1992, 1993, 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Parser for GNU CHILL (CCITT High-Level Language)  -*- C -*-    Copyright 1992, 1993, 1995, 1996, 1997, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -283,427 +283,346 @@ begin_comment
 comment|/* Forward declarations. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|write_lower_upper_value
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|exp_opcode
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|ch_terminal
 name|match_bitstring_literal
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|ch_terminal
 name|match_integer_literal
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|ch_terminal
 name|match_character_literal
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|ch_terminal
 name|match_string_literal
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|ch_terminal
 name|match_float_literal
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|enum
-name|ch_terminal
-name|match_float_literal
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|decode_integer_literal
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|LONGEST
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|decode_integer_value
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|LONGEST
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|match_simple_name_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|growbuf_by_size
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|void
+name|parse_case_label
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|parse_untyped_expr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_if_expression
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|void
+name|parse_if_expression_body
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|parse_else_alternative
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_then_alternative
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_expr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_operand0
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_operand1
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_operand2
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_operand3
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_operand4
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_operand5
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_operand6
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_primval
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_tuple
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_opt_element_list
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_tuple_element
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_named_record_element
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_call
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|parse_mode_or_normal_call
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -712,215 +631,110 @@ literal|0
 end_if
 
 begin_endif
-unit|static struct type *parse_mode_call PARAMS ((void));
+unit|static struct type *parse_mode_call (void);
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_unary_call
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parse_opt_untyped_expr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|void
-name|parse_case_label
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|expect
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|ch_terminal
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|void
-name|parse_expr
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|parse_primval
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|parse_untyped_expr
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|parse_opt_untyped_expr
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|parse_if_expression_body
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|ch_terminal
 name|ch_lex
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|INLINE
 specifier|static
 name|enum
 name|ch_terminal
 name|PEEK_TOKEN
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|ch_terminal
 name|peek_token_
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|forward_token_
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|require
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|ch_terminal
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|check_token
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|ch_terminal
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -970,7 +784,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*int current_token, lookahead_token;*/
+comment|/*int current_token, lookahead_token; */
 end_comment
 
 begin_function
@@ -979,7 +793,9 @@ specifier|static
 name|enum
 name|ch_terminal
 name|PEEK_TOKEN
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1046,11 +862,9 @@ name|enum
 name|ch_terminal
 name|peek_token_
 parameter_list|(
-name|i
-parameter_list|)
 name|int
 name|i
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1058,9 +872,13 @@ name|i
 operator|>
 name|MAX_LOOK_AHEAD
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
-literal|"internal error - too much lookahead"
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"too much lookahead"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1105,7 +923,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void pushback_token (code, node)      enum ch_terminal code;      YYSTYPE node; {   int i;   if (terminal_buffer[MAX_LOOK_AHEAD] != TOKEN_NOT_READ)     fatal ("internal error - cannot pushback token");   for (i = MAX_LOOK_AHEAD; i> 0; i--)     {        terminal_buffer[i] = terminal_buffer[i - 1];        val_buffer[i] = val_buffer[i - 1];   }   terminal_buffer[0] = code;   val_buffer[0] = node; }
+unit|static void pushback_token (enum ch_terminal code, YYSTYPE node) {   int i;   if (terminal_buffer[MAX_LOOK_AHEAD] != TOKEN_NOT_READ)     internal_error (__FILE__, __LINE__, 		    "cannot pushback token");   for (i = MAX_LOOK_AHEAD; i> 0; i--)     {       terminal_buffer[i] = terminal_buffer[i - 1];       val_buffer[i] = val_buffer[i - 1];     }   terminal_buffer[0] = code;   val_buffer[0] = node; }
 endif|#
 directive|endif
 end_endif
@@ -1114,7 +932,9 @@ begin_function
 specifier|static
 name|void
 name|forward_token_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1185,12 +1005,10 @@ specifier|static
 name|void
 name|require
 parameter_list|(
-name|token
-parameter_list|)
 name|enum
 name|ch_terminal
 name|token
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1200,27 +1018,18 @@ operator|!=
 name|token
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|sprintf
+name|internal_error
 argument_list|(
-name|buf
+name|__FILE__
 argument_list|,
-literal|"internal parser error - expected token %d"
+name|__LINE__
+argument_list|,
+literal|"expected token %d"
 argument_list|,
 operator|(
 name|int
 operator|)
 name|token
-argument_list|)
-expr_stmt|;
-name|fatal
-argument_list|(
-name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1235,12 +1044,10 @@ specifier|static
 name|int
 name|check_token
 parameter_list|(
-name|token
-parameter_list|)
 name|enum
 name|ch_terminal
 name|token
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1262,7 +1069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* return 0 if expected token was not found,    else return 1. */
+comment|/* return 0 if expected token was not found,    else return 1.  */
 end_comment
 
 begin_function
@@ -1270,18 +1077,14 @@ specifier|static
 name|int
 name|expect
 parameter_list|(
-name|token
-parameter_list|,
-name|message
-parameter_list|)
 name|enum
 name|ch_terminal
 name|token
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|message
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1343,17 +1146,16 @@ literal|0
 end_if
 
 begin_comment
-unit|static tree parse_opt_name_string (allow_all)      int allow_all;
-comment|/* 1 if ALL is allowed as a postfix */
+comment|/* Parse a name string.  If ALLOW_ALL is 1, ALL is allowed as a postfix. */
 end_comment
 
 begin_comment
-unit|{   int token = PEEK_TOKEN();   tree name;   if (token != NAME)     {       if (token == ALL&& allow_all) 	{ 	  FORWARD_TOKEN (); 	  return ALL_POSTFIX; 	}       return NULL_TREE;     }   name = PEEK_LVAL();   for (;;)     {       FORWARD_TOKEN ();       token = PEEK_TOKEN();       if (token != '!') 	return name;       FORWARD_TOKEN();       token = PEEK_TOKEN();       if (token == ALL&& allow_all) 	return get_identifier3(IDENTIFIER_POINTER (name), "!", "*");       if (token != NAME) 	{ 	  if (pass == 1) 	    error ("'%s!' is not followed by an identifier", 		   IDENTIFIER_POINTER (name)); 	  return name; 	}       name = get_identifier3(IDENTIFIER_POINTER(name), 			     "!", IDENTIFIER_POINTER(PEEK_LVAL()));     } }  static tree parse_simple_name_string () {   int token = PEEK_TOKEN();   tree name;   if (token != NAME)     {       error ("expected a name here");       return error_mark_node;     }   name = PEEK_LVAL ();   FORWARD_TOKEN ();   return name; }  static tree parse_name_string () {   tree name = parse_opt_name_string (0);   if (name)     return name;   if (pass == 1)     error ("expected a name string here");   return error_mark_node; }
+unit|static tree parse_opt_name_string (int allow_all) {   int token = PEEK_TOKEN ();   tree name;   if (token != NAME)     {       if (token == ALL&& allow_all) 	{ 	  FORWARD_TOKEN (); 	  return ALL_POSTFIX; 	}       return NULL_TREE;     }   name = PEEK_LVAL ();   for (;;)     {       FORWARD_TOKEN ();       token = PEEK_TOKEN ();       if (token != '!') 	return name;       FORWARD_TOKEN ();       token = PEEK_TOKEN ();       if (token == ALL&& allow_all) 	return get_identifier3 (IDENTIFIER_POINTER (name), "!", "*");       if (token != NAME) 	{ 	  if (pass == 1) 	    error ("'%s!' is not followed by an identifier", 		   IDENTIFIER_POINTER (name)); 	  return name; 	}       name = get_identifier3 (IDENTIFIER_POINTER (name), 			      "!", IDENTIFIER_POINTER (PEEK_LVAL ()));     } }  static tree parse_simple_name_string (void) {   int token = PEEK_TOKEN ();   tree name;   if (token != NAME)     {       error ("expected a name here");       return error_mark_node;     }   name = PEEK_LVAL ();   FORWARD_TOKEN ();   return name; }  static tree parse_name_string (void) {   tree name = parse_opt_name_string (0);   if (name)     return name;   if (pass == 1)     error ("expected a name string here");   return error_mark_node; }
 comment|/* Matches:<name_string>    Returns if pass 1: the identifier.    Returns if pass 2: a decl or value for identifier. */
 end_comment
 
 begin_endif
-unit|static tree parse_name () {   tree name = parse_name_string ();   if (pass == 1 || ignoring)     return name;   else     {       tree decl = lookup_name (name);       if (decl == NULL_TREE) 	{ 	  error ("`%s' undeclared", IDENTIFIER_POINTER (name)); 	  return error_mark_node; 	}       else if (TREE_CODE (TREE_TYPE (decl)) == ERROR_MARK) 	return error_mark_node;       else if (TREE_CODE (decl) == CONST_DECL) 	return DECL_INITIAL (decl);       else if (TREE_CODE (TREE_TYPE (decl)) == REFERENCE_TYPE) 	return convert_from_reference (decl);       else 	return decl;     }  }
+unit|static tree parse_name (void) {   tree name = parse_name_string ();   if (pass == 1 || ignoring)     return name;   else     {       tree decl = lookup_name (name);       if (decl == NULL_TREE) 	{ 	  error ("`%s' undeclared", IDENTIFIER_POINTER (name)); 	  return error_mark_node; 	}       else if (TREE_CODE (TREE_TYPE (decl)) == ERROR_MARK) 	return error_mark_node;       else if (TREE_CODE (decl) == CONST_DECL) 	return DECL_INITIAL (decl);       else if (TREE_CODE (TREE_TYPE (decl)) == REFERENCE_TYPE) 	return convert_from_reference (decl);       else 	return decl;     } }
 endif|#
 directive|endif
 end_endif
@@ -1365,7 +1167,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void pushback_paren_expr (expr)      tree expr; {   if (pass == 1&& !ignoring)     expr = build1 (PAREN_EXPR, NULL_TREE, expr);   pushback_token (EXPR, expr); }
+unit|static void pushback_paren_expr (tree expr) {   if (pass == 1&& !ignoring)     expr = build1 (PAREN_EXPR, NULL_TREE, expr);   pushback_token (EXPR, expr); }
 endif|#
 directive|endif
 end_endif
@@ -1378,7 +1180,9 @@ begin_function
 specifier|static
 name|void
 name|parse_case_label
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1420,7 +1224,9 @@ begin_function
 specifier|static
 name|int
 name|parse_opt_untyped_expr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1455,7 +1261,9 @@ begin_function
 specifier|static
 name|void
 name|parse_unary_call
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FORWARD_TOKEN
 argument_list|()
@@ -1491,7 +1299,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static struct type * parse_mode_call () {   struct type *type;   FORWARD_TOKEN ();   expect ('(', NULL);   if (PEEK_TOKEN () != TYPENAME)     error ("expect MODENAME here `%s'", lexptr);   type = PEEK_LVAL().tsym.type;   FORWARD_TOKEN ();   expect (')', NULL);   return type; }
+unit|static struct type * parse_mode_call (void) {   struct type *type;   FORWARD_TOKEN ();   expect ('(', NULL);   if (PEEK_TOKEN () != TYPENAME)     error ("expect MODENAME here `%s'", lexptr);   type = PEEK_LVAL ().tsym.type;   FORWARD_TOKEN ();   expect (')', NULL);   return type; }
 endif|#
 directive|endif
 end_endif
@@ -1502,7 +1310,9 @@ name|struct
 name|type
 modifier|*
 name|parse_mode_or_normal_call
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -1571,7 +1381,9 @@ begin_function
 specifier|static
 name|void
 name|parse_call
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|arg_count
@@ -1696,7 +1508,9 @@ begin_function
 specifier|static
 name|void
 name|parse_named_record_element
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|stoken
@@ -1787,13 +1601,11 @@ specifier|static
 name|void
 name|parse_tuple_element
 parameter_list|(
-name|type
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2012,13 +1824,11 @@ specifier|static
 name|void
 name|parse_opt_element_list
 parameter_list|(
-name|type
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|arglist_len
 operator|=
@@ -2080,13 +1890,11 @@ specifier|static
 name|void
 name|parse_tuple
 parameter_list|(
-name|mode
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -2214,7 +2022,9 @@ begin_function
 specifier|static
 name|void
 name|parse_primval
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -2419,7 +2229,7 @@ case|:
 name|FORWARD_TOKEN
 argument_list|()
 expr_stmt|;
-comment|/* This is pseudo-Chill, similar to C's '(TYPE[])EXPR' 	 which casts to an artificial array. */
+comment|/* This is pseudo-Chill, similar to C's '(TYPE[])EXPR'          which casts to an artificial array. */
 name|expect
 argument_list|(
 literal|'('
@@ -2531,7 +2341,7 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case CONST:     case EXPR:       val = PEEK_LVAL();       FORWARD_TOKEN ();       break;
+block|case CONST:     case EXPR:       val = PEEK_LVAL ();       FORWARD_TOKEN ();       break;
 endif|#
 directive|endif
 case|case
@@ -3174,7 +2984,9 @@ begin_function
 specifier|static
 name|void
 name|parse_operand6
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3222,7 +3034,9 @@ begin_function
 specifier|static
 name|void
 name|parse_operand5
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|exp_opcode
@@ -3287,7 +3101,9 @@ begin_function
 specifier|static
 name|void
 name|parse_operand4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|exp_opcode
@@ -3362,7 +3178,9 @@ begin_function
 specifier|static
 name|void
 name|parse_operand3
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|exp_opcode
@@ -3429,7 +3247,9 @@ begin_function
 specifier|static
 name|void
 name|parse_operand2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|exp_opcode
@@ -3540,7 +3360,9 @@ begin_function
 specifier|static
 name|void
 name|parse_operand1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|exp_opcode
@@ -3599,7 +3421,9 @@ begin_function
 specifier|static
 name|void
 name|parse_operand0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|exp_opcode
@@ -3666,7 +3490,9 @@ begin_function
 specifier|static
 name|void
 name|parse_expr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|parse_operand0
 argument_list|()
@@ -3695,7 +3521,9 @@ begin_function
 specifier|static
 name|void
 name|parse_then_alternative
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|expect
 argument_list|(
@@ -3714,7 +3542,9 @@ begin_function
 specifier|static
 name|void
 name|parse_else_alternative
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3754,7 +3584,9 @@ begin_function
 specifier|static
 name|void
 name|parse_if_expression_body
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|parse_expr
 argument_list|()
@@ -3777,7 +3609,9 @@ begin_function
 specifier|static
 name|void
 name|parse_if_expression
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|require
 argument_list|(
@@ -3805,7 +3639,9 @@ begin_function
 specifier|static
 name|void
 name|parse_untyped_expr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -3880,7 +3716,9 @@ end_function
 begin_function
 name|int
 name|chill_parse
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|terminal_buffer
 index|[
@@ -4037,11 +3875,9 @@ specifier|static
 name|void
 name|growbuf_by_size
 parameter_list|(
-name|count
-parameter_list|)
 name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|growby
@@ -4106,7 +3942,9 @@ specifier|static
 name|char
 modifier|*
 name|match_simple_name_string
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4206,24 +4044,18 @@ specifier|static
 name|int
 name|decode_integer_value
 parameter_list|(
-name|base
-parameter_list|,
-name|tokptrptr
-parameter_list|,
-name|ivalptr
-parameter_list|)
 name|int
 name|base
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|tokptrptr
-decl_stmt|;
+parameter_list|,
 name|LONGEST
 modifier|*
 name|ivalptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4414,19 +4246,15 @@ specifier|static
 name|int
 name|decode_integer_literal
 parameter_list|(
-name|valptr
-parameter_list|,
-name|tokptrptr
-parameter_list|)
 name|LONGEST
 modifier|*
 name|valptr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|tokptrptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4615,7 +4443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  If it wasn't for the fact that floating point values can contain '_'     characters, we could just let strtod do all the hard work by letting it     try to consume as much of the current token buffer as possible and     find a legal conversion.  Unfortunately we need to filter out the '_'     characters before calling strtod, which we do by copying the other     legal chars to a local buffer to be converted.  However since we also     need to keep track of where the last unconsumed character in the input     buffer is, we have transfer only as many characters as may compose a     legal floating point value. */
+comment|/*  If it wasn't for the fact that floating point values can contain '_'    characters, we could just let strtod do all the hard work by letting it    try to consume as much of the current token buffer as possible and    find a legal conversion.  Unfortunately we need to filter out the '_'    characters before calling strtod, which we do by copying the other    legal chars to a local buffer to be converted.  However since we also    need to keep track of where the last unconsumed character in the input    buffer is, we have transfer only as many characters as may compose a    legal floating point value. */
 end_comment
 
 begin_function
@@ -4623,7 +4451,9 @@ specifier|static
 name|enum
 name|ch_terminal
 name|match_float_literal
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4944,7 +4774,9 @@ specifier|static
 name|enum
 name|ch_terminal
 name|match_string_literal
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5290,7 +5122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Recognize a character literal.  A character literal is single character    or a control sequence, enclosed in single quotes.  A control sequence    is a comma separated list of one or more integer literals, enclosed    in parenthesis and introduced with a circumflex character.     EX:  'a'  '^(7)'  '^(7,8)'     As a GNU chill extension, the syntax C'xx' is also recognized as a     character literal, where xx is a hex value for the character.     Note that more than a single character, enclosed in single quotes, is    a string literal.     Returns CHARACTER_LITERAL if a match is found.    */
+comment|/* Recognize a character literal.  A character literal is single character    or a control sequence, enclosed in single quotes.  A control sequence    is a comma separated list of one or more integer literals, enclosed    in parenthesis and introduced with a circumflex character.     EX:  'a'  '^(7)'  '^(7,8)'     As a GNU chill extension, the syntax C'xx' is also recognized as a     character literal, where xx is a hex value for the character.     Note that more than a single character, enclosed in single quotes, is    a string literal.     Returns CHARACTER_LITERAL if a match is found.  */
 end_comment
 
 begin_function
@@ -5298,7 +5130,9 @@ specifier|static
 name|enum
 name|ch_terminal
 name|match_character_literal
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5337,7 +5171,7 @@ literal|'\''
 operator|)
 condition|)
 block|{
-comment|/* We have a GNU chill extension form, so skip the leading "C'", 	 decode the hex value, and then ensure that we have a trailing 	 single quote character. */
+comment|/* We have a GNU chill extension form, so skip the leading "C'",          decode the hex value, and then ensure that we have a trailing          single quote character. */
 name|tokptr
 operator|+=
 literal|2
@@ -5386,7 +5220,7 @@ block|{
 name|tokptr
 operator|++
 expr_stmt|;
-comment|/* Determine which form we have, either a control sequence or the 	 single character form. */
+comment|/* Determine which form we have, either a control sequence or the          single character form. */
 if|if
 condition|(
 operator|*
@@ -5407,7 +5241,7 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* Match and decode a control sequence.  Return zero if we don't 		 find a valid integer literal, or if the next unconsumed character 		 after the integer literal is not the trailing ')'. */
+comment|/* Match and decode a control sequence.  Return zero if we don't 	         find a valid integer literal, or if the next unconsumed character 	         after the integer literal is not the trailing ')'. */
 name|tokptr
 operator|+=
 literal|2
@@ -5500,7 +5334,7 @@ name|tokptr
 operator|++
 expr_stmt|;
 block|}
-comment|/* The trailing quote has not yet been consumed.  If we don't find 	 it, then we have no match. */
+comment|/* The trailing quote has not yet been consumed.  If we don't find          it, then we have no match. */
 if|if
 condition|(
 operator|*
@@ -5563,7 +5397,9 @@ specifier|static
 name|enum
 name|ch_terminal
 name|match_integer_literal
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5608,11 +5444,6 @@ directive|if
 name|defined
 argument_list|(
 name|CC_HAS_LONG_LONG
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__STDC__
 argument_list|)
 if|if
 condition|(
@@ -5672,7 +5503,9 @@ specifier|static
 name|enum
 name|ch_terminal
 name|match_bitstring_literal
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -5914,7 +5747,7 @@ name|k
 init|=
 name|TARGET_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 condition|?
 name|bits_per_char
 operator|-
@@ -5927,7 +5760,7 @@ control|(
 init|;
 name|TARGET_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 condition|?
 name|k
 operator|>=
@@ -5939,7 +5772,7 @@ name|bits_per_char
 condition|;
 name|TARGET_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 condition|?
 name|k
 operator|--
@@ -5970,7 +5803,7 @@ operator||=
 operator|(
 name|TARGET_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 operator|)
 condition|?
 operator|(
@@ -6304,7 +6137,9 @@ specifier|static
 name|enum
 name|ch_terminal
 name|ch_lex
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -6337,7 +6172,7 @@ name|lexptr
 operator|++
 expr_stmt|;
 block|}
-comment|/* Look for special single character cases which can't be the first        character of some other multicharacter token. */
+comment|/* Look for special single character cases which can't be the first      character of some other multicharacter token. */
 switch|switch
 condition|(
 operator|*
@@ -6388,7 +6223,7 @@ operator|++
 operator|)
 return|;
 block|}
-comment|/* Look for characters which start a particular kind of multicharacter        token, such as a character literal, register name, convenience        variable name, string literal, etc. */
+comment|/* Look for characters which start a particular kind of multicharacter      token, such as a character literal, register name, convenience      variable name, string literal, etc. */
 switch|switch
 condition|(
 operator|*
@@ -6401,7 +6236,7 @@ case|:
 case|case
 literal|'\"'
 case|:
-comment|/* First try to match a string literal, which is any 	     sequence of characters enclosed in matching single or double 	     quotes, except that a single character inside single quotes 	     is a character literal, so we have to catch that case also. */
+comment|/* First try to match a string literal, which is any          sequence of characters enclosed in matching single or double          quotes, except that a single character inside single quotes          is a character literal, so we have to catch that case also. */
 name|token
 operator|=
 name|match_string_literal
@@ -6594,7 +6429,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Look for single character cases which which could be the first        character of some other multicharacter token, but aren't, or we        would already have found it. */
+comment|/* Look for single character cases which which could be the first      character of some other multicharacter token, but aren't, or we      would already have found it. */
 switch|switch
 condition|(
 operator|*
@@ -6624,7 +6459,7 @@ operator|++
 operator|)
 return|;
 block|}
-comment|/* Look for a float literal before looking for an integer literal, so        we match as much of the input stream as possible. */
+comment|/* Look for a float literal before looking for an integer literal, so      we match as much of the input stream as possible. */
 name|token
 operator|=
 name|match_float_literal
@@ -6679,7 +6514,7 @@ name|token
 operator|)
 return|;
 block|}
-comment|/* Try to match a simple name string, and if a match is found, then        further classify what sort of name it is and return an appropriate        token.  Note that attempting to match a simple name string consumes        the token from lexptr, so we can't back out if we later find that        we can't classify what sort of name it is. */
+comment|/* Try to match a simple name string, and if a match is found, then      further classify what sort of name it is and return an appropriate      token.  Note that attempting to match a simple name string consumes      the token from lexptr, so we can't back out if we later find that      we can't classify what sort of name it is. */
 name|inputname
 operator|=
 name|match_simple_name_string
@@ -7087,11 +6922,13 @@ name|inputname
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|LOC_UNRESOLVED
-case|:
-name|error
+default|default:
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"unhandled SYMBOL_CLASS in ch_lex()"
 argument_list|)
 expr_stmt|;
@@ -7127,7 +6964,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Catch single character tokens which are not part of some        longer token. */
+comment|/* Catch single character tokens which are not part of some      longer token. */
 switch|switch
 condition|(
 operator|*
@@ -7182,20 +7019,16 @@ specifier|static
 name|void
 name|write_lower_upper_value
 parameter_list|(
-name|opcode
-parameter_list|,
-name|type
-parameter_list|)
 name|enum
 name|exp_opcode
 name|opcode
-decl_stmt|;
+parameter_list|,
 comment|/* Either UNOP_LOWER or UNOP_UPPER */
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7256,12 +7089,10 @@ begin_function
 name|void
 name|chill_error
 parameter_list|(
-name|msg
-parameter_list|)
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Never used. */
 block|}

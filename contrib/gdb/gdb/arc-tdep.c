@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ARC target-dependent stuff.    Copyright (C) 1995, 1997 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ARC target-dependent stuff.    Copyright 1995, 1996, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -51,6 +51,28 @@ directive|include
 file|"gdbcmd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
+begin_comment
+comment|/* Local functions */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|arc_set_cpu_type
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Current CPU, set with the "set cpu" command.  */
 end_comment
@@ -96,9 +118,27 @@ index|[]
 init|=
 block|{
 block|{
-literal|"base"
+literal|"arc5"
 block|,
-name|bfd_mach_arc_base
+name|bfd_mach_arc_5
+block|}
+block|,
+block|{
+literal|"arc6"
+block|,
+name|bfd_mach_arc_6
+block|}
+block|,
+block|{
+literal|"arc7"
+block|,
+name|bfd_mach_arc_7
+block|}
+block|,
+block|{
+literal|"arc8"
+block|,
+name|bfd_mach_arc_8
 block|}
 block|,
 block|{
@@ -295,49 +335,40 @@ begin_comment
 comment|/* Codestream stuff.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|codestream_read
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|codestream_seek
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|int
 name|codestream_fill
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -359,6 +390,10 @@ name|CORE_ADDR
 name|codestream_addr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* FIXME assumes sizeof (int) == 32? */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -418,11 +453,9 @@ name|unsigned
 name|int
 name|codestream_fill
 parameter_list|(
-name|peek_flag
-parameter_list|)
 name|int
 name|peek_flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|codestream_addr
 operator|=
@@ -470,109 +503,45 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* FIXME: check return code?  */
-comment|/* Handle byte order differences.  */
-if|if
-condition|(
-name|HOST_BYTE_ORDER
-operator|!=
-name|TARGET_BYTE_ORDER
-condition|)
+comment|/* Handle byte order differences -> convert to host byte ordering.  */
 block|{
-specifier|register
-name|unsigned
 name|int
 name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|n
-init|=
-sizeof|sizeof
-argument_list|(
-name|codestream_buf
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-specifier|register
-name|char
-name|tmp
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 for|for
 control|(
 name|i
 operator|=
 literal|0
-operator|,
-name|p
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|codestream_buf
 init|;
 name|i
 operator|<
 name|CODESTREAM_BUFSIZ
 condition|;
-operator|++
 name|i
-operator|,
-name|p
-operator|+=
-name|n
-control|)
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|n
-operator|/
-literal|2
-condition|;
 operator|++
-name|j
 control|)
-name|tmp
-operator|=
-name|p
+name|codestream_buf
 index|[
-name|j
-index|]
-operator|,
-name|p
-index|[
-name|j
+name|i
 index|]
 operator|=
-name|p
+name|extract_unsigned_integer
+argument_list|(
+operator|&
+name|codestream_buf
 index|[
-name|n
-operator|-
-literal|1
-operator|-
-name|j
+name|i
 index|]
-operator|,
-name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|codestream_buf
 index|[
-name|n
-operator|-
-literal|1
-operator|-
-name|j
+name|i
 index|]
-operator|=
-name|tmp
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -596,11 +565,9 @@ specifier|static
 name|void
 name|codestream_seek
 parameter_list|(
-name|place
-parameter_list|)
 name|CORE_ADDR
 name|place
-decl_stmt|;
+parameter_list|)
 block|{
 name|codestream_next_addr
 operator|=
@@ -643,18 +610,14 @@ specifier|static
 name|void
 name|codestream_read
 parameter_list|(
-name|buf
-parameter_list|,
-name|count
-parameter_list|)
 name|unsigned
 name|int
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -704,11 +667,9 @@ name|unsigned
 name|int
 name|setup_prologue_scan
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -739,11 +700,9 @@ specifier|static
 name|long
 name|arc_get_frame_setup
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -865,7 +824,7 @@ operator|=
 name|codestream_get
 argument_list|()
 expr_stmt|;
-comment|/* Frame may not be necessary, even though blink is saved. 	 At least this is something we recognize.  */
+comment|/* Frame may not be necessary, even though blink is saved.          At least this is something we recognize.  */
 name|frame_size
 operator|=
 literal|0
@@ -1055,9 +1014,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|insn
 operator|&
 name|OPMASK
+operator|)
 operator|==
 literal|0x60000000
 condition|)
@@ -1100,18 +1061,14 @@ end_comment
 
 begin_function
 name|CORE_ADDR
-name|skip_prologue
+name|arc_skip_prologue
 parameter_list|(
-name|pc
-parameter_list|,
-name|frameless_p
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|,
 name|int
 name|frameless_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -1241,13 +1198,11 @@ begin_function
 name|CORE_ADDR
 name|arc_frame_saved_pc
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|func_start
@@ -1417,20 +1372,16 @@ begin_function
 name|void
 name|frame_find_saved_regs
 parameter_list|(
-name|fip
-parameter_list|,
-name|fsrp
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_saved_regs
 modifier|*
 name|fsrp
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|locals
@@ -1672,8 +1623,10 @@ end_function
 
 begin_function
 name|void
-name|push_dummy_frame
-parameter_list|()
+name|arc_push_dummy_frame
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|sp
@@ -1789,8 +1742,10 @@ end_function
 
 begin_function
 name|void
-name|pop_frame
-parameter_list|()
+name|arc_pop_frame
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|frame_info
@@ -1973,25 +1928,17 @@ specifier|static
 name|insn_type
 name|get_insn_type
 parameter_list|(
-name|insn
-parameter_list|,
-name|pc
-parameter_list|,
-name|target
-parameter_list|)
 name|unsigned
 name|long
 name|insn
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|pc
-decl_stmt|,
-decl|*
+parameter_list|,
+name|CORE_ADDR
+modifier|*
 name|target
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -2068,7 +2015,7 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* ??? It isn't clear that this is always the right answer. 	 The problem occurs when the next insn is an 8 byte insn.  If the 	 branch is conditional there's no worry as there shouldn't be an 8 	 byte insn following.  The programmer may be cheating if s/he knows 	 the branch will never be taken, but we don't deal with that. 	 Note that the programmer is also allowed to play games by putting 	 an insn with long immediate data in the delay slot and then duplicate 	 the long immediate data at the branch target.  Ugh!  */
+comment|/* ??? It isn't clear that this is always the right answer.          The problem occurs when the next insn is an 8 byte insn.  If the          branch is conditional there's no worry as there shouldn't be an 8          byte insn following.  The programmer may be cheating if s/he knows          the branch will never be taken, but we don't deal with that.          Note that the programmer is also allowed to play games by putting          an insn with long immediate data in the delay slot and then duplicate          the long immediate data at the branch target.  Ugh!  */
 if|if
 condition|(
 name|X_N
@@ -2180,7 +2127,7 @@ return|;
 return|return
 name|BRANCH8
 return|;
-default|default :
+default|default:
 comment|/* arithmetic insns, etc. */
 if|if
 condition|(
@@ -2216,7 +2163,7 @@ name|NORMAL4
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* single_step() is called just before we want to resume the inferior, if we    want to single-step it but there is no hardware or kernel single-step    support.  We find all the possible targets of the coming instruction and    breakpoint them.     single_step is also called just after the inferior stops.  If we had    set up a simulated single-step, we undo our damage.  */
@@ -2226,18 +2173,14 @@ begin_function
 name|void
 name|arc_software_single_step
 parameter_list|(
-name|ignore
-parameter_list|,
-name|insert_breakpoints_p
-parameter_list|)
 name|enum
 name|target_signal
 name|ignore
-decl_stmt|;
+parameter_list|,
 comment|/* sig but we don't need it */
 name|int
 name|insert_breakpoints_p
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|CORE_ADDR
@@ -2352,7 +2295,7 @@ name|type
 operator|==
 name|BRANCH8
 operator|)
-comment|/* Watch out for branches to the following location. 	     We just stored a breakpoint there and another call to 	     target_insert_breakpoint will think the real insn is the 	     breakpoint we just stored there.  */
+comment|/* Watch out for branches to the following location.          We just stored a breakpoint there and another call to          target_insert_breakpoint will think the real insn is the          breakpoint we just stored there.  */
 operator|&&
 name|target
 operator|!=
@@ -2419,10 +2362,14 @@ end_function
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Because of Multi-arch, GET_LONGJMP_TARGET is always defined.  So test    for a definition of JB_PC.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GET_LONGJMP_TARGET
+name|JB_PC
 end_ifdef
 
 begin_comment
@@ -2433,12 +2380,10 @@ begin_function
 name|int
 name|get_longjmp_target
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 modifier|*
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2549,17 +2494,13 @@ specifier|static
 name|int
 name|arc_print_insn
 parameter_list|(
-name|vma
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|vma
-decl_stmt|;
+parameter_list|,
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -2600,11 +2541,7 @@ name|current_disasm
 operator|=
 name|arc_get_disassembler
 argument_list|(
-name|current_mach
-argument_list|,
-name|current_endian
-operator|==
-name|BIG_ENDIAN
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2633,17 +2570,13 @@ begin_function
 name|void
 name|arc_set_cpu_type_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2698,7 +2631,7 @@ expr_stmt|;
 comment|/* Restore the value.  */
 name|tmp_arc_cpu_type
 operator|=
-name|strsave
+name|xstrdup
 argument_list|(
 name|arc_cpu_type
 argument_list|)
@@ -2724,7 +2657,7 @@ expr_stmt|;
 comment|/* Restore its value.  */
 name|tmp_arc_cpu_type
 operator|=
-name|strsave
+name|xstrdup
 argument_list|(
 name|arc_cpu_type
 argument_list|)
@@ -2738,17 +2671,13 @@ specifier|static
 name|void
 name|arc_show_cpu_type_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -2757,15 +2686,14 @@ comment|/* Modify the actual cpu type.    Result is a boolean indicating success
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|arc_set_cpu_type
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2847,7 +2775,9 @@ end_escape
 begin_function
 name|void
 name|_initialize_arc_tdep
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|cmd_list_element
@@ -2877,13 +2807,12 @@ operator|&
 name|setlist
 argument_list|)
 expr_stmt|;
+name|set_cmd_cfunc
+argument_list|(
 name|c
-operator|->
-name|function
-operator|.
-name|cfunc
-operator|=
+argument_list|,
 name|arc_set_cpu_type_command
+argument_list|)
 expr_stmt|;
 name|c
 operator|=
@@ -2895,18 +2824,17 @@ operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
+name|set_cmd_cfunc
+argument_list|(
 name|c
-operator|->
-name|function
-operator|.
-name|cfunc
-operator|=
+argument_list|,
 name|arc_show_cpu_type_command
+argument_list|)
 expr_stmt|;
-comment|/* We have to use strsave here because the `set' command frees it before      setting a new value.  */
+comment|/* We have to use xstrdup() here because the `set' command frees it      before setting a new value.  */
 name|tmp_arc_cpu_type
 operator|=
-name|strsave
+name|xstrdup
 argument_list|(
 name|DEFAULT_ARC_CPU_TYPE
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for complaint handling during symbol reading in GDB.    Copyright (C) 1990, 1991, 1992  Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for complaint handling during symbol reading in GDB.    Copyright 1990, 1991, 1992, 1993, 1995, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -20,6 +20,16 @@ include|#
 directive|include
 file|"gdbcmd.h"
 end_include
+
+begin_function_decl
+specifier|extern
+name|void
+name|_initialize_complaints
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Structure to manage complaints about symbol file contents.  */
@@ -67,7 +77,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Should each complaint be self explanatory, or should we assume that    a series of complaints is being produced?     case 0:  self explanatory message.    case 1:  First message of a series that must start off with explanation.    case 2:  Subsequent message, when user already knows we are reading             symbols and we can just state our piece.  */
+comment|/* Should each complaint be self explanatory, or should we assume that    a series of complaints is being produced?     case 0:  self explanatory message.    case 1:  First message of a series that must start off with explanation.    case 2:  Subsequent message, when user already knows we are reading    symbols and we can just state our piece.  */
 end_comment
 
 begin_decl_stmt
@@ -76,17 +86,6 @@ name|int
 name|complaint_series
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* External variables and functions referenced. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|info_verbose
 decl_stmt|;
 end_decl_stmt
 
@@ -101,15 +100,8 @@ begin_comment
 comment|/* Print a complaint about the input symbols, and link the complaint block    into a chain for later handling.  */
 end_comment
 
-begin_comment
-comment|/* VARARGS */
-end_comment
-
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|complain
 parameter_list|(
 name|struct
@@ -119,22 +111,10 @@ name|complaint
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|complain
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -142,31 +122,6 @@ argument_list|,
 name|complaint
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|struct
-name|complaint
-modifier|*
-name|complaint
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|complaint
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-expr|struct
-name|complaint
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|complaint
 operator|->
 name|counter
@@ -227,12 +182,32 @@ comment|/* Isolated messages, must be self-explanatory.  */
 case|case
 literal|0
 case|:
+if|if
+condition|(
+name|warning_hook
+condition|)
+call|(
+modifier|*
+name|warning_hook
+call|)
+argument_list|(
+name|complaint
+operator|->
+name|message
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|begin_line
 argument_list|()
 expr_stmt|;
-name|puts_filtered
+name|fputs_filtered
 argument_list|(
 literal|"During symbol reading, "
+argument_list|,
+name|gdb_stderr
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -240,8 +215,10 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|vprintf_filtered
+name|vfprintf_filtered
 argument_list|(
+name|gdb_stderr
+argument_list|,
 name|complaint
 operator|->
 name|message
@@ -249,25 +226,27 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|puts_filtered
+name|fputs_filtered
 argument_list|(
 literal|".\n"
+argument_list|,
+name|gdb_stderr
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* First of a series, without `set verbose'.  */
 case|case
 literal|1
 case|:
-name|begin_line
-argument_list|()
-expr_stmt|;
-name|puts_filtered
-argument_list|(
-literal|"During symbol reading..."
-argument_list|)
-expr_stmt|;
-name|vprintf_filtered
+if|if
+condition|(
+name|warning_hook
+condition|)
+call|(
+modifier|*
+name|warning_hook
+call|)
 argument_list|(
 name|complaint
 operator|->
@@ -276,9 +255,34 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|puts_filtered
+else|else
+block|{
+name|begin_line
+argument_list|()
+expr_stmt|;
+name|fputs_filtered
+argument_list|(
+literal|"During symbol reading..."
+argument_list|,
+name|gdb_stderr
+argument_list|)
+expr_stmt|;
+name|vfprintf_filtered
+argument_list|(
+name|gdb_stderr
+argument_list|,
+name|complaint
+operator|->
+name|message
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|fputs_filtered
 argument_list|(
 literal|"..."
+argument_list|,
+name|gdb_stderr
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -289,10 +293,18 @@ expr_stmt|;
 name|complaint_series
 operator|++
 expr_stmt|;
+block|}
 break|break;
-comment|/* Subsequent messages of a series, or messages under `set verbose'. 	 (We'll already have produced a "Reading in symbols for XXX..." 	 message and will clean up at the end with a newline.)  */
+comment|/* Subsequent messages of a series, or messages under `set verbose'.          (We'll already have produced a "Reading in symbols for XXX..."          message and will clean up at the end with a newline.)  */
 default|default:
-name|vprintf_filtered
+if|if
+condition|(
+name|warning_hook
+condition|)
+call|(
+modifier|*
+name|warning_hook
+call|)
 argument_list|(
 name|complaint
 operator|->
@@ -301,9 +313,24 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|puts_filtered
+else|else
+block|{
+name|vfprintf_filtered
+argument_list|(
+name|gdb_stderr
+argument_list|,
+name|complaint
+operator|->
+name|message
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|fputs_filtered
 argument_list|(
 literal|"..."
+argument_list|,
+name|gdb_stderr
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -312,10 +339,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* If GDB dumps core, we'd like to see the complaints first.  Presumably      GDB will not be sending so many complaints that this becomes a      performance hog.  */
 name|gdb_flush
 argument_list|(
-name|gdb_stdout
+name|gdb_stderr
 argument_list|)
 expr_stmt|;
 name|va_end
@@ -334,16 +362,12 @@ begin_function
 name|void
 name|clear_complaints
 parameter_list|(
+name|int
 name|sym_reading
 parameter_list|,
+name|int
 name|noisy
 parameter_list|)
-name|int
-name|sym_reading
-decl_stmt|;
-name|int
-name|noisy
-decl_stmt|;
 block|{
 name|struct
 name|complaint
@@ -387,6 +411,9 @@ operator|&&
 name|complaint_series
 operator|>
 literal|1
+operator|&&
+operator|!
+name|warning_hook
 condition|)
 block|{
 comment|/* Terminate previous series, since caller won't.  */
@@ -412,7 +439,9 @@ end_function
 begin_function
 name|void
 name|_initialize_complaints
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_show_from_set
 argument_list|(

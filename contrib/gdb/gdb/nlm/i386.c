@@ -131,7 +131,9 @@ end_function_decl
 begin_function
 name|void
 name|flush_i_cache
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -143,19 +145,15 @@ begin_function
 name|void
 name|frame_to_registers
 parameter_list|(
-name|frame
-parameter_list|,
-name|regs
-parameter_list|)
 name|struct
 name|StackFrame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|regs
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Copy EAX -> EDI */
 name|mem2hex
@@ -293,19 +291,15 @@ begin_function
 name|void
 name|registers_to_frame
 parameter_list|(
-name|regs
-parameter_list|,
-name|frame
-parameter_list|)
 name|char
 modifier|*
 name|regs
-decl_stmt|;
+parameter_list|,
 name|struct
 name|StackFrame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Copy EAX -> EDI */
 name|hex2mem
@@ -439,13 +433,11 @@ begin_function
 name|void
 name|set_step_traps
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|StackFrame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|frame
 operator|->
@@ -460,13 +452,11 @@ begin_function
 name|void
 name|clear_step_traps
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|StackFrame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|frame
 operator|->
@@ -482,19 +472,15 @@ begin_function
 name|void
 name|do_status
 parameter_list|(
-name|ptr
-parameter_list|,
-name|frame
-parameter_list|)
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|StackFrame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|sigval

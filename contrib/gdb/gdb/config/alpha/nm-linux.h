@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native definitions for alpha running Linux.    Copyright (C) 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Native definitions for alpha running GNU/Linux.     Copyright 1993, 1994, 1996, 1998, 2000, 2001, 2002 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NM_LINUX_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NM_LINUX_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"nm-linux.h"
+end_include
 
 begin_comment
 comment|/* Figure out where the longjmp will land.  We expect that we have just entered    longjmp and haven't yet setup the stack frame, so the args are still in the    argument regs.  A0_REGNUM points at the jmp_buf structure from which we    extract the pc (JB_PC) that we will land at.  The pc is copied into ADDR.    This routine returns true on success */
@@ -17,29 +35,16 @@ parameter_list|)
 value|get_longjmp_target(ADDR)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|get_longjmp_target
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Tell gdb that we can attach and detach other processes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATTACH_DETACH
-end_define
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* ptrace register ``addresses'' are absolute.  */
@@ -51,6 +56,10 @@ directive|define
 name|U_REGS_OFFSET
 value|0
 end_define
+
+begin_comment
+comment|/* FIXME: This is probably true, or should be, on all GNU/Linux ports.    IA64?  Sparc64?  */
+end_comment
 
 begin_define
 define|#
@@ -81,56 +90,13 @@ name|CANNOT_STEP_BREAKPOINT
 end_define
 
 begin_comment
-comment|/* Linux has shared libraries.  */
+comment|/* GNU/Linux has shared libraries.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GDB_TARGET_HAS_SHARED_LIBS
-end_define
-
-begin_comment
-comment|/* Support for shared libraries.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"solib.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SVR4_SHARED_LIBS
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_ELF64
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* This is a lie.  It's actually in stdio.h. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSIGNAL_IN_SIGNAL_H
 end_define
 
 begin_comment
@@ -146,6 +112,15 @@ name|regsetp
 parameter_list|)
 value|((long *) (regsetp))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NM_LINUX_H */
+end_comment
 
 end_unit
 

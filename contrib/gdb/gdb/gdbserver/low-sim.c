@@ -1,24 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface to simulators, for the remote server for GDB.    Copyright (C) 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface to simulators, for the remote server for GDB.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"server.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"server.h"
 end_include
 
 begin_include
@@ -60,8 +54,9 @@ comment|/* in sim/common/callback.c */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
-name|registers
+name|my_registers
 index|[
 name|REGISTER_BYTES
 index|]
@@ -71,6 +66,15 @@ operator|(
 name|aligned
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|registers
+init|=
+name|my_registers
 decl_stmt|;
 end_decl_stmt
 
@@ -104,14 +108,12 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|generic_load
+name|mygeneric_load
 parameter_list|(
-name|loadfile_bfd
-parameter_list|)
 name|bfd
 modifier|*
 name|loadfile_bfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -181,7 +183,7 @@ name|s
 operator|->
 name|lma
 expr_stmt|;
-comment|/* Is this really necessary?  I guess it gives the user something 		 to look at during a long download.  */
+comment|/* Is this really necessary?  I guess it gives the user something 	         to look at during a long download.  */
 name|printf
 argument_list|(
 literal|"Loading section %s, size 0x%lx lma 0x%lx\n"
@@ -260,19 +262,15 @@ begin_function
 name|int
 name|create_inferior
 parameter_list|(
+name|char
+modifier|*
 name|program
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|argv
 parameter_list|)
-name|char
-modifier|*
-name|program
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
 block|{
 name|bfd
 modifier|*
@@ -283,9 +281,6 @@ name|pid
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TARGET_BYTE_ORDER_SELECTABLE
 name|char
 modifier|*
 modifier|*
@@ -294,8 +289,6 @@ decl_stmt|;
 name|int
 name|nargs
 decl_stmt|;
-endif|#
-directive|endif
 name|abfd
 operator|=
 name|bfd_openr
@@ -364,9 +357,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|TARGET_BYTE_ORDER_SELECTABLE
 comment|/* Add "-E big" or "-E little" to the argument list depending on the      endianness of the program to be loaded.  */
 for|for
 control|(
@@ -467,8 +457,6 @@ name|argv
 operator|=
 name|new_argv
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Create an instance of the simulator.  */
 name|default_callback
 operator|.
@@ -523,7 +511,7 @@ argument_list|)
 operator|==
 name|SIM_RC_FAIL
 condition|)
-name|generic_load
+name|mygeneric_load
 argument_list|(
 name|abfd
 argument_list|)
@@ -558,13 +546,34 @@ block|}
 end_function
 
 begin_comment
+comment|/* Attaching is not supported.  */
+end_comment
+
+begin_function
+name|int
+name|myattach
+parameter_list|(
+name|int
+name|pid
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Kill the inferior process.  Make us have no inferior.  */
 end_comment
 
 begin_function
 name|void
 name|kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sim_close
 argument_list|(
@@ -593,11 +602,9 @@ specifier|static
 name|void
 name|fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|sim_fetch_register
 argument_list|(
@@ -631,11 +638,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -684,11 +689,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -750,11 +753,9 @@ begin_function
 name|int
 name|mythread_alive
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|1
@@ -771,12 +772,10 @@ name|unsigned
 name|char
 name|mywait
 parameter_list|(
-name|status
-parameter_list|)
 name|char
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|sigrc
@@ -871,16 +870,12 @@ begin_function
 name|void
 name|myresume
 parameter_list|(
+name|int
 name|step
 parameter_list|,
+name|int
 name|signo
 parameter_list|)
-name|int
-name|step
-decl_stmt|;
-name|int
-name|signo
-decl_stmt|;
 block|{
 comment|/* Should be using target_signal_to_host() or signal numbers in target.h      to convert GDB signal number to target signal number.  */
 name|sim_resume
@@ -903,22 +898,16 @@ begin_function
 name|void
 name|read_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|sim_read
 argument_list|(
@@ -942,22 +931,16 @@ begin_function
 name|int
 name|write_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|sim_write
 argument_list|(
@@ -977,17 +960,14 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void initialize () {   inferior_pid = 0; }  int have_inferior_p () {   return inferior_pid != 0; }
-endif|#
-directive|endif
-end_endif
+begin_function
+name|void
+name|initialize_low
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
 
 end_unit
 

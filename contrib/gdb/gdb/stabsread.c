@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support routines for decoding "stabs" debugging information format.    Copyright 1986, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 1998              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support routines for decoding "stabs" debugging information format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"doublest.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -149,6 +155,16 @@ directive|undef
 name|EXTERN
 end_undef
 
+begin_function_decl
+specifier|extern
+name|void
+name|_initialize_stabsread
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* The routines that read and process a complete stabs for a C struct or     C++ class pass lists of data member fields and lists of member function    fields in an instance of a field_info structure, as defined below.    This is part of some reorganization of low level C++ support and is    expected to eventually go away... (FIXME) */
 end_comment
@@ -165,7 +181,7 @@ name|nextfield
 modifier|*
 name|next
 decl_stmt|;
-comment|/* This is the raw visibility from the stab.  It is not checked 	 for being one of the visibilities we recognize, so code which 	 examines this field better be able to deal.  */
+comment|/* This is the raw visibility from the stab.  It is not checked 	   for being one of the visibilities we recognize, so code which 	   examines this field better be able to deal.  */
 name|int
 name|visibility
 decl_stmt|;
@@ -197,767 +213,677 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_one_struct_field
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|get_substring
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|dbx_alloc_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 index|[
 literal|2
 index|]
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|long
 name|read_huge_number
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|error_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|patch_block_stabs
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|pending
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|pending_stabs
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fix_common_block
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symbol
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_type_number
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|read_range_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
 index|[
 literal|2
 index|]
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|read_sun_builtin_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
 index|[
 literal|2
 index|]
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|read_sun_floating_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
 index|[
 literal|2
 index|]
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|read_enum_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|rs6000_builtin_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_member_functions
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_struct_fields
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_baseclasses
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_tilde_fields
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|attach_fn_fields_to_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|attach_fields_to_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|read_struct_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|read_array_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 modifier|*
 name|read_args
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_cpp_abbrev
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* new functions added for cfront support */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|copy_cfront_struct_fields
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|get_cfront_method_physname
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_cfront_baseclasses
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_cfront_static_fields
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|read_cfront_member_functions
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|field_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* end new functions added for cfront support */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|add_live_range
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|symbol
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|resolve_live_range
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|symbol
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|process_reference
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|string
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|CORE_ADDR
 name|ref_search_value
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|refnum
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|resolve_symbol_reference
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|symbol
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|stabsread_clear_cache
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -1009,16 +935,42 @@ begin_comment
 comment|/* Define this as 1 if a pcc declaration of a char or short argument    gives the correct address.  Otherwise assume pcc gives the    address of the corresponding int, which is not the same on a    big-endian machine.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|BELIEVE_PCC_PROMOTION
-end_ifndef
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|BELIEVE_PCC_PROMOTION
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BELIEVE_PCC_PROMOTION_TYPE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BELIEVE_PCC_PROMOTION_TYPE
 value|0
 end_define
 
@@ -1098,7 +1050,7 @@ name|complaint
 name|error_type_complaint
 init|=
 block|{
-literal|"debug info mismatch between compiler and debugger"
+literal|"couldn't parse type; debugger out of date?"
 block|,
 literal|0
 block|,
@@ -1365,36 +1317,32 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_init_type_vector
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|os9k_init_type_vector
 parameter_list|(
-name|tv
-parameter_list|)
 name|struct
 name|type
 modifier|*
 modifier|*
 name|tv
-decl_stmt|;
+parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -1460,14 +1408,12 @@ modifier|*
 modifier|*
 name|dbx_lookup_type
 parameter_list|(
-name|typenums
-parameter_list|)
 name|int
 name|typenums
 index|[
 literal|2
 index|]
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1587,7 +1533,7 @@ operator|&
 name|temp_type
 return|;
 block|}
-comment|/* Type is defined outside of header files. 	 Find it in this object file's type vector.  */
+comment|/* Type is defined outside of header files.          Find it in this object file's type vector.  */
 if|if
 condition|(
 name|index
@@ -1920,21 +1866,17 @@ name|type
 modifier|*
 name|dbx_alloc_type
 parameter_list|(
-name|typenums
-parameter_list|,
-name|objfile
-parameter_list|)
 name|int
 name|typenums
 index|[
 literal|2
 index|]
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2006,27 +1948,21 @@ specifier|static
 name|void
 name|patch_block_stabs
 parameter_list|(
-name|symbols
-parameter_list|,
-name|stabs
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|pending
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|,
 name|struct
 name|pending_stabs
 modifier|*
 name|stabs
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ii
@@ -2049,7 +1985,7 @@ condition|(
 name|stabs
 condition|)
 block|{
-comment|/* for all the stab entries, find their corresponding symbols and  	 patch their types! */
+comment|/* for all the stab entries, find their corresponding symbols and           patch their types! */
 for|for
 control|(
 name|ii
@@ -2135,8 +2071,8 @@ operator|!
 name|sym
 condition|)
 block|{
-comment|/* FIXME-maybe: it would be nice if we noticed whether 		 the variable was defined *anywhere*, not just whether 		 it is defined in this compilation unit.  But neither 		 xlc or GCC seem to need such a definition, and until 		 we do psymtabs (so that the minimal symbols from all 		 compilation units are available now), I'm not sure 		 how to get the information.  */
-comment|/* On xcoff, if a global is defined and never referenced, 		 ld will remove it from the executable.  There is then 		 a N_GSYM stab for it, but no regular (C_EXT) symbol.  */
+comment|/* FIXME-maybe: it would be nice if we noticed whether 	         the variable was defined *anywhere*, not just whether 	         it is defined in this compilation unit.  But neither 	         xlc or GCC seem to need such a definition, and until 	         we do psymtabs (so that the minimal symbols from all 	         compilation units are available now), I'm not sure 	         how to get the information.  */
+comment|/* On xcoff, if a global is defined and never referenced, 	         ld will remove it from the executable.  There is then 	         a N_GSYM stab for it, but no regular (C_EXT) symbol.  */
 name|sym
 operator|=
 operator|(
@@ -2350,21 +2286,17 @@ specifier|static
 name|int
 name|read_type_number
 parameter_list|(
-name|pp
-parameter_list|,
-name|typenums
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|int
 modifier|*
 name|typenums
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|nbits
@@ -2479,33 +2411,6 @@ end_function
 begin_escape
 end_escape
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|REG_STRUCT_HAS_ADDR
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|REG_STRUCT_HAS_ADDR
-parameter_list|(
-name|gcc_p
-parameter_list|,
-name|type
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2586,18 +2491,14 @@ name|char
 modifier|*
 name|get_substring
 parameter_list|(
-name|p
-parameter_list|,
-name|c
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2659,12 +2560,10 @@ name|char
 modifier|*
 name|get_cfront_method_physname
 parameter_list|(
-name|fname
-parameter_list|)
 name|char
 modifier|*
 name|fname
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -2811,7 +2710,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read base classes within cfront class definition.    eg: A:ZcA;1@Bpub v2@Bvirpri;__ct__1AFv func__1AFv *sfunc__1AFv ;as__1A ;;              ^^^^^^^^^^^^^^^^^^         A:ZcA;;foopri__1AFv foopro__1AFv __ct__1AFv __ct__1AFRC1A foopub__1AFv ;;;              ^    */
+comment|/* Read base classes within cfront class definition.    eg: A:ZcA;1@Bpub v2@Bvirpri;__ct__1AFv func__1AFv *sfunc__1AFv ;as__1A ;;    ^^^^^^^^^^^^^^^^^^     A:ZcA;;foopri__1AFv foopro__1AFv __ct__1AFv __ct__1AFRC1A foopub__1AFv ;;;    ^  */
 end_comment
 
 begin_function
@@ -2819,34 +2718,26 @@ specifier|static
 name|int
 name|read_cfront_baseclasses
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
-name|struct
-name|objfile
-modifier|*
-name|objfile
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -3051,7 +2942,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new
 argument_list|)
@@ -3157,7 +3048,7 @@ name|VISIBILITY_PUBLIC
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Bad visibility format.  Complain and treat it as                public.  */
+comment|/* Bad visibility format.  Complain and treat it as 	     public.  */
 block|{
 specifier|static
 name|struct
@@ -3219,9 +3110,9 @@ operator|*
 name|pp
 operator|)
 expr_stmt|;
-comment|/* Set the bit offset of the portion of the object corresponding  	   to this baseclass.  Always zero in the absence of            multiple inheritance.  */
-comment|/* Unable to read bit position from stabs; 	   Assuming no multiple inheritance for now FIXME! */
-comment|/* We may have read this in the structure definition; 	   now we should fixup the members to be the actual base classes */
+comment|/* Set the bit offset of the portion of the object corresponding           to this baseclass.  Always zero in the absence of          multiple inheritance.  */
+comment|/* Unable to read bit position from stabs;          Assuming no multiple inheritance for now FIXME! */
+comment|/* We may have read this in the structure definition;          now we should fixup the members to be the actual base classes */
 name|FIELD_BITPOS
 argument_list|(
 name|new
@@ -3335,7 +3226,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*demangled_name*/
+comment|/*demangled_name */
 if|if
 condition|(
 name|bsym
@@ -3394,7 +3285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* read cfront member functions.    pp points to string starting with list of functions    eg: A:ZcA;1@Bpub v2@Bvirpri;__ct__1AFv func__1AFv *sfunc__1AFv ;as__1A ;;                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         A:ZcA;;foopri__1AFv foopro__1AFv __ct__1AFv __ct__1AFRC1A foopub__1AFv ;;;               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  */
+comment|/* read cfront member functions.    pp points to string starting with list of functions    eg: A:ZcA;1@Bpub v2@Bvirpri;__ct__1AFv func__1AFv *sfunc__1AFv ;as__1A ;;    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^     A:ZcA;;foopri__1AFv foopro__1AFv __ct__1AFv __ct__1AFRC1A foopub__1AFv ;;;    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   */
 end_comment
 
 begin_function
@@ -3402,34 +3293,26 @@ specifier|static
 name|int
 name|read_cfront_member_functions
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* This code extracted from read_member_functions       so as to do the similar thing for our funcs */
 name|int
@@ -3639,7 +3522,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new_fnlist
 argument_list|)
@@ -3793,7 +3676,7 @@ operator|=
 name|main_fn_name
 expr_stmt|;
 comment|/*-------------------------------------------------*/
-comment|/* Set up the sublists        Sublists are stuff like args, static, visibility, etc.        so in ARM, we have to set that info some other way.        Multiple sublists happen if overloading        eg: foo::26=##1;:;2A.;        In g++, we'd loop here thru all the sublists...  */
+comment|/* Set up the sublists          Sublists are stuff like args, static, visibility, etc.          so in ARM, we have to set that info some other way.          Multiple sublists happen if overloading          eg: foo::26=##1;:;2A.;          In g++, we'd loop here thru all the sublists...  */
 name|new_sublist
 operator|=
 operator|(
@@ -3812,7 +3695,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new_sublist
 argument_list|)
@@ -3869,7 +3752,7 @@ expr_stmt|;
 comment|/* If this is just a stub, then we don't have the real name here. */
 if|if
 condition|(
-name|TYPE_FLAGS
+name|TYPE_STUB
 argument_list|(
 name|new_sublist
 operator|->
@@ -3877,8 +3760,6 @@ name|fn_field
 operator|.
 name|type
 argument_list|)
-operator|&
-name|TYPE_FLAG_STUB
 condition|)
 block|{
 if|if
@@ -3913,7 +3794,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* physname used later in mangling; eg PFs_i,5 for foo__1aFPFs_i         physname gets strcat'd in order to recreate the onto mangled name */
+comment|/* physname used later in mangling; eg PFs_i,5 for foo__1aFPFs_i           physname gets strcat'd in order to recreate the onto mangled name */
 name|pname
 operator|=
 name|get_cfront_method_physname
@@ -3937,8 +3818,8 @@ name|pname
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Set this member function's visibility fields.         Unable to distinguish access from stabs definition!          Assuming public for now.  FIXME! 	 (for private, set new_sublist->fn_field.is_private = 1, 	 for public, set new_sublist->fn_field.is_protected = 1) */
-comment|/* Unable to distinguish const/volatile from stabs definition!        Assuming normal for now.  FIXME! */
+comment|/* Set this member function's visibility fields.           Unable to distinguish access from stabs definition!          Assuming public for now.  FIXME!          (for private, set new_sublist->fn_field.is_private = 1,          for public, set new_sublist->fn_field.is_protected = 1) */
+comment|/* Unable to distinguish const/volatile from stabs definition!          Assuming normal for now.  FIXME! */
 name|new_sublist
 operator|->
 name|fn_field
@@ -3956,7 +3837,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* volatile not implemented in cfront */
-comment|/* Set virtual/static function info        How to get vtable offsets ?         Assuming normal for now FIXME!!         For vtables, figure out from whence this virtual function came.        It may belong to virtual function table of        one of its baseclasses. 	 set: 	   new_sublist -> fn_field.voffset = vtable offset, 	   new_sublist -> fn_field.fcontext = look_ahead_type; 	   where look_ahead_type is type of baseclass */
+comment|/* Set virtual/static function info          How to get vtable offsets ?           Assuming normal for now FIXME!!           For vtables, figure out from whence this virtual function came.          It may belong to virtual function table of          one of its baseclasses.          set:          new_sublist -> fn_field.voffset = vtable offset,          new_sublist -> fn_field.fcontext = look_ahead_type;          where look_ahead_type is type of baseclass */
 if|if
 condition|(
 name|is_static
@@ -4218,26 +4099,20 @@ begin_function
 name|int
 name|resolve_cfront_continuation
 parameter_list|(
-name|objfile
-parameter_list|,
-name|sym
-parameter_list|,
-name|p
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|struct
 name|symbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|symbol
@@ -4388,7 +4263,7 @@ name|type
 argument_list|,
 name|objfile
 argument_list|)
-comment|/* g++ does this next, but cfront already did this:  	    || !read_struct_fields (&fi,&p, type, objfile) */
+comment|/* g++ does this next, but cfront already did this:       || !read_struct_fields (&fi,&p, type, objfile) */
 operator|||
 operator|!
 name|copy_cfront_struct_fields
@@ -4448,7 +4323,7 @@ name|fi
 argument_list|,
 name|type
 argument_list|)
-comment|/* g++ does this next, but cfront doesn't seem to have this:        		|| !read_tilde_fields (&fi,&p, type, objfile) */
+comment|/* g++ does this next, but cfront doesn't seem to have this:       || !read_tilde_fields (&fi,&p, type, objfile) */
 condition|)
 block|{
 name|type
@@ -4486,26 +4361,20 @@ specifier|static
 name|int
 name|resolve_symbol_reference
 parameter_list|(
-name|objfile
-parameter_list|,
-name|sym
-parameter_list|,
-name|p
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|struct
 name|symbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|refnum
@@ -4535,7 +4404,7 @@ literal|0
 return|;
 comment|/* Use "#<num>" as the name; we'll fix the name later.      We stored the original symbol name as "#<id>=<name>"      so we can now search for "#<id>" to resolving the reference.      We'll fix the names later by removing the "#<id>" or "#<id>=" */
 comment|/*---------------------------------------------------------*/
-comment|/* Get the reference id number, and       advance p past the names so we can parse the rest.         eg: id=2 for p : "2=", "2=z:r(0,1)" "2:r(0,1);l(#5,#6),l(#7,#4)" */
+comment|/* Get the reference id number, and       advance p past the names so we can parse the rest.       eg: id=2 for p : "2=", "2=z:r(0,1)" "2:r(0,1);l(#5,#6),l(#7,#4)" */
 comment|/*---------------------------------------------------------*/
 comment|/* This gets reference name from string.  sym may not have a name. */
 comment|/* Get the reference number associated with the reference id in the      gdb stab string.  From that reference number, get the main/primary      symbol for this alias.  */
@@ -4573,9 +4442,9 @@ literal|0
 return|;
 block|}
 comment|/* Parse the stab of the referencing symbol      now that we have the referenced symbol.      Add it as a new symbol and a link back to the referenced symbol.      eg: p : "=", "=z:r(0,1)" ":r(0,1);l(#5,#6),l(#7,#4)" */
-comment|/* If the stab symbol table and string contain:          RSYM   0      5      00000000 868    #15=z:r(0,1)          LBRAC  0      0      00000000 899    #5=          SLINE  0      16     00000003 923    #6=      Then the same symbols can be later referenced by:          RSYM   0      5      00000000 927    #15:r(0,1);l(#5,#6)      This is used in live range splitting to:      1) specify that a symbol (#15) is actually just a new storage          class for a symbol (#15=z) which was previously defined.      2) specify that the beginning and ending ranges for a symbol          (#15) are the values of the beginning (#5) and ending (#6)          symbols. */
-comment|/* Read number as reference id.       eg: p : "=", "=z:r(0,1)" ":r(0,1);l(#5,#6),l(#7,#4)" */
-comment|/* FIXME! Might I want to use SYMBOL_CLASS (sym) = LOC_OPTIMIZED_OUT;       in case of "l(0,0)"? */
+comment|/* If the stab symbol table and string contain:      RSYM   0      5      00000000 868    #15=z:r(0,1)      LBRAC  0      0      00000000 899    #5=      SLINE  0      16     00000003 923    #6=      Then the same symbols can be later referenced by:      RSYM   0      5      00000000 927    #15:r(0,1);l(#5,#6)      This is used in live range splitting to:      1) specify that a symbol (#15) is actually just a new storage       class for a symbol (#15=z) which was previously defined.      2) specify that the beginning and ending ranges for a symbol       (#15) are the values of the beginning (#5) and ending (#6)       symbols. */
+comment|/* Read number as reference id.      eg: p : "=", "=z:r(0,1)" ":r(0,1);l(#5,#6),l(#7,#4)" */
+comment|/* FIXME! Might I want to use SYMBOL_CLASS (sym) = LOC_OPTIMIZED_OUT;      in case of "l(0,0)"? */
 comment|/*--------------------------------------------------*/
 comment|/* Add this symbol to the reference list.           */
 comment|/*--------------------------------------------------*/
@@ -4682,7 +4551,7 @@ operator|=
 name|alias
 expr_stmt|;
 block|}
-comment|/* Want to fix up name so that other functions (eg. valops)       will correctly print the name.       Don't add_symbol_to_list so that lookup_symbol won't find it.       nope... needed for fixups. */
+comment|/* Want to fix up name so that other functions (eg. valops)      will correctly print the name.      Don't add_symbol_to_list so that lookup_symbol won't find it.      nope... needed for fixups. */
 name|SYMBOL_NAME
 argument_list|(
 name|sym
@@ -4784,6 +4653,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This file maintains a cache of stabs aliases found in the symbol    table. If the symbol table changes, this cache must be cleared    or we are left holding onto data in invalid obstacks. */
+end_comment
+
+begin_function
+name|void
+name|stabsread_clear_cache
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ref_count
+operator|=
+literal|0
+expr_stmt|;
+name|ref_chunk
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Create array of pointers mapping refids to symbols and stab strings.    Add pointers to reference definition symbols and/or their values as we     find them, using their reference numbers as our index.     These will be used later when we resolve references. */
 end_comment
 
@@ -4791,29 +4682,21 @@ begin_function
 name|void
 name|ref_add
 parameter_list|(
-name|refnum
-parameter_list|,
-name|sym
-parameter_list|,
-name|stabs
-parameter_list|,
-name|value
-parameter_list|)
 name|int
 name|refnum
-decl_stmt|;
+parameter_list|,
 name|struct
 name|symbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|stabs
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4943,11 +4826,9 @@ name|symbol
 modifier|*
 name|ref_search
 parameter_list|(
-name|refnum
-parameter_list|)
 name|int
 name|refnum
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4982,11 +4863,9 @@ specifier|static
 name|CORE_ADDR
 name|ref_search_value
 parameter_list|(
-name|refnum
-parameter_list|)
 name|int
 name|refnum
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5021,13 +4900,11 @@ specifier|static
 name|int
 name|process_reference
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5104,13 +4981,11 @@ begin_function
 name|int
 name|symbol_reference_defined
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5179,34 +5054,24 @@ name|symbol
 modifier|*
 name|define_symbol
 parameter_list|(
-name|valu
-parameter_list|,
-name|string
-parameter_list|,
-name|desc
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|CORE_ADDR
 name|valu
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|desc
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -5373,6 +5238,9 @@ name|sym
 argument_list|)
 operator|=
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -5384,6 +5252,9 @@ name|sym
 argument_list|)
 operator|=
 name|SECT_OFF_DATA
+argument_list|(
+name|objfile
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -5395,6 +5266,9 @@ name|sym
 argument_list|)
 operator|=
 name|SECT_OFF_BSS
+argument_list|(
+name|objfile
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -5403,7 +5277,7 @@ condition|(
 name|processing_gcc_compilation
 condition|)
 block|{
-comment|/* GCC 2.x puts the line number in desc.  SunOS apparently puts in the 	 number of bytes occupied by a type or object, which we ignore.  */
+comment|/* GCC 2.x puts the line number in desc.  SunOS apparently puts in the          number of bytes occupied by a type or object, which we ignore.  */
 name|SYMBOL_LINE
 argument_list|(
 name|sym
@@ -5554,7 +5428,7 @@ name|refnum
 decl_stmt|,
 name|nlen
 decl_stmt|;
-comment|/* If STRING defines a new reference id, then add it to the 	 reference map.  Else it must be referring to a previously 	 defined symbol, so add it to the alias list of the previously 	 defined symbol.  */
+comment|/* If STRING defines a new reference id, then add it to the          reference map.  Else it must be referring to a previously          defined symbol, so add it to the alias list of the previously          defined symbol.  */
 name|s
 operator|=
 name|string
@@ -5603,7 +5477,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* S..P contains the name of the symbol.  We need to store 	 the correct name into SYMBOL_NAME.  */
+comment|/* S..P contains the name of the symbol.  We need to store          the correct name into SYMBOL_NAME.  */
 name|nlen
 operator|=
 name|p
@@ -5785,8 +5659,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Open-coded memcpy--saves function call time.  */
-comment|/* FIXME:  Does it really?  Try replacing with simple strcpy and 	 try it on an executable with a large symbol table. */
-comment|/* FIXME: considering that gcc can open code memcpy anyway, I 	 doubt it.  xoxorich. */
+comment|/* FIXME:  Does it really?  Try replacing with simple strcpy and          try it on an executable with a large symbol table. */
+comment|/* FIXME: considering that gcc can open code memcpy anyway, I          doubt it.  xoxorich. */
 block|{
 specifier|register
 name|char
@@ -5828,7 +5702,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* If this symbol is from a C++ compilation, then attempt to cache the 	 demangled form for future reference.  This is a typical time versus 	 space tradeoff, that was decided in favor of time because it sped up 	 C++ symbol lookups by a factor of about 20. */
+comment|/* If this symbol is from a C++ compilation, then attempt to cache the          demangled form for future reference.  This is a typical time versus          space tradeoff, that was decided in favor of time because it sped up          C++ symbol lookups by a factor of about 20. */
 name|SYMBOL_INIT_DEMANGLED_NAME
 argument_list|(
 name|sym
@@ -5891,7 +5765,7 @@ block|{
 case|case
 literal|'c'
 case|:
-comment|/* c is a special case, not followed by a type-number. 	 SYMBOL:c=iVALUE for an integer constant symbol. 	 SYMBOL:c=rVALUE for a floating constant symbol. 	 SYMBOL:c=eTYPE,INTVALUE for an enum constant symbol. 	 e.g. "b:c=e6,0" for "const b = blob1" 	 (where type 6 is defined by "blobs:t6=eblob1:0,blob2:1,;").  */
+comment|/* c is a special case, not followed by a type-number.          SYMBOL:c=iVALUE for an integer constant symbol.          SYMBOL:c=rVALUE for a floating constant symbol.          SYMBOL:c=eTYPE,INTVALUE for an enum constant symbol.          e.g. "b:c=e6,0" for "const b = blob1"          (where type 6 is defined by "blobs:t6=eblob1:0,blob2:1,;").  */
 if|if
 condition|(
 operator|*
@@ -6001,16 +5875,13 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|store_floating
+name|store_typed_floating
 argument_list|(
 name|dbl_valu
 argument_list|,
-name|TYPE_LENGTH
-argument_list|(
 name|SYMBOL_TYPE
 argument_list|(
 name|sym
-argument_list|)
 argument_list|)
 argument_list|,
 name|d
@@ -6299,7 +6170,7 @@ expr_stmt|;
 comment|/* fall into process_function_types.  */
 name|process_function_types
 label|:
-comment|/* Function result types are described as the result type in stabs. 	 We need to convert this to the function-returning-type-X type 	 in GDB.  E.g. "int" is converted to "function returning int".  */
+comment|/* Function result types are described as the result type in stabs.          We need to convert this to the function-returning-type-X type          in GDB.  E.g. "int" is converted to "function returning int".  */
 if|if
 condition|(
 name|TYPE_CODE
@@ -6440,7 +6311,7 @@ name|type
 modifier|*
 name|ptype
 decl_stmt|;
-comment|/* A type number of zero indicates the start of varargs.          	 FIXME: GDB currently ignores vararg functions.  */
+comment|/* A type number of zero indicates the start of varargs. 	         FIXME: GDB currently ignores vararg functions.  */
 if|if
 condition|(
 name|p
@@ -6468,7 +6339,7 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* The Sun compilers mark integer arguments, which should 		 be promoted to the width of the calling conventions, with 		 a type which references itself. This type is turned into 		 a TYPE_CODE_VOID type by read_type, and we have to turn 		 it back into builtin_type_int here. 		 FIXME: Do we need a new builtin_type_promoted_int_arg ?  */
+comment|/* The Sun compilers mark integer arguments, which should 	         be promoted to the width of the calling conventions, with 	         a type which references itself. This type is turned into 	         a TYPE_CODE_VOID type by read_type, and we have to turn 	         it back into builtin_type_int here. 	         FIXME: Do we need a new builtin_type_promoted_int_arg ?  */
 if|if
 condition|(
 name|TYPE_CODE
@@ -6487,10 +6358,19 @@ argument_list|(
 name|ftype
 argument_list|,
 name|nparams
-operator|++
 argument_list|)
 operator|=
 name|ptype
+expr_stmt|;
+name|TYPE_FIELD_ARTIFICIAL
+argument_list|(
+name|ftype
+argument_list|,
+name|nparams
+operator|++
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|TYPE_NFIELDS
@@ -6554,7 +6434,7 @@ goto|;
 case|case
 literal|'G'
 case|:
-comment|/* For a class G (global) symbol, it appears that the 	 value is not correct.  It is necessary to search for the 	 corresponding linker definition to find the value. 	 These definitions appear at the end of the namelist.  */
+comment|/* For a class G (global) symbol, it appears that the          value is not correct.  It is necessary to search for the          corresponding linker definition to find the value.          These definitions appear at the end of the namelist.  */
 name|SYMBOL_TYPE
 argument_list|(
 name|sym
@@ -6582,7 +6462,7 @@ argument_list|)
 operator|=
 name|VAR_NAMESPACE
 expr_stmt|;
-comment|/* Don't add symbol references to global_sym_chain. 	 Symbol references don't have valid names and wont't match up with 	 minimal symbols when the global_sym_chain is relocated. 	 We'll fixup symbol references when we fixup the defining symbol.  */
+comment|/* Don't add symbol references to global_sym_chain.          Symbol references don't have valid names and wont't match up with          minimal symbols when the global_sym_chain is relocated.          We'll fixup symbol references when we fixup the defining symbol.  */
 if|if
 condition|(
 name|SYMBOL_NAME
@@ -6638,7 +6518,7 @@ name|global_symbols
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* This case is faked by a conditional above, 	 when there is no code letter in the dbx data. 	 Dbx data never actually contains 'l'.  */
+comment|/* This case is faked by a conditional above,          when there is no code letter in the dbx data.          Dbx data never actually contains 'l'.  */
 case|case
 literal|'s'
 case|:
@@ -6737,7 +6617,7 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* Normally this is a parameter, a LOC_ARG.  On the i960, it 	 can also be a LOC_LOCAL_ARG depending on symbol type.  */
+comment|/* Normally this is a parameter, a LOC_ARG.  On the i960, it          can also be a LOC_LOCAL_ARG depending on symbol type.  */
 ifndef|#
 directive|ifndef
 name|DBX_PARM_SYMBOL_CLASS
@@ -6786,7 +6666,7 @@ if|if
 condition|(
 name|TARGET_BYTE_ORDER
 operator|!=
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 condition|)
 block|{
 comment|/* On little-endian machines, this crud is never necessary, 	     and, if the extra bytes contain garbage, is harmful.  */
@@ -6800,10 +6680,11 @@ operator|||
 name|BELIEVE_PCC_PROMOTION
 condition|)
 break|break;
-if|#
-directive|if
+if|if
+condition|(
 operator|!
 name|BELIEVE_PCC_PROMOTION
+condition|)
 block|{
 comment|/* This is the signed type which arguments get promoted to.  */
 specifier|static
@@ -6866,13 +6747,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+if|if
+condition|(
 name|BELIEVE_PCC_PROMOTION_TYPE
-argument_list|)
-comment|/* This macro is defined on machines (e.g. sparc) where 	   we should believe the type of a PCC 'short' argument, 	   but shouldn't believe the address (the address is 	   the address of the corresponding int). 	    	   My guess is that this correction, as opposed to changing 	   the parameter to an 'int' (as done below, for PCC 	   on most machines), is the right thing to do 	   on all machines, but I don't want to risk breaking 	   something that already works.  On most PCC machines, 	   the sparc problem doesn't come up because the calling 	   function has to zero the top bytes (not knowing whether 	   the called function wants an int or a short), so there 	   is little practical difference between an int and a short 	   (except perhaps what happens when the GDB user types 	   "print short_arg = 0x10000;").  	    	   Hacked for SunOS 4.1 by gnu@cygnus.com.  In 4.1, the compiler 	   actually produces the correct address (we don't need to fix it 	   up).  I made this code adapt so that it will offset the symbol 	   if it was pointing at an int-aligned location and not 	   otherwise.  This way you can use the same gdb for 4.0.x and 	   4.1 systems. 	    	   If the parameter is shorter than an int, and is integral 	   (e.g. char, short, or unsigned equivalent), and is claimed to 	   be passed on an integer boundary, don't believe it!  Offset the 	   parameter's address to the tail-end of that integer.  */
+condition|)
+block|{
+comment|/* This is defined on machines (e.g. sparc) where we 	         should believe the type of a PCC 'short' argument, 	         but shouldn't believe the address (the address is the 	         address of the corresponding int).  	         My guess is that this correction, as opposed to 	         changing the parameter to an 'int' (as done below, 	         for PCC on most machines), is the right thing to do 	         on all machines, but I don't want to risk breaking 	         something that already works.  On most PCC machines, 	         the sparc problem doesn't come up because the calling 	         function has to zero the top bytes (not knowing 	         whether the called function wants an int or a short), 	         so there is little practical difference between an 	         int and a short (except perhaps what happens when the 	         GDB user types "print short_arg = 0x10000;").  	         Hacked for SunOS 4.1 by gnu@cygnus.com.  In 4.1, the 	         compiler actually produces the correct address (we 	         don't need to fix it up).  I made this code adapt so 	         that it will offset the symbol if it was pointing at 	         an int-aligned location and not otherwise.  This way 	         you can use the same gdb for 4.0.x and 4.1 systems.  	         If the parameter is shorter than an int, and is 	         integral (e.g. char, short, or unsigned equivalent), 	         and is claimed to be passed on an integer boundary, 	         don't believe it!  Offset the parameter's address to 	         the tail-end of that integer.  */
 if|if
 condition|(
 name|TYPE_LENGTH
@@ -6931,10 +6811,10 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-else|#
-directive|else
-comment|/* no BELIEVE_PCC_PROMOTION_TYPE.  */
-comment|/* If PCC says a parameter is a short or a char, 	   it is really an int.  */
+block|}
+else|else
+block|{
+comment|/* If PCC says a parameter is a short or a char, 	         it is really an int.  */
 if|if
 condition|(
 name|TYPE_LENGTH
@@ -6980,13 +6860,8 @@ name|pcc_promotion_type
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* no BELIEVE_PCC_PROMOTION_TYPE.  */
 block|}
-endif|#
-directive|endif
-comment|/* !BELIEVE_PCC_PROMOTION.  */
+block|}
 case|case
 literal|'P'
 case|:
@@ -7015,7 +6890,7 @@ goto|goto
 name|process_prototype_types
 goto|;
 block|}
-comment|/*FALLTHROUGH*/
+comment|/*FALLTHROUGH */
 case|case
 literal|'R'
 case|:
@@ -7058,6 +6933,8 @@ name|sym
 argument_list|)
 operator|>=
 name|NUM_REGS
+operator|+
+name|NUM_PSEUDO_REGS
 condition|)
 block|{
 name|complain
@@ -7071,6 +6948,8 @@ name|sym
 argument_list|)
 argument_list|,
 name|NUM_REGS
+operator|+
+name|NUM_PSEUDO_REGS
 argument_list|,
 name|SYMBOL_SOURCE_NAME
 argument_list|(
@@ -7145,6 +7024,8 @@ name|sym
 argument_list|)
 operator|>=
 name|NUM_REGS
+operator|+
+name|NUM_PSEUDO_REGS
 condition|)
 block|{
 name|complain
@@ -7158,6 +7039,8 @@ name|sym
 argument_list|)
 argument_list|,
 name|NUM_REGS
+operator|+
+name|NUM_PSEUDO_REGS
 argument_list|,
 name|SYMBOL_SOURCE_NAME
 argument_list|(
@@ -7186,7 +7069,7 @@ condition|(
 name|within_function
 condition|)
 block|{
-comment|/* Sun cc uses a pair of symbols, one 'p' and one 'r' with the same 	     name to represent an argument passed in a register. 	     GCC uses 'P' for the same case.  So if we find such a symbol pair 	     we combine it into one 'P' symbol.  For Sun cc we need to do this 	     regardless of REG_STRUCT_HAS_ADDR, because the compiler puts out 	     the 'p' symbol even if it never saves the argument onto the stack.  	     On most machines, we want to preserve both symbols, so that 	     we can still get information about what is going on with the 	     stack (VAX for computing args_printed, using stack slots instead 	     of saved registers in backtraces, etc.).  	     Note that this code illegally combines 	       main(argc) struct foo argc; { register struct foo argc; } 	     but this case is considered pathological and causes a warning 	     from a decent compiler.  */
+comment|/* Sun cc uses a pair of symbols, one 'p' and one 'r' with the same 	     name to represent an argument passed in a register. 	     GCC uses 'P' for the same case.  So if we find such a symbol pair 	     we combine it into one 'P' symbol.  For Sun cc we need to do this 	     regardless of REG_STRUCT_HAS_ADDR, because the compiler puts out 	     the 'p' symbol even if it never saves the argument onto the stack.  	     On most machines, we want to preserve both symbols, so that 	     we can still get information about what is going on with the 	     stack (VAX for computing args_printed, using stack slots instead 	     of saved registers in backtraces, etc.).  	     Note that this code illegally combines 	     main(argc) struct foo argc; { register struct foo argc; } 	     but this case is considered pathological and causes a warning 	     from a decent compiler.  */
 if|if
 condition|(
 name|local_symbols
@@ -7199,6 +7082,9 @@ literal|0
 ifndef|#
 directive|ifndef
 name|USE_REGISTER_NOT_ARG
+operator|&&
+name|REG_STRUCT_HAS_ADDR_P
+argument_list|()
 operator|&&
 name|REG_STRUCT_HAS_ADDR
 argument_list|(
@@ -7489,7 +7375,7 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* For a nameless type, we don't want a create a symbol, thus we 	 did not use `sym'. Return without further processing. */
+comment|/* For a nameless type, we don't want a create a symbol, thus we          did not use `sym'. Return without further processing. */
 if|if
 condition|(
 name|nameless
@@ -7518,7 +7404,7 @@ argument_list|)
 operator|=
 name|VAR_NAMESPACE
 expr_stmt|;
-comment|/* C++ vagaries: we may have a type which is derived from 	 a base type which did not have its name defined when the 	 derived class was output.  We fill in the derived class's 	 base part member's name here in that case.  */
+comment|/* C++ vagaries: we may have a type which is derived from          a base type which did not have its name defined when the          derived class was output.  We fill in the derived class's          base part member's name here in that case.  */
 if|if
 condition|(
 name|TYPE_NAME
@@ -7681,7 +7567,32 @@ operator|==
 name|TYPE_CODE_FUNC
 condition|)
 block|{
-comment|/* If we are giving a name to a type such as "pointer to 		 foo" or "function returning foo", we better not set 		 the TYPE_NAME.  If the program contains "typedef char 		 *caddr_t;", we don't want all variables of type char 		 * to print as caddr_t.  This is not just a 		 consequence of GDB's type management; PCC and GCC (at 		 least through version 2.4) both output variables of 		 either type char * or caddr_t with the type number 		 defined in the 't' symbol for caddr_t.  If a future 		 compiler cleans this up it GDB is not ready for it 		 yet, but if it becomes ready we somehow need to 		 disable this check (without breaking the PCC/GCC2.4 		 case).  		 Sigh.  		 Fortunately, this check seems not to be necessary 		 for anything except pointers or functions.  */
+comment|/* If we are giving a name to a type such as "pointer to 	         foo" or "function returning foo", we better not set 	         the TYPE_NAME.  If the program contains "typedef char 	         *caddr_t;", we don't want all variables of type char 	         * to print as caddr_t.  This is not just a 	         consequence of GDB's type management; PCC and GCC (at 	         least through version 2.4) both output variables of 	         either type char * or caddr_t with the type number 	         defined in the 't' symbol for caddr_t.  If a future 	         compiler cleans this up it GDB is not ready for it 	         yet, but if it becomes ready we somehow need to 	         disable this check (without breaking the PCC/GCC2.4 	         case).  	         Sigh.  	         Fortunately, this check seems not to be necessary 	         for anything except pointers or functions.  */
+comment|/* ezannoni: 2000-10-26. This seems to apply for 		 versions of gcc older than 2.8. This was the original 		 problem: with the following code gdb would tell that 		 the type for name1 is caddr_t, and func is char() 	         typedef char *caddr_t; 		 char *name2; 		 struct x 		 { 		 char *name1; 		 } xx; 		 char *func() 		 { 		 } 		 main () {} 		 */
+comment|/* Pascal accepts names for pointer types. */
+if|if
+condition|(
+name|current_subfile
+operator|->
+name|language
+operator|==
+name|language_pascal
+condition|)
+block|{
+name|TYPE_NAME
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|=
+name|SYMBOL_NAME
+argument_list|(
+name|sym
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 name|TYPE_NAME
@@ -7710,7 +7621,7 @@ break|break;
 case|case
 literal|'T'
 case|:
-comment|/* Struct, union, or enum tag.  For GNU C++, this can be be followed 	 by 't' which means we are typedef'ing it as well.  */
+comment|/* Struct, union, or enum tag.  For GNU C++, this can be be followed          by 't' which means we are typedef'ing it as well.  */
 name|synonym
 operator|=
 operator|*
@@ -7725,7 +7636,7 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
-comment|/* The semantics of C++ state that "struct foo { ... }" also defines  	 a typedef for "foo".  Unfortunately, cfront never makes the typedef 	 when translating C++ into C.  We make the typedef here so that 	 "ptype foo" works as expected for cfront translated code.  */
+comment|/* The semantics of C++ state that "struct foo { ... }" also defines           a typedef for "foo".  Unfortunately, cfront never makes the typedef          when translating C++ into C.  We make the typedef here so that          "ptype foo" works as expected for cfront translated code.  */
 elseif|else
 if|if
 condition|(
@@ -7752,7 +7663,7 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* For a nameless type, we don't want a create a symbol, thus we 	 did not use `sym'. Return without further processing. */
+comment|/* For a nameless type, we don't want a create a symbol, thus we          did not use `sym'. Return without further processing. */
 if|if
 condition|(
 name|nameless
@@ -8147,6 +8058,8 @@ name|sym
 argument_list|)
 operator|>=
 name|NUM_REGS
+operator|+
+name|NUM_PSEUDO_REGS
 condition|)
 block|{
 name|complain
@@ -8160,6 +8073,8 @@ name|sym
 argument_list|)
 argument_list|,
 name|NUM_REGS
+operator|+
+name|NUM_PSEUDO_REGS
 argument_list|,
 name|SYMBOL_SOURCE_NAME
 argument_list|(
@@ -8195,7 +8110,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* This is used by Sun FORTRAN for "function result value". 	 Sun claims ("dbx and dbxtool interfaces", 2nd ed) 	 that Pascal uses it too, but when I tried it Pascal used 	 "x:3" (local symbol) instead.  */
+comment|/* This is used by Sun FORTRAN for "function result value".          Sun claims ("dbx and dbxtool interfaces", 2nd ed)          that Pascal uses it too, but when I tried it Pascal used          "x:3" (local symbol) instead.  */
 name|SYMBOL_TYPE
 argument_list|(
 name|sym
@@ -8239,11 +8154,11 @@ name|local_symbols
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* New code added to support cfront stabs strings.        Note: case 'P' already handled above */
+comment|/* New code added to support cfront stabs strings.          Note: case 'P' already handled above */
 case|case
 literal|'Z'
 case|:
-comment|/* Cfront type continuation coming up! 	 Find the original definition and add to it. 	 We'll have to do this for the typedef too, 	 since we cloned the symbol to define a type in read_type. 	 Stabs info examples: 		 __1C :Ztl  		 foo__1CFv :ZtF (first def foo__1CFv:F(0,3);(0,24)) 		 C:ZsC;;__ct__1CFv func1__1CFv func2__1CFv ... ;;; 		 where C is the name of the class. 	 Unfortunately, we can't lookup the original symbol yet 'cuz  	 we haven't finished reading all the symbols. 	 Instead, we save it for processing later */
+comment|/* Cfront type continuation coming up!          Find the original definition and add to it.          We'll have to do this for the typedef too,          since we cloned the symbol to define a type in read_type.          Stabs info examples:          __1C :Ztl           foo__1CFv :ZtF (first def foo__1CFv:F(0,3);(0,24))          C:ZsC;;__ct__1CFv func1__1CFv func2__1CFv ... ;;;          where C is the name of the class.          Unfortunately, we can't lookup the original symbol yet 'cuz           we haven't finished reading all the symbols.          Instead, we save it for processing later */
 name|process_later
 argument_list|(
 name|sym
@@ -8341,6 +8256,9 @@ block|}
 comment|/* When passing structures to a function, some systems sometimes pass      the address in a register, not the structure itself. */
 if|if
 condition|(
+name|REG_STRUCT_HAS_ADDR_P
+argument_list|()
+operator|&&
 name|REG_STRUCT_HAS_ADDR
 argument_list|(
 name|processing_gcc_compilation
@@ -8477,13 +8395,22 @@ condition|(
 operator|*
 name|p
 operator|&&
-operator|*
 name|p
+index|[
+literal|0
+index|]
 operator|==
 literal|'l'
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'('
 condition|)
 block|{
-comment|/* GNU extensions for live range splitting may be appended to               the end of the stab string.  eg. "l(#1,#2);l(#3,#5)" */
+comment|/* GNU extensions for live range splitting may be appended to  	     the end of the stab string.  eg. "l(#1,#2);l(#3,#5)" */
 comment|/* Resolve the live range and add it to SYM's live range list.  */
 if|if
 condition|(
@@ -8554,26 +8481,20 @@ specifier|static
 name|int
 name|resolve_live_range
 parameter_list|(
-name|objfile
-parameter_list|,
-name|sym
-parameter_list|,
-name|p
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|struct
 name|symbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|refnum
@@ -8784,29 +8705,22 @@ specifier|static
 name|void
 name|add_live_range
 parameter_list|(
-name|objfile
-parameter_list|,
-name|sym
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|struct
 name|symbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|start
-decl_stmt|,
+parameter_list|,
+name|CORE_ADDR
 name|end
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|range_list
@@ -8926,7 +8840,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Skip rest of this symbol and return an error type.     General notes on error recovery:  error_type always skips to the    end of the symbol (modulo cretinous dbx symbol name continuation).    Thus code like this:     if (*(*pp)++ != ';')      return error_type (pp, objfile);     is wrong because if *pp starts out pointing at '\0' (typically as the    result of an earlier error), it will be incremented to point to the    start of the next symbol, which might produce strange results, at least    if you run off the end of the string table.  Instead use     if (**pp != ';')      return error_type (pp, objfile);    ++*pp;     or     if (**pp != ';')      foo = error_type (pp, objfile);    else      ++*pp;     And in case it isn't obvious, the point of all this hair is so the compiler    can define new types and new syntaxes, and old versions of the    debugger will be able to read the new symbol tables.  */
+comment|/* Skip rest of this symbol and return an error type.     General notes on error recovery:  error_type always skips to the    end of the symbol (modulo cretinous dbx symbol name continuation).    Thus code like this:     if (*(*pp)++ != ';')    return error_type (pp, objfile);     is wrong because if *pp starts out pointing at '\0' (typically as the    result of an earlier error), it will be incremented to point to the    start of the next symbol, which might produce strange results, at least    if you run off the end of the string table.  Instead use     if (**pp != ';')    return error_type (pp, objfile);    ++*pp;     or     if (**pp != ';')    foo = error_type (pp, objfile);    else    ++*pp;     And in case it isn't obvious, the point of all this hair is so the compiler    can define new types and new syntaxes, and old versions of the    debugger will be able to read the new symbol tables.  */
 end_comment
 
 begin_function
@@ -8936,20 +8850,16 @@ name|type
 modifier|*
 name|error_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|complain
 argument_list|(
@@ -9040,21 +8950,17 @@ name|type
 modifier|*
 name|read_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|objfile
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -9140,7 +9046,7 @@ argument_list|,
 name|objfile
 argument_list|)
 return|;
-comment|/* Type is not being defined here.  Either it already exists, 	 or this is a forward reference to it.  dbx_alloc_type handles 	 both cases.  */
+comment|/* Type is not being defined here.  Either it already exists,          or this is a forward reference to it.  dbx_alloc_type handles          both cases.  */
 if|if
 condition|(
 operator|*
@@ -9158,7 +9064,7 @@ name|objfile
 argument_list|)
 return|;
 comment|/* Type is being defined here.  */
-comment|/* Skip the '='. 	 Also skip the type descriptor - we get it below with (*pp)[-1].  */
+comment|/* Skip the '='.          Also skip the type descriptor - we get it below with (*pp)[-1].  */
 operator|(
 operator|*
 name|pp
@@ -9169,7 +9075,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 'typenums=' not present, type is anonymous.  Read and return 	 the definition, but don't put it in the type vector.  */
+comment|/* 'typenums=' not present, type is anonymous.  Read and return          the definition, but don't put it in the type vector.  */
 name|typenums
 index|[
 literal|0
@@ -9694,8 +9600,8 @@ name|pp
 operator|)
 operator|--
 expr_stmt|;
-comment|/* We deal with something like t(1,2)=(3,4)=... which 	 the Lucid compiler and recent gcc versions (post 2.7.3) use. */
-comment|/* Allocate and enter the typedef type first. 	 This handles recursive types. */
+comment|/* We deal with something like t(1,2)=(3,4)=... which          the Lucid compiler and recent gcc versions (post 2.7.3) use. */
+comment|/* Allocate and enter the typedef type first.          This handles recursive types. */
 name|type
 operator|=
 name|dbx_alloc_type
@@ -9758,11 +9664,13 @@ operator|||
 name|is_string
 condition|)
 block|{
-operator|*
+comment|/* This is the absolute wrong way to construct types.  Every 	       other debug format has found a way around this problem and 	       the related problems with unnecessarily stubbed types; 	       someone motivated should attempt to clean up the issue 	       here as well.  Once a type pointed to has been created it 	       should not be modified.  */
+name|replace_type
+argument_list|(
 name|type
-operator|=
-operator|*
+argument_list|,
 name|xtype
+argument_list|)
 expr_stmt|;
 name|TYPE_NAME
 argument_list|(
@@ -9798,7 +9706,7 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/* In the following types, we must be sure to overwrite any existing        type that the typenums refer to, rather than allocating a new one        and making the typenums point to the new one.  This is because there        may already be pointers to the existing type (if it had been        forward-referenced), and we must change it to a pointer, function,        reference, or whatever, *in-place*.  */
+comment|/* In the following types, we must be sure to overwrite any existing          type that the typenums refer to, rather than allocating a new one          and making the typenums point to the new one.  This is because there          may already be pointers to the existing type (if it had been          forward-referenced), and we must change it to a pointer, function,          reference, or whatever, *in-place*.  */
 case|case
 literal|'*'
 case|:
@@ -9930,6 +9838,299 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+comment|/* Prototyped function.  (Sun)  */
+block|{
+comment|/* Unresolved questions:             - According to Sun's ``STABS Interface Manual'', for 'f'            and 'F' symbol descriptors, a `0' in the argument type list            indicates a varargs function.  But it doesn't say how 'g'            type descriptors represent that info.  Someone with access            to Sun's toolchain should try it out.             - According to the comment in define_symbol (search for            `process_prototype_types:'), Sun emits integer arguments as            types which ref themselves --- like `void' types.  Do we            have to deal with that here, too?  Again, someone with            access to Sun's toolchain should try it out and let us            know.  */
+specifier|const
+name|char
+modifier|*
+name|type_start
+init|=
+operator|(
+operator|*
+name|pp
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+name|struct
+name|type
+modifier|*
+name|return_type
+init|=
+name|read_type
+argument_list|(
+name|pp
+argument_list|,
+name|objfile
+argument_list|)
+decl_stmt|;
+name|struct
+name|type
+modifier|*
+name|func_type
+init|=
+name|make_function_type
+argument_list|(
+name|return_type
+argument_list|,
+name|dbx_lookup_type
+argument_list|(
+name|typenums
+argument_list|)
+argument_list|)
+decl_stmt|;
+struct|struct
+name|type_list
+block|{
+name|struct
+name|type
+modifier|*
+name|type
+decl_stmt|;
+name|struct
+name|type_list
+modifier|*
+name|next
+decl_stmt|;
+block|}
+modifier|*
+name|arg_types
+init|=
+literal|0
+struct|;
+name|int
+name|num_args
+init|=
+literal|0
+decl_stmt|;
+while|while
+condition|(
+operator|*
+operator|*
+name|pp
+operator|&&
+operator|*
+operator|*
+name|pp
+operator|!=
+literal|'#'
+condition|)
+block|{
+name|struct
+name|type
+modifier|*
+name|arg_type
+init|=
+name|read_type
+argument_list|(
+name|pp
+argument_list|,
+name|objfile
+argument_list|)
+decl_stmt|;
+name|struct
+name|type_list
+modifier|*
+name|new
+init|=
+name|alloca
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|new
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|new
+operator|->
+name|type
+operator|=
+name|arg_type
+expr_stmt|;
+name|new
+operator|->
+name|next
+operator|=
+name|arg_types
+expr_stmt|;
+name|arg_types
+operator|=
+name|new
+expr_stmt|;
+name|num_args
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+operator|*
+name|pp
+operator|==
+literal|'#'
+condition|)
+operator|++
+operator|*
+name|pp
+expr_stmt|;
+else|else
+block|{
+specifier|static
+name|struct
+name|complaint
+name|msg
+init|=
+block|{
+literal|"Prototyped function type didn't end arguments with `#':\n%s"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|complain
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|type_start
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* If there is just one argument whose type is `void', then            that's just an empty argument list.  */
+if|if
+condition|(
+name|arg_types
+operator|&&
+operator|!
+name|arg_types
+operator|->
+name|next
+operator|&&
+name|TYPE_CODE
+argument_list|(
+name|arg_types
+operator|->
+name|type
+argument_list|)
+operator|==
+name|TYPE_CODE_VOID
+condition|)
+name|num_args
+operator|=
+literal|0
+expr_stmt|;
+name|TYPE_FIELDS
+argument_list|(
+name|func_type
+argument_list|)
+operator|=
+operator|(
+expr|struct
+name|field
+operator|*
+operator|)
+name|TYPE_ALLOC
+argument_list|(
+name|func_type
+argument_list|,
+name|num_args
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|field
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|TYPE_FIELDS
+argument_list|(
+name|func_type
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|num_args
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|field
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|type_list
+modifier|*
+name|t
+decl_stmt|;
+comment|/* We stuck each argument type onto the front of the list              when we read it, so the list is reversed.  Build the              fields array right-to-left.  */
+for|for
+control|(
+name|t
+operator|=
+name|arg_types
+operator|,
+name|i
+operator|=
+name|num_args
+operator|-
+literal|1
+init|;
+name|t
+condition|;
+name|t
+operator|=
+name|t
+operator|->
+name|next
+operator|,
+name|i
+operator|--
+control|)
+name|TYPE_FIELD_TYPE
+argument_list|(
+name|func_type
+argument_list|,
+name|i
+argument_list|)
+operator|=
+name|t
+operator|->
+name|type
+expr_stmt|;
+block|}
+name|TYPE_NFIELDS
+argument_list|(
+name|func_type
+argument_list|)
+operator|=
+name|num_args
+expr_stmt|;
+name|TYPE_FLAGS
+argument_list|(
+name|func_type
+argument_list|)
+operator||=
+name|TYPE_FLAG_PROTOTYPED
+expr_stmt|;
+name|type
+operator|=
+name|func_type
+expr_stmt|;
+break|break;
+block|}
+case|case
 literal|'k'
 case|:
 comment|/* Const qualifier on some type (Sun) */
@@ -9937,7 +10138,7 @@ case|case
 literal|'c'
 case|:
 comment|/* Const qualifier on some type (OS9000) */
-comment|/* Because 'c' means other things to AIX and 'k' is perfectly good, 	 only accept 'c' in the os9k_stabs case.  */
+comment|/* Because 'c' means other things to AIX and 'k' is perfectly good,          only accept 'c' in the os9k_stabs case.  */
 if|if
 condition|(
 name|type_descriptor
@@ -9964,7 +10165,25 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* FIXME! For now, we ignore const and volatile qualifiers.  */
+name|type
+operator|=
+name|make_cv_type
+argument_list|(
+literal|1
+argument_list|,
+name|TYPE_VOLATILE
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|type
+argument_list|,
+name|dbx_lookup_type
+argument_list|(
+name|typenums
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'B'
@@ -9974,7 +10193,7 @@ case|case
 literal|'i'
 case|:
 comment|/* Volatile qual on some type (OS9000) */
-comment|/* Because 'i' means other things to AIX and 'B' is perfectly good, 	 only accept 'i' in the os9k_stabs case.  */
+comment|/* Because 'i' means other things to AIX and 'B' is perfectly good,          only accept 'i' in the os9k_stabs case.  */
 if|if
 condition|(
 name|type_descriptor
@@ -10001,7 +10220,25 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* FIXME! For now, we ignore const and volatile qualifiers.  */
+name|type
+operator|=
+name|make_cv_type
+argument_list|(
+name|TYPE_CONST
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|type
+argument_list|,
+name|dbx_lookup_type
+argument_list|(
+name|typenums
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'@'
@@ -10188,7 +10425,7 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Ignore unrecognized type attributes, so future compilers 		 can invent new ones.  */
+comment|/* Ignore unrecognized type attributes, so future compilers 	         can invent new ones.  */
 break|break;
 block|}
 operator|++
@@ -10785,11 +11022,9 @@ name|type
 modifier|*
 name|rs6000_builtin_type
 parameter_list|(
-name|typenum
-parameter_list|)
 name|int
 name|typenum
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* We recognize types numbered from -NUMBER_RECOGNIZED to -1.  */
 define|#
@@ -10876,7 +11111,7 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* The size of this and all the other types are fixed, defined 	 by the debugging format.  If there is a type called "int" which 	 is other than 32 bits, then it should use a new negative type 	 number (or avoid negative type numbers for that case). 	 See stabs.texinfo.  */
+comment|/* The size of this and all the other types are fixed, defined          by the debugging format.  If there is a type called "int" which          is other than 32 bits, then it should use a new negative type          number (or avoid negative type numbers for that case).          See stabs.texinfo.  */
 name|rettype
 operator|=
 name|init_type
@@ -11125,7 +11360,7 @@ break|break;
 case|case
 literal|14
 case|:
-comment|/* This is an IEEE double on the RS/6000, and different machines with 	 different sizes for "long double" should use different negative 	 type numbers.  See stabs.texinfo.  */
+comment|/* This is an IEEE double on the RS/6000, and different machines with          different sizes for "long double" should use different negative          type numbers.  See stabs.texinfo.  */
 name|rettype
 operator|=
 name|init_type
@@ -11547,7 +11782,7 @@ comment|/* This page contains subroutines of read_type.  */
 end_comment
 
 begin_comment
-comment|/* Read member function stabs info for C++ classes.  The form of each member    function data is:  	NAME :: TYPENUM[=type definition] ARGS : PHYSNAME ;     An example with two member functions is:  	afunc1::20=##15;:i;2A.;afunc2::20:i;2A.;     For the case of overloaded operators, the format is op$::*.funcs, where    $ is the CPLUS_MARKER (usually '$'), `*' holds the place for an operator    name (such as `+=') and `.' marks the end of the operator name.     Returns 1 for success, 0 for failure.  */
+comment|/* Read member function stabs info for C++ classes.  The form of each member    function data is:     NAME :: TYPENUM[=type definition] ARGS : PHYSNAME ;     An example with two member functions is:     afunc1::20=##15;:i;2A.;afunc2::20:i;2A.;     For the case of overloaded operators, the format is op$::*.funcs, where    $ is the CPLUS_MARKER (usually '$'), `*' holds the place for an operator    name (such as `+=') and `.' marks the end of the operator name.     Returns 1 for success, 0 for failure.  */
 end_comment
 
 begin_function
@@ -11555,34 +11790,26 @@ specifier|static
 name|int
 name|read_member_functions
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|nfn_fields
@@ -11593,6 +11820,9 @@ name|int
 name|length
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|skip_method
 decl_stmt|;
 comment|/* Total number of member functions defined in this class.  If the class      defines two `f' functions, and one `g' function, then this will have      the value 3.  */
 name|int
@@ -11653,7 +11883,7 @@ operator|!=
 literal|';'
 condition|)
 block|{
-comment|/* We should be positioned at the start of the function name. 	 Scan forward to find the first ':' and if it is not the 	 first of a "::" delimiter, then this is not a member function. */
+comment|/* We should be positioned at the start of the function name.          Scan forward to find the first ':' and if it is not the          first of a "::" delimiter, then this is not a member function. */
 name|p
 operator|=
 operator|*
@@ -11695,6 +11925,169 @@ name|length
 operator|=
 literal|0
 expr_stmt|;
+name|skip_method
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|-
+operator|*
+name|pp
+operator|==
+name|strlen
+argument_list|(
+literal|"__base_ctor"
+argument_list|)
+operator|&&
+name|strncmp
+argument_list|(
+operator|*
+name|pp
+argument_list|,
+literal|"__base_ctor"
+argument_list|,
+name|strlen
+argument_list|(
+literal|"__base_ctor"
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|skip_method
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|-
+operator|*
+name|pp
+operator|==
+name|strlen
+argument_list|(
+literal|"__base_dtor"
+argument_list|)
+operator|&&
+name|strncmp
+argument_list|(
+operator|*
+name|pp
+argument_list|,
+literal|"__base_dtor"
+argument_list|,
+name|strlen
+argument_list|(
+literal|"__base_dtor"
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|skip_method
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|-
+operator|*
+name|pp
+operator|==
+name|strlen
+argument_list|(
+literal|"__deleting_dtor"
+argument_list|)
+operator|&&
+name|strncmp
+argument_list|(
+operator|*
+name|pp
+argument_list|,
+literal|"__deleting_dtor"
+argument_list|,
+name|strlen
+argument_list|(
+literal|"__deleting_dtor"
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|skip_method
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|skip_method
+condition|)
+block|{
+comment|/* Skip past '::'.  */
+operator|*
+name|pp
+operator|=
+name|p
+operator|+
+literal|2
+expr_stmt|;
+comment|/* Read the type.  */
+name|read_type
+argument_list|(
+name|pp
+argument_list|,
+name|objfile
+argument_list|)
+expr_stmt|;
+comment|/* Skip past the colon, mangled name, semicolon, flags, and final 	     semicolon.  */
+while|while
+condition|(
+operator|*
+operator|*
+name|pp
+operator|!=
+literal|';'
+condition|)
+operator|(
+operator|*
+name|pp
+operator|)
+operator|++
+expr_stmt|;
+operator|(
+operator|*
+name|pp
+operator|)
+operator|++
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|*
+name|pp
+operator|!=
+literal|';'
+condition|)
+operator|(
+operator|*
+name|pp
+operator|)
+operator|++
+expr_stmt|;
+operator|(
+operator|*
+name|pp
+operator|)
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 name|new_fnlist
 operator|=
 operator|(
@@ -11713,7 +12106,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new_fnlist
 argument_list|)
@@ -11899,7 +12292,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new_sublist
 argument_list|)
@@ -12003,7 +12396,7 @@ block|}
 comment|/* If this is just a stub, then we don't have the real name here. */
 if|if
 condition|(
-name|TYPE_FLAGS
+name|TYPE_STUB
 argument_list|(
 name|new_sublist
 operator|->
@@ -12011,8 +12404,6 @@ name|fn_field
 operator|.
 name|type
 argument_list|)
-operator|&
-name|TYPE_FLAG_STUB
 condition|)
 block|{
 if|if
@@ -12716,34 +13107,26 @@ specifier|static
 name|int
 name|read_cpp_abbrev
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -12793,7 +13176,7 @@ name|p
 operator|+
 literal|1
 expr_stmt|;
-comment|/* At this point, *pp points to something like "22:23=*22...", 	 where the type number before the ':' is the "context" and 	 everything after is a regular type definition.  Lookup the 	 type, find it's name, and construct the field name. */
+comment|/* At this point, *pp points to something like "22:23=*22...",          where the type number before the ':' is the "context" and          everything after is a regular type definition.  Lookup the          type, find it's name, and construct the field name. */
 name|context
 operator|=
 name|read_type
@@ -12812,6 +13195,25 @@ case|case
 literal|'f'
 case|:
 comment|/* $vf -- a virtual function table pointer */
+name|name
+operator|=
+name|type_name_no_tag
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+name|name
+operator|=
+literal|""
+expr_stmt|;
+block|}
 name|fip
 operator|->
 name|list
@@ -12829,7 +13231,7 @@ name|type_obstack
 argument_list|,
 name|vptr_name
 argument_list|,
-literal|""
+name|name
 argument_list|,
 literal|""
 argument_list|)
@@ -12923,7 +13325,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* At this point, *pp points to the ':'.  Skip it and read the 	 field type. */
+comment|/* At this point, *pp points to the ':'.  Skip it and read the          field type. */
 name|p
 operator|=
 operator|++
@@ -13055,7 +13457,7 @@ operator|*
 name|pp
 argument_list|)
 expr_stmt|;
-comment|/* We have no idea what syntax an unrecognized abbrev would have, so 	 better return 0.  If we returned 1, we would need to at least advance 	 *pp to avoid an infinite loop.  */
+comment|/* We have no idea what syntax an unrecognized abbrev would have, so          better return 0.  If we returned 1, we would need to at least advance          *pp to avoid an infinite loop.  */
 return|return
 literal|0
 return|;
@@ -13071,42 +13473,32 @@ specifier|static
 name|void
 name|read_one_struct_field
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|p
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* The following is code to work around cfront generated stabs.      The stabs contains full mangled name for each field.      We try to demangle the name and extract the field name out of it.   */
+comment|/* The following is code to work around cfront generated stabs.      The stabs contains full mangled name for each field.      We try to demangle the name and extract the field name out of it.    */
 if|if
 condition|(
 name|ARM_DEMANGLING
@@ -13354,9 +13746,9 @@ if|#
 directive|if
 literal|0
 comment|/* Possible future hook for nested types. */
-block|if (**pp == '!') 	{ 	  fip -> list -> field.bitpos = (long)-2;
+block|if (**pp == '!') 	{ 	  fip->list->field.bitpos = (long) -2;
 comment|/* nested type */
-block|p = ++(*pp); 	}       else ...;
+block|p = ++(*pp); 	}       else 	...;
 endif|#
 directive|endif
 while|while
@@ -13531,7 +13923,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* This can happen in two cases: (1) at least for gcc 2.4.5 or so, 	 it is a field which has been optimized out.  The correct stab for 	 this case is to use VISIBILITY_IGNORE, but that is a recent 	 invention.  (2) It is a 0-size array.  For example 	 union { int num; char str[0]; } foo.  Printing "<no value>" for 	 str in "p foo" is OK, since foo.str (and thus foo.str[3]) 	 will continue to work, and a 0-size array as a whole doesn't 	 have any contents to print.  	 I suspect this probably could also happen with gcc -gstabs (not 	 -gstabs+) for static fields, and perhaps other C++ extensions. 	 Hopefully few people use -gstabs with gdb, since it is intended 	 for dbx compatibility.  */
+comment|/* This can happen in two cases: (1) at least for gcc 2.4.5 or so,          it is a field which has been optimized out.  The correct stab for          this case is to use VISIBILITY_IGNORE, but that is a recent          invention.  (2) It is a 0-size array.  For example          union { int num; char str[0]; } foo.  Printing "<no value>" for          str in "p foo" is OK, since foo.str (and thus foo.str[3])          will continue to work, and a 0-size array as a whole doesn't          have any contents to print.           I suspect this probably could also happen with gcc -gstabs (not          -gstabs+) for static fields, and perhaps other C++ extensions.          Hopefully few people use -gstabs with gdb, since it is intended          for dbx compatibility.  */
 comment|/* Ignore this field.  */
 name|fip
 operator|->
@@ -13544,7 +13936,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Detect an unpacked field and mark it as such. 	 dbx gives a bit size for all fields. 	 Note that forward refs cannot be packed, 	 and treat enums as if they had the width of ints.  */
+comment|/* Detect an unpacked field and mark it as such.          dbx gives a bit size for all fields.          Note that forward refs cannot be packed,          and treat enums as if they had the width of ints.  */
 name|struct
 name|type
 modifier|*
@@ -13676,7 +14068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read struct or class data fields.  They have the form:     	NAME : [VISIBILITY] TYPENUM , BITPOS , BITSIZE ;     At the end, we see a semicolon instead of a field.     In C++, this may wind up being NAME:?TYPENUM:PHYSNAME; for    a static field.     The optional VISIBILITY is one of:     	'/0'	(VISIBILITY_PRIVATE) 	'/1'	(VISIBILITY_PROTECTED) 	'/2'	(VISIBILITY_PUBLIC) 	'/9'	(VISIBILITY_IGNORE)     or nothing, for C style fields with public visibility.     Returns 1 for success, 0 for failure.  */
+comment|/* Read struct or class data fields.  They have the form:     NAME : [VISIBILITY] TYPENUM , BITPOS , BITSIZE ;     At the end, we see a semicolon instead of a field.     In C++, this may wind up being NAME:?TYPENUM:PHYSNAME; for    a static field.     The optional VISIBILITY is one of:     '/0' (VISIBILITY_PRIVATE)    '/1' (VISIBILITY_PROTECTED)    '/2' (VISIBILITY_PUBLIC)    '/9' (VISIBILITY_IGNORE)     or nothing, for C style fields with public visibility.     Returns 1 for success, 0 for failure.  */
 end_comment
 
 begin_function
@@ -13684,34 +14076,26 @@ specifier|static
 name|int
 name|read_struct_fields
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -13730,6 +14114,7 @@ operator|*
 name|pp
 expr_stmt|;
 comment|/* Read each data member type until we find the terminating ';' at the end of      the data member list, or break for some other reason such as finding the      start of the member function list. */
+comment|/* Stab string for structure/union does not end with two ';' in      SUN C compiler 5.3 i.e. F6U2, hence check for end of string. */
 while|while
 condition|(
 operator|*
@@ -13737,6 +14122,12 @@ operator|*
 name|pp
 operator|!=
 literal|';'
+operator|&&
+operator|*
+operator|*
+name|pp
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
@@ -13776,7 +14167,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new
 argument_list|)
@@ -13814,7 +14205,7 @@ operator|=
 operator|*
 name|pp
 expr_stmt|;
-comment|/* If is starts with CPLUS_MARKER it is a special abbreviation, 	 unless the CPLUS_MARKER is followed by an underscore, in 	 which case it is just the name of an anonymous type, which we 	 should handle like any other type name.  */
+comment|/* If is starts with CPLUS_MARKER it is a special abbreviation,          unless the CPLUS_MARKER is followed by an underscore, in          which case it is just the name of an anonymous type, which we          should handle like any other type name.  */
 if|if
 condition|(
 name|is_cplus_marker
@@ -13852,7 +14243,7 @@ literal|0
 return|;
 continue|continue;
 block|}
-comment|/* Look for the ':' that separates the field name from the field 	 values.  Data members are delimited by a single ':', while member 	 functions are delimited by a pair of ':'s.  When we hit the member 	 functions (if any), terminate scan loop and return. */
+comment|/* Look for the ':' that separates the field name from the field          values.  Data members are delimited by a single ':', while member          functions are delimited by a pair of ':'s.  When we hit the member          functions (if any), terminate scan loop and return. */
 while|while
 condition|(
 operator|*
@@ -13924,7 +14315,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-comment|/* chill the list of fields: the last entry (at the head) is a 	 partially constructed entry which we now scrub. */
+comment|/* chill the list of fields: the last entry (at the head) is a          partially constructed entry which we now scrub. */
 name|fip
 operator|->
 name|list
@@ -13943,7 +14334,15 @@ block|}
 end_function
 
 begin_comment
+comment|/* *INDENT-OFF* */
+end_comment
+
+begin_comment
 comment|/* The stabs for C++ derived classes contain baseclass information which    is marked by a '!' character after the total size.  This function is    called when we encounter the baseclass marker, and slurps up all the    baseclass information.     Immediately following the '!' marker is the number of base classes that    the class is derived from, followed by information for each base class.    For each base class, there are two visibility specifiers, a bit offset    to the base class information within the derived class, a reference to    the type for the base class, and a terminating semicolon.     A typical example, with two base classes, would be "!2,020,19;0264,21;".    						       ^^ ^ ^ ^  ^ ^  ^ 	Baseclass information marker __________________|| | | |  | |  | 	Number of baseclasses __________________________| | | |  | |  | 	Visibility specifiers (2) ________________________| | |  | |  | 	Offset in bits from start of class _________________| |  | |  | 	Type number for base class ___________________________|  | |  | 	Visibility specifiers (2) _______________________________| |  | 	Offset in bits from start of class ________________________|  | 	Type number of base class ____________________________________|    Return 1 for success, 0 for (error-type-inducing) failure.  */
+end_comment
+
+begin_comment
+comment|/* *INDENT-ON* */
 end_comment
 
 begin_function
@@ -13951,34 +14350,26 @@ specifier|static
 name|int
 name|read_baseclasses
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -14144,7 +14535,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new
 argument_list|)
@@ -14279,7 +14670,7 @@ name|VISIBILITY_PUBLIC
 case|:
 break|break;
 default|default:
-comment|/* Bad visibility format.  Complain and treat it as 	       public.  */
+comment|/* Bad visibility format.  Complain and treat it as 	     public.  */
 block|{
 specifier|static
 name|struct
@@ -14344,7 +14735,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* The last piece of baseclass information is the type of the 	 base class.  Read it, and remember it's type name as this 	 field's name. */
+comment|/* The last piece of baseclass information is the type of the          base class.  Read it, and remember it's type name as this          field's name. */
 name|new
 operator|->
 name|field
@@ -14408,34 +14799,26 @@ specifier|static
 name|int
 name|read_tilde_fields
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -14702,21 +15085,17 @@ specifier|static
 name|int
 name|attach_fn_fields_to_type
 parameter_list|(
-name|fip
-parameter_list|,
-name|type
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -14774,7 +15153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* read cfront class static data.    pp points to string starting with the list of static data    eg: A:ZcA;1@Bpub v2@Bvirpri;__ct__1AFv func__1AFv *sfunc__1AFv ;as__1A ;;              							   ^^^^^^^^         A:ZcA;;foopri__1AFv foopro__1AFv __ct__1AFv __ct__1AFRC1A foopub__1AFv ;;;              							               ^    */
+comment|/* read cfront class static data.    pp points to string starting with the list of static data    eg: A:ZcA;1@Bpub v2@Bvirpri;__ct__1AFv func__1AFv *sfunc__1AFv ;as__1A ;;    ^^^^^^^^     A:ZcA;;foopri__1AFv foopro__1AFv __ct__1AFv __ct__1AFRC1A foopub__1AFv ;;;    ^  */
 end_comment
 
 begin_function
@@ -14782,34 +15161,26 @@ specifier|static
 name|int
 name|read_cfront_static_fields
 parameter_list|(
-name|fip
-parameter_list|,
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nextfield
@@ -14899,7 +15270,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*demangled_name*/
+comment|/*demangled_name */
 if|if
 condition|(
 operator|!
@@ -14955,7 +15326,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new
 argument_list|)
@@ -15027,7 +15398,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set name field */
-comment|/* The following is code to work around cfront generated stabs.          The stabs contains full mangled name for each field.          We try to demangle the name and extract the field name out of it.       */
+comment|/* The following is code to work around cfront generated stabs.          The stabs contains full mangled name for each field.          We try to demangle the name and extract the field name out of it.        */
 if|if
 condition|(
 name|ARM_DEMANGLING
@@ -15154,27 +15525,21 @@ specifier|static
 name|int
 name|copy_cfront_struct_fields
 parameter_list|(
-name|fip
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|nfields
@@ -15226,7 +15591,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|new
 argument_list|)
@@ -15340,28 +15705,22 @@ specifier|static
 name|int
 name|attach_fields_to_type
 parameter_list|(
-name|fip
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|field_info
 modifier|*
 name|fip
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -15682,7 +16041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read the description of a structure (or union type) and return an object    describing the type.     PP points to a character pointer that points to the next unconsumed token    in the the stabs string.  For example, given stabs "A:T4=s4a:1,0,32;;",    *PP will point to "4a:1,0,32;;".     TYPE points to an incomplete type that needs to be filled in.     OBJFILE points to the current objfile from which the stabs information is    being read.  (Note that it is redundant in that TYPE also contains a pointer    to this same objfile, so it might be a good idea to eliminate it.  FIXME).     */
+comment|/* Read the description of a structure (or union type) and return an object    describing the type.     PP points to a character pointer that points to the next unconsumed token    in the the stabs string.  For example, given stabs "A:T4=s4a:1,0,32;;",    *PP will point to "4a:1,0,32;;".     TYPE points to an incomplete type that needs to be filled in.     OBJFILE points to the current objfile from which the stabs information is    being read.  (Note that it is redundant in that TYPE also contains a pointer    to this same objfile, so it might be a good idea to eliminate it.  FIXME).   */
 end_comment
 
 begin_function
@@ -15692,27 +16051,21 @@ name|type
 modifier|*
 name|read_struct_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cleanup
@@ -15878,6 +16231,12 @@ name|objfile
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Fix up any cv-qualified versions of this type.  */
+name|finish_cv_type
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 name|do_cleanups
 argument_list|(
 name|back_to
@@ -15902,29 +16261,23 @@ name|type
 modifier|*
 name|read_array_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -16188,29 +16541,23 @@ name|type
 modifier|*
 name|read_enum_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -16293,7 +16640,7 @@ condition|(
 name|os9k_stabs
 condition|)
 block|{
-comment|/* Size.  Perhaps this does not have to be conditionalized on 	 os9k_stabs (assuming the name of an enum constant can't start 	 with a digit).  */
+comment|/* Size.  Perhaps this does not have to be conditionalized on          os9k_stabs (assuming the name of an enum constant can't start          with a digit).  */
 name|read_huge_number
 argument_list|(
 name|pp
@@ -16758,7 +17105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Sun's ACC uses a somewhat saner method for specifying the builtin    typedefs in every file (for int, long, etc):  	type = b<signed><width><format type>;<offset>;<nbits> 	signed = u or s. 	optional format type = c or b for char or boolean. 	offset = offset from high order bit to start bit of type. 	width is # bytes in object of this type, nbits is # bits in type.     The width/offset stuff appears to be for small objects stored in    larger ones (e.g. `shorts' in `int' registers).  We ignore it for now,    FIXME.  */
+comment|/* Sun's ACC uses a somewhat saner method for specifying the builtin    typedefs in every file (for int, long, etc):     type = b<signed><width><format type>;<offset>;<nbits>    signed = u or s.    optional format type = c or b for char or boolean.    offset = offset from high order bit to start bit of type.    width is # bytes in object of this type, nbits is # bits in type.     The width/offset stuff appears to be for small objects stored in    larger ones (e.g. `shorts' in `int' registers).  We ignore it for now,    FIXME.  */
 end_comment
 
 begin_function
@@ -16768,28 +17115,22 @@ name|type
 modifier|*
 name|read_sun_builtin_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|typenums
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|int
 name|typenums
 index|[
 literal|2
 index|]
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|type_bits
@@ -17036,28 +17377,22 @@ name|type
 modifier|*
 name|read_sun_floating_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|typenums
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|int
 name|typenums
 index|[
 literal|2
 index|]
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|nbits
@@ -17177,24 +17512,18 @@ specifier|static
 name|long
 name|read_huge_number
 parameter_list|(
-name|pp
-parameter_list|,
-name|end
-parameter_list|,
-name|bits
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|int
 name|end
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|bits
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -17330,7 +17659,7 @@ name|overflow
 operator|=
 literal|1
 expr_stmt|;
-comment|/* This depends on large values being output in octal, which is 	 what GCC does. */
+comment|/* This depends on large values being output in octal, which is          what GCC does. */
 if|if
 condition|(
 name|radix
@@ -17461,7 +17790,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* -0x7f is the same as 0x80.  So deal with it by adding one to 	 the number of bits.  */
+comment|/* -0x7f is the same as 0x80.  So deal with it by adding one to          the number of bits.  */
 if|if
 condition|(
 name|sign
@@ -17513,28 +17842,22 @@ name|type
 modifier|*
 name|read_range_type
 parameter_list|(
-name|pp
-parameter_list|,
-name|typenums
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|int
 name|typenums
 index|[
 literal|2
 index|]
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -17764,7 +18087,7 @@ operator|=
 name|n3bits
 expr_stmt|;
 block|}
-comment|/* Range from<large number> to<large number>-1 is a large signed 	 integral type.  Take care of the case where<large number> doesn't 	 fit in a long but<large number>-1 does.  */
+comment|/* Range from<large number> to<large number>-1 is a large signed          integral type.  Take care of the case where<large number> doesn't          fit in a long but<large number>-1 does.  */
 elseif|else
 if|if
 condition|(
@@ -17896,12 +18219,34 @@ operator|>
 literal|0
 condition|)
 block|{
+name|struct
+name|type
+modifier|*
+name|float_type
+init|=
+name|init_type
+argument_list|(
+name|TYPE_CODE_FLT
+argument_list|,
+name|n2
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|objfile
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|self_subrange
 condition|)
 block|{
-return|return
+name|struct
+name|type
+modifier|*
+name|complex_type
+init|=
 name|init_type
 argument_list|(
 name|TYPE_CODE_COMPLEX
@@ -17916,25 +18261,22 @@ name|NULL
 argument_list|,
 name|objfile
 argument_list|)
+decl_stmt|;
+name|TYPE_TARGET_TYPE
+argument_list|(
+name|complex_type
+argument_list|)
+operator|=
+name|float_type
+expr_stmt|;
+return|return
+name|complex_type
 return|;
 block|}
 else|else
-block|{
 return|return
-name|init_type
-argument_list|(
-name|TYPE_CODE_FLT
-argument_list|,
-name|n2
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|objfile
-argument_list|)
+name|float_type
 return|;
-block|}
 block|}
 comment|/* If the upper bound is -1, it must really be an unsigned int.  */
 elseif|else
@@ -17951,7 +18293,7 @@ literal|1
 condition|)
 block|{
 comment|/* It is unsigned int or unsigned long.  */
-comment|/* GCC 2.3.3 uses this for long long too, but that is just a GDB 3.5 	 compatibility hack.  */
+comment|/* GCC 2.3.3 uses this for long long too, but that is just a GDB 3.5          compatibility hack.  */
 return|return
 name|init_type
 argument_list|(
@@ -18024,6 +18366,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* -1 is used for the upper bound of (4 byte) "unsigned int" and          "unsigned long", and we already checked for that,          so don't need to test for it here.  */
 if|if
 condition|(
 name|n3
@@ -18046,38 +18389,65 @@ argument_list|,
 name|objfile
 argument_list|)
 return|;
-if|if
-condition|(
+comment|/* Is n3 == 2**(8n)-1 for some integer n?  Then it's an          unsigned n-byte integer.  But do require n to be a power of          two; we don't want 3- and 5-byte integers flying around.  */
+block|{
+name|int
+name|bytes
+decl_stmt|;
+name|unsigned
+name|long
+name|bits
+decl_stmt|;
+name|bits
+operator|=
 name|n3
+expr_stmt|;
+for|for
+control|(
+name|bytes
+operator|=
+literal|0
+init|;
+operator|(
+name|bits
+operator|&
+literal|0xff
+operator|)
 operator|==
 literal|0xff
-condition|)
-return|return
-name|init_type
-argument_list|(
-name|TYPE_CODE_INT
-argument_list|,
-literal|1
-argument_list|,
-name|TYPE_FLAG_UNSIGNED
-argument_list|,
-name|NULL
-argument_list|,
-name|objfile
-argument_list|)
-return|;
+condition|;
+name|bytes
+operator|++
+control|)
+name|bits
+operator|>>=
+literal|8
+expr_stmt|;
 if|if
 condition|(
-name|n3
+name|bits
 operator|==
-literal|0xffff
+literal|0
+operator|&&
+operator|(
+operator|(
+name|bytes
+operator|-
+literal|1
+operator|)
+operator|&
+name|bytes
+operator|)
+operator|==
+literal|0
 condition|)
+comment|/* "bytes is a power of two" */
 return|return
 name|init_type
 argument_list|(
 name|TYPE_CODE_INT
 argument_list|,
-literal|2
+name|bytes
 argument_list|,
 name|TYPE_FLAG_UNSIGNED
 argument_list|,
@@ -18086,7 +18456,7 @@ argument_list|,
 name|objfile
 argument_list|)
 return|;
-comment|/* -1 is used for the upper bound of (4 byte) "unsigned int" and 	 "unsigned long", and we already checked for that, 	 so don't need to test for it here.  */
+block|}
 block|}
 comment|/* I think this is for Convex "long long".  Since I don't know whether      Convex sets self_subrange, I also accept that particular size regardless      of self_subrange.  */
 elseif|else
@@ -18309,25 +18679,19 @@ modifier|*
 modifier|*
 name|read_args
 parameter_list|(
-name|pp
-parameter_list|,
-name|end
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|int
 name|end
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* FIXME!  Remove this arbitrary limit!  */
 name|struct
@@ -18587,19 +18951,15 @@ begin_function
 name|void
 name|common_block_start
 parameter_list|(
-name|name
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -18670,13 +19030,11 @@ begin_function
 name|void
 name|common_block_end
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Symbols declared since the BCOMM are to have the common block      start address added in when we know it.  common_block and      common_block_i point to the first symbol after the BCOMM in      the local_symbols list; copy the list and hang it off the      symbol for the common block name for later fixup.  */
 name|int
@@ -18922,18 +19280,14 @@ specifier|static
 name|void
 name|fix_common_block
 parameter_list|(
-name|sym
-parameter_list|,
-name|valu
-parameter_list|)
 name|struct
 name|symbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|int
 name|valu
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pending
@@ -19014,13 +19368,11 @@ begin_function
 name|void
 name|add_undefined_type
 parameter_list|(
-name|type
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -19072,13 +19424,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Go through each undefined type, see if it's still undefined, and fix it    up if possible.  We have two kinds of undefined types:     TYPE_CODE_ARRAY:  Array whose target type wasn't defined yet. 			Fix:  update array length using the element bounds 			and the target type's length.    TYPE_CODE_STRUCT, TYPE_CODE_UNION:  Structure whose fields were not 			yet defined at the time a pointer to it was made.    			Fix:  Do a full lookup on the struct/union tag.  */
+comment|/* Go through each undefined type, see if it's still undefined, and fix it    up if possible.  We have two kinds of undefined types:     TYPE_CODE_ARRAY:  Array whose target type wasn't defined yet.    Fix:  update array length using the element bounds    and the target type's length.    TYPE_CODE_STRUCT, TYPE_CODE_UNION:  Structure whose fields were not    yet defined at the time a pointer to it was made.    Fix:  Do a full lookup on the struct/union tag.  */
 end_comment
 
 begin_function
 name|void
 name|cleanup_undefined_types
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -19124,13 +19478,11 @@ block|{
 comment|/* Check if it has been defined since.  Need to do this here 	       as well as in check_typedef to deal with the (legitimate in 	       C though not C++) case of several types with the same name 	       in different source files.  */
 if|if
 condition|(
-name|TYPE_FLAGS
+name|TYPE_STUB
 argument_list|(
 operator|*
 name|type
 argument_list|)
-operator|&
-name|TYPE_FLAG_STUB
 condition|)
 block|{
 name|struct
@@ -19335,13 +19687,11 @@ begin_function
 name|void
 name|scan_file_globals
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hash
@@ -19390,7 +19740,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* Avoid expensive loop through all minimal symbols if there are 	 no unresolved symbols.  */
+comment|/* Avoid expensive loop through all minimal symbols if there are          no unresolved symbols.  */
 for|for
 control|(
 name|hash
@@ -19568,7 +19918,7 @@ block|}
 comment|/* Check to see whether we need to fix up a common block.  */
 comment|/* Note: this code might be executed several times for 		     the same symbol if there are multiple references.  */
 comment|/* If symbol has aliases, do minimal symbol fixups for each. 		     These live aliases/references weren't added to  		     global_sym_chain hash but may also need to be fixed up. */
-comment|/* FIXME: Maybe should have added aliases to the global chain,		     resolved symbol name, then treated aliases as normal  		     symbols?  Still, we wouldn't want to add_to_list. */
+comment|/* FIXME: Maybe should have added aliases to the global chain,                     resolved symbol name, then treated aliases as normal  		     symbols?  Still, we wouldn't want to add_to_list. */
 comment|/* Now do the same for each alias of this symbol */
 name|rsym
 operator|=
@@ -19809,7 +20159,9 @@ end_comment
 begin_function
 name|void
 name|stabsread_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -19820,7 +20172,9 @@ end_comment
 begin_function
 name|void
 name|stabsread_new_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Empty the hash table of global syms looking for values.  */
 name|memset
@@ -19845,7 +20199,9 @@ end_comment
 begin_function
 name|void
 name|start_stabs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|global_stabs
 operator|=
@@ -19890,19 +20246,17 @@ end_comment
 begin_function
 name|void
 name|end_stabs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
 name|type_vector
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|type_vector
 argument_list|)
 expr_stmt|;
@@ -19926,13 +20280,11 @@ begin_function
 name|void
 name|finish_global_stabs
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -19948,11 +20300,8 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|global_stabs
 argument_list|)
 expr_stmt|;
@@ -19971,7 +20320,9 @@ end_comment
 begin_function
 name|void
 name|_initialize_stabsread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|undef_types_allocated
 operator|=

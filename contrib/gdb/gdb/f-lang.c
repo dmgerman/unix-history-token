@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Fortran language support routines for GDB, the GNU debugger.    Copyright 1993, 1994, 1996 Free Software Foundation, Inc.    Contributed by Motorola.  Adapted from the C parser by Farooq Butt    (fmbutt@engage.sps.mot.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Fortran language support routines for GDB, the GNU debugger.    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Motorola.  Adapted from the C parser by Farooq Butt    (fmbutt@engage.sps.mot.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"f-lang.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"valprint.h"
 end_include
 
 begin_comment
@@ -227,6 +233,16 @@ begin_comment
 comment|/* Local functions */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|void
+name|_initialize_f_language
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -234,97 +250,88 @@ literal|0
 end_if
 
 begin_endif
-unit|static void clear_function_list PARAMS ((void)); static long get_bf_for_fcn PARAMS ((long)); static void clear_bf_list PARAMS ((void)); static void patch_all_commons_by_name PARAMS ((char *, CORE_ADDR, int)); static SAVED_F77_COMMON_PTR find_first_common_named PARAMS ((char *)); static void add_common_entry PARAMS ((struct symbol *)); static void add_common_block PARAMS ((char *, CORE_ADDR, int, char *)); static SAVED_FUNCTION *allocate_saved_function_node PARAMS ((void)); static SAVED_BF_PTR allocate_saved_bf_node PARAMS ((void)); static COMMON_ENTRY_PTR allocate_common_entry_node PARAMS ((void)); static SAVED_F77_COMMON_PTR allocate_saved_f77_common_node PARAMS ((void)); static void patch_common_entries PARAMS ((SAVED_F77_COMMON_PTR, CORE_ADDR, int));
+unit|static void clear_function_list (void); static long get_bf_for_fcn (long); static void clear_bf_list (void); static void patch_all_commons_by_name (char *, CORE_ADDR, int); static SAVED_F77_COMMON_PTR find_first_common_named (char *); static void add_common_entry (struct symbol *); static void add_common_block (char *, CORE_ADDR, int, char *); static SAVED_FUNCTION *allocate_saved_function_node (void); static SAVED_BF_PTR allocate_saved_bf_node (void); static COMMON_ENTRY_PTR allocate_common_entry_node (void); static SAVED_F77_COMMON_PTR allocate_saved_f77_common_node (void); static void patch_common_entries (SAVED_F77_COMMON_PTR, CORE_ADDR, int);
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|f_create_fundamental_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|f_printstr
-name|PARAMS
-argument_list|(
-operator|(
-name|GDB_FILE
-operator|*
+parameter_list|(
+name|struct
+name|ui_file
+modifier|*
 name|stream
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|string
-operator|,
+parameter_list|,
 name|unsigned
 name|int
 name|length
-operator|,
+parameter_list|,
 name|int
 name|width
-operator|,
+parameter_list|,
 name|int
 name|force_ellipses
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|f_printchar
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|c
-operator|,
-name|GDB_FILE
-operator|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
 name|stream
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|f_emit_char
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|c
-operator|,
-name|GDB_FILE
-operator|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
 name|stream
-operator|,
+parameter_list|,
 name|int
 name|quoter
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Print the character C on STREAM as part of the contents of a literal    string whose delimiter is QUOTER.  Note that that format for printing    characters and strings is language specific.    FIXME:  This is a copy of the same function from c-exp.y.  It should    be replaced with a true F77 version.  */
@@ -335,23 +342,18 @@ specifier|static
 name|void
 name|f_emit_char
 parameter_list|(
-name|c
-parameter_list|,
-name|stream
-parameter_list|,
-name|quoter
-parameter_list|)
 specifier|register
 name|int
 name|c
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|quoter
-decl_stmt|;
+parameter_list|)
 block|{
 name|c
 operator|&=
@@ -506,17 +508,14 @@ specifier|static
 name|void
 name|f_printchar
 parameter_list|(
-name|c
-parameter_list|,
-name|stream
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|fputs_filtered
 argument_list|(
@@ -553,34 +552,25 @@ specifier|static
 name|void
 name|f_printstr
 parameter_list|(
-name|stream
-parameter_list|,
-name|string
-parameter_list|,
-name|length
-parameter_list|,
-name|width
-parameter_list|,
-name|force_ellipses
-parameter_list|)
-name|GDB_FILE
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|length
-decl_stmt|;
+parameter_list|,
 name|int
 name|width
-decl_stmt|;
+parameter_list|,
 name|int
 name|force_ellipses
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -606,14 +596,6 @@ decl_stmt|;
 specifier|extern
 name|int
 name|inspect_it
-decl_stmt|;
-specifier|extern
-name|int
-name|repeat_count_threshold
-decl_stmt|;
-specifier|extern
-name|int
-name|print_max
 decl_stmt|;
 if|if
 condition|(
@@ -649,7 +631,7 @@ operator|++
 name|i
 control|)
 block|{
-comment|/* Position of the character we are examining 	 to see whether it is repeated.  */
+comment|/* Position of the character we are examining          to see whether it is repeated.  */
 name|unsigned
 name|int
 name|rep1
@@ -886,18 +868,14 @@ name|type
 modifier|*
 name|f_create_fundamental_type
 parameter_list|(
-name|objfile
-parameter_list|,
-name|typeid
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|int
 name|typeid
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1489,7 +1467,7 @@ name|builtin_type_f_real_s16
 expr_stmt|;
 break|break;
 default|default:
-comment|/* FIXME:  For now, if we are asked to produce a type not in this 	 language, create the equivalent of a C integer type with the 	 name "<?type?>".  When all the dust settles from the type 	 reconstruction work, this should probably become an error. */
+comment|/* FIXME:  For now, if we are asked to produce a type not in this          language, create the equivalent of a C integer type with the          name "<?type?>".  When all the dust settles from the type          reconstruction work, this should probably become an error. */
 name|type
 operator|=
 name|init_type
@@ -1761,74 +1739,86 @@ name|struct
 name|type
 modifier|*
 modifier|*
-name|CONST_PTR
-parameter_list|(
+function_decl|const (
 name|f_builtin_types
-index|[]
-parameter_list|)
-init|=
+function_decl|[]
+end_function_decl
+
+begin_expr_stmt
+unit|)
+operator|=
 block|{
 operator|&
 name|builtin_type_f_character
-operator|,
-function_decl|&builtin_type_f_logical
-operator|,
-function_decl|&builtin_type_f_logical_s1
-operator|,
-function_decl|&builtin_type_f_logical_s2
-operator|,
-function_decl|&builtin_type_f_integer
-operator|,
-function_decl|&builtin_type_f_integer_s2
-operator|,
-function_decl|&builtin_type_f_real
-operator|,
-function_decl|&builtin_type_f_real_s8
-operator|,
-function_decl|&builtin_type_f_real_s16
-operator|,
-function_decl|&builtin_type_f_complex_s8
-operator|,
-function_decl|&builtin_type_f_complex_s16
-operator|,
+block|,
+operator|&
+name|builtin_type_f_logical
+block|,
+operator|&
+name|builtin_type_f_logical_s1
+block|,
+operator|&
+name|builtin_type_f_logical_s2
+block|,
+operator|&
+name|builtin_type_f_integer
+block|,
+operator|&
+name|builtin_type_f_integer_s2
+block|,
+operator|&
+name|builtin_type_f_real
+block|,
+operator|&
+name|builtin_type_f_real_s8
+block|,
+operator|&
+name|builtin_type_f_real_s16
+block|,
+operator|&
+name|builtin_type_f_complex_s8
+block|,
+operator|&
+name|builtin_type_f_complex_s16
+block|,
 if|#
 directive|if
 literal|0
-function_decl|&builtin_type_f_complex_s32,
+block|&builtin_type_f_complex_s32,
 endif|#
 directive|endif
-function_decl|&builtin_type_f_void
-operator|,
-function_decl|0
-end_function_decl
+operator|&
+name|builtin_type_f_void
+block|,
+literal|0
+block|}
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-unit|};
 comment|/* This is declared in c-lang.h but it is silly to import that file for what    is already just a hack. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|c_value_print
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|value
-operator|*
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|val_prettyprint
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|const
@@ -1846,6 +1836,8 @@ block|,
 name|range_check_on
 block|,
 name|type_check_on
+block|,
+name|case_sensitive_off
 block|,
 name|f_parse
 block|,
@@ -1941,7 +1933,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_f_language
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|builtin_type_f_void
 operator|=
@@ -2293,7 +2287,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static SAVED_BF_PTR allocate_saved_bf_node() {   SAVED_BF_PTR new;      new = (SAVED_BF_PTR) xmalloc (sizeof (SAVED_BF));   return(new); }  static SAVED_FUNCTION * allocate_saved_function_node() {   SAVED_FUNCTION *new;      new = (SAVED_FUNCTION *) xmalloc (sizeof (SAVED_FUNCTION));   return(new); }  static SAVED_F77_COMMON_PTR allocate_saved_f77_common_node() {   SAVED_F77_COMMON_PTR new;      new = (SAVED_F77_COMMON_PTR) xmalloc (sizeof (SAVED_F77_COMMON));   return(new); }  static COMMON_ENTRY_PTR allocate_common_entry_node() {   COMMON_ENTRY_PTR new;      new = (COMMON_ENTRY_PTR) xmalloc (sizeof (COMMON_ENTRY));   return(new); }
+unit|static SAVED_BF_PTR allocate_saved_bf_node (void) {   SAVED_BF_PTR new;    new = (SAVED_BF_PTR) xmalloc (sizeof (SAVED_BF));   return (new); }  static SAVED_FUNCTION * allocate_saved_function_node (void) {   SAVED_FUNCTION *new;    new = (SAVED_FUNCTION *) xmalloc (sizeof (SAVED_FUNCTION));   return (new); }  static SAVED_F77_COMMON_PTR allocate_saved_f77_common_node (void) {   SAVED_F77_COMMON_PTR new;    new = (SAVED_F77_COMMON_PTR) xmalloc (sizeof (SAVED_F77_COMMON));   return (new); }  static COMMON_ENTRY_PTR allocate_common_entry_node (void) {   COMMON_ENTRY_PTR new;    new = (COMMON_ENTRY_PTR) xmalloc (sizeof (COMMON_ENTRY));   return (new); }
 endif|#
 directive|endif
 end_endif
@@ -2341,23 +2335,23 @@ literal|0
 end_if
 
 begin_comment
-unit|static SAVED_BF_PTR saved_bf_list=NULL;
-comment|/* Ptr to (.bf,function)                                                      list*/
+unit|static SAVED_BF_PTR saved_bf_list = NULL;
+comment|/* Ptr to (.bf,function)  						   list */
 end_comment
 
 begin_comment
-unit|static SAVED_BF_PTR saved_bf_list_end=NULL;
+unit|static SAVED_BF_PTR saved_bf_list_end = NULL;
 comment|/* Ptr to above list's end */
 end_comment
 
 begin_comment
-unit|static SAVED_BF_PTR current_head_bf_list=NULL;
-comment|/* Current head of above list 						  */
+unit|static SAVED_BF_PTR current_head_bf_list = NULL;
+comment|/* Current head of above list 							 */
 end_comment
 
 begin_comment
 unit|static SAVED_BF_PTR tmp_bf_ptr;
-comment|/* Generic temporary for use                                                      in macros */
+comment|/* Generic temporary for use  				   in macros */
 end_comment
 
 begin_comment
@@ -2365,17 +2359,17 @@ comment|/* The following function simply enters a given common block onto     th
 end_comment
 
 begin_comment
-unit|static void add_common_block(name,offset,secnum,func_stab)      char *name;      CORE_ADDR offset;      int secnum;      char *func_stab; {   SAVED_F77_COMMON_PTR tmp;   char *c,*local_copy_func_stab;
+unit|static void add_common_block (char *name, CORE_ADDR offset, int secnum, char *func_stab) {   SAVED_F77_COMMON_PTR tmp;   char *c, *local_copy_func_stab;
 comment|/* If the COMMON block we are trying to add has a blank       name (i.e. "#BLNK_COM") then we set it to __BLANK      because the darn "#" character makes GDB's input       parser have fits. */
 end_comment
 
 begin_comment
-unit|if (STREQ(name,BLANK_COMMON_NAME_ORIGINAL) ||       STREQ(name,BLANK_COMMON_NAME_MF77))     {              free(name);       name = alloca(strlen(BLANK_COMMON_NAME_LOCAL) + 1);        strcpy(name,BLANK_COMMON_NAME_LOCAL);      }      tmp = allocate_saved_f77_common_node();      local_copy_func_stab = xmalloc (strlen(func_stab) + 1);   strcpy(local_copy_func_stab,func_stab);       tmp->name = xmalloc(strlen(name) + 1);
+unit|if (STREQ (name, BLANK_COMMON_NAME_ORIGINAL) ||       STREQ (name, BLANK_COMMON_NAME_MF77))     {        xfree (name);       name = alloca (strlen (BLANK_COMMON_NAME_LOCAL) + 1);       strcpy (name, BLANK_COMMON_NAME_LOCAL);     }    tmp = allocate_saved_f77_common_node ();    local_copy_func_stab = xmalloc (strlen (func_stab) + 1);   strcpy (local_copy_func_stab, func_stab);    tmp->name = xmalloc (strlen (name) + 1);
 comment|/* local_copy_func_stab is a stabstring, let us first extract the       function name from the stab by NULLing out the ':' character. */
 end_comment
 
 begin_endif
-unit|c = NULL;    c = strchr(local_copy_func_stab,':');      if (c)     *c = '\0';   else     error("Malformed function STAB found in add_common_block()");         tmp->owning_function = xmalloc (strlen(local_copy_func_stab) + 1);       strcpy(tmp->owning_function,local_copy_func_stab);       strcpy(tmp->name,name);   tmp->offset = offset;    tmp->next = NULL;   tmp->entries = NULL;   tmp->secnum = secnum;       current_common = tmp;      if (head_common_list == NULL)     {       head_common_list = tail_common_list = tmp;     }   else     {       tail_common_list->next = tmp;        tail_common_list = tmp;     } }
+unit|c = NULL;   c = strchr (local_copy_func_stab, ':');    if (c)     *c = '\0';   else     error ("Malformed function STAB found in add_common_block()");     tmp->owning_function = xmalloc (strlen (local_copy_func_stab) + 1);    strcpy (tmp->owning_function, local_copy_func_stab);    strcpy (tmp->name, name);   tmp->offset = offset;   tmp->next = NULL;   tmp->entries = NULL;   tmp->secnum = secnum;    current_common = tmp;    if (head_common_list == NULL)     {       head_common_list = tail_common_list = tmp;     }   else     {       tail_common_list->next = tmp;       tail_common_list = tmp;     } }
 endif|#
 directive|endif
 end_endif
@@ -2391,12 +2385,12 @@ literal|0
 end_if
 
 begin_comment
-unit|static void add_common_entry(entry_sym_ptr)      struct symbol *entry_sym_ptr;  {   COMMON_ENTRY_PTR tmp;
+unit|static void add_common_entry (struct symbol *entry_sym_ptr) {   COMMON_ENTRY_PTR tmp;
 comment|/* The order of this list is important, since       we expect the entries to appear in decl.      order when we later issue "info common" calls */
 end_comment
 
 begin_endif
-unit|tmp = allocate_common_entry_node();      tmp->next = NULL;   tmp->symbol = entry_sym_ptr;      if (current_common == NULL)     error("Attempt to add COMMON entry with no block open!");   else              {       if (current_common->entries == NULL) 	{ 	  current_common->entries = tmp; 	  current_common->end_of_entries = tmp;  	}       else 	{ 	  current_common->end_of_entries->next = tmp;  	  current_common->end_of_entries = tmp;  	}     } }
+unit|tmp = allocate_common_entry_node ();    tmp->next = NULL;   tmp->symbol = entry_sym_ptr;    if (current_common == NULL)     error ("Attempt to add COMMON entry with no block open!");   else     {       if (current_common->entries == NULL) 	{ 	  current_common->entries = tmp; 	  current_common->end_of_entries = tmp; 	}       else 	{ 	  current_common->end_of_entries->next = tmp; 	  current_common->end_of_entries = tmp; 	}     } }
 endif|#
 directive|endif
 end_endif
@@ -2412,7 +2406,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static SAVED_F77_COMMON_PTR find_first_common_named(name)      char *name;  {      SAVED_F77_COMMON_PTR tmp;      tmp = head_common_list;      while (tmp != NULL)     {       if (STREQ(tmp->name,name)) 	return(tmp);       else 	tmp = tmp->next;     }   return(NULL);  }
+unit|static SAVED_F77_COMMON_PTR find_first_common_named (char *name) {    SAVED_F77_COMMON_PTR tmp;    tmp = head_common_list;    while (tmp != NULL)     {       if (STREQ (tmp->name, name)) 	return (tmp);       else 	tmp = tmp->next;     }   return (NULL); }
 endif|#
 directive|endif
 end_endif
@@ -2425,18 +2419,14 @@ begin_function
 name|SAVED_F77_COMMON_PTR
 name|find_common_for_function
 parameter_list|(
+name|char
+modifier|*
 name|name
 parameter_list|,
+name|char
+modifier|*
 name|funcname
 parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|char
-modifier|*
-name|funcname
-decl_stmt|;
 block|{
 name|SAVED_F77_COMMON_PTR
 name|tmp
@@ -2504,22 +2494,22 @@ comment|/* The following function is called to patch up the offsets     for the 
 end_comment
 
 begin_comment
-unit|static void patch_common_entries (blk, offset, secnum)      SAVED_F77_COMMON_PTR blk;      CORE_ADDR offset;      int secnum; {   COMMON_ENTRY_PTR entry;      blk->offset = offset;
+unit|static void patch_common_entries (SAVED_F77_COMMON_PTR blk, CORE_ADDR offset, int secnum) {   COMMON_ENTRY_PTR entry;    blk->offset = offset;
 comment|/* Keep this around for future use. */
 end_comment
 
 begin_comment
-unit|entry = blk->entries;      while (entry != NULL)     {       SYMBOL_VALUE (entry->symbol) += offset;        SYMBOL_SECTION (entry->symbol) = secnum;              entry = entry->next;     }   blk->secnum = secnum;  }
+unit|entry = blk->entries;    while (entry != NULL)     {       SYMBOL_VALUE (entry->symbol) += offset;       SYMBOL_SECTION (entry->symbol) = secnum;        entry = entry->next;     }   blk->secnum = secnum; }
 comment|/* Patch all commons named "name" that need patching.Since COMMON    blocks occur with relative infrequency, we simply do a linear scan on    the name.  Eventually, the best way to do this will be a    hashed-lookup.  Secnum is the section number for the .bss section    (which is where common data lives). */
 end_comment
 
 begin_comment
-unit|static void patch_all_commons_by_name (name, offset, secnum)      char *name;      CORE_ADDR offset;      int secnum; {      SAVED_F77_COMMON_PTR tmp;
+unit|static void patch_all_commons_by_name (char *name, CORE_ADDR offset, int secnum) {    SAVED_F77_COMMON_PTR tmp;
 comment|/* For blank common blocks, change the canonical reprsentation       of a blank name */
 end_comment
 
 begin_endif
-unit|if ((STREQ(name,BLANK_COMMON_NAME_ORIGINAL)) ||       (STREQ(name,BLANK_COMMON_NAME_MF77)))     {       free(name);       name = alloca(strlen(BLANK_COMMON_NAME_LOCAL) + 1);        strcpy(name,BLANK_COMMON_NAME_LOCAL);      }      tmp = head_common_list;      while (tmp != NULL)     {       if (COMMON_NEEDS_PATCHING(tmp)) 	if (STREQ(tmp->name,name)) 	  patch_common_entries(tmp,offset,secnum);               tmp = tmp->next;     }    }
+unit|if ((STREQ (name, BLANK_COMMON_NAME_ORIGINAL)) ||       (STREQ (name, BLANK_COMMON_NAME_MF77)))     {       xfree (name);       name = alloca (strlen (BLANK_COMMON_NAME_LOCAL) + 1);       strcpy (name, BLANK_COMMON_NAME_LOCAL);     }    tmp = head_common_list;    while (tmp != NULL)     {       if (COMMON_NEEDS_PATCHING (tmp)) 	if (STREQ (tmp->name, name)) 	  patch_common_entries (tmp, offset, secnum);        tmp = tmp->next;     } }
 endif|#
 directive|endif
 end_endif
@@ -2563,7 +2553,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void    clear_bf_list() {      SAVED_BF_PTR tmp = saved_bf_list;   SAVED_BF_PTR next = NULL;       while (tmp != NULL)     {       next = tmp->next;       free(tmp);       tmp=next;     }   saved_bf_list = NULL; }
+unit|static void clear_bf_list (void) {    SAVED_BF_PTR tmp = saved_bf_list;   SAVED_BF_PTR next = NULL;    while (tmp != NULL)     {       next = tmp->next;       xfree (tmp);       tmp = next;     }   saved_bf_list = NULL; }
 endif|#
 directive|endif
 end_endif
@@ -2581,17 +2571,17 @@ literal|0
 end_if
 
 begin_comment
-unit|static long get_bf_for_fcn (the_function)      long the_function; {   SAVED_BF_PTR tmp;   int nprobes = 0;
+unit|static long get_bf_for_fcn (long the_function) {   SAVED_BF_PTR tmp;   int nprobes = 0;
 comment|/* First use a simple queuing algorithm (i.e. look and see if the       item at the head of the queue is the one you want)  */
 end_comment
 
 begin_comment
-unit|if (saved_bf_list == NULL)     fatal ("cannot get .bf node off empty list");       if (current_head_bf_list != NULL)      if (current_head_bf_list->symnum_fcn == the_function)       { 	if (global_remote_debug)  	  fprintf(stderr,"*");   	tmp = current_head_bf_list;  	current_head_bf_list = current_head_bf_list->next; 	return(tmp->symnum_bf);        }
+unit|if (saved_bf_list == NULL)     internal_error (__FILE__, __LINE__, 		    "cannot get .bf node off empty list");    if (current_head_bf_list != NULL)     if (current_head_bf_list->symnum_fcn == the_function)       { 	if (global_remote_debug) 	  fprintf (stderr, "*");  	tmp = current_head_bf_list; 	current_head_bf_list = current_head_bf_list->next; 	return (tmp->symnum_bf);       }
 comment|/* If the above did not work (probably because #line directives were       used in the sourcefile and they messed up our internal tables) we now do      the ugly linear scan */
 end_comment
 
 begin_endif
-unit|if (global_remote_debug)      fprintf(stderr,"\ndefaulting to linear scan\n");       nprobes = 0;    tmp = saved_bf_list;   while (tmp != NULL)     {       nprobes++;        if (tmp->symnum_fcn == the_function) 	{  	  if (global_remote_debug) 	    fprintf(stderr,"Found in %d probes\n",nprobes); 	  current_head_bf_list = tmp->next; 	  return(tmp->symnum_bf); 	}        tmp= tmp->next;      }      return(-1);  }  static SAVED_FUNCTION_PTR saved_function_list=NULL;  static SAVED_FUNCTION_PTR saved_function_list_end=NULL;   static void clear_function_list() {   SAVED_FUNCTION_PTR tmp = saved_function_list;   SAVED_FUNCTION_PTR next = NULL;       while (tmp != NULL)     {       next = tmp->next;       free(tmp);       tmp = next;     }      saved_function_list = NULL; }
+unit|if (global_remote_debug)     fprintf (stderr, "\ndefaulting to linear scan\n");    nprobes = 0;   tmp = saved_bf_list;   while (tmp != NULL)     {       nprobes++;       if (tmp->symnum_fcn == the_function) 	{ 	  if (global_remote_debug) 	    fprintf (stderr, "Found in %d probes\n", nprobes); 	  current_head_bf_list = tmp->next; 	  return (tmp->symnum_bf); 	}       tmp = tmp->next;     }    return (-1); }  static SAVED_FUNCTION_PTR saved_function_list = NULL; static SAVED_FUNCTION_PTR saved_function_list_end = NULL;  static void clear_function_list (void) {   SAVED_FUNCTION_PTR tmp = saved_function_list;   SAVED_FUNCTION_PTR next = NULL;    while (tmp != NULL)     {       next = tmp->next;       xfree (tmp);       tmp = next;     }    saved_function_list = NULL; }
 endif|#
 directive|endif
 end_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level Unix child interface to ttrace, for GDB when running under HP-UX.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level Unix child interface to ttrace, for GDB when running under HP-UX.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -36,13 +36,29 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"command.h"
+end_include
+
+begin_comment
+comment|/* We need pstat functionality so that we can get the exec file    for a process we attach to.     According to HP, we should use the 64bit interfaces, so we    define _PSTAT64 to achieve this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PSTAT64
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/pstat.h>
 end_include
 
 begin_comment
@@ -119,23 +135,6 @@ include|#
 directive|include
 file|<sys/ttrace.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UNISTD_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -565,7 +564,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This semaphore is used to coordinate the child and parent processes    after a fork(), and before an exec() by the child.  See parent_attach_all    for details.    */
+comment|/* This semaphore is used to coordinate the child and parent processes    after a fork(), and before an exec() by the child.  See parent_attach_all    for details.  */
 end_comment
 
 begin_typedef
@@ -690,7 +689,7 @@ value|uint64_t
 end_define
 
 begin_comment
-comment|/* When supplied as the "addr" operand, ttrace interprets this    to mean, "from the current address".    */
+comment|/* When supplied as the "addr" operand, ttrace interprets this    to mean, "from the current address".  */
 end_comment
 
 begin_define
@@ -701,7 +700,7 @@ value|((TTRACE_ARG_TYPE) TT_NOPC)
 end_define
 
 begin_comment
-comment|/* When supplied as the "addr", "data" or "addr2" operand for most    requests, ttrace interprets this to mean, "pay no heed to this    argument".    */
+comment|/* When supplied as the "addr", "data" or "addr2" operand for most    requests, ttrace interprets this to mean, "pay no heed to this    argument".  */
 end_comment
 
 begin_define
@@ -712,7 +711,7 @@ value|((TTRACE_ARG_TYPE) TT_NULLARG)
 end_define
 
 begin_comment
-comment|/* This is capable of holding the value of a 32-bit register.  The    value is always left-aligned in the buffer; i.e., [0] contains    the most-significant byte of the register's value, and [sizeof(reg)]    contains the least-significant value.     ??rehrauer: Yes, this assumes that an int is 32-bits on HP-UX, and    that registers are 32-bits on HP-UX.  The latter assumption changes    with PA2.0.    */
+comment|/* This is capable of holding the value of a 32-bit register.  The    value is always left-aligned in the buffer; i.e., [0] contains    the most-significant byte of the register's value, and [sizeof(reg)]    contains the least-significant value.     ??rehrauer: Yes, this assumes that an int is 32-bits on HP-UX, and    that registers are 32-bits on HP-UX.  The latter assumption changes    with PA2.0.  */
 end_comment
 
 begin_typedef
@@ -1015,13 +1014,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|saved_real_pid
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+name|ptid_t
+name|saved_real_ptid
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -1034,11 +1032,9 @@ begin_function
 name|CORE_ADDR
 name|get_raw_pc
 parameter_list|(
-name|ttid
-parameter_list|)
 name|lwpid_t
 name|ttid
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -1115,11 +1111,9 @@ name|char
 modifier|*
 name|get_printable_name_of_stepping_mode
 parameter_list|(
-name|mode
-parameter_list|)
 name|stepping_mode_t
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1161,11 +1155,9 @@ name|char
 modifier|*
 name|get_printable_name_of_ttrace_event
 parameter_list|(
-name|event
-parameter_list|)
 name|ttevents_t
 name|event
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* This enumeration is "gappy", so don't use a table. */
 switch|switch
@@ -1251,7 +1243,7 @@ case|:
 return|return
 literal|"TTEVT_SYSCALL_RESTART"
 return|;
-default|default :
+default|default:
 return|return
 literal|"?new event?"
 return|;
@@ -1271,11 +1263,9 @@ name|char
 modifier|*
 name|get_printable_name_of_ttrace_request
 parameter_list|(
-name|request
-parameter_list|)
 name|ttreq_t
 name|request
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1450,7 +1440,7 @@ case|:
 return|return
 literal|"TT_LWP_GET_STATE"
 return|;
-default|default :
+default|default:
 return|return
 literal|"?new req?"
 return|;
@@ -1471,11 +1461,9 @@ name|char
 modifier|*
 name|get_printable_name_of_process_state
 parameter_list|(
-name|process_state
-parameter_list|)
 name|process_state_t
 name|process_state
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1529,12 +1517,10 @@ specifier|static
 name|void
 name|clear_ttstate_t
 parameter_list|(
-name|tts
-parameter_list|)
 name|ttstate_t
 modifier|*
 name|tts
-decl_stmt|;
+parameter_list|)
 block|{
 name|tts
 operator|->
@@ -1572,18 +1558,14 @@ specifier|static
 name|void
 name|copy_ttstate_t
 parameter_list|(
+name|ttstate_t
+modifier|*
 name|tts_to
 parameter_list|,
+name|ttstate_t
+modifier|*
 name|tts_from
 parameter_list|)
-name|ttstate_t
-modifier|*
-name|tts_to
-decl_stmt|;
-name|ttstate_t
-modifier|*
-name|tts_from
-decl_stmt|;
 block|{
 name|memcpy
 argument_list|(
@@ -1617,7 +1599,9 @@ begin_function
 specifier|static
 name|int
 name|any_thread_records
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1641,16 +1625,12 @@ name|thread_info
 modifier|*
 name|create_thread_info
 parameter_list|(
-name|pid
-parameter_list|,
-name|tid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -1665,7 +1645,7 @@ name|thread_count_of_pid
 decl_stmt|;
 name|new_p
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1780,9 +1760,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|saved_real_pid
+name|saved_real_ptid
 operator|=
-name|inferior_pid
+name|inferior_ptid
 expr_stmt|;
 block|}
 else|else
@@ -1806,13 +1786,13 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Another day, another thread...      */
+comment|/* Another day, another thread...    */
 name|thread_head
 operator|.
 name|count
 operator|++
 expr_stmt|;
-comment|/* The new thread always goes at the head of the list.      */
+comment|/* The new thread always goes at the head of the list.    */
 name|new_p
 operator|->
 name|next
@@ -1827,7 +1807,7 @@ name|head
 operator|=
 name|new_p
 expr_stmt|;
-comment|/* Is this the "pseudo" thread of a process?  It is if there's      * no other thread for this process on the list.  (Note that this      * accomodates multiple processes, such as we see even for simple      * cases like forking "non-threaded" programs.)      */
+comment|/* Is this the "pseudo" thread of a process?  It is if there's    * no other thread for this process on the list.  (Note that this    * accomodates multiple processes, such as we see even for simple    * cases like forking "non-threaded" programs.)    */
 name|p
 operator|=
 name|thread_head
@@ -1863,7 +1843,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* Did we see any other threads for this pid?  (Recall that we just      * added this thread to the list...)      */
+comment|/* Did we see any other threads for this pid?  (Recall that we just    * added this thread to the list...)    */
 if|if
 condition|(
 name|thread_count_of_pid
@@ -1906,7 +1886,9 @@ begin_function
 specifier|static
 name|void
 name|clear_thread_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -1951,7 +1933,7 @@ name|p
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|q
 argument_list|)
@@ -1996,7 +1978,7 @@ name|p
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|q
 argument_list|)
@@ -2020,7 +2002,7 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-comment|/* No threads, so can't have pending events.      */
+comment|/* No threads, so can't have pending events.    */
 name|more_events_left
 operator|=
 literal|0
@@ -2038,11 +2020,9 @@ name|thread_info
 modifier|*
 name|find_thread_info
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -2125,17 +2105,15 @@ specifier|static
 name|lwpid_t
 name|map_from_gdb_tid
 parameter_list|(
-name|gdb_tid
-parameter_list|)
 name|lwpid_t
 name|gdb_tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
 name|p
 decl_stmt|;
-comment|/* First assume gdb_tid really is a tid, and try to find a      * matching entry on the threads list.      */
+comment|/* First assume gdb_tid really is a tid, and try to find a    * matching entry on the threads list.    */
 for|for
 control|(
 name|p
@@ -2165,7 +2143,7 @@ return|return
 name|gdb_tid
 return|;
 block|}
-comment|/* It doesn't appear to be a tid; perhaps it's really a pid?      * Try to find a "pseudo" thread entry on the threads list.      */
+comment|/* It doesn't appear to be a tid; perhaps it's really a pid?    * Try to find a "pseudo" thread entry on the threads list.    */
 for|for
 control|(
 name|p
@@ -2199,7 +2177,7 @@ operator|->
 name|tid
 return|;
 block|}
-comment|/* Perhaps it's the tid of a deleted thread we may still      * have some knowledge of?      */
+comment|/* Perhaps it's the tid of a deleted thread we may still    * have some knowledge of?    */
 for|for
 control|(
 name|p
@@ -2229,7 +2207,7 @@ return|return
 name|gdb_tid
 return|;
 block|}
-comment|/* Or perhaps it's the pid of a deleted process we may still      * have knowledge of?      */
+comment|/* Or perhaps it's the pid of a deleted process we may still    * have knowledge of?    */
 for|for
 control|(
 name|p
@@ -2279,11 +2257,9 @@ specifier|static
 name|lwpid_t
 name|map_to_gdb_tid
 parameter_list|(
-name|real_tid
-parameter_list|)
 name|lwpid_t
 name|real_tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -2389,7 +2365,9 @@ begin_function
 specifier|static
 name|int
 name|saved_signals_exist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -2439,11 +2417,9 @@ specifier|static
 name|int
 name|is_pseudo_thread
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -2485,11 +2461,9 @@ specifier|static
 name|int
 name|is_terminated
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -2526,11 +2500,9 @@ specifier|static
 name|int
 name|is_process_id
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|lwpid_t
 name|tid
@@ -2641,16 +2613,12 @@ name|thread_info
 modifier|*
 name|add_tthread
 parameter_list|(
-name|pid
-parameter_list|,
-name|tid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -2693,11 +2661,9 @@ specifier|static
 name|void
 name|del_tthread
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -2776,7 +2742,7 @@ operator|->
 name|am_pseudo
 condition|)
 block|{
-comment|/*                 * Deleting a main thread is ok if we're doing                 * a parent-follow on a child; this is odd but                 * not wrong.  It apparently _doesn't_ happen                 * on the child-follow, as we don't just delete                 * the pseudo while keeping the rest of the                 * threads around--instead, we clear out the whole                 * thread list at once.                 */
+comment|/* 	       * Deleting a main thread is ok if we're doing 	       * a parent-follow on a child; this is odd but 	       * not wrong.  It apparently _doesn't_ happen 	       * on the child-follow, as we don't just delete 	       * the pseudo while keeping the rest of the 	       * threads around--instead, we clear out the whole 	       * thread list at once. 	       */
 name|thread_info
 modifier|*
 name|q
@@ -2813,7 +2779,7 @@ operator|==
 name|p
 condition|)
 block|{
-comment|/* Remove from pseudo list.                          */
+comment|/* Remove from pseudo list. 		       */
 if|if
 condition|(
 name|q_chase
@@ -2845,7 +2811,7 @@ name|q
 expr_stmt|;
 block|}
 block|}
-comment|/* Remove from live list.             */
+comment|/* Remove from live list. 	   */
 name|thread_head
 operator|.
 name|count
@@ -2874,7 +2840,7 @@ name|p
 operator|->
 name|next
 expr_stmt|;
-comment|/* Add to deleted thread list.             */
+comment|/* Add to deleted thread list. 	   */
 name|p
 operator|->
 name|next
@@ -2942,11 +2908,9 @@ specifier|static
 name|int
 name|get_pid_for
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3033,16 +2997,12 @@ specifier|static
 name|void
 name|set_handled
 parameter_list|(
-name|pid
-parameter_list|,
-name|tid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3088,11 +3048,9 @@ specifier|static
 name|int
 name|was_handled
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3132,11 +3090,9 @@ specifier|static
 name|void
 name|clear_handled
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3196,7 +3152,9 @@ begin_function
 specifier|static
 name|void
 name|clear_all_handled
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3276,11 +3234,9 @@ specifier|static
 name|void
 name|clear_stepping_mode
 parameter_list|(
-name|tid
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3340,7 +3296,9 @@ begin_function
 specifier|static
 name|void
 name|clear_all_stepping_mode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3419,7 +3377,9 @@ begin_function
 specifier|static
 name|void
 name|set_all_unseen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3477,12 +3437,10 @@ specifier|static
 name|void
 name|print_tthread
 parameter_list|(
-name|p
-parameter_list|)
 name|thread_info
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3616,7 +3574,9 @@ begin_function
 specifier|static
 name|void
 name|print_tthreads
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3772,7 +3732,9 @@ begin_function
 specifier|static
 name|void
 name|update_thread_list
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -3803,7 +3765,7 @@ operator|->
 name|next
 control|)
 block|{
-comment|/* Is this an "unseen" thread which really happens to be a process?          If so, is it inferior_pid and is a vfork in flight?  If yes to          all, then DON'T REMOVE IT!  We're in the midst of moving a vfork          operation, which is a multiple step thing, to the point where we          can touch the parent again.  We've most likely stopped to examine          the child at a late stage in the vfork, and if we're not following          the child, we'd best not treat the parent as a dead "thread"...          */
+comment|/* Is this an "unseen" thread which really happens to be a process?          If so, is it inferior_ptid and is a vfork in flight?  If yes to          all, then DON'T REMOVE IT!  We're in the midst of moving a vfork          operation, which is a multiple step thing, to the point where we          can touch the parent again.  We've most likely stopped to examine          the child at a late stage in the vfork, and if we're not following          the child, we'd best not treat the parent as a dead "thread"...        */
 if|if
 condition|(
 operator|(
@@ -3841,7 +3803,7 @@ operator|->
 name|seen
 condition|)
 block|{
-comment|/* Remove this one              */
+comment|/* Remove this one 	   */
 ifdef|#
 directive|ifdef
 name|THREAD_DEBUG
@@ -3888,34 +3850,24 @@ specifier|static
 name|int
 name|call_real_ttrace
 parameter_list|(
-name|request
-parameter_list|,
-name|pid
-parameter_list|,
-name|tid
-parameter_list|,
-name|addr
-parameter_list|,
-name|data
-parameter_list|,
-name|addr2
-parameter_list|)
 name|ttreq_t
 name|request
-decl_stmt|;
+parameter_list|,
 name|pid_t
 name|pid
-decl_stmt|;
+parameter_list|,
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|,
 name|TTRACE_ARG_TYPE
 name|addr
-decl_stmt|,
+parameter_list|,
+name|TTRACE_ARG_TYPE
 name|data
-decl_stmt|,
+parameter_list|,
+name|TTRACE_ARG_TYPE
 name|addr2
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -3949,7 +3901,7 @@ condition|(
 name|errno
 condition|)
 block|{
-comment|/* Don't bother for a known benign error: if you ask for the      * first thread state, but there is only one thread and it's      * not stopped, ttrace complains.      *      * We have this inside the #ifdef because our caller will do      * this check for real.      */
+comment|/* Don't bother for a known benign error: if you ask for the        * first thread state, but there is only one thread and it's        * not stopped, ttrace complains.        *        * We have this inside the #ifdef because our caller will do        * this check for real.        */
 if|if
 condition|(
 name|request
@@ -3989,7 +3941,7 @@ if|#
 directive|if
 literal|0
 comment|/* ??rehrauer: It would probably be most robust to catch and report    * failed requests here.  However, some clients of this interface    * seem to expect to catch& deal with them, so we'd best not.    */
-block|if (errno) {     strcpy (reason_for_failure, "ttrace (");     strcat (reason_for_failure, get_printable_name_of_ttrace_request (request));     strcat (reason_for_failure, ")");     printf( "ttrace error, errno = %d\n", errno );     perror_with_name (reason_for_failure);   }
+block|if (errno)     {       strcpy (reason_for_failure, "ttrace (");       strcat (reason_for_failure, get_printable_name_of_ttrace_request (request));       strcat (reason_for_failure, ")");       printf ("ttrace error, errno = %d\n", errno);       perror_with_name (reason_for_failure);     }
 endif|#
 directive|endif
 return|return
@@ -4010,32 +3962,22 @@ specifier|static
 name|int
 name|call_real_ttrace_wait
 parameter_list|(
-name|pid
-parameter_list|,
-name|tid
-parameter_list|,
-name|option
-parameter_list|,
-name|tsp
-parameter_list|,
-name|tsp_size
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|,
 name|ttwopt_t
 name|option
-decl_stmt|;
+parameter_list|,
 name|ttstate_t
 modifier|*
 name|tsp
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|tsp_size
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ttw_status
@@ -4112,17 +4054,13 @@ specifier|static
 name|lwpid_t
 name|get_process_first_stopped_thread_id
 parameter_list|(
-name|pid
-parameter_list|,
-name|thread_state
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|ttstate_t
 modifier|*
 name|thread_state
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -4172,7 +4110,7 @@ operator|==
 name|EPROTO
 condition|)
 block|{
-comment|/* This is an error we can handle: there isn't any stopped          * thread.  This happens when we're re-starting the application          * and it has only one thread.  GET_NEXT handles the case of          * no more stopped threads well; GET_FIRST doesn't.  (A ttrace          * "feature".)          */
+comment|/* This is an error we can handle: there isn't any stopped 	   * thread.  This happens when we're re-starting the application 	   * and it has only one thread.  GET_NEXT handles the case of 	   * no more stopped threads well; GET_FIRST doesn't.  (A ttrace 	   * "feature".) 	   */
 name|tt_status
 operator|=
 literal|1
@@ -4222,17 +4160,13 @@ specifier|static
 name|lwpid_t
 name|get_process_next_stopped_thread_id
 parameter_list|(
-name|pid
-parameter_list|,
-name|thread_state
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|ttstate_t
 modifier|*
 name|thread_state
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -4297,7 +4231,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* End of list, no next state.  Don't return the      * tts_lwpid, as it's a meaningless "240".      *      * This is an HPUX "feature".      */
+comment|/* End of list, no next state.  Don't return the        * tts_lwpid, as it's a meaningless "240".        *        * This is an HPUX "feature".        */
 return|return
 literal|0
 return|;
@@ -4319,11 +4253,9 @@ specifier|static
 name|lwpid_t
 name|get_active_tid_of_pid
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|ttstate_t
 name|thread_state
@@ -4348,11 +4280,9 @@ begin_function
 name|int
 name|is_process_ttrace_request
 parameter_list|(
-name|tt_request
-parameter_list|)
 name|ttreq_t
 name|tt_request
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|IS_TTRACE_PROCREQ
@@ -4375,11 +4305,9 @@ specifier|static
 name|ttreq_t
 name|make_process_version
 parameter_list|(
-name|request
-parameter_list|)
 name|ttreq_t
 name|request
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4446,7 +4374,7 @@ operator|-
 literal|1
 return|;
 comment|/* No equivalent */
-default|default :
+default|default:
 return|return
 name|request
 return|;
@@ -4466,29 +4394,21 @@ specifier|static
 name|int
 name|call_ttrace
 parameter_list|(
-name|request
-parameter_list|,
-name|gdb_tid
-parameter_list|,
-name|addr
-parameter_list|,
-name|data
-parameter_list|,
-name|addr2
-parameter_list|)
 name|ttreq_t
 name|request
-decl_stmt|;
+parameter_list|,
 name|int
 name|gdb_tid
-decl_stmt|;
+parameter_list|,
 name|TTRACE_ARG_TYPE
 name|addr
-decl_stmt|,
+parameter_list|,
+name|TTRACE_ARG_TYPE
 name|data
-decl_stmt|,
+parameter_list|,
+name|TTRACE_ARG_TYPE
 name|addr2
-decl_stmt|;
+parameter_list|)
 block|{
 name|lwpid_t
 name|real_tid
@@ -4702,7 +4622,7 @@ name|request
 argument_list|)
 condition|)
 block|{
-comment|/* Ok, we couldn't get a tid.  Try to translate to          * the equivalent process operation.  We expect this          * NOT to happen, so this is a desparation-type          * move.  It can happen if there is an internal          * error and so no "wait()" call is ever done.          */
+comment|/* Ok, we couldn't get a tid.  Try to translate to 	   * the equivalent process operation.  We expect this 	   * NOT to happen, so this is a desparation-type 	   * move.  It can happen if there is an internal 	   * error and so no "wait()" call is ever done. 	   */
 name|new_request
 operator|=
 name|make_process_version
@@ -4732,12 +4652,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Use hacky saved pid, which won't always be correct              * in the multi-process future.  Use tid as thread,              * probably dooming this to failure.  FIX!              */
+comment|/* Use hacky saved pid, which won't always be correct 	       * in the multi-process future.  Use tid as thread, 	       * probably dooming this to failure.  FIX! 	       */
 if|if
 condition|(
-name|saved_real_pid
-operator|!=
-literal|0
+operator|!
+name|ptid_equal
+argument_list|(
+name|saved_real_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 block|{
 ifdef|#
@@ -4751,14 +4675,20 @@ name|printf
 argument_list|(
 literal|"...using saved pid %d\n"
 argument_list|,
-name|saved_real_pid
+name|PIDGET
+argument_list|(
+name|saved_real_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 name|real_pid
 operator|=
-name|saved_real_pid
+name|PIDGET
+argument_list|(
+name|saved_real_ptid
+argument_list|)
 expr_stmt|;
 name|real_tid
 operator|=
@@ -4774,7 +4704,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Sucessfully translated this to a process request,              * which needs no thread value.              */
+comment|/* Sucessfully translated this to a process request, 	       * which needs no thread value. 	       */
 name|real_pid
 operator|=
 name|gdb_tid
@@ -4802,9 +4732,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|saved_real_pid
-operator|==
-literal|0
+name|ptid_equal
+argument_list|(
+name|saved_real_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -4817,7 +4750,10 @@ if|if
 condition|(
 name|gdb_tid
 operator|!=
-name|saved_real_pid
+name|PIDGET
+argument_list|(
+name|saved_real_ptid
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -4825,7 +4761,10 @@ literal|"...but have the wrong pid (%d rather than %d)\n"
 argument_list|,
 name|gdb_tid
 argument_list|,
-name|saved_real_pid
+name|PIDGET
+argument_list|(
+name|saved_real_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4838,7 +4777,7 @@ block|}
 comment|/* Is a process request */
 else|else
 block|{
-comment|/* We have to have a thread.  Ooops.          */
+comment|/* We have to have a thread.  Ooops. 	   */
 name|error
 argument_list|(
 literal|"Thread request with no threads (%s)"
@@ -4967,7 +4906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Stop all the threads of a process.  *  * NOTE: use of TT_PROC_STOP can cause a thread with a real event  *       to get a TTEVT_NONE event, discarding the old event.  Be  *       very careful, and only call TT_PROC_STOP when you mean it!  */
+comment|/* Stop all the threads of a process.   * NOTE: use of TT_PROC_STOP can cause a thread with a real event  *       to get a TTEVT_NONE event, discarding the old event.  Be  *       very careful, and only call TT_PROC_STOP when you mean it!  */
 end_comment
 
 begin_function
@@ -4975,11 +4914,9 @@ specifier|static
 name|void
 name|stop_all_threads_of_process
 parameter_list|(
-name|real_pid
-parameter_list|)
 name|pid_t
 name|real_pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ttw_status
@@ -5026,7 +4963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Under some circumstances, it's unsafe to attempt to stop, or even    query the state of, a process' threads.     In ttrace-based HP-UX, an example is a vforking child process.  The    vforking parent and child are somewhat fragile, w/r/t what we can do    what we can do to them with ttrace, until after the child exits or    execs, or until the parent's vfork event is delivered.  Until that    time, we must not try to stop the process' threads, or inquire how    many there are, or even alter its data segments, or it typically dies    with a SIGILL.  Sigh.     This function returns 1 if this stopped process, and the event that    we're told was responsible for its current stopped state, cannot safely    have its threads examined.    */
+comment|/* Under some circumstances, it's unsafe to attempt to stop, or even    query the state of, a process' threads.     In ttrace-based HP-UX, an example is a vforking child process.  The    vforking parent and child are somewhat fragile, w/r/t what we can do    what we can do to them with ttrace, until after the child exits or    execs, or until the parent's vfork event is delivered.  Until that    time, we must not try to stop the process' threads, or inquire how    many there are, or even alter its data segments, or it typically dies    with a SIGILL.  Sigh.     This function returns 1 if this stopped process, and the event that    we're told was responsible for its current stopped state, cannot safely    have its threads examined.  */
 end_comment
 
 begin_define
@@ -5039,7 +4976,7 @@ parameter_list|,
 name|pid
 parameter_list|)
 define|\
-value|(((evt) == TTEVT_VFORK)&& ((pid) != inferior_pid))
+value|(((evt) == TTEVT_VFORK)&& ((pid) != PIDGET (inferior_ptid)))
 end_define
 
 begin_define
@@ -5065,7 +5002,7 @@ parameter_list|,
 name|pid
 parameter_list|)
 define|\
-value|(((evt) == TTEVT_VFORK)&& ((pid) == inferior_pid))
+value|(((evt) == TTEVT_VFORK)&& ((pid) == PIDGET (inferior_ptid)))
 end_define
 
 begin_function
@@ -5073,16 +5010,12 @@ specifier|static
 name|int
 name|can_touch_threads_of_process
 parameter_list|(
-name|pid
-parameter_list|,
-name|stopping_event
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|ttevents_t
 name|stopping_event
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5150,17 +5083,13 @@ specifier|static
 name|int
 name|select_stopped_thread_of_process
 parameter_list|(
-name|pid
-parameter_list|,
-name|tsp
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|ttstate_t
 modifier|*
 name|tsp
-decl_stmt|;
+parameter_list|)
 block|{
 name|lwpid_t
 name|candidate_tid
@@ -5258,7 +5187,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|WAIT_BUFFER_DEBUG
-comment|/* It's possible here to see either a SIGTRAP (due to            * successful completion of a step) or a SYSCALL_ENTRY            * (due to a step completion with active hardware            * watchpoints).            */
+comment|/* It's possible here to see either a SIGTRAP (due to 	   * successful completion of a step) or a SYSCALL_ENTRY 	   * (due to a step completion with active hardware 	   * watchpoints). 	   */
 if|if
 condition|(
 name|debug_on
@@ -5281,7 +5210,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Remember this one, and throw away any previous            * candidate.            */
+comment|/* Remember this one, and throw away any previous 	   * candidate. 	   */
 name|candidate_tid
 operator|=
 name|tstate
@@ -5343,7 +5272,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/*            * If the user deleted a breakpoint while this            * breakpoint-hit event was buffered, we can forget            * it now.            */
+comment|/* 	   * If the user deleted a breakpoint while this 	   * breakpoint-hit event was buffered, we can forget 	   * it now. 	   */
 ifdef|#
 directive|ifdef
 name|WAIT_BUFFER_DEBUG
@@ -5417,7 +5346,7 @@ operator|==
 name|fake_step_tid
 condition|)
 block|{
-comment|/* Fake step.            */
+comment|/* Fake step. 	   */
 name|tstate
 operator|=
 name|candidate_tstate
@@ -5510,11 +5439,9 @@ specifier|static
 name|void
 name|check_thread_consistency
 parameter_list|(
-name|real_pid
-parameter_list|)
 name|pid_t
 name|real_pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tid
@@ -5527,7 +5454,7 @@ name|thread_info
 modifier|*
 name|p
 decl_stmt|;
-comment|/* Spin down the O/S list of threads, checking that they      * match what we've got.      */
+comment|/* Spin down the O/S list of threads, checking that they    * match what we've got.    */
 for|for
 control|(
 name|tid
@@ -5698,27 +5625,19 @@ specifier|static
 name|int
 name|call_ttrace_wait
 parameter_list|(
-name|pid
-parameter_list|,
-name|option
-parameter_list|,
-name|tsp
-parameter_list|,
-name|tsp_size
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|ttwopt_t
 name|option
-decl_stmt|;
+parameter_list|,
 name|ttstate_t
 modifier|*
 name|tsp
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|tsp_size
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* This holds the actual, for-real, true process ID.    */
 specifier|static
@@ -5835,7 +5754,7 @@ operator|==
 name|RUNNING
 condition|)
 block|{
-comment|/* OK--normal call of ttrace_wait with no buffered events.            */
+comment|/* OK--normal call of ttrace_wait with no buffered events. 	   */
 empty_stmt|;
 block|}
 elseif|else
@@ -5846,7 +5765,7 @@ operator|==
 name|FAKE_STEPPING
 condition|)
 block|{
-comment|/* Ok--call of ttrace_wait to support            * fake stepping with no buffered events.            *            * But we better be fake-stepping!            */
+comment|/* Ok--call of ttrace_wait to support 	   * fake stepping with no buffered events. 	   * 	   * But we better be fake-stepping! 	   */
 if|if
 condition|(
 operator|!
@@ -5876,7 +5795,7 @@ name|VFORKING
 operator|)
 condition|)
 block|{
-comment|/* Ok--there are two processes, so waiting            * for the second while the first is stopped            * is ok.  Handled bits stay as they were.            */
+comment|/* Ok--there are two processes, so waiting 	   * for the second while the first is stopped 	   * is ok.  Handled bits stay as they were. 	   */
 empty_stmt|;
 block|}
 elseif|else
@@ -5894,7 +5813,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* No known state.            */
+comment|/* No known state. 	 */
 name|warning
 argument_list|(
 literal|"Inconsistent process state."
@@ -5911,7 +5830,7 @@ operator|==
 name|STOPPED
 condition|)
 block|{
-comment|/* OK--buffered events being unbuffered.            */
+comment|/* OK--buffered events being unbuffered. 	   */
 empty_stmt|;
 block|}
 elseif|else
@@ -5922,7 +5841,7 @@ operator|==
 name|RUNNING
 condition|)
 block|{
-comment|/* An error--shouldn't have buffered events            * when running.            */
+comment|/* An error--shouldn't have buffered events 	   * when running. 	   */
 name|warning
 argument_list|(
 literal|"Trying to continue with buffered events:"
@@ -5937,7 +5856,7 @@ operator|==
 name|FAKE_STEPPING
 condition|)
 block|{
-comment|/*            * Better be fake-stepping!            */
+comment|/* 	   * Better be fake-stepping! 	   */
 if|if
 condition|(
 operator|!
@@ -5967,7 +5886,7 @@ name|VFORKING
 operator|)
 condition|)
 block|{
-comment|/* Ok--there are two processes, so waiting            * for the second while the first is stopped            * is ok.  Handled bits stay as they were.            */
+comment|/* Ok--there are two processes, so waiting 	   * for the second while the first is stopped 	   * is ok.  Handled bits stay as they were. 	   */
 empty_stmt|;
 block|}
 else|else
@@ -6068,7 +5987,7 @@ name|tsp
 operator|->
 name|tts_pid
 expr_stmt|;
-comment|/* For most events: Stop the world!        *        * It's sometimes not safe to stop all threads of a process.        * Sometimes it's not even safe to ask for the thread state        * of a process!        */
+comment|/* For most events: Stop the world!         * It's sometimes not safe to stop all threads of a process.        * Sometimes it's not even safe to ask for the thread state        * of a process!        */
 if|if
 condition|(
 name|can_touch_threads_of_process
@@ -6081,7 +6000,7 @@ name|tts_event
 argument_list|)
 condition|)
 block|{
-comment|/* If we're really only stepping a single thread, then don't            * try to stop all the others -- we only do this single-stepping            * business when all others were already stopped...and the stop            * would mess up other threads' events.            *            * Similiarly, if there are other threads with events,            * don't do the stop.            */
+comment|/* If we're really only stepping a single thread, then don't 	   * try to stop all the others -- we only do this single-stepping 	   * business when all others were already stopped...and the stop 	   * would mess up other threads' events. 	   * 	   * Similiarly, if there are other threads with events, 	   * don't do the stop. 	   */
 if|if
 condition|(
 operator|!
@@ -6104,7 +6023,7 @@ argument_list|(
 name|real_pid
 argument_list|)
 expr_stmt|;
-comment|/* At this point, we could scan and update_thread_list(),              * and only use the local list for the rest of the              * module! We'd get rid of the scans in the various              * continue routines (adding one in attach).  It'd              * be great--UPGRADE ME!              */
+comment|/* At this point, we could scan and update_thread_list(), 	       * and only use the local list for the rest of the 	       * module! We'd get rid of the scans in the various 	       * continue routines (adding one in attach).  It'd 	       * be great--UPGRADE ME! 	       */
 block|}
 block|}
 ifdef|#
@@ -6331,7 +6250,9 @@ end_if
 begin_function
 name|int
 name|child_reported_exec_events_per_exec_call
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|1
@@ -6349,7 +6270,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Our implementation of hardware watchpoints involves making memory    pages write-protected.  We must remember a page's original permissions,    and we must also know when it is appropriate to restore a page's    permissions to its original state.     We use a "dictionary" of hardware-watched pages to do this.  Each    hardware-watched page is recorded in the dictionary.  Each page's    dictionary entry contains the original permissions and a reference    count.  Pages are hashed into the dictionary by their start address.     When hardware watchpoint is set on page X for the first time, page X    is added to the dictionary with a reference count of 1.  If other    hardware watchpoints are subsequently set on page X, its reference    count is incremented.  When hardware watchpoints are removed from    page X, its reference count is decremented.  If a page's reference    count drops to 0, it's permissions are restored and the page's entry    is thrown out of the dictionary.    */
+comment|/* Our implementation of hardware watchpoints involves making memory    pages write-protected.  We must remember a page's original permissions,    and we must also know when it is appropriate to restore a page's    permissions to its original state.     We use a "dictionary" of hardware-watched pages to do this.  Each    hardware-watched page is recorded in the dictionary.  Each page's    dictionary entry contains the original permissions and a reference    count.  Pages are hashed into the dictionary by their start address.     When hardware watchpoint is set on page X for the first time, page X    is added to the dictionary with a reference count of 1.  If other    hardware watchpoints are subsequently set on page X, its reference    count is incremented.  When hardware watchpoints are removed from    page X, its reference count is decremented.  If a page's reference    count drops to 0, it's permissions are restored and the page's entry    is thrown out of the dictionary.  */
 end_comment
 
 begin_typedef
@@ -6417,7 +6338,9 @@ begin_function
 specifier|static
 name|void
 name|require_memory_page_dictionary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -6514,7 +6437,9 @@ begin_function
 specifier|static
 name|void
 name|retire_memory_page_dictionary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|memory_page_dictionary
 operator|.
@@ -6538,16 +6463,12 @@ specifier|static
 name|int
 name|write_protect_page
 parameter_list|(
-name|pid
-parameter_list|,
-name|page_start
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|page_start
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -6661,7 +6582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Unwrite-protect the memory page that starts at this address, restoring    (what we must assume are) its original permissions.    */
+comment|/* Unwrite-protect the memory page that starts at this address, restoring    (what we must assume are) its original permissions.  */
 end_comment
 
 begin_function
@@ -6669,21 +6590,15 @@ specifier|static
 name|void
 name|unwrite_protect_page
 parameter_list|(
-name|pid
-parameter_list|,
-name|page_start
-parameter_list|,
-name|original_permissions
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|page_start
-decl_stmt|;
+parameter_list|,
 name|int
 name|original_permissions
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -6732,18 +6647,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* Memory page-protections are used to implement "hardware" watchpoints    on HP-UX.     For every memory page that is currently being watched (i.e., that    presently should be write-protected), write-protect it.    */
+comment|/* Memory page-protections are used to implement "hardware" watchpoints    on HP-UX.     For every memory page that is currently being watched (i.e., that    presently should be write-protected), write-protect it.  */
 end_comment
 
 begin_function
 name|void
 name|hppa_enable_page_protection_events
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|bucket
@@ -6815,18 +6728,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* Memory page-protections are used to implement "hardware" watchpoints    on HP-UX.     For every memory page that is currently being watched (i.e., that    presently is or should be write-protected), un-write-protect it.    */
+comment|/* Memory page-protections are used to implement "hardware" watchpoints    on HP-UX.     For every memory page that is currently being watched (i.e., that    presently is or should be write-protected), un-write-protect it.  */
 end_comment
 
 begin_function
 name|void
 name|hppa_disable_page_protection_events
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|bucket
@@ -6906,16 +6817,12 @@ specifier|static
 name|int
 name|count_unhandled_events
 parameter_list|(
-name|real_pid
-parameter_list|,
-name|real_tid
-parameter_list|)
 name|int
 name|real_pid
-decl_stmt|;
+parameter_list|,
 name|lwpid_t
 name|real_tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|ttstate_t
 name|tstate
@@ -6995,7 +6902,7 @@ name|ttid
 argument_list|)
 condition|)
 block|{
-comment|/* TTEVT_NONE implies we just stopped it ourselves            * because we're the stop-the-world guys, so it's            * not an event from our point of view.            *            * If "was_handled" is true, this is an event we            * already handled, so don't count it.            *            * Note that we don't count the thread with the            * currently-reported event, as it's already marked            * as handled.            */
+comment|/* TTEVT_NONE implies we just stopped it ourselves 	   * because we're the stop-the-world guys, so it's 	   * not an event from our point of view. 	   * 	   * If "was_handled" is true, this is an event we 	   * already handled, so don't count it. 	   * 	   * Note that we don't count the thread with the 	   * currently-reported event, as it's already marked 	   * as handled. 	   */
 name|events_left
 operator|++
 expr_stmt|;
@@ -7200,17 +7107,13 @@ begin_function
 name|int
 name|ptrace_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|ttstate_t
 name|tsp
@@ -7260,7 +7163,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* ??rehrauer: It appears that if our inferior exits and we          haven't asked for exit events, that we're not getting any          indication save a negative return from ttrace_wait and an          errno set to ESRCH?          */
+comment|/* ??rehrauer: It appears that if our inferior exits and we          haven't asked for exit events, that we're not getting any          indication save a negative return from ttrace_wait and an          errno set to ESRCH?        */
 if|if
 condition|(
 name|errno
@@ -7275,7 +7178,10 @@ literal|0
 expr_stmt|;
 comment|/* WIFEXITED */
 return|return
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 return|;
 block|}
 name|warning
@@ -7291,7 +7197,10 @@ operator|=
 name|ttwait_return
 expr_stmt|;
 return|return
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 return|;
 block|}
 name|real_pid
@@ -7316,7 +7225,7 @@ operator|&
 name|TTEVT_LWP_CREATE
 condition|)
 block|{
-comment|/* Unlike what you might expect, this event is reported in       * the _creating_ thread, and the _created_ thread (whose tid       * we have) is still running.  So we have to stop it.  This       * has already been done in "call_ttrace_wait", but should we       * ever abandon the "stop-the-world" model, here's the command       * to use:       *       *    call_ttrace( TT_LWP_STOP, real_tid, TT_NIL, TT_NIL, TT_NIL );       *       * Note that this would depend on being called _after_ "add_tthread"       * below for the tid-to-pid translation to be done in "call_ttrace".       */
+comment|/* Unlike what you might expect, this event is reported in        * the _creating_ thread, and the _created_ thread (whose tid        * we have) is still running.  So we have to stop it.  This        * has already been done in "call_ttrace_wait", but should we        * ever abandon the "stop-the-world" model, here's the command        * to use:        *        *    call_ttrace( TT_LWP_STOP, real_tid, TT_NIL, TT_NIL, TT_NIL );        *        * Note that this would depend on being called _after_ "add_tthread"        * below for the tid-to-pid translation to be done in "call_ttrace".        */
 ifdef|#
 directive|ifdef
 name|THREAD_DEBUG
@@ -7343,7 +7252,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Now we have to return the tid of the created thread, not       * the creating thread, or "wait_for_inferior" won't know we       * have a new "process" (thread).  Plus we should record it       * right, too.       */
+comment|/* Now we have to return the tid of the created thread, not        * the creating thread, or "wait_for_inferior" won't know we        * have a new "process" (thread).  Plus we should record it        * right, too.        */
 name|real_tid
 operator|=
 name|tsp
@@ -7429,7 +7338,10 @@ name|real_pid
 argument_list|,
 name|real_tid
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7465,7 +7377,7 @@ argument_list|,
 name|real_tid
 argument_list|)
 expr_stmt|;
-comment|/* OK to do this, as "add_tthread" won't add       * duplicate entries.  Also OK not to do it,       * as this event isn't one which can change the       * thread state.       */
+comment|/* OK to do this, as "add_tthread" won't add        * duplicate entries.  Also OK not to do it,        * as this event isn't one which can change the        * thread state.        */
 name|add_tthread
 argument_list|(
 name|real_pid
@@ -7517,7 +7429,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Attempt to translate the ttrace_wait-returned status into the      ptrace equivalent.       ??rehrauer: This is somewhat fragile.  We really ought to rewrite      clients that expect to pick apart a ptrace wait status, to use      something a little more abstract.      */
+comment|/* Attempt to translate the ttrace_wait-returned status into the      ptrace equivalent.       ??rehrauer: This is somewhat fragile.  We really ought to rewrite      clients that expect to pick apart a ptrace wait status, to use      something a little more abstract.    */
 if|if
 condition|(
 operator|(
@@ -7603,7 +7515,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Make an exec or fork look like a breakpoint.  Definitely a hack,          but I don't think non HP-UX-specific clients really carefully          inspect the first events they get after inferior startup, so          it probably almost doesn't matter what we claim this is.          */
+comment|/* Make an exec or fork look like a breakpoint.  Definitely a hack,          but I don't think non HP-UX-specific clients really carefully          inspect the first events they get after inferior startup, so          it probably almost doesn't matter what we claim this is.        */
 ifdef|#
 directive|ifdef
 name|THREAD_DEBUG
@@ -7618,7 +7530,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Also make fork and exec events look like bpts, so they can be caught.       */
+comment|/* Also make fork and exec events look like bpts, so they can be caught.        */
 operator|*
 name|status
 operator|=
@@ -7652,7 +7564,7 @@ name|TTEVT_SYSCALL_RETURN
 operator|)
 condition|)
 block|{
-comment|/* Make a syscall event look like a breakpoint.  Same comments          as for exec& fork events.          */
+comment|/* Make a syscall event look like a breakpoint.  Same comments          as for exec& fork events.        */
 ifdef|#
 directive|ifdef
 name|THREAD_DEBUG
@@ -7667,7 +7579,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Also make syscall events look like bpts, so they can be caught.       */
+comment|/* Also make syscall events look like bpts, so they can be caught.        */
 operator|*
 name|status
 operator|=
@@ -7723,7 +7635,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Also make thread events look like bpts, so they can be caught.       */
+comment|/* Also make thread events look like bpts, so they can be caught.        */
 operator|*
 name|status
 operator|=
@@ -7764,11 +7676,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Prevent rest of gdb from thinking this is        * a new thread if for some reason it's never        * seen the main thread before.        */
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|map_to_gdb_tid
 argument_list|(
 name|real_tid
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* HACK, FIX */
@@ -7879,9 +7794,12 @@ expr_stmt|;
 block|}
 name|target_post_wait
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|tsp
 operator|.
 name|tts_pid
+argument_list|)
 argument_list|,
 operator|*
 name|status
@@ -7916,7 +7834,10 @@ expr_stmt|;
 comment|/* Remember this for later use in "hppa_prepare_to_proceed".    */
 name|old_gdb_pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|reported_pid
 operator|=
@@ -7979,7 +7900,9 @@ end_comment
 begin_function
 name|int
 name|parent_attach_all
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -8147,11 +8070,9 @@ specifier|static
 name|void
 name|require_notification_of_events
 parameter_list|(
-name|real_pid
-parameter_list|)
 name|int
 name|real_pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -8299,11 +8220,9 @@ specifier|static
 name|void
 name|require_notification_of_exec_events
 parameter_list|(
-name|real_pid
-parameter_list|)
 name|int
 name|real_pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -8422,13 +8341,11 @@ begin_function
 name|void
 name|child_acknowledge_created_inferior
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* We need a memory home for a constant, to pass it to ttrace.      The value of the constant is arbitrary, so long as both      parent and child use the same value.  Might as well use the      "magic" constant provided by ttrace...      */
+comment|/* We need a memory home for a constant, to pass it to ttrace.      The value of the constant is arbitrary, so long as both      parent and child use the same value.  Might as well use the      "magic" constant provided by ttrace...    */
 name|uint64_t
 name|tc_magic_parent
 init|=
@@ -8465,7 +8382,10 @@ expr_stmt|;
 comment|/* Tell the "rest of gdb" that the initial thread exists.    * This isn't really a hack.  Other thread-based versions    * of gdb (e.g. gnu-nat.c) seem to do the same thing.    *    * Q: Why don't we also add this thread to the local    *    list via "add_tthread"?    *    * A: Because we don't know the tid, and can't stop the    *    the process safely to ask what it is.  Anyway, we'll    *    add it when it gets the EXEC event.    */
 name|add_thread
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* in thread.c */
@@ -8563,15 +8483,16 @@ begin_function
 name|void
 name|child_post_startup_inferior
 parameter_list|(
-name|real_pid
+name|ptid_t
+name|ptid
 parameter_list|)
-name|int
-name|real_pid
-decl_stmt|;
 block|{
 name|require_notification_of_events
 argument_list|(
-name|real_pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8586,11 +8507,9 @@ specifier|static
 name|void
 name|hppa_enable_catch_fork
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -8698,11 +8617,9 @@ specifier|static
 name|void
 name|hppa_disable_catch_fork
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -8819,14 +8736,12 @@ begin_function
 name|int
 name|child_insert_fork_catchpoint
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Enable reporting of fork events from the kernel. */
-comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.      */
+comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.    */
 return|return
 literal|0
 return|;
@@ -8851,14 +8766,12 @@ begin_function
 name|int
 name|child_remove_fork_catchpoint
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Disable reporting of fork events from the kernel. */
-comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.      */
+comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.    */
 return|return
 literal|0
 return|;
@@ -8875,11 +8788,9 @@ specifier|static
 name|void
 name|hppa_enable_catch_vfork
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -8987,11 +8898,9 @@ specifier|static
 name|void
 name|hppa_disable_catch_vfork
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -9108,14 +9017,12 @@ begin_function
 name|int
 name|child_insert_vfork_catchpoint
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Enable reporting of vfork events from the kernel. */
-comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.      */
+comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.    */
 return|return
 literal|0
 return|;
@@ -9140,14 +9047,12 @@ begin_function
 name|int
 name|child_remove_vfork_catchpoint
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Disable reporting of vfork events from the kernel. */
-comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.      */
+comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.    */
 return|return
 literal|0
 return|;
@@ -9169,24 +9074,20 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Q: Do we need to map the returned process ID to a thread ID?  *  * A: I don't think so--here we want a _real_ pid.  Any later  *    operations will call "require_notification_of_events" and  *    start the mapping.  */
+comment|/* Q: Do we need to map the returned process ID to a thread ID?   * A: I don't think so--here we want a _real_ pid.  Any later  *    operations will call "require_notification_of_events" and  *    start the mapping.  */
 end_comment
 
 begin_function
 name|int
 name|child_has_forked
 parameter_list|(
-name|tid
-parameter_list|,
-name|childpid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|childpid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -9327,17 +9228,13 @@ begin_function
 name|int
 name|child_has_vforked
 parameter_list|(
-name|tid
-parameter_list|,
-name|childpid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|childpid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -9471,9 +9368,11 @@ end_if
 begin_function
 name|int
 name|child_can_follow_vfork_prior_to_exec
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-comment|/* ttrace does allow this.       ??rehrauer: However, I had major-league problems trying to      convince wait_for_inferior to handle that case.  Perhaps when      it is rewritten to grok multiple processes in an explicit way...      */
+comment|/* ttrace does allow this.       ??rehrauer: However, I had major-league problems trying to      convince wait_for_inferior to handle that case.  Perhaps when      it is rewritten to grok multiple processes in an explicit way...    */
 return|return
 literal|0
 return|;
@@ -9498,14 +9397,12 @@ begin_function
 name|int
 name|child_insert_exec_catchpoint
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Enable reporting of exec events from the kernel. */
-comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.      */
+comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.    */
 return|return
 literal|0
 return|;
@@ -9530,14 +9427,12 @@ begin_function
 name|int
 name|child_remove_exec_catchpoint
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Disable reporting of execevents from the kernel. */
-comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.      */
+comment|/* ??rehrauer: For the moment, we're always enabling these events,      and just ignoring them if there's no catchpoint to catch them.    */
 return|return
 literal|0
 return|;
@@ -9562,18 +9457,14 @@ begin_function
 name|int
 name|child_has_execd
 parameter_list|(
-name|tid
-parameter_list|,
-name|execd_pathname
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|execd_pathname
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -9720,24 +9611,18 @@ begin_function
 name|int
 name|child_has_syscall_event
 parameter_list|(
-name|pid
-parameter_list|,
-name|kind
-parameter_list|,
-name|syscall_id
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_waitkind
 modifier|*
 name|kind
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|syscall_id
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -9898,23 +9783,29 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Check to see if the given thread is alive.  *  * We'll trust the thread list, as the more correct  * approach of stopping the process and spinning down  * the OS's thread list is _very_ expensive.  *  * May need a FIXME for that reason.  */
+comment|/* Check to see if the given thread is alive.   * We'll trust the thread list, as the more correct  * approach of stopping the process and spinning down  * the OS's thread list is _very_ expensive.  *  * May need a FIXME for that reason.  */
 end_comment
 
 begin_function
 name|int
 name|child_thread_alive
 parameter_list|(
-name|gdb_tid
+name|ptid_t
+name|ptid
 parameter_list|)
+block|{
 name|lwpid_t
 name|gdb_tid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 decl_stmt|;
-block|{
 name|lwpid_t
 name|tid
 decl_stmt|;
-comment|/* This spins down the lists twice.     * Possible peformance improvement here!     */
+comment|/* This spins down the lists twice.    * Possible peformance improvement here!    */
 name|tid
 operator|=
 name|map_from_gdb_tid
@@ -9941,34 +9832,26 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function attempts to read the specified number of bytes from the    save_state_t that is our view into the hardware registers, starting at    ss_offset, and ending at ss_offset + sizeof_buf - 1     If this function succeeds, it deposits the fetched bytes into buf,    and returns 0.     If it fails, it returns a negative result.  The contents of buf are    undefined it this function fails.    */
+comment|/* This function attempts to read the specified number of bytes from the    save_state_t that is our view into the hardware registers, starting at    ss_offset, and ending at ss_offset + sizeof_buf - 1     If this function succeeds, it deposits the fetched bytes into buf,    and returns 0.     If it fails, it returns a negative result.  The contents of buf are    undefined it this function fails.  */
 end_comment
 
 begin_function
 name|int
 name|read_from_register_save_state
 parameter_list|(
-name|tid
-parameter_list|,
-name|ss_offset
-parameter_list|,
-name|buf
-parameter_list|,
-name|sizeof_buf
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|,
 name|TTRACE_ARG_TYPE
 name|ss_offset
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|sizeof_buf
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -10005,7 +9888,7 @@ name|tt_status
 operator|==
 literal|1
 condition|)
-comment|/* Map ttrace's version of success to our version.        * Sometime ttrace returns 0, but that's ok here.        */
+comment|/* Map ttrace's version of success to our version.      * Sometime ttrace returns 0, but that's ok here.      */
 return|return
 literal|0
 return|;
@@ -10019,34 +9902,26 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function attempts to write the specified number of bytes to the    save_state_t that is our view into the hardware registers, starting at    ss_offset, and ending at ss_offset + sizeof_buf - 1     If this function succeeds, it deposits the bytes in buf, and returns 0.     If it fails, it returns a negative result.  The contents of the save_state_t    are undefined it this function fails.    */
+comment|/* This function attempts to write the specified number of bytes to the    save_state_t that is our view into the hardware registers, starting at    ss_offset, and ending at ss_offset + sizeof_buf - 1     If this function succeeds, it deposits the bytes in buf, and returns 0.     If it fails, it returns a negative result.  The contents of the save_state_t    are undefined it this function fails.  */
 end_comment
 
 begin_function
 name|int
 name|write_to_register_save_state
 parameter_list|(
-name|tid
-parameter_list|,
-name|ss_offset
-parameter_list|,
-name|buf
-parameter_list|,
-name|sizeof_buf
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|,
 name|TTRACE_ARG_TYPE
 name|ss_offset
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|sizeof_buf
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -10087,33 +9962,25 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function is a sop to the largeish number of direct calls    to call_ptrace that exist in other files.  Rather than create    functions whose name abstracts away from ptrace, and change all    the present callers of call_ptrace, we'll do the expedient (and    perhaps only practical) thing.     Note HP-UX explicitly disallows a mix of ptrace& ttrace on a traced    process.  Thus, we must translate all ptrace requests into their    process-specific, ttrace equivalents.    */
+comment|/* This function is a sop to the largeish number of direct calls    to call_ptrace that exist in other files.  Rather than create    functions whose name abstracts away from ptrace, and change all    the present callers of call_ptrace, we'll do the expedient (and    perhaps only practical) thing.     Note HP-UX explicitly disallows a mix of ptrace& ttrace on a traced    process.  Thus, we must translate all ptrace requests into their    process-specific, ttrace equivalents.  */
 end_comment
 
 begin_function
 name|int
 name|call_ptrace
 parameter_list|(
-name|pt_request
-parameter_list|,
-name|gdb_tid
-parameter_list|,
-name|addr
-parameter_list|,
-name|data
-parameter_list|)
 name|int
 name|pt_request
-decl_stmt|;
+parameter_list|,
 name|int
 name|gdb_tid
-decl_stmt|;
+parameter_list|,
 name|PTRACE_ARG3_TYPE
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|ttreq_t
 name|tt_request
@@ -10154,7 +10021,7 @@ condition|(
 name|pt_request
 condition|)
 block|{
-comment|/* The following cases cannot conveniently be handled conveniently          by merely adjusting the ptrace arguments and feeding into the          generic call to ttrace at the bottom of this function.           Note that because all branches of this switch end in "return",          there's no need for any "break" statements.          */
+comment|/* The following cases cannot conveniently be handled conveniently          by merely adjusting the ptrace arguments and feeding into the          generic call to ttrace at the bottom of this function.           Note that because all branches of this switch end in "return",          there's no need for any "break" statements.        */
 case|case
 name|PT_SETTRC
 case|:
@@ -10342,7 +10209,7 @@ return|;
 return|return
 name|tt_status
 return|;
-comment|/* The following cases are handled by merely adjusting the ptrace          arguments and feeding into the generic call to ttrace.          */
+comment|/* The following cases are handled by merely adjusting the ptrace          arguments and feeding into the generic call to ttrace.        */
 case|case
 name|PT_DETACH
 case|:
@@ -10462,7 +10329,7 @@ operator|=
 name|TT_PROC_GET_PATHNAME
 expr_stmt|;
 break|break;
-default|default :
+default|default:
 name|tt_request
 operator|=
 name|pt_request
@@ -10494,7 +10361,9 @@ end_comment
 begin_function
 name|void
 name|kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|tid
@@ -10518,12 +10387,15 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 literal|0
 condition|)
 return|return;
-comment|/* Walk the list of "threads", some of which are "pseudo threads",      aka "processes".  For each that is NOT inferior_pid, stop it,      and detach it.       You see, we may not have just a single process to kill.  If we're      restarting or quitting or detaching just after the inferior has      forked, then we've actually two processes to clean up.       But we can't just call target_mourn_inferior() for each, since that      zaps the target vector.      */
+comment|/* Walk the list of "threads", some of which are "pseudo threads",      aka "processes".  For each that is NOT inferior_ptid, stop it,      and detach it.       You see, we may not have just a single process to kill.  If we're      restarting or quitting or detaching just after the inferior has      forked, then we've actually two processes to clean up.       But we can't just call target_mourn_inferior() for each, since that      zaps the target vector.    */
 name|paranoia
 operator|=
 operator|(
@@ -10531,7 +10403,7 @@ name|thread_info
 operator|*
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 name|thread_head
 operator|.
@@ -10619,14 +10491,16 @@ name|t
 operator|->
 name|pid
 operator|!=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* TT_PROC_STOP doesn't require a subsequent ttrace_wait, as it          * generates no event.          */
 name|call_ttrace
 argument_list|(
-name|TT_PROC_STOP
+name|TT_PROC_EXIT
 argument_list|,
 name|t
 operator|->
@@ -10635,24 +10509,6 @@ argument_list|,
 name|TT_NIL
 argument_list|,
 name|TT_NIL
-argument_list|,
-name|TT_NIL
-argument_list|)
-expr_stmt|;
-name|call_ttrace
-argument_list|(
-name|TT_PROC_DETACH
-argument_list|,
-name|t
-operator|->
-name|pid
-argument_list|,
-name|TT_NIL
-argument_list|,
-operator|(
-name|TTRACE_ARG_TYPE
-operator|)
-name|TARGET_SIGNAL_0
 argument_list|,
 name|TT_NIL
 argument_list|)
@@ -10665,16 +10521,19 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-name|free
+name|xfree
 argument_list|(
 name|paranoia
 argument_list|)
 expr_stmt|;
 name|call_ttrace
 argument_list|(
-name|TT_PROC_STOP
+name|TT_PROC_EXIT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|TT_NIL
 argument_list|,
@@ -10707,12 +10566,10 @@ specifier|static
 name|void
 name|thread_dropping_event_check
 parameter_list|(
-name|p
-parameter_list|)
 name|thread_info
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -10722,7 +10579,7 @@ operator|->
 name|handled
 condition|)
 block|{
-comment|/*          * This seems to happen when we "next" over a          * "fork()" while following the parent.  If it's          * the FORK event, that's ok.  If it's a SIGNAL          * in the unfollowed child, that's ok to--but          * how can we know that's what's going on?          *          * FIXME!          */
+comment|/*        * This seems to happen when we "next" over a        * "fork()" while following the parent.  If it's        * the FORK event, that's ok.  If it's a SIGNAL        * in the unfollowed child, that's ok to--but        * how can we know that's what's going on?        *        * FIXME!        */
 if|if
 condition|(
 name|p
@@ -10756,12 +10613,12 @@ operator|==
 name|TTEVT_SIGNAL
 condition|)
 block|{
-comment|/* Ok, close eyes and let it happen.                   */
+comment|/* Ok, close eyes and let it happen. 	       */
 empty_stmt|;
 block|}
 else|else
 block|{
-comment|/* This shouldn't happen--we're dropping a                   * real event.                   */
+comment|/* This shouldn't happen--we're dropping a 	       * real event. 	       */
 name|warning
 argument_list|(
 literal|"About to continue process %d, thread %d with unhandled event %s."
@@ -10802,7 +10659,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* No saved state, have to assume it failed.              */
+comment|/* No saved state, have to assume it failed. 	   */
 name|warning
 argument_list|(
 literal|"About to continue process %d, thread %d with unhandled event."
@@ -10848,16 +10705,12 @@ specifier|static
 name|void
 name|threads_continue_all_but_one
 parameter_list|(
-name|gdb_tid
-parameter_list|,
-name|signal
-parameter_list|)
 name|lwpid_t
 name|gdb_tid
-decl_stmt|;
+parameter_list|,
 name|int
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -10892,7 +10745,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* First update the thread list.      */
+comment|/* First update the thread list.    */
 name|set_all_unseen
 argument_list|()
 expr_stmt|;
@@ -10930,7 +10783,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|THREAD_DEBUG
-comment|/* FIX: later should check state is stopped;          * state.tts_flags& TTS_STATEMASK == TTS_WASSUSPENDED          */
+comment|/* FIX: later should check state is stopped;        * state.tts_flags& TTS_STATEMASK == TTS_WASSUSPENDED        */
 if|if
 condition|(
 name|debug_on
@@ -10982,7 +10835,7 @@ argument_list|(
 name|scan_tid
 argument_list|)
 expr_stmt|;
-comment|/* This is either a newly-created thread or the              * result of a fork; in either case there's no              * actual event to worry about.              */
+comment|/* This is either a newly-created thread or the 	   * result of a fork; in either case there's no 	   * actual event to worry about. 	   */
 name|p
 operator|->
 name|handled
@@ -10998,7 +10851,7 @@ operator|!=
 name|TTEVT_NONE
 condition|)
 block|{
-comment|/* Oops, do need to worry!                  */
+comment|/* Oops, do need to worry! 	       */
 name|warning
 argument_list|(
 literal|"Unexpected thread with \"%s\" event."
@@ -11064,11 +10917,11 @@ name|state
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Remove unseen threads.      */
+comment|/* Remove unseen threads.    */
 name|update_thread_list
 argument_list|()
 expr_stmt|;
-comment|/* Now run down the thread list and continue or step.      */
+comment|/* Now run down the thread list and continue or step.    */
 for|for
 control|(
 name|p
@@ -11086,13 +10939,13 @@ operator|->
 name|next
 control|)
 block|{
-comment|/* Sanity check.          */
+comment|/* Sanity check.        */
 name|thread_dropping_event_check
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* Pass the correct signals along.          */
+comment|/* Pass the correct signals along.        */
 if|if
 condition|(
 name|p
@@ -11127,7 +10980,7 @@ operator|!=
 name|real_tid
 condition|)
 block|{
-comment|/*              * Not the thread of interest, so continue it              * as the user expects.              */
+comment|/* 	   * Not the thread of interest, so continue it 	   * as the user expects. 	   */
 if|if
 condition|(
 name|p
@@ -11137,7 +10990,7 @@ operator|==
 name|DO_STEP
 condition|)
 block|{
-comment|/* Just step this thread.                  */
+comment|/* Just step this thread. 	       */
 name|call_ttrace
 argument_list|(
 name|TT_LWP_SINGLE
@@ -11162,7 +11015,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Regular continue (default case).                  */
+comment|/* Regular continue (default case). 	       */
 name|call_ttrace
 argument_list|(
 name|TT_LWP_CONTINUE
@@ -11188,7 +11041,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Step the thread of interest.             */
+comment|/* Step the thread of interest. 	   */
 name|call_ttrace
 argument_list|(
 name|TT_LWP_SINGLE
@@ -11227,16 +11080,12 @@ specifier|static
 name|void
 name|threads_continue_all_with_signals
 parameter_list|(
-name|gdb_tid
-parameter_list|,
-name|signal
-parameter_list|)
 name|lwpid_t
 name|gdb_tid
-decl_stmt|;
+parameter_list|,
 name|int
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -11271,7 +11120,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Scan and update thread list.      */
+comment|/* Scan and update thread list.    */
 name|set_all_unseen
 argument_list|()
 expr_stmt|;
@@ -11360,7 +11209,7 @@ argument_list|(
 name|scan_tid
 argument_list|)
 expr_stmt|;
-comment|/* This is either a newly-created thread or the              * result of a fork; in either case there's no              * actual event to worry about.              */
+comment|/* This is either a newly-created thread or the 	   * result of a fork; in either case there's no 	   * actual event to worry about. 	   */
 name|p
 operator|->
 name|handled
@@ -11376,7 +11225,7 @@ operator|!=
 name|TTEVT_NONE
 condition|)
 block|{
-comment|/* Oops, do need to worry!                  */
+comment|/* Oops, do need to worry! 	       */
 name|warning
 argument_list|(
 literal|"Unexpected thread with \"%s\" event."
@@ -11428,11 +11277,11 @@ name|state
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Remove unseen threads from our list.      */
+comment|/* Remove unseen threads from our list.    */
 name|update_thread_list
 argument_list|()
 expr_stmt|;
-comment|/* Continue the threads.      */
+comment|/* Continue the threads.    */
 for|for
 control|(
 name|p
@@ -11450,13 +11299,13 @@ operator|->
 name|next
 control|)
 block|{
-comment|/* Sanity check.          */
+comment|/* Sanity check.        */
 name|thread_dropping_event_check
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* Pass the correct signals along.          */
+comment|/* Pass the correct signals along.        */
 if|if
 condition|(
 name|p
@@ -11536,7 +11385,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Continue this thread (default case).              */
+comment|/* Continue this thread (default case). 	   */
 name|call_ttrace
 argument_list|(
 name|TT_LWP_CONTINUE
@@ -11576,17 +11425,13 @@ specifier|static
 name|void
 name|thread_fake_step
 parameter_list|(
-name|tid
-parameter_list|,
-name|signal
-parameter_list|)
 name|lwpid_t
 name|tid
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -11631,7 +11476,7 @@ argument_list|(
 literal|"Step while step already in progress."
 argument_list|)
 expr_stmt|;
-comment|/* See if there's a saved signal value for this      * thread to be passed on, but no current signal.      */
+comment|/* See if there's a saved signal value for this    * thread to be passed on, but no current signal.    */
 name|p
 operator|=
 name|find_thread_info
@@ -11654,10 +11499,10 @@ name|have_signal
 operator|&&
 name|signal
 operator|==
-name|NULL
+name|TARGET_SIGNAL_0
 condition|)
 block|{
-comment|/* Pass on a saved signal.              */
+comment|/* Pass on a saved signal. 	   */
 name|signal
 operator|=
 name|p
@@ -11703,7 +11548,7 @@ argument_list|,
 name|TT_NIL
 argument_list|)
 expr_stmt|;
-comment|/* Do bookkeeping so "call_ttrace_wait" knows it has to wait      * for this thread only, and clear any saved signal info.      */
+comment|/* Do bookkeeping so "call_ttrace_wait" knows it has to wait    * for this thread only, and clear any saved signal info.    */
 name|doing_fake_step
 operator|=
 literal|1
@@ -11728,16 +11573,12 @@ specifier|static
 name|void
 name|threads_continue_one_with_signal
 parameter_list|(
-name|gdb_tid
-parameter_list|,
-name|signal
-parameter_list|)
 name|lwpid_t
 name|gdb_tid
-decl_stmt|;
+parameter_list|,
 name|int
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_info
 modifier|*
@@ -11871,29 +11712,23 @@ name|CHILD_RESUME
 end_ifndef
 
 begin_comment
-comment|/* Resume execution of the inferior process.  *  * This routine is in charge of setting the "handled" bits.   *  *   If STEP is zero,      continue it.  *   If STEP is nonzero,   single-step it.  *     *   If SIGNAL is nonzero, give it that signal.  *  *   If TID is -1,         apply to all threads.  *   If TID is not -1,     apply to specified thread.  *     *           STEP  *      \      !0                        0  *  TID  \________________________________________________  *       |  *   -1  |   Step current            Continue all threads  *       |   thread and              (but which gets any  *       |   continue others         signal?--We look at  *       |                           "inferior_pid")  *       |  *    N  |   Step _this_ thread      Continue _this_ thread  *       |   and leave others        and leave others   *       |   stopped; internally     stopped; used only for  *       |   used by gdb, never      hardware watchpoints  *       |   a user command.         and attach, never a  *       |                           user command.  */
+comment|/* Resume execution of the inferior process.   * This routine is in charge of setting the "handled" bits.   *  *   If STEP is zero,      continue it.  *   If STEP is nonzero,   single-step it.  *     *   If SIGNAL is nonzero, give it that signal.  *  *   If TID is -1,         apply to all threads.  *   If TID is not -1,     apply to specified thread.  *     *           STEP  *      \      !0                        0  *  TID  \________________________________________________  *       |  *   -1  |   Step current            Continue all threads  *       |   thread and              (but which gets any  *       |   continue others         signal?--We look at  *       |                           "inferior_ptid")  *       |  *    N  |   Step _this_ thread      Continue _this_ thread  *       |   and leave others        and leave others   *       |   stopped; internally     stopped; used only for  *       |   used by gdb, never      hardware watchpoints  *       |   a user command.         and attach, never a  *       |                           user command.  */
 end_comment
 
 begin_function
 name|void
 name|child_resume
 parameter_list|(
-name|gdb_tid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|signal
-parameter_list|)
-name|lwpid_t
-name|gdb_tid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|resume_all_threads
@@ -11903,6 +11738,14 @@ name|tid
 decl_stmt|;
 name|process_state_t
 name|new_process_state
+decl_stmt|;
+name|lwpid_t
+name|gdb_tid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 decl_stmt|;
 name|resume_all_threads
 operator|=
@@ -11921,7 +11764,7 @@ condition|(
 name|resume_all_threads
 condition|)
 block|{
-comment|/* Resume all threads, but first pick a tid value      * so we can get the pid when in call_ttrace doing      * the map.      */
+comment|/* Resume all threads, but first pick a tid value        * so we can get the pid when in call_ttrace doing        * the map.        */
 if|if
 condition|(
 name|vfork_in_flight
@@ -11935,7 +11778,10 @@ name|tid
 operator|=
 name|map_from_gdb_tid
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12161,7 +12007,7 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* Are we faking this "continue" or "step"?    *    * We used to do steps by continuing all the threads for     * which the events had been handled already.  While    * conceptually nicer (hides it all in a lower level), this    * can lead to starvation and a hang (e.g. all but one thread    * are unhandled at a breakpoint just before a "join" operation,    * and one thread is in the join, and the user wants to step that    * thread).    */
+comment|/* Are we faking this "continue" or "step"?     * We used to do steps by continuing all the threads for     * which the events had been handled already.  While    * conceptually nicer (hides it all in a lower level), this    * can lead to starvation and a hang (e.g. all but one thread    * are unhandled at a breakpoint just before a "join" operation,    * and one thread is in the join, and the user wants to step that    * thread).    */
 if|if
 condition|(
 name|resume_all_threads
@@ -12183,7 +12029,7 @@ operator|!
 name|step
 condition|)
 block|{
-comment|/* No need to do any notes on a per-thread            * basis--we're done!            */
+comment|/* No need to do any notes on a per-thread 	   * basis--we're done! 	   */
 ifdef|#
 directive|ifdef
 name|WAIT_BUFFER_DEBUG
@@ -12316,7 +12162,7 @@ condition|(
 name|resume_all_threads
 condition|)
 block|{
-comment|/*            * Regular user step: other threads get a "continue".            */
+comment|/* 	   * Regular user step: other threads get a "continue". 	   */
 name|threads_continue_all_but_one
 argument_list|(
 name|tid
@@ -12333,7 +12179,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* "Fake step": gdb is stepping one thread over a            * breakpoint, watchpoint, or out of a library load            * event, etc.  The rest just stay where they are.            *            * Also used when there are pending events: we really            * step the current thread, but leave the rest stopped.            * Users can't request this, but "wait_for_inferior"            * does--a lot!            */
+comment|/* "Fake step": gdb is stepping one thread over a 	   * breakpoint, watchpoint, or out of a library load 	   * event, etc.  The rest just stay where they are. 	   * 	   * Also used when there are pending events: we really 	   * step the current thread, but leave the rest stopped. 	   * Users can't request this, but "wait_for_inferior" 	   * does--a lot! 	   */
 name|thread_fake_step
 argument_list|(
 name|tid
@@ -12341,7 +12187,7 @@ argument_list|,
 name|signal
 argument_list|)
 expr_stmt|;
-comment|/* Clear the "handled" state of this thread, because            * we'll soon get a new event for it.  Other events            * stay as they were.            */
+comment|/* Clear the "handled" state of this thread, because 	   * we'll soon get a new event for it.  Other events 	   * stay as they were. 	   */
 name|clear_handled
 argument_list|(
 name|tid
@@ -12427,7 +12273,7 @@ argument_list|,
 name|signal
 argument_list|)
 expr_stmt|;
-comment|/* Clear the "handled" state of this thread, because                * we'll soon get a new event for it.  Other events                * can stay as they were.                */
+comment|/* Clear the "handled" state of this thread, because 	       * we'll soon get a new event for it.  Other events 	       * can stay as they were. 	       */
 name|clear_handled
 argument_list|(
 name|tid
@@ -12442,7 +12288,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* No signals to send.            */
+comment|/* No signals to send. 	   */
 if|if
 condition|(
 name|resume_all_threads
@@ -12546,7 +12392,7 @@ argument_list|,
 name|TT_NIL
 argument_list|)
 expr_stmt|;
-comment|/* Clear the "handled" state of this thread, because                * we'll soon get a new event for it.  Other events                * can stay as they were.                */
+comment|/* Clear the "handled" state of this thread, because 	       * we'll soon get a new event for it.  Other events 	       * can stay as they were. 	       */
 name|clear_handled
 argument_list|(
 name|tid
@@ -12605,7 +12451,7 @@ name|ATTACH_DETACH
 end_ifdef
 
 begin_comment
-comment|/*  * Like it says.  *  * One worry is that we may not be attaching to "inferior_pid"  * and thus may not want to clear out our data.  FIXME?  *   */
+comment|/*  * Like it says.  *  * One worry is that we may not be attaching to "inferior_ptid"  * and thus may not want to clear out our data.  FIXME?  *   */
 end_comment
 
 begin_function
@@ -12613,16 +12459,12 @@ specifier|static
 name|void
 name|update_thread_state_after_attach
 parameter_list|(
-name|pid
-parameter_list|,
-name|kind_of_go
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|attach_continue_t
 name|kind_of_go
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -12721,7 +12563,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Tell ourselves and the "rest of gdb" that this thread        * exists.        *        * This isn't really a hack.  Other thread-based versions        * of gdb (e.g. gnu-nat.c) seem to do the same thing.        *        * We don't need to do mapping here, as we know this        * is the first thread and thus gets the real pid        * (and is "inferior_pid").        *        * NOTE: it probably isn't the originating thread,        *       but that doesn't matter (we hope!).        */
+comment|/* Tell ourselves and the "rest of gdb" that this thread        * exists.        *        * This isn't really a hack.  Other thread-based versions        * of gdb (e.g. gnu-nat.c) seem to do the same thing.        *        * We don't need to do mapping here, as we know this        * is the first thread and thus gets the real pid        * (and is "inferior_ptid").        *        * NOTE: it probably isn't the originating thread,        *       but that doesn't matter (we hope!).        */
 name|add_tthread
 argument_list|(
 name|pid
@@ -12755,6 +12597,7 @@ name|p
 operator|->
 name|last_stop_state
 argument_list|,
+operator|&
 name|thread_state
 argument_list|)
 expr_stmt|;
@@ -12771,7 +12614,7 @@ operator|==
 name|kind_of_go
 condition|)
 block|{
-comment|/*            * If we are going to CONTINUE afterwards,            * raising a SIGTRAP, don't bother trying to            * handle this event.  But check first!            */
+comment|/* 	   * If we are going to CONTINUE afterwards, 	   * raising a SIGTRAP, don't bother trying to 	   * handle this event.  But check first! 	   */
 switch|switch
 condition|(
 name|p
@@ -12784,7 +12627,7 @@ block|{
 case|case
 name|TTEVT_NONE
 case|:
-comment|/* Ok to set this handled.               */
+comment|/* Ok to set this handled. 	       */
 break|break;
 default|default:
 name|warning
@@ -12820,7 +12663,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* There will be no "continue" opertion, so the            * process remains stopped.  Don't set any events            * handled except the "gimmies".            */
+comment|/* There will be no "continue" opertion, so the 	   * process remains stopped.  Don't set any events 	   * handled except the "gimmies". 	   */
 switch|switch
 condition|(
 name|p
@@ -12833,7 +12676,7 @@ block|{
 case|case
 name|TTEVT_NONE
 case|:
-comment|/* Ok to ignore this.                */
+comment|/* Ok to ignore this. 	       */
 name|set_handled
 argument_list|(
 name|pid
@@ -12848,7 +12691,7 @@ case|:
 case|case
 name|TTEVT_FORK
 case|:
-comment|/* Expected "other" FORK or EXEC event from a                * fork or vfork.                */
+comment|/* Expected "other" FORK or EXEC event from a 	       * fork or vfork. 	       */
 break|break;
 default|default:
 name|printf
@@ -12877,7 +12720,10 @@ block|}
 block|}
 name|add_thread
 argument_list|(
-name|tid
+name|pid_to_ptid
+argument_list|(
+name|pid
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* in thread.c */
@@ -12894,7 +12740,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* One mustn't call ttrace_wait() after attaching via ttrace,      'cause the process is stopped already.            However, the upper layers of gdb's execution control will      want to wait after attaching (but not after forks, in      which case they will be doing a "target_resume", anticipating      a later TTEVT_EXEC or TTEVT_FORK event).       To make this attach() implementation more compatible with      others, we'll make the attached-to process raise a SIGTRAP.       Issue: this continues only one thread.  That could be      dangerous if the thread is blocked--the process won't run      and no trap will be raised.  FIX! (check state.tts_flags?      need one that's either TTS_WASRUNNING--but we've stopped      it and made it TTS_WASSUSPENDED.  Hum...FIXME!)    */
+comment|/* One mustn't call ttrace_wait() after attaching via ttrace,      'cause the process is stopped already.       However, the upper layers of gdb's execution control will      want to wait after attaching (but not after forks, in      which case they will be doing a "target_resume", anticipating      a later TTEVT_EXEC or TTEVT_FORK event).       To make this attach() implementation more compatible with      others, we'll make the attached-to process raise a SIGTRAP.       Issue: this continues only one thread.  That could be      dangerous if the thread is blocked--the process won't run      and no trap will be raised.  FIX! (check state.tts_flags?      need one that's either TTS_WASRUNNING--but we've stopped      it and made it TTS_WASSUSPENDED.  Hum...FIXME!)    */
 if|if
 condition|(
 name|DO_ATTACH_CONTINUE
@@ -12979,11 +12825,9 @@ begin_function
 name|int
 name|attach
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -13052,11 +12896,9 @@ begin_function
 name|void
 name|child_post_attach
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -13093,11 +12935,9 @@ begin_function
 name|void
 name|detach
 parameter_list|(
-name|signal
-parameter_list|)
 name|int
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|errno
 operator|=
@@ -13107,7 +12947,10 @@ name|call_ttrace
 argument_list|(
 name|TT_PROC_DETACH
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|TT_NIL
 argument_list|,
@@ -13167,7 +13010,9 @@ end_endif
 begin_function
 name|void
 name|_initialize_kernel_u_addr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -13186,42 +13031,36 @@ comment|/* NOTE! I tried using TTRACE_READDATA, etc., to read and write memory  
 end_comment
 
 begin_comment
-comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.   Copy to inferior if    WRITE is nonzero.       Returns the length copied, which is either the LEN argument or zero.    This xfer function does not do partial moves, since child_ops    doesn't allow memory operations to cross below us in the target stack    anyway.  */
+comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.   Copy to inferior if    WRITE is nonzero.  TARGET is ignored.     Returns the length copied, which is either the LEN argument or zero.    This xfer function does not do partial moves, since child_ops    doesn't allow memory operations to cross below us in the target stack    anyway.  */
 end_comment
 
 begin_function
 name|int
 name|child_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -13235,6 +13074,9 @@ init|=
 name|memaddr
 operator|&
 operator|-
+operator|(
+name|CORE_ADDR
+operator|)
 sizeof|sizeof
 argument_list|(
 name|TTRACE_XFER_TYPE
@@ -13270,6 +13112,7 @@ name|TTRACE_XFER_TYPE
 argument_list|)
 decl_stmt|;
 comment|/* Allocate buffer of that many longwords.  */
+comment|/* FIXME (alloca): This code, cloned from infptrace.c, is unsafe      because it uses alloca to allocate a buffer of arbitrary size.      For very large xfers, this could crash GDB's stack.  */
 specifier|register
 name|TTRACE_XFER_TYPE
 modifier|*
@@ -13322,7 +13165,10 @@ name|call_ttrace
 argument_list|(
 name|TT_LWP_RDTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|TTRACE_ARG_TYPE
@@ -13354,7 +13200,10 @@ name|call_ttrace
 argument_list|(
 name|TT_LWP_RDTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 call|(
@@ -13439,7 +13288,10 @@ name|call_ttrace
 argument_list|(
 name|TT_LWP_WRDATA
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|TTRACE_ARG_TYPE
@@ -13462,7 +13314,7 @@ condition|(
 name|errno
 condition|)
 block|{
-comment|/* Using the appropriate one (I or D) is necessary for 		 Gould NP1, at least.  */
+comment|/* Using the appropriate one (I or D) is necessary for 	         Gould NP1, at least.  */
 name|errno
 operator|=
 literal|0
@@ -13471,7 +13323,10 @@ name|call_ttrace
 argument_list|(
 name|TT_LWP_WRTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|TTRACE_ARG_TYPE
@@ -13536,7 +13391,10 @@ name|call_ttrace
 argument_list|(
 name|TT_LWP_RDTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|TTRACE_ARG_TYPE
@@ -13599,7 +13457,9 @@ begin_function
 specifier|static
 name|void
 name|udot_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|udot_off
@@ -13699,7 +13559,10 @@ name|call_ttrace
 argument_list|(
 name|TT_LWP_RUREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|TTRACE_ARG_TYPE
@@ -13779,12 +13642,13 @@ name|char
 modifier|*
 name|child_pid_to_exec_file
 parameter_list|(
-name|tid
-parameter_list|)
 name|int
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
+name|int
+name|tt_status
+decl_stmt|;
 specifier|static
 name|char
 name|exec_file_buffer
@@ -13792,31 +13656,15 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|int
-name|tt_status
+name|pid_t
+name|pid
 decl_stmt|;
-name|CORE_ADDR
-name|top_of_stack
+specifier|static
+name|struct
+name|pst_status
+name|buf
 decl_stmt|;
-name|char
-name|four_chars
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|int
-name|name_index
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|int
-name|done
-decl_stmt|;
-name|int
-name|saved_inferior_pid
-decl_stmt|;
-comment|/* As of 10.x HP-UX, there's an explicit request to get the    *pathname.    */
+comment|/* On various versions of hpux11, this may fail due to a supposed      kernel bug.  We have alternate methods to get this information      (ie pstat).  */
 name|tt_status
 operator|=
 name|call_ttrace
@@ -13826,13 +13674,10 @@ argument_list|,
 name|tid
 argument_list|,
 operator|(
-name|TTRACE_ARG_TYPE
+name|uint64_t
 operator|)
 name|exec_file_buffer
 argument_list|,
-operator|(
-name|TTRACE_ARG_TYPE
-operator|)
 sizeof|sizeof
 argument_list|(
 name|exec_file_buffer
@@ -13840,7 +13685,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|TT_NIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -13852,128 +13697,67 @@ condition|)
 return|return
 name|exec_file_buffer
 return|;
-comment|/* ??rehrauer: The above request may or may not be broken.  It      doesn't seem to work when I use it.  But, it may be designed      to only work immediately after an exec event occurs.  (I'm      waiting for COSL to explain.)       In any case, if it fails, try a really, truly amazingly gross      hack that DDE uses, of pawing through the process' data      segment to find the pathname.      */
-name|top_of_stack
-operator|=
-literal|0x7b03a000
-expr_stmt|;
-name|name_index
-operator|=
-literal|0
-expr_stmt|;
-name|done
-operator|=
-literal|0
-expr_stmt|;
-comment|/* On the chance that pid != inferior_pid, set inferior_pid      to pid, so that (grrrr!) implicit uses of inferior_pid get      the right id.      */
-name|saved_inferior_pid
-operator|=
-name|inferior_pid
-expr_stmt|;
-name|inferior_pid
-operator|=
-name|tid
-expr_stmt|;
-comment|/* Try to grab a null-terminated string. */
-while|while
-condition|(
-operator|!
-name|done
-condition|)
-block|{
+comment|/* Try to get process information via pstat and extract the filename      from the pst_cmd field within the pst_status structure.  */
 if|if
 condition|(
-name|target_read_memory
+name|pstat_getproc
 argument_list|(
-name|top_of_stack
+operator|&
+name|buf
 argument_list|,
-name|four_chars
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pst_status
+argument_list|)
 argument_list|,
-literal|4
+literal|0
+argument_list|,
+name|tid
 argument_list|)
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
-name|inferior_pid
-operator|=
-name|saved_inferior_pid
+name|char
+modifier|*
+name|p
+init|=
+name|buf
+operator|.
+name|pst_cmd
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|' '
+condition|)
+name|p
+operator|++
 expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-for|for
-control|(
-name|i
+operator|*
+name|p
 operator|=
 literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|exec_file_buffer
-index|[
-name|name_index
-operator|++
-index|]
-operator|=
-name|four_chars
-index|[
-name|i
-index|]
 expr_stmt|;
-name|done
-operator|=
+return|return
 operator|(
-name|four_chars
-index|[
-name|i
-index|]
-operator|==
-literal|'\0'
+name|buf
+operator|.
+name|pst_cmd
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|done
-condition|)
-break|break;
-block|}
-name|top_of_stack
-operator|+=
-literal|4
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|exec_file_buffer
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-block|{
-name|inferior_pid
-operator|=
-name|saved_inferior_pid
-expr_stmt|;
-return|return
-name|NULL
 return|;
 block|}
-name|inferior_pid
-operator|=
-name|saved_inferior_pid
-expr_stmt|;
 return|return
-name|exec_file_buffer
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -13981,7 +13765,9 @@ end_function
 begin_function
 name|void
 name|pre_fork_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|status
@@ -14043,11 +13829,9 @@ begin_function
 name|int
 name|hppa_require_attach
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -14118,7 +13902,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If successful, the process is now stopped.  But if       * we're VFORKING, the parent is still running, so don't       * change the process state.       */
+comment|/* If successful, the process is now stopped.  But if        * we're VFORKING, the parent is still running, so don't        * change the process state.        */
 if|if
 condition|(
 name|process_state
@@ -14129,7 +13913,7 @@ name|process_state
 operator|=
 name|STOPPED
 expr_stmt|;
-comment|/* If we were already attached, you'd think that we       * would need to start going again--but you'd be wrong,       * as the fork-following code is actually in the middle       * of the "resume" routine in in "infrun.c" and so       * will (almost) immediately do a resume.       *       * On the other hand, if we are VFORKING, which means       * that the child and the parent share a process for a       * while, we know that "resume" won't be resuming       * until the child EXEC event is seen.  But we still       * don't want to continue, as the event is already       * there waiting.       */
+comment|/* If we were already attached, you'd think that we        * would need to start going again--but you'd be wrong,        * as the fork-following code is actually in the middle        * of the "resume" routine in in "infrun.c" and so        * will (almost) immediately do a resume.        *        * On the other hand, if we are VFORKING, which means        * that the child and the parent share a process for a        * while, we know that "resume" won't be resuming        * until the child EXEC event is seen.  But we still        * don't want to continue, as the event is already        * there waiting.        */
 name|update_thread_state_after_attach
 argument_list|(
 name|pid
@@ -14149,16 +13933,12 @@ begin_function
 name|int
 name|hppa_require_detach
 parameter_list|(
+name|int
 name|pid
 parameter_list|,
+name|int
 name|signal
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|signal
-decl_stmt|;
 block|{
 name|int
 name|tt_status
@@ -14215,7 +13995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given the starting address of a memory page, hash it to a bucket in    the memory page dictionary.    */
+comment|/* Given the starting address of a memory page, hash it to a bucket in    the memory page dictionary.  */
 end_comment
 
 begin_function
@@ -14223,11 +14003,9 @@ specifier|static
 name|int
 name|get_dictionary_bucket_of_page
 parameter_list|(
-name|page_start
-parameter_list|)
 name|CORE_ADDR
 name|page_start
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hash
@@ -14255,7 +14033,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a memory page's starting address, get (i.e., find an existing    or create a new) dictionary entry for the page.  The page will be    write-protected when this function returns, but may have a reference    count of 0 (if the page was newly-added to the dictionary).    */
+comment|/* Given a memory page's starting address, get (i.e., find an existing    or create a new) dictionary entry for the page.  The page will be    write-protected when this function returns, but may have a reference    count of 0 (if the page was newly-added to the dictionary).  */
 end_comment
 
 begin_function
@@ -14264,16 +14042,12 @@ name|memory_page_t
 modifier|*
 name|get_dictionary_entry_of_page
 parameter_list|(
-name|pid
-parameter_list|,
-name|page_start
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|page_start
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|bucket
@@ -14292,11 +14066,9 @@ name|NULL
 decl_stmt|;
 comment|/* We're going to be using the dictionary now, than-kew. */
 name|require_memory_page_dictionary
-argument_list|(
-name|pid
-argument_list|)
+argument_list|()
 expr_stmt|;
-comment|/* Try to find an existing dictionary entry for this page.  Hash      on the page's starting address.      */
+comment|/* Try to find an existing dictionary entry for this page.  Hash      on the page's starting address.    */
 name|bucket
 operator|=
 name|get_dictionary_bucket_of_page
@@ -14341,7 +14113,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* Did we find a dictionary entry for this page?  If not, then      add it to the dictionary now.      */
+comment|/* Did we find a dictionary entry for this page?  If not, then      add it to the dictionary now.    */
 if|if
 condition|(
 name|page
@@ -14430,17 +14202,13 @@ specifier|static
 name|void
 name|remove_dictionary_entry_of_page
 parameter_list|(
-name|pid
-parameter_list|,
-name|page
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|memory_page_t
 modifier|*
 name|page
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Restore the page's original permissions. */
 name|unwrite_protect_page
@@ -14508,7 +14276,7 @@ operator|.
 name|page_count
 operator|--
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|page
 argument_list|)
@@ -14521,11 +14289,9 @@ specifier|static
 name|void
 name|hppa_enable_syscall_events
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -14623,11 +14389,9 @@ specifier|static
 name|void
 name|hppa_disable_syscall_events
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tt_status
@@ -14723,33 +14487,25 @@ block|}
 end_function
 
 begin_comment
-comment|/* The address range beginning with START and ending with START+LEN-1    (inclusive) is to be watched via page-protection by a new watchpoint.    Set protection for all pages that overlap that range.     Note that our caller sets TYPE to:      0 for a bp_hardware_watchpoint,      1 for a bp_read_watchpoint,      2 for a bp_access_watchpoint     (Yes, this is intentionally (though lord only knows why) different    from the TYPE that is passed to hppa_remove_hw_watchpoint.)    */
+comment|/* The address range beginning with START and ending with START+LEN-1    (inclusive) is to be watched via page-protection by a new watchpoint.    Set protection for all pages that overlap that range.     Note that our caller sets TYPE to:    0 for a bp_hardware_watchpoint,    1 for a bp_read_watchpoint,    2 for a bp_access_watchpoint     (Yes, this is intentionally (though lord only knows why) different    from the TYPE that is passed to hppa_remove_hw_watchpoint.)  */
 end_comment
 
 begin_function
 name|int
 name|hppa_insert_hw_watchpoint
 parameter_list|(
-name|pid
-parameter_list|,
-name|start
-parameter_list|,
-name|len
-parameter_list|,
-name|type
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|start
-decl_stmt|;
+parameter_list|,
 name|LONGEST
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|page_start
@@ -14853,7 +14609,7 @@ name|memory_page_t
 modifier|*
 name|page
 decl_stmt|;
-comment|/* This gets the page entered into the dictionary if it was          not already entered.          */
+comment|/* This gets the page entered into the dictionary if it was          not already entered.        */
 name|page
 operator|=
 name|get_dictionary_entry_of_page
@@ -14869,7 +14625,7 @@ name|reference_count
 operator|++
 expr_stmt|;
 block|}
-comment|/* Our implementation depends on seeing calls to kernel code, for the      following reason.  Here we ask to be notified of syscalls.       When a protected page is accessed by user code, HP-UX raises a SIGBUS.      Fine.       But when kernel code accesses the page, it doesn't give a SIGBUS.      Rather, the system call that touched the page fails, with errno=EFAULT.      Not good for us.       We could accomodate this "feature" by asking to be notified of syscall      entries& exits; upon getting an entry event, disabling page-protections;      upon getting an exit event, reenabling page-protections and then checking      if any watchpoints triggered.       However, this turns out to be a real performance loser.  syscalls are      usually a frequent occurrence.  Having to unprotect-reprotect all watched      pages, and also to then read all watched memory locations and compare for      triggers, can be quite expensive.       Instead, we'll only ask to be notified of syscall exits.  When we get      one, we'll check whether errno is set.  If not, or if it's not EFAULT,      we can just continue the inferior.       If errno is set upon syscall exit to EFAULT, we must perform some fairly      hackish stuff to determine whether the failure really was due to a      page-protect trap on a watched location.      */
+comment|/* Our implementation depends on seeing calls to kernel code, for the      following reason.  Here we ask to be notified of syscalls.       When a protected page is accessed by user code, HP-UX raises a SIGBUS.      Fine.       But when kernel code accesses the page, it doesn't give a SIGBUS.      Rather, the system call that touched the page fails, with errno=EFAULT.      Not good for us.       We could accomodate this "feature" by asking to be notified of syscall      entries& exits; upon getting an entry event, disabling page-protections;      upon getting an exit event, reenabling page-protections and then checking      if any watchpoints triggered.       However, this turns out to be a real performance loser.  syscalls are      usually a frequent occurrence.  Having to unprotect-reprotect all watched      pages, and also to then read all watched memory locations and compare for      triggers, can be quite expensive.       Instead, we'll only ask to be notified of syscall exits.  When we get      one, we'll check whether errno is set.  If not, or if it's not EFAULT,      we can just continue the inferior.       If errno is set upon syscall exit to EFAULT, we must perform some fairly      hackish stuff to determine whether the failure really was due to a      page-protect trap on a watched location.    */
 if|if
 condition|(
 name|dictionary_was_empty
@@ -14886,34 +14642,26 @@ block|}
 end_function
 
 begin_comment
-comment|/* The address range beginning with START and ending with START+LEN-1    (inclusive) was being watched via page-protection by a watchpoint    which has been removed.  Remove protection for all pages that    overlap that range, which are not also being watched by other    watchpoints.    */
+comment|/* The address range beginning with START and ending with START+LEN-1    (inclusive) was being watched via page-protection by a watchpoint    which has been removed.  Remove protection for all pages that    overlap that range, which are not also being watched by other    watchpoints.  */
 end_comment
 
 begin_function
 name|int
 name|hppa_remove_hw_watchpoint
 parameter_list|(
-name|pid
-parameter_list|,
-name|start
-parameter_list|,
-name|len
-parameter_list|,
-name|type
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|start
-decl_stmt|;
+parameter_list|,
 name|LONGEST
 name|len
-decl_stmt|;
+parameter_list|,
 name|enum
 name|bptype
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|page_start
@@ -15018,7 +14766,7 @@ operator|->
 name|reference_count
 operator|--
 expr_stmt|;
-comment|/* Was this the last reference of this page?  If so, then we          must scrub the entry from the dictionary, and also restore          the page's original permissions.          */
+comment|/* Was this the last reference of this page?  If so, then we          must scrub the entry from the dictionary, and also restore          the page's original permissions.        */
 if|if
 condition|(
 name|page
@@ -15048,7 +14796,7 @@ operator|)
 literal|0
 operator|)
 expr_stmt|;
-comment|/* If write protections are currently disallowed, then that implies that      wait_for_inferior believes that the inferior is within a system call.      Since we want to see both syscall entry and return, it's clearly not      good to disable syscall events in this state!       ??rehrauer: Yeah, it'd be better if we had a specific flag that said,      "inferior is between syscall events now".  Oh well.      */
+comment|/* If write protections are currently disallowed, then that implies that      wait_for_inferior believes that the inferior is within a system call.      Since we want to see both syscall entry and return, it's clearly not      good to disable syscall events in this state!       ??rehrauer: Yeah, it'd be better if we had a specific flag that said,      "inferior is between syscall events now".  Oh well.    */
 if|if
 condition|(
 name|dictionary_is_empty
@@ -15069,30 +14817,24 @@ block|}
 end_function
 
 begin_comment
-comment|/* Could we implement a watchpoint of this type via our available    hardware support?     This query does not consider whether a particular address range    could be so watched, but just whether support is generally available    for such things.  See hppa_range_profitable_for_hw_watchpoint for a    query that answers whether a particular range should be watched via    hardware support.    */
+comment|/* Could we implement a watchpoint of this type via our available    hardware support?     This query does not consider whether a particular address range    could be so watched, but just whether support is generally available    for such things.  See hppa_range_profitable_for_hw_watchpoint for a    query that answers whether a particular range should be watched via    hardware support.  */
 end_comment
 
 begin_function
 name|int
 name|hppa_can_use_hw_watchpoint
 parameter_list|(
-name|type
-parameter_list|,
-name|cnt
-parameter_list|,
-name|ot
-parameter_list|)
 name|enum
 name|bptype
 name|type
-decl_stmt|;
+parameter_list|,
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|,
 name|enum
 name|bptype
 name|ot
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -15105,28 +14847,22 @@ block|}
 end_function
 
 begin_comment
-comment|/* Assuming we could set a hardware watchpoint on this address, do    we think it would be profitable ("a good idea") to do so?  If not,    we can always set a regular (aka single-step& test) watchpoint    on the address...    */
+comment|/* Assuming we could set a hardware watchpoint on this address, do    we think it would be profitable ("a good idea") to do so?  If not,    we can always set a regular (aka single-step& test) watchpoint    on the address...  */
 end_comment
 
 begin_function
 name|int
 name|hppa_range_profitable_for_hw_watchpoint
 parameter_list|(
-name|pid
-parameter_list|,
-name|start
-parameter_list|,
-name|len
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|start
-decl_stmt|;
+parameter_list|,
 name|LONGEST
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|range_is_stack_based
@@ -15146,12 +14882,12 @@ decl_stmt|;
 name|LONGEST
 name|range_size_in_pages
 decl_stmt|;
-comment|/* ??rehrauer: For now, say that all addresses are potentially      profitable.  Possibly later we'll want to test the address      for "stackness"?      */
+comment|/* ??rehrauer: For now, say that all addresses are potentially      profitable.  Possibly later we'll want to test the address      for "stackness"?    */
 name|range_is_stack_based
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If any page in the range is inaccessible, then we cannot      really use hardware watchpointing, even though our client      thinks we can.  In that case, it's actually an error to      attempt to use hw watchpoints, so we'll tell our client      that the range is "unprofitable", and hope that they listen...      */
+comment|/* If any page in the range is inaccessible, then we cannot      really use hardware watchpointing, even though our client      thinks we can.  In that case, it's actually an error to      attempt to use hw watchpoints, so we'll tell our client      that the range is "unprofitable", and hope that they listen...    */
 name|range_is_accessible
 operator|=
 literal|1
@@ -15169,7 +14905,7 @@ argument_list|(
 name|_SC_PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* If we can't determine page size, we're hosed.  Tell our      client it's unprofitable to use hw watchpoints for this      range.      */
+comment|/* If we can't determine page size, we're hosed.  Tell our      client it's unprofitable to use hw watchpoints for this      range.    */
 if|if
 condition|(
 name|errno
@@ -15298,11 +15034,9 @@ name|char
 modifier|*
 name|hppa_pid_or_tid_to_str
 parameter_list|(
-name|id
+name|ptid_t
+name|ptid
 parameter_list|)
-name|pid_t
-name|id
-decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -15312,6 +15046,14 @@ literal|100
 index|]
 decl_stmt|;
 comment|/* Static because address returned. */
+name|pid_t
+name|id
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
+decl_stmt|;
 comment|/* Does this appear to be a process?  If so, print it that way. */
 if|if
 condition|(
@@ -15321,9 +15063,9 @@ name|id
 argument_list|)
 condition|)
 return|return
-name|hppa_pid_to_str
+name|child_pid_to_str
 argument_list|(
-name|id
+name|ptid
 argument_list|)
 return|;
 comment|/* Else, print both the GDB thread number and the system thread id. */
@@ -15335,7 +15077,7 @@ literal|"thread %d ("
 argument_list|,
 name|pid_to_thread_id
 argument_list|(
-name|id
+name|ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15345,7 +15087,7 @@ name|buf
 argument_list|,
 name|hppa_tid_to_str
 argument_list|(
-name|id
+name|ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15373,11 +15115,9 @@ begin_function
 name|pid_t
 name|hppa_switched_threads
 parameter_list|(
-name|gdb_pid
-parameter_list|)
 name|pid_t
 name|gdb_pid
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -15417,7 +15157,7 @@ operator|!
 name|reported_bpt
 condition|)
 block|{
-comment|/*         * The core switched, but we didn't just report a         * breakpoint, so there's no just-hit breakpoint         * instruction at "reported_pid"'s PC, and thus there         * is no need to step over it.         */
+comment|/*        * The core switched, but we didn't just report a        * breakpoint, so there's no just-hit breakpoint        * instruction at "reported_pid"'s PC, and thus there        * is no need to step over it.        */
 return|return
 operator|(
 name|pid_t
@@ -15427,7 +15167,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* There's been a real switch, and we reported         * a hit breakpoint.  Let "hppa_prepare_to_proceed"         * know, so it can see whether the breakpoint is         * still active.         */
+comment|/* There's been a real switch, and we reported        * a hit breakpoint.  Let "hppa_prepare_to_proceed"        * know, so it can see whether the breakpoint is        * still active.        */
 return|return
 name|reported_pid
 return|;
@@ -15446,11 +15186,9 @@ begin_function
 name|void
 name|hppa_ensure_vforking_parent_remains_stopped
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Nothing to do when using ttrace.  Only the ptrace-based implementation      must do real work.    */
 block|}
@@ -15459,7 +15197,9 @@ end_function
 begin_function
 name|int
 name|hppa_resume_execd_vforking_child_to_get_parent_vfork
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -15471,10 +15211,130 @@ end_function
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Write a register as a 64bit value.  This may be necessary if the    native OS is too braindamaged to allow some (or all) registers to    be written in 32bit hunks such as hpux11 and the PC queue registers.     This is horribly gross and disgusting.  */
+end_comment
+
+begin_function
+name|int
+name|ttrace_write_reg_64
+parameter_list|(
+name|int
+name|gdb_tid
+parameter_list|,
+name|CORE_ADDR
+name|dest_addr
+parameter_list|,
+name|CORE_ADDR
+name|src_addr
+parameter_list|)
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+name|lwpid_t
+name|tid
+decl_stmt|;
+name|int
+name|tt_status
+decl_stmt|;
+name|tid
+operator|=
+name|map_from_gdb_tid
+argument_list|(
+name|gdb_tid
+argument_list|)
+expr_stmt|;
+name|pid
+operator|=
+name|get_pid_for
+argument_list|(
+name|tid
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|tt_status
+operator|=
+name|ttrace
+argument_list|(
+name|TT_LWP_WUREGS
+argument_list|,
+name|pid
+argument_list|,
+name|tid
+argument_list|,
+operator|(
+name|TTRACE_ARG_TYPE
+operator|)
+name|dest_addr
+argument_list|,
+literal|8
+argument_list|,
+operator|(
+name|TTRACE_ARG_TYPE
+operator|)
+name|src_addr
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|THREAD_DEBUG
+if|if
+condition|(
+name|errno
+condition|)
+block|{
+comment|/* Don't bother for a known benign error: if you ask for the          first thread state, but there is only one thread and it's          not stopped, ttrace complains.                   We have this inside the #ifdef because our caller will do          this check for real.  */
+if|if
+condition|(
+name|request
+operator|!=
+name|TT_PROC_GET_FIRST_LWP_STATE
+operator|||
+name|errno
+operator|!=
+name|EPROTO
+condition|)
+block|{
+if|if
+condition|(
+name|debug_on
+condition|)
+name|printf
+argument_list|(
+literal|"TT fail for %s, with pid %d, tid %d, status %d \n"
+argument_list|,
+name|get_printable_name_of_ttrace_request
+argument_list|(
+name|TT_LWP_WUREGS
+argument_list|)
+argument_list|,
+name|pid
+argument_list|,
+name|tid
+argument_list|,
+name|tt_status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+return|return
+name|tt_status
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|_initialize_infttrace
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Initialize the ttrace-based hardware watchpoint implementation. */
 name|memory_page_dictionary
@@ -15504,6 +15364,29 @@ operator|=
 name|sysconf
 argument_list|(
 name|_SC_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* We do a lot of casts from pointers to TTRACE_ARG_TYPE; make sure      this is okay.  */
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|TTRACE_ARG_TYPE
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+condition|)
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface to ptrace, for the remote server for GDB.    Copyright (C) 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface to ptrace, for the remote server for GDB.    Copyright 1995, 1996, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"server.h"
 end_include
 
 begin_include
@@ -80,32 +80,21 @@ comment|/***************Begin MY defs*********************/
 end_comment
 
 begin_decl_stmt
-name|int
-name|quit_flag
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|char
-name|registers
+name|my_registers
 index|[
 name|REGISTER_BYTES
 index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Index within `registers' of the first byte of the space for    register N.  */
-end_comment
-
 begin_decl_stmt
 name|char
-name|buf2
-index|[
-name|MAX_REGISTER_RAW_SIZE
-index|]
+modifier|*
+name|registers
+init|=
+name|my_registers
 decl_stmt|;
 end_decl_stmt
 
@@ -127,65 +116,28 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|inferior_pid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|quit
-argument_list|()
-decl_stmt|,
-name|perror_with_name
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|query
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/* Start an inferior process and returns its pid.    ALLARGS is a vector of program-name and args.    ENV is the environment vector to pass.  */
+comment|/* Start an inferior process and returns its pid.    ALLARGS is a vector of program-name and args. */
 end_comment
 
 begin_function
 name|int
 name|create_inferior
 parameter_list|(
+name|char
+modifier|*
 name|program
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|allargs
 parameter_list|)
-name|char
-modifier|*
-name|program
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|allargs
-decl_stmt|;
 block|{
 name|int
 name|pid
@@ -277,7 +229,9 @@ end_comment
 begin_function
 name|void
 name|kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -309,6 +263,25 @@ block|}
 end_function
 
 begin_comment
+comment|/* Attaching is not supported.  */
+end_comment
+
+begin_function
+name|int
+name|myattach
+parameter_list|(
+name|int
+name|pid
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Return nonzero if the given thread is still alive.  */
 end_comment
 
@@ -316,11 +289,9 @@ begin_function
 name|int
 name|mythread_alive
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|1
@@ -337,12 +308,10 @@ name|unsigned
 name|char
 name|mywait
 parameter_list|(
-name|status
-parameter_list|)
 name|char
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pid
@@ -351,13 +320,23 @@ name|union
 name|wait
 name|w
 decl_stmt|;
+name|enable_async_io
+argument_list|()
+expr_stmt|;
 name|pid
 operator|=
-name|wait
+name|waitpid
 argument_list|(
+name|inferior_pid
+argument_list|,
 operator|&
 name|w
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+name|disable_async_io
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -481,16 +460,12 @@ begin_function
 name|void
 name|myresume
 parameter_list|(
+name|int
 name|step
 parameter_list|,
+name|int
 name|signal
 parameter_list|)
-name|int
-name|step
-decl_stmt|;
-name|int
-name|signal
-decl_stmt|;
 block|{
 name|errno
 operator|=
@@ -583,16 +558,12 @@ begin_function
 name|CORE_ADDR
 name|register_addr
 parameter_list|(
-name|regno
-parameter_list|,
-name|blockend
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|blockend
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|addr
@@ -605,7 +576,7 @@ literal|0
 operator|||
 name|regno
 operator|>=
-name|ARCH_NUM_REGS
+name|NUM_REGS
 condition|)
 name|error
 argument_list|(
@@ -638,11 +609,9 @@ specifier|static
 name|void
 name|fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -806,11 +775,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -858,11 +825,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -973,7 +938,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Error, even if attached.  Failing to write these two 		 registers is pretty serious.  */
+comment|/* Error, even if attached.  Failing to write these two 	         registers is pretty serious.  */
 name|sprintf
 argument_list|(
 name|buf
@@ -1134,37 +1099,20 @@ begin_comment
 comment|/* Copy LEN bytes from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|read_inferior_memory
-argument_list|(
-argument|memaddr
-argument_list|,
-argument|myaddr
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1178,6 +1126,9 @@ init|=
 name|memaddr
 operator|&
 operator|-
+operator|(
+name|CORE_ADDR
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int
@@ -1301,7 +1252,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Copy LEN bytes of data from debugger memory at MYADDR    to inferior's memory at MEMADDR.    On failure (cannot write the inferior)    returns the value of errno.  */
@@ -1311,22 +1262,16 @@ begin_function
 name|int
 name|write_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1340,6 +1285,9 @@ init|=
 name|memaddr
 operator|&
 operator|-
+operator|(
+name|CORE_ADDR
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int
@@ -1544,27 +1492,11 @@ end_escape
 
 begin_function
 name|void
-name|initialize
-parameter_list|()
-block|{
-name|inferior_pid
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|int
-name|have_inferior_p
-parameter_list|()
-block|{
-return|return
-name|inferior_pid
-operator|!=
-literal|0
-return|;
-block|}
+name|initialize_low
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 end_unit

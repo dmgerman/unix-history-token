@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read NLM (NetWare Loadable Module) format executable files for GDB.    Copyright 1993, 1994, 1998 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support (fnf@cygnus.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Read NLM (NetWare Loadable Module) format executable files for GDB.    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support (fnf@cygnus.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdb_string.h"
 end_include
 
 begin_include
@@ -42,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gdb-stabs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"buildsym.h"
 end_include
 
@@ -57,91 +45,82 @@ directive|include
 file|"stabsread.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|_initialize_nlmread
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|nlm_new_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|nlm_symfile_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|nlm_symfile_read
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|nlm_symfile_finish
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|nlm_symtab_read
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Initialize anything that needs initializing when a completely new symbol    file is specified (not just adding some symbols from another file, e.g. a    shared library).     We reinitialize buildsym, since gdb will be able to read stabs from an NLM    file at some point in the near future.  */
@@ -152,13 +131,11 @@ specifier|static
 name|void
 name|nlm_new_init
 parameter_list|(
-name|ignore
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 name|stabsread_new_init
 argument_list|()
@@ -178,18 +155,16 @@ specifier|static
 name|void
 name|nlm_symfile_init
 parameter_list|(
-name|ignore
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	nlm_symtab_read -- read the symbol table of an NLM file  SYNOPSIS  	void nlm_symtab_read (bfd *abfd, CORE_ADDR addr, 			      struct objfile *objfile)  DESCRIPTION  	Given an open bfd, a base address to relocate symbols to, and a 	flag that specifies whether or not this bfd is for an executable 	or not (may be shared library for example), add all the global 	function and data symbols to the minimal symbol table. */
+comment|/*     LOCAL FUNCTION     nlm_symtab_read -- read the symbol table of an NLM file     SYNOPSIS     void nlm_symtab_read (bfd *abfd, CORE_ADDR addr,    struct objfile *objfile)     DESCRIPTION     Given an open bfd, a base address to relocate symbols to, and a    flag that specifies whether or not this bfd is for an executable    or not (may be shared library for example), add all the global    function and data symbols to the minimal symbol table.  */
 end_comment
 
 begin_function
@@ -197,24 +172,18 @@ specifier|static
 name|void
 name|nlm_symtab_read
 parameter_list|(
-name|abfd
-parameter_list|,
-name|addr
-parameter_list|,
-name|objfile
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|storage_needed
@@ -298,7 +267,7 @@ name|back_to
 operator|=
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|symbol_table
 argument_list|)
@@ -357,7 +326,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-comment|/*sym -> flags& BSF_GLOBAL*/
+comment|/*sym -> flags& BSF_GLOBAL */
 literal|1
 condition|)
 block|{
@@ -388,7 +357,7 @@ name|symaddr
 operator|+=
 name|addr
 expr_stmt|;
-comment|/* For non-absolute symbols, use the type of the section 		 they are relative to, to intuit text/data.  BFD provides 		 no way of figuring this out for absolute symbols. */
+comment|/* For non-absolute symbols, use the type of the section 	         they are relative to, to intuit text/data.  BFD provides 	         no way of figuring this out for absolute symbols. */
 if|if
 condition|(
 name|sym
@@ -456,25 +425,14 @@ specifier|static
 name|void
 name|nlm_symfile_read
 parameter_list|(
-name|objfile
-parameter_list|,
-name|section_offsets
-parameter_list|,
-name|mainline
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
+parameter_list|,
 name|int
 name|mainline
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -502,21 +460,16 @@ argument_list|()
 expr_stmt|;
 name|back_to
 operator|=
-name|make_cleanup
-argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|discard_minimal_symbols
-argument_list|,
-literal|0
-argument_list|)
+name|make_cleanup_discard_minimal_symbols
+argument_list|()
 expr_stmt|;
 comment|/* FIXME, should take a section_offsets param, not just an offset.  */
 name|offset
 operator|=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 literal|0
@@ -536,8 +489,6 @@ name|stabsect_build_psymtabs
 argument_list|(
 name|objfile
 argument_list|,
-name|section_offsets
-argument_list|,
 name|mainline
 argument_list|,
 literal|".stab"
@@ -551,7 +502,8 @@ name|mainsym
 operator|=
 name|lookup_symbol
 argument_list|(
-literal|"main"
+name|main_name
+argument_list|()
 argument_list|,
 name|NULL
 argument_list|,
@@ -627,13 +579,11 @@ specifier|static
 name|void
 name|nlm_symfile_finish
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -644,7 +594,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mfree
+name|xmfree
 argument_list|(
 name|objfile
 operator|->
@@ -696,7 +646,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_nlmread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_symtab_fns
 argument_list|(

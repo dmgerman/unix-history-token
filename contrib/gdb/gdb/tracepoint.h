@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Data structures associated with tracepoints in GDB.    Copyright (C) 1997 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Data structures associated with tracepoints in GDB.    Copyright 1997, 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -19,32 +19,6 @@ directive|define
 name|TRACEPOINT_H
 value|1
 end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BREAKPOINT_H
-argument_list|)
-end_if
-
-begin_enum
-enum|enum
-name|enable
-block|{
-name|disabled
-block|,
-name|enabled
-block|}
-enum|;
-end_enum
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The data structure for an action: */
@@ -80,9 +54,8 @@ name|tracepoint
 modifier|*
 name|next
 decl_stmt|;
-name|enum
-name|enable
-name|enabled
+name|int
+name|enabled_p
 decl_stmt|;
 if|#
 directive|if
@@ -110,7 +83,7 @@ name|char
 modifier|*
 name|source_file
 decl_stmt|;
-comment|/* Number of times this tracepoint should single-step       and collect additional data */
+comment|/* Number of times this tracepoint should single-step         and collect additional data */
 name|long
 name|step_count
 decl_stmt|;
@@ -130,7 +103,7 @@ name|expression
 modifier|*
 name|cond
 decl_stmt|;
-comment|/* String we used to set the tracepoint (malloc'd).  Only matters if      address is non-NULL.  */
+comment|/* String we used to set the tracepoint (malloc'd).  Only matters if        address is non-NULL.  */
 name|char
 modifier|*
 name|addr_string
@@ -144,7 +117,7 @@ comment|/* Input radix we used to set the tracepoint.  */
 name|int
 name|input_radix
 decl_stmt|;
-comment|/* Count of the number of times this tracepoint was taken, dumped      with the info, but not used for anything else.  Useful for      seeing how many times you hit a tracepoint prior to the program      aborting, so you can back up to just before the abort.  */
+comment|/* Count of the number of times this tracepoint was taken, dumped        with the info, but not used for anything else.  Useful for        seeing how many times you hit a tracepoint prior to the program        aborting, so you can back up to just before the abort.  */
 name|int
 name|hit_count
 decl_stmt|;
@@ -152,7 +125,7 @@ comment|/* Thread number for thread-specific tracepoint, or -1 if don't care */
 name|int
 name|thread
 decl_stmt|;
-comment|/* BFD section, in case of overlays:       no, I don't know if tracepoints are really gonna work with overlays.  */
+comment|/* BFD section, in case of overlays:         no, I don't know if tracepoints are really gonna work with overlays.  */
 name|asection
 modifier|*
 name|section
@@ -186,7 +159,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* The tracepont chain of all tracepoints */
+comment|/* The tracepoint chain of all tracepoints */
 end_comment
 
 begin_decl_stmt
@@ -210,166 +183,133 @@ begin_comment
 comment|/* A hook used to notify the UI of tracepoint operations */
 end_comment
 
-begin_macro
+begin_function_decl
 name|void
-argument_list|(
-argument|*create_tracepoint_hook
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|create_tracepoint_hook
+function_decl|)
+parameter_list|(
+name|struct
 name|tracepoint
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_macro
+begin_function_decl
 name|void
-argument_list|(
-argument|*delete_tracepoint_hook
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|delete_tracepoint_hook
+function_decl|)
+parameter_list|(
+name|struct
 name|tracepoint
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_macro
+begin_function_decl
 name|void
-argument_list|(
-argument|*modify_tracepoint_hook
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|modify_tracepoint_hook
+function_decl|)
+parameter_list|(
+name|struct
 name|tracepoint
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_macro
+begin_function_decl
 name|void
-argument_list|(
-argument|*trace_find_hook
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|trace_find_hook
+function_decl|)
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|arg
-operator|,
+parameter_list|,
 name|int
 name|from_tty
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_macro
+begin_function_decl
 name|void
-argument_list|(
-argument|*trace_start_stop_hook
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|trace_start_stop_hook
+function_decl|)
+parameter_list|(
 name|int
 name|start
-operator|,
+parameter_list|,
 name|int
 name|from_tty
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|struct
 name|tracepoint
 modifier|*
 name|get_tracepoint_by_number
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|get_traceframe_number
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|free_actions
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|tracepoint
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|enum
 name|actionline_type
 name|validate_actionline
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|tracepoint
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Walk the following statement or block through all tracepoints.    ALL_TRACEPOINTS_SAFE does so even if the statment deletes the current    breakpoint.  */

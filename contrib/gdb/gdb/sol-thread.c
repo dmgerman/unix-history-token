@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface for debugging Solaris threads for GDB, the GNU debugger.    Copyright 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface for debugging Solaris threads for GDB, the GNU debugger.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -77,6 +71,24 @@ begin_include
 include|#
 directive|include
 file|"gdbcmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"symfile.h"
 end_include
 
 begin_decl_stmt
@@ -160,84 +172,27 @@ begin_comment
 comment|/* target vector for corelow.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|procfs_pid_to_str
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Note that these prototypes differ slightly from those used in procfs.c    for of two reasons.  One, we can't use gregset_t, as that's got a whole    different meaning under Solaris (also, see above).  Two, we can't use the    pointer form here as these are actually arrays of ints (for Sparc's at    least), and are automatically coerced into pointers to ints when used as    parameters.  That makes it impossible to avoid a compiler warning when    passing pr{g fp}regset_t's from a parameter to an argument of one of    these functions.  */
+comment|/* Prototypes for supply_gregset etc. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|supply_gregset
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|prgregset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fill_gregset
-name|PARAMS
-argument_list|(
-operator|(
-name|prgregset_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|supply_fpregset
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|prfpregset_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fill_fpregset
-name|PARAMS
-argument_list|(
-operator|(
-name|prfpregset_t
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"gregset.h"
+end_include
 
 begin_comment
 comment|/* This struct is defined by us, but mainly used for the proc_service interface.    We don't have much use for it, except as a handy place to get a real pid    for memory accesses.  */
@@ -247,8 +202,8 @@ begin_struct
 struct|struct
 name|ps_prochandle
 block|{
-name|pid_t
-name|pid
+name|ptid_t
+name|ptid
 decl_stmt|;
 block|}
 struct|;
@@ -294,196 +249,127 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|cleanup
-modifier|*
-name|save_inferior_pid
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|restore_inferior_pid
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|td_err_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|td_err_e
 name|errcode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|td_state_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|td_thr_state_e
 name|statecode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|int
+name|ptid_t
 name|thread_to_lwp
-name|PARAMS
-argument_list|(
-operator|(
-name|int
+parameter_list|(
+name|ptid_t
 name|thread_id
-operator|,
+parameter_list|,
 name|int
 name|default_lwp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sol_thread_resume
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|,
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|,
 name|int
 name|step
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|target_signal
 name|signo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|int
+name|ptid_t
 name|lwp_to_thread
-name|PARAMS
-argument_list|(
-operator|(
-name|int
+parameter_list|(
+name|ptid_t
 name|lwp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sol_thread_alive
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sol_core_close
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|quitting
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|init_sol_thread_ops
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|init_sol_core_ops
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|THREAD_FLAG
-value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|is_thread
-parameter_list|(
-name|ARG
 parameter_list|)
-value|(((ARG)& THREAD_FLAG) != 0)
-end_define
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Default definitions: These must be defined in tm.h     if they are to be shared with a process module such as procfs.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|is_lwp
+name|GET_PID
 parameter_list|(
-name|ARG
+name|ptid
 parameter_list|)
-value|(((ARG)& THREAD_FLAG) == 0)
+value|ptid_get_pid (ptid)
 end_define
 
 begin_define
@@ -491,9 +377,9 @@ define|#
 directive|define
 name|GET_LWP
 parameter_list|(
-name|LWP_ID
+name|ptid
 parameter_list|)
-value|(TIDGET(LWP_ID))
+value|ptid_get_lwp (ptid)
 end_define
 
 begin_define
@@ -501,9 +387,29 @@ define|#
 directive|define
 name|GET_THREAD
 parameter_list|(
-name|THREAD_ID
+name|ptid
 parameter_list|)
-value|(((THREAD_ID)>> 16)& 0x7fff)
+value|ptid_get_tid (ptid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_lwp
+parameter_list|(
+name|ptid
+parameter_list|)
+value|(GET_LWP (ptid) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_thread
+parameter_list|(
+name|ptid
+parameter_list|)
+value|(GET_THREAD (ptid) != 0)
 end_define
 
 begin_define
@@ -511,11 +417,11 @@ define|#
 directive|define
 name|BUILD_LWP
 parameter_list|(
-name|LWP_ID
+name|lwp
 parameter_list|,
-name|PID
+name|pid
 parameter_list|)
-value|((LWP_ID)<< 16 | (PID))
+value|ptid_build (pid, lwp, 0)
 end_define
 
 begin_define
@@ -523,11 +429,11 @@ define|#
 directive|define
 name|BUILD_THREAD
 parameter_list|(
-name|THREAD_ID
+name|tid
 parameter_list|,
-name|PID
+name|pid
 parameter_list|)
-value|(THREAD_FLAG | BUILD_LWP (THREAD_ID, PID))
+value|ptid_build (pid, 0, tid)
 end_define
 
 begin_comment
@@ -1013,11 +919,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*  LOCAL FUNCTION  	td_err_string - Convert a thread_db error code to a string  SYNOPSIS  	char * td_err_string (errcode)  DESCRIPTION  	Return the thread_db error string associated with errcode.  If errcode 	is unknown, then return a message.   */
+comment|/*     LOCAL FUNCTION     td_err_string - Convert a thread_db error code to a string     SYNOPSIS     char * td_err_string (errcode)     DESCRIPTION     Return the thread_db error string associated with errcode.  If errcode    is unknown, then return a message.   */
 end_comment
 
 begin_function
@@ -1026,11 +929,9 @@ name|char
 modifier|*
 name|td_err_string
 parameter_list|(
-name|errcode
-parameter_list|)
 name|td_err_e
 name|errcode
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -1156,7 +1057,7 @@ block|,
 block|{
 name|TD_PARTIALREG
 block|,
-literal|"Only part of register set was writen/read"
+literal|"Only part of register set was written/read"
 block|}
 block|,
 block|{
@@ -1240,7 +1141,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	td_state_string - Convert a thread_db state code to a string  SYNOPSIS  	char * td_state_string (statecode)  DESCRIPTION  	Return the thread_db state string associated with statecode.  If 	statecode is unknown, then return a message.   */
+comment|/*     LOCAL FUNCTION     td_state_string - Convert a thread_db state code to a string     SYNOPSIS     char * td_state_string (statecode)     DESCRIPTION     Return the thread_db state string associated with statecode.  If    statecode is unknown, then return a message.   */
 end_comment
 
 begin_function
@@ -1249,11 +1150,9 @@ name|char
 modifier|*
 name|td_state_string
 parameter_list|(
-name|statecode
-parameter_list|)
 name|td_thr_state_e
 name|statecode
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -1385,24 +1284,20 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	thread_to_lwp - Convert a Posix or Solaris thread id to a LWP id.  SYNOPSIS  	int thread_to_lwp (thread_id, default_lwp)  DESCRIPTION  	This function converts a Posix or Solaris thread id to a lightweight 	process id.  If thread_id is non-existent, that's an error.  If it's 	an inactive thread, then we return default_lwp.  NOTES  	This function probably shouldn't call error()...   */
+comment|/*     LOCAL FUNCTION     thread_to_lwp - Convert a Posix or Solaris thread id to a LWP id.     SYNOPSIS     tpid_t thread_to_lwp (thread_id, default_lwp)     DESCRIPTION     This function converts a Posix or Solaris thread id to a lightweight    process id.  If thread_id is non-existent, that's an error.  If it's    an inactive thread, then we return default_lwp.     NOTES     This function probably shouldn't call error()...   */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|thread_to_lwp
 parameter_list|(
+name|ptid_t
 name|thread_id
 parameter_list|,
+name|int
 name|default_lwp
 parameter_list|)
-name|int
-name|thread_id
-decl_stmt|;
-name|int
-name|default_lwp
-decl_stmt|;
 block|{
 name|td_thrinfo_t
 name|ti
@@ -1447,8 +1342,11 @@ operator|==
 name|TD_NOTHR
 condition|)
 return|return
+name|pid_to_ptid
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 return|;
 comment|/* thread must have terminated */
 elseif|else
@@ -1486,8 +1384,11 @@ operator|==
 name|TD_NOTHR
 condition|)
 return|return
+name|pid_to_ptid
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 return|;
 comment|/* thread must have terminated */
 elseif|else
@@ -1524,7 +1425,10 @@ operator|-
 literal|1
 condition|)
 return|return
+name|pid_to_ptid
+argument_list|(
 name|default_lwp
+argument_list|)
 return|;
 name|error
 argument_list|(
@@ -1559,19 +1463,17 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	lwp_to_thread - Convert a LWP id to a Posix or Solaris thread id.  SYNOPSIS  	int lwp_to_thread (lwp_id)  DESCRIPTION  	This function converts a lightweight process id to a Posix or Solaris 	thread id.  If thread_id is non-existent, that's an error.  NOTES  	This function probably shouldn't call error()...   */
+comment|/*     LOCAL FUNCTION     lwp_to_thread - Convert a LWP id to a Posix or Solaris thread id.     SYNOPSIS     int lwp_to_thread (lwp_id)     DESCRIPTION     This function converts a lightweight process id to a Posix or Solaris    thread id.  If thread_id is non-existent, that's an error.     NOTES     This function probably shouldn't call error()...   */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|lwp_to_thread
 parameter_list|(
+name|ptid_t
 name|lwp
 parameter_list|)
-name|int
-name|lwp
-decl_stmt|;
 block|{
 name|td_thrinfo_t
 name|ti
@@ -1603,8 +1505,11 @@ name|lwp
 argument_list|)
 condition|)
 return|return
+name|pid_to_ptid
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 return|;
 comment|/* defunct lwp */
 name|val
@@ -1629,8 +1534,11 @@ operator|==
 name|TD_NOTHR
 condition|)
 return|return
+name|pid_to_ptid
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 return|;
 comment|/* thread must have terminated */
 elseif|else
@@ -1667,7 +1575,7 @@ condition|)
 return|return
 name|lwp
 return|;
-comment|/* libthread doesn't know about it, just return lwp */
+comment|/* libthread doesn't know about it; 				   just return lwp */
 elseif|else
 if|if
 condition|(
@@ -1703,8 +1611,11 @@ operator|==
 name|TD_NOTHR
 condition|)
 return|return
+name|pid_to_ptid
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 return|;
 comment|/* thread must have terminated */
 elseif|else
@@ -1744,50 +1655,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	save_inferior_pid - Save inferior_pid on the cleanup list 	restore_inferior_pid - Restore inferior_pid from the cleanup list  SYNOPSIS  	struct cleanup *save_inferior_pid () 	void restore_inferior_pid (int pid)  DESCRIPTION  	These two functions act in unison to restore inferior_pid in 	case of an error.  NOTES  	inferior_pid is a global variable that needs to be changed by many of 	these routines before calling functions in procfs.c.  In order to 	guarantee that inferior_pid gets restored (in case of errors), you 	need to call save_inferior_pid before changing it.  At the end of the 	function, you should invoke do_cleanups to restore it.   */
-end_comment
-
-begin_function
-specifier|static
-name|struct
-name|cleanup
-modifier|*
-name|save_inferior_pid
-parameter_list|()
-block|{
-return|return
-name|make_cleanup
-argument_list|(
-name|restore_inferior_pid
-argument_list|,
-name|inferior_pid
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|restore_inferior_pid
-parameter_list|(
-name|pid
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-block|{
-name|inferior_pid
-operator|=
-name|pid
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Most target vector functions from here on actually just pass through to    procfs.c, as they don't need to do anything specific for threads.  */
 end_comment
 
@@ -1800,17 +1667,13 @@ specifier|static
 name|void
 name|sol_thread_open
 parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|procfs_ops
 operator|.
@@ -1833,17 +1696,13 @@ specifier|static
 name|void
 name|sol_thread_attach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|procfs_ops
 operator|.
@@ -1871,6 +1730,8 @@ name|target_ops
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|auto_solib_add
 argument_list|)
 expr_stmt|;
 if|if
@@ -1885,9 +1746,9 @@ argument_list|)
 expr_stmt|;
 name|main_ph
 operator|.
-name|pid
+name|ptid
 operator|=
-name|inferior_pid
+name|inferior_ptid
 expr_stmt|;
 comment|/* Save for xfer_memory */
 name|push_target
@@ -1896,30 +1757,33 @@ operator|&
 name|sol_thread_ops
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|lwp_to_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|main_ph
 operator|.
-name|pid
+name|ptid
 expr_stmt|;
 else|else
 name|add_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 expr_stmt|;
 block|}
@@ -1936,18 +1800,26 @@ specifier|static
 name|void
 name|sol_thread_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
+name|inferior_ptid
+operator|=
+name|pid_to_ptid
+argument_list|(
+name|PIDGET
+argument_list|(
+name|main_ph
+operator|.
+name|ptid
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|unpush_target
 argument_list|(
 operator|&
@@ -1975,22 +1847,16 @@ specifier|static
 name|void
 name|sol_thread_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|signo
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cleanup
@@ -1999,50 +1865,59 @@ name|old_chain
 decl_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|thread_to_lwp
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|,
+name|PIDGET
+argument_list|(
 name|main_ph
 operator|.
-name|pid
+name|ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|procfs_first_available
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 operator|!=
 operator|-
 literal|1
 condition|)
 block|{
-name|int
-name|save_pid
+name|ptid_t
+name|save_ptid
 init|=
-name|pid
+name|ptid
 decl_stmt|;
-name|pid
+name|ptid
 operator|=
 name|thread_to_lwp
 argument_list|(
-name|pid
+name|ptid
 argument_list|,
 operator|-
 literal|2
@@ -2050,7 +1925,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 operator|==
 operator|-
 literal|2
@@ -2065,18 +1943,21 @@ if|if
 condition|(
 name|info_verbose
 operator|&&
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
 name|warning
 argument_list|(
-literal|"Specified thread %d seems to have terminated"
+literal|"Specified thread %ld seems to have terminated"
 argument_list|,
 name|GET_THREAD
 argument_list|(
-name|save_pid
+name|save_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2085,7 +1966,7 @@ name|procfs_ops
 operator|.
 name|to_resume
 argument_list|(
-name|pid
+name|ptid
 argument_list|,
 name|step
 argument_list|,
@@ -2106,83 +1987,88 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|sol_thread_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|ourstatus
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|ourstatus
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
+name|ptid_t
 name|rtnval
 decl_stmt|;
-name|int
-name|save_pid
+name|ptid_t
+name|save_ptid
 decl_stmt|;
 name|struct
 name|cleanup
 modifier|*
 name|old_chain
 decl_stmt|;
-name|save_pid
+name|save_ptid
 operator|=
-name|inferior_pid
+name|inferior_ptid
 expr_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|thread_to_lwp
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|,
+name|PIDGET
+argument_list|(
 name|main_ph
 operator|.
-name|pid
+name|ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|procfs_first_available
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 operator|!=
 operator|-
 literal|1
 condition|)
 block|{
-name|int
-name|save_pid
+name|ptid_t
+name|save_ptid
 init|=
-name|pid
+name|ptid
 decl_stmt|;
-name|pid
+name|ptid
 operator|=
 name|thread_to_lwp
 argument_list|(
-name|pid
+name|ptid
 argument_list|,
 operator|-
 literal|2
@@ -2190,7 +2076,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 operator|==
 operator|-
 literal|2
@@ -2205,18 +2094,21 @@ if|if
 condition|(
 name|info_verbose
 operator|&&
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
 name|warning
 argument_list|(
-literal|"Specified thread %d seems to have terminated"
+literal|"Specified thread %ld seems to have terminated"
 argument_list|,
 name|GET_THREAD
 argument_list|(
-name|save_pid
+name|save_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2227,7 +2119,7 @@ name|procfs_ops
 operator|.
 name|to_wait
 argument_list|(
-name|pid
+name|ptid
 argument_list|,
 name|ourstatus
 argument_list|)
@@ -2251,14 +2143,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|PIDGET
+argument_list|(
 name|rtnval
+argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
 name|rtnval
 operator|=
-name|save_pid
+name|save_ptid
 expr_stmt|;
 comment|/* See if we have a new thread */
 if|if
@@ -2268,9 +2163,13 @@ argument_list|(
 name|rtnval
 argument_list|)
 operator|&&
+operator|!
+name|ptid_equal
+argument_list|(
 name|rtnval
-operator|!=
-name|save_pid
+argument_list|,
+name|save_ptid
+argument_list|)
 operator|&&
 operator|!
 name|in_thread_list
@@ -2313,11 +2212,9 @@ specifier|static
 name|void
 name|sol_thread_fetch_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_t
 name|thread
@@ -2345,7 +2242,7 @@ condition|(
 operator|!
 name|is_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 condition|)
 block|{
@@ -2371,12 +2268,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Solaris thread: convert inferior_pid into a td_thrhandle_t */
+comment|/* Solaris thread: convert inferior_ptid into a td_thrhandle_t */
 name|thread
 operator|=
 name|GET_THREAD
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2485,11 +2382,20 @@ expr_stmt|;
 comment|/* Note that we must call supply_{g fp}regset *after* calling the td routines    because the td routines call ps_lget* which affect the values stored in the    registers array.  */
 name|supply_gregset
 argument_list|(
+operator|(
+name|gdb_gregset_t
+operator|*
+operator|)
+operator|&
 name|gregset
 argument_list|)
 expr_stmt|;
 name|supply_fpregset
 argument_list|(
+operator|(
+name|gdb_fpregset_t
+operator|*
+operator|)
 operator|&
 name|fpregset
 argument_list|)
@@ -2509,11 +2415,9 @@ specifier|static
 name|void
 name|sol_thread_store_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_t
 name|thread
@@ -2525,7 +2429,7 @@ name|td_err_e
 name|val
 decl_stmt|;
 name|prgregset_t
-name|regset
+name|gregset
 decl_stmt|;
 name|prfpregset_t
 name|fpregset
@@ -2541,7 +2445,7 @@ condition|(
 operator|!
 name|is_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 condition|)
 block|{
@@ -2555,12 +2459,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Solaris thread: convert inferior_pid into a td_thrhandle_t */
+comment|/* Solaris thread: convert inferior_ptid into a td_thrhandle_t */
 name|thread
 operator|=
 name|GET_THREAD
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 expr_stmt|;
 name|val
@@ -2602,10 +2506,17 @@ block|{
 comment|/* Not writing all the regs */
 comment|/* save new register value */
 name|char
+modifier|*
 name|old_value
-index|[
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|alloca
+argument_list|(
 name|REGISTER_SIZE
-index|]
+argument_list|)
 decl_stmt|;
 name|memcpy
 argument_list|(
@@ -2630,7 +2541,7 @@ argument_list|(
 operator|&
 name|thandle
 argument_list|,
-name|regset
+name|gregset
 argument_list|)
 expr_stmt|;
 if|if
@@ -2703,13 +2614,22 @@ directive|endif
 block|}
 name|fill_gregset
 argument_list|(
-name|regset
+operator|(
+name|gdb_gregset_t
+operator|*
+operator|)
+operator|&
+name|gregset
 argument_list|,
 name|regno
 argument_list|)
 expr_stmt|;
 name|fill_fpregset
 argument_list|(
+operator|(
+name|gdb_fpregset_t
+operator|*
+operator|)
 operator|&
 name|fpregset
 argument_list|,
@@ -2723,7 +2643,7 @@ argument_list|(
 operator|&
 name|thandle
 argument_list|,
-name|regset
+name|gregset
 argument_list|)
 expr_stmt|;
 if|if
@@ -2788,7 +2708,9 @@ begin_function
 specifier|static
 name|void
 name|sol_thread_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|procfs_ops
 operator|.
@@ -2798,40 +2720,38 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Transfer LEN bytes between GDB address MYADDR and target address    MEMADDR.  If DOWRITE is non-zero, transfer them to the target,    otherwise transfer them from the target.  TARGET is unused.     Returns the number of bytes transferred. */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|sol_thread_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|dowrite
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|dowrite
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 name|int
 name|retval
@@ -2843,25 +2763,25 @@ name|old_chain
 decl_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|is_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 operator|||
 comment|/* A thread */
 operator|!
 name|target_thread_alive
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 condition|)
 comment|/* An lwp, but not alive */
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|procfs_first_available
 argument_list|()
@@ -2886,6 +2806,8 @@ name|len
 argument_list|,
 name|dowrite
 argument_list|,
+name|attrib
+argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
@@ -2903,6 +2825,8 @@ argument_list|,
 name|len
 argument_list|,
 name|dowrite
+argument_list|,
+name|attrib
 argument_list|,
 name|target
 argument_list|)
@@ -2927,13 +2851,11 @@ specifier|static
 name|void
 name|sol_thread_files_info
 parameter_list|(
-name|ignore
-parameter_list|)
 name|struct
 name|target_ops
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 name|procfs_ops
 operator|.
@@ -2949,7 +2871,9 @@ begin_function
 specifier|static
 name|void
 name|sol_thread_kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|procfs_ops
 operator|.
@@ -2964,19 +2888,20 @@ specifier|static
 name|void
 name|sol_thread_notice_signals
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 block|{
 name|procfs_ops
 operator|.
 name|to_notice_signals
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|PIDGET
 argument_list|(
-name|pid
+name|ptid
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2992,25 +2917,19 @@ specifier|static
 name|void
 name|sol_thread_create_inferior
 parameter_list|(
-name|exec_file
-parameter_list|,
-name|allargs
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|exec_file
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|allargs
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|procfs_ops
 operator|.
@@ -3027,16 +2946,20 @@ if|if
 condition|(
 name|sol_thread_active
 operator|&&
-name|inferior_pid
-operator|!=
-literal|0
+operator|!
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 block|{
 name|main_ph
 operator|.
-name|pid
+name|ptid
 operator|=
-name|inferior_pid
+name|inferior_ptid
 expr_stmt|;
 comment|/* Save for xfer_memory */
 name|push_target
@@ -3045,29 +2968,40 @@ operator|&
 name|sol_thread_ops
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|lwp_to_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|main_ph
 operator|.
-name|pid
+name|ptid
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|in_thread_list
+argument_list|(
+name|inferior_ptid
+argument_list|)
+condition|)
 name|add_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 expr_stmt|;
 block|}
@@ -3078,17 +3012,38 @@ begin_comment
 comment|/* This routine is called whenever a new symbol table is read in, or when all    symbol tables are removed.  libthread_db can only be initialized when it    finds the right variables in libthread.so.  Since it's a shared library,    those variables don't show up until the library gets mapped and the symbol    table is read in.  */
 end_comment
 
+begin_comment
+comment|/* This new_objfile event is now managed by a chained function pointer.   * It is the callee's responsability to call the next client on the chain.  */
+end_comment
+
+begin_comment
+comment|/* Saved pointer to previous owner of the new_objfile event. */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+function_decl|(
+modifier|*
+name|target_new_objfile_chain
+function_decl|)
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|sol_thread_new_objfile
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|td_err_e
 name|val
@@ -3103,7 +3058,9 @@ name|sol_thread_active
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+goto|goto
+name|quit
+goto|;
 block|}
 comment|/* don't do anything if init failed to resolve the libthread_db library */
 if|if
@@ -3111,7 +3068,9 @@ condition|(
 operator|!
 name|procfs_suppress_run
 condition|)
-return|return;
+goto|goto
+name|quit
+goto|;
 comment|/* Now, initialize the thread debugging library.  This needs to be done after      the shared libraries are located because it needs information from the      user's thread library.  */
 name|val
 operator|=
@@ -3124,9 +3083,10 @@ name|val
 operator|!=
 name|TD_OK
 condition|)
-name|error
+block|{
+name|warning
 argument_list|(
-literal|"target_new_objfile: td_init: %s"
+literal|"sol_thread_new_objfile: td_init: %s"
 argument_list|,
 name|td_err_string
 argument_list|(
@@ -3134,6 +3094,10 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+goto|goto
+name|quit
+goto|;
+block|}
 name|val
 operator|=
 name|p_td_ta_new
@@ -3151,7 +3115,9 @@ name|val
 operator|==
 name|TD_NOLIBTHREAD
 condition|)
-return|return;
+goto|goto
+name|quit
+goto|;
 elseif|else
 if|if
 condition|(
@@ -3159,9 +3125,10 @@ name|val
 operator|!=
 name|TD_OK
 condition|)
-name|error
+block|{
+name|warning
 argument_list|(
-literal|"target_new_objfile: td_ta_new: %s"
+literal|"sol_thread_new_objfile: td_ta_new: %s"
 argument_list|,
 name|td_err_string
 argument_list|(
@@ -3169,9 +3136,25 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+goto|goto
+name|quit
+goto|;
+block|}
 name|sol_thread_active
 operator|=
 literal|1
+expr_stmt|;
+name|quit
+label|:
+comment|/* Call predecessor on chain, if any. */
+if|if
+condition|(
+name|target_new_objfile_chain
+condition|)
+name|target_new_objfile_chain
+argument_list|(
+name|objfile
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3184,7 +3167,9 @@ begin_function
 specifier|static
 name|void
 name|sol_thread_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unpush_target
 argument_list|(
@@ -3208,7 +3193,9 @@ begin_function
 specifier|static
 name|int
 name|sol_thread_can_run
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|procfs_suppress_run
@@ -3217,7 +3204,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   LOCAL FUNCTION  	sol_thread_alive     - test thread for "aliveness"  SYNOPSIS  	static bool sol_thread_alive (int pid);  DESCRIPTION  	returns true if thread still active in inferior.   */
+comment|/*      LOCAL FUNCTION     sol_thread_alive     - test thread for "aliveness"     SYNOPSIS     static bool sol_thread_alive (ptid_t ptid);     DESCRIPTION     returns true if thread still active in inferior.   */
 end_comment
 
 begin_function
@@ -3225,17 +3212,15 @@ specifier|static
 name|int
 name|sol_thread_alive
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 block|{
 if|if
 condition|(
 name|is_thread
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 condition|)
 comment|/* non-kernel thread */
@@ -3246,11 +3231,14 @@ decl_stmt|;
 name|td_thrhandle_t
 name|th
 decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
 name|pid
 operator|=
 name|GET_THREAD
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 expr_stmt|;
 if|if
@@ -3310,7 +3298,7 @@ name|procfs_ops
 operator|.
 name|to_thread_alive
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 return|;
 else|else
@@ -3319,7 +3307,7 @@ name|orig_core_ops
 operator|.
 name|to_thread_alive
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 return|;
 block|}
@@ -3330,7 +3318,9 @@ begin_function
 specifier|static
 name|void
 name|sol_thread_stop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|procfs_ops
 operator|.
@@ -3348,7 +3338,7 @@ comment|/* These routines implement the lower half of the thread_db interface.  
 end_comment
 
 begin_comment
-comment|/* Various versions of<proc_service.h> have slightly    different function prototypes.  In particular, we have        NEWER		    	OLDER       struct ps_prochandle *  	const struct ps_prochandle *       void*			char*       const void*		char*       int			size_t     Which one you have depends on solaris version and what    patches you've applied.  On the theory that there are    only two major variants, we have configure check the    prototype of ps_pdwrite (), and use that info to make    appropriate typedefs here. */
+comment|/* Various versions of<proc_service.h> have slightly    different function prototypes.  In particular, we have     NEWER                        OLDER    struct ps_prochandle *       const struct ps_prochandle *    void*                        char*    const void*          char*    int                  size_t     Which one you have depends on solaris version and what    patches you've applied.  On the theory that there are    only two major variants, we have configure check the    prototype of ps_pdwrite (), and use that info to make    appropriate typedefs here. */
 end_comment
 
 begin_ifdef
@@ -3390,6 +3380,13 @@ name|gdb_ps_size_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|paddr_t
+name|gdb_ps_addr_t
+typedef|;
+end_typedef
+
 begin_else
 else|#
 directive|else
@@ -3428,6 +3425,13 @@ name|gdb_ps_size_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|psaddr_t
+name|gdb_ps_addr_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
@@ -3435,6 +3439,10 @@ end_endif
 
 begin_comment
 comment|/* The next four routines are called by thread_db to tell us to stop and stop    a particular process or lwp.  Since GDB ensures that these are all stopped    by the time we call anything in thread_db, these routines need to do    nothing.  */
+end_comment
+
+begin_comment
+comment|/* Process stop */
 end_comment
 
 begin_function
@@ -3451,6 +3459,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Process continue */
+end_comment
+
 begin_function
 name|ps_err_e
 name|ps_pcontinue
@@ -3464,6 +3476,10 @@ name|PS_OK
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* LWP stop */
+end_comment
 
 begin_function
 name|ps_err_e
@@ -3482,6 +3498,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* LWP continue */
+end_comment
+
 begin_function
 name|ps_err_e
 name|ps_lcontinue
@@ -3498,6 +3518,10 @@ name|PS_OK
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Looks up the symbol LD_SYMBOL_NAME in the debugger's symbol table.  */
+end_comment
 
 begin_function
 name|ps_err_e
@@ -3516,7 +3540,7 @@ name|char
 modifier|*
 name|ld_symbol_name
 parameter_list|,
-name|paddr_t
+name|gdb_ps_addr_t
 modifier|*
 name|ld_symbol_addr
 parameter_list|)
@@ -3577,7 +3601,7 @@ name|ps_prochandle
 modifier|*
 name|ph
 parameter_list|,
-name|paddr_t
+name|gdb_ps_addr_t
 name|addr
 parameter_list|,
 name|char
@@ -3595,31 +3619,53 @@ name|old_chain
 decl_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|is_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 operator|||
 comment|/* A thread */
 operator|!
 name|target_thread_alive
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 condition|)
 comment|/* An lwp, but not alive */
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|procfs_first_available
 argument_list|()
 expr_stmt|;
 comment|/* Find any live lwp.  */
 comment|/* Note: don't need to call switch_to_thread; we're just reading memory.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+comment|/* For Sparc64 cross Sparc32, make sure the address has not been      accidentally sign-extended (or whatever) to beyond 32 bits.  */
+if|if
+condition|(
+name|bfd_get_arch_size
+argument_list|(
+name|exec_bfd
+argument_list|)
+operator|==
+literal|32
+condition|)
+name|addr
+operator|&=
+literal|0xffffffff
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|size
@@ -3630,6 +3676,7 @@ block|{
 name|int
 name|cc
 decl_stmt|;
+comment|/* FIXME: passing 0 as attrib argument.  */
 if|if
 condition|(
 name|target_has_execution
@@ -3647,6 +3694,8 @@ argument_list|,
 name|size
 argument_list|,
 name|dowrite
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|procfs_ops
@@ -3666,6 +3715,8 @@ argument_list|,
 name|size
 argument_list|,
 name|dowrite
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|core_ops
@@ -3708,6 +3759,50 @@ return|return
 name|PS_ERR
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|cc
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|dowrite
+operator|==
+literal|0
+condition|)
+name|warning
+argument_list|(
+literal|"rw_common (): unable to read at addr 0x%lx"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|addr
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+literal|"rw_common (): unable to write at addr 0x%lx"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|addr
+argument_list|)
+expr_stmt|;
+name|do_cleanups
+argument_list|(
+name|old_chain
+argument_list|)
+expr_stmt|;
+return|return
+name|PS_ERR
+return|;
+block|}
 name|size
 operator|-=
 name|cc
@@ -3728,6 +3823,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Copies SIZE bytes from target process .data segment to debugger memory.  */
+end_comment
+
 begin_function
 name|ps_err_e
 name|ps_pdread
@@ -3735,7 +3834,7 @@ parameter_list|(
 name|gdb_ps_prochandle_t
 name|ph
 parameter_list|,
-name|paddr_t
+name|gdb_ps_addr_t
 name|addr
 parameter_list|,
 name|gdb_ps_read_buf_t
@@ -3761,6 +3860,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Copies SIZE bytes from debugger memory .data segment to target process.  */
+end_comment
 
 begin_function
 name|ps_err_e
@@ -3769,79 +3872,7 @@ parameter_list|(
 name|gdb_ps_prochandle_t
 name|ph
 parameter_list|,
-name|paddr_t
-name|addr
-parameter_list|,
-name|gdb_ps_write_buf_t
-name|buf
-parameter_list|,
-name|gdb_ps_size_t
-name|size
-parameter_list|)
-block|{
-return|return
-name|rw_common
-argument_list|(
-literal|1
-argument_list|,
-name|ph
-argument_list|,
-name|addr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
-argument_list|,
-name|size
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|ps_err_e
-name|ps_ptread
-parameter_list|(
-name|gdb_ps_prochandle_t
-name|ph
-parameter_list|,
-name|paddr_t
-name|addr
-parameter_list|,
-name|gdb_ps_read_buf_t
-name|buf
-parameter_list|,
-name|gdb_ps_size_t
-name|size
-parameter_list|)
-block|{
-return|return
-name|rw_common
-argument_list|(
-literal|0
-argument_list|,
-name|ph
-argument_list|,
-name|addr
-argument_list|,
-name|buf
-argument_list|,
-name|size
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|ps_err_e
-name|ps_ptwrite
-parameter_list|(
-name|gdb_ps_prochandle_t
-name|ph
-parameter_list|,
-name|paddr_t
+name|gdb_ps_addr_t
 name|addr
 parameter_list|,
 name|gdb_ps_write_buf_t
@@ -3873,7 +3904,87 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get integer regs */
+comment|/* Copies SIZE bytes from target process .text segment to debugger memory.  */
+end_comment
+
+begin_function
+name|ps_err_e
+name|ps_ptread
+parameter_list|(
+name|gdb_ps_prochandle_t
+name|ph
+parameter_list|,
+name|gdb_ps_addr_t
+name|addr
+parameter_list|,
+name|gdb_ps_read_buf_t
+name|buf
+parameter_list|,
+name|gdb_ps_size_t
+name|size
+parameter_list|)
+block|{
+return|return
+name|rw_common
+argument_list|(
+literal|0
+argument_list|,
+name|ph
+argument_list|,
+name|addr
+argument_list|,
+name|buf
+argument_list|,
+name|size
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Copies SIZE bytes from debugger memory .text segment to target process.  */
+end_comment
+
+begin_function
+name|ps_err_e
+name|ps_ptwrite
+parameter_list|(
+name|gdb_ps_prochandle_t
+name|ph
+parameter_list|,
+name|gdb_ps_addr_t
+name|addr
+parameter_list|,
+name|gdb_ps_write_buf_t
+name|buf
+parameter_list|,
+name|gdb_ps_size_t
+name|size
+parameter_list|)
+block|{
+return|return
+name|rw_common
+argument_list|(
+literal|1
+argument_list|,
+name|ph
+argument_list|,
+name|addr
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+argument_list|,
+name|size
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Get integer regs for LWP */
 end_comment
 
 begin_function
@@ -3897,10 +4008,10 @@ name|old_chain
 decl_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|BUILD_LWP
 argument_list|(
@@ -3908,7 +4019,7 @@ name|lwpid
 argument_list|,
 name|PIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3935,6 +4046,10 @@ argument_list|)
 expr_stmt|;
 name|fill_gregset
 argument_list|(
+operator|(
+name|gdb_gregset_t
+operator|*
+operator|)
 name|gregset
 argument_list|,
 operator|-
@@ -3953,7 +4068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set integer regs */
+comment|/* Set integer regs for LWP */
 end_comment
 
 begin_function
@@ -3978,10 +4093,10 @@ name|old_chain
 decl_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|BUILD_LWP
 argument_list|(
@@ -3989,12 +4104,16 @@ name|lwpid
 argument_list|,
 name|PIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|supply_gregset
 argument_list|(
+operator|(
+name|gdb_gregset_t
+operator|*
+operator|)
 name|gregset
 argument_list|)
 expr_stmt|;
@@ -4029,6 +4148,10 @@ name|PS_OK
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Log a message (sends to gdb_stderr).  */
+end_comment
 
 begin_function
 name|void
@@ -4158,7 +4281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get floating-point regs.  */
+comment|/* Get floating-point regs for LWP */
 end_comment
 
 begin_function
@@ -4183,10 +4306,10 @@ name|old_chain
 decl_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|BUILD_LWP
 argument_list|(
@@ -4194,7 +4317,7 @@ name|lwpid
 argument_list|,
 name|PIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4221,6 +4344,10 @@ argument_list|)
 expr_stmt|;
 name|fill_fpregset
 argument_list|(
+operator|(
+name|gdb_fpregset_t
+operator|*
+operator|)
 name|fpregset
 argument_list|,
 operator|-
@@ -4239,7 +4366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set floating-point regs.  */
+comment|/* Set floating-point regs for LWP */
 end_comment
 
 begin_function
@@ -4265,10 +4392,10 @@ name|old_chain
 decl_stmt|;
 name|old_chain
 operator|=
-name|save_inferior_pid
+name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
 name|BUILD_LWP
 argument_list|(
@@ -4276,12 +4403,16 @@ name|lwpid
 argument_list|,
 name|PIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|supply_fpregset
 argument_list|(
+operator|(
+name|gdb_fpregset_t
+operator|*
+operator|)
 name|fpregset
 argument_list|)
 expr_stmt|;
@@ -4320,50 +4451,81 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|PR_MODEL_LP64
+end_ifdef
+
+begin_comment
+comment|/* Identify process as 32-bit or 64-bit.    At the moment I'm using bfd to do this.    There might be a more solaris-specific (eg. procfs) method,    but this ought to work.  */
+end_comment
+
+begin_function
+name|ps_err_e
+name|ps_pdmodel
+parameter_list|(
+name|gdb_ps_prochandle_t
+name|ph
+parameter_list|,
+name|int
+modifier|*
+name|data_model
+parameter_list|)
+block|{
+if|if
+condition|(
+name|exec_bfd
+operator|==
+literal|0
+condition|)
+operator|*
+name|data_model
+operator|=
+name|PR_MODEL_UNKNOWN
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bfd_get_arch_size
+argument_list|(
+name|exec_bfd
+argument_list|)
+operator|==
+literal|32
+condition|)
+operator|*
+name|data_model
+operator|=
+name|PR_MODEL_ILP32
+expr_stmt|;
+else|else
+operator|*
+name|data_model
+operator|=
+name|PR_MODEL_LP64
+expr_stmt|;
+return|return
+name|PS_OK
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PR_MODEL_LP64 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TM_I386SOL2_H
 end_ifdef
 
 begin_comment
-comment|/* Get local descriptor table.  */
+comment|/* Reads the local descriptor table of a LWP.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/procfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysi86.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nldt_allocated
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|ssd
-modifier|*
-name|ldt_bufp
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|ps_err_e
@@ -4381,25 +4543,41 @@ modifier|*
 name|pldt
 parameter_list|)
 block|{
-name|gregset_t
-name|gregset
+comment|/* NOTE: only used on Solaris, therefore OK to refer to procfs.c */
+specifier|extern
+name|struct
+name|ssd
+modifier|*
+name|procfs_find_LDT_entry
+argument_list|(
+name|ptid_t
+argument_list|)
 decl_stmt|;
-name|int
-name|lwp_fd
+name|struct
+name|ssd
+modifier|*
+name|ret
 decl_stmt|;
-name|ps_err_e
-name|val
-decl_stmt|;
-name|int
-name|nldt
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-comment|/* Get procfs file descriptor for the LWP.  */
-name|lwp_fd
+comment|/* FIXME: can't I get the process ID from the prochandle or something?    */
+if|if
+condition|(
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+operator|<=
+literal|0
+operator|||
+name|lwpid
+operator|<=
+literal|0
+condition|)
+return|return
+name|PS_BADLID
+return|;
+name|ret
 operator|=
-name|procfs_get_pid_fd
+name|procfs_find_LDT_entry
 argument_list|(
 name|BUILD_LWP
 argument_list|(
@@ -4407,81 +4585,22 @@ name|lwpid
 argument_list|,
 name|PIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lwp_fd
-operator|<
-literal|0
-condition|)
-return|return
-name|PS_BADLID
-return|;
-comment|/* Fetch registers und LDT descriptors.  */
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|lwp_fd
-argument_list|,
-name|PIOCGREG
-argument_list|,
-operator|&
-name|gregset
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-name|PS_ERR
-return|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|lwp_fd
-argument_list|,
-name|PIOCNLDT
-argument_list|,
-operator|&
-name|nldt
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-name|PS_ERR
-return|;
-if|if
-condition|(
-name|nldt_allocated
-operator|<
-name|nldt
+name|ret
 condition|)
 block|{
-name|ldt_bufp
-operator|=
-operator|(
-expr|struct
-name|ssd
-operator|*
-operator|)
-name|xrealloc
+name|memcpy
 argument_list|(
-name|ldt_bufp
+name|pldt
 argument_list|,
-operator|(
-name|nldt
-operator|+
-literal|1
-operator|)
-operator|*
+name|ret
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4489,76 +4608,12 @@ name|ssd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|nldt_allocated
-operator|=
-name|nldt
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|lwp_fd
-argument_list|,
-name|PIOCLDT
-argument_list|,
-name|ldt_bufp
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-name|PS_ERR
-return|;
-comment|/* Search LDT for the LWP via register GS.  */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nldt
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|ldt_bufp
-index|[
-name|i
-index|]
-operator|.
-name|sel
-operator|==
-operator|(
-name|gregset
-index|[
-name|GS
-index|]
-operator|&
-literal|0xffff
-operator|)
-condition|)
-block|{
-operator|*
-name|pldt
-operator|=
-name|ldt_bufp
-index|[
-name|i
-index|]
-expr_stmt|;
 return|return
 name|PS_OK
 return|;
 block|}
-block|}
-comment|/* LDT not found.  */
+else|else
+comment|/* LDT not found. */
 return|return
 name|PS_ERR
 return|;
@@ -4586,11 +4641,9 @@ name|char
 modifier|*
 name|solaris_pid_to_str
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -4608,25 +4661,25 @@ condition|)
 return|return
 name|procfs_pid_to_str
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 return|;
 if|if
 condition|(
 name|is_thread
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 condition|)
 block|{
-name|int
+name|ptid_t
 name|lwp
 decl_stmt|;
 name|lwp
 operator|=
 name|thread_to_lwp
 argument_list|(
-name|pid
+name|ptid
 argument_list|,
 operator|-
 literal|2
@@ -4634,7 +4687,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|PIDGET
+argument_list|(
 name|lwp
+argument_list|)
 operator|==
 operator|-
 literal|1
@@ -4643,18 +4699,21 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Thread %d (defunct)"
+literal|"Thread %ld (defunct)"
 argument_list|,
 name|GET_THREAD
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|PIDGET
+argument_list|(
 name|lwp
+argument_list|)
 operator|!=
 operator|-
 literal|2
@@ -4663,11 +4722,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Thread %d (LWP %d)"
+literal|"Thread %ld (LWP %ld)"
 argument_list|,
 name|GET_THREAD
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|,
 name|GET_LWP
@@ -4681,11 +4740,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Thread %d        "
+literal|"Thread %ld        "
 argument_list|,
 name|GET_THREAD
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4695,7 +4754,7 @@ if|if
 condition|(
 name|GET_LWP
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 operator|!=
 literal|0
@@ -4704,11 +4763,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"LWP    %d        "
+literal|"LWP    %ld        "
 argument_list|,
 name|GET_LWP
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4721,7 +4780,7 @@ literal|"process %d    "
 argument_list|,
 name|PIDGET
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4743,19 +4802,15 @@ specifier|static
 name|int
 name|sol_find_new_threads_callback
 parameter_list|(
-name|th
-parameter_list|,
-name|ignored
-parameter_list|)
 specifier|const
 name|td_thrhandle_t
 modifier|*
 name|th
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|ignored
-decl_stmt|;
+parameter_list|)
 block|{
 name|td_err_e
 name|retval
@@ -4763,8 +4818,8 @@ decl_stmt|;
 name|td_thrinfo_t
 name|ti
 decl_stmt|;
-name|int
-name|pid
+name|ptid_t
+name|ptid
 decl_stmt|;
 if|if
 condition|(
@@ -4788,7 +4843,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|pid
+name|ptid
 operator|=
 name|BUILD_THREAD
 argument_list|(
@@ -4798,7 +4853,7 @@ name|ti_tid
 argument_list|,
 name|PIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4807,12 +4862,12 @@ condition|(
 operator|!
 name|in_thread_list
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 condition|)
 name|add_thread
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 expr_stmt|;
 return|return
@@ -4822,9 +4877,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sol_find_new_threads
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* don't do anything if init failed to resolve the libthread_db library */
 if|if
@@ -4835,7 +4893,10 @@ condition|)
 return|return;
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 operator|-
 literal|1
@@ -4848,6 +4909,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|procfs_ops
+operator|.
+name|to_find_new_threads
+argument_list|()
+expr_stmt|;
+comment|/* first find new kernel threads */
 name|p_td_ta_thr_iter
 argument_list|(
 name|main_ta
@@ -4877,17 +4944,13 @@ specifier|static
 name|void
 name|sol_core_open
 parameter_list|(
-name|filename
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|orig_core_ops
 operator|.
@@ -4906,11 +4969,9 @@ specifier|static
 name|void
 name|sol_core_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
 name|orig_core_ops
 operator|.
@@ -4927,17 +4988,13 @@ specifier|static
 name|void
 name|sol_core_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|unpush_target
 argument_list|(
@@ -4962,13 +5019,11 @@ specifier|static
 name|void
 name|sol_core_files_info
 parameter_list|(
-name|t
-parameter_list|)
 name|struct
 name|target_ops
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 name|orig_core_ops
 operator|.
@@ -4980,12 +5035,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAINTENANCE_CMDS
-end_ifdef
-
 begin_comment
 comment|/* Worker bee for info sol-thread command.  This is a callback function that    gets called once for each Solaris thread (ie. not kernel thread) in the     inferior.  Print anything interesting that we can think of.  */
 end_comment
@@ -4995,30 +5044,21 @@ specifier|static
 name|int
 name|info_cb
 parameter_list|(
-name|th
-parameter_list|,
-name|s
-parameter_list|)
 specifier|const
 name|td_thrhandle_t
 modifier|*
 name|th
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|td_err_e
 name|ret
 decl_stmt|;
 name|td_thrinfo_t
 name|ti
-decl_stmt|;
-name|struct
-name|minimal_symbol
-modifier|*
-name|msym
 decl_stmt|;
 if|if
 condition|(
@@ -5141,8 +5181,12 @@ name|ti_startfunc
 operator|!=
 literal|0
 condition|)
-if|if
-condition|(
+block|{
+name|struct
+name|minimal_symbol
+modifier|*
+name|msym
+decl_stmt|;
 name|msym
 operator|=
 name|lookup_minimal_symbol_by_pc
@@ -5151,6 +5195,10 @@ name|ti
 operator|.
 name|ti_startfunc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msym
 condition|)
 name|printf_filtered
 argument_list|(
@@ -5165,13 +5213,17 @@ expr_stmt|;
 else|else
 name|printf_filtered
 argument_list|(
-literal|"   startfunc: 0x%08x\n"
+literal|"   startfunc: 0x%s\n"
 argument_list|,
+name|paddr
+argument_list|(
 name|ti
 operator|.
 name|ti_startfunc
 argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* If thread is asleep, print function that went to sleep: */
 if|if
 condition|(
@@ -5181,8 +5233,12 @@ name|ti_state
 operator|==
 name|TD_THR_SLEEP
 condition|)
-if|if
-condition|(
+block|{
+name|struct
+name|minimal_symbol
+modifier|*
+name|msym
+decl_stmt|;
 name|msym
 operator|=
 name|lookup_minimal_symbol_by_pc
@@ -5191,6 +5247,10 @@ name|ti
 operator|.
 name|ti_pc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msym
 condition|)
 name|printf_filtered
 argument_list|(
@@ -5205,13 +5265,17 @@ expr_stmt|;
 else|else
 name|printf_filtered
 argument_list|(
-literal|" - Sleep func: 0x%08x\n"
+literal|" - Sleep func: 0x%s\n"
 argument_list|,
+name|paddr
+argument_list|(
 name|ti
 operator|.
 name|ti_startfunc
 argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* Wrap up line, if necessary */
 if|if
 condition|(
@@ -5255,17 +5319,13 @@ specifier|static
 name|void
 name|info_solthreads
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|p_td_ta_thr_iter
 argument_list|(
@@ -5287,31 +5347,90 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|int
+name|sol_find_memory_regions
+parameter_list|(
+name|int
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
+name|CORE_ADDR
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+return|return
+name|procfs_ops
+operator|.
+name|to_find_memory_regions
+argument_list|(
+name|func
+argument_list|,
+name|data
+argument_list|)
+return|;
+block|}
+end_function
 
-begin_comment
-comment|/* MAINTENANCE_CMDS */
-end_comment
+begin_function
+specifier|static
+name|char
+modifier|*
+name|sol_make_note_section
+parameter_list|(
+name|bfd
+modifier|*
+name|obfd
+parameter_list|,
+name|int
+modifier|*
+name|note_size
+parameter_list|)
+block|{
+return|return
+name|procfs_ops
+operator|.
+name|to_make_corefile_notes
+argument_list|(
+name|obfd
+argument_list|,
+name|note_size
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
 name|int
 name|ignore
 parameter_list|(
-name|addr
-parameter_list|,
-name|contents
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -5323,7 +5442,9 @@ begin_function
 specifier|static
 name|void
 name|init_sol_thread_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sol_thread_ops
 operator|.
@@ -5501,6 +5622,18 @@ name|sol_thread_alive
 expr_stmt|;
 name|sol_thread_ops
 operator|.
+name|to_pid_to_str
+operator|=
+name|solaris_pid_to_str
+expr_stmt|;
+name|sol_thread_ops
+operator|.
+name|to_find_new_threads
+operator|=
+name|sol_find_new_threads
+expr_stmt|;
+name|sol_thread_ops
+operator|.
 name|to_stop
 operator|=
 name|sol_thread_stop
@@ -5561,6 +5694,18 @@ literal|0
 expr_stmt|;
 name|sol_thread_ops
 operator|.
+name|to_find_memory_regions
+operator|=
+name|sol_find_memory_regions
+expr_stmt|;
+name|sol_thread_ops
+operator|.
+name|to_make_corefile_notes
+operator|=
+name|sol_make_note_section
+expr_stmt|;
+name|sol_thread_ops
+operator|.
 name|to_magic
 operator|=
 name|OPS_MAGIC
@@ -5572,7 +5717,9 @@ begin_function
 specifier|static
 name|void
 name|init_sol_core_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sol_core_ops
 operator|.
@@ -5617,7 +5764,7 @@ operator|=
 name|sol_core_detach
 expr_stmt|;
 comment|/* sol_core_ops.to_resume  = 0; */
-comment|/* sol_core_ops.to_wait  = 0;	 */
+comment|/* sol_core_ops.to_wait  = 0;  */
 name|sol_core_ops
 operator|.
 name|to_fetch_registers
@@ -5708,6 +5855,20 @@ name|tc_none
 expr_stmt|;
 name|sol_core_ops
 operator|.
+name|to_thread_alive
+operator|=
+name|sol_thread_alive
+expr_stmt|;
+name|sol_core_ops
+operator|.
+name|to_pid_to_str
+operator|=
+name|solaris_pid_to_str
+expr_stmt|;
+comment|/* On Solaris/x86, when debugging a threaded core file from process<n>,      the following causes "info threads" to produce "procfs: couldn't find pid<n> in procinfo list" where<n> is the pid of the process that produced      the core file.  Disable it for now. */
+comment|/* sol_core_ops.to_find_new_threads = sol_find_new_threads; */
+name|sol_core_ops
+operator|.
 name|to_sections
 operator|=
 literal|0
@@ -5742,7 +5903,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_sol_thread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -5904,9 +6067,6 @@ name|procfs_suppress_run
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAINTENANCE_CMDS
 name|add_cmd
 argument_list|(
 literal|"sol-threads"
@@ -5921,9 +6081,6 @@ operator|&
 name|maintenanceinfolist
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MAINTENANCE_CMDS */
 name|memcpy
 argument_list|(
 operator|&
@@ -5959,6 +6116,15 @@ argument_list|(
 operator|&
 name|core_ops
 argument_list|)
+expr_stmt|;
+comment|/* Hook into new_objfile notification. */
+name|target_new_objfile_chain
+operator|=
+name|target_new_objfile_hook
+expr_stmt|;
+name|target_new_objfile_hook
+operator|=
+name|sol_thread_new_objfile
 expr_stmt|;
 return|return;
 name|die

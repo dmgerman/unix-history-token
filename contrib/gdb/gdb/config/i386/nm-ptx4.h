@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions to make GDB run on a Sequent Symmetry under ptx    with Weitek 1167 and i387 support.    Copyright 1986, 1987, 1989, 1992  Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions to make GDB run on a Sequent Symmetry under ptx    with Weitek 1167 and i387 support.    Copyright 1986, 1987, 1989, 1992, 1994, 1996, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
 
 begin_include
 include|#
@@ -80,29 +86,26 @@ name|target_waitstatus
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
+name|ptid_t
 name|child_wait
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
+parameter_list|(
+name|ptid_t
+parameter_list|,
+name|struct
 name|target_waitstatus
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * ptx does attach as of ptx version 2.1.  Prior to that, the interface  * exists but does not work.  *  * FIXME: Using attach/detach requires using the ptx MPDEBUGGER  * interface.  There are still problems with that, so for now don't  * enable attach/detach.  If you turn it on anyway, it will mostly  * work, but has a number of bugs. -fubar, 2/94.  */
 end_comment
 
 begin_comment
-comment|/*#define ATTACH_DETACH 1*/
+comment|/*#define ATTACH_DETACH 1 */
 end_comment
 
 begin_undef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Symbol table definitions for GDB.    Copyright 1986, 89, 91, 92, 93, 94, 95, 96, 1998              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Symbol table definitions for GDB.    Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|obstack_chunk_free
-value|free
+value|xfree
 end_define
 
 begin_include
@@ -94,7 +94,7 @@ name|BYTE_BITFIELD
 end_define
 
 begin_comment
-comment|/*nothing*/
+comment|/*nothing */
 end_comment
 
 begin_endif
@@ -110,15 +110,15 @@ begin_struct
 struct|struct
 name|general_symbol_info
 block|{
-comment|/* Name of the symbol.  This is a required field.  Storage for the name is      allocated on the psymbol_obstack or symbol_obstack for the associated      objfile. */
+comment|/* Name of the symbol.  This is a required field.  Storage for the name is        allocated on the psymbol_obstack or symbol_obstack for the associated        objfile. */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Value of the symbol.  Which member of this union to use, and what      it means, depends on what kind of symbol this is and its      SYMBOL_CLASS.  See comments there for more details.  All of these      are in host byte order (though what they point to might be in      target byte order, e.g. LOC_CONST_BYTES).  */
+comment|/* Value of the symbol.  Which member of this union to use, and what        it means, depends on what kind of symbol this is and its        SYMBOL_CLASS.  See comments there for more details.  All of these        are in host byte order (though what they point to might be in        target byte order, e.g. LOC_CONST_BYTES).  */
 union|union
 block|{
-comment|/* The fact that this is a long not a LONGEST mainly limits the 	 range of a LOC_CONST.  Since LOC_CONST_BYTES exists, I'm not 	 sure that is a big deal.  */
+comment|/* The fact that this is a long not a LONGEST mainly limits the 	   range of a LOC_CONST.  Since LOC_CONST_BYTES exists, I'm not 	   sure that is a big deal.  */
 name|long
 name|ivalue
 decl_stmt|;
@@ -143,7 +143,7 @@ decl_stmt|;
 block|}
 name|value
 union|;
-comment|/* Since one and only one language can apply, wrap the language specific      information inside a union. */
+comment|/* Since one and only one language can apply, wrap the language specific        information inside a union. */
 union|union
 block|{
 struct|struct
@@ -172,13 +172,13 @@ struct|;
 block|}
 name|language_specific
 union|;
-comment|/* Record the source code language that applies to this symbol.      This is used to select one of the fields from the language specific      union above. */
+comment|/* Record the source code language that applies to this symbol.        This is used to select one of the fields from the language specific        union above. */
 name|enum
 name|language
 name|language
 name|BYTE_BITFIELD
 decl_stmt|;
-comment|/* Which section is this symbol in?  This is an index into      section_offsets for this objfile.  Negative means that the symbol      does not get relocated relative to a section.      Disclaimer: currently this is just used for xcoff, so don't      expect all symbol-reading code to set it correctly (the ELF code      also tries to set it correctly).  */
+comment|/* Which section is this symbol in?  This is an index into        section_offsets for this objfile.  Negative means that the symbol        does not get relocated relative to a section.        Disclaimer: currently this is just used for xcoff, so don't        expect all symbol-reading code to set it correctly (the ELF code        also tries to set it correctly).  */
 name|short
 name|section
 decl_stmt|;
@@ -191,21 +191,18 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|symbol_overlayed_address
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -339,7 +336,7 @@ parameter_list|,
 name|obstack
 parameter_list|)
 define|\
-value|do {									\     char *demangled = NULL;						\     if (SYMBOL_LANGUAGE (symbol) == language_cplus			\ 	|| SYMBOL_LANGUAGE (symbol) == language_auto)			\       {									\ 	demangled =							\ 	  cplus_demangle (SYMBOL_NAME (symbol), DMGL_PARAMS | DMGL_ANSI);\ 	if (demangled != NULL)						\ 	  {								\ 	    SYMBOL_LANGUAGE (symbol) = language_cplus;			\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = 			\ 	      obsavestring (demangled, strlen (demangled), (obstack));	\ 	    free (demangled);						\ 	  }								\ 	else								\ 	  {								\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = NULL;		\ 	  }								\       }									\     if (SYMBOL_LANGUAGE (symbol) == language_java)			\       {									\ 	demangled =							\ 	  cplus_demangle (SYMBOL_NAME (symbol),				\ 			  DMGL_PARAMS | DMGL_ANSI | DMGL_JAVA);		\ 	if (demangled != NULL)						\ 	  {								\ 	    SYMBOL_LANGUAGE (symbol) = language_java;			\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = 			\ 	      obsavestring (demangled, strlen (demangled), (obstack));	\ 	    free (demangled);						\ 	  }								\ 	else								\ 	  {								\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = NULL;		\ 	  }								\       }									\     if (demangled == NULL						\&& (SYMBOL_LANGUAGE (symbol) == language_chill			\ 	    || SYMBOL_LANGUAGE (symbol) == language_auto))		\       {									\ 	demangled =							\ 	  chill_demangle (SYMBOL_NAME (symbol));			\ 	if (demangled != NULL)						\ 	  {								\ 	    SYMBOL_LANGUAGE (symbol) = language_chill;			\ 	    SYMBOL_CHILL_DEMANGLED_NAME (symbol) = 			\ 	      obsavestring (demangled, strlen (demangled), (obstack));	\ 	    free (demangled);						\ 	  }								\ 	else								\ 	  {								\ 	    SYMBOL_CHILL_DEMANGLED_NAME (symbol) = NULL;		\ 	  }								\       }									\     if (SYMBOL_LANGUAGE (symbol) == language_auto)			\       {									\ 	SYMBOL_LANGUAGE (symbol) = language_unknown;			\       }									\   } while (0)
+value|do {									\     char *demangled = NULL;						\     if (SYMBOL_LANGUAGE (symbol) == language_unknown)                 \           SYMBOL_LANGUAGE (symbol) = language_auto;                    \     if (SYMBOL_LANGUAGE (symbol) == language_cplus			\ 	|| SYMBOL_LANGUAGE (symbol) == language_auto)			\       {									\ 	demangled =							\ 	  cplus_demangle (SYMBOL_NAME (symbol), DMGL_PARAMS | DMGL_ANSI);\ 	if (demangled != NULL)						\ 	  {								\ 	    SYMBOL_LANGUAGE (symbol) = language_cplus;			\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = 			\ 	      obsavestring (demangled, strlen (demangled), (obstack));	\ 	    xfree (demangled);						\ 	  }								\ 	else								\ 	  {								\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = NULL;		\ 	  }								\       }									\     if (SYMBOL_LANGUAGE (symbol) == language_java)			\       {									\ 	demangled =							\ 	  cplus_demangle (SYMBOL_NAME (symbol),				\ 			  DMGL_PARAMS | DMGL_ANSI | DMGL_JAVA);		\ 	if (demangled != NULL)						\ 	  {								\ 	    SYMBOL_LANGUAGE (symbol) = language_java;			\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = 			\ 	      obsavestring (demangled, strlen (demangled), (obstack));	\ 	    xfree (demangled);						\ 	  }								\ 	else								\ 	  {								\ 	    SYMBOL_CPLUS_DEMANGLED_NAME (symbol) = NULL;		\ 	  }								\       }									\     if (demangled == NULL						\&& (SYMBOL_LANGUAGE (symbol) == language_chill			\ 	    || SYMBOL_LANGUAGE (symbol) == language_auto))		\       {									\ 	demangled =							\ 	  chill_demangle (SYMBOL_NAME (symbol));			\ 	if (demangled != NULL)						\ 	  {								\ 	    SYMBOL_LANGUAGE (symbol) = language_chill;			\ 	    SYMBOL_CHILL_DEMANGLED_NAME (symbol) = 			\ 	      obsavestring (demangled, strlen (demangled), (obstack));	\ 	    xfree (demangled);						\ 	  }								\ 	else								\ 	  {								\ 	    SYMBOL_CHILL_DEMANGLED_NAME (symbol) = NULL;		\ 	  }								\       }									\   } while (0)
 end_define
 
 begin_comment
@@ -438,12 +435,12 @@ begin_struct
 struct|struct
 name|minimal_symbol
 block|{
-comment|/* The general symbol info required for all types of symbols.       The SYMBOL_VALUE_ADDRESS contains the address that this symbol      corresponds to.  */
+comment|/* The general symbol info required for all types of symbols.         The SYMBOL_VALUE_ADDRESS contains the address that this symbol        corresponds to.  */
 name|struct
 name|general_symbol_info
 name|ginfo
 decl_stmt|;
-comment|/* The info field is available for caching machine-specific information      so it doesn't have to rederive the info constantly (over a serial line).      It is initialized to zero and stays that way until target-dependent code      sets it.  Storage for any data pointed to by this field should be allo-      cated on the symbol_obstack for the associated objfile.        The type would be "void *" except for reasons of compatibility with older      compilers.  This field is optional.       Currently, the AMD 29000 tdep.c uses it to remember things it has decoded      from the instructions in the function header, and the MIPS-16 code uses      it to identify 16-bit procedures.  */
+comment|/* The info field is available for caching machine-specific information        so it doesn't have to rederive the info constantly (over a serial line).        It is initialized to zero and stays that way until target-dependent code        sets it.  Storage for any data pointed to by this field should be allo-        cated on the symbol_obstack for the associated objfile.          The type would be "void *" except for reasons of compatibility with older        compilers.  This field is optional.         Currently, the AMD 29000 tdep.c uses it to remember things it has decoded        from the instructions in the function header, and the MIPS-16 code uses        it to identify 16-bit procedures.  */
 name|char
 modifier|*
 name|info
@@ -458,7 +455,7 @@ name|filename
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Classification types for this symbol.  These should be taken as "advisory      only", since if gdb can't easily figure out a classification it simply      selects mst_unknown.  It may also have to guess when it can't figure out      which is a better match between two types (mst_data versus mst_bss) for      example.  Since the minimal symbol info is sometimes derived from the      BFD library's view of a file, we need to live with what information bfd      supplies. */
+comment|/* Classification types for this symbol.  These should be taken as "advisory        only", since if gdb can't easily figure out a classification it simply        selects mst_unknown.  It may also have to guess when it can't figure out        which is a better match between two types (mst_data versus mst_bss) for        example.  Since the minimal symbol info is sometimes derived from the        BFD library's view of a file, we need to live with what information bfd        supplies. */
 enum|enum
 name|minimal_symbol_type
 block|{
@@ -479,11 +476,11 @@ comment|/* Generally uninitialized data */
 name|mst_abs
 block|,
 comment|/* Generally absolute (nonrelocatable) */
-comment|/* GDB uses mst_solib_trampoline for the start address of a shared 	 library trampoline entry.  Breakpoints for shared library functions 	 are put there if the shared library is not yet loaded. 	 After the shared library is loaded, lookup_minimal_symbol will 	 prefer the minimal symbol from the shared library (usually 	 a mst_text symbol) over the mst_solib_trampoline symbol, and the 	 breakpoints will be moved to their true address in the shared 	 library via breakpoint_re_set.  */
+comment|/* GDB uses mst_solib_trampoline for the start address of a shared 	   library trampoline entry.  Breakpoints for shared library functions 	   are put there if the shared library is not yet loaded. 	   After the shared library is loaded, lookup_minimal_symbol will 	   prefer the minimal symbol from the shared library (usually 	   a mst_text symbol) over the mst_solib_trampoline symbol, and the 	   breakpoints will be moved to their true address in the shared 	   library via breakpoint_re_set.  */
 name|mst_solib_trampoline
 block|,
 comment|/* Shared library trampoline code */
-comment|/* For the mst_file* types, the names are only guaranteed to be unique 	 within a given .o file.  */
+comment|/* For the mst_file* types, the names are only guaranteed to be unique 	   within a given .o file.  */
 name|mst_file_text
 block|,
 comment|/* Static version of mst_text */
@@ -496,6 +493,18 @@ block|}
 name|type
 name|BYTE_BITFIELD
 enum|;
+comment|/* Minimal symbols with the same hash key are kept on a linked        list.  This is the link.  */
+name|struct
+name|minimal_symbol
+modifier|*
+name|hash_next
+decl_stmt|;
+comment|/* Minimal symbols are stored in two different hash tables.  This is        the `next' pointer for the demangled hash table.  */
+name|struct
+name|minimal_symbol
+modifier|*
+name|demangled_hash_next
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -606,19 +615,19 @@ decl_stmt|;
 name|CORE_ADDR
 name|endaddr
 decl_stmt|;
-comment|/* The symbol that names this block, if the block is the body of a      function; otherwise, zero.  */
+comment|/* The symbol that names this block, if the block is the body of a        function; otherwise, zero.  */
 name|struct
 name|symbol
 modifier|*
 name|function
 decl_stmt|;
-comment|/* The `struct block' for the containing block, or 0 if none.       The superblock of a top-level local block (i.e. a function in the      case of C) is the STATIC_BLOCK.  The superblock of the      STATIC_BLOCK is the GLOBAL_BLOCK.  */
+comment|/* The `struct block' for the containing block, or 0 if none.         The superblock of a top-level local block (i.e. a function in the        case of C) is the STATIC_BLOCK.  The superblock of the        STATIC_BLOCK is the GLOBAL_BLOCK.  */
 name|struct
 name|block
 modifier|*
 name|superblock
 decl_stmt|;
-comment|/* Version of GCC used to compile the function corresponding      to this block, or 0 if not compiled with GCC.  When possible,      GCC should be compatible with the native compiler, or if that      is not feasible, the differences should be fixed during symbol      reading.  As of 16 Apr 93, this flag is never used to distinguish      between gcc2 and the native compiler.       If there is no function corresponding to this block, this meaning      of this flag is undefined.  */
+comment|/* Version of GCC used to compile the function corresponding        to this block, or 0 if not compiled with GCC.  When possible,        GCC should be compatible with the native compiler, or if that        is not feasible, the differences should be fixed during symbol        reading.  As of 16 Apr 93, this flag is never used to distinguish        between gcc2 and the native compiler.         If there is no function corresponding to this block, this meaning        of this flag is undefined.  */
 name|unsigned
 name|char
 name|gcc_compile_flag
@@ -627,7 +636,7 @@ comment|/* Number of local symbols.  */
 name|int
 name|nsyms
 decl_stmt|;
-comment|/* The symbols.  If some of them are arguments, then they must be      in the order in which we would like to print them.  */
+comment|/* The symbols.  If some of them are arguments, then they must be        in the order in which we would like to print them.  */
 name|struct
 name|symbol
 modifier|*
@@ -713,6 +722,25 @@ value|(bl)->gcc_compile_flag
 end_define
 
 begin_comment
+comment|/* Macro to loop through all symbols in a block BL.    i counts which symbol we are looking at, and sym points to the current    symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALL_BLOCK_SYMBOLS
+parameter_list|(
+name|bl
+parameter_list|,
+name|i
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|for ((i) = 0, (sym) = BLOCK_SYM ((bl), (i));	\ 	     (i)< BLOCK_NSYMS ((bl));			\ 	     ++(i), (sym) = BLOCK_SYM ((bl), (i)))
+end_define
+
+begin_comment
 comment|/* Nonzero if symbols of block BL should be sorted alphabetically.    Don't sort a block which corresponds to a function.  If we did the    sorting would have to preserve the order of the symbols for the    arguments.  */
 end_comment
 
@@ -741,20 +769,20 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-comment|/* UNDEF_NAMESPACE is used when a namespace has not been discovered or      none of the following apply.  This usually indicates an error either      in the symbol information or in gdb's handling of symbols. */
+comment|/* UNDEF_NAMESPACE is used when a namespace has not been discovered or        none of the following apply.  This usually indicates an error either        in the symbol information or in gdb's handling of symbols. */
 name|UNDEF_NAMESPACE
 block|,
-comment|/* VAR_NAMESPACE is the usual namespace.  In C, this contains variables,      function names, typedef names and enum type values. */
+comment|/* VAR_NAMESPACE is the usual namespace.  In C, this contains variables,        function names, typedef names and enum type values. */
 name|VAR_NAMESPACE
 block|,
-comment|/* STRUCT_NAMESPACE is used in C to hold struct, union and enum type names.      Thus, if `struct foo' is used in a C program, it produces a symbol named      `foo' in the STRUCT_NAMESPACE. */
+comment|/* STRUCT_NAMESPACE is used in C to hold struct, union and enum type names.        Thus, if `struct foo' is used in a C program, it produces a symbol named        `foo' in the STRUCT_NAMESPACE. */
 name|STRUCT_NAMESPACE
 block|,
-comment|/* LABEL_NAMESPACE may be used for names of labels (for gotos);      currently it is not used and labels are not recorded at all.  */
+comment|/* LABEL_NAMESPACE may be used for names of labels (for gotos);        currently it is not used and labels are not recorded at all.  */
 name|LABEL_NAMESPACE
 block|,
-comment|/* Searching namespaces. These overlap with VAR_NAMESPACE, providing      some granularity with the search_symbols function. */
-comment|/* Everything in VAR_NAMESPACE minus FUNCTIONS_-, TYPES_-, and      METHODS_NAMESPACE */
+comment|/* Searching namespaces. These overlap with VAR_NAMESPACE, providing        some granularity with the search_symbols function. */
+comment|/* Everything in VAR_NAMESPACE minus FUNCTIONS_-, TYPES_-, and        METHODS_NAMESPACE */
 name|VARIABLES_NAMESPACE
 block|,
 comment|/* All functions -- for some reason not methods, though. */
@@ -796,46 +824,46 @@ block|,
 comment|/* Value address is at SYMBOL_VALUE offset in arglist.  */
 name|LOC_REF_ARG
 block|,
-comment|/* Value is in register number SYMBOL_VALUE.  Just like LOC_REGISTER      except this is an argument.  Probably the cleaner way to handle      this would be to separate address_class (which would include      separate ARG and LOCAL to deal with FRAME_ARGS_ADDRESS versus      FRAME_LOCALS_ADDRESS), and an is_argument flag.       For some symbol formats (stabs, for some compilers at least),      the compiler generates two symbols, an argument and a register.      In some cases we combine them to a single LOC_REGPARM in symbol      reading, but currently not for all cases (e.g. it's passed on the      stack and then loaded into a register).  */
+comment|/* Value is in register number SYMBOL_VALUE.  Just like LOC_REGISTER        except this is an argument.  Probably the cleaner way to handle        this would be to separate address_class (which would include        separate ARG and LOCAL to deal with FRAME_ARGS_ADDRESS versus        FRAME_LOCALS_ADDRESS), and an is_argument flag.         For some symbol formats (stabs, for some compilers at least),        the compiler generates two symbols, an argument and a register.        In some cases we combine them to a single LOC_REGPARM in symbol        reading, but currently not for all cases (e.g. it's passed on the        stack and then loaded into a register).  */
 name|LOC_REGPARM
 block|,
-comment|/* Value is in specified register.  Just like LOC_REGPARM except the      register holds the address of the argument instead of the argument      itself. This is currently used for the passing of structs and unions      on sparc and hppa.  It is also used for call by reference where the      address is in a register, at least by mipsread.c.  */
+comment|/* Value is in specified register.  Just like LOC_REGPARM except the        register holds the address of the argument instead of the argument        itself. This is currently used for the passing of structs and unions        on sparc and hppa.  It is also used for call by reference where the        address is in a register, at least by mipsread.c.  */
 name|LOC_REGPARM_ADDR
 block|,
 comment|/* Value is a local variable at SYMBOL_VALUE offset in stack frame.  */
 name|LOC_LOCAL
 block|,
-comment|/* Value not used; definition in SYMBOL_TYPE.  Symbols in the namespace      STRUCT_NAMESPACE all have this class.  */
+comment|/* Value not used; definition in SYMBOL_TYPE.  Symbols in the namespace        STRUCT_NAMESPACE all have this class.  */
 name|LOC_TYPEDEF
 block|,
 comment|/* Value is address SYMBOL_VALUE_ADDRESS in the code */
 name|LOC_LABEL
 block|,
-comment|/* In a symbol table, value is SYMBOL_BLOCK_VALUE of a `struct block'.      In a partial symbol table, SYMBOL_VALUE_ADDRESS is the start address      of the block.  Function names have this class. */
+comment|/* In a symbol table, value is SYMBOL_BLOCK_VALUE of a `struct block'.        In a partial symbol table, SYMBOL_VALUE_ADDRESS is the start address        of the block.  Function names have this class. */
 name|LOC_BLOCK
 block|,
-comment|/* Value is a constant byte-sequence pointed to by SYMBOL_VALUE_BYTES, in      target byte order.  */
+comment|/* Value is a constant byte-sequence pointed to by SYMBOL_VALUE_BYTES, in        target byte order.  */
 name|LOC_CONST_BYTES
 block|,
-comment|/* Value is arg at SYMBOL_VALUE offset in stack frame. Differs from      LOC_LOCAL in that symbol is an argument; differs from LOC_ARG in      that we find it in the frame (FRAME_LOCALS_ADDRESS), not in the      arglist (FRAME_ARGS_ADDRESS).  Added for i960, which passes args      in regs then copies to frame.  */
+comment|/* Value is arg at SYMBOL_VALUE offset in stack frame. Differs from        LOC_LOCAL in that symbol is an argument; differs from LOC_ARG in        that we find it in the frame (FRAME_LOCALS_ADDRESS), not in the        arglist (FRAME_ARGS_ADDRESS).  Added for i960, which passes args        in regs then copies to frame.  */
 name|LOC_LOCAL_ARG
 block|,
-comment|/* Value is at SYMBOL_VALUE offset from the current value of      register number SYMBOL_BASEREG.  This exists mainly for the same      things that LOC_LOCAL and LOC_ARG do; but we need to do this      instead because on 88k DWARF gives us the offset from the      frame/stack pointer, rather than the offset from the "canonical      frame address" used by COFF, stabs, etc., and we don't know how      to convert between these until we start examining prologues.       Note that LOC_BASEREG is much less general than a DWARF expression.      We don't need the generality (at least not yet), and storing a general      DWARF expression would presumably take up more space than the existing      scheme.  */
+comment|/* Value is at SYMBOL_VALUE offset from the current value of        register number SYMBOL_BASEREG.  This exists mainly for the same        things that LOC_LOCAL and LOC_ARG do; but we need to do this        instead because on 88k DWARF gives us the offset from the        frame/stack pointer, rather than the offset from the "canonical        frame address" used by COFF, stabs, etc., and we don't know how        to convert between these until we start examining prologues.         Note that LOC_BASEREG is much less general than a DWARF expression.        We don't need the generality (at least not yet), and storing a general        DWARF expression would presumably take up more space than the existing        scheme.  */
 name|LOC_BASEREG
 block|,
 comment|/* Same as LOC_BASEREG but it is an argument.  */
 name|LOC_BASEREG_ARG
 block|,
-comment|/* Value is at fixed address, but the address of the variable has      to be determined from the minimal symbol table whenever the      variable is referenced.      This happens if debugging information for a global symbol is      emitted and the corresponding minimal symbol is defined      in another object file or runtime common storage.      The linker might even remove the minimal symbol if the global      symbol is never referenced, in which case the symbol remains      unresolved.  */
+comment|/* Value is at fixed address, but the address of the variable has        to be determined from the minimal symbol table whenever the        variable is referenced.        This happens if debugging information for a global symbol is        emitted and the corresponding minimal symbol is defined        in another object file or runtime common storage.        The linker might even remove the minimal symbol if the global        symbol is never referenced, in which case the symbol remains        unresolved.  */
 name|LOC_UNRESOLVED
 block|,
-comment|/* Value is at a thread-specific location calculated by a      target-specific method. */
+comment|/* Value is at a thread-specific location calculated by a        target-specific method. */
 name|LOC_THREAD_LOCAL_STATIC
 block|,
-comment|/* The variable does not actually exist in the program.      The value is ignored.  */
+comment|/* The variable does not actually exist in the program.        The value is ignored.  */
 name|LOC_OPTIMIZED_OUT
 block|,
-comment|/* The variable is static, but actually lives at * (address).    * I.e. do an extra indirection to get to it.    * This is used on HP-UX to get at globals that are allocated    * in shared libraries, where references from images other    * than the one where the global was allocated are done    * with a level of indirection.    */
+comment|/* The variable is static, but actually lives at * (address).      * I.e. do an extra indirection to get to it.      * This is used on HP-UX to get at globals that are allocated      * in shared libraries, where references from images other      * than the one where the global was allocated are done      * with a level of indirection.      */
 name|LOC_INDIRECT
 block|}
 enum|;
@@ -923,12 +951,12 @@ name|address_class
 name|aclass
 name|BYTE_BITFIELD
 decl_stmt|;
-comment|/* Line number of definition.  FIXME:  Should we really make the assumption      that nobody will try to debug files longer than 64K lines?  What about      machine generated programs? */
+comment|/* Line number of definition.  FIXME:  Should we really make the assumption        that nobody will try to debug files longer than 64K lines?  What about        machine generated programs? */
 name|unsigned
 name|short
 name|line
 decl_stmt|;
-comment|/* Some symbols require an additional value to be recorded on a per-      symbol basis.  Stash those values here. */
+comment|/* Some symbols require an additional value to be recorded on a per-        symbol basis.  Stash those values here. */
 union|union
 block|{
 comment|/* Used by LOC_BASEREG and LOC_BASEREG_ARG.  */
@@ -938,13 +966,13 @@ decl_stmt|;
 block|}
 name|aux_value
 union|;
-comment|/* Link to a list of aliases for this symbol.      Only a "primary/main symbol may have aliases.  */
+comment|/* Link to a list of aliases for this symbol.        Only a "primary/main symbol may have aliases.  */
 name|struct
 name|alias_list
 modifier|*
 name|aliases
 decl_stmt|;
-comment|/* List of ranges where this symbol is active.  This is only      used by alias symbols at the current time.  */
+comment|/* List of ranges where this symbol is active.  This is only        used by alias symbols at the current time.  */
 name|struct
 name|range_list
 modifier|*
@@ -1079,7 +1107,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Source-file information.  This describes the relation between source files,    ine numbers and addresses in the program text.  */
+comment|/* Source-file information.  This describes the relation between source files,    line numbers and addresses in the program text.  */
 end_comment
 
 begin_struct
@@ -1122,7 +1150,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The order of entries in the linetable is significant.  They should    be sorted by increasing values of the pc field.  If there is more than    one entry for a given pc, then I'm not sure what should happen (and    I not sure whether we currently handle it the best way).     Example: a C for statement generally looks like this     	10	0x100	- for the init/test part of a for stmt.    	20	0x200    	30	0x300    	10	0x400	- for the increment part of a for stmt.     */
+comment|/* The order of entries in the linetable is significant.  They should    be sorted by increasing values of the pc field.  If there is more than    one entry for a given pc, then I'm not sure what should happen (and    I not sure whether we currently handle it the best way).     Example: a C for statement generally looks like this     10   0x100   - for the init/test part of a for stmt.    20   0x200    30   0x300    10   0x400   - for the increment part of a for stmt.     If an entry has a line number of zero, it marks the start of a PC    range for which no line number information is available.  It is    acceptable, though wasteful of table space, for such a range to be    zero length.  */
 end_comment
 
 begin_struct
@@ -1132,7 +1160,7 @@ block|{
 name|int
 name|nitems
 decl_stmt|;
-comment|/* Actually NITEMS elements.  If you don't like this use of the      `struct hack', you can shove it up your ANSI (seriously, if the      committee tells us how to do it, we can probably go along).  */
+comment|/* Actually NITEMS elements.  If you don't like this use of the        `struct hack', you can shove it up your ANSI (seriously, if the        committee tells us how to do it, we can probably go along).  */
 name|struct
 name|linetable_entry
 name|item
@@ -1193,7 +1221,8 @@ name|secoff
 parameter_list|,
 name|whichone
 parameter_list|)
-value|(secoff->offsets[whichone])
+define|\
+value|((whichone == -1) \     ? (internal_error (__FILE__, __LINE__, "Section index is uninitialized"), -1) \     : secoff->offsets[whichone])
 end_define
 
 begin_comment
@@ -1238,7 +1267,7 @@ comment|/* Section in objfile->section_offsets for the blockvector and        th
 name|int
 name|block_line_section
 decl_stmt|;
-comment|/* If several symtabs share a blockvector, exactly one of them        should be designed the primary, so that the blockvector        is relocated exactly once by objfile_relocate.  */
+comment|/* If several symtabs share a blockvector, exactly one of them        should be designated the primary, so that the blockvector        is relocated exactly once by objfile_relocate.  */
 name|int
 name|primary
 decl_stmt|;
@@ -1252,7 +1281,7 @@ name|char
 modifier|*
 name|dirname
 decl_stmt|;
-comment|/* This component says how to free the data we point to:        free_contents => do a tree walk and free each object.        free_nothing => do nothing; some other symtab will free          the data this one uses.       free_linetable => free just the linetable.  FIXME: Is this redundant       with the primary field?  */
+comment|/* This component says how to free the data we point to:        free_contents => do a tree walk and free each object.        free_nothing => do nothing; some other symtab will free        the data this one uses.        free_linetable => free just the linetable.  FIXME: Is this redundant        with the primary field?  */
 enum|enum
 name|free_code
 block|{
@@ -1351,6 +1380,11 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
+comment|/* Full path of the source file.  NULL if not known.  */
+name|char
+modifier|*
+name|fullname
+decl_stmt|;
 comment|/* Information about the object file from which symbols should be read.  */
 name|struct
 name|objfile
@@ -1363,14 +1397,14 @@ name|section_offsets
 modifier|*
 name|section_offsets
 decl_stmt|;
-comment|/* Range of text addresses covered by this file; texthigh is the      beginning of the next section. */
+comment|/* Range of text addresses covered by this file; texthigh is the        beginning of the next section. */
 name|CORE_ADDR
 name|textlow
 decl_stmt|;
 name|CORE_ADDR
 name|texthigh
 decl_stmt|;
-comment|/* Array of pointers to all of the partial_symtab's which this one      depends on.  Since this array can only be set to previous or      the current (?) psymtab, this dependency tree is guaranteed not      to have any loops.  "depends on" means that symbols must be read      for the dependencies before being read for this psymtab; this is      for type references in stabs, where if foo.c includes foo.h, declarations      in foo.h may use type numbers defined in foo.c.  For other debugging      formats there may be no need to use dependencies.  */
+comment|/* Array of pointers to all of the partial_symtab's which this one        depends on.  Since this array can only be set to previous or        the current (?) psymtab, this dependency tree is guaranteed not        to have any loops.  "depends on" means that symbols must be read        for the dependencies before being read for this psymtab; this is        for type references in stabs, where if foo.c includes foo.h, declarations        in foo.h may use type numbers defined in foo.c.  For other debugging        formats there may be no need to use dependencies.  */
 name|struct
 name|partial_symtab
 modifier|*
@@ -1380,41 +1414,39 @@ decl_stmt|;
 name|int
 name|number_of_dependencies
 decl_stmt|;
-comment|/* Global symbol list.  This list will be sorted after readin to      improve access.  Binary search will be the usual method of      finding a symbol within it. globals_offset is an integer offset      within global_psymbols[].  */
+comment|/* Global symbol list.  This list will be sorted after readin to        improve access.  Binary search will be the usual method of        finding a symbol within it. globals_offset is an integer offset        within global_psymbols[].  */
 name|int
 name|globals_offset
 decl_stmt|;
 name|int
 name|n_global_syms
 decl_stmt|;
-comment|/* Static symbol list.  This list will *not* be sorted after readin;      to find a symbol in it, exhaustive search must be used.  This is      reasonable because searches through this list will eventually      lead to either the read in of a files symbols for real (assumed      to take a *lot* of time; check) or an error (and we don't care      how long errors take).  This is an offset and size within      static_psymbols[].  */
+comment|/* Static symbol list.  This list will *not* be sorted after readin;        to find a symbol in it, exhaustive search must be used.  This is        reasonable because searches through this list will eventually        lead to either the read in of a files symbols for real (assumed        to take a *lot* of time; check) or an error (and we don't care        how long errors take).  This is an offset and size within        static_psymbols[].  */
 name|int
 name|statics_offset
 decl_stmt|;
 name|int
 name|n_static_syms
 decl_stmt|;
-comment|/* Pointer to symtab eventually allocated for this source file, 0 if      !readin or if we haven't looked for the symtab after it was readin.  */
+comment|/* Pointer to symtab eventually allocated for this source file, 0 if        !readin or if we haven't looked for the symtab after it was readin.  */
 name|struct
 name|symtab
 modifier|*
 name|symtab
 decl_stmt|;
-comment|/* Pointer to function which will read in the symtab corresponding to      this psymtab.  */
+comment|/* Pointer to function which will read in the symtab corresponding to        this psymtab.  */
 name|void
-argument_list|(
-argument|*read_symtab
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|read_symtab
+function_decl|)
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Information that lets read_symtab() locate the part of the symbol table      that this psymtab corresponds to.  This information is private to the      format-dependent symbol reading routines.  For further detail examine      the various symbol reading modules.  Should really be (void *) but is      (char *) as with other such gdb variables.  (FIXME) */
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Information that lets read_symtab() locate the part of the symbol table        that this psymtab corresponds to.  This information is private to the        format-dependent symbol reading routines.  For further detail examine        the various symbol reading modules.  Should really be (void *) but is        (char *) as with other such gdb variables.  (FIXME) */
 name|char
 modifier|*
 name|read_symtab_private
@@ -1456,54 +1488,6 @@ directive|define
 name|VTBL_FNADDR_OFFSET
 value|2
 end_define
-
-begin_comment
-comment|/* Macro that yields non-zero value iff NAME is the prefix for C++ operator    names.  If you leave out the parenthesis here you will lose!    Currently 'o' 'p' CPLUS_MARKER is used for both the symbol in the    symbol-file and the names in gdb's symbol table.    Note that this macro is g++ specific (FIXME). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPNAME_PREFIX_P
-parameter_list|(
-name|NAME
-parameter_list|)
-define|\
-value|((NAME)[0] == 'o'&& (NAME)[1] == 'p'&& is_cplus_marker ((NAME)[2]))
-end_define
-
-begin_comment
-comment|/* Macro that yields non-zero value iff NAME is the prefix for C++ vtbl    names.  Note that this macro is g++ specific (FIXME).    '_vt$' is the old cfront-style vtables; '_VT$' is the new    style, using thunks (where '$' is really CPLUS_MARKER). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VTBL_PREFIX_P
-parameter_list|(
-name|NAME
-parameter_list|)
-define|\
-value|((NAME)[0] == '_' \&& (((NAME)[1] == 'V'&& (NAME)[2] == 'T') \        || ((NAME)[1] == 'v'&& (NAME)[2] == 't')) \&& is_cplus_marker ((NAME)[3]))
-end_define
-
-begin_comment
-comment|/* Macro that yields non-zero value iff NAME is the prefix for C++ destructor    names.  Note that this macro is g++ specific (FIXME).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DESTRUCTOR_PREFIX_P
-parameter_list|(
-name|NAME
-parameter_list|)
-define|\
-value|((NAME)[0] == '_'&& is_cplus_marker ((NAME)[1])&& (NAME)[2] == '_')
-end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* External variables and functions for the objects described above. */
@@ -1583,172 +1567,152 @@ begin_comment
 comment|/* lookup a symbol table by source file name */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtab
 modifier|*
 name|lookup_symtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
+specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup a symbol by name (optional block, optional symtab) */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|lookup_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
-expr|struct
+name|struct
 name|block
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|namespace_enum
-operator|,
+parameter_list|,
 name|int
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|symtab
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup a symbol by name, within a specified block */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|lookup_block_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|block
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|namespace_enum
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup a [struct, union, enum] by name, within a specified block */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|type
 modifier|*
 name|lookup_struct
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|block
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|type
 modifier|*
 name|lookup_union
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|block
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|type
 modifier|*
 name|lookup_enum
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|block
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup the function corresponding to the block */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|block_function
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|block
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* from blockframe.c: */
@@ -1758,108 +1722,93 @@ begin_comment
 comment|/* lookup the function symbol corresponding to the address */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|find_pc_function
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup the function corresponding to the address and section */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|find_pc_sect_function
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup function from address, return name, start addr and end addr */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|find_pc_partial_function
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|clear_pc_function_cache
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|find_pc_sect_partial_function
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* from symtab.c: */
@@ -1869,220 +1818,188 @@ begin_comment
 comment|/* lookup partial symbol table by filename */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|partial_symtab
 modifier|*
 name|lookup_partial_symtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
+specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup partial symbol table by address */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|partial_symtab
 modifier|*
 name|find_pc_psymtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup partial symbol table by address and section */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|partial_symtab
 modifier|*
 name|find_pc_sect_psymtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup full symbol table by address */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtab
 modifier|*
 name|find_pc_symtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup full symbol table by address and section */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtab
 modifier|*
 name|find_pc_sect_symtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup partial symbol by address */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|partial_symbol
 modifier|*
 name|find_pc_psymbol
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* lookup partial symbol by address and section */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|partial_symbol
 modifier|*
 name|find_pc_sect_psymbol
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|find_pc_line_pc_range
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|contained_in
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|block
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|block
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|reread_symbols
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|type
 modifier|*
 name|lookup_transparent_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Macro for name of symbol to indicate a file compiled with gcc. */
@@ -2132,66 +2049,60 @@ begin_comment
 comment|/* Functions for dealing with the minimal symbol table, really a misc    address<->symbol mapping for things we don't have debug symbols for.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|prim_record_minimal_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|minimal_symbol_type
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|minimal_symbol
 modifier|*
 name|prim_record_minimal_symbol_and_info
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|minimal_symbol_type
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|info
-operator|,
+parameter_list|,
 name|int
 name|section
-operator|,
+parameter_list|,
 name|asection
-operator|*
+modifier|*
 name|bfd_section
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -2199,228 +2110,238 @@ directive|ifdef
 name|SOFUN_ADDRESS_MAYBE_MISSING
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|find_stab_function_addr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
-name|partial_symtab
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|msymbol_hash_iw
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|msymbol_hash
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|add_minsym_to_hash_table
+parameter_list|(
+name|struct
+name|minimal_symbol
+modifier|*
+name|sym
+parameter_list|,
+name|struct
+name|minimal_symbol
+modifier|*
+modifier|*
+name|table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|struct
 name|minimal_symbol
 modifier|*
 name|lookup_minimal_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|minimal_symbol
 modifier|*
 name|lookup_minimal_symbol_text
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|struct
 name|minimal_symbol
 modifier|*
 name|lookup_minimal_symbol_solib_trampoline
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|minimal_symbol
 modifier|*
 name|lookup_minimal_symbol_by_pc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|minimal_symbol
 modifier|*
 name|lookup_minimal_symbol_by_pc_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|minimal_symbol
 modifier|*
 name|lookup_solib_trampoline_symbol_by_pc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|find_solib_trampoline_target
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|init_minimal_symbol_collection
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
+name|struct
+name|cleanup
+modifier|*
+name|make_cleanup_discard_minimal_symbols
+parameter_list|(
 name|void
-name|discard_minimal_symbols
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|install_minimal_symbols
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Sort all the minimal symbols in OBJFILE.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|msymbols_sort
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
+modifier|*
 name|objfile
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct
@@ -2435,7 +2356,7 @@ name|asection
 modifier|*
 name|section
 decl_stmt|;
-comment|/* Line number.  Line numbers start at 1 and proceed through symtab->nlines.      0 is never a valid line number; it is used to indicate that line number      information is not available.  */
+comment|/* Line number.  Line numbers start at 1 and proceed through symtab->nlines.        0 is never a valid line number; it is used to indicate that line number        information is not available.  */
 name|int
 name|line
 decl_stmt|;
@@ -2517,7 +2438,7 @@ name|struct
 name|symtab_and_line
 name|catch_sal
 decl_stmt|;
-comment|/* This may need to be extended in the future, if      some platforms allow reporting more information,      such as point of rethrow, type of exception object,      type expected by catch clause, etc. */
+comment|/* This may need to be extended in the future, if        some platforms allow reporting more information,        such as point of rethrow, type of exception object,        type expected by catch clause, etc. */
 block|}
 struct|;
 end_struct
@@ -2592,654 +2513,587 @@ begin_comment
 comment|/* Given a pc value, return line number it is in.  Second arg nonzero means    if pc is on the boundary use the previous statement's line number.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtab_and_line
 name|find_pc_line
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Same function, but specify a section as well as an address */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtab_and_line
 name|find_pc_sect_line
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Given an address, return the nearest symbol at or below it in memory.    Optionally return the symtab it's from through 2nd arg, and the    address in inferior memory of the symbol through 3rd arg.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|find_addr_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|symtab
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Given a symtab and line number, return the pc there.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|find_line_pc
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symtab
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|find_line_pc_range
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symtab_and_line
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|resolve_sal_pc
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symtab_and_line
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Given a string, return the line specified by it.  For commands like "list"    and "breakpoint".  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtabs_and_lines
 name|decode_line_spec
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtabs_and_lines
 name|decode_line_spec_1
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|symtabs_and_lines
-name|decode_line_1
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|symtab
-operator|*
-operator|,
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|MAINTENANCE_CMDS
-end_if
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Symmisc.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|maintenance_print_symbols
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|maintenance_print_psymbols
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|maintenance_print_msymbols
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|maintenance_print_objfiles
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|maintenance_check_symtabs
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* maint.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|maintenance_print_statistics
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|free_symtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Symbol-reading stuff in symfile.c and solib.c.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtab
 modifier|*
 name|psymtab_to_symtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|clear_solib
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|objfile
-modifier|*
-name|symbol_file_add
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|CORE_ADDR
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* source.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|identify_source_line
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symtab
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|print_source_lines
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symtab
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|forget_cached_source_info
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|select_source_symtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 modifier|*
 name|make_symbol_completion_list
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|make_file_symbol_completion_list
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 modifier|*
 name|make_symbol_overload_list
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symbol
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|make_source_files_completion_list
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* symtab.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|partial_symtab
 modifier|*
 name|find_main_psymtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|symtab
+modifier|*
+name|find_line_symtab
+parameter_list|(
+name|struct
+name|symtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|symtab_and_line
+name|find_function_start_sal
+parameter_list|(
+name|struct
+name|symbol
+modifier|*
+name|sym
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* blockframe.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|blockvector
 modifier|*
 name|blockvector_for_pc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|blockvector
 modifier|*
 name|blockvector_for_pc_sect
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* symfile.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|clear_symtab_users
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|enum
 name|language
 name|deduce_language_from_filename
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* symtab.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|in_prologue
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
 name|pc
-operator|,
+parameter_list|,
 name|CORE_ADDR
 name|func_start
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|fixup_symbol_section
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symbol
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|partial_symbol
+modifier|*
+name|fixup_psymbol_section
+parameter_list|(
+name|struct
+name|partial_symbol
+modifier|*
+name|psym
+parameter_list|,
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Symbol searching */
 end_comment
 
 begin_comment
-comment|/* When using search_symbols, a list of the following structs is returned.    Callers must free the search list using free_symbol_search! */
+comment|/* When using search_symbols, a list of the following structs is returned.    Callers must free the search list using free_search_symbols! */
 end_comment
 
 begin_struct
 struct|struct
 name|symbol_search
 block|{
-comment|/* The block in which the match was found. Could be, for example,      STATIC_BLOCK or GLOBAL_BLOCK. */
+comment|/* The block in which the match was found. Could be, for example,        STATIC_BLOCK or GLOBAL_BLOCK. */
 name|int
 name|block
 decl_stmt|;
-comment|/* Information describing what was found.       If symtab abd symbol are NOT NULL, then information was found      for this match. */
+comment|/* Information describing what was found.         If symtab abd symbol are NOT NULL, then information was found        for this match. */
 name|struct
 name|symtab
 modifier|*
@@ -3250,7 +3104,7 @@ name|symbol
 modifier|*
 name|symbol
 decl_stmt|;
-comment|/* If msymbol is non-null, then a match was made on something for      which only minimal_symbols exist. */
+comment|/* If msymbol is non-null, then a match was made on something for        which only minimal_symbols exist. */
 name|struct
 name|minimal_symbol
 modifier|*
@@ -3266,47 +3120,84 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|search_symbols
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|namespace_enum
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|symbol_search
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|free_search_symbols
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symbol_search
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|cleanup
+modifier|*
+name|make_cleanup_free_search_symbols
+parameter_list|(
+name|struct
+name|symbol_search
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* The name of the ``main'' function.    FIXME: cagney/2001-03-20: Can't make main_name() const since some    of the calling code currently assumes that the string isn't    const. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_main_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+comment|/*const*/
+name|char
+modifier|*
+name|main_name
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

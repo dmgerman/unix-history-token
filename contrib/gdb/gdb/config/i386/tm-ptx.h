@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target machine definitions for GDB on a Sequent Symmetry under ptx    with Weitek 1167 and i387 support.    Copyright 1986, 1987, 1989, 1991, 1992, 1993 Free Software Foundation, Inc.    Symmetry version by Jay Vosburgh (fubar@sequent.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target machine definitions for GDB on a Sequent Symmetry under ptx    with Weitek 1167 and i387 support.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994, 1995, 2000    Free Software Foundation, Inc.    Symmetry version by Jay Vosburgh (fubar@sequent.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -99,10 +99,10 @@ literal|0
 end_if
 
 begin_undef
-unit|--- this code can't be used unless we know we are running native,      since it uses host specific ptrace calls. /* code for 80387 fpu.  Functions are from i386-dep.c, copied into  * symm-dep.c.  */ #define FLOAT_INFO { i386_float_info(); } #endif  /* Number of machine registers */  #undef  NUM_REGS #define NUM_REGS 49  /* Initializer for an array of names of registers.  There should be at least    NUM_REGS strings in this initializer.  Any excess ones are simply ignored.    The order of the first 8 registers must match the compiler's numbering    scheme (which is the same as the 386 scheme) and also regmap in the various    *-nat.c files. */
+unit|-- -this code can 't be used unless we know we are running native, since it uses host specific ptrace calls. /* code for 80387 fpu.  Functions are from i386-dep.c, copied into  * symm-dep.c.  */ #define FLOAT_INFO { i386_float_info(); } #endif  /* Number of machine registers */  #undef  NUM_REGS #define NUM_REGS 49  /* Initializer for an array of names of registers.  There should be at least    NUM_REGS strings in this initializer.  Any excess ones are simply ignored.    The order of the first 8 registers must match the compiler's numbering    scheme (which is the same as the 386 scheme) and also regmap in the various    *-nat.c files. */
 undef|#
 directive|undef
-name|REGISTER_NAMES
+name|REGISTER_NAME
 end_undef
 
 begin_define
@@ -345,7 +345,7 @@ value|{ (addr) = ptx_register_u_addr((blockend), (regno)); }
 end_define
 
 begin_comment
-unit|extern int ptx_register_u_addr PARAMS ((int, int));
+unit|extern int ptx_register_u_addr (int, int);
 comment|/* Total amount of space needed to store our copies of the machine's    register state, the array `registers'.  10 i*86 registers, 8 i387    registers, and 31 Weitek 1167 registers */
 end_comment
 
@@ -552,7 +552,7 @@ value|symmetry_extract_return_value(TYPE, REGBUF, VALBUF)
 end_define
 
 begin_comment
-comment|/* #undef  FRAME_FIND_SAVED_REGS #define FRAME_FIND_SAVED_REGS(frame_info, frame_saved_regs) \ { ptx_frame_find_saved_regs((frame_info),&(frame_saved_regs)); } */
+comment|/*    #undef  FRAME_FIND_SAVED_REGS    #define FRAME_FIND_SAVED_REGS(frame_info, frame_saved_regs) \    { ptx_frame_find_saved_regs((frame_info),&(frame_saved_regs)); }  */
 end_comment
 
 begin_endif

@@ -20,7 +20,7 @@ name|TAGSH
 end_define
 
 begin_comment
-comment|/*	Copyright (C) 1995 Free Software Foundation, Inc.  *   * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  *  * As a special exception, the Free Software Foundation gives permission  * for additional uses of the text contained in its release of GUILE.  *  * The exception is that, if you link the GUILE library with other files  * to produce an executable, this does not by itself cause the  * resulting executable to be covered by the GNU General Public License.  * Your use of that executable is in no way restricted on account of  * linking the GUILE library code into it.  *  * This exception does not however invalidate any other reasons why  * the executable file might be covered by the GNU General Public License.  *  * This exception applies only to the code released by the  * Free Software Foundation under the name GUILE.  If you copy  * code from other Free Software Foundation releases into a copy of  * GUILE, as the General Public License permits, the exception does  * not apply to the code that you add in this way.  To avoid misleading  * anyone as to the status of such modified files, you must delete  * this exception notice from them.  *  * If you write modifications of your own for GUILE, it is your choice  * whether to permit this exception to apply to your modifications.  * If you do not wish that, delete this exception notice.    */
+comment|/*      Copyright 1995, 1999 Free Software Foundation, Inc.   * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  *  * As a special exception, the Free Software Foundation gives permission  * for additional uses of the text contained in its release of GUILE.  *  * The exception is that, if you link the GUILE library with other files  * to produce an executable, this does not by itself cause the  * resulting executable to be covered by the GNU General Public License.  * Your use of that executable is in no way restricted on account of  * linking the GUILE library code into it.  *  * This exception does not however invalidate any other reasons why  * the executable file might be covered by the GNU General Public License.  *  * This exception applies only to the code released by the  * Free Software Foundation under the name GUILE.  If you copy  * code from other Free Software Foundation releases into a copy of  * GUILE, as the General Public License permits, the exception does  * not apply to the code that you add in this way.  To avoid misleading  * anyone as to the status of such modified files, you must delete  * this exception notice from them.  *  * If you write modifications of your own for GUILE, it is your choice  * whether to permit this exception to apply to your modifications.  * If you do not wish that, delete this exception notice.    */
 end_comment
 
 begin_escape
@@ -34,7 +34,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Three Bit Tags  *  * 000 -- a non-immediate value.  Points into the pair heap.    *  * 001 -- a gloc (i.e., a resolved global variable in a CAR in a code graph)  *	  or the CAR of an object handle (i.e., the tagged pointer to the  *	  vtable part of a user-defined object).  *  *        If X has this tag, the value at CDAR(X - 1) distinguishes  *	  glocs from object handles.  The distinction only needs  *	  to be made in a few places.  Only a few parts of the code know  *	  about glocs.  In most cases, when a value in the CAR of a pair  *	  has the tag 001, it means that the pair is an object handle.  *  * 010 -- the tag for immediate, exact integers.   *  * 011 -- in the CAR of a pair, this tag indicates that the pair is a closure.  *	  The remaining bits of the CAR are a pointer into the pair heap  * 	  to the code graph for the closure.  *  * 1xy -- an extension tag which means that there is a five or six bit  *	  tag to the left of the low three bits.  See the nice diagrams  *	  in ../doc/code.doc if you want to know what the bits mean.  */
+comment|/* Three Bit Tags   * 000 -- a non-immediate value.  Points into the pair heap.    *  * 001 -- a gloc (i.e., a resolved global variable in a CAR in a code graph)  *        or the CAR of an object handle (i.e., the tagged pointer to the  *        vtable part of a user-defined object).  *  *        If X has this tag, the value at CDAR(X - 1) distinguishes  *        glocs from object handles.  The distinction only needs  *        to be made in a few places.  Only a few parts of the code know  *        about glocs.  In most cases, when a value in the CAR of a pair  *        has the tag 001, it means that the pair is an object handle.  *  * 010 -- the tag for immediate, exact integers.   *  * 011 -- in the CAR of a pair, this tag indicates that the pair is a closure.  *        The remaining bits of the CAR are a pointer into the pair heap  *        to the code graph for the closure.  *  * 1xy -- an extension tag which means that there is a five or six bit  *        tag to the left of the low three bits.  See the nice diagrams  *        in ../doc/code.doc if you want to know what the bits mean.  */
 end_comment
 
 begin_escape
@@ -1117,7 +1117,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Two slightly extensible types: smobs and ptobs.  *  */
+comment|/* Two slightly extensible types: smobs and ptobs.   */
 end_comment
 
 begin_define
@@ -1369,35 +1369,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* 0*/
+comment|/* 0 */
 end_comment
 
 begin_escape
 end_escape
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* STDC */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STDC */
-end_comment
 
 begin_endif
 endif|#

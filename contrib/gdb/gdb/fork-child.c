@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Fork a Unix child process, and set up to debug it, for GDB.    Copyright 1990, 1991, 1992, 1993, 1994, 1996 Free Software Foundation, Inc.    Contributed by Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Fork a Unix child process, and set up to debug it, for GDB.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000,    2001 Free Software Foundation, Inc.    Contributed by Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -40,7 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_vfork.h"
 end_include
 
 begin_include
@@ -64,32 +70,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"command.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UNISTD_H
-end_ifdef
+begin_comment
+comment|/* for dont_repeat () */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<signal.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|DEBUGGING
-value|0
-end_define
 
 begin_comment
 comment|/* This just gets used as a default if we can't find SHELL */
@@ -131,19 +123,15 @@ specifier|static
 name|void
 name|breakup_args
 parameter_list|(
+name|char
+modifier|*
 name|scratch
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|argv
 parameter_list|)
-name|char
-modifier|*
-name|scratch
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -151,18 +139,6 @@ name|cp
 init|=
 name|scratch
 decl_stmt|;
-if|#
-directive|if
-name|DEBUGGING
-name|printf
-argument_list|(
-literal|"breakup_args: input = %s\n"
-argument_list|,
-name|scratch
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 init|;
@@ -274,98 +250,61 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start an inferior Unix child process and sets inferior_pid to its pid.    EXEC_FILE is the file to run.    ALLARGS is a string containing the arguments to the program.    ENV is the environment vector to pass.  SHELL_FILE is the shell file,    or NULL if we should pick one.  Errors reported with error().  */
+comment|/* Start an inferior Unix child process and sets inferior_ptid to its pid.    EXEC_FILE is the file to run.    ALLARGS is a string containing the arguments to the program.    ENV is the environment vector to pass.  SHELL_FILE is the shell file,    or NULL if we should pick one.  Errors reported with error().  */
 end_comment
 
-begin_function_decl
+begin_comment
+comment|/* This function is NOT-REENTRANT.  Some of the variables have been    made static to ensure that they survive the vfork() call.  */
+end_comment
+
+begin_function
 name|void
 name|fork_inferior
 parameter_list|(
-name|exec_file
+name|char
+modifier|*
+name|exec_file_arg
 parameter_list|,
+name|char
+modifier|*
 name|allargs
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|env
 parameter_list|,
+name|void
+function_decl|(
+modifier|*
 name|traceme_fun
-parameter_list|,
-name|init_trace_fun
-parameter_list|,
-name|pre_trace_fun
-parameter_list|,
-name|shell_file
-parameter_list|)
-name|char
-modifier|*
-name|exec_file
-decl_stmt|;
-name|char
-modifier|*
-name|allargs
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|env
-decl_stmt|;
-function_decl|void
+function_decl|)
 parameter_list|(
-function_decl|*traceme_fun
-end_function_decl
-
-begin_expr_stmt
-unit|)
-name|PARAMS
-argument_list|(
-operator|(
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+parameter_list|)
+parameter_list|,
 name|void
-argument_list|(
-argument|*init_trace_fun
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|init_trace_fun
+function_decl|)
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+parameter_list|)
+parameter_list|,
 name|void
-argument_list|(
-argument|*pre_trace_fun
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|pre_trace_fun
+function_decl|)
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|)
+parameter_list|,
 name|char
 modifier|*
-name|shell_file
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|shell_file_arg
+parameter_list|)
 block|{
 name|int
 name|pid
@@ -398,6 +337,16 @@ name|debug_setpgrp
 init|=
 literal|657473
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|shell_file
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|exec_file
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -408,16 +357,17 @@ name|shell
 init|=
 literal|0
 decl_stmt|;
+specifier|static
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-name|char
-modifier|*
-name|tryname
-decl_stmt|;
 comment|/* If no exec file handed to us, get it from the exec-file command -- with      a good, common error message if none is specified.  */
+name|exec_file
+operator|=
+name|exec_file_arg
+expr_stmt|;
 if|if
 condition|(
 name|exec_file
@@ -432,6 +382,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* STARTUP_WITH_SHELL is defined in inferior.h.    * If 0, we'll just do a fork/exec, no shell, so don't    * bother figuring out what shell.    */
+name|shell_file
+operator|=
+name|shell_file_arg
+expr_stmt|;
 if|if
 condition|(
 name|STARTUP_WITH_SHELL
@@ -466,18 +420,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|DEBUGGING
-name|printf
-argument_list|(
-literal|"shell is %s\n"
-argument_list|,
-name|shell_file
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Multiplying the length of exec_file by 4 is to account for the fact      that it may expand when quoted; it is a worst-case number based on      every character being '.  */
 name|len
 operator|=
@@ -499,7 +441,7 @@ argument_list|)
 operator|+
 literal|1
 operator|+
-comment|/*slop*/
+comment|/*slop */
 literal|12
 expr_stmt|;
 comment|/* If desired, concat something onto the front of ALLARGS.      SHELL_COMMAND is the result.  */
@@ -559,40 +501,6 @@ condition|)
 block|{
 comment|/* We're going to call execvp. Create argv */
 comment|/* Largest case: every other character is a separate arg */
-if|#
-directive|if
-name|DEBUGGING
-name|printf
-argument_list|(
-literal|"allocating argv, length = %d\n"
-argument_list|,
-operator|(
-operator|(
-name|strlen
-argument_list|(
-name|allargs
-argument_list|)
-operator|+
-literal|1
-operator|)
-operator|/
-operator|(
-name|unsigned
-operator|)
-literal|2
-operator|+
-literal|2
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|argv
 operator|=
 operator|(
@@ -664,7 +572,7 @@ argument_list|,
 literal|"exec "
 argument_list|)
 expr_stmt|;
-comment|/* Quoting in this style is said to work with all shells.  But csh        on IRIX 4.0.1 can't deal with it.  So we only quote it if we need        to.  */
+comment|/* Quoting in this style is said to work with all shells.  But csh          on IRIX 4.0.1 can't deal with it.  So we only quote it if we need          to.  */
 name|p
 operator|=
 name|exec_file
@@ -682,6 +590,9 @@ condition|)
 block|{
 case|case
 literal|'\''
+case|:
+case|case
+literal|'!'
 case|:
 case|case
 literal|'"'
@@ -783,6 +694,21 @@ argument_list|,
 literal|"'\\''"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'!'
+condition|)
+name|strcat
+argument_list|(
+name|shell_command
+argument_list|,
+literal|"\\!"
+argument_list|)
+expr_stmt|;
 else|else
 name|strncat
 argument_list|(
@@ -851,7 +777,7 @@ argument_list|(
 name|gdb_stderr
 argument_list|)
 expr_stmt|;
-comment|/* If there's any initialization of the target layers that must happen    to prepare to handle the child we're about fork, do it now...    */
+comment|/* If there's any initialization of the target layers that must happen      to prepare to handle the child we're about fork, do it now...    */
 if|if
 condition|(
 name|pre_trace_fun
@@ -864,25 +790,7 @@ name|pre_trace_fun
 call|)
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USG
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_VFORK
-argument_list|)
-name|pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
+comment|/* Create the child process.  Note that the apparent call to vfork()      below *might* actually be a call to fork() due to the fact that      autoconf will ``#define vfork fork'' on certain platforms.  */
 if|if
 condition|(
 name|debug_fork
@@ -898,8 +806,6 @@ operator|=
 name|vfork
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|pid
@@ -945,11 +851,11 @@ argument_list|(
 literal|"setpgrp failed in child"
 argument_list|)
 expr_stmt|;
-comment|/* Ask the tty subsystem to switch to the one we specified earlier 	 (or to share the current terminal, if none was specified).  */
+comment|/* Ask the tty subsystem to switch to the one we specified earlier          (or to share the current terminal, if none was specified).  */
 name|new_tty
 argument_list|()
 expr_stmt|;
-comment|/* Changing the signal handlers for the inferior after 	 a vfork can also change them for the superior, so we don't mess 	 with signals here.  See comments in 	 initialize_signals for how we get the right signal handlers 	 for the inferior.  */
+comment|/* Changing the signal handlers for the inferior after          a vfork can also change them for the superior, so we don't mess          with signals here.  See comments in          initialize_signals for how we get the right signal handlers          for the inferior.  */
 comment|/* "Trace me, Dr. Memory!" */
 call|(
 modifier|*
@@ -958,7 +864,7 @@ call|)
 argument_list|()
 expr_stmt|;
 comment|/* The call above set this process (the "child") as debuggable        * by the original gdb process (the "parent").  Since processes        * (unlike people) can have only one parent, if you are        * debugging gdb itself (and your debugger is thus _already_ the        * controller/parent for this child),  code from here on out        * is undebuggable.  Indeed, you probably got an error message        * saying "not parent".  Sorry--you'll have to use print statements!        */
-comment|/* There is no execlpe call, so we have to set the environment 	 for our child in the global variable.  If we've vforked, this 	 clobbers the parent, but environ is restored a few lines down 	 in the parent.  By the way, yes we do need to look down the 	 path to find $SHELL.  Rich Pixley says so, and I agree.  */
+comment|/* There is no execlpe call, so we have to set the environment          for our child in the global variable.  If we've vforked, this          clobbers the parent, but environ is restored a few lines down          in the parent.  By the way, yes we do need to look down the          path to find $SHELL.  Rich Pixley says so, and I agree.  */
 name|environ
 operator|=
 name|env
@@ -969,13 +875,6 @@ condition|(
 name|shell
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* HP change is problematic. The -f option has different meanings 	   for different shells. It is particularly inappropriate for 	   bourne shells. */
-block|execlp (shell_file, shell_file, "-f", "-c", shell_command, (char *) 0);
-else|#
-directive|else
 name|execlp
 argument_list|(
 name|shell_file
@@ -993,8 +892,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* If we get here, it's an error */
 name|fprintf_unfiltered
 argument_list|(
@@ -1031,63 +928,6 @@ name|char
 modifier|*
 name|errstring
 decl_stmt|;
-if|#
-directive|if
-name|DEBUGGING
-name|printf
-argument_list|(
-literal|"about to exec target, exec_file = %s\n"
-argument_list|,
-name|exec_file
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|argv
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"strlen(argv[%d]) is %d\n"
-argument_list|,
-name|i
-argument_list|,
-name|strlen
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"argv[%d] is %s\n"
-argument_list|,
-name|i
-argument_list|,
-name|argv
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|execvp
 argument_list|(
 name|exec_file
@@ -1162,7 +1002,7 @@ argument_list|,
 literal|".\n"
 argument_list|)
 expr_stmt|;
-comment|/* This extra info seems to be useless         fprintf_unfiltered (gdb_stderr, "Got error %s.\n", errstring);          */
+comment|/* This extra info seems to be useless 	     fprintf_unfiltered (gdb_stderr, "Got error %s.\n", errstring); 	   */
 name|gdb_flush
 argument_list|(
 name|gdb_stderr
@@ -1183,9 +1023,12 @@ expr_stmt|;
 name|init_thread_list
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 expr_stmt|;
 comment|/* Needed for wait_for_inferior stuff below */
 comment|/* Now that we have a child process, make it our target, and      initialize anything target-vector-specific that needs initializing.  */
@@ -1198,7 +1041,7 @@ name|pid
 argument_list|)
 expr_stmt|;
 comment|/* We are now in the child process of interest, having exec'd the      correct program, and are poised at the first instruction of the      new program.  */
-comment|/* Allow target dependant code to play with the new process.  This might be      used to have target-specific code initialize a variable in the new process      prior to executing the first instruction.  */
+comment|/* Allow target dependent code to play with the new process.  This might be      used to have target-specific code initialize a variable in the new process      prior to executing the first instruction.  */
 name|TARGET_CREATE_INFERIOR_HOOK
 argument_list|(
 name|pid
@@ -1215,32 +1058,24 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* An inferior Unix process CHILD_PID has been created by a call to    fork() (or variants like vfork).  It is presently stopped, and waiting    to be resumed.  clone_and_follow_inferior will fork the debugger,    and that clone will "follow" (attach to) CHILD_PID.  The original copy    of the debugger will not touch CHILD_PID again.     Also, the original debugger will set FOLLOWED_CHILD FALSE, while the    clone will set it TRUE.    */
+comment|/* An inferior Unix process CHILD_PID has been created by a call to    fork() (or variants like vfork).  It is presently stopped, and waiting    to be resumed.  clone_and_follow_inferior will fork the debugger,    and that clone will "follow" (attach to) CHILD_PID.  The original copy    of the debugger will not touch CHILD_PID again.     Also, the original debugger will set FOLLOWED_CHILD FALSE, while the    clone will set it TRUE.  */
 end_comment
 
 begin_function
 name|void
 name|clone_and_follow_inferior
 parameter_list|(
-name|child_pid
-parameter_list|,
-name|followed_child
-parameter_list|)
 name|int
 name|child_pid
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|followed_child
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|extern
-name|int
-name|auto_solib_add
-decl_stmt|;
 name|int
 name|debugger_pid
 decl_stmt|;
@@ -1254,7 +1089,7 @@ literal|100
 index|]
 decl_stmt|;
 comment|/* Arbitrary but sufficient length. */
-comment|/* This semaphore is used to coordinate the two debuggers' handoff      of CHILD_PID.  The original debugger will detach from CHILD_PID,      and then the clone debugger will attach to it.  (It must be done      this way because on some targets, only one process at a time can      trace another.  Thus, the original debugger must relinquish its      tracing rights before the clone can pick them up.)      */
+comment|/* This semaphore is used to coordinate the two debuggers' handoff      of CHILD_PID.  The original debugger will detach from CHILD_PID,      and then the clone debugger will attach to it.  (It must be done      this way because on some targets, only one process at a time can      trace another.  Thus, the original debugger must relinquish its      tracing rights before the clone can pick them up.)    */
 define|#
 directive|define
 name|SEM_TALK
@@ -1296,7 +1131,7 @@ argument_list|(
 name|gdb_stderr
 argument_list|)
 expr_stmt|;
-comment|/* Open the semaphore pipes.      */
+comment|/* Open the semaphore pipes.    */
 name|status
 operator|=
 name|pipe
@@ -1315,26 +1150,7 @@ argument_list|(
 literal|"error getting pipe for handoff semaphore"
 argument_list|)
 expr_stmt|;
-comment|/* Clone the debugger. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USG
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_VFORK
-argument_list|)
-name|debugger_pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
+comment|/* Clone the debugger.  Note that the apparent call to vfork()      below *might* actually be a call to fork() due to the fact that      autoconf will ``#define vfork fork'' on certain platforms.  */
 if|if
 condition|(
 name|debug_fork
@@ -1350,8 +1166,6 @@ operator|=
 name|vfork
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|debugger_pid
@@ -1363,7 +1177,7 @@ argument_list|(
 literal|"fork"
 argument_list|)
 expr_stmt|;
-comment|/* Are we the original debugger?  If so, we must relinquish all claims    to CHILD_PID. */
+comment|/* Are we the original debugger?  If so, we must relinquish all claims      to CHILD_PID. */
 if|if
 condition|(
 name|debugger_pid
@@ -1378,7 +1192,7 @@ literal|100
 index|]
 decl_stmt|;
 comment|/* Arbitrary but sufficient length */
-comment|/* Detach from CHILD_PID.  Deliver a "stop" signal when we do, though,        so that it remains stopped until the clone debugger can attach        to it.        */
+comment|/* Detach from CHILD_PID.  Deliver a "stop" signal when we do, though,          so that it remains stopped until the clone debugger can attach          to it.        */
 name|detach_breakpoints
 argument_list|(
 name|child_pid
@@ -1440,7 +1254,7 @@ argument_list|(
 name|debug_fork
 argument_list|)
 expr_stmt|;
-comment|/* The child (i.e., the cloned debugger) must now attach to          CHILD_PID.  inferior_pid is presently set to the parent process          of the fork, while CHILD_PID should be the child process of the          fork.           Wait until the original debugger relinquishes control of CHILD_PID,          though.          */
+comment|/* The child (i.e., the cloned debugger) must now attach to          CHILD_PID.  inferior_ptid is presently set to the parent process          of the fork, while CHILD_PID should be the child process of the          fork.           Wait until the original debugger relinquishes control of CHILD_PID,          though.        */
 name|read
 argument_list|(
 name|handoff_semaphore
@@ -1457,7 +1271,7 @@ name|listen_value
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Note that we DON'T want to actually detach from inferior_pid,          because that would allow it to run free.  The original          debugger wants to retain control of the process.  So, we          just reset inferior_pid to CHILD_PID, and then ensure that all          breakpoints are really set in CHILD_PID.          */
+comment|/* Note that we DON'T want to actually detach from inferior_ptid,          because that would allow it to run free.  The original          debugger wants to retain control of the process.  So, we          just reset inferior_ptid to CHILD_PID, and then ensure that all          breakpoints are really set in CHILD_PID.        */
 name|target_mourn_inferior
 argument_list|()
 expr_stmt|;
@@ -1484,7 +1298,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Perform any necessary cleanup, after attachment.  (This form          of attaching can behave differently on some targets than the          standard method, where a process formerly not under debugger          control was suddenly attached to..)          */
+comment|/* Perform any necessary cleanup, after attachment.  (This form          of attaching can behave differently on some targets than the          standard method, where a process formerly not under debugger          control was suddenly attached to..)        */
 name|target_post_follow_inferior_by_clone
 argument_list|()
 expr_stmt|;
@@ -1528,11 +1342,9 @@ begin_function
 name|void
 name|startup_inferior
 parameter_list|(
-name|ntraps
-parameter_list|)
 name|int
 name|ntraps
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pending_execs
@@ -1622,8 +1434,8 @@ operator|!
 name|terminal_initted
 condition|)
 block|{
-comment|/* Now that the child has exec'd we know it has already set its 		 process group.  On POSIX systems, tcsetpgrp will fail with 		 EPERM if we try it before the child's setpgid.  */
-comment|/* Set up the "saved terminal modes" of the inferior 		 based on what modes we are starting it with.  */
+comment|/* Now that the child has exec'd we know it has already set its 	         process group.  On POSIX systems, tcsetpgrp will fail with 	         EPERM if we try it before the child's setpgid.  */
+comment|/* Set up the "saved terminal modes" of the inferior 	         based on what modes we are starting it with.  */
 name|target_terminal_init
 argument_list|()
 expr_stmt|;

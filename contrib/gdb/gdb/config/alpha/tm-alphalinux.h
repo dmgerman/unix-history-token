@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions to make GDB run on an Alpha box under Linux.  The    definitions here are used when the _target_ system is running Linux.    Copyright 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions to make GDB run on an Alpha box under GNU/Linux.  The    definitions here are used when the _target_ system is running    GNU/Linux.     Copyright 1996, 1998, 1999, 2000, 2002 Free Software Foundation,    Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -25,18 +25,15 @@ begin_comment
 comment|/* Are we currently handling a signal ?  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|alpha_linux_sigtramp_offset
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_undef
 undef|#
@@ -81,7 +78,7 @@ value|(SIGTRAMP_START(pc) + 3*4)
 end_define
 
 begin_comment
-comment|/* Number of traps that happen between exec'ing the shell to run an    inferior, and when we finally get to the inferior code.  This is 2    on Linux and most implementations.  */
+comment|/* Number of traps that happen between exec'ing the shell to run an    inferior, and when we finally get to the inferior code.  This is 2    on GNU/Linux and most implementations.  */
 end_comment
 
 begin_undef
@@ -181,7 +178,7 @@ value|((frame)->frame - 0x298)
 end_define
 
 begin_comment
-comment|/* If FRAME refers to a sigtramp frame, return the address of the next frame.     Under Linux, sigtramp handlers have dynamically generated procedure    descriptors that make this hack unnecessary.  */
+comment|/* If FRAME refers to a sigtramp frame, return the address of the next frame.     Under GNU/Linux, sigtramp handlers have dynamically generated    procedure descriptors that make this hack unnecessary.  */
 end_comment
 
 begin_undef
@@ -202,14 +199,10 @@ parameter_list|)
 value|(0)
 end_define
 
-begin_comment
-comment|/* We need this for the SOLIB_TRAMPOLINE stuff.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"tm-sysv4.h"
+file|"tm-linux.h"
 end_include
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for symbol-reading containing "stabs", for GDB.    Copyright 1992 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by John Gilmore.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for symbol-reading containing "stabs", for GDB.    Copyright 1992, 1993, 1995, 1996, 1997, 1999, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by John Gilmore.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -23,43 +23,11 @@ directive|define
 name|GDBSTABS_H
 end_define
 
-begin_comment
-comment|/* Offsets in the psymtab's section_offsets array for various kinds of    stabs symbols.  Every psymtab built from stabs will have these offsets    filled in by these guidelines, so that when actually reading symbols, the    proper offset can simply be selected and added to the symbol value.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SECT_OFF_TEXT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECT_OFF_DATA
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECT_OFF_BSS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECT_OFF_RODATA
-value|3
-end_define
-
 begin_define
 define|#
 directive|define
 name|SECT_OFF_MAX
-value|4
+value|64
 end_define
 
 begin_comment
@@ -139,7 +107,7 @@ name|stab_section_info
 modifier|*
 name|stab_section_info
 decl_stmt|;
-comment|/* section starting points 				   of the original .o files before linking. */
+comment|/* section starting points 							   of the original .o files before linking. */
 comment|/* See stabsread.h for the use of the following. */
 name|struct
 name|header_file
@@ -152,7 +120,7 @@ decl_stmt|;
 name|int
 name|n_allocated_header_files
 decl_stmt|;
-comment|/* Pointers to BFD sections.  These are used to speed up the building of      minimal symbols.  */
+comment|/* Pointers to BFD sections.  These are used to speed up the building of        minimal symbols.  */
 name|asection
 modifier|*
 name|text_section
