@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.7 (Berkeley) %G%"
+literal|"@(#)print.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,7 +437,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|int
 name|num
 decl_stmt|;
@@ -449,36 +448,41 @@ specifier|extern
 name|int
 name|termwidth
 decl_stmt|;
+specifier|register
 name|int
-name|row
-decl_stmt|,
-name|col
+name|chcnt
 decl_stmt|;
+comment|/* total row character count printed */
+specifier|register
+name|int
+name|col
+decl_stmt|,
+name|row
+decl_stmt|;
+comment|/* row/column counters */
+specifier|register
 name|int
 name|colwidth
 decl_stmt|;
 comment|/* width of a printing column */
 name|int
-name|numcols
-decl_stmt|;
-comment|/* number of columns */
-name|int
-name|numrows
-decl_stmt|;
-comment|/* number of rows */
-name|int
 name|base
 decl_stmt|;
 comment|/* subscript for leftmost column */
 name|int
-name|chcnt
+name|endcol
 decl_stmt|;
-comment|/* character count printed */
+comment|/* last column for this entry */
 name|int
-name|newcnt
+name|numcols
 decl_stmt|;
+comment|/* total number of columns */
 name|int
-name|curcol
+name|numrows
+decl_stmt|;
+comment|/* total number of rows */
+name|int
+name|cnt
 decl_stmt|;
 name|colwidth
 operator|=
@@ -517,7 +521,7 @@ literal|1
 expr_stmt|;
 name|colwidth
 operator|+=
-literal|3
+literal|2
 expr_stmt|;
 name|numcols
 operator|=
@@ -558,13 +562,9 @@ operator|++
 name|row
 control|)
 block|{
-name|curcol
+name|endcol
 operator|=
 name|colwidth
-expr_stmt|;
-name|chcnt
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -572,6 +572,8 @@ name|base
 operator|=
 name|row
 operator|,
+name|chcnt
+operator|=
 name|col
 operator|=
 literal|0
@@ -604,13 +606,10 @@ operator|>=
 name|num
 condition|)
 break|break;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|newcnt
+while|while
+condition|(
+operator|(
+name|cnt
 operator|=
 operator|(
 name|chcnt
@@ -624,16 +623,11 @@ operator|-
 literal|1
 operator|)
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|newcnt
-operator|>
-name|curcol
+operator|)
+operator|<=
+name|endcol
 condition|)
 block|{
-break|break;
-block|}
 operator|(
 name|void
 operator|)
@@ -644,7 +638,7 @@ argument_list|)
 expr_stmt|;
 name|chcnt
 operator|=
-name|newcnt
+name|cnt
 expr_stmt|;
 block|}
 for|for
@@ -652,7 +646,7 @@ control|(
 init|;
 name|chcnt
 operator|<
-name|curcol
+name|endcol
 condition|;
 operator|++
 name|chcnt
@@ -665,7 +659,7 @@ argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
-name|curcol
+name|endcol
 operator|+=
 name|colwidth
 expr_stmt|;
