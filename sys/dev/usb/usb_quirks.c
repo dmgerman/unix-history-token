@@ -401,9 +401,9 @@ block|}
 block|}
 block|,
 block|{
-name|USB_VENDOR_QUALCOMM
+name|USB_VENDOR_QUALCOMM2
 block|,
-name|USB_PRODUCT_QUALCOMM_CDMA_MSM
+name|USB_PRODUCT_QUALCOMM2_CDMA_MSM
 block|,
 name|ANY
 block|,
