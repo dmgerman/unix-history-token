@@ -6584,6 +6584,7 @@ operator|=
 name|SCHAR
 expr_stmt|;
 else|else
+block|{
 name|schar
 operator|=
 operator|*
@@ -6615,6 +6616,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 break|break;
 case|case
