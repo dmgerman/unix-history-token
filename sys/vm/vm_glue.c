@@ -2620,8 +2620,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vmspace_exitfree
 argument_list|(
 name|p

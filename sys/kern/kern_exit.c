@@ -2644,21 +2644,9 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Give vm and machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|vm_waitproc
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 ifdef|#
