@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/ad1848.c  *   * Modified by Luigi Rizzo (luigi@iet.unipi.it)  *  * The low level driver for the AD1848/CS4248 codec chip which is used for  * example in the MS Sound System.  *   * The CS4231 which is used in the GUS MAX and some other cards is upwards  * compatible with AD1848 and this driver is able to drive it.  *   * CS4231A and AD1845 are upward compatible with CS4231. However the new  * features of these chips are different.  *   * CS4232 is a PnP audio chip which contains a CS4231A (and SB, MPU). CS4232A is  * an improved version of CS4232.  *   * CS4236 is also a PnP audio chip similar to the 4232  *  * OPTi931 is another high-end 1848-type chip. It differs in the use  * of the high 16 registers and configuration stuff. Luckily, being a  * PnP device, we can avoid black magic to identify the chip and be  * sure of its identity.  *   * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Modified: Riccardo Facchetti  24 Mar 1995 - Added the Audio Excel DSP 16  * initialization routine.  */
+comment|/*  * sound/ad1848.c  *   * Modified by Luigi Rizzo (luigi@iet.unipi.it)  *  * The low level driver for the AD1848/CS4248 codec chip which is used for  * example in the MS Sound System.  *   * The CS4231 which is used in the GUS MAX and some other cards is upwards  * compatible with AD1848 and this driver is able to drive it.  *   * CS4231A and AD1845 are upward compatible with CS4231. However the new  * features of these chips are different.  *   * CS4232 is a PnP audio chip which contains a CS4231A (and SB, MPU). CS4232A is  * an improved version of CS4232.  *   * CS4236 is also a PnP audio chip similar to the 4232  *  * OPTi931 is another high-end 1848-type chip. It differs in the use  * of the high 16 registers and configuration stuff. Luckily, being a  * PnP device, we can avoid black magic to identify the chip and be  * sure of its identity.  *   * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Modified: Riccardo Facchetti  24 Mar 1995 - Added the Audio Excel DSP 16  * initialization routine.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -7837,6 +7837,9 @@ operator|-
 literal|1
 condition|)
 return|return ;
+ifndef|#
+directive|ifndef
+name|PC98
 name|outb
 argument_list|(
 name|config_port
@@ -7864,6 +7867,8 @@ argument_list|(
 literal|"[IRQ Conflict?]"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Write IRQ+DMA setup */
 name|outb
 argument_list|(
