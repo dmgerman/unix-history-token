@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)unexpand.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)unexpand.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +70,12 @@ end_comment
 begin_comment
 comment|/*  * unexpand - put tabs into a file replacing blanks  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -87,7 +107,33 @@ name|all
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tabify
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -145,20 +191,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: unexpand [ -a ] file ...\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|all
 operator|++
 expr_stmt|;
@@ -194,21 +229,18 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|argc
 operator|--
 operator|,
@@ -286,20 +318,36 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|tabify
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
 argument_list|(
-argument|c
+name|stderr
+argument_list|,
+literal|"usage: unexpand [-a] file ...\n"
 argument_list|)
-end_macro
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
-begin_decl_stmt
+begin_function
+name|void
+name|tabify
+parameter_list|(
+name|c
+parameter_list|)
 name|char
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -463,7 +511,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
