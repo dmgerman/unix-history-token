@@ -3788,7 +3788,7 @@ argument|wdustart(du);
 comment|/* anything more for controller to do? */
 argument|wdstart(unit); }
 comment|/*  * Initialize a drive.  */
-argument|int wdopen(dev_t dev, int flags, int fmt, struct thread *td) { 	register unsigned int lunit; 	register struct softc *du; 	struct disklabel *dl;  	lunit = dkunit(dev); 	if (lunit>= NWD || dksparebits(dev) !=
+argument|int wdopen(dev_t dev, int flags, int fmt, struct thread *td) { 	register unsigned int lunit; 	register struct softc *du;  	lunit = dkunit(dev); 	if (lunit>= NWD || dksparebits(dev) !=
 literal|0
 argument|) 		return (ENXIO); 	du = wddrives[lunit]; 	if (du == NULL) 		return (ENXIO);  	dev->si_iosize_max =
 literal|248
@@ -3820,7 +3820,7 @@ argument|,
 literal|1
 argument|);  	wdsleep(du->dk_ctrlr,
 literal|"wdopn1"
-argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN;  	dl =&du->disk.d_label; 	bzero(dl, sizeof(*dl)); 	dl->d_secsize = du->dk_dd.d_secsize; 	dl->d_nsectors = du->dk_dd.d_nsectors; 	dl->d_ntracks = du->dk_dd.d_ntracks; 	dl->d_ncylinders = du->dk_dd.d_ncylinders; 	dl->d_secpercyl = du->dk_dd.d_secpercyl; 	dl->d_secperunit = du->dk_dd.d_secperunit;  	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
+argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN;  	du->disk.d_sectorsize = du->dk_dd.d_secsize; 	du->disk.d_mediasize = du->dk_dd.d_secperunit * du->dk_dd.d_secsize; 	du->disk.d_fwsectors = du->dk_dd.d_nsectors; 	du->disk.d_fwheads = du->dk_dd.d_ntracks;  	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
 literal|"wdopn2"
 argument|);  	return
 literal|0

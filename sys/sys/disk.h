@@ -27,48 +27,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_DISKSLICE_H_
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SYS_DISKSLICE_H_ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_DISKLABEL
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SYS_DISKLABEL */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -93,6 +51,19 @@ decl_stmt|;
 name|dev_t
 name|d_dev
 decl_stmt|;
+comment|/* These four fields must be valid while opened */
+name|u_int
+name|d_sectorsize
+decl_stmt|;
+name|off_t
+name|d_mediasize
+decl_stmt|;
+name|u_int
+name|d_fwsectors
+decl_stmt|;
+name|u_int
+name|d_fwheads
+decl_stmt|;
 name|struct
 name|diskslices
 modifier|*
@@ -100,6 +71,7 @@ name|d_slice
 decl_stmt|;
 name|struct
 name|disklabel
+modifier|*
 name|d_label
 decl_stmt|;
 name|LIST_ENTRY
