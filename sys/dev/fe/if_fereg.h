@@ -544,5 +544,184 @@ name|FE_RE1000_IRQCONF
 value|0x10
 end_define
 
+begin_comment
+comment|/*  * Fujitsu MB86965 JLI mode support routines.  */
+end_comment
+
+begin_comment
+comment|/* Datasheet for 86965 explicitly states that it only supports serial  * EEPROM with 16 words (32 bytes) capacity.  (I.e., 93C06.)  However,  * ones with 64 words (128 bytes) are available in the marked, namely  * 93C46, and are also fully compatible with 86965.  It is known that  * some boards (e.g., ICL) actually have 93C46 on them and use extra  * storage to keep various config info.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JLI_EEPROM_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/*  * SSi 78Q8377A support routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSI_EEPROM_SIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSI_DIN
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSI_DAT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSI_CSL
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSI_CLK
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSI_EEP
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_SSI_EEP_IRQ
+value|9
+end_define
+
+begin_comment
+comment|/* Irq ???		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FE_SSI_EEP_ADDR
+value|16
+end_define
+
+begin_comment
+comment|/* Station(MAC) address	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FE_SSI_EEP_DUPLEX
+value|25
+end_define
+
+begin_comment
+comment|/* Duplex mode ???	*/
+end_comment
+
+begin_comment
+comment|/*  * TDK/LANX boards support routines.  */
+end_comment
+
+begin_comment
+comment|/* AX012/AX013 equips an X24C01 chip, which has 128 bytes of memory cells.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNX_EEPROM_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/* Bit assignments and command definitions for the serial EEPROM    interface register in LANX ASIC.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNX_SDA_HI
+value|0x08
+end_define
+
+begin_comment
+comment|/* Drive SDA line high (logical 1.)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNX_SDA_LO
+value|0x00
+end_define
+
+begin_comment
+comment|/* Drive SDA line low (logical 0.)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNX_SDA_FL
+value|0x08
+end_define
+
+begin_comment
+comment|/* Float (don't drive) SDA line.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNX_SDA_IN
+value|0x01
+end_define
+
+begin_comment
+comment|/* Mask for reading SDA line.		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNX_CLK_HI
+value|0x04
+end_define
+
+begin_comment
+comment|/* Drive clock line high (active.)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNX_CLK_LO
+value|0x00
+end_define
+
+begin_comment
+comment|/* Drive clock line low (inactive.)	*/
+end_comment
+
 end_unit
 
