@@ -8307,6 +8307,17 @@ begin_comment
 comment|/* Enhanced USB Microphone */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_TREK_THUMBDRIVE_8MB
+value|0x9988
+end_define
+
+begin_comment
+comment|/* ThumbDrive 8MB */
+end_comment
+
 begin_comment
 comment|/* Texas Intel products */
 end_comment
@@ -8357,6 +8368,17 @@ define|#
 directive|define
 name|USB_PRODUCT_TREK_THUMBDRIVE
 value|0x1111
+end_define
+
+begin_comment
+comment|/* ThumbDrive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_TREK_THUMBDRIVE_8MB
+value|0x9988
 end_define
 
 begin_comment
