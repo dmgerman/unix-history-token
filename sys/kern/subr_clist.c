@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.9 1994/11/26 19:23:50 bde Exp $  */
+comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.10 1995/05/30 08:06:18 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -269,6 +269,33 @@ modifier|*
 name|cblockp
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|isset
+argument_list|(
+name|cblockp
+operator|->
+name|c_quote
+argument_list|,
+name|CBQSIZE
+operator|*
+name|NBBY
+operator|-
+literal|1
+argument_list|)
+condition|)
+name|bzero
+argument_list|(
+name|cblockp
+operator|->
+name|c_quote
+argument_list|,
+sizeof|sizeof
+name|cblockp
+operator|->
+name|c_quote
+argument_list|)
+expr_stmt|;
 name|cblockp
 operator|->
 name|c_next
@@ -307,7 +334,7 @@ decl_stmt|;
 name|struct
 name|cblock
 modifier|*
-name|tmp
+name|cbp
 decl_stmt|;
 for|for
 control|(
@@ -323,39 +350,36 @@ operator|++
 name|i
 control|)
 block|{
-name|tmp
+name|cbp
 operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|cblock
-argument_list|)
+expr|*
+name|cbp
 argument_list|,
 name|M_TTYS
 argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|bzero
+comment|/* 		 * Freed cblocks have zero quotes and garbage elsewhere. 		 * Set the may-have-quote bit to force zeroing the quotes. 		 */
+name|setbit
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|tmp
+name|cbp
+operator|->
+name|c_quote
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|cblock
-argument_list|)
+name|CBQSIZE
+operator|*
+name|NBBY
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|cblock_free
 argument_list|(
-name|tmp
+name|cbp
 argument_list|)
 expr_stmt|;
 block|}
@@ -367,7 +391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the cblock allocation policy for a a clist.  * Must be called at spltty().  */
+comment|/*  * Set the cblock allocation policy for a a clist.  * Must be called in process context at spltty().  */
 end_comment
 
 begin_function
@@ -1442,6 +1466,7 @@ name|chr
 operator|&
 name|TTY_QUOTE
 condition|)
+block|{
 name|setbit
 argument_list|(
 name|cblockp
@@ -1461,6 +1486,21 @@ operator|->
 name|c_info
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Use one of the spare quote bits to record that something 		 * may be quoted. 		 */
+name|setbit
+argument_list|(
+name|cblockp
+operator|->
+name|c_quote
+argument_list|,
+name|CBQSIZE
+operator|*
+name|NBBY
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|clrbit
 argument_list|(
@@ -1785,7 +1825,23 @@ argument_list|,
 name|numc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Clear quote bits. The following could probably be made into 		 * a seperate "bitzero()" routine, but why bother? 		 */
+comment|/* 		 * Clear quote bits if they aren't known to be clear. 		 * The following could probably be made into a seperate 		 * "bitzero()" routine, but why bother? 		 */
+if|if
+condition|(
+name|isset
+argument_list|(
+name|cblockp
+operator|->
+name|c_quote
+argument_list|,
+name|CBQSIZE
+operator|*
+name|NBBY
+operator|-
+literal|1
+argument_list|)
+condition|)
+block|{
 name|startbit
 operator|=
 name|clistp
@@ -1840,7 +1896,7 @@ operator|/
 name|NBBY
 operator|)
 expr_stmt|;
-comment|/* 		 * Calculate mask of bits to preserve in first and 		 * last bytes. 		 */
+comment|/* 			 * Calculate mask of bits to preserve in first and 			 * last bytes. 			 */
 name|startmask
 operator|=
 name|NBBY
@@ -1925,6 +1981,7 @@ operator||
 name|endmask
 operator|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * ...and update pointer for the next chunk. 		 */
 name|src
