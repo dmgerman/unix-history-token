@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)utils.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)utils.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -43,24 +43,40 @@ end_typedef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|STATIC
+name|REDEBUG
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|STATIC
-value|static
+name|NDEBUG
 end_define
 
 begin_comment
-comment|/* override if cc no like "static int f();" */
+comment|/* no assertions please */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
 
 end_unit
 

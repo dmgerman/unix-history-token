@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)engine.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)engine.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -67,6 +67,13 @@ define|#
 directive|define
 name|print
 value|sprint
+end_define
+
+begin_define
+define|#
+directive|define
+name|at
+value|sat
 end_define
 
 begin_define
@@ -141,6 +148,13 @@ define|#
 directive|define
 name|print
 value|lprint
+end_define
+
+begin_define
+define|#
+directive|define
+name|at
+value|lat
 end_define
 
 begin_define
@@ -224,28 +238,17 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
+begin_include
+include|#
+directive|include
+file|"engine.ih"
+end_include
 
-begin_function_decl
-name|STATIC
-name|void
-name|print
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|regchar
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REDEBUG
+end_ifdef
 
 begin_define
 define|#
@@ -258,13 +261,13 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{ if (m->eflags&REG_TRACE) print(m->g, t, s, c, stdout); }
+value|print(m, t, s, c, stdout)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DO
+name|AT
 parameter_list|(
 name|t
 parameter_list|,
@@ -276,7 +279,17 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-value|{ if (m->eflags&REG_TRACE) { \ 					printf("%s %s-", t, regchar(*(p1))); \ 					printf("%s ", regchar(*(p2))); \ 					printf("%ld-%ld\n", s1, s2); } }
+value|at(m, t, p1, p2, s1, s2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE
+parameter_list|(
+name|str
+parameter_list|)
+value|{ if (m->eflags&REG_TRACE) printf("=%s\n", (str)); }
 end_define
 
 begin_else
@@ -304,7 +317,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DO
+name|AT
 parameter_list|(
 name|t
 parameter_list|,
@@ -322,65 +335,26 @@ begin_comment
 comment|/* nothing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOTE
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|STATIC
-name|uchar
-modifier|*
-name|fast
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
-name|uchar
-modifier|*
-name|slow
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
-name|uchar
-modifier|*
-name|dissect
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
-name|uchar
-modifier|*
-name|backref
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
-name|states
-name|expand
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
-name|states
-name|step
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/*  - matcher - the actual matching engine  */
+comment|/*  - matcher - the actual matching engine  == static int matcher(register struct re_guts *g, uchar *string, \  ==	size_t nmatch, regmatch_t pmatch[], int eflags);  */
 end_comment
 
 begin_function
@@ -476,6 +450,7 @@ name|uchar
 modifier|*
 name|stop
 decl_stmt|;
+comment|/* simplify the situation where possible */
 if|if
 condition|(
 name|g
@@ -488,7 +463,6 @@ name|nmatch
 operator|=
 literal|0
 expr_stmt|;
-comment|/* simplify tests */
 if|if
 condition|(
 name|eflags
@@ -776,6 +750,11 @@ init|;
 condition|;
 control|)
 block|{
+name|NOTE
+argument_list|(
+literal|"finding start"
+argument_list|)
+expr_stmt|;
 name|endp
 operator|=
 name|slow
@@ -802,12 +781,13 @@ condition|)
 break|break;
 name|assert
 argument_list|(
-operator|*
 name|m
 operator|->
 name|coldp
-operator|!=
-literal|'\0'
+operator|<
+name|m
+operator|->
+name|endp
 argument_list|)
 expr_stmt|;
 name|m
@@ -901,7 +881,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|m
 operator|->
 name|pmatch
@@ -911,9 +890,6 @@ index|]
 operator|.
 name|rm_so
 operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|m
 operator|->
 name|pmatch
@@ -926,14 +902,28 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|g
 operator|->
 name|backrefs
+operator|&&
+operator|!
+operator|(
+name|m
+operator|->
+name|eflags
+operator|&
+name|REG_BACKR
+operator|)
 condition|)
+block|{
+name|NOTE
+argument_list|(
+literal|"dissecting"
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 name|dissect
@@ -951,6 +941,7 @@ argument_list|,
 name|gl
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -1026,6 +1017,11 @@ name|REG_ESPACE
 operator|)
 return|;
 block|}
+name|NOTE
+argument_list|(
+literal|"backref dissect"
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 name|backref
@@ -1080,19 +1076,31 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-while|while
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
 condition|(
 name|dp
-operator|==
+operator|!=
 name|NULL
-operator|&&
+operator|||
 name|endp
-operator|>
+operator|<=
 name|m
 operator|->
 name|coldp
-operator|&&
-operator|(
+condition|)
+break|break;
+comment|/* defeat */
+name|NOTE
+argument_list|(
+literal|"backoff"
+argument_list|)
+expr_stmt|;
 name|endp
 operator|=
 name|slow
@@ -1111,12 +1119,19 @@ name|gf
 argument_list|,
 name|gl
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|endp
+operator|==
 name|NULL
 condition|)
-block|{
+break|break;
+comment|/* defeat */
 comment|/* try it on a shorter possibility */
+ifndef|#
+directive|ifndef
+name|NDEBUG
 for|for
 control|(
 name|i
@@ -1135,6 +1150,8 @@ name|i
 operator|++
 control|)
 block|{
+name|assert
+argument_list|(
 name|m
 operator|->
 name|pmatch
@@ -1143,10 +1160,13 @@ name|i
 index|]
 operator|.
 name|rm_so
-operator|=
+operator|==
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
 name|m
 operator|->
 name|pmatch
@@ -1155,11 +1175,19 @@ name|i
 index|]
 operator|.
 name|rm_eo
-operator|=
+operator|==
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+name|NOTE
+argument_list|(
+literal|"backoff dissect"
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 name|backref
@@ -1203,6 +1231,11 @@ condition|)
 comment|/* found a shorter one */
 break|break;
 comment|/* despite initial appearances, there is no match here */
+name|NOTE
+argument_list|(
+literal|"false alarm"
+argument_list|)
+expr_stmt|;
 name|start
 operator|=
 name|m
@@ -1384,7 +1417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dissect - figure out what matched what, no back references  */
+comment|/*  - dissect - figure out what matched what, no back references  == static uchar *dissect(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
@@ -1496,11 +1529,7 @@ name|uchar
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
-name|size_t
-name|len
-decl_stmt|;
-name|DO
+name|AT
 argument_list|(
 literal|"diss"
 argument_list|,
@@ -2409,7 +2438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - backref - figure out what matched what, figuring in back references  */
+comment|/*  - backref - figure out what matched what, figuring in back references  == static uchar *backref(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst, sopno lev);  */
 end_comment
 
 begin_function
@@ -2513,7 +2542,7 @@ name|cset
 modifier|*
 name|cs
 decl_stmt|;
-name|DO
+name|AT
 argument_list|(
 literal|"back"
 argument_list|,
@@ -2864,7 +2893,7 @@ operator|--
 expr_stmt|;
 comment|/* adjust for the for's final increment */
 comment|/* the hard stuff */
-name|DO
+name|AT
 argument_list|(
 literal|"hard"
 argument_list|,
@@ -3660,7 +3689,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - fast - step through the string at top speed  */
+comment|/*  - fast - step through the string at top speed  == static uchar *fast(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
@@ -3735,6 +3764,23 @@ decl_stmt|;
 specifier|register
 name|uchar
 name|c
+init|=
+operator|(
+name|start
+operator|==
+name|m
+operator|->
+name|beginp
+operator|)
+condition|?
+literal|'\0'
+else|:
+operator|*
+operator|(
+name|start
+operator|-
+literal|1
+operator|)
 decl_stmt|;
 specifier|register
 name|uchar
@@ -3802,10 +3848,6 @@ argument_list|,
 operator|*
 name|p
 argument_list|)
-expr_stmt|;
-name|c
-operator|=
-literal|'\0'
 expr_stmt|;
 name|coldp
 operator|=
@@ -4080,7 +4122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - slow - step through the string more deliberately  */
+comment|/*  - slow - step through the string more deliberately  == static uchar *slow(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
@@ -4192,7 +4234,7 @@ modifier|*
 name|matchp
 decl_stmt|;
 comment|/* last p at which a match ended */
-name|DO
+name|AT
 argument_list|(
 literal|"slow"
 argument_list|,
@@ -4475,7 +4517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - expand - return set of states reachable from an initial set  */
+comment|/*  - expand - return set of states reachable from an initial set  == static states expand(register struct re_guts *g, int start, \  ==	int stop, register states st, int atbol, int ateol);  */
 end_comment
 
 begin_function
@@ -5018,7 +5060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - step - map set of states reachable before char to set reachable after  */
+comment|/*  - step - map set of states reachable before char to set reachable after  == static states step(register struct re_guts *g, int start, int stop, \  ==	register states bef, uchar ch, register states aft);  */
 end_comment
 
 begin_function
@@ -5595,14 +5637,14 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REDEBUG
+end_ifdef
 
 begin_comment
-comment|/*  - print - print a set of states  */
+comment|/*  - print - print a set of states  == #ifdef REDEBUG  == static void print(struct match *m, char *caption, states st, \  ==	uchar ch, FILE *d);  == #endif  */
 end_comment
 
 begin_function
@@ -5610,7 +5652,7 @@ specifier|static
 name|void
 name|print
 parameter_list|(
-name|g
+name|m
 parameter_list|,
 name|caption
 parameter_list|,
@@ -5621,9 +5663,9 @@ parameter_list|,
 name|d
 parameter_list|)
 name|struct
-name|re_guts
+name|match
 modifier|*
-name|g
+name|m
 decl_stmt|;
 name|char
 modifier|*
@@ -5641,6 +5683,16 @@ name|d
 decl_stmt|;
 block|{
 specifier|register
+name|struct
+name|re_guts
+modifier|*
+name|g
+init|=
+name|m
+operator|->
+name|g
+decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5650,6 +5702,18 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|m
+operator|->
+name|eflags
+operator|&
+name|REG_TRACE
+operator|)
+condition|)
+return|return;
 name|fprintf
 argument_list|(
 name|d
@@ -5671,7 +5735,7 @@ name|d
 argument_list|,
 literal|" %s"
 argument_list|,
-name|regchar
+name|pchar
 argument_list|(
 name|ch
 argument_list|)
@@ -5734,6 +5798,188 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*   - at - print current situation  == #ifdef REDEBUG  == static void at(struct match *m, char *title, uchar *start, uchar *stop, \  ==						sopno startst, stopno stopst);  == #endif  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|at
+parameter_list|(
+name|m
+parameter_list|,
+name|title
+parameter_list|,
+name|start
+parameter_list|,
+name|stop
+parameter_list|,
+name|startst
+parameter_list|,
+name|stopst
+parameter_list|)
+name|struct
+name|match
+modifier|*
+name|m
+decl_stmt|;
+name|char
+modifier|*
+name|title
+decl_stmt|;
+name|uchar
+modifier|*
+name|start
+decl_stmt|;
+name|uchar
+modifier|*
+name|stop
+decl_stmt|;
+name|sopno
+name|startst
+decl_stmt|;
+name|sopno
+name|stopst
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|m
+operator|->
+name|eflags
+operator|&
+name|REG_TRACE
+operator|)
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|"%s %s-"
+argument_list|,
+name|title
+argument_list|,
+name|pchar
+argument_list|(
+operator|*
+name|start
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|pchar
+argument_list|(
+operator|*
+name|stop
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%ld-%ld\n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|startst
+argument_list|,
+operator|(
+name|long
+operator|)
+name|stopst
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCHARDONE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCHARDONE
+end_define
+
+begin_comment
+comment|/* never again */
+end_comment
+
+begin_comment
+comment|/*  - pchar - make a character printable  == #ifdef REDEBUG  == static char *pchar(int ch);  == #endif  *  * Is this identical to regchar() over in debug.c?  Well, yes.  But a  * duplicate here avoids having a debugging-capable regexec.o tied to  * a matching debug.o, and this is convenient.  It all disappears in  * the non-debug compilation anyway, so it doesn't matter much.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+comment|/* -> representation */
+name|pchar
+parameter_list|(
+name|ch
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|pbuf
+index|[
+literal|10
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|isprint
+argument_list|(
+name|ch
+argument_list|)
+operator|||
+name|ch
+operator|==
+literal|' '
+condition|)
+name|sprintf
+argument_list|(
+name|pbuf
+argument_list|,
+literal|"%c"
+argument_list|,
+name|ch
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|pbuf
+argument_list|,
+literal|"\\%o"
+argument_list|,
+name|ch
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pbuf
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -5785,6 +6031,12 @@ begin_undef
 undef|#
 directive|undef
 name|print
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|at
 end_undef
 
 begin_undef

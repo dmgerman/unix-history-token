@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regerror.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regerror.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regerror.c	5.1 (Berkeley) %G%"
+literal|"@(#)regerror.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<regex.h>
 end_include
 
@@ -90,6 +84,10 @@ include|#
 directive|include
 file|"utils.h"
 end_include
+
+begin_comment
+comment|/*  = #define	REG_NOMATCH	 1  = #define	REG_BADPAT	 2  = #define	REG_ECOLLATE	 3  = #define	REG_ECTYPE	 4  = #define	REG_EESCAPE	 5  = #define	REG_ESUBREG	 6  = #define	REG_EBRACK	 7  = #define	REG_EPAREN	 8  = #define	REG_EBRACE	 9  = #define	REG_BADBR	10  = #define	REG_ERANGE	11  = #define	REG_ESPACE	12  = #define	REG_BADRPT	13  = #define	REG_EMPTY	14  = #define	REG_ASSERT	15  */
+end_comment
 
 begin_struct
 specifier|static
@@ -140,7 +138,7 @@ name|REG_EESCAPE
 block|,
 literal|"EESCAPE"
 block|,
-literal|"\\ applied to unescapable character"
+literal|"trailing backslash (\\)"
 block|,
 name|REG_ESUBREG
 block|,
@@ -212,7 +210,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  - regerror - the interface to error numbers  */
+comment|/*  - regerror - the interface to error numbers  = extern size_t regerror(int errcode, const regex_t *preg, char *errbuf, \  =							size_t errbuf_size);  */
 end_comment
 
 begin_comment
@@ -354,11 +352,11 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REDEBUG
+end_ifdef
 
 begin_comment
 comment|/*  - eprint - express an error number as a string  */
