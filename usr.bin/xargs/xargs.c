@@ -29,17 +29,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)xargs.c	8.1 (Berkeley) 6/6/93";
@@ -47,25 +47,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -83,6 +86,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -156,6 +165,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|echo
+index|[]
+init|=
+name|_PATH_ECHO
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -182,11 +201,9 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -195,11 +212,11 @@ modifier|*
 name|bbp
 decl_stmt|,
 modifier|*
-name|ebp
-decl_stmt|,
-modifier|*
 modifier|*
 name|bxp
+decl_stmt|,
+modifier|*
+name|ebp
 decl_stmt|,
 modifier|*
 modifier|*
@@ -502,11 +519,13 @@ name|cnt
 operator|=
 name|strlen
 argument_list|(
+operator|(
 operator|*
 name|bxp
 operator|++
 operator|=
-name|_PATH_ECHO
+name|echo
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1087,9 +1106,8 @@ decl_stmt|;
 block|{
 specifier|volatile
 name|int
-name|noinvoke
+name|childerr
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -1165,7 +1183,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-name|noinvoke
+name|childerr
 operator|=
 literal|0
 expr_stmt|;
@@ -1173,7 +1191,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 condition|)
 block|{
@@ -1185,7 +1203,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fork"
+literal|"vfork"
 argument_list|)
 expr_stmt|;
 case|case
@@ -1201,19 +1219,9 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|noinvoke
+name|childerr
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 name|_exit
 argument_list|(
@@ -1250,13 +1258,31 @@ expr_stmt|;
 comment|/* If we couldn't invoke the utility, exit 127. */
 if|if
 condition|(
-name|noinvoke
+name|childerr
+operator|!=
+literal|0
 condition|)
+block|{
+name|errno
+operator|=
+name|childerr
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|127
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* If utility signaled or exited with a value of 255, exit 1-125. */
 if|if
 condition|(
