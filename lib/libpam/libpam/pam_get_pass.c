@@ -354,15 +354,6 @@ return|return
 name|retval
 return|;
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[pam_get_pass]\n%s\n"
-argument_list|,
-name|prompt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|item
