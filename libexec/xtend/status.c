@@ -71,21 +71,18 @@ directive|include
 file|"paths.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|printstatus
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|STATUS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Initialize the status table from the status files  */
@@ -94,7 +91,9 @@ end_comment
 begin_function
 name|void
 name|initstatus
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -172,7 +171,9 @@ end_comment
 begin_function
 name|void
 name|checkpoint_status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|h
@@ -438,7 +439,9 @@ end_decl_stmt
 begin_function
 name|void
 name|clientgone
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
