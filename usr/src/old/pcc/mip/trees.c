@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.35 (Berkeley) %G%"
+literal|"@(#)trees.c	4.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,11 +521,48 @@ block|}
 elseif|else
 if|if
 condition|(
-name|o
+name|opty
 operator|==
-name|UNARY
-name|MINUS
+name|UTYPE
 operator|&&
+operator|(
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|FCON
+operator|||
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|DCON
+operator|)
+condition|)
+block|{
+switch|switch
+condition|(
+name|o
+condition|)
+block|{
+case|case
+name|NOT
+case|:
+if|if
+condition|(
+name|hflag
+condition|)
+name|werror
+argument_list|(
+literal|"constant argument to NOT"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|l
 operator|->
 name|in
@@ -534,7 +571,92 @@ name|op
 operator|==
 name|FCON
 condition|)
-block|{
+name|l
+operator|->
+name|tn
+operator|.
+name|lval
+operator|=
+name|l
+operator|->
+name|fpn
+operator|.
+name|fval
+operator|==
+literal|0.0
+expr_stmt|;
+else|else
+name|l
+operator|->
+name|tn
+operator|.
+name|lval
+operator|=
+name|l
+operator|->
+name|dpn
+operator|.
+name|dval
+operator|==
+literal|0.0
+expr_stmt|;
+name|l
+operator|->
+name|tn
+operator|.
+name|rval
+operator|=
+name|NONAME
+expr_stmt|;
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|=
+name|ICON
+expr_stmt|;
+name|l
+operator|->
+name|fn
+operator|.
+name|csiz
+operator|=
+name|l
+operator|->
+name|in
+operator|.
+name|type
+operator|=
+name|INT
+expr_stmt|;
+name|l
+operator|->
+name|fn
+operator|.
+name|cdim
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|l
+operator|)
+return|;
+case|case
+name|UNARY
+name|MINUS
+case|:
+if|if
+condition|(
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|FCON
+condition|)
 name|l
 operator|->
 name|fpn
@@ -547,6 +669,20 @@ operator|->
 name|fpn
 operator|.
 name|fval
+expr_stmt|;
+else|else
+name|l
+operator|->
+name|dpn
+operator|.
+name|dval
+operator|=
+operator|-
+name|l
+operator|->
+name|dpn
+operator|.
+name|dval
 expr_stmt|;
 return|return
 operator|(
@@ -554,41 +690,6 @@ name|l
 operator|)
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|o
-operator|==
-name|UNARY
-name|MINUS
-operator|&&
-name|l
-operator|->
-name|in
-operator|.
-name|op
-operator|==
-name|DCON
-condition|)
-block|{
-name|l
-operator|->
-name|dpn
-operator|.
-name|dval
-operator|=
-operator|-
-name|l
-operator|->
-name|dpn
-operator|.
-name|dval
-expr_stmt|;
-return|return
-operator|(
-name|l
-operator|)
-return|;
 block|}
 elseif|else
 if|if
@@ -1613,15 +1714,17 @@ name|p
 operator|->
 name|fn
 operator|.
-name|cdim
+name|csiz
 operator|=
+name|INT
+expr_stmt|;
 name|p
 operator|->
 name|fn
 operator|.
-name|csiz
+name|cdim
 operator|=
-name|INT
+literal|0
 expr_stmt|;
 name|p
 operator|->
@@ -2180,7 +2283,7 @@ endif|#
 directive|endif
 argument|default: 				uerror(
 literal|"unacceptable operand of&"
-argument|); 				break; 				} 			break;  		case LS: 		case RS: 		case ASG LS: 		case ASG RS: 			if(tsize(p->in.right->in.type, p->in.right->fn.cdim, p->in.right->fn.csiz)> SZINT) 				p->in.right = makety(p->in.right, INT,
+argument|); 				break; 				} 			break;  		case LS: 		case RS: 			if( l->in.type == CHAR || l->in.type == SHORT ) 				p->in.type = INT; 			else if( l->in.type == UCHAR || l->in.type == USHORT ) 				p->in.type = UNSIGNED; 			else 				p->in.type = l->in.type; 		case ASG LS: 		case ASG RS: 			if( r->in.type != INT ) 				p->in.right = r = makety(r, INT,
 literal|0
 argument|, INT ); 			break;  		case RETURN: 		case ASSIGN: 		case CAST:
 comment|/* structure assignment */
@@ -2347,7 +2450,7 @@ argument|, 				opst[p->in.op] ); 			} 		} 	else if( ref1 ){ 		if( t1 == t2 ) { 	
 literal|"illegal structure pointer combination"
 argument|); 				return; 				} 			d1 = p->in.left->fn.cdim; 			d2 = p->in.right->fn.cdim; 			for( ;; ){ 				if( ISARY(t1) ){ 					if( dimtab[d1] != dimtab[d2] ){ 						werror(
 literal|"illegal array size combination"
-argument|); 						return; 						} 					++d1; 					++d2; 					} 				else if( !ISPTR(t1) ) break; 				t1 = DECREF(t1); 				} 			} 		else 			werror(
+argument|); 						return; 						} 					++d1; 					++d2; 					} 				else if( !ISPTR(t1) ) break; 				t1 = DECREF(t1); 				} 			} 		else if( t1 != INCREF(UNDEF)&& t2 != INCREF(UNDEF) ) 			werror(
 literal|"illegal pointer combination"
 argument|); 		}  	}  NODE * stref( p ) register NODE *p; {  	TWORD t; 	int d, s, dsc, align; 	OFFSZ off; 	register struct symtab *q;
 comment|/* make p->x */
@@ -2537,13 +2640,13 @@ argument|); 		return( NCVT ); 		} 	mt12 = mt1& mt2;  	switch( o ){  	case NAME :
 literal|0
 argument|); 		if( mt1& MDBI ) return( TYPL ); 		break;  	case COMPL: 		if( mt1& MENU ) return(
 literal|0
-argument|); 		if( mt1& MINT ) return( TYPL ); 		break;  	case UNARY AND: 		{  return( NCVT+OTHER ); } 	case INIT: 	case CM: 		return(
+argument|); 		if( mt1& MINT ) return( TYPL ); 		break;  	case UNARY AND: 		return( NCVT+OTHER ); 	case INIT: 	case CM: 		return(
 literal|0
 argument|);  	case NOT: 	case CBRANCH: 		if( mt1& MSTR ) break; 		return(
 literal|0
 argument|);  	case ANDAND: 	case OROR: 		if( (mt1& MSTR) || (mt2& MSTR) ) break; 		return(
 literal|0
-argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break;  	case MOD: 	case AND: 	case OR: 	case ER: 		if( mt12& MINT ) return( TYMATCH ); 		break;  	case LS: 	case RS: 		if( mt12& MINT ) return( TYMATCH+OTHER ); 		break;  	case EQ: 	case NE: 	case LT: 	case LE: 	case GT: 	case GE: 		if( mt12& MENU ) return( TYMATCH+NCVT+PUN ); 		if( mt12& MDBI ) return( TYMATCH+NCVT+CVTO ); 		else if( mt12& MPTR ) return( PTMATCH+PUN ); 		else if( mt12& MPTI ) return( PTMATCH+PUN ); 		else break;  	case QUEST: 	case COMOP: 		if( mt2&MENU ) return( TYPR+NCVTR ); 		return( TYPR );  	case STREF: 		return( NCVTR+OTHER );  	case FORCE: 		return( TYPL );  	case COLON: 		if( mt12& MENU ) return( NCVT+PUN+TYMATCH ); 		else if( mt12& MDBI ) return( NCVT+TYMATCH ); 		else if( mt12& MPTR ) return( TYPL+PTMATCH+PUN ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+PUN ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+PUN ); 		else if( mt12& MSTR ) return( NCVT+TYPL+OTHER ); 		else if( mt12 == MVOID ) return( NCVT+TYPL ); 		break;  	case ASSIGN: 	case RETURN: 		if( mt12& MSTR ) return( LVAL+NCVT+TYPL+OTHER ); 		else if( mt12& MENU ) return( LVAL+NCVT+TYPL+TYMATCH+PUN ); 	case CAST: 		if(o==CAST&& mt1==MVOID)return(TYPL+TYMATCH); 		else if( mt12& MDBI ) return( TYPL+LVAL+NCVT+TYMATCH ); 		else if( mt2 == MVOID&& 		        ( p->in.right->in.op == CALL || 			  p->in.right->in.op == UNARY CALL)) break; 		else if( (mt1& MPTR)&& (mt2& MPTI) ) 			return( LVAL+PTMATCH+PUN ); 		else if( mt12& MPTI ) return( TYPL+LVAL+TYMATCH+PUN ); 		break;  	case ASG LS: 	case ASG RS: 		if( mt12& MINT ) return( TYPL+LVAL+OTHER ); 		break;  	case ASG MUL: 	case ASG DIV: 		if( mt12& MDBI ) return( LVAL+TYMATCH ); 		break;  	case ASG MOD: 	case ASG AND: 	case ASG OR: 	case ASG ER: 		if( mt12& MINT ) return( LVAL+TYMATCH ); 		break;  	case ASG PLUS: 	case ASG MINUS: 	case INCR: 	case DECR: 		if( mt12& MDBI ) return( TYMATCH+LVAL ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+LVAL+CVTR ); 		break;  	case MINUS: 		if( mt12& MPTR ) return( CVTO+PTMATCH+PUN ); 		if( mt2& MPTR ) break; 	case PLUS: 		if( mt12& MDBI ) return( TYMATCH ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+CVTR ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+CVTL );  		} 	if( mt12 == MSTR ) 		uerror(
+argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break;  	case MOD: 	case AND: 	case OR: 	case ER: 		if( mt12& MINT ) return( TYMATCH ); 		break;  	case LS: 	case RS: 		if( mt12& MINT ) return( OTHER ); 		break;  	case EQ: 	case NE: 	case LT: 	case LE: 	case GT: 	case GE: 		if( mt12& MENU ) return( TYMATCH+NCVT+PUN ); 		if( mt12& MDBI ) return( TYMATCH+NCVT+CVTO ); 		else if( mt12& MPTR ) return( PTMATCH+PUN ); 		else if( mt12& MPTI ) return( PTMATCH+PUN ); 		else break;  	case QUEST: 	case COMOP: 		if( mt2&MENU ) return( TYPR+NCVTR ); 		return( TYPR );  	case STREF: 		return( NCVTR+OTHER );  	case FORCE: 		return( TYPL );  	case COLON: 		if( mt12& MENU ) return( NCVT+PUN+TYMATCH ); 		else if( mt12& MDBI ) return( NCVT+TYMATCH ); 		else if( mt12& MPTR ) return( TYPL+PTMATCH+PUN ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+PUN ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+PUN ); 		else if( mt12& MSTR ) return( NCVT+TYPL+OTHER ); 		else if( mt12 == MVOID ) return( NCVT+TYPL ); 		break;  	case ASSIGN: 	case RETURN: 		if( mt12& MSTR ) return( LVAL+NCVT+TYPL+OTHER ); 		else if( mt12& MENU ) return( LVAL+NCVT+TYPL+TYMATCH+PUN ); 	case CAST: 		if(o==CAST&& mt1==MVOID)return(TYPL+TYMATCH); 		else if( mt12& MDBI ) return( TYPL+LVAL+NCVT+TYMATCH ); 		else if( mt2 == MVOID&& 		        ( p->in.right->in.op == CALL || 			  p->in.right->in.op == UNARY CALL)) break; 		else if( (mt1& MPTR)&& (mt2& MPTI) ) 			return( LVAL+PTMATCH+PUN ); 		else if( mt12& MPTI ) return( TYPL+LVAL+TYMATCH+PUN ); 		break;  	case ASG LS: 	case ASG RS: 		if( mt12& MINT ) return( TYPL+LVAL+OTHER ); 		break;  	case ASG MUL: 	case ASG DIV: 		if( mt12& MDBI ) return( LVAL+TYMATCH ); 		break;  	case ASG MOD: 	case ASG AND: 	case ASG OR: 	case ASG ER: 		if( mt12& MINT ) return( LVAL+TYMATCH ); 		break;  	case ASG PLUS: 	case ASG MINUS: 	case INCR: 	case DECR: 		if( mt12& MDBI ) return( TYMATCH+LVAL ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+LVAL+CVTR ); 		break;  	case MINUS: 		if( mt12& MPTR ) return( CVTO+PTMATCH+PUN ); 		if( mt2& MPTR ) break; 	case PLUS: 		if( mt12& MDBI ) return( TYMATCH ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+CVTR ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+CVTL );  		} 	if( mt12 == MSTR ) 		uerror(
 literal|"%s is not a permitted struct/union operation"
 argument|, opst[o] ); 	else 		uerror(
 literal|"operands of %s have incompatible types"
