@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_umap.c,v 1.6 1996/05/13 17:43:18 wollman Exp $"
+literal|"$Id: mount_umap.c,v 1.7 1996/09/14 02:59:13 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,7 +291,8 @@ literal|"g:o:u:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

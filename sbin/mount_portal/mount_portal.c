@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_portal.c,v 1.7 1996/09/14 02:58:43 bde Exp $"
+literal|"$Id: mount_portal.c,v 1.7.2.1 1997/03/24 05:53:41 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,7 +375,8 @@ literal|"o:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

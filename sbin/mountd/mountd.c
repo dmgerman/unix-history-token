@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.11.2.7 1997/08/29 19:23:39 guido Exp $"
+literal|"$Id: mountd.c,v 1.11.2.8 1997/09/30 13:25:35 jlemon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1555,7 +1555,8 @@ literal|"2dnr"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

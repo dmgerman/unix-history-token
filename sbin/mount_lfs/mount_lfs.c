@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_lfs.c,v 1.4 1996/05/13 17:43:05 wollman Exp $"
+literal|"$Id: mount_lfs.c,v 1.5 1996/09/14 02:58:07 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,7 +243,8 @@ literal|"dno:s"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

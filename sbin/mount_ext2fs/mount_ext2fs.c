@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_ext2fs.c,v 1.3 1996/07/23 19:29:27 peter Exp $"
+literal|"$Id: mount_ext2fs.c,v 1.4 1996/09/14 02:57:56 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +205,8 @@ literal|"o:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

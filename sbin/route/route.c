@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.16.2.4 1997/04/02 17:06:20 phk Exp $"
+literal|"$Id: route.c,v 1.16.2.5 1997/07/18 09:14:10 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -623,7 +623,8 @@ literal|"nqdtv"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
