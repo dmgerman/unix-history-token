@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swab.c	4.2	83/06/27	*/
+comment|/*	swab.c	5.1	85/05/30	*/
 end_comment
 
 begin_comment
