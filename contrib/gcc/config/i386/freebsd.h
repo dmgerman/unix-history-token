@@ -715,23 +715,6 @@ name|NO_DBX_FUNCTION_END
 value|TARGET_AOUT
 end_define
 
-begin_comment
-comment|/* In ELF, the function stabs come first, before the relative offsets.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DBX_FUNCTION_FIRST
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DBX_CHECK_FUNCTION_FIRST
-value|TARGET_ELF
-end_define
-
 begin_undef
 undef|#
 directive|undef
