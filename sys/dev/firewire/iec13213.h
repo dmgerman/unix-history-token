@@ -187,6 +187,10 @@ begin_comment
 comment|/* Directory */
 end_comment
 
+begin_comment
+comment|/*  * CSR keys  * 00 - 2F: defined by CSR architecture standards.  * 30 - 37: defined by BUS starndards  * 38 - 3F: defined by Vendor/Specifier  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -534,6 +538,13 @@ end_define
 begin_comment
 comment|/* 0x54 Management agent */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CSRVAL_VENDOR_PRIVATE
+value|0xacde48
+end_define
 
 begin_define
 define|#
