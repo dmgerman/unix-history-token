@@ -798,7 +798,7 @@ operator|(
 operator|(
 name|data
 operator|&
-literal|0x1f
+name|ADDR_CFG_MASK
 operator|)
 operator|*
 literal|0x100
@@ -816,7 +816,7 @@ operator|(
 operator|(
 name|data
 operator|&
-literal|0x1f
+name|ADDR_CFG_MASK
 operator|)
 operator|<<
 literal|4
@@ -827,6 +827,39 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|data
+operator|&
+name|ADDR_CFG_MASK
+operator|)
+operator|==
+name|ADDR_CFG_EISA
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|parent
+argument_list|,
+literal|"if_ep:<%s> at port 0x%03x in EISA mode!\n"
+argument_list|,
+name|desc
+argument_list|,
+name|ioport
+argument_list|)
+expr_stmt|;
+comment|/* Set the adaptor tag so that the next card can be found. */
+name|outb
+argument_list|(
+name|ELINK_ID_PORT
+argument_list|,
+name|tag
+operator|--
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* Test for an adapter with PnP support. */
 name|data
 operator|=
