@@ -4,7 +4,7 @@ comment|/* Copyright 1988,1990,1993,1994 by Paul Vixie  * All rights reserved  *
 end_comment
 
 begin_comment
-comment|/* config.h - configurables for Vixie Cron  *  * $Id: config.h,v 1.2 1995/04/12 19:28:30 ache Exp $  */
+comment|/* config.h - configurables for Vixie Cron  *  * $Id: config.h,v 1.3 1995/04/14 21:54:16 ache Exp $  */
 end_comment
 
 begin_if
@@ -90,11 +90,19 @@ comment|/* -Fx	 = set full-name of sender 			 * -odi	 = Option Deliverymode Inte
 end_comment
 
 begin_comment
-comment|/* #define MAILCMD "/bin/mail"			/*-*/
+comment|/* #define MAILCMD "/bin/mail" */
 end_comment
 
 begin_comment
-comment|/* #define MAILARGS "%s -d  %s"			/*-*/
+comment|/*-*/
+end_comment
+
+begin_comment
+comment|/* #define MAILARGS "%s -d  %s" */
+end_comment
+
+begin_comment
+comment|/*-*/
 end_comment
 
 begin_comment
@@ -102,15 +110,27 @@ comment|/* -d = undocumented but common flag: deliver locally? 			 */
 end_comment
 
 begin_comment
-comment|/* #define MAILCMD "/usr/mmdf/bin/submit"	/*-*/
+comment|/* #define MAILCMD "/usr/mmdf/bin/submit" */
 end_comment
 
 begin_comment
-comment|/* #define MAILARGS "%s -mlrxto %s"		/*-*/
+comment|/*-*/
 end_comment
 
 begin_comment
-comment|/* #define MAIL_DATE				/*-*/
+comment|/* #define MAILARGS "%s -mlrxto %s" */
+end_comment
+
+begin_comment
+comment|/*-*/
+end_comment
+
+begin_comment
+comment|/* #define MAIL_DATE */
+end_comment
+
+begin_comment
+comment|/*-*/
 end_comment
 
 begin_comment
@@ -122,7 +142,11 @@ comment|/* if ALLOW_FILE and DENY_FILE are not defined or are 			 * defined but 
 end_comment
 
 begin_comment
-comment|/*#define ALLOW_ONLY_ROOT			/*-*/
+comment|/* #define ALLOW_ONLY_ROOT */
+end_comment
+
+begin_comment
+comment|/*-*/
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 4.9.1.16 1994/07/22 08:42:30 vixie Exp $  */
+comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 1.1 1994/09/22 20:45:07 pst Exp $  */
 end_comment
 
 begin_comment
@@ -22,7 +22,11 @@ comment|/* enable -d flag and SIGUSR[12] support (ucb) */
 end_comment
 
 begin_comment
-comment|/*#define ALLOW_T_UNSPEC /* enable the "unspec" RR type for old athena (ucb) */
+comment|/*#define ALLOW_T_UNSPEC*/
+end_comment
+
+begin_comment
+comment|/* enable the "unspec" RR type for old athena (ucb) */
 end_comment
 
 begin_define
@@ -36,11 +40,19 @@ comment|/* enable inverse queries (nslookup) (ucb/vix) */
 end_comment
 
 begin_comment
-comment|/*#define DSTORAGE	/* debug malloc overruns using storage.o (ucb/vix) */
+comment|/*#define DSTORAGE*/
 end_comment
 
 begin_comment
-comment|/*#define DMALLOC	/* trace malloc orphans using dmalloc.o (vix) */
+comment|/* debug malloc overruns using storage.o (ucb/vix) */
+end_comment
+
+begin_comment
+comment|/*#define DMALLOC*/
+end_comment
+
+begin_comment
+comment|/* trace malloc orphans using dmalloc.o (vix) */
 end_comment
 
 begin_define
@@ -104,7 +116,11 @@ comment|/* enable SIGWINCH for query logging (bb) */
 end_comment
 
 begin_comment
-comment|/*#define YPKLUDGE  	/* deal effectively with broken "ypserv -i" (mcsun) */
+comment|/*#define YPKLUDGE*/
+end_comment
+
+begin_comment
+comment|/* deal effectively with broken "ypserv -i" (mcsun) */
 end_comment
 
 begin_define
@@ -118,7 +134,11 @@ comment|/* trace bogus root servers and ignore them (pma,bb) */
 end_comment
 
 begin_comment
-comment|/*#define LOCALDOM	/* permit "domain" directive in named.boot (ucb) */
+comment|/*#define LOCALDOM*/
+end_comment
+
+begin_comment
+comment|/* permit "domain" directive in named.boot (ucb) */
 end_comment
 
 begin_define
@@ -162,7 +182,11 @@ comment|/* if you want to be able to specify dotted serial#s */
 end_comment
 
 begin_comment
-comment|/*#define SENSIBLE_DOTS	/* if you want dotted serial#s to make numeric sense */
+comment|/*#define SENSIBLE_DOTS*/
+end_comment
+
+begin_comment
+comment|/* if you want dotted serial#s to make numeric sense */
 end_comment
 
 begin_define
@@ -186,7 +210,11 @@ comment|/* validation procedure (anant@isi.edu) */
 end_comment
 
 begin_comment
-comment|/*#define SHORT_FNAMES	/* file names used in named-xfer need to be short */
+comment|/*#define SHORT_FNAMES*/
+end_comment
+
+begin_comment
+comment|/* file names used in named-xfer need to be short */
 end_comment
 
 begin_define
@@ -210,7 +238,11 @@ comment|/* allow transfers of NS only for a zone (mpa) (EXP) */
 end_comment
 
 begin_comment
-comment|/*#define SUNSECURITY	/* obscure fix for sunos (see below) */
+comment|/*#define SUNSECURITY*/
+end_comment
+
+begin_comment
+comment|/* obscure fix for sunos (see below) */
 end_comment
 
 begin_define
@@ -225,7 +257,11 @@ comment|/* what syslog facility should named use? */
 end_comment
 
 begin_comment
-comment|/*#define SECURE_ZONES	/* if you want to inhibit world access to zone(s) */
+comment|/*#define SECURE_ZONES*/
+end_comment
+
+begin_comment
+comment|/* if you want to inhibit world access to zone(s) */
 end_comment
 
 begin_define
@@ -311,7 +347,11 @@ comment|/* log errors/timeouts getting serial number */
 end_comment
 
 begin_comment
-comment|/*#define RETURNSOA	/* good code that the world isn't ready for yet */
+comment|/*#define RETURNSOA*/
+end_comment
+
+begin_comment
+comment|/* good code that the world isn't ready for yet */
 end_comment
 
 begin_define
@@ -335,7 +375,11 @@ comment|/* keep nameserver statistics; uses more memory */
 end_comment
 
 begin_comment
-comment|/*#define RENICE  	/* named-xfer should run at normal priority */
+comment|/*#define RENICE*/
+end_comment
+
+begin_comment
+comment|/* named-xfer should run at normal priority */
 end_comment
 
 begin_comment

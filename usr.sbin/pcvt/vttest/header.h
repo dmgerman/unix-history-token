@@ -11,11 +11,19 @@ comment|/* Choose one of these */
 end_comment
 
 begin_comment
-comment|/* #define XENIX        /* XENIX implies UNIX                           */
+comment|/* #define XENIX */
 end_comment
 
 begin_comment
-comment|/* #define SIII         /* SIII  implies UNIX, (NDELAY a la System III) */
+comment|/* XENIX implies UNIX                           */
+end_comment
+
+begin_comment
+comment|/* #define SIII */
+end_comment
+
+begin_comment
+comment|/* SIII  implies UNIX, (NDELAY a la System III) */
 end_comment
 
 begin_define
@@ -29,15 +37,27 @@ comment|/* UNIX                                         */
 end_comment
 
 begin_comment
-comment|/* #define VMS          /* VMS not done yet -- send me your version!!!! */
+comment|/* #define VMS */
 end_comment
 
 begin_comment
-comment|/* #define SARG20       /* Sargasso C for TOPS-20                       */
+comment|/* VMS not done yet -- send me your version!!!! */
 end_comment
 
 begin_comment
-comment|/* #define SARG10       /* Sargasso C for TOPS-10                       */
+comment|/* #define SARG20 */
+end_comment
+
+begin_comment
+comment|/* Sargasso C for TOPS-20                       */
+end_comment
+
+begin_comment
+comment|/* #define SARG10 */
+end_comment
+
+begin_comment
+comment|/* Sargasso C for TOPS-10                       */
 end_comment
 
 begin_comment
