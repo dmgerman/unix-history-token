@@ -2349,16 +2349,6 @@ parameter_list|)
 value|((c)->a_desc->vdesc_call(c))
 end_define
 
-begin_define
-define|#
-directive|define
-name|VDESC
-parameter_list|(
-name|OP
-parameter_list|)
-value|(& __CONCAT(OP,_desc))
-end_define
-
 begin_comment
 comment|/*  * VMIO support inline  */
 end_comment
