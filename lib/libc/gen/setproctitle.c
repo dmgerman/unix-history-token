@@ -290,6 +290,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+operator|*
+name|obuf
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 name|va_start
 argument_list|(
