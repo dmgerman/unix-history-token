@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: decode.c,v 1.3.6.1 1997/11/18 07:14:13 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"decode.h"
 end_include
 
 begin_function

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vnconfig.c,v 1.7 1997/10/27 07:55:31 charnier Exp $"
+literal|"$Id: vnconfig.c,v 1.3.6.2 1997/11/18 07:20:55 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: readmsg.c,v 1.3 1997/10/29 07:32:29 charnier Exp $"
+literal|"$Id: readmsg.c,v 1.1.1.1.8.1 1997/11/07 07:42:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1687,6 +1687,9 @@ index|[
 literal|26
 index|]
 decl_stmt|;
+name|time_t
+name|tsp_time_sec
+decl_stmt|;
 switch|switch
 condition|(
 name|msg
@@ -1766,6 +1769,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|tsp_time_sec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_sec
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|tm
@@ -1773,11 +1784,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
+name|tsp_time_sec
 argument_list|)
 operator|+
 literal|3

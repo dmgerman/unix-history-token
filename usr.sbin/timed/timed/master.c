@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: master.c,v 1.4 1997/10/29 07:32:28 charnier Exp $"
+literal|"$Id: master.c,v 1.2.2.1 1997/11/07 07:42:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +253,9 @@ name|timeval
 name|wait
 decl_stmt|,
 name|ntime
+decl_stmt|;
+name|time_t
+name|tsp_time_sec
 decl_stmt|;
 name|struct
 name|tsp
@@ -752,6 +755,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|tsp_time_sec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_sec
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -762,11 +773,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
+name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -864,6 +871,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|tsp_time_sec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_sec
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -874,11 +889,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
+name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
