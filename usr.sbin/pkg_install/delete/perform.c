@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.2 1993/09/03 23:01:02 jkh Exp $"
+literal|"$Id: perform.c,v 1.3 1993/10/08 01:19:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,9 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+name|PackingList
+name|p
+decl_stmt|;
 comment|/* Reset some state */
 if|if
 condition|(
@@ -232,55 +235,6 @@ argument_list|(
 name|LogDir
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fexists
-argument_list|(
-name|REQUIRE_FNAME
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"Executing 'require' script.\n"
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"chmod +x %s"
-argument_list|,
-name|REQUIRE_FNAME
-argument_list|)
-expr_stmt|;
-comment|/* be sure */
-if|if
-condition|(
-name|vsystem
-argument_list|(
-literal|"./%s %s DEINSTALL"
-argument_list|,
-name|REQUIRE_FNAME
-argument_list|,
-name|pkg
-argument_list|)
-condition|)
-block|{
-name|whinge
-argument_list|(
-literal|"Package %s fails requirements - not deleted."
-argument_list|,
-name|pkg
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-block|}
 name|cfile
 operator|=
 name|fopen
@@ -335,6 +289,80 @@ argument_list|(
 name|cfile
 argument_list|)
 expr_stmt|;
+name|setenv
+argument_list|(
+name|PKG_PREFIX_VNAME
+argument_list|,
+operator|(
+name|p
+operator|=
+name|find_plist
+argument_list|(
+operator|&
+name|Plist
+argument_list|,
+name|PLIST_CWD
+argument_list|)
+operator|)
+condition|?
+name|p
+operator|->
+name|name
+else|:
+name|NULL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fexists
+argument_list|(
+name|REQUIRE_FNAME
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Executing 'require' script.\n"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"chmod +x %s"
+argument_list|,
+name|REQUIRE_FNAME
+argument_list|)
+expr_stmt|;
+comment|/* be sure */
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"./%s %s DEINSTALL"
+argument_list|,
+name|REQUIRE_FNAME
+argument_list|,
+name|pkg
+argument_list|)
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Package %s fails requirements - not deleted."
+argument_list|,
+name|pkg
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+block|}
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.5 1994/04/05 14:08:46 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.6 1994/05/25 06:27:23 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -240,6 +240,17 @@ end_define
 begin_comment
 comment|/* prefix for extended PLIST cmd */
 end_comment
+
+begin_comment
+comment|/* The name of the "prefix" environment variable given to scripts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKG_PREFIX_VNAME
+value|"PKG_PREFIX"
+end_define
 
 begin_enum
 enum|enum

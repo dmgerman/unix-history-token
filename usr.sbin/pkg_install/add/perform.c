@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.6 1993/10/10 20:25:31 jkh Exp $"
+literal|"$Id: perform.c,v 1.7 1994/05/25 06:24:18 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,18 +428,6 @@ name|Prefix
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Just to be safe - overridden if package has made a choice */
-else|else
-name|add_plist_top
-argument_list|(
-operator|&
-name|Plist
-argument_list|,
-name|PLIST_CWD
-argument_list|,
-name|home
-argument_list|)
-expr_stmt|;
 comment|/* If we're running in MASTER mode, just output the plist and return */
 if|if
 condition|(
@@ -469,6 +457,31 @@ literal|0
 return|;
 block|}
 block|}
+name|setenv
+argument_list|(
+name|PKG_PREFIX_VNAME
+argument_list|,
+operator|(
+name|p
+operator|=
+name|find_plist
+argument_list|(
+operator|&
+name|Plist
+argument_list|,
+name|PLIST_CWD
+argument_list|)
+operator|)
+condition|?
+name|p
+operator|->
+name|name
+else|:
+name|NULL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|PkgName
 operator|=
 operator|(
