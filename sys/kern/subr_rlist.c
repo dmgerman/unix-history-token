@@ -4,8 +4,14 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.22 1997/09/02 20:05:51 bde Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.23 1997/09/16 11:43:31 bde Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_diagnostic.h"
+end_include
 
 begin_include
 include|#

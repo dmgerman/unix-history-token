@@ -24,6 +24,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"opt_diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/pcvt/pcvt_hdr.h>
 end_include
 

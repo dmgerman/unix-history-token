@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.56 1997/10/20 14:32:46 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.76 1997/12/15 20:31:25 eivind Exp $ */
+comment|/*	$Id: if_de.c,v 1.77 1998/01/08 23:42:24 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -20,6 +20,12 @@ define|#
 directive|define
 name|TULIP_HDR_DATA
 end_define
+
+begin_include
+include|#
+directive|include
+file|"opt_diagnostic.h"
+end_include
 
 begin_include
 include|#
