@@ -286,14 +286,14 @@ comment|/* desired fs_cpg */
 end_comment
 
 begin_comment
-comment|/*  * ROTDELAY gives the minimum number of milliseconds to initiate  * another disk transfer on the same cylinder. It is used in  * determining the rotationally optimal layout for disk blocks  * within a file; the default of fs_rotdelay is 4ms.  */
+comment|/*  * Once upon a time...  *    ROTDELAY gives the minimum number of milliseconds to initiate  *    another disk transfer on the same cylinder. It is used in  *    determining the rotationally optimal layout for disk blocks  *    within a file; the default of fs_rotdelay is 4ms.  *  * ...but now we make this 0 to disable the rotdelay delay because  * modern drives with read/write-behind achieve higher performance  * without the delay.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ROTDELAY
-value|4
+value|0
 end_define
 
 begin_comment
@@ -322,14 +322,14 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * For each cylinder we keep track of the availability of blocks at different  * rotational positions, so that we can lay out the data to be picked  * up with minimum rotational latency.  NRPOS is the default number of  * rotational positions that we distinguish.  With NRPOS of 8 the resolution  * of our summary information is 2ms for a typical 3600 rpm drive.  */
+comment|/*  * Once upon a time...  *    For each cylinder we keep track of the availability of blocks at different  *    rotational positions, so that we can lay out the data to be picked  *    up with minimum rotational latency.  NRPOS is the default number of  *    rotational positions that we distinguish.  With NRPOS of 8 the resolution  *    of our summary information is 2ms for a typical 3600 rpm drive.  *  * ...but now we make this 1 (which disables the rotational position table)  * because modern drives with read-ahead and write-behind do better without  * the rotational position table.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NRPOS
-value|8
+value|0
 end_define
 
 begin_comment
@@ -1221,7 +1221,7 @@ argument_list|(
 name|optarg
 argument_list|)
 operator|)
-operator|<=
+operator|<
 literal|0
 condition|)
 name|fatal
