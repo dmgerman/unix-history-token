@@ -6255,7 +6255,7 @@ expr|struct
 name|ip6aux
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
