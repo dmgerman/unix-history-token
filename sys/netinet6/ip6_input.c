@@ -508,7 +508,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
 name|ip6_setdstifaddr
 name|__P
@@ -1033,7 +1033,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * make sure we don't have onion peering information into m_aux. 	 */
+comment|/* 	 * make sure we don't have onion peering information into m_tag. 	 */
 name|ip6_delaux
 argument_list|(
 name|m
@@ -2197,7 +2197,7 @@ name|ro_rt
 operator|->
 name|rt_ifa
 decl_stmt|;
-comment|/* 		 * record address information into m_aux. 		 */
+comment|/* 		 * record address information into m_tag. 		 */
 operator|(
 name|void
 operator|)
@@ -2367,7 +2367,7 @@ goto|;
 block|}
 name|hbhcheck
 label|:
-comment|/* 	 * record address information into m_aux, if we don't have one yet. 	 * note that we are unable to record it, if the address is not listed 	 * as our interface address (e.g. multicast addresses, addresses 	 * within FAITH prefixes and such). 	 */
+comment|/* 	 * record address information into m_tag, if we don't have one yet. 	 * note that we are unable to record it, if the address is not listed 	 * as our interface address (e.g. multicast addresses, addresses 	 * within FAITH prefixes and such). 	 */
 if|if
 condition|(
 name|deliverifp
@@ -3043,7 +3043,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
 name|ip6_setdstifaddr
 parameter_list|(
@@ -3063,11 +3063,11 @@ name|ia6
 decl_stmt|;
 block|{
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
-name|n
+name|mtag
 decl_stmt|;
-name|n
+name|mtag
 operator|=
 name|ip6_addaux
 argument_list|(
@@ -3076,16 +3076,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|mtag
 condition|)
-name|n
+operator|(
+operator|(
+expr|struct
+name|ip6aux
+operator|*
+operator|)
+operator|(
+name|mtag
+operator|+
+literal|1
+operator|)
+operator|)
 operator|->
 name|ip6a_dstia6
 operator|=
 name|ia6
 expr_stmt|;
 return|return
-name|n
+name|mtag
 return|;
 comment|/* NULL if failed to set */
 block|}
@@ -3106,11 +3117,11 @@ name|m
 decl_stmt|;
 block|{
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
-name|n
+name|mtag
 decl_stmt|;
-name|n
+name|mtag
 operator|=
 name|ip6_findaux
 argument_list|(
@@ -3119,10 +3130,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|mtag
 condition|)
 return|return
-name|n
+operator|(
+operator|(
+expr|struct
+name|ip6aux
+operator|*
+operator|)
+operator|(
+name|mtag
+operator|+
+literal|1
+operator|)
+operator|)
 operator|->
 name|ip6a_dstia6
 return|;
@@ -6134,7 +6156,7 @@ end_function
 
 begin_function
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
 name|ip6_addaux
 parameter_list|(
@@ -6187,6 +6209,7 @@ if|if
 condition|(
 name|mtag
 condition|)
+block|{
 name|m_tag_prepend
 argument_list|(
 name|m
@@ -6194,11 +6217,6 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|mtag
-condition|)
 name|bzero
 argument_list|(
 name|mtag
@@ -6212,28 +6230,17 @@ name|ip6aux
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 return|return
 name|mtag
-condition|?
-operator|(
-expr|struct
-name|ip6aux
-operator|*
-operator|)
-operator|(
-name|mtag
-operator|+
-literal|1
-operator|)
-else|:
-name|NULL
 return|;
 block|}
 end_function
 
 begin_function
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
 name|ip6_findaux
 parameter_list|(
@@ -6263,19 +6270,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|mtag
-condition|?
-operator|(
-expr|struct
-name|ip6aux
-operator|*
-operator|)
-operator|(
-name|mtag
-operator|+
-literal|1
-operator|)
-else|:
-name|NULL
 return|;
 block|}
 end_function

@@ -1249,7 +1249,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
 name|ip6_addaux
 name|__P
@@ -1265,7 +1265,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ip6aux
+name|m_tag
 modifier|*
 name|ip6_findaux
 name|__P
