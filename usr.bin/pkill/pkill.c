@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pkill.c,v 1.7 2004/02/15 17:03:30 soren Exp $	*/
+comment|/*	$NetBSD: pkill.c,v 1.8 2005/03/02 15:31:44 abs Exp $	*/
 end_comment
 
 begin_comment
@@ -2546,7 +2546,7 @@ name|STATUS_BADUSAGE
 argument_list|,
 literal|"unknown user `%s'"
 argument_list|,
-name|optarg
+name|sp
 argument_list|)
 expr_stmt|;
 name|li
@@ -2580,7 +2580,7 @@ name|STATUS_BADUSAGE
 argument_list|,
 literal|"unknown group `%s'"
 argument_list|,
-name|optarg
+name|sp
 argument_list|)
 expr_stmt|;
 name|li
