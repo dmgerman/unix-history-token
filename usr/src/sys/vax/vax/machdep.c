@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.5	%G%	*/
+comment|/*	machdep.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -247,30 +247,18 @@ name|maxmem
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
+comment|/* 	 */
+comment|/* Bell labs style comment */
 name|tocons
 argument_list|(
 name|TXDB_CWSI
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|VAX
-operator|==
-literal|750
 name|tocons
 argument_list|(
-name|TXDB_CCSF
+name|TXDB_CCSI
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Allow for the u. area of process 0 and its (single) 	 * page of page tables. 	 */
 name|unixsize
 operator|=
@@ -1918,11 +1906,6 @@ argument_list|(
 name|rootdev
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
 if|if
 condition|(
 name|howto
@@ -1931,7 +1914,7 @@ name|RB_HALT
 condition|)
 name|tocons
 argument_list|(
-name|TXDB_WSI
+name|TXDB_DONE
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1942,41 +1925,18 @@ operator|==
 name|RB_PANIC
 condition|)
 empty_stmt|;
-comment|/* sent TXDB_CWSI at boot */
+comment|/* cold or warm start */
 else|else
-block|{
-name|tocons
-argument_list|(
-name|TXDB_WSI
-argument_list|)
-expr_stmt|;
 name|tocons
 argument_list|(
 name|TXDB_BOOT
 argument_list|)
 expr_stmt|;
-comment|/* defboo.cmd, not restar.cmd */
-block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|VAX
 operator|==
 literal|750
-if|if
-condition|(
-name|howto
-operator|&
-name|RB_HALT
-condition|)
-empty_stmt|;
-else|else
-name|tocons
-argument_list|(
-name|TXDB_BOOT
-argument_list|)
-expr_stmt|;
 block|{
 asm|asm("movl r11,r5");
 block|}
