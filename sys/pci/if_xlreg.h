@@ -405,6 +405,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|XL_DOWN_POLL
+value|0x2D
+end_define
+
+begin_comment
+comment|/* 3c90xB only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|XL_TX_FREETHRESH
 value|0x2F
 end_define
@@ -422,6 +433,17 @@ directive|define
 name|XL_UPLIST_STATUS
 value|0x30
 end_define
+
+begin_define
+define|#
+directive|define
+name|XL_UP_POLL
+value|0x3D
+end_define
+
+begin_comment
+comment|/* 3c90xB only */
+end_comment
 
 begin_define
 define|#
@@ -2298,6 +2320,25 @@ name|XL_MIN_FRAMELEN
 value|60
 end_define
 
+begin_define
+define|#
+directive|define
+name|ETHER_ALIGN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XL_INC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(x) = (x + 1) % y
+end_define
+
 begin_struct
 struct|struct
 name|xl_list_data
@@ -2345,6 +2386,14 @@ name|struct
 name|xl_chain
 modifier|*
 name|xl_next
+decl_stmt|;
+name|struct
+name|xl_chain
+modifier|*
+name|xl_prev
+decl_stmt|;
+name|u_int32_t
+name|xl_phys
 decl_stmt|;
 block|}
 struct|;
@@ -2396,6 +2445,7 @@ name|xl_chain_onefrag
 modifier|*
 name|xl_rx_head
 decl_stmt|;
+comment|/* 3c90x "boomerang" queuing stuff */
 name|struct
 name|xl_chain
 modifier|*
@@ -2410,6 +2460,16 @@ name|struct
 name|xl_chain
 modifier|*
 name|xl_tx_free
+decl_stmt|;
+comment|/* 3c90xB "cyclone/hurricane/tornado" stuff */
+name|int
+name|xl_tx_prod
+decl_stmt|;
+name|int
+name|xl_tx_cons
+decl_stmt|;
+name|int
+name|xl_tx_cnt
 decl_stmt|;
 block|}
 struct|;
@@ -2626,6 +2686,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|XL_TXSTAT_RND_DEFEAT
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* 3c905B only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XL_TXSTAT_EMPTY
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* 3c905B only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|XL_TXSTAT_DL_INTR
 value|0x80000000
 end_define
@@ -2714,7 +2796,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*  * The 3C905B adapters implement a few features that we want to  * take advantage of, namely the multicast hash filter. With older  * chips, you only have the option of turning on reception of all  * multicast frames, which is kind of lame.  */
+comment|/*  * The 3C905B adapters implement a few features that we want to  * take advantage of, namely the multicast hash filter. With older  * chips, you only have the option of turning on reception of all  * multicast frames, which is kind of lame.  *  * We also use this to decide on a transmit strategy. For the 3c90xB  * cards, we can use polled descriptor mode, which reduces CPU overhead.  */
 end_comment
 
 begin_define
@@ -2820,8 +2902,8 @@ decl_stmt|;
 name|u_int16_t
 name|xl_tx_thresh
 decl_stmt|;
-name|caddr_t
-name|xl_ldata_ptr
+name|int
+name|xl_if_flags
 decl_stmt|;
 name|struct
 name|xl_list_data
@@ -3126,6 +3208,13 @@ define|#
 directive|define
 name|TC_DEVICEID_HURRICANE_10_100BT_SERV
 value|0x9800
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_DEVICEID_TORNADO_10_100BT_SERV
+value|0x9805
 end_define
 
 begin_define
