@@ -239,7 +239,7 @@ name|sb
 operator|.
 name|st_mode
 operator|&
-literal|0100
+name|S_IXUSR
 condition|?
 literal|"y"
 else|:
@@ -252,7 +252,7 @@ name|sb
 operator|.
 name|st_mode
 operator|&
-literal|0100
+name|S_IXUSR
 condition|?
 literal|0
 else|:
@@ -285,7 +285,7 @@ operator|.
 name|st_mode
 operator|&
 operator|~
-literal|0100
+name|S_IXUSR
 argument_list|)
 operator|<
 literal|0
@@ -313,7 +313,7 @@ name|sb
 operator|.
 name|st_mode
 operator||
-literal|0100
+name|S_IXUSR
 argument_list|)
 operator|<
 literal|0
@@ -339,7 +339,7 @@ name|sb
 operator|.
 name|st_mode
 operator|&
-literal|0100
+name|S_IXUSR
 condition|?
 literal|0
 else|:
