@@ -2204,6 +2204,19 @@ condition|(
 name|tmp
 operator|&&
 operator|!
+operator|(
+operator|(
+name|DevInfo
+operator|*
+operator|)
+name|tmp
+operator|->
+name|private
+operator|)
+operator|->
+name|use_dhcp
+operator|&&
+operator|!
 name|msgYesNo
 argument_list|(
 literal|"Would you like to bring the %s interface up right now?"
@@ -3019,6 +3032,18 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"userconfig_script_load=\"YES\"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|OnVTY
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"console=\"serial\"\n"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -4415,6 +4440,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_TRY_DHCP
+argument_list|,
+literal|"NO"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* For now */
 name|cp
 operator|=
 name|getenv
@@ -4480,9 +4515,10 @@ name|variable_set2
 argument_list|(
 name|VAR_NFS_SECURE
 argument_list|,
-literal|"YES"
+literal|"NO"
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4528,6 +4564,15 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"init"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_NEWFS_ARGS
+argument_list|,
+literal|"-b 8192 -f 1024"
 argument_list|,
 literal|0
 argument_list|)

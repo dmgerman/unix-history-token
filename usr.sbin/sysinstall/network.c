@@ -360,6 +360,20 @@ return|return
 name|FALSE
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"DHCP"
+argument_list|)
+condition|)
+goto|goto
+name|bail
+goto|;
 name|msgNotify
 argument_list|(
 literal|"ifconfig %s %s"
@@ -445,6 +459,8 @@ name|rp
 argument_list|)
 expr_stmt|;
 block|}
+name|bail
+label|:
 if|if
 condition|(
 name|isDebug
@@ -1541,11 +1557,11 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"NOTICE: The PPP command is now started on VTY2 (type ALT-F3 to\n"
+literal|"NOTICE: The PPP command is now started on VTY3 (type ALT-F3 to\n"
 literal|"interact with it, ALT-F1 to switch back here). If you are using\n"
-literal|"a PAP or CHAP login simply enter \"dial\" otherwise you'll need\n"
-literal|"need to use is the \"term\" command which starts a terminal\n"
-literal|"emulator you can use to talk to your modem and dial the service\n"
+literal|"a PAP or CHAP login simply enter \"dial\", otherwise you'll need\n"
+literal|"to use the \"term\" command which starts a terminal emulator\n"
+literal|"which you can use to talk to your modem and dial the service\n"
 literal|"provider.  Once you're connected, come back to this screen and\n"
 literal|"press return.\n\n"
 literal|"DO NOT PRESS [ENTER] HERE UNTIL THE CONNECTION IS FULLY\n"

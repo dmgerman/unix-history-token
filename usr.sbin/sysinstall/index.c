@@ -276,9 +276,17 @@ literal|"gnome"
 block|,
 literal|"Components of the Gnome Desktop environment."
 block|,
+literal|"irc"
+block|,
+literal|"Internet Relay Chat utilities."
+block|,
 literal|"japanese"
 block|,
 literal|"Ported software for the Japanese market."
+block|,
+literal|"java"
+block|,
+literal|"Java language support."
 block|,
 literal|"kde"
 block|,
@@ -451,6 +459,10 @@ block|,
 literal|"x11-fonts"
 block|,
 literal|"X Window System fonts and font utilities."
+block|,
+literal|"x11-servers"
+block|,
+literal|"X Window System servers."
 block|,
 literal|"x11-toolkits"
 block|,
