@@ -4,18 +4,97 @@ comment|/*-  * Copyright (c) 1999 Michael Smith  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  * We could actually use all 33 segments, but using only 32 means that  * each scatter/gather map is 256 bytes in size, and thus we don't have to worry about  * maps crossing page boundaries.  */
+comment|/*  * Debugging levels:  *  0 - quiet, only emit warnings  *  1 - noisy, emit major function points and things done  *  2 - extremely noisy, emit trace items in loops, etc.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MLX_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|debug
+parameter_list|(
+name|level
+parameter_list|,
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do { if (level<= MLX_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args); } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|debug_called
+parameter_list|(
+name|level
+parameter_list|)
+value|do { if (level<= MLX_DEBUG) printf(__FUNCTION__ ": called\n"); } while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|debug
+parameter_list|(
+name|level
+parameter_list|,
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|debug_called
+parameter_list|(
+name|level
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * We could actually use all 17/33 segments, but using only 16/32 means that  * each scatter/gather map is 128/256 bytes in size, and thus we don't have to worry about  * maps crossing page boundaries.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MLX_NSEG
+name|MLX_NSEG_OLD
+value|16
+end_define
+
+begin_comment
+comment|/* max scatter/gather segments we use 3.x and earlier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX_NSEG_NEW
 value|32
 end_define
 
 begin_comment
-comment|/* max scatter/gather segments we use */
+comment|/* max scatter/gather segments we use 4.x and later */
 end_comment
 
 begin_define
@@ -35,6 +114,10 @@ directive|define
 name|MLX_MAXDRIVES
 value|32
 end_define
+
+begin_comment
+comment|/* max number of system drives */
+end_comment
 
 begin_comment
 comment|/*  * Structure describing a System Drive as attached to the controller.  */
@@ -186,6 +269,9 @@ comment|/* bus connections */
 name|device_t
 name|mlx_dev
 decl_stmt|;
+name|dev_t
+name|mlx_dev_t
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -238,6 +324,10 @@ name|bus_dmamap_t
 name|mlx_sg_dmamap
 decl_stmt|;
 comment|/* map for s/g buffers */
+name|int
+name|mlx_sg_nseg
+decl_stmt|;
+comment|/* max number of s/g entries */
 comment|/* controller limits and features */
 name|struct
 name|mlx_enquiry2
@@ -378,11 +468,23 @@ name|int
 name|mlx_locks
 decl_stmt|;
 comment|/* reentrancy avoidance */
+name|int
+name|mlx_flags
+decl_stmt|;
+define|#
+directive|define
+name|MLX_SPINUP_REPORTED
+value|(1<<0)
+comment|/* "spinning up drives" message displayed */
 comment|/* interface-specific accessor functions */
 name|int
 name|mlx_iftype
 decl_stmt|;
 comment|/* interface protocol */
+define|#
+directive|define
+name|MLX_IFTYPE_2
+value|2
 define|#
 directive|define
 name|MLX_IFTYPE_3
@@ -445,6 +547,30 @@ name|sc
 parameter_list|,
 name|int
 name|action
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|mlx_fw_handshake
+function_decl|)
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+modifier|*
+name|error
+parameter_list|,
+name|int
+modifier|*
+name|param1
+parameter_list|,
+name|int
+modifier|*
+name|param2
 parameter_list|)
 function_decl|;
 define|#

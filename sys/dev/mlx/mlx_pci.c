@@ -117,47 +117,6 @@ directive|include
 file|<dev/mlx/mlxreg.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|debug
-parameter_list|(
-name|fmt
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-value|printf("%s: " fmt "\n", __FUNCTION__ , ##args)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|debug
-parameter_list|(
-name|fmt
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int
@@ -318,7 +277,20 @@ name|mlx_identifiers
 index|[]
 init|=
 block|{
-comment|/*    {0x1069, 0x0001, 0x0000, 0x0000, MLX_IFTYPE_2, "Mylex version 2 RAID interface"}, */
+block|{
+literal|0x1069
+block|,
+literal|0x0001
+block|,
+literal|0x0000
+block|,
+literal|0x0000
+block|,
+name|MLX_IFTYPE_2
+block|,
+literal|"Mylex version 2 RAID interface"
+block|}
+block|,
 block|{
 literal|0x1069
 block|,
@@ -392,9 +364,9 @@ name|mlx_ident
 modifier|*
 name|m
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
@@ -520,9 +492,9 @@ decl_stmt|;
 name|u_int32_t
 name|command
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Make sure we are going to be able to talk to this board.      */
@@ -534,7 +506,7 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -561,6 +533,22 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* force the busmaster enable bit on */
+name|command
+operator||=
+name|PCIM_CMD_BUSMASTEREN
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+name|command
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/*      * Initialise softc.      */
 name|sc
 operator|=
@@ -672,21 +660,37 @@ name|ENXIO
 operator|)
 return|;
 comment|/*      * Allocate the PCI register window.      */
-comment|/* type 3 adapters have an I/O region we don't use at base 0 */
-name|rid
-operator|=
-operator|(
+comment|/* type 2/3 adapters have an I/O region we don't use at base 0 */
+switch|switch
+condition|(
 name|sc
 operator|->
 name|mlx_iftype
-operator|==
+condition|)
+block|{
+case|case
+name|MLX_IFTYPE_2
+case|:
+case|case
 name|MLX_IFTYPE_3
-operator|)
-condition|?
+case|:
+name|rid
+operator|=
 name|MLX_CFG_BASE1
-else|:
+expr_stmt|;
+break|break;
+case|case
+name|MLX_IFTYPE_4
+case|:
+case|case
+name|MLX_IFTYPE_5
+case|:
+name|rid
+operator|=
 name|MLX_CFG_BASE0
 expr_stmt|;
+break|break;
+block|}
 name|sc
 operator|->
 name|mlx_mem
@@ -787,7 +791,7 @@ argument_list|,
 comment|/* filter, filterarg */
 name|MAXBSIZE
 argument_list|,
-name|MLX_NSEG
+name|MLX_NSEG_NEW
 argument_list|,
 comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT

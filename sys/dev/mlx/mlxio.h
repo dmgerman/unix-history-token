@@ -163,6 +163,11 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* command mailbox contents */
+comment|/* wrapper */
+name|int
+name|mu_error
+decl_stmt|;
+comment|/* result of submission to driver */
 block|}
 struct|;
 end_struct
