@@ -815,8 +815,8 @@ name|int
 name|countcpus
 parameter_list|)
 block|{
-name|ACPI_PHYSICAL_ADDRESS
-name|rsdp_phys
+name|ACPI_PTR
+name|rsdp_ptr
 decl_stmt|;
 name|RSDP_DESCRIPTOR
 modifier|*
@@ -839,10 +839,10 @@ if|if
 condition|(
 name|AcpiOsGetRootPointer
 argument_list|(
-literal|0
+name|ACPI_LOGICAL_ADDRESSING
 argument_list|,
 operator|&
-name|rsdp_phys
+name|rsdp_ptr
 argument_list|)
 operator|!=
 name|AE_OK
@@ -858,7 +858,11 @@ operator|*
 operator|)
 name|IA64_PHYS_TO_RR7
 argument_list|(
-name|rsdp_phys
+name|rsdp_ptr
+operator|.
+name|Pointer
+operator|.
+name|Physical
 argument_list|)
 expr_stmt|;
 name|xsdt
