@@ -7487,7 +7487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the virtual address and length of a buffer */
+comment|/*  * Get the virtual address and length of a buffer.  * Note: the vaddr argument is optional.  */
 end_comment
 
 begin_function
@@ -7516,6 +7516,12 @@ modifier|*
 name|len
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|vaddr
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|vaddr
 operator|=
@@ -7569,6 +7575,12 @@ name|uint32_t
 name|prio
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|vaddr
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|vaddr
 operator|=
@@ -9638,7 +9650,7 @@ name|firstva
 operator|=
 name|tmp
 operator|->
-name|nb_startva
+name|nb_mappedsystemva
 expr_stmt|;
 operator|*
 name|firstlen
