@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)edit.c	1.1 %G%"
+literal|"@(#)edit.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,6 +488,18 @@ argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If we are in read only mode, make the 		 * temporary message file readonly as well. 		 */
+if|if
+condition|(
+name|readonly
+condition|)
+name|chmod
+argument_list|(
+name|edname
+argument_list|,
+literal|0400
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Fork/execl the editor on the edit file. 		 */
 if|if
 condition|(
@@ -604,6 +616,19 @@ operator|!=
 name|pid
 condition|)
 empty_stmt|;
+comment|/* 		 * If in read only mode, just remove the editor 		 * temporary and return. 		 */
+if|if
+condition|(
+name|readonly
+condition|)
+block|{
+name|remove
+argument_list|(
+name|edname
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * Now copy the message to the end of the 		 * temp file. 		 */
 if|if
 condition|(
