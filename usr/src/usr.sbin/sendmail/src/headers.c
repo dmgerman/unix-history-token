@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.26 (Berkeley) %G%"
+literal|"@(#)headers.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -561,6 +561,11 @@ name|char
 modifier|*
 name|fancy
 decl_stmt|;
+name|bool
+name|oldHoldErrs
+init|=
+name|HoldErrs
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -573,7 +578,21 @@ modifier|*
 name|udbsender
 parameter_list|()
 function_decl|;
-comment|/* 			**  Try doing USERDB rewriting even on fully commented 			**  names; this saves the "comment" information (such 			**  as full name) and rewrites the electronic part. 			*/
+comment|/* 			**  Try doing USERDB rewriting even on fully commented 			**  names; this saves the "comment" information (such 			**  as full name) and rewrites the electronic part. 			** 			** XXX	This code doesn't belong here -- parsing should 			** XXX	not be done during collect() phase because 			** XXX	error messages can confuse the SMTP phase. 			** XXX	Setting HoldErrs is a crude hack around this 			** XXX	problem. 			*/
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_ARPAFTP
+condition|)
+name|HoldErrs
+operator|=
+name|TRUE
+expr_stmt|;
 name|fancy
 operator|=
 name|crackaddr
@@ -671,6 +690,10 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
+name|HoldErrs
+operator|=
+name|oldHoldErrs
+expr_stmt|;
 block|}
 endif|#
 directive|endif
