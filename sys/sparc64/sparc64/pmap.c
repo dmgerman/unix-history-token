@@ -8352,25 +8352,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|vm_offset_t
-name|pmap_phys_address
-parameter_list|(
-name|int
-name|ppn
-parameter_list|)
-block|{
-return|return
-operator|(
-name|sparc64_ptob
-argument_list|(
-name|ppn
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
 end_comment

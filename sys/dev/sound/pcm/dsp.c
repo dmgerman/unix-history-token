@@ -4754,6 +4754,10 @@ parameter_list|,
 name|vm_offset_t
 name|offset
 parameter_list|,
+name|vm_offset_t
+modifier|*
+name|paddr
+parameter_list|,
 name|int
 name|nprot
 parameter_list|)
@@ -4775,9 +4779,6 @@ name|c
 decl_stmt|;
 name|intrmask_t
 name|s
-decl_stmt|;
-name|int
-name|ret
 decl_stmt|;
 if|if
 condition|(
@@ -4904,10 +4905,9 @@ name|flags
 operator||=
 name|CHN_F_MAPPED
 expr_stmt|;
-name|ret
+operator|*
+name|paddr
 operator|=
-name|atop
-argument_list|(
 name|vtophys
 argument_list|(
 name|sndbuf_getbufofs
@@ -4917,7 +4917,6 @@ operator|->
 name|bufsoft
 argument_list|,
 name|offset
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4940,7 +4939,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-name|ret
+literal|0
 return|;
 block|}
 end_function

@@ -1616,6 +1616,10 @@ parameter_list|,
 name|vm_offset_t
 name|offset
 parameter_list|,
+name|vm_offset_t
+modifier|*
+name|paddr
+parameter_list|,
 name|int
 name|prot
 parameter_list|)
@@ -1631,6 +1635,8 @@ argument_list|(
 name|adp
 argument_list|,
 name|offset
+argument_list|,
+name|paddr
 argument_list|,
 name|prot
 argument_list|)

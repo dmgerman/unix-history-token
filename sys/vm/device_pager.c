@@ -358,6 +358,8 @@ name|npages
 decl_stmt|;
 name|vm_offset_t
 name|off
+decl_stmt|,
+name|paddr
 decl_stmt|;
 comment|/* 	 * Offset should be page aligned. 	 */
 if|if
@@ -468,14 +470,16 @@ name|dev
 argument_list|,
 name|off
 argument_list|,
+operator|&
+name|paddr
+argument_list|,
 operator|(
 name|int
 operator|)
 name|prot
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 name|mtx_unlock
@@ -748,6 +752,8 @@ name|dev
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|d_mmap_t
 modifier|*
@@ -812,10 +818,8 @@ argument_list|(
 literal|"dev_pager_getpage: no map function"
 argument_list|)
 expr_stmt|;
-name|paddr
+name|ret
 operator|=
-name|pmap_phys_address
-argument_list|(
 call|(
 modifier|*
 name|mapfunc
@@ -830,23 +834,24 @@ name|offset
 operator|<<
 name|PAGE_SHIFT
 argument_list|,
+operator|&
+name|paddr
+argument_list|,
 name|prot
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|paddr
-operator|!=
-operator|-
-literal|1
+name|ret
+operator|==
+literal|0
 argument_list|,
 operator|(
 literal|"dev_pager_getpage: map function returns error"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Replace the passed in reqpage page with our own fake page and free up the 	 * all of the original pages. 	 */
+comment|/* 	 * Replace the passed in reqpage page with our own fake page and 	 * free up the all of the original pages. 	 */
 name|page
 operator|=
 name|dev_pager_getfake

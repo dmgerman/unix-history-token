@@ -266,6 +266,8 @@ name|dev
 parameter_list|,
 name|offset
 parameter_list|,
+name|paddr
+parameter_list|,
 name|nprot
 parameter_list|)
 name|dev_t
@@ -273,6 +275,10 @@ name|dev
 decl_stmt|;
 name|vm_offset_t
 name|offset
+decl_stmt|;
+name|vm_offset_t
+modifier|*
+name|paddr
 decl_stmt|;
 name|int
 name|nprot

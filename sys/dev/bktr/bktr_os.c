@@ -3287,6 +3287,10 @@ parameter_list|,
 name|vm_offset_t
 name|offset
 parameter_list|,
+name|vm_offset_t
+modifier|*
+name|paddr
+parameter_list|,
 name|int
 name|nprot
 parameter_list|)
@@ -3395,10 +3399,9 @@ operator|-
 literal|1
 operator|)
 return|;
-return|return
-operator|(
-name|atop
-argument_list|(
+operator|*
+name|paddr
+operator|=
 name|vtophys
 argument_list|(
 name|bktr
@@ -3407,7 +3410,10 @@ name|bigbuf
 argument_list|)
 operator|+
 name|offset
-argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

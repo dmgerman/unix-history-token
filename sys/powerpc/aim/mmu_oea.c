@@ -6330,24 +6330,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|vm_offset_t
-name|pmap_phys_address
-parameter_list|(
-name|int
-name|ppn
-parameter_list|)
-block|{
-name|TODO
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Map a list of wired pages into kernel virtual address space.  This is  * intended for temporary mappings which do not need page modification or  * references recorded.  Existing mappings in the region are overwritten.  */
 end_comment
