@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_fat.c,v 1.12 1997/02/22 09:40:47 peter Exp $ */
 end_comment
 
 begin_comment
@@ -40,18 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mount.h>
 end_include
 
@@ -68,12 +56,6 @@ end_include
 begin_comment
 comment|/* to define vattr structure */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
 
 begin_comment
 comment|/*  * msdosfs include files.  */

@@ -42,43 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -114,12 +78,6 @@ begin_comment
 comment|/* DEVFS */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -154,12 +112,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
 end_include
 
 begin_include
