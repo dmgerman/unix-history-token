@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -534,13 +534,7 @@ expr_stmt|;
 name|ihinit
 argument_list|()
 expr_stmt|;
-name|bhinit
-argument_list|()
-expr_stmt|;
-name|binit
-argument_list|()
-expr_stmt|;
-name|bswinit
+name|swapinit
 argument_list|()
 expr_stmt|;
 name|nchinit
@@ -936,11 +930,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|swdevt
-modifier|*
-name|swp
-decl_stmt|;
 name|int
 name|base
 decl_stmt|,
@@ -1099,7 +1088,38 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a vswapon() 	 * system is issued, usually when the system goes multi-user. 	 */
+block|}
+end_block
+
+begin_comment
+comment|/*  * Set up swap devices.  * Initialize linked list of free swap  * headers. These do not actually point  * to buffers, but rather to pages that  * are being swapped in and out.  */
+end_comment
+
+begin_macro
+name|swapinit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|sp
+init|=
+name|swbuf
+decl_stmt|;
+name|struct
+name|swdevt
+modifier|*
+name|swp
+decl_stmt|;
+comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a swapon() 	 * system is issued, usually when the system goes multi-user. 	 */
 name|nswdev
 operator|=
 literal|0
@@ -1148,7 +1168,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"binit"
+literal|"swapinit"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1205,32 +1225,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Initialize linked list of free swap  * headers. These do not actually point  * to buffers, but rather to pages that  * are being swapped in and out.  */
-end_comment
-
-begin_macro
-name|bswinit
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|sp
-init|=
-name|swbuf
-decl_stmt|;
+comment|/* 	 * Now set up swap buffer headers. 	 */
 name|bswlist
 operator|.
 name|av_forw
