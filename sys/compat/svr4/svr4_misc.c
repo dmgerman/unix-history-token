@@ -1255,12 +1255,6 @@ argument_list|(
 operator|(
 literal|"svr4_sys_getdents64(%d, *, %d)\n"
 operator|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
-operator|,
 name|SCARG
 argument_list|(
 name|uap
