@@ -432,6 +432,9 @@ decl_stmt|;
 name|u_int64_t
 name|default_node_wwn
 decl_stmt|;
+name|u_int32_t
+name|default_id
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -460,17 +463,29 @@ name|intr_config_hook
 name|ehook
 decl_stmt|;
 name|u_int8_t
+label|:
+literal|1
+operator|,
+name|fcbsy
+operator|:
+literal|1
+operator|,
+name|ktmature
+operator|:
+literal|1
+operator|,
 name|mboxwaiting
-decl_stmt|;
-name|u_int8_t
-name|simqfrozen
-decl_stmt|;
-name|u_int8_t
-name|drain
-decl_stmt|;
-name|u_int8_t
+operator|:
+literal|1
+operator|,
 name|intsok
-decl_stmt|;
+operator|:
+literal|1
+operator|,
+name|simqfrozen
+operator|:
+literal|3
+expr_stmt|;
 name|struct
 name|mtx
 name|lock
@@ -740,7 +755,7 @@ name|MAXISPREQUEST
 parameter_list|(
 name|isp
 parameter_list|)
-value|256
+value|((IS_FC(isp) || IS_ULTRA2(isp))? 1024 : 256)
 end_define
 
 begin_define
@@ -784,7 +799,7 @@ parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|if (isp->isp_osinfo.mboxwaiting) { \ 		isp->isp_osinfo.mboxwaiting = 0; \ 		wakeup(&isp->isp_osinfo.mboxwaiting); \ 	} \ 	isp->isp_mboxbsy = 0
+value|if (isp->isp_osinfo.mboxwaiting) { \ 		isp->isp_osinfo.mboxwaiting = 0; \ 		wakeup(&isp->isp_mbxworkp); \ 	} \ 	isp->isp_mboxbsy = 0
 end_define
 
 begin_define
@@ -803,6 +818,8 @@ name|FC_SCRATCH_ACQUIRE
 parameter_list|(
 name|isp
 parameter_list|)
+define|\
+value|if (isp->isp_osinfo.fcbsy) {					\ 		isp_prt(isp, ISP_LOGWARN,				\ 		    "FC scratch area busy (line %d)!", __LINE__);	\ 	} else								\ 		isp->isp_osinfo.fcbsy = 1
 end_define
 
 begin_define
@@ -812,6 +829,7 @@ name|FC_SCRATCH_RELEASE
 parameter_list|(
 name|isp
 parameter_list|)
+value|isp->isp_osinfo.fcbsy = 0
 end_define
 
 begin_ifndef
@@ -1187,7 +1205,7 @@ name|DEFAULT_IID
 parameter_list|(
 name|x
 parameter_list|)
-value|7
+value|(isp)->isp_osinfo.default_id
 end_define
 
 begin_define
@@ -1197,7 +1215,7 @@ name|DEFAULT_LOOPID
 parameter_list|(
 name|x
 parameter_list|)
-value|109
+value|(isp)->isp_osinfo.default_id
 end_define
 
 begin_define
@@ -1866,9 +1884,7 @@ argument_list|(
 operator|&
 name|isp
 operator|->
-name|isp_osinfo
-operator|.
-name|mboxwaiting
+name|isp_mbxworkp
 argument_list|,
 operator|&
 name|isp
