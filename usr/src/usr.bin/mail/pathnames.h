@@ -4,8 +4,40 @@ comment|/*  * Declarations and constants specific to an installation.  *  * Vax/
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)pathnames.h	2.2 %G%";  */
+comment|/*  * Sccs Id = "@(#)pathnames.h	2.3 %G%";  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GETHOST
+end_define
+
+begin_comment
+comment|/* System has gethostname syscall */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GETHOST
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCAL
+value|EMPTYID
+end_define
+
+begin_comment
+comment|/* Dynamically determined local host */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -15,8 +47,14 @@ value|'j'
 end_define
 
 begin_comment
-comment|/* Local machine id */
+comment|/* Local host id */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|GETHOST
+end_endif
 
 begin_define
 define|#
