@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -158,26 +158,23 @@ begin_comment
 comment|/* **  Compilation options. ** **	#define these if they are available; comment them out otherwise. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DBM
-value|1
-end_define
+begin_comment
+comment|/* # define DBM		1	/* use DBM library (requires -ldbm) */
+end_comment
 
 begin_comment
-comment|/* use DBM library (requires -ldbm) */
+comment|/* # define NDBM	1	/* new DBM library available (requires DBM) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NDBM
+name|NEWDB
 value|1
 end_define
 
 begin_comment
-comment|/* new DBM library available (requires DBM) */
+comment|/* use new 4.4bsd database package db(3) */
 end_comment
 
 begin_define
