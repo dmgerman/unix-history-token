@@ -1320,7 +1320,7 @@ name|fs
 parameter_list|,
 name|c
 parameter_list|)
-value|((ufs2_daddr_t)((fs)->fs_fpg * (c)))
+value|(((ufs2_daddr_t)(fs)->fs_fpg) * (c))
 end_define
 
 begin_define
@@ -1531,7 +1531,7 @@ name|frag
 parameter_list|)
 comment|/* calculates ((off_t)frag * fs->fs_fsize) */
 define|\
-value|((off_t)(frag)<< (fs)->fs_fshift)
+value|(((off_t)(frag))<< (fs)->fs_fshift)
 end_define
 
 begin_define
@@ -1545,7 +1545,7 @@ name|blk
 parameter_list|)
 comment|/* calculates ((off_t)blk * fs->fs_bsize) */
 define|\
-value|((off_t)(blk)<< (fs)->fs_bshift)
+value|(((off_t)(blk))<< (fs)->fs_bshift)
 end_define
 
 begin_comment
@@ -1692,7 +1692,7 @@ parameter_list|,
 name|percentreserved
 parameter_list|)
 define|\
-value|(blkstofrags((fs), (fs)->fs_cstotal.cs_nbfree) + \ 	(fs)->fs_cstotal.cs_nffree - \ 	((off_t)((fs)->fs_dsize) * (percentreserved) / 100))
+value|(blkstofrags((fs), (fs)->fs_cstotal.cs_nbfree) + \ 	(fs)->fs_cstotal.cs_nffree - \ 	(((off_t)((fs)->fs_dsize)) * (percentreserved) / 100))
 end_define
 
 begin_comment
