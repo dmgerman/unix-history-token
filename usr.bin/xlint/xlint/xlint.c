@@ -1502,30 +1502,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Transform the value of a preprocessor symbol to a string, by using    ANSI features of the preprocessor.  STRINGIZEINT() is for internal    use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRINGIZEINT
-parameter_list|(
-name|a
-parameter_list|)
-value|#a
-end_define
-
-begin_define
-define|#
-directive|define
-name|STRINGIZE
-parameter_list|(
-name|a
-parameter_list|)
-value|STRINGIZEINT(a)
-end_define
-
 begin_function
 name|int
 name|main
@@ -1867,7 +1843,7 @@ operator|&
 name|cppflags
 argument_list|,
 literal|"-D__FreeBSD__="
-name|STRINGIZE
+name|__XSTRING
 argument_list|(
 name|__FreeBSD__
 argument_list|)
