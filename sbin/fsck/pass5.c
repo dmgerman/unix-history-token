@@ -2145,7 +2145,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"CLEAN FLAG IS WRONG IN SUPERBLOCK"
+literal|"CLEAN FLAG NOT SET IN SUPERBLOCK"
 argument_list|)
 expr_stmt|;
 if|if
