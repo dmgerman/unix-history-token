@@ -596,9 +596,12 @@ literal|"ahc"
 argument_list|,
 name|ahc
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|ahc
 operator|->
-name|unit
+name|dev_softc
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -772,9 +775,12 @@ literal|"ahc"
 argument_list|,
 name|ahc
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|ahc
 operator|->
-name|unit
+name|dev_softc
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
