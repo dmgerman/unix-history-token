@@ -2347,7 +2347,6 @@ name|addrloop
 goto|;
 comment|/* XXX: see below */
 block|}
-elseif|else
 if|if
 condition|(
 name|IFA6_IS_DEPRECATED
@@ -2410,14 +2409,7 @@ goto|;
 block|}
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|IFA6_IS_DEPRECATED
-argument_list|(
-name|ia6
-argument_list|)
-condition|)
+else|else
 block|{
 comment|/* 			 * A new RA might have made a deprecated address 			 * preferred. 			 */
 name|ia6
