@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c 4.1 %G%"
+literal|"@(#)init.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -917,7 +917,7 @@ name|dosource
 block|,
 literal|1
 block|,
-literal|1
+literal|2
 block|,
 literal|"stop"
 block|,

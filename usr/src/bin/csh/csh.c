@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.3 %G%"
+literal|"@(#)csh.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
