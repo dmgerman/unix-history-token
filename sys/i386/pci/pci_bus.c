@@ -143,9 +143,8 @@ function_decl|;
 end_function_decl
 
 begin_function
-specifier|static
 name|int
-name|nexus_pcib_maxslots
+name|legacy_pcib_maxslots
 parameter_list|(
 name|device_t
 name|dev
@@ -162,9 +161,8 @@ comment|/* read configuration space register */
 end_comment
 
 begin_function
-specifier|static
 name|u_int32_t
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 parameter_list|(
 name|device_t
 name|dev
@@ -209,9 +207,8 @@ comment|/* write configuration space register */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|nexus_pcib_write_config
+name|legacy_pcib_write_config
 parameter_list|(
 name|device_t
 name|dev
@@ -253,46 +250,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* route interrupt */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|nexus_pcib_route_interrupt
-parameter_list|(
-name|device_t
-name|pcib
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|pin
-parameter_list|)
-block|{
-return|return
-operator|(
-name|pcibios_pcib_route_interrupt
-argument_list|(
-name|pcib
-argument_list|,
-name|dev
-argument_list|,
-name|pin
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 specifier|static
 specifier|const
 name|char
 modifier|*
-name|nexus_pcib_is_host_bridge
+name|legacy_pcib_is_host_bridge
 parameter_list|(
 name|int
 name|bus
@@ -350,7 +313,7 @@ operator|=
 literal|"Intel 824?? host to PCI bridge"
 expr_stmt|;
 comment|/* XXX This is a guess */
-comment|/* *busnum = nexus_pcib_read_config(0, bus, slot, func, 0x41, 1); */
+comment|/* *busnum = legacy_pcib_read_config(0, bus, slot, func, 0x41, 1); */
 operator|*
 name|busnum
 operator|=
@@ -455,7 +418,7 @@ expr_stmt|;
 operator|*
 name|busnum
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -480,7 +443,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -501,7 +464,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -524,7 +487,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -545,7 +508,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -780,7 +743,7 @@ expr_stmt|;
 operator|*
 name|busnum
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -819,7 +782,7 @@ expr_stmt|;
 operator|*
 name|busnum
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -845,7 +808,7 @@ expr_stmt|;
 operator|*
 name|busnum
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -871,7 +834,7 @@ expr_stmt|;
 operator|*
 name|busnum
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -902,7 +865,7 @@ expr_stmt|;
 operator|*
 name|busnum
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -933,7 +896,7 @@ expr_stmt|;
 operator|*
 name|busnum
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -988,7 +951,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|nexus_pcib_identify
+name|legacy_pcib_identify
 parameter_list|(
 name|driver_t
 modifier|*
@@ -1086,7 +1049,7 @@ literal|0
 expr_stmt|;
 name|hdrtype
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -1168,7 +1131,7 @@ name|i
 decl_stmt|;
 name|id
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -1193,7 +1156,7 @@ condition|)
 continue|continue;
 name|class
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -1210,7 +1173,7 @@ argument_list|)
 expr_stmt|;
 name|subclass
 operator|=
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -1227,7 +1190,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|nexus_pcib_is_host_bridge
+name|legacy_pcib_is_host_bridge
 argument_list|(
 name|bus
 argument_list|,
@@ -1420,7 +1383,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"nexus_pcib_identify: no bridge found, adding pcib0 anyway\n"
+literal|"legacy_pcib_identify: no bridge found, adding pcib0 anyway\n"
 argument_list|)
 expr_stmt|;
 name|child
@@ -1450,7 +1413,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|nexus_pcib_probe
+name|legacy_pcib_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -1473,9 +1436,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|nexus_pcib_attach
+name|legacy_pcib_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -1503,9 +1465,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|nexus_pcib_read_ivar
+name|legacy_pcib_read_ivar
 parameter_list|(
 name|device_t
 name|dev
@@ -1548,9 +1509,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|nexus_pcib_write_ivar
+name|legacy_pcib_write_ivar
 parameter_list|(
 name|device_t
 name|dev
@@ -1593,7 +1553,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|nexus_pcib_methods
+name|legacy_pcib_methods
 index|[]
 init|=
 block|{
@@ -1602,21 +1562,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_identify
 argument_list|,
-name|nexus_pcib_identify
+name|legacy_pcib_identify
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|nexus_pcib_probe
+name|legacy_pcib_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|nexus_pcib_attach
+name|legacy_pcib_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1652,14 +1612,14 @@ name|DEVMETHOD
 argument_list|(
 name|bus_read_ivar
 argument_list|,
-name|nexus_pcib_read_ivar
+name|legacy_pcib_read_ivar
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_write_ivar
 argument_list|,
-name|nexus_pcib_write_ivar
+name|legacy_pcib_write_ivar
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1709,28 +1669,28 @@ name|DEVMETHOD
 argument_list|(
 name|pcib_maxslots
 argument_list|,
-name|nexus_pcib_maxslots
+name|legacy_pcib_maxslots
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|pcib_read_config
 argument_list|,
-name|nexus_pcib_read_config
+name|legacy_pcib_read_config
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|pcib_write_config
 argument_list|,
-name|nexus_pcib_write_config
+name|legacy_pcib_write_config
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|pcib_route_interrupt
 argument_list|,
-name|nexus_pcib_route_interrupt
+name|pcibios_pcib_route_interrupt
 argument_list|)
 block|,
 block|{
@@ -1745,12 +1705,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|nexus_pcib_driver
+name|legacy_pcib_driver
 init|=
 block|{
 literal|"pcib"
 block|,
-name|nexus_pcib_methods
+name|legacy_pcib_methods
 block|,
 literal|1
 block|, }
@@ -1764,7 +1724,7 @@ name|pcib
 argument_list|,
 name|legacy
 argument_list|,
-name|nexus_pcib_driver
+name|legacy_pcib_driver
 argument_list|,
 name|pcib_devclass
 argument_list|,
