@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.8.2.5 1996/06/05 19:50:37 nate Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.8.2.6 1996/09/18 16:19:28 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -667,6 +667,19 @@ name|fxp_device
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Set initial transmit threshold at 64 (512 bytes). This is  * increased by 64 (512 bytes) at a time, to maximum of 192  * (1536 bytes), if an underrun occurs.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tx_threshold
+init|=
+literal|64
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Number of transmit control blocks. This determines the number  * of transmit buffers that can be chained in the CB list.  * This must be a power of two.  */
@@ -1991,9 +2004,8 @@ name|txp
 operator|->
 name|tx_threshold
 operator|=
-literal|128
+name|tx_threshold
 expr_stmt|;
-comment|/* bytes*8 = 1024 */
 name|txp
 operator|->
 name|mb_head
@@ -2643,6 +2655,33 @@ name|sp
 operator|->
 name|rx_shortframes
 expr_stmt|;
+comment|/* 	 * If any transmit underruns occured, bump up the transmit 	 * threshold by another 512 bytes (64 * 8). 	 */
+if|if
+condition|(
+name|sp
+operator|->
+name|tx_underruns
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_oerrors
+operator|+=
+name|sp
+operator|->
+name|tx_underruns
+expr_stmt|;
+if|if
+condition|(
+name|tx_threshold
+operator|<
+literal|192
+condition|)
+name|tx_threshold
+operator|+=
+literal|64
+expr_stmt|;
+block|}
 comment|/* 	 * If there is no pending command, start another stats 	 * dump. Otherwise punt for now. 	 */
 if|if
 condition|(
@@ -2685,6 +2724,12 @@ comment|/* 		 * A previous command is still waiting to be accepted. 		 * Just ze
 name|sp
 operator|->
 name|tx_good
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|tx_underruns
 operator|=
 literal|0
 expr_stmt|;
