@@ -3,10 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Adams.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_comment
-comment|/*  * Hacks to support "-a|c|n" flags on the command line which enable VJ  * header compresion and disable ICMP.  * If this is good all rights go to B& L Jolitz, otherwise send your  * comments to Reagan (/dev/null).  *  * nerd@percival.rain.com (Michael Galassi) 92.09.03  *  * Hacked to change from sgtty to POSIX termio style serial line control  * and added flag to enable cts/rts style flow control.  *  * blymn@awadi.com.au (Brett Lymn) 93.04.04  *  * Put slattach in it's own process group so it can't be killed  * accidentally. Close the connection on SIGHUP and SIGINT. Write a  * syslog entry upon opening and closing the connection.  Rich Murphey  * and Brad Huntting.  *  * Add '-r command' option: runs 'command' upon recieving SIGHUP  * resulting from loss of carrier.  Log any errors after forking.  * Rich 8/13/93  *  * This version of slattach includes many changes by David Greenman, Brian  * Smith, Chris Bradley, and me (Michael Galassi).  None of them are  * represented as functional anywhere outside of RAINet though they do work  * for us.  Documentation is limited to the usage message for now.  If you  * make improovments please pass them back.  *  * Added '-u UCMD' which runs 'UCMD<old><new>' whenever the slip  * unit number changes where<old> and<new> are the old and new unit  * numbers, respectively.  Also added the '-z' option which forces  * invocation of the redial command (-r CMD) upon startup regardless  * of whether the com driver claims (sometimes mistakenly) that  * carrier is present. Also added '-e ECMD' which runs ECMD before  * exiting.  *  * marc@escargot.rain.com (Marc Frajola) 93/09/10  *  * Minor fixes to allow passive SLIP links to work (connections with  * modem control that do not have an associated dial command). Added  * code to re-check for carrier after dial command has been executed.  * Added SIGTERM handler to properly handle normal kill signals. Fixed  * bug in logic that caused message about no -u command to be logged  * even when -u was specified and the sl number changes. Tried to get  * rid of redundant syslog()'s to minimize console log output. Improved  * logging of improper command line options or number of command  * arguments. Removed spurious newline characters from syslog() calls.  *  * gjung@gjbsd.franken.de  *  * sighup_handler changed to set CLOCAL before running redial_cmd.  * added flag exiting, so exit_handler is not run twice.  *  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -14,6 +10,7 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
 name|copyright
 index|[]
@@ -99,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/slip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_slvar.h>
 end_include
 
@@ -155,22 +158,6 @@ include|#
 directive|include
 file|<strings.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -229,23 +216,48 @@ end_comment
 begin_function_decl
 name|void
 name|setup_line
-parameter_list|()
+parameter_list|(
+name|int
+name|cflag
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* configure slip line */
+comment|/* configure terminal settings */
 end_comment
 
 begin_function_decl
 name|void
-name|attach_line
+name|slip_discipline
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
 comment|/* switch to slip line discipline */
+end_comment
+
+begin_function_decl
+name|void
+name|configure_network
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* configure slip interface */
+end_comment
+
+begin_function_decl
+name|void
+name|acquire_line
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* get tty device as controling terminal */
 end_comment
 
 begin_decl_stmt
@@ -270,21 +282,9 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|slipdisc
-init|=
-name|SLIPDISC
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ttydisc
-init|=
-name|TTYDISC
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* path name of the tty (e.g. /dev/tty01) */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -340,6 +340,10 @@ name|DEFAULT_BAUD
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* baud rate of tty */
+end_comment
+
 begin_decl_stmt
 name|int
 name|slflags
@@ -373,6 +377,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* act as demon if zero, else don't fork. */
+end_comment
+
 begin_decl_stmt
 name|int
 name|exiting
@@ -386,47 +394,28 @@ comment|/* allready running exit_handler */
 end_comment
 
 begin_decl_stmt
-name|FILE
-modifier|*
-name|console
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|termios
 name|tty
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|termios
-name|tty_orig
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* For saving original tty state */
+comment|/* tty configuration/state */
 end_comment
 
 begin_decl_stmt
 name|char
-name|devname
+name|tty_path
 index|[
 literal|32
 index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-name|hostname
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* path name of the tty (e.g. /dev/tty01) */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -468,15 +457,6 @@ comment|/* command to exec before exiting. */
 end_comment
 
 begin_decl_stmt
-name|char
-name|string
-index|[
-literal|100
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 name|usage_str
@@ -501,12 +481,6 @@ parameter_list|)
 block|{
 name|int
 name|option
-decl_stmt|;
-name|char
-name|name
-index|[
-literal|32
-index|]
 decl_stmt|;
 specifier|extern
 name|char
@@ -545,12 +519,12 @@ literal|'a'
 case|:
 name|slflags
 operator||=
-name|SC_AUTOCOMP
+name|IFF_LINK2
 expr_stmt|;
 name|slflags
 operator|&=
 operator|~
-name|SC_COMPRESS
+name|IFF_LINK0
 expr_stmt|;
 break|break;
 case|case
@@ -558,12 +532,12 @@ literal|'c'
 case|:
 name|slflags
 operator||=
-name|SC_COMPRESS
+name|IFF_LINK0
 expr_stmt|;
 name|slflags
 operator|&=
 operator|~
-name|SC_AUTOCOMP
+name|IFF_LINK2
 expr_stmt|;
 break|break;
 case|case
@@ -610,7 +584,7 @@ literal|'n'
 case|:
 name|slflags
 operator||=
-name|SC_NOICMP
+name|IFF_LINK1
 expr_stmt|;
 break|break;
 case|case
@@ -810,21 +784,21 @@ condition|)
 block|{
 name|strcpy
 argument_list|(
-name|devname
+name|tty_path
 argument_list|,
 name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|strcat
 argument_list|(
-name|devname
+name|tty_path
 argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
 name|strncat
 argument_list|(
-name|devname
+name|tty_path
 argument_list|,
 name|dev
 argument_list|,
@@ -833,7 +807,7 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|=
-name|devname
+name|tty_path
 expr_stmt|;
 block|}
 if|if
@@ -849,103 +823,32 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* fork, setsid, chdir /, and close std*. */
-comment|/* Note: daemon() closes stderr, so log errors from here on. */
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"slattach[%d]"
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|)
-expr_stmt|;
+comment|/* daemon() closed stderr, so log errors from here on. */
 name|openlog
 argument_list|(
-name|name
+literal|"slattach"
 argument_list|,
 name|LOG_CONS
+operator||
+name|LOG_PID
 argument_list|,
 name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
-argument_list|(
-name|dev
-argument_list|,
-name|O_RDWR
-operator||
-name|O_NONBLOCK
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"open(%s): %m"
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
-name|exit_handler
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* acquire the serial line as a controling terminal. */
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|TIOCSCTTY
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"ioctl(TIOCSCTTY) failed: %s: %m"
-argument_list|)
-expr_stmt|;
-comment|/* Make us the foreground process group associated with the 	   slip line which is our controlling terminal. */
-if|if
-condition|(
-name|tcsetpgrp
-argument_list|(
-name|fd
-argument_list|,
-name|getpid
+name|acquire_line
 argument_list|()
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syslog
+expr_stmt|;
+comment|/* get tty device as controling terminal */
+name|setup_line
 argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"tcsetpgrp failed: %s: %m"
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* configure for slip line discipline */
+name|slip_discipline
+argument_list|()
+expr_stmt|;
+comment|/* switch to slip line discipline */
 comment|/* upon INT log a timestamp and exit.  */
 if|if
 condition|(
@@ -1012,36 +915,6 @@ argument_list|,
 literal|"cannot install SIGHUP handler: %s: %m"
 argument_list|)
 expr_stmt|;
-comment|/* Keep track of our original terminal values for redialing */
-if|if
-condition|(
-name|tcgetattr
-argument_list|(
-name|fd
-argument_list|,
-operator|&
-name|tty_orig
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"tcgetattr: %m"
-argument_list|)
-expr_stmt|;
-name|exit_handler
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|setup_line
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|redial_on_startup
@@ -1049,10 +922,7 @@ condition|)
 name|sighup_handler
 argument_list|()
 expr_stmt|;
-else|else
-name|attach_line
-argument_list|()
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1095,6 +965,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+name|configure_network
+argument_list|()
+expr_stmt|;
+comment|/* configure the network if needed. */
 for|for
 control|(
 init|;
@@ -1103,9 +978,13 @@ control|)
 block|{
 name|sigset_t
 name|mask
-init|=
-literal|0
 decl_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
 name|sigsuspend
 argument_list|(
 operator|&
@@ -1116,10 +995,268 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Close all FDs, fork, reopen tty port as 0-2, and make it the    controlling terminal for our process group. */
+end_comment
+
+begin_function
+name|void
+name|acquire_line
+parameter_list|()
+block|{
+name|int
+name|ttydisc
+init|=
+name|TTYDISC
+decl_stmt|;
+name|int
+name|pgrp
+decl_stmt|;
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|TIOCSETD
+argument_list|,
+operator|&
+name|ttydisc
+argument_list|)
+expr_stmt|;
+comment|/* reset to tty discipline */
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
+comment|/* close FDs before forking. */
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|STDERR_FILENO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>
+literal|2
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+comment|/* ignore HUP signal when parent dies. */
+name|daemon
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* fork, setsid, chdir /, and close std*. */
+while|while
+condition|(
+name|getppid
+argument_list|()
+operator|!=
+literal|1
+condition|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Wait for parent to die. */
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|sighup_handler
+argument_list|)
+operator|<
+literal|0
+condition|)
+comment|/* Re-enable HUP signal */
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"cannot install SIGHUP handler: %s: %m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|dev
+argument_list|,
+name|O_RDWR
+operator||
+name|O_NONBLOCK
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"open(%s) fd=%d: %m"
+argument_list|,
+name|dev
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|STDERR_FILENO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>
+literal|2
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|STDIN_FILENO
+expr_stmt|;
+comment|/* acquire the serial line as a controling terminal. */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"ioctl(TIOCSCTTY) failed: %s: %m"
+argument_list|)
+expr_stmt|;
+comment|/* Make us the foreground process group associated with the 	   slip line which is our controlling terminal. */
+if|if
+condition|(
+name|tcsetpgrp
+argument_list|(
+name|fd
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"tcsetpgrp failed: %s: %m"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Set the tty flags and set DTR. */
+end_comment
+
+begin_comment
+comment|/* Call as setup_line(CLOCAL) to force clocal assertion. */
+end_comment
+
 begin_function
 name|void
 name|setup_line
-parameter_list|()
+parameter_list|(
+name|int
+name|cflag
+parameter_list|)
 block|{
 name|tty
 operator|.
@@ -1146,6 +1283,8 @@ operator||
 name|flow_control
 operator||
 name|modem_control
+operator||
+name|cflag
 expr_stmt|;
 name|tty
 operator|.
@@ -1212,6 +1351,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Put the line in slip discipline. */
+end_comment
+
+begin_function
+name|void
+name|slip_discipline
+parameter_list|()
+block|{
+name|int
+name|slipdisc
+init|=
+name|SLIPDISC
+decl_stmt|;
 comment|/* Switch to slip line discipline. */
 if|if
 condition|(
@@ -1248,7 +1404,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|SLIOCSFLAGS
+name|SIOCSIFFLAGS
 argument_list|,
 operator|&
 name|slflags
@@ -1261,7 +1417,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(SLIOCSFLAGS): %m"
+literal|"ioctl(SIOCSIFFLAGS): %m"
 argument_list|)
 expr_stmt|;
 name|exit_handler
@@ -1274,12 +1430,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* switch to slip line discipline and configure the network. */
+comment|/* configure the interface, eg. by passing the unit number to a script. */
 end_comment
 
 begin_function
 name|void
-name|attach_line
+name|configure_network
 parameter_list|()
 block|{
 name|int
@@ -1442,7 +1598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Signal handler for SIGHUP when carrier is dropped. */
+comment|/* signup_handler() is invoked when carrier drops, eg. before redial. */
 end_comment
 
 begin_function
@@ -1457,41 +1613,20 @@ condition|)
 return|return;
 name|again
 label|:
-comment|/* reset discipline */
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|TIOCSETD
-argument_list|,
-operator|&
-name|ttydisc
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"ioctl(TIOCSETD): %m"
-argument_list|)
-expr_stmt|;
-name|exit_handler
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* invoke a shell for redial_cmd or punt. */
 if|if
 condition|(
 name|redial_cmd
 condition|)
 block|{
+name|acquire_line
+argument_list|()
+expr_stmt|;
+name|setup_line
+argument_list|(
+name|CLOCAL
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -1505,51 +1640,6 @@ argument_list|,
 name|redial_cmd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|modem_control
-operator|&
-name|CLOCAL
-operator|)
-condition|)
-block|{
-name|tty_orig
-operator|.
-name|c_cflag
-operator||=
-name|CLOCAL
-expr_stmt|;
-if|if
-condition|(
-name|tcsetattr
-argument_list|(
-name|fd
-argument_list|,
-name|TCSAFLUSH
-argument_list|,
-operator|&
-name|tty_orig
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"tcsetattr(TCSAFLUSH): %m"
-argument_list|)
-expr_stmt|;
-name|exit_handler
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|system
 argument_list|(
 name|redial_cmd
@@ -1631,7 +1721,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * No redial command. 		 * 		 * If modem control, just wait for carrier before 		 * falling through to setup_line() and attach_line(). 		 * If no modem control, just fall through immediately. 		 */
+comment|/* If modem control, just wait for carrier before attaching. 		   If no modem control, just fall through immediately. */
 if|if
 condition|(
 operator|!
@@ -1658,20 +1748,19 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* Now wait for carrier before attaching line: */
+comment|/* Now wait for carrier before attaching line. */
+comment|/* We must poll since CLOCAL prevents signal. */
 while|while
 condition|(
 operator|!
 name|carrier
 condition|)
 block|{
-comment|/* 			 * Don't burn the CPU checking for carrier; 			 * carrier must be polled since there is no 			 * way to have a signal sent when carrier 			 * goes high (SIGHUP can only be sent when 			 * carrier is dropped); so add space between 			 * checks for carrier: 			 */
 name|sleep
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* Check for carrier present on tty port: */
 name|ioctl
 argument_list|(
 name|fd
@@ -1688,12 +1777,10 @@ name|comstate
 operator|&
 name|TIOCM_CD
 condition|)
-block|{
 name|carrier
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 name|syslog
 argument_list|(
@@ -1709,9 +1796,14 @@ expr_stmt|;
 block|}
 block|}
 name|setup_line
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|slip_discipline
 argument_list|()
 expr_stmt|;
-name|attach_line
+name|configure_network
 argument_list|()
 expr_stmt|;
 block|}
@@ -1735,11 +1827,11 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"sl%d on %s caught SIGINT, exiting."
-argument_list|,
-name|unit
+literal|"SIGINT on %s (sl%d); exiting"
 argument_list|,
 name|dev
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|exit_handler
