@@ -72,8 +72,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_VG468
+name|PCIC_VG365
 value|6
+end_define
+
+begin_comment
+comment|/* Vadem 365 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VG465
+value|7
+end_define
+
+begin_comment
+comment|/* Vadem 465 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VG468
+value|8
 end_define
 
 begin_comment
@@ -84,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_VG469
-value|7
+value|9
 end_define
 
 begin_comment
@@ -95,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_RF5C396
-value|8
+value|10
 end_define
 
 begin_comment
@@ -106,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_IBM_KING
-value|9
+value|11
 end_define
 
 begin_comment
@@ -117,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_PC98
-value|10
+value|12
 end_define
 
 begin_comment
@@ -128,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_TI1130
-value|11
+value|13
 end_define
 
 begin_comment
