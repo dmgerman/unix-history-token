@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.22.1.1 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1557,10 +1557,15 @@ name|S_IFMT
 operator|)
 operator|!=
 name|S_IFCHR
+operator|&&
+operator|!
+name|mfs
 condition|)
 name|printf
 argument_list|(
-literal|"%s: not a character device\n"
+literal|"%s: %s: not a character-special device\n"
+argument_list|,
+name|progname
 argument_list|,
 name|special
 argument_list|)
