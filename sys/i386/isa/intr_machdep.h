@@ -66,10 +66,6 @@ value|0x60
 end_define
 
 begin_comment
-comment|/* XXX note that the AST interrupt is at 0x50 */
-end_comment
-
-begin_comment
 comment|/* blocking values for local APIC Task Priority Register */
 end_comment
 
@@ -188,32 +184,6 @@ value|(ICU_OFFSET + 112)
 end_define
 
 begin_comment
-comment|/* 0x90 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XINVLPG_OFFSET
-value|(ICU_OFFSET + 113)
-end_define
-
-begin_comment
-comment|/* 0x91 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XINVLRNG_OFFSET
-value|(ICU_OFFSET + 114)
-end_define
-
-begin_comment
-comment|/* 0x92 */
-end_comment
-
-begin_comment
 comment|/* inter-cpu clock handling */
 end_comment
 
@@ -221,23 +191,15 @@ begin_define
 define|#
 directive|define
 name|XHARDCLOCK_OFFSET
-value|(ICU_OFFSET + 120)
+value|(ICU_OFFSET + 113)
 end_define
-
-begin_comment
-comment|/* 0x98 */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|XSTATCLOCK_OFFSET
-value|(ICU_OFFSET + 121)
+value|(ICU_OFFSET + 114)
 end_define
-
-begin_comment
-comment|/* 0x99 */
-end_comment
 
 begin_comment
 comment|/* inter-CPU rendezvous */
@@ -247,19 +209,11 @@ begin_define
 define|#
 directive|define
 name|XRENDEZVOUS_OFFSET
-value|(ICU_OFFSET + 122)
+value|(ICU_OFFSET + 115)
 end_define
 
 begin_comment
-comment|/* 0x9A */
-end_comment
-
-begin_comment
 comment|/* IPI to generate an additional software trap at the target CPU */
-end_comment
-
-begin_comment
-comment|/* XXX in the middle of the interrupt range, overlapping IRQ48 */
 end_comment
 
 begin_define
@@ -268,10 +222,6 @@ directive|define
 name|XCPUAST_OFFSET
 value|(ICU_OFFSET +  48)
 end_define
-
-begin_comment
-comment|/* 0x50 */
-end_comment
 
 begin_comment
 comment|/* IPI to signal CPUs to stop and wait for another CPU to restart them */
@@ -283,10 +233,6 @@ directive|define
 name|XCPUSTOP_OFFSET
 value|(ICU_OFFSET + 128)
 end_define
-
-begin_comment
-comment|/* 0xA0 */
-end_comment
 
 begin_comment
 comment|/*  * Note: this vector MUST be xxxx1111, 32 + 223 = 255 = 0xff:  */
@@ -786,13 +732,7 @@ begin_decl_stmt
 name|inthand_t
 name|Xinvltlb
 decl_stmt|,
-comment|/* TLB shootdowns - global */
-name|Xinvlpg
-decl_stmt|,
-comment|/* TLB shootdowns - 1 page */
-name|Xinvlrng
-decl_stmt|,
-comment|/* TLB shootdowns - page range */
+comment|/* TLB shootdowns */
 name|Xhardclock
 decl_stmt|,
 comment|/* Forward hardclock() */

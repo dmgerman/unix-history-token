@@ -123,6 +123,16 @@ directive|define
 name|APIC_INTR_REORDER
 end_define
 
+begin_comment
+comment|/*  * Redirect clock interrupts to a higher priority (fast intr) vector,  * while still using the slow interrupt handler. Only effective when   * APIC_INTR_REORDER is defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_INTR_HIGHPRI_CLOCK
+end_define
+
 begin_endif
 endif|#
 directive|endif

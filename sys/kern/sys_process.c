@@ -680,14 +680,14 @@ argument_list|,
 name|out_entry
 argument_list|)
 expr_stmt|;
-name|pmap_qenter
+name|pmap_kenter
 argument_list|(
 name|kva
 argument_list|,
-operator|&
+name|VM_PAGE_TO_PHYS
+argument_list|(
 name|m
-argument_list|,
-literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now do the i/o move. 		 */
@@ -709,11 +709,9 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|pmap_qremove
+name|pmap_kremove
 argument_list|(
 name|kva
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * release the page and the object 		 */
