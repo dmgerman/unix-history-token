@@ -1619,11 +1619,9 @@ operator|=
 name|optarg
 expr_stmt|;
 else|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"syslogd: out of descriptors, ignoring %s\n"
+literal|"out of descriptors, ignoring %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -6246,7 +6244,7 @@ argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
-comment|/* FALLTROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 name|q
 operator|->
