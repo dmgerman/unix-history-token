@@ -11524,6 +11524,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|fh
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 operator|*
 name|status
 operator|=
