@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)api.c	4.1 (Berkeley) %G%"
+literal|"@(#)api.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|"screen.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostctlr.h"
 end_include
 
 begin_include
@@ -2915,6 +2921,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Send to presentation space (3270 buffer) */
 if|if
 condition|(
 operator|(
@@ -2926,7 +2933,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|source
+name|target
 operator|->
 name|begin
 operator|>
@@ -2943,14 +2950,87 @@ name|rc
 operator|=
 literal|0x07
 expr_stmt|;
-comment|/* invalid source definition */
+comment|/* invalid target definition */
+block|}
+if|if
+condition|(
+operator|!
+name|UnLocked
+condition|)
+block|{
+name|parms
+operator|.
+name|rc
+operator|=
+literal|0x03
+expr_stmt|;
+comment|/* Keyboard locked */
+block|}
+elseif|else
+if|if
+condition|(
+name|parms
+operator|.
+name|copy_mode
+operator|!=
+literal|0
+condition|)
+block|{
+name|parms
+operator|.
+name|rc
+operator|=
+literal|0x0f
+expr_stmt|;
+comment|/* Copy of field attr's not allowed */
+block|}
+elseif|else
+if|if
+condition|(
+name|IsProtected
+argument_list|(
+name|target
+operator|->
+name|begin
+argument_list|)
+operator|||
+comment|/* Make sure no protected */
+operator|(
+name|WhereAttrByte
+argument_list|(
+name|target
+operator|->
+name|begin
+argument_list|)
+operator|!=
+comment|/* in range */
+name|WhereAttrByte
+argument_list|(
+name|target
+operator|->
+name|begin
+operator|+
+name|length
+operator|-
+literal|1
+argument_list|)
+operator|)
+condition|)
+block|{
+name|parms
+operator|.
+name|rc
+operator|=
+literal|0x0e
+expr_stmt|;
+comment|/* Attempt to write in protected */
 block|}
 else|else
 block|{
 if|if
 condition|(
 operator|(
-name|source
+name|target
 operator|->
 name|begin
 operator|+
@@ -2970,7 +3050,7 @@ argument_list|(
 name|Host
 argument_list|)
 operator|-
-name|source
+name|target
 operator|->
 name|begin
 expr_stmt|;
@@ -2982,6 +3062,14 @@ literal|0x0f
 expr_stmt|;
 comment|/* Truncate */
 block|}
+name|TurnOnMdt
+argument_list|(
+name|target
+operator|->
+name|begin
+argument_list|)
+expr_stmt|;
+comment|/* Things have changed */
 if|if
 condition|(
 operator|(
