@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.8 1994/11/05 07:23:58 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.9 1994/11/06 01:16:30 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -76,7 +76,7 @@ name|char
 name|msg
 index|[]
 init|=
-literal|" You are now done with the initial phase of the installation, which gets FreeBSD onto your hard disk.  At this point, we need to go on to ftp, SLIP, DOS floppy, parallel port or carrier pigeon a bindist over so that your system is actually usable.  Select Yes to proceed with this phase, or No to simply drop into a shell."
+literal|" You are now done with the initial phase of the installation that gets FreeBSD onto your hard disk.  At this point, we need to go on to ftp, SLIP, DOS floppy, parallel port or carrier pigeon a bindist over so that your system is actually usable.  Select _Yes_ to proceed with this phase, or _No_ to simply drop into a shell."
 decl_stmt|;
 end_decl_stmt
 
