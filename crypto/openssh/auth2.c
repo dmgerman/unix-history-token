@@ -1021,6 +1021,12 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+name|authctxt
+operator|->
+name|pw
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|authctxt
 operator|->
