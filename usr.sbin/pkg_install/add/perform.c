@@ -373,7 +373,7 @@ block|}
 comment|/* Nope - do it now */
 else|else
 block|{
-comment|/* Is it an ftp://foo.bar.baz/file.tgz specification? */
+comment|/* Is it an ftp://foo.bar.baz/file.t[bg]z specification? */
 if|if
 condition|(
 name|isURL
@@ -1175,13 +1175,14 @@ literal|"PKG_ADD_BASE"
 argument_list|)
 condition|)
 block|{
+comment|/* XXX: need to handle .tgz also */
 name|snprintf
 argument_list|(
 name|path
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"%s/%s.tgz"
+literal|"%s/%s.tbz"
 argument_list|,
 name|getenv
 argument_list|(

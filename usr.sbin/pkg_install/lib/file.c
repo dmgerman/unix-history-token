@@ -678,11 +678,12 @@ argument_list|,
 name|spec
 argument_list|)
 expr_stmt|;
+comment|/* XXX: need to handle .tgz also */
 name|strcat
 argument_list|(
 name|cp
 argument_list|,
-literal|".tgz"
+literal|".tbz"
 argument_list|)
 expr_stmt|;
 block|}
@@ -708,11 +709,12 @@ argument_list|,
 name|spec
 argument_list|)
 expr_stmt|;
+comment|/* XXX: need to handle .tgz also */
 name|strcat
 argument_list|(
 name|fname
 argument_list|,
-literal|".tgz"
+literal|".tbz"
 argument_list|)
 expr_stmt|;
 block|}
@@ -909,6 +911,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* XXX: need to handle .tgz also */
 name|execl
 argument_list|(
 literal|"/usr/bin/tar"
@@ -917,9 +920,9 @@ literal|"tar"
 argument_list|,
 name|Verbose
 condition|?
-literal|"-xzpvf"
+literal|"-xjvf"
 else|:
-literal|"-xzpf"
+literal|"-xzf"
 argument_list|,
 literal|"-"
 argument_list|,
@@ -1114,11 +1117,11 @@ name|suffixes
 index|[]
 init|=
 block|{
+literal|".tbz"
+block|,
 literal|".tgz"
 block|,
 literal|".tar"
-block|,
-literal|".tbz"
 block|,
 name|NULL
 block|}
@@ -2263,7 +2266,7 @@ name|strcpy
 argument_list|(
 name|args
 argument_list|,
-literal|"-y"
+literal|"-j"
 argument_list|)
 expr_stmt|;
 else|else

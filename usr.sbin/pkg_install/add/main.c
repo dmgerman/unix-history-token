@@ -683,12 +683,21 @@ index|]
 operator|==
 literal|'t'
 operator|&&
+operator|(
+name|ptr
+index|[
+literal|2
+index|]
+operator|==
+literal|'b'
+operator|||
 name|ptr
 index|[
 literal|2
 index|]
 operator|==
 literal|'g'
+operator|)
 operator|&&
 name|ptr
 index|[
@@ -704,13 +713,14 @@ literal|4
 index|]
 operator|)
 condition|)
+comment|/* XXX: need to handle .tgz also */
 if|if
 condition|(
 name|strlcat
 argument_list|(
 name|remotepkg
 argument_list|,
-literal|".tgz"
+literal|".tbz"
 argument_list|,
 sizeof|sizeof
 argument_list|(
