@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.19 1997/03/23 03:49:00 bde Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.20 1997/03/24 12:29:41 bde Exp $  */
 end_comment
 
 begin_include
@@ -478,6 +478,36 @@ end_endif
 begin_comment
 comment|/* COM_MULTIPORT */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|COM_CONSOLE
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->id_flags& 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_FORCECONSOLE
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->id_flags& 0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_LLCONSOLE
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->id_flags& 0x40)
+end_define
 
 begin_define
 define|#
@@ -1547,6 +1577,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|speed_t
 name|comdefaultrate
 init|=
@@ -1564,6 +1595,13 @@ end_decl_stmt
 begin_comment
 comment|/* input chars + weighted output completions */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|Port_t
+name|siocniobase
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3977,12 +4015,60 @@ name|dev
 operator|->
 name|id_iobase
 expr_stmt|;
+if|if
+condition|(
+name|COM_LLCONSOLE
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sio%d: reserved for low-level i/o\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 	 * We don't want to get actual interrupts, just masked ones. 	 * Interrupts from this line should already be masked in the ICU, 	 * but mask them in the processor as well in case there are some 	 * (misconfigured) shared interrupts. 	 */
 name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* EXTRA DELAY? */
 comment|/* 	 * Initialize the speed and the word size and wait long enough to 	 * drain the maximum of 16 bytes of junk in device output queues. 	 * The speed is undefined after a master reset and must be set 	 * before relying on anything related to output.  There may be 	 * junk after a (very fast) soft reboot and (apparently) after 	 * master reset. 	 * XXX what about the UART bug avoided by waiting in comparam()? 	 * We don't want to to wait long enough to drain at 2 bps. 	 */
+if|if
+condition|(
+name|iobase
+operator|==
+name|siocniobase
+condition|)
+name|DELAY
+argument_list|(
+operator|(
+literal|16
+operator|+
+literal|1
+operator|)
+operator|*
+literal|1000000
+operator|/
+operator|(
+name|comdefaultrate
+operator|/
+literal|10
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|outb
 argument_list|(
 name|iobase
@@ -4051,6 +4137,7 @@ literal|10
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Enable the interrupt gate and disable device interupts.  This 	 * should leave the device driving the interrupt line low and 	 * guarantee an edge trigger if an interrupt can be generated. 	 */
 comment|/* EXTRA DELAY? */
 name|outb
@@ -14476,10 +14563,6 @@ decl_stmt|;
 block|}
 struct|;
 specifier|static
-name|Port_t
-name|siocniobase
-decl_stmt|;
-specifier|static
 name|void
 name|siocnclose
 name|__P
@@ -14887,23 +14970,90 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
-name|int
-name|unit
+name|struct
+name|isa_device
+modifier|*
+name|dvp
 decl_stmt|;
-comment|/* XXX: ick */
-name|unit
+name|int
+name|s
+decl_stmt|;
+name|struct
+name|siocnstate
+name|sp
+decl_stmt|;
+comment|/* 	 * Find our first enabled console, if any.  If it is a high-level 	 * console device, then initialize it and return successfully. 	 * If it is a low-level console device, then initialize it and 	 * return unsuccessfully.  It must be initialized in both cases 	 * for early use by console drivers and debuggers.  Initializing 	 * the hardware is not necessary in all cases, since the i/o 	 * routines initialize it on the fly, but it is necessary if 	 * input might arrive while the hardware is switched back to an 	 * uninitialized state.  We can't handle multiple console devices 	 * yet because our low-level routines don't take a device arg. 	 * We trust the user to set the console flags properly so that we 	 * don't need to probe. 	 */
+name|cp
+operator|->
+name|cn_pri
 operator|=
-name|DEV_TO_UNIT
-argument_list|(
-name|CONUNIT
-argument_list|)
+name|CN_DEAD
 expr_stmt|;
+for|for
+control|(
+name|dvp
+operator|=
+name|isa_devtab_tty
+init|;
+name|dvp
+operator|->
+name|id_driver
+operator|!=
+name|NULL
+condition|;
+name|dvp
+operator|++
+control|)
+if|if
+condition|(
+name|dvp
+operator|->
+name|id_driver
+operator|==
+operator|&
+name|siodriver
+operator|&&
+name|dvp
+operator|->
+name|id_enabled
+operator|&&
+name|COM_CONSOLE
+argument_list|(
+name|dvp
+argument_list|)
+condition|)
+block|{
 name|siocniobase
 operator|=
-name|CONADDR
+name|dvp
+operator|->
+name|id_iobase
 expr_stmt|;
-comment|/* make sure hardware exists?  XXX */
-comment|/* initialize required fields */
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+name|siocnopen
+argument_list|(
+operator|&
+name|sp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|COM_LLCONSOLE
+argument_list|(
+name|dvp
+argument_list|)
+condition|)
+block|{
 name|cp
 operator|->
 name|cn_dev
@@ -14912,37 +15062,31 @@ name|makedev
 argument_list|(
 name|CDEV_MAJOR
 argument_list|,
-name|unit
+name|dvp
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMCONSOLE
 name|cp
 operator|->
 name|cn_pri
 operator|=
-name|CN_REMOTE
-expr_stmt|;
-comment|/* Force a serial port console */
-else|#
-directive|else
-name|cp
-operator|->
-name|cn_pri
-operator|=
-operator|(
+name|COM_FORCECONSOLE
+argument_list|(
+name|dvp
+argument_list|)
+operator|||
 name|boothowto
 operator|&
 name|RB_SERIAL
-operator|)
 condition|?
 name|CN_REMOTE
 else|:
 name|CN_NORMAL
 expr_stmt|;
-endif|#
-directive|endif
+block|}
+break|break;
+block|}
 block|}
 name|void
 name|siocninit
