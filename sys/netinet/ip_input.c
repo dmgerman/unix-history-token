@@ -2085,17 +2085,13 @@ operator|=
 name|ip_fw_chk_ptr
 argument_list|(
 operator|&
-name|ip
-argument_list|,
-name|hlen
+name|m
 argument_list|,
 name|NULL
+comment|/* oif */
 argument_list|,
 operator|&
 name|divert_cookie
-argument_list|,
-operator|&
-name|m
 argument_list|,
 operator|&
 name|rule
@@ -2106,12 +2102,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|i
 operator|&
 name|IP_FW_PORT_DENY_FLAG
+operator|)
+operator|||
+name|m
+operator|==
+name|NULL
 condition|)
 block|{
-comment|/* XXX new interface-denied */
+comment|/* drop */
 if|if
 condition|(
 name|m
@@ -2123,38 +2125,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Packet discarded by firewall */
-specifier|static
-name|int
-name|__debug
-init|=
-literal|10
-decl_stmt|;
-if|if
-condition|(
-name|__debug
-operator|>
-literal|0
-condition|)
-block|{
-name|printf
+name|ip
+operator|=
+name|mtod
 argument_list|(
-literal|"firewall returns NULL, please update!\n"
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
 argument_list|)
 expr_stmt|;
-name|__debug
-operator|--
-expr_stmt|;
-block|}
-return|return;
-block|}
+comment|/* just in case m changed */
 if|if
 condition|(
 name|i

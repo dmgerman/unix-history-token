@@ -3267,11 +3267,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3286,39 +3281,6 @@ goto|goto
 name|forward
 goto|;
 comment|/* HACK! I should obey the fw_one_pass */
-if|if
-condition|(
-name|ntohs
-argument_list|(
-name|save_eh
-operator|.
-name|ether_type
-argument_list|)
-operator|!=
-name|ETHERTYPE_IP
-condition|)
-goto|goto
-name|forward
-goto|;
-comment|/* not an IP packet, ipfw is not appropriate */
-if|if
-condition|(
-name|m0
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-condition|)
-goto|goto
-name|forward
-goto|;
-comment|/* header too short for an IP pkt, cannot filter */
 comment|/* 	 * i need some amt of data to be contiguous, and in case others need 	 * the packet (shared==1) also better be in the first mbuf. 	 */
 name|i
 operator|=
@@ -3370,9 +3332,40 @@ name|NULL
 return|;
 block|}
 block|}
-comment|/* 	 * before calling the firewall, swap fields the same as IP does. 	 * here we assume the pkt is an IP one and the header is contiguous 	 */
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
+comment|/* 	 * NetBSD-style generic packet filter, pfil(9), hooks. 	 * Enables ipf(8) in bridging. 	 */
+if|if
+condition|(
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
 name|ip
-operator|=
+argument_list|)
+operator|&&
+name|ntohs
+argument_list|(
+name|save_eh
+operator|.
+name|ether_type
+argument_list|)
+operator|==
+name|ETHERTYPE_IP
+condition|)
+block|{
+comment|/* 	     * before calling the firewall, swap fields the same as IP does. 	     * here we assume the pkt is an IP one and the header is contiguous 	     */
+name|struct
+name|ip
+modifier|*
+name|ip
+init|=
 name|mtod
 argument_list|(
 name|m0
@@ -3381,7 +3374,7 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|ip
 operator|->
 name|ip_len
@@ -3404,10 +3397,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NetBSD-style generic packet filter, pfil(9), hooks. 	 * Enables ipf(8) in bridging. 	 */
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 for|for
 control|(
 init|;
@@ -3476,66 +3465,7 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
-comment|/* 	 * The third parameter to the firewall code is the dst. interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
-if|if
-condition|(
-name|IPFW_LOADED
-operator|&&
-name|bdg_ipfw
-operator|!=
-literal|0
-condition|)
-block|{
-name|i
-operator|=
-name|ip_fw_chk_ptr
-argument_list|(
-operator|&
-name|ip
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-comment|/* cookie */
-argument_list|,
-operator|&
-name|m0
-argument_list|,
-operator|&
-name|rule
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|i
-operator|&
-name|IP_FW_PORT_DENY_FLAG
-operator|)
-operator|||
-name|m0
-operator|==
-name|NULL
-condition|)
-comment|/* drop */
-return|return
-name|m0
-return|;
-block|}
-else|else
-name|i
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Treat it as a "pass" when not using ipfw. */
-comment|/* 	 * If we get here, the firewall has passed the pkt, but the mbuf 	 * pointer might have changed. Restore ip and the fields ntohs()'d. 	 */
+comment|/* 	     * If we get here, the firewall has passed the pkt, but the mbuf 	     * pointer might have changed. Restore ip and the fields ntohs()'d. 	     */
 name|ip
 operator|=
 name|mtod
@@ -3569,6 +3499,65 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* PFIL_HOOKS */
+comment|/* 	 * The second parameter to the firewall code is the dst. interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
+if|if
+condition|(
+operator|!
+name|IPFW_LOADED
+operator|||
+name|bdg_ipfw
+operator|==
+literal|0
+condition|)
+goto|goto
+name|forward
+goto|;
+comment|/* not using ipfw, accept the packet */
+name|i
+operator|=
+name|ip_fw_chk_ptr
+argument_list|(
+operator|&
+name|m0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+comment|/* cookie */
+argument_list|,
+operator|&
+name|rule
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|*
+operator|)
+operator|&
+name|save_eh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+name|IP_FW_PORT_DENY_FLAG
+operator|)
+operator|||
+name|m0
+operator|==
+name|NULL
+condition|)
+comment|/* drop */
+return|return
+name|m0
+return|;
 if|if
 condition|(
 name|i

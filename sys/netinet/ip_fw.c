@@ -1193,7 +1193,7 @@ modifier|*
 name|ip
 parameter_list|,
 name|int
-name|offset
+name|ip_off
 parameter_list|,
 name|int
 name|ip_len
@@ -1221,49 +1221,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|ip_fw_chk_t
 name|ip_fw_chk
-parameter_list|(
-name|struct
-name|ip
-modifier|*
-modifier|*
-name|pip
-parameter_list|,
-name|int
-name|hlen
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|oif
-parameter_list|,
-name|u_int16_t
-modifier|*
-name|cookie
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-modifier|*
-name|flow_id
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-modifier|*
-name|next_hop
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -2487,7 +2450,7 @@ modifier|*
 name|ip
 parameter_list|,
 name|int
-name|offset
+name|ip_off
 parameter_list|,
 name|int
 name|ip_len
@@ -2602,6 +2565,13 @@ index|]
 decl_stmt|;
 name|int
 name|len
+decl_stmt|;
+name|int
+name|offset
+init|=
+name|ip_off
+operator|&
+name|IP_OFFMASK
 decl_stmt|;
 name|count
 operator|=
@@ -3286,8 +3256,6 @@ break|break;
 block|}
 if|if
 condition|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 operator|(
@@ -3329,8 +3297,6 @@ operator|<<
 literal|3
 argument_list|,
 operator|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 name|IP_MF
@@ -5265,7 +5231,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *		Special case: cookie == NULL on input for bridging.  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	IP_FW_PORT_DENY_FLAG	the packet must be dropped.  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
+comment|/*  * Parameters:  *  *	*m	The packet; we set to NULL when/if we nuke it.  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *		Special case: cookie == NULL on input for bridging.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *		For bridged packets, this is a pointer to the MAC header.  *  * Return value:  *  *	IP_FW_PORT_DENY_FLAG	the packet must be dropped.  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
 end_comment
 
 begin_function
@@ -5274,13 +5240,10 @@ name|int
 name|ip_fw_chk
 parameter_list|(
 name|struct
-name|ip
+name|mbuf
 modifier|*
 modifier|*
-name|pip
-parameter_list|,
-name|int
-name|hlen
+name|m
 parameter_list|,
 name|struct
 name|ifnet
@@ -5290,12 +5253,6 @@ parameter_list|,
 name|u_int16_t
 modifier|*
 name|cookie
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|m
 parameter_list|,
 name|struct
 name|ip_fw
@@ -5323,8 +5280,15 @@ name|ip
 modifier|*
 name|ip
 init|=
+name|mtod
+argument_list|(
 operator|*
-name|pip
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
@@ -5346,11 +5310,32 @@ name|ifnet
 modifier|*
 name|tif
 decl_stmt|;
+name|u_int
+name|hlen
+init|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+decl_stmt|;
+name|struct
+name|ether_header
+modifier|*
+name|eh
+init|=
+name|NULL
+decl_stmt|;
 name|u_short
+name|ip_off
+init|=
+literal|0
+decl_stmt|,
 name|offset
 init|=
 literal|0
 decl_stmt|;
+comment|/* local copy of addresses for faster matching */
 name|u_short
 name|src_port
 init|=
@@ -5366,7 +5351,6 @@ name|src_ip
 decl_stmt|,
 name|dst_ip
 decl_stmt|;
-comment|/* XXX */
 name|u_int8_t
 name|proto
 init|=
@@ -5376,7 +5360,6 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXX */
 name|u_int16_t
 name|skipto
 decl_stmt|,
@@ -5384,6 +5367,8 @@ name|bridgeCookie
 decl_stmt|;
 name|u_int16_t
 name|ip_len
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|dyn_checked
@@ -5404,7 +5389,10 @@ name|q
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Special hack for bridging (as usual) */
+define|#
+directive|define
+name|BRIDGED
+value|(cookie ==&bridgeCookie)
 if|if
 condition|(
 name|cookie
@@ -5412,6 +5400,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* this is a bridged packet */
 name|bridgeCookie
 operator|=
 literal|0
@@ -5421,10 +5410,52 @@ operator|=
 operator|&
 name|bridgeCookie
 expr_stmt|;
-define|#
-directive|define
-name|BRIDGED
-value|(cookie ==&bridgeCookie)
+name|eh
+operator|=
+operator|(
+expr|struct
+name|ether_header
+operator|*
+operator|)
+name|next_hop
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|&&
+name|ntohs
+argument_list|(
+name|eh
+operator|->
+name|ether_type
+argument_list|)
+operator|==
+name|ETHERTYPE_IP
+condition|)
+name|hlen
+operator|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
 name|hlen
 operator|=
 name|ip
@@ -5445,14 +5476,15 @@ name|cookie
 operator|=
 literal|0
 expr_stmt|;
-define|#
-directive|define
-name|PULLUP_TO
-parameter_list|(
-name|len
-parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				ip = NULL ;				\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 			    }						\ 			} while (0)
 comment|/* 	 * Collect parameters into local variables for faster matching. 	 */
+if|if
+condition|(
+name|hlen
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* this is an IP packet */
 name|proto
 operator|=
 name|ip
@@ -5473,24 +5505,18 @@ name|ip_dst
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|&&
 name|BRIDGED
 condition|)
 block|{
 comment|/* not yet... */
-name|offset
+name|ip_off
 operator|=
-operator|(
 name|ntohs
 argument_list|(
 name|ip
 operator|->
 name|ip_off
 argument_list|)
-operator|&
-name|IP_OFFMASK
-operator|)
 expr_stmt|;
 name|ip_len
 operator|=
@@ -5504,15 +5530,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|offset
+name|ip_off
 operator|=
-operator|(
 name|ip
 operator|->
 name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
 expr_stmt|;
 name|ip_len
 operator|=
@@ -5521,6 +5543,12 @@ operator|->
 name|ip_len
 expr_stmt|;
 block|}
+name|offset
+operator|=
+name|ip_off
+operator|&
+name|IP_OFFMASK
+expr_stmt|;
 if|if
 condition|(
 name|offset
@@ -5528,6 +5556,14 @@ operator|==
 literal|0
 condition|)
 block|{
+define|#
+directive|define
+name|PULLUP_TO
+parameter_list|(
+name|len
+parameter_list|)
+define|\
+value|do {						\ 			if ((*m)->m_len< (len)) {		\ 			    *m = m_pullup(*m, (len));		\ 			    if (*m == 0)			\ 				goto bogusfrag;			\ 			    ip = mtod(*m, struct ip *);		\ 			}					\ 		} while (0)
 switch|switch
 condition|(
 name|proto
@@ -5683,10 +5719,11 @@ break|break ;
 default|default :
 break|break;
 block|}
-block|}
 undef|#
 directive|undef
 name|PULLUP_TO
+block|}
+block|}
 name|last_pkt
 operator|.
 name|src_ip
@@ -7046,7 +7083,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip
+operator|*
+name|m
 operator|!=
 name|NULL
 condition|)
@@ -7056,7 +7094,7 @@ name|NULL
 argument_list|,
 name|ip
 argument_list|,
-name|offset
+name|ip_off
 argument_list|,
 name|ip_len
 argument_list|,
@@ -7151,6 +7189,10 @@ name|IP_FW_F_PRN
 operator|)
 operator|&&
 name|fw_verbose
+operator|&&
+name|hlen
+operator|>
+literal|0
 condition|)
 name|ipfw_report
 argument_list|(
@@ -7158,7 +7200,7 @@ name|f
 argument_list|,
 name|ip
 argument_list|,
-name|offset
+name|ip_off
 argument_list|,
 name|ip_len
 argument_list|,
