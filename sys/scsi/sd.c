@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.23 1994/04/20 07:06:57 davidg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.24 1994/05/25 09:13:32 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -148,12 +148,6 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NetBSD
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|DDB
 end_ifdef
 
@@ -188,61 +182,6 @@ end_endif
 begin_comment
 comment|/* DDB */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NetBSD */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ddb.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|NDDB
-operator|>
-literal|0
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NDDB> 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Debugger
-parameter_list|(
-name|s
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NDDB> 0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

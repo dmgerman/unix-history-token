@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.9 1994/05/25 09:13:20 rgrimes Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.10 1994/08/20 03:48:58 davidg Exp $  */
 end_comment
 
 begin_define
@@ -110,12 +110,6 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NetBSD
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|DDB
 end_ifdef
 
@@ -150,59 +144,6 @@ end_endif
 begin_comment
 comment|/* DDB */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NetBSD */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"ddb.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NDDB
-operator|>
-literal|0
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NDDB> 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Debugger
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NDDB> 0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
