@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_signal.c,v 1.5 1995/10/21 05:01:57 swallace Exp $  */
+comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_signal.c,v 1.6 1995/10/21 20:33:43 swallace Exp $  */
 end_comment
 
 begin_include
@@ -1404,6 +1404,16 @@ literal|0
 block|if (signum != SIGALRM) 				sa.sa_flags |= SA_RESTART;
 endif|#
 directive|endif
+operator|*
+name|retval
+operator|=
+operator|(
+name|int
+operator|)
+name|IBCS2_SIG_ERR
+expr_stmt|;
+comment|/* init error return */
+comment|/* perform native sigaction() */
 if|if
 condition|(
 operator|(
@@ -1456,14 +1466,6 @@ name|error
 operator|)
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
-operator|=
-operator|(
-name|int
-operator|)
-name|IBCS2_SIG_ERR
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -1502,6 +1504,55 @@ name|sa
 operator|.
 name|sa_handler
 expr_stmt|;
+comment|/* special sigset() check */
+if|if
+condition|(
+name|IBCS2_SIGCALL
+argument_list|(
+name|SCARG
+argument_list|(
+name|uap
+argument_list|,
+name|sig
+argument_list|)
+argument_list|)
+operator|==
+name|IBCS2_SIGSET_MASK
+condition|)
+comment|/* check to make sure signal is not blocked */
+if|if
+condition|(
+name|sigismember
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_sigmask
+argument_list|,
+name|signum
+argument_list|)
+condition|)
+block|{
+comment|/* return SIG_HOLD and unblock signal*/
+operator|*
+name|retval
+operator|=
+operator|(
+name|int
+operator|)
+name|IBCS2_SIG_HOLD
+expr_stmt|;
+name|p
+operator|->
+name|p_sigmask
+operator|&=
+operator|~
+name|sigmask
+argument_list|(
+name|signum
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
