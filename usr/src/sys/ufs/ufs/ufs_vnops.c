@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	4.43	82/12/09	*/
+comment|/*	ufs_vnops.c	4.44	82/12/19	*/
 end_comment
 
 begin_include
@@ -4495,9 +4495,8 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|EEXIST
+name|ENOTEMPTY
 expr_stmt|;
-comment|/* XXX */
 goto|goto
 name|bad
 goto|;
