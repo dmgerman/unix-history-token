@@ -1376,20 +1376,25 @@ name|id
 operator|->
 name|sensitive_hw
 condition|)
-name|resource_set_int
+block|{
+if|#
+directive|if
+literal|0
+block|resource_set_int(id->name, -1, "sensitive", 1);
+else|#
+directive|else
+name|printf
 argument_list|(
-name|id
+literal|"WARNING: isa driver %s is sensitive, but cannot set it!\n"
+argument_list|,
+name|driver
 operator|->
 name|name
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"sensitive"
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|devclass_add_driver
 argument_list|(
 name|isa_devclass
