@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c	5.1 (Berkeley) %G%"
+literal|"@(#)pc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1314,9 +1314,17 @@ index|]
 operator|=
 literal|"-J"
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 if|if
 condition|(
 name|tflag
@@ -1341,7 +1349,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 name|asargs
 index|[
 name|asargx
@@ -1688,9 +1696,17 @@ index|]
 operator|=
 literal|"-J"
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 if|if
 condition|(
 name|tflag
@@ -1715,7 +1731,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 name|asargs
 index|[
 name|asargx
