@@ -389,14 +389,6 @@ argument_list|)
 name|sq_waitq
 expr_stmt|;
 comment|/* waiting in userland */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pthread
-argument_list|)
-name|sq_blockedq
-expr_stmt|;
-comment|/* waiting in kernel */
 block|}
 struct|;
 end_struct
@@ -486,7 +478,14 @@ argument|kse
 argument_list|)
 name|k_qe
 expr_stmt|;
-comment|/* link entry */
+comment|/* KSE list link entry */
+name|TAILQ_ENTRY
+argument_list|(
+argument|kse
+argument_list|)
+name|k_kgqe
+expr_stmt|;
+comment|/* KSEG's KSE list entry */
 name|struct
 name|ksd
 name|k_ksd
@@ -612,6 +611,36 @@ comment|/* has an initialized schedq */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Add/remove threads from a KSE's scheduling queue.  * For now the scheduling queue is hung off the KSEG.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSEG_THRQ_ADD
+parameter_list|(
+name|kseg
+parameter_list|,
+name|thr
+parameter_list|)
+define|\
+value|do {							\ 	TAILQ_INSERT_TAIL(&(kseg)->kg_threadq, thr, kle);\ 	(kseg)->kg_threadcount++;			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSEG_THRQ_REMOVE
+parameter_list|(
+name|kseg
+parameter_list|,
+name|thr
+parameter_list|)
+define|\
+value|do {							\ 	TAILQ_REMOVE(&(kseg)->kg_threadq, thr, kle);	\ 	(kseg)->kg_threadcount--;			\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * Lock acquire and release for KSEs.  */
@@ -2005,7 +2034,7 @@ name|THR_GCLIST_ADD
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, tle);	\ 		(thrd)->flags |= THR_FLAGS_IN_GCLIST;		\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, gcle);\ 		(thrd)->flags |= THR_FLAGS_IN_GCLIST;		\ 		_gc_count++;					\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -2015,7 +2044,15 @@ name|THR_GCLIST_REMOVE
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, tle);	\ 		(thrd)->flags&= ~THR_FLAGS_IN_GCLIST;		\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, gcle);	\ 		(thrd)->flags&= ~THR_FLAGS_IN_GCLIST;		\ 		_gc_count--;					\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GC_NEEDED
+parameter_list|()
+value|(atomic_load_acq_int(&_gc_count)>= 5)
 end_define
 
 begin_comment
@@ -2397,8 +2434,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|SCLASS
-name|pthread_t
-name|_gc_thread
+name|int
+name|_gc_count
+name|SCLASS_PRESET
+argument_list|(
+literal|0
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2541,7 +2582,7 @@ modifier|*
 name|_kse_alloc
 parameter_list|(
 name|struct
-name|kse
+name|pthread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2570,7 +2611,7 @@ name|void
 name|_kse_free
 parameter_list|(
 name|struct
-name|kse
+name|pthread
 modifier|*
 parameter_list|,
 name|struct
@@ -2594,7 +2635,7 @@ modifier|*
 name|_kseg_alloc
 parameter_list|(
 name|struct
-name|kse
+name|pthread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2775,6 +2816,17 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pq_free
+parameter_list|(
+name|struct
+name|pq_queue
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3025,7 +3077,38 @@ modifier|*
 name|_thr_alloc
 parameter_list|(
 name|struct
-name|kse
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thread_enter_uts
+parameter_list|(
+name|struct
+name|kse_thr_mailbox
+modifier|*
+parameter_list|,
+name|struct
+name|kse_mailbox
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thread_switch
+parameter_list|(
+name|struct
+name|kse_thr_mailbox
+modifier|*
+parameter_list|,
+name|struct
+name|kse_thr_mailbox
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3251,9 +3334,20 @@ name|void
 name|_thr_free
 parameter_list|(
 name|struct
-name|kse
+name|pthread
 modifier|*
 parameter_list|,
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thr_gc
+parameter_list|(
 name|struct
 name|pthread
 modifier|*

@@ -52,6 +52,9 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+name|kse_critical_t
+name|crit
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -216,7 +219,16 @@ name|pthread
 operator|->
 name|ret
 expr_stmt|;
-comment|/* Unlock the thread and remove the reference. */
+comment|/* Detach the thread. */
+name|pthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator||=
+name|PTHREAD_DETACHED
+expr_stmt|;
+comment|/* Unlock the thread. */
 name|THR_SCHED_UNLOCK
 argument_list|(
 name|curthread
@@ -224,6 +236,48 @@ argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Remove the thread from the list of active 			 * threads and add it to the GC list. 			 */
+name|crit
+operator|=
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
+name|KSE_LOCK_ACQUIRE
+argument_list|(
+name|curthread
+operator|->
+name|kse
+argument_list|,
+operator|&
+name|_thread_list_lock
+argument_list|)
+expr_stmt|;
+name|THR_LIST_REMOVE
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+name|THR_GCLIST_ADD
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+name|KSE_LOCK_RELEASE
+argument_list|(
+name|curthread
+operator|->
+name|kse
+argument_list|,
+operator|&
+name|_thread_list_lock
+argument_list|)
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
+argument_list|)
+expr_stmt|;
+comment|/* Remove the reference. */
 name|_thr_ref_delete
 argument_list|(
 name|curthread
