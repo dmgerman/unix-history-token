@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.18 1995/08/28 14:47:30 jkh Exp $"
+literal|"$Id: pen.c,v 1.13.4.1 1995/08/30 07:50:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,20 +66,26 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|Pen
+name|LastPen
 index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_function
 name|char
 modifier|*
-name|PlayPen
-decl_stmt|;
-end_decl_stmt
+name|where_playpen
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|LastPen
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Find a good place to play. */
@@ -87,10 +93,13 @@ end_comment
 
 begin_function
 specifier|static
-name|char
-modifier|*
+name|void
 name|find_play_pen
 parameter_list|(
+name|char
+modifier|*
+name|pen
+parameter_list|,
 name|size_t
 name|sz
 parameter_list|)
@@ -103,6 +112,13 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+name|pen
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -137,7 +153,7 @@ operator|)
 condition|)
 name|sprintf
 argument_list|(
-name|Pen
+name|pen
 argument_list|,
 literal|"%s/instmp.XXXXXX"
 argument_list|,
@@ -179,7 +195,7 @@ operator|)
 condition|)
 name|sprintf
 argument_list|(
-name|Pen
+name|pen
 argument_list|,
 literal|"%s/instmp.XXXXXX"
 argument_list|,
@@ -208,7 +224,7 @@ name|sz
 condition|)
 name|strcpy
 argument_list|(
-name|Pen
+name|pen
 argument_list|,
 literal|"/var/tmp/instmp.XXXXXX"
 argument_list|)
@@ -235,7 +251,7 @@ name|sz
 condition|)
 name|strcpy
 argument_list|(
-name|Pen
+name|pen
 argument_list|,
 literal|"/tmp/instmp.XXXXXX"
 argument_list|)
@@ -273,7 +289,7 @@ name|sz
 condition|)
 name|strcpy
 argument_list|(
-name|Pen
+name|pen
 argument_list|,
 literal|"/usr/tmp/instmp.XXXXXX"
 argument_list|)
@@ -281,14 +297,13 @@ expr_stmt|;
 else|else
 name|barf
 argument_list|(
-literal|"Can't find enough temporary space to extract the files, please set\nyour PKG_TMPDIR environment variable to a location with at least %d bytes\nfree."
+literal|"Can't find enough temporary space to extract the files, please set\n"
+literal|"your PKG_TMPDIR environment variable to a location with at least %d bytes\n"
+literal|"free."
 argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
-return|return
-name|Pen
-return|;
 block|}
 end_function
 
@@ -309,32 +324,24 @@ name|size_t
 name|sz
 parameter_list|)
 block|{
+name|find_play_pen
+argument_list|(
+name|pen
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|pen
+index|[
+literal|0
+index|]
 condition|)
-name|PlayPen
-operator|=
-name|find_play_pen
-argument_list|(
-name|sz
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|strcpy
-argument_list|(
-name|Pen
-argument_list|,
-name|pen
-argument_list|)
-expr_stmt|;
-name|PlayPen
-operator|=
-name|Pen
-expr_stmt|;
-block|}
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 operator|!
@@ -345,44 +352,59 @@ argument_list|,
 name|FILENAME_MAX
 argument_list|)
 condition|)
+block|{
 name|upchuck
 argument_list|(
 literal|"getcwd"
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 operator|!
 name|mktemp
 argument_list|(
-name|Pen
+name|pen
 argument_list|)
 condition|)
+block|{
 name|barf
 argument_list|(
 literal|"Can't mktemp '%s'."
 argument_list|,
-name|Pen
+name|pen
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 name|mkdir
 argument_list|(
-name|Pen
+name|pen
 argument_list|,
 literal|0755
 argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
 name|barf
 argument_list|(
 literal|"Can't mkdir '%s'."
 argument_list|,
-name|Pen
+name|pen
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 name|Verbose
@@ -396,7 +418,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Projected package size: %d bytes, free temp space: %d bytes in %s\n"
+literal|"Requested space: %d bytes, free space: %d bytes in %s\n"
 argument_list|,
 operator|(
 name|int
@@ -405,10 +427,10 @@ name|sz
 argument_list|,
 name|min_free
 argument_list|(
-name|Pen
+name|pen
 argument_list|)
 argument_list|,
-name|Pen
+name|pen
 argument_list|)
 expr_stmt|;
 block|}
@@ -416,7 +438,7 @@ if|if
 condition|(
 name|min_free
 argument_list|(
-name|Pen
+name|pen
 argument_list|)
 operator|<
 name|sz
@@ -424,26 +446,27 @@ condition|)
 block|{
 name|rmdir
 argument_list|(
-name|Pen
+name|pen
 argument_list|)
 expr_stmt|;
 name|barf
 argument_list|(
-literal|"Not enough free space to create `%s'.\nPlease set your PKG_TMPDIR environment variable to a location with more space and\ntry the command again."
+literal|"Not enough free space to create: `%s'\n"
+literal|"Please set your PKG_TMPDIR environment variable to a location\n"
+literal|"with more space and\ntry the command again."
 argument_list|,
-name|Pen
+name|pen
 argument_list|)
 expr_stmt|;
-name|PlayPen
-operator|=
+return|return
 name|NULL
-expr_stmt|;
+return|;
 block|}
 if|if
 condition|(
 name|chdir
 argument_list|(
-name|Pen
+name|pen
 argument_list|)
 operator|==
 name|FAIL
@@ -452,7 +475,14 @@ name|barf
 argument_list|(
 literal|"Can't chdir to '%s'."
 argument_list|,
-name|Pen
+name|pen
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|LastPen
+argument_list|,
+name|pen
 argument_list|)
 expr_stmt|;
 return|return
@@ -521,7 +551,7 @@ name|vsystem
 argument_list|(
 literal|"rm -rf %s"
 argument_list|,
-name|Pen
+name|LastPen
 argument_list|)
 condition|)
 name|fprintf
@@ -530,7 +560,7 @@ name|stderr
 argument_list|,
 literal|"Couldn't remove temporary dir '%s'\n"
 argument_list|,
-name|Pen
+name|LastPen
 argument_list|)
 expr_stmt|;
 name|Cwd
@@ -551,35 +581,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Accessor function for telling us where the pen is */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|where_playpen
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|Cwd
-index|[
-literal|0
-index|]
-condition|)
-return|return
-name|Pen
-return|;
-else|else
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
 begin_function
 name|size_t
 name|min_free
@@ -593,15 +594,6 @@ name|struct
 name|statfs
 name|buf
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|tmpdir
-condition|)
-name|tmpdir
-operator|=
-name|Pen
-expr_stmt|;
 if|if
 condition|(
 name|statfs

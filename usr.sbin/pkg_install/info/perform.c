@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.17 1995/07/30 01:44:38 ache Exp $"
+literal|"$Id: perform.c,v 1.16.4.1 1995/08/30 07:49:55 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -339,6 +339,8 @@ name|cp
 operator|=
 name|fileGetURL
 argument_list|(
+name|NULL
+argument_list|,
 name|pkg
 argument_list|)
 operator|)
@@ -446,6 +448,8 @@ name|cp
 operator|=
 name|fileFindByPath
 argument_list|(
+name|NULL
+argument_list|,
 name|pkg
 argument_list|)
 operator|)
