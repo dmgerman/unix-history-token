@@ -88,29 +88,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86
+name|DIST_COMPAT21
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_COMMERCIAL
+name|DIST_XF86
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_DES
+name|DIST_COMMERCIAL
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_EXPERIMENTAL
+name|DIST_DES
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_EXPERIMENTAL
+value|0x4000
 end_define
 
 begin_define
@@ -119,6 +126,10 @@ directive|define
 name|DIST_ALL
 value|0x0FFF
 end_define
+
+begin_comment
+comment|/* Don't include commerce, DES or experimental in "all" */
+end_comment
 
 begin_comment
 comment|/* Canned distribution sets */

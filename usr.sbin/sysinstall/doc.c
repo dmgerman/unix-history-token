@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.9 1995/11/04 08:47:22 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.10 1995/11/06 12:49:23 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  */
 end_comment
 
 begin_include
@@ -17,9 +17,9 @@ begin_function
 name|int
 name|docBrowser
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|junk
+name|self
 parameter_list|)
 block|{
 name|char
@@ -148,14 +148,20 @@ name|RET_FAIL
 return|;
 block|}
 comment|/* Run browser on the appropriate doc */
+if|if
+condition|(
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuHTMLDoc
 argument_list|)
-expr_stmt|;
+condition|)
 return|return
 name|RET_SUCCESS
+return|;
+else|else
+return|return
+name|RET_FAIL
 return|;
 block|}
 end_function
@@ -168,9 +174,9 @@ begin_function
 name|int
 name|docShowDocument
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 name|char
@@ -198,6 +204,14 @@ name|variable_get
 argument_list|(
 name|VAR_BROWSER_BINARY
 argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|str
+init|=
+name|self
+operator|->
+name|prompt
 decl_stmt|;
 if|if
 condition|(
