@@ -10,7 +10,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.24 (Berkeley) %G%"
+literal|"@(#)main.c	2.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
@@ -1774,7 +1774,7 @@ operator|++
 expr_stmt|;
 name|raw
 operator|=
-name|rawname
+name|unrawname
 argument_list|(
 name|name
 argument_list|)
@@ -2177,27 +2177,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dfile
 operator|.
 name|mod
 condition|)
-block|{
+return|return;
 if|if
 condition|(
+operator|!
 name|preen
 condition|)
-block|{
-if|if
-condition|(
-name|hotroot
-condition|)
-name|exit
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|printf
 argument_list|(
@@ -2208,11 +2198,19 @@ if|if
 condition|(
 name|hotroot
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"\n***** BOOT UNIX (NO SYNC!) *****\n"
+literal|"\n***** REBOOT UNIX *****\n"
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|hotroot
+condition|)
+block|{
+name|sync
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2220,12 +2218,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-name|sync
-argument_list|()
-expr_stmt|;
-comment|/* ??? */
 block|}
 end_block
 
