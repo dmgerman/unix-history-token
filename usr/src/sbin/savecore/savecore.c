@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.9 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,6 +477,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|force
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|errno
@@ -552,6 +558,13 @@ name|cp
 condition|)
 block|{
 case|case
+literal|'f'
+case|:
+name|force
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|Verbose
@@ -565,7 +578,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: savecore [-v] dirname [ system ]\n"
+literal|"usage: savecore [-f] [-v] dirname [ system ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1666,7 +1679,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Dump time not found.\n"
+literal|"Dump time is zero.\n"
 argument_list|)
 expr_stmt|;
 return|return
