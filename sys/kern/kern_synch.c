@@ -658,7 +658,7 @@ argument_list|,
 argument|p_list
 argument_list|)
 block|{
-comment|/* 		 * Increment time in/out of memory and sleep time 		 * (if sleeping).  We ignore overflow; with 16-bit int's 		 * (remember them?) overflow takes 45 days. 		if (p->p_stat == SWAIT) 			continue; 		 */
+comment|/* 		 * Increment time in/out of memory and sleep time 		 * (if sleeping).  We ignore overflow; with 16-bit int's 		 * (remember them?) overflow takes 45 days. 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
