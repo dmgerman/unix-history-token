@@ -104,14 +104,8 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|ORIENT
-argument_list|(
-name|fp
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* Orientation set by __sgetc() when buffer is empty. */
+comment|/* ORIENT(fp, -1); */
 name|retval
 operator|=
 name|__sgetc

@@ -115,14 +115,8 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|ORIENT
-argument_list|(
-name|so
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* Orientation set by __sputc() when buffer is full. */
+comment|/* ORIENT(so, -1); */
 name|retval
 operator|=
 name|__sputc
