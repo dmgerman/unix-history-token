@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	1.1 (Berkeley) %G%"
+literal|"@(#)timedc.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,6 +155,15 @@ name|cmd
 modifier|*
 name|c
 decl_stmt|;
+name|openlog
+argument_list|(
+literal|"timedc"
+argument_list|,
+name|LOG_ODELAY
+argument_list|,
+name|LOG_AUTH
+argument_list|)
+expr_stmt|;
 comment|/* 	 * security dictates! 	 */
 if|if
 condition|(
