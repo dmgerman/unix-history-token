@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      ndbm.h     4.2     83/12/20     */
+comment|/*      ndbm.h     4.3     84/08/28     */
 end_comment
 
 begin_comment
-comment|/*  * (New) Hashed key data base library (-lndbm).  */
+comment|/*  * Hashed key data base library.  */
 end_comment
 
 begin_define
@@ -26,52 +26,48 @@ typedef|typedef
 struct|struct
 block|{
 name|int
-name|db_dirf
+name|dbm_dirf
 decl_stmt|;
 comment|/* open directory file */
 name|int
-name|db_pagf
+name|dbm_pagf
 decl_stmt|;
 comment|/* open page file */
 name|int
-name|db_flags
+name|dbm_flags
 decl_stmt|;
-define|#
-directive|define
-name|_DB_RDONLY
-value|0x1
-comment|/* data base open read-only */
+comment|/* flags, see below */
 name|long
-name|db_maxbno
+name|dbm_maxbno
 decl_stmt|;
 comment|/* last ``block'' in page file */
 name|long
-name|db_bitno
+name|dbm_bitno
 decl_stmt|;
 name|long
-name|db_hmask
+name|dbm_hmask
 decl_stmt|;
 name|long
-name|db_blkno
+name|dbm_blkno
 decl_stmt|;
 comment|/* current page to read/write */
 name|long
-name|db_pagbno
+name|dbm_pagbno
 decl_stmt|;
 comment|/* current page in pagbuf */
 name|char
-name|db_pagbuf
+name|dbm_pagbuf
 index|[
 name|PBLKSIZ
 index|]
 decl_stmt|;
 comment|/* page file block buffer */
 name|long
-name|db_dirbno
+name|dbm_dirbno
 decl_stmt|;
 comment|/* current block in dirbuf */
 name|char
-name|db_dirbuf
+name|dbm_dirbuf
 index|[
 name|DBLKSIZ
 index|]
@@ -85,11 +81,57 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|dbrdonly
+name|_DBM_RDONLY
+value|0x1
+end_define
+
+begin_comment
+comment|/* data base open read-only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DBM_IOERR
+value|0x2
+end_define
+
+begin_comment
+comment|/* data base I/O error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dbm_rdonly
 parameter_list|(
 name|db
 parameter_list|)
-value|((db)->db_flags&_DB_RDONLY) != 0
+value|((db)->dbm_flags& _DBM_RDONLY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dbm_error
+parameter_list|(
+name|db
+parameter_list|)
+value|((db)->dbm_flags& _DBM_IOERR)
+end_define
+
+begin_comment
+comment|/* use this one at your own risk! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dbm_clearerr
+parameter_list|(
+name|db
+parameter_list|)
+value|((db)->dbm_flags&= ~_DBM_IOERR)
 end_define
 
 begin_typedef
@@ -109,76 +151,76 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* flags to dbmstore() */
+comment|/*  * flags to dbm_store()  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DB_INSERT
+name|DBM_INSERT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|DB_REPLACE
+name|DBM_REPLACE
 value|1
 end_define
 
 begin_function_decl
-name|datum
-name|dbmfetch
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|datum
-name|dbmfirstkey
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|datum
-name|dbmnextkey
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|long
-name|dbmforder
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|dbmdelete
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|dbmstore
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DBM
 modifier|*
-name|ndbmopen
+name|dbm_open
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|ndbmclose
+name|dbm_close
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|datum
+name|dbm_fetch
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|datum
+name|dbm_firstkey
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|datum
+name|dbm_nextkey
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|dbm_forder
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dbm_delete
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dbm_store
 parameter_list|()
 function_decl|;
 end_function_decl
