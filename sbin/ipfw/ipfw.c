@@ -395,8 +395,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printf0like
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
@@ -1312,6 +1321,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1371,6 +1382,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1391,6 +1404,8 @@ else|else
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1406,6 +1421,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1420,6 +1437,8 @@ else|else
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1614,6 +1633,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1673,6 +1694,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1693,6 +1716,8 @@ else|else
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1708,6 +1733,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
@@ -1722,6 +1749,8 @@ else|else
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|inet_ntoa
 argument_list|(
 name|chain
