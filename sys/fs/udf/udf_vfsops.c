@@ -2405,6 +2405,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|flags
+argument_list|,
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -2558,6 +2560,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 block|{
 name|struct

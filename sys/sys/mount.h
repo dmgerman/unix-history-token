@@ -2036,6 +2036,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2455,8 +2460,10 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|VPP
+parameter_list|,
+name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_root)(MP, VPP)
+value|(*(MP)->mnt_op->vfs_root)(MP, VPP, P)
 end_define
 
 begin_define

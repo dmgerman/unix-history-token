@@ -1401,6 +1401,9 @@ name|mp
 argument_list|,
 operator|&
 name|rvp
+argument_list|,
+name|curthread
+comment|/* XXX */
 argument_list|)
 operator|)
 condition|)

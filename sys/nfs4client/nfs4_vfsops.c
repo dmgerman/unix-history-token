@@ -3208,7 +3208,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Goes something like this.. 	 * - Call vflush() to clear out vnodes for this filesystem 	 * - Close the socket 	 * - Free up the data structures 	 */
+comment|/* 	 * Goes something like this.. 	 * - Call vflush(, td) to clear out vnodes for this filesystem 	 * - Close the socket 	 * - Free up the data structures 	 */
 comment|/* In the forced case, cancel any outstanding requests. */
 if|if
 condition|(
@@ -3246,6 +3246,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|flags
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3313,6 +3315,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 block|{
 name|struct

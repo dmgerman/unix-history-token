@@ -102,34 +102,19 @@ parameter_list|)
 value|((struct fdescnode *)(vp)->v_data)
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
+name|vfs_init_t
 name|fdesc_init
-parameter_list|(
-name|struct
-name|vfsconf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
+name|vfs_root_t
 name|fdesc_root
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern

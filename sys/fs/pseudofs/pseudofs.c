@@ -1323,6 +1323,8 @@ condition|?
 name|FORCECLOSE
 else|:
 literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1351,6 +1353,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 block|{
 name|struct

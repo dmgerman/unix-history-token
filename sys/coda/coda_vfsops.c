@@ -944,6 +944,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|FORCECLOSE
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1019,6 +1021,8 @@ parameter_list|(
 name|vfsp
 parameter_list|,
 name|vpp
+parameter_list|,
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1030,6 +1034,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 block|{
 name|struct

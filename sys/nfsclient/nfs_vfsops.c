@@ -4863,6 +4863,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|flags
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4923,6 +4925,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 block|{
 name|struct

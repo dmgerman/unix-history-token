@@ -4282,6 +4282,8 @@ name|mp
 argument_list|,
 operator|&
 name|newdp
+argument_list|,
+name|td
 argument_list|)
 condition|)
 name|panic
@@ -5214,6 +5216,8 @@ name|mp
 argument_list|,
 operator|&
 name|fsrootvp
+argument_list|,
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -5334,6 +5338,8 @@ name|mp
 argument_list|,
 operator|&
 name|fsrootvp
+argument_list|,
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -6740,6 +6746,8 @@ name|mp
 argument_list|,
 operator|&
 name|vroot
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

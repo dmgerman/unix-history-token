@@ -1122,6 +1122,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|flags
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1224,6 +1226,8 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|vpp
+parameter_list|,
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1235,6 +1239,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 block|{
 name|struct

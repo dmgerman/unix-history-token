@@ -2271,6 +2271,8 @@ name|mp
 argument_list|,
 operator|&
 name|tdp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|vfs_unbusy

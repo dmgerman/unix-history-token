@@ -5069,6 +5069,8 @@ argument_list|,
 name|SKIPSYSTEM
 operator||
 name|flags
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5154,6 +5156,8 @@ argument_list|,
 name|SKIPSYSTEM
 operator||
 name|flags
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5184,6 +5188,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|flags
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=

@@ -1163,6 +1163,8 @@ name|mp
 argument_list|,
 operator|&
 name|vp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1392,6 +1394,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|flags
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1530,6 +1534,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 block|{
 name|int

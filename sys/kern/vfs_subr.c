@@ -9617,7 +9617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove any vnodes in the vnode table belonging to mount point mp.  *  * If FORCECLOSE is not specified, there should not be any active ones,  * return error if any are found (nb: this is a user error, not a  * system error). If FORCECLOSE is specified, detach any active vnodes  * that are found.  *  * If WRITECLOSE is set, only flush out regular file vnodes open for  * writing.  *  * SKIPSYSTEM causes any vnodes marked VV_SYSTEM to be skipped.  *  * `rootrefs' specifies the base reference count for the root vnode  * of this filesystem. The root vnode is considered busy if its  * v_usecount exceeds this value. On a successful return, vflush()  * will call vrele() on the root vnode exactly rootrefs times.  * If the SKIPSYSTEM or WRITECLOSE flags are specified, rootrefs must  * be zero.  */
+comment|/*  * Remove any vnodes in the vnode table belonging to mount point mp.  *  * If FORCECLOSE is not specified, there should not be any active ones,  * return error if any are found (nb: this is a user error, not a  * system error). If FORCECLOSE is specified, detach any active vnodes  * that are found.  *  * If WRITECLOSE is set, only flush out regular file vnodes open for  * writing.  *  * SKIPSYSTEM causes any vnodes marked VV_SYSTEM to be skipped.  *  * `rootrefs' specifies the base reference count for the root vnode  * of this filesystem. The root vnode is considered busy if its  * v_usecount exceeds this value. On a successful return, vflush(, td)  * will call vrele() on the root vnode exactly rootrefs times.  * If the SKIPSYSTEM or WRITECLOSE flags are specified, rootrefs must  * be zero.  */
 end_comment
 
 begin_ifdef
@@ -9674,6 +9674,8 @@ parameter_list|,
 name|rootrefs
 parameter_list|,
 name|flags
+parameter_list|,
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -9686,15 +9688,12 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-block|{
 name|struct
 name|thread
 modifier|*
 name|td
-init|=
-name|curthread
 decl_stmt|;
-comment|/* XXX */
+block|{
 name|struct
 name|vnode
 modifier|*
@@ -9757,6 +9756,8 @@ name|mp
 argument_list|,
 operator|&
 name|rootvp
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=

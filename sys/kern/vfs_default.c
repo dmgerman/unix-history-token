@@ -2321,6 +2321,8 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|vpp
+parameter_list|,
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2332,6 +2334,11 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 block|{
 return|return

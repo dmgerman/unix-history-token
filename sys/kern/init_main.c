@@ -2220,6 +2220,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|rootvnode
+argument_list|,
+name|td
 argument_list|)
 condition|)
 name|panic
