@@ -347,17 +347,6 @@ name|found
 goto|;
 name|not_found
 label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"couldn't find %s in %s\n"
-argument_list|,
-name|ruser
-argument_list|,
-name|group
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|openpam_get_option
@@ -379,17 +368,6 @@ operator|)
 return|;
 name|found
 label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"found %s in %s\n"
-argument_list|,
-name|ruser
-argument_list|,
-name|group
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|openpam_get_option
