@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.18 (Berkeley) %G%"
+literal|"@(#)cp.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -166,13 +172,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|uid_t
 name|myuid
 decl_stmt|;
@@ -188,11 +187,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|interactive_flag
+name|iflag
 decl_stmt|,
-name|preserve_flag
+name|pflag
 decl_stmt|,
-name|recursive_flag
+name|rflag
 decl_stmt|;
 end_decl_stmt
 
@@ -259,8 +258,6 @@ decl_stmt|,
 name|r
 decl_stmt|;
 name|int
-name|force_flag
-decl_stmt|,
 name|symfollow
 decl_stmt|,
 name|lstat
@@ -275,10 +272,6 @@ name|old_to
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 comment|/* 	 * cp is used by mv(1) -- except for usage statements, print 	 * the "called as" program name. 	 */
 name|pname
@@ -301,8 +294,6 @@ else|:
 operator|*
 name|argv
 expr_stmt|;
-name|force_flag
-operator|=
 name|symfollow
 operator|=
 literal|0
@@ -336,9 +327,9 @@ block|{
 case|case
 literal|'f'
 case|:
-name|force_flag
+name|iflag
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -352,7 +343,7 @@ break|break;
 case|case
 literal|'i'
 case|:
-name|interactive_flag
+name|iflag
 operator|=
 name|isatty
 argument_list|(
@@ -366,7 +357,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|preserve_flag
+name|pflag
 operator|=
 literal|1
 expr_stmt|;
@@ -377,7 +368,7 @@ case|:
 case|case
 literal|'R'
 case|:
-name|recursive_flag
+name|rflag
 operator|=
 literal|1
 expr_stmt|;
@@ -408,14 +399,6 @@ literal|2
 condition|)
 name|usage
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|force_flag
-condition|)
-name|interactive_flag
-operator|=
-literal|0
 expr_stmt|;
 name|buf
 operator|=
@@ -499,7 +482,7 @@ operator|=
 name|symfollow
 operator|||
 operator|!
-name|recursive_flag
+name|rflag
 condition|?
 name|stat
 else|:
@@ -818,7 +801,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|recursive_flag
+name|rflag
 condition|)
 block|{
 operator|(
@@ -912,7 +895,7 @@ expr_stmt|;
 comment|/* 		 * If not -p and directory didn't exist, set it to be the 		 * same as the from directory, umodified by the umask; 		 * arguably wrong, but it's been that way forever. 		 */
 if|if
 condition|(
-name|preserve_flag
+name|pflag
 condition|)
 name|setfile
 argument_list|(
@@ -951,7 +934,7 @@ case|:
 comment|/* 		 * if recursive flag on, try and create the special device 		 * otherwise copy the contents. 		 */
 if|if
 condition|(
-name|recursive_flag
+name|rflag
 condition|)
 block|{
 name|copy_special
@@ -965,7 +948,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|preserve_flag
+name|pflag
 condition|)
 name|setfile
 argument_list|(
@@ -1069,7 +1052,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|interactive_flag
+name|iflag
 condition|)
 block|{
 name|int
@@ -1265,7 +1248,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|preserve_flag
+name|pflag
 condition|)
 name|setfile
 argument_list|(
@@ -1728,7 +1711,7 @@ operator|)
 name|free
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|dp
@@ -1794,7 +1777,7 @@ operator|)
 name|free
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|dp
@@ -1833,7 +1816,7 @@ operator|)
 name|free
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|dp
@@ -1855,7 +1838,7 @@ expr_stmt|;
 name|free
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|dp
@@ -1881,7 +1864,7 @@ block|}
 name|free
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|dir_list
