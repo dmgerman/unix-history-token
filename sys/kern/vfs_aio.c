@@ -3114,6 +3114,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|cb
 operator|->
 name|aio_buf
@@ -4809,6 +4812,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|cb
 operator|->
 name|aio_buf
@@ -6374,6 +6380,9 @@ operator|(
 expr|struct
 name|kevent
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|job
 operator|->
@@ -10722,7 +10731,7 @@ operator|->
 name|aiocbp
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|cb
 operator|->
@@ -10854,7 +10863,7 @@ operator|->
 name|aiocbp
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|cb
 operator|->
@@ -11105,13 +11114,6 @@ name|kn
 operator|->
 name|kn_id
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
-comment|/* XXX no clue, so overkill */
 name|SLIST_REMOVE
 argument_list|(
 operator|&
@@ -11124,11 +11126,6 @@ argument_list|,
 name|knote
 argument_list|,
 name|kn_selnext
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -11170,9 +11167,14 @@ name|kn
 operator|->
 name|kn_data
 operator|=
-literal|0
+name|aiocbe
+operator|->
+name|uaiocb
+operator|.
+name|_aiocb_private
+operator|.
+name|error
 expr_stmt|;
-comment|/* XXX data returned? */
 if|if
 condition|(
 name|aiocbe
