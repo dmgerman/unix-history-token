@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ifconfig.c,v 1.34 1997/04/21 01:17:58 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: ifmedia.c,v 1.1 1997/05/04 06:22:27 peter Exp $ */
+comment|/*	$Id: ifmedia.c,v 1.2 1997/05/10 14:47:35 peter Exp $ */
 end_comment
 
 begin_comment
@@ -225,9 +225,17 @@ name|void
 name|media_status
 parameter_list|(
 name|s
+parameter_list|,
+name|info
 parameter_list|)
 name|int
 name|s
+decl_stmt|;
+name|struct
+name|rt_addrinfo
+modifier|*
+name|info
+name|__unused
 decl_stmt|;
 block|{
 name|struct
