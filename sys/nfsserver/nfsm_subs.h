@@ -230,7 +230,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do { \ 	if (mrep != NULL) { \ 		m_freem(mrep); \ 		mrep = NULL; \ 	} \ 	if (error == EBADRPC) { \ 		error = 0; \ 		goto nfsmout; \ 	} \ 	mreq = nfs_rephead((s), nfsd, error,&mb,&bpos); \ 	*mrq = mreq; \ } while (0)
+value|do { \ 	if (mrep != NULL) { \ 		m_freem(mrep); \ 		mrep = NULL; \ 	} \ 	mreq = nfs_rephead((s), nfsd, error,&mb,&bpos); \ 	*mrq = mreq; \ 	if (error == EBADRPC) { \ 		error = 0; \ 		goto nfsmout; \ 	} \ } while (0)
 end_define
 
 begin_define
