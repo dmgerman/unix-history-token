@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.159 (Berkeley) %G%"
+literal|"@(#)conf.c	8.160 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1234,6 +1234,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* arbitrary programs */
+name|MAPDEF
+argument_list|(
+literal|"program"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|map_parseargs
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|prog_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
 comment|/* sequenced maps */
 name|MAPDEF
 argument_list|(
