@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_output.c	7.13.1.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_output.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -258,7 +264,7 @@ name|snd_una
 expr_stmt|;
 name|win
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -308,7 +314,7 @@ block|}
 block|}
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|so
 operator|->
@@ -687,7 +693,7 @@ return|;
 name|send
 label|:
 comment|/* 	 * Grab a header mbuf, attaching a copy of data to 	 * be transmitted, and initialize the header from 	 * the template for sends on this connection. 	 */
-name|MGET
+name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
@@ -707,22 +713,11 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-define|#
-directive|define
-name|MAXLINKHDR
-value|32
-comment|/* belongs elsewhere */
-define|#
-directive|define
-name|DATASPACE
-value|(MMAXOFF - (MMINOFF + MAXLINKHDR + sizeof (struct tcpiphdr)))
 name|m
 operator|->
-name|m_off
-operator|=
-name|MMINOFF
-operator|+
-name|MAXLINKHDR
+name|m_data
+operator|+=
+name|max_linkhdr
 expr_stmt|;
 name|m
 operator|->
@@ -733,6 +728,19 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 name|ti
 operator|=
@@ -810,7 +818,15 @@ if|if
 condition|(
 name|len
 operator|<=
-name|DATASPACE
+name|MHLEN
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+operator|-
+name|max_linkhdr
 condition|)
 block|{
 if|if
@@ -993,7 +1009,7 @@ name|mss
 decl_stmt|;
 name|mss
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|so
 operator|->
@@ -1674,6 +1690,31 @@ operator|+
 name|optlen
 operator|+
 name|len
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+condition|)
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+operator|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|ti
+operator|)
+operator|->
+name|ip_len
 expr_stmt|;
 operator|(
 operator|(
