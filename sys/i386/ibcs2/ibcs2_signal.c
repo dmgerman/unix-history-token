@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Scott Bartram  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_signal.c,v 1.4 1995/10/19 19:20:17 swallace Exp $  */
 end_comment
 
 begin_include
@@ -1102,6 +1102,10 @@ modifier|*
 name|retval
 decl_stmt|;
 block|{
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
 name|int
 name|signum
 init|=
@@ -1189,11 +1193,10 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 	 * sigset is identical to signal() except that SIG_HOLD is allowed as 	 * an action. 	 */
 case|case
 name|IBCS2_SIGSET_MASK
 case|:
-comment|/* 		 * sigset is identical to signal() except 		 * that SIG_HOLD is allowed as 		 * an action. 		 */
+comment|/* 		 * Check for SIG_HOLD action. 		 * Otherwise, perform signal() except with different sa_flags. 		 */
 if|if
 condition|(
 name|SCARG
@@ -1202,9 +1205,25 @@ name|uap
 argument_list|,
 name|fp
 argument_list|)
-operator|==
+operator|!=
 name|IBCS2_SIG_HOLD
 condition|)
+block|{
+comment|/* add sig to mask before exececuting signal handler */
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|ibcs2_sigset
+goto|;
+block|}
+comment|/* else fallthrough to sighold */
+case|case
+name|IBCS2_SIGHOLD_MASK
+case|:
 block|{
 name|struct
 name|sigprocmask_args
@@ -1245,7 +1264,6 @@ name|retval
 argument_list|)
 return|;
 block|}
-comment|/* FALLTHROUGH */
 case|case
 name|IBCS2_SIGNAL_MASK
 case|:
@@ -1261,9 +1279,48 @@ name|nbsa
 decl_stmt|,
 modifier|*
 name|obsa
-decl_stmt|,
-name|sa
 decl_stmt|;
+comment|/* do not automatically block signal */
+name|sa
+operator|.
+name|sa_flags
+operator|=
+name|SA_NODEFER
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SA_RESETHAND
+if|if
+condition|(
+operator|(
+name|signum
+operator|!=
+name|IBCS2_SIGILL
+operator|)
+operator|&&
+operator|(
+name|signum
+operator|!=
+name|IBCS2_SIGTRAP
+operator|)
+operator|&&
+operator|(
+name|signum
+operator|!=
+name|IBCS2_SIGPWR
+operator|)
+condition|)
+comment|/* set to SIG_DFL before executing handler */
+name|sa
+operator|.
+name|sa_flags
+operator||=
+name|SA_RESETHAND
+expr_stmt|;
+endif|#
+directive|endif
+name|ibcs2_sigset
+label|:
 name|nbsa
 operator|=
 name|stackgap_alloc
@@ -1340,12 +1397,6 @@ name|sa
 operator|.
 name|sa_mask
 argument_list|)
-expr_stmt|;
-name|sa
-operator|.
-name|sa_flags
-operator|=
-name|SA_NODEFER
 expr_stmt|;
 if|#
 directive|if
@@ -1456,49 +1507,6 @@ literal|0
 return|;
 block|}
 case|case
-name|IBCS2_SIGHOLD_MASK
-case|:
-block|{
-name|struct
-name|sigprocmask_args
-name|sa
-decl_stmt|;
-name|SCARG
-argument_list|(
-operator|&
-name|sa
-argument_list|,
-name|how
-argument_list|)
-operator|=
-name|SIG_BLOCK
-expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
-name|sa
-argument_list|,
-name|mask
-argument_list|)
-operator|=
-name|sigmask
-argument_list|(
-name|signum
-argument_list|)
-expr_stmt|;
-return|return
-name|sigprocmask
-argument_list|(
-name|p
-argument_list|,
-operator|&
-name|sa
-argument_list|,
-name|retval
-argument_list|)
-return|;
-block|}
-case|case
 name|IBCS2_SIGRELSE_MASK
 case|:
 block|{
@@ -1553,8 +1561,6 @@ name|struct
 name|sigaction
 modifier|*
 name|bsa
-decl_stmt|,
-name|sa
 decl_stmt|;
 name|bsa
 operator|=
