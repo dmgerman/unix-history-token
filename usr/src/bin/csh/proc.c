@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.2 (Berkeley) %G%"
+literal|"@(#)proc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1118,7 +1118,16 @@ condition|)
 break|break;
 name|sigpause
 argument_list|(
+name|sigblock
+argument_list|(
 literal|0
+argument_list|)
+operator|&
+operator|~
+name|sigmask
+argument_list|(
+name|SIGCHLD
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
