@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tc3.c	5.2 (Berkeley) %G%"
+literal|"@(#)tc3.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * tc3 [term]  * Dummy program to test out termlib.  * Input two numbers and it prints out the tgoto string generated.  */
+comment|/*  * tc3 [term]  * Dummy program to test out termlib.  Input two numbers (row and col)  * and it prints out the tgoto string generated.  */
 end_comment
 
 begin_include
@@ -292,9 +292,9 @@ name|tgoto
 argument_list|(
 name|CM
 argument_list|,
-name|row
-argument_list|,
 name|col
+argument_list|,
+name|row
 argument_list|)
 expr_stmt|;
 name|pr
@@ -349,7 +349,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * rdchar: returns a readable representation of an ASCII char, using ^ notation.  */
+comment|/*  * rdchar() returns a readable representation of an ASCII character  * using ^ for control, ' for meta.  */
 end_comment
 
 begin_include
@@ -380,14 +380,11 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-comment|/* 	 * Due to a bug in isprint, this prints spaces as ^`, but this is OK 	 * because we want something to show up on the screen. 	 */
+init|=
 name|ret
-index|[
-literal|0
-index|]
-operator|=
-operator|(
+decl_stmt|;
+if|if
+condition|(
 operator|(
 name|c
 operator|&
@@ -395,35 +392,36 @@ literal|0377
 operator|)
 operator|>
 literal|0177
-operator|)
-condition|?
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
 literal|'\''
-else|:
-literal|' '
 expr_stmt|;
 name|c
 operator|&=
 literal|0177
 expr_stmt|;
-name|ret
-index|[
-literal|1
-index|]
-operator|=
+if|if
+condition|(
+operator|!
 name|isprint
 argument_list|(
 name|c
 argument_list|)
-condition|?
-literal|' '
-else|:
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
 literal|'^'
 expr_stmt|;
-name|ret
-index|[
-literal|2
-index|]
+operator|*
+name|p
+operator|++
 operator|=
+operator|(
 name|isprint
 argument_list|(
 name|c
@@ -434,32 +432,16 @@ else|:
 name|c
 operator|^
 literal|0100
+operator|)
 expr_stmt|;
-name|ret
-index|[
-literal|3
-index|]
+operator|*
+name|p
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|ret
-init|;
-operator|*
-name|p
-operator|==
-literal|' '
-condition|;
-name|p
-operator|++
-control|)
-empty_stmt|;
 return|return
 operator|(
-name|p
+name|ret
 operator|)
 return|;
 block|}
