@@ -1732,7 +1732,7 @@ while|while
 condition|(
 name|fgets
 argument_list|(
-name|from
+name|to
 argument_list|,
 name|PATH_MAX
 argument_list|,
@@ -1742,7 +1742,7 @@ condition|)
 block|{
 name|fgets
 argument_list|(
-name|to
+name|from
 argument_list|,
 name|PATH_MAX
 argument_list|,
@@ -1779,9 +1779,9 @@ if|if
 condition|(
 name|symlink
 argument_list|(
-name|to
-argument_list|,
 name|from
+argument_list|,
+name|to
 argument_list|)
 operator|==
 operator|-
