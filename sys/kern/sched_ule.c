@@ -5320,6 +5320,10 @@ expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_OURSELF
+operator||
+name|SRQ_YIELDING
 argument_list|)
 expr_stmt|;
 block|}
@@ -5755,6 +5759,8 @@ block|}
 name|setrunqueue
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 block|}
@@ -7001,8 +7007,28 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
+comment|/* let jeff work out how to map the flags better */
+comment|/* I'm open to suggestions */
+if|if
+condition|(
+name|flags
+operator|&
+name|SRQ_YIELDING
+condition|)
+comment|/* 		 * Preempting during switching can be bad JUJU 		 * especially for KSE processes 		 */
+name|sched_add_internal
+argument_list|(
+name|td
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|sched_add_internal
 argument_list|(
 name|td

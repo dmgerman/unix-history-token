@@ -608,6 +608,8 @@ expr_stmt|;
 name|sched_add
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 return|return;
@@ -793,6 +795,8 @@ expr_stmt|;
 name|sched_add
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 block|}
@@ -870,6 +874,8 @@ expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 block|}
@@ -883,6 +889,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -988,6 +997,8 @@ comment|/* 		 * Common path optimisation: Only one of everything 		 * and the KS
 name|sched_add
 argument_list|(
 name|td
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1360,6 +1371,8 @@ argument_list|(
 name|ke
 operator|->
 name|ke_thread
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 block|}

@@ -740,6 +740,8 @@ name|FIRST_THREAD_IN_PROC
 argument_list|(
 name|pagezero_proc
 argument_list|)
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
