@@ -1,12 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)genassym.c	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.6 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)genassym.c	5.6 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
 
 begin_include
 include|#
 directive|include
-file|"../i386/pte.h"
+file|"machine/pte.h"
 end_include
 
 begin_include
@@ -18,25 +49,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmmeter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vmparam.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dir.h"
+file|"vmmeter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/vmparam.h"
 end_include
 
 begin_include
@@ -81,23 +106,40 @@ directive|include
 file|"msgbuf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"machine/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/trap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/reg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syscall.h"
+end_include
+
 begin_function
 name|main
 parameter_list|()
 block|{
-specifier|register
-name|struct
-name|user
-modifier|*
-name|u
-init|=
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
-literal|0
-decl_stmt|;
 specifier|register
 name|struct
 name|proc
@@ -126,6 +168,43 @@ literal|0
 decl_stmt|;
 specifier|register
 name|struct
+name|user
+modifier|*
+name|up
+init|=
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+specifier|register
+name|struct
+name|rusage
+modifier|*
+name|rup
+init|=
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+name|struct
+name|text
+modifier|*
+name|tp
+init|=
+operator|(
+expr|struct
+name|text
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+name|struct
 name|pcb
 modifier|*
 name|pcb
@@ -136,6 +215,10 @@ name|pcb
 operator|*
 operator|)
 literal|0
+decl_stmt|;
+specifier|register
+name|unsigned
+name|i
 decl_stmt|;
 name|printf
 argument_list|(
@@ -154,19 +237,20 @@ argument_list|(
 literal|"#define\tU_PROCP %d\n"
 argument_list|,
 operator|&
-name|u
+name|up
 operator|->
 name|u_procp
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_EOSYS %d\n"
+literal|"#define\tUDOT_SZ %d\n"
 argument_list|,
-operator|&
-name|u
-operator|->
-name|u_eosys
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|user
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -301,12 +385,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_CR3 %d\n"
+literal|"#define\tP_PID %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_cr3
+name|p_pid
 argument_list|)
 expr_stmt|;
 name|printf
@@ -778,12 +862,40 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_FPSAV %d\n"
+literal|"#define\tPCB_FLAGS %d\n"
 argument_list|,
 operator|&
 name|pcb
 operator|->
-name|pcb_fpsav
+name|pcb_flags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tFP_WASUSED %d\n"
+argument_list|,
+name|FP_WASUSED
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tFP_NEEDSSAVE %d\n"
+argument_list|,
+name|FP_NEEDSSAVE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tFP_NEEDSRESTORE %d\n"
+argument_list|,
+name|FP_NEEDSRESTORE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tFP_USESEMC %d\n"
+argument_list|,
+name|FP_USESEMC
 argument_list|)
 expr_stmt|;
 name|printf
