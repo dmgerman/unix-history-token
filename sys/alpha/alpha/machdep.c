@@ -4052,10 +4052,6 @@ operator|.
 name|apcb_ksp
 expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
-name|boothowto
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KADB

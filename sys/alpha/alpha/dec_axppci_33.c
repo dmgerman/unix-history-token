@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -528,6 +534,10 @@ name|panic
 argument_list|(
 literal|"can't init serial console"
 argument_list|)
+expr_stmt|;
+name|boothowto
+operator||=
+name|RB_SERIAL
 expr_stmt|;
 break|break;
 block|}
