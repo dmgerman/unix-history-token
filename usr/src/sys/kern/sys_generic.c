@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.3	82/07/24	*/
+comment|/*	sys_generic.c	5.4	82/07/25	*/
 end_comment
 
 begin_include
@@ -1930,12 +1930,10 @@ name|fs_bsize
 expr_stmt|;
 block|}
 else|else
-block|{
 name|bsize
 operator|=
 name|BLKDEV_IOSIZE
 expr_stmt|;
-block|}
 do|do
 block|{
 name|lbn
@@ -2006,6 +2004,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|u
+operator|.
+name|u_error
+operator|||
 operator|(
 name|long
 operator|)
@@ -2079,11 +2081,6 @@ name|DEV_BSIZE
 operator|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bn
-condition|)
-block|{
 name|count
 operator|=
 name|howmany
@@ -2107,7 +2104,6 @@ name|i
 operator|+=
 name|CLSIZE
 control|)
-block|{
 if|if
 condition|(
 name|mfind
@@ -2128,8 +2124,6 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|n
