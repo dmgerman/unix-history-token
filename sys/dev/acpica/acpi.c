@@ -1790,6 +1790,12 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/*      * Call the ECDT probe function to provide EC functionality before      * the namespace has been evaluated.      */
+name|acpi_ec_ecdt_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
