@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|VN_MAXPRIVATE
-value|184
+value|188
 end_define
 
 begin_struct
@@ -88,14 +88,6 @@ name|long
 name|v_holdcnt
 decl_stmt|;
 comment|/* page& buffer references */
-name|u_short
-name|v_shlockc
-decl_stmt|;
-comment|/* count of shared locks */
-name|u_short
-name|v_exlockc
-decl_stmt|;
-comment|/* count of exclusive locks */
 name|off_t
 name|v_lastr
 decl_stmt|;
@@ -282,39 +274,6 @@ end_define
 
 begin_comment
 comment|/* vnode being used by kernel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VEXLOCK
-value|0x0010
-end_define
-
-begin_comment
-comment|/* exclusive lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSHLOCK
-value|0x0020
-end_define
-
-begin_comment
-comment|/* shared lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VLWAIT
-value|0x0040
-end_define
-
-begin_comment
-comment|/* proc is waiting on shared or excl. lock */
 end_comment
 
 begin_define
@@ -655,6 +614,15 @@ name|vn_islocked
 function_decl|)
 parameter_list|(
 comment|/* vp */
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|vn_advlock
+function_decl|)
+parameter_list|(
+comment|/* vp, proc, op, lck, flg */
 parameter_list|)
 function_decl|;
 block|}
@@ -1077,6 +1045,24 @@ parameter_list|(
 name|v
 parameter_list|)
 value|(*((v)->v_op->vn_islocked))(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_ADVLOCK
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|o
+parameter_list|,
+name|l
+parameter_list|,
+name|f
+parameter_list|)
+value|(*((v)->v_op->vn_advlock))((v),(p),(o),(l),(f))
 end_define
 
 begin_comment

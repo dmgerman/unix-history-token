@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -185,6 +185,50 @@ end_define
 begin_comment
 comment|/* exclusive or write lock */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|F_WAIT
+value|0x010
+end_define
+
+begin_comment
+comment|/* Wait until lock is granted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_FLOCK
+value|0x020
+end_define
+
+begin_comment
+comment|/* Use flock(2) semantics for lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_POSIX
+value|0x040
+end_define
+
+begin_comment
+comment|/* Use POSIX semantics for lock */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -519,6 +563,38 @@ name|O_ACCMODE
 value|(O_RDONLY|O_WRONLY|O_RDWR)
 end_define
 
+begin_comment
+comment|/* file segment locking set data type - information passed to system by user */
+end_comment
+
+begin_struct
+struct|struct
+name|flock
+block|{
+name|short
+name|l_type
+decl_stmt|;
+name|short
+name|l_whence
+decl_stmt|;
+name|size_t
+name|l_start
+decl_stmt|;
+name|size_t
+name|l_len
+decl_stmt|;
+comment|/* len = 0 means until end of file */
+name|short
+name|l_sysid
+decl_stmt|;
+name|int
+name|l_pid
+decl_stmt|;
+comment|/* should be pid_t */
+block|}
+struct|;
+end_struct
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -548,7 +624,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

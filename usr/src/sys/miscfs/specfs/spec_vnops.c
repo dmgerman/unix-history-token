@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -192,6 +192,9 @@ decl_stmt|,
 name|spec_print
 argument_list|()
 decl_stmt|,
+name|spec_advlock
+argument_list|()
+decl_stmt|,
 name|spec_ebadf
 argument_list|()
 decl_stmt|,
@@ -305,6 +308,9 @@ comment|/* print */
 name|spec_nullop
 block|,
 comment|/* islocked */
+name|spec_advlock
+block|,
+comment|/* advlock */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2213,6 +2219,69 @@ name|v_rdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Special device advisory byte-level locks.  */
+end_comment
+
+begin_macro
+name|spec_advlock
+argument_list|(
+argument|vp
+argument_list|,
+argument|id
+argument_list|,
+argument|op
+argument_list|,
+argument|fl
+argument_list|,
+argument|flags
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|op
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|flock
+modifier|*
+name|fl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 end_block
 

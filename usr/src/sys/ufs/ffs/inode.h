@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -87,6 +87,12 @@ name|MAXQUOTAS
 index|]
 decl_stmt|;
 comment|/* pointer to dquot structures */
+name|struct
+name|lockf
+modifier|*
+name|i_lockf
+decl_stmt|;
+comment|/* Head of byte-level lock list */
 name|long
 name|i_diroff
 decl_stmt|;

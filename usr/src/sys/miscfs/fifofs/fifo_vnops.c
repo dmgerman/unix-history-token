@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -135,6 +135,9 @@ decl_stmt|,
 name|fifo_print
 argument_list|()
 decl_stmt|,
+name|fifo_advlock
+argument_list|()
+decl_stmt|,
 name|fifo_ebadf
 argument_list|()
 decl_stmt|,
@@ -248,6 +251,9 @@ comment|/* print */
 name|fifo_nullop
 block|,
 comment|/* islocked */
+name|fifo_advlock
+block|,
+comment|/* advlock */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1779,6 +1785,69 @@ block|{
 return|return
 operator|(
 name|EBADF
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Fifo advisory byte-level locks.  */
+end_comment
+
+begin_macro
+name|fifo_advlock
+argument_list|(
+argument|vp
+argument_list|,
+argument|id
+argument_list|,
+argument|op
+argument_list|,
+argument|fl
+argument_list|,
+argument|flags
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|op
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|flock
+modifier|*
+name|fl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -258,6 +258,9 @@ argument_list|()
 decl_stmt|,
 name|nfs_islocked
 argument_list|()
+decl_stmt|,
+name|nfs_advlock
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -363,6 +366,9 @@ comment|/* print */
 name|nfs_islocked
 block|,
 comment|/* islocked */
+name|nfs_advlock
+block|,
+comment|/* advlock */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -404,6 +410,9 @@ name|spec_badop
 argument_list|()
 decl_stmt|,
 name|spec_nullop
+argument_list|()
+decl_stmt|,
+name|spec_advlock
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -510,6 +519,9 @@ comment|/* print */
 name|nfs_islocked
 block|,
 comment|/* islocked */
+name|spec_advlock
+block|,
+comment|/* advlock */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -553,6 +565,9 @@ name|fifo_badop
 argument_list|()
 decl_stmt|,
 name|fifo_nullop
+argument_list|()
+decl_stmt|,
+name|fifo_advlock
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -659,6 +674,9 @@ comment|/* print */
 name|nfs_islocked
 block|,
 comment|/* islocked */
+name|fifo_advlock
+block|,
+comment|/* advlock */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -9499,6 +9517,69 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * NFS advisory byte-level locks.  * Currently unsupported.  */
+end_comment
+
+begin_macro
+name|nfs_advlock
+argument_list|(
+argument|vp
+argument_list|,
+argument|id
+argument_list|,
+argument|op
+argument_list|,
+argument|fl
+argument_list|,
+argument|flags
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|op
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|flock
+modifier|*
+name|fl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
