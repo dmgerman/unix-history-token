@@ -45,6 +45,18 @@ directive|include
 file|<machine/sapicreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
