@@ -895,7 +895,7 @@ name|dvp
 operator|->
 name|id_flags
 operator|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
