@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -269,6 +269,9 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -314,15 +317,11 @@ name|j
 operator|>=
 name|NOFILE
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+name|RETURN
+argument_list|(
 name|EBADF
+argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|u
 operator|.
 name|u_r
@@ -343,7 +342,11 @@ name|uap
 operator|->
 name|j
 condition|)
-return|return;
+name|RETURN
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|u
@@ -376,6 +379,8 @@ operator|->
 name|j
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|closef
 argument_list|(
 name|u
@@ -388,13 +393,6 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_error
-condition|)
-return|return;
 block|}
 name|dupit
 argument_list|(
@@ -415,6 +413,17 @@ index|]
 operator|&
 operator|~
 name|UF_EXCLOSE
+argument_list|)
+expr_stmt|;
+comment|/* 	 * dup2() must succeed even though the close had an error. 	 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+name|RETURN
+argument_list|(
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -1331,12 +1340,14 @@ name|pf
 operator|=
 literal|0
 expr_stmt|;
+name|RETURN
+argument_list|(
 name|closef
 argument_list|(
 name|fp
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* WHAT IF u.u_error ? */
 block|}
 end_block
 
@@ -1884,13 +1895,20 @@ end_expr_stmt
 
 begin_block
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|fp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|fp
@@ -1905,7 +1923,11 @@ operator|->
 name|f_count
 operator|--
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1920,6 +1942,8 @@ argument_list|(
 literal|"closef: count< 1"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 call|(
 modifier|*
 name|fp
@@ -1945,6 +1969,11 @@ name|f_count
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
