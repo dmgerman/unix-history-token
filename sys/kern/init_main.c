@@ -2242,9 +2242,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|NODEVFS
 comment|/* 	 * For disk based systems, we probably cannot do this yet 	 * since the fs will be read-only.  But a NFS root 	 * might be ok.  It is worth a shot. 	 */
 name|error
 operator|=
@@ -2302,8 +2299,6 @@ name|init_does_devfs
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Need just enough stack to hold the faked-up "execve()" arguments. 	 */
 name|addr
 operator|=
