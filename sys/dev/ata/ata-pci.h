@@ -1042,7 +1042,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALICABLE
+name|ALINEW
 value|0x02
 end_define
 
