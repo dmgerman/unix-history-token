@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.14 (Berkeley) %G%"
+literal|"@(#)ps.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5237,7 +5237,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|"?"
+literal|" ?"
 operator|)
 return|;
 name|x
@@ -7548,7 +7548,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-3.3s "
+literal|" %-2.3s "
 argument_list|,
 name|state
 argument_list|(
@@ -7616,7 +7616,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|" %2ld:%02ld"
+literal|" %3ld:%02ld"
 argument_list|,
 name|ap
 operator|->
@@ -7782,7 +7782,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-3.3s"
+literal|" %-2.3s"
 argument_list|,
 name|state
 argument_list|(
@@ -7866,7 +7866,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-3.3s"
+literal|" %-2.3s"
 argument_list|,
 name|state
 argument_list|(
@@ -8061,7 +8061,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-3.3s"
+literal|" %-2.3s"
 argument_list|,
 name|state
 argument_list|(
