@@ -104,7 +104,7 @@ comment|/* Minimum and maximum values a `signed int' can hold.  */
 end_comment
 
 begin_comment
-comment|/* #define INT_MIN (-INT_MAX-1) #define INT_MAX 2147483647 */
+comment|/* #ifndef INT_MIN #define INT_MIN (-INT_MAX-1) #endif #ifndef INT_MAX #define INT_MAX 2147483647 #endif */
 end_comment
 
 begin_define
