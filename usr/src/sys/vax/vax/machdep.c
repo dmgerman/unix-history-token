@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -403,6 +403,33 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VAX630
+include|#
+directive|include
+file|"qv.h"
+if|#
+directive|if
+name|NQV
+operator|>
+literal|0
+comment|/* 	 * redirect console to qvss if it exists 	 */
+if|if
+condition|(
+operator|!
+name|qvcons_init
+argument_list|()
+condition|)
+name|printf
+argument_list|(
+literal|"qvss not initialized\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|printf
 argument_list|(
