@@ -2301,6 +2301,7 @@ operator|&
 name|LC_SLEEPLOCK
 condition|)
 block|{
+comment|/* 		 * Since spin locks include a critical section, this check 		 * impliclty enforces a lock order of all sleep locks before 		 * all spin locks. 		 */
 if|if
 condition|(
 name|td
