@@ -2077,7 +2077,7 @@ name|callout_init
 argument_list|(
 name|calloutp
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|kn
