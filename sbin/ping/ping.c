@@ -566,16 +566,34 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/*  * Use a union to coerce alignment to at least sockaddr_in's alignment.  * This avoids unaligned access faults on alpha.  */
+end_comment
+
+begin_union
+union|union
+block|{
 name|struct
 name|sockaddr
-name|whereto
+name|_w2
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* who to ping */
-end_comment
+name|struct
+name|sockaddr_in
+name|_w2_in
+decl_stmt|;
+comment|/* who to ping */
+block|}
+name|ww
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|whereto
+value|ww._w2
+end_define
 
 begin_decl_stmt
 name|int
