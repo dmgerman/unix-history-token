@@ -110,7 +110,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id: exphy.c,v 1.1 1999/08/21 17:40:41 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,6 +320,7 @@ expr_stmt|;
 comment|/* 	 * Argh, 3Com PHY reports oui == 0 model == 0! 	 */
 if|if
 condition|(
+operator|(
 name|MII_OUI
 argument_list|(
 name|ma
@@ -341,6 +342,31 @@ name|mii_id2
 argument_list|)
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+name|MII_OUI
+argument_list|(
+name|ma
+operator|->
+name|mii_id1
+argument_list|,
+name|ma
+operator|->
+name|mii_id2
+argument_list|)
+operator|!=
+name|MII_OUI_BROADCOM
+operator|||
+name|MII_MODEL
+argument_list|(
+name|ma
+operator|->
+name|mii_id2
+argument_list|)
+operator|!=
+name|MII_MODEL_BROADCOM_3c905Cphy
+operator|)
 condition|)
 return|return
 operator|(
@@ -367,11 +393,34 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|MII_OUI
+argument_list|(
+name|ma
+operator|->
+name|mii_id1
+argument_list|,
+name|ma
+operator|->
+name|mii_id2
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
 literal|"3Com internal media interface"
+argument_list|)
+expr_stmt|;
+else|else
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|MII_STR_BROADCOM_3c905Cphy
 argument_list|)
 expr_stmt|;
 return|return

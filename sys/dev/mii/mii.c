@@ -94,7 +94,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id: mii.c,v 1.1 1999/08/21 17:40:41 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,7 +307,7 @@ decl_stmt|;
 name|device_t
 name|child
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 name|parent
 decl_stmt|;
@@ -810,6 +810,15 @@ name|media
 init|=
 literal|0
 decl_stmt|;
+comment|/* Poke the parent in case it has any media of its own to add. */
+name|MIIBUS_MEDIAINIT
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
