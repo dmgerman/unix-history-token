@@ -152,7 +152,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Exported from grep.c. */
+comment|/* Exported from fgrepmat.c, egrepmat.c, grepmat.c.  */
 end_comment
 
 begin_decl_stmt
@@ -161,19 +161,6 @@ name|char
 specifier|const
 modifier|*
 name|matcher
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Exported from fgrepmat.c, egrepmat.c, grepmat.c.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-name|default_matcher
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +199,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* -x */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|eolbyte
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -z */
 end_comment
 
 end_unit
