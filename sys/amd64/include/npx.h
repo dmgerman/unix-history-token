@@ -157,6 +157,20 @@ name|__INITIAL_NPXCW__
 value|0x127F
 end_define
 
+begin_define
+define|#
+directive|define
+name|__INITIAL_MXCSR__
+value|0x1F80
+end_define
+
+begin_define
+define|#
+directive|define
+name|__INITIAL_MXCSR_MASK__
+value|0xFFBF
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
