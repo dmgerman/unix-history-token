@@ -411,6 +411,9 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|u_int
+name|version
+decl_stmt|;
 name|g_taste_t
 modifier|*
 name|taste
@@ -435,6 +438,31 @@ name|g_ctl_destroy_geom_t
 modifier|*
 name|destroy_geom
 decl_stmt|;
+comment|/* 	 * Defaults values for geom methods 	 */
+name|g_start_t
+modifier|*
+name|start
+decl_stmt|;
+name|g_spoiled_t
+modifier|*
+name|spoiled
+decl_stmt|;
+name|g_dumpconf_t
+modifier|*
+name|dumpconf
+decl_stmt|;
+name|g_access_t
+modifier|*
+name|access
+decl_stmt|;
+name|g_orphan_t
+modifier|*
+name|orphan
+decl_stmt|;
+name|g_ioctl_t
+modifier|*
+name|ioctl
+decl_stmt|;
 comment|/* 	 * The remaining elements are private 	 */
 name|LIST_ENTRY
 argument_list|(
@@ -452,6 +480,20 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|G_VERSION_00
+value|0x19950323
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VERSION
+value|G_VERSION_00
+end_define
 
 begin_comment
 comment|/*  * The g_geom is an instance of a g_class.  */
