@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chkpth.c	5.3 (Berkeley) %G%"
+literal|"@(#)chkpth.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******  *	chkpth(logname, mchname, path)  *	char *path, *logname, *mchname;  *  *	chkpth  -  this routine will check the path table for the  *	machine or log name (non-null parameter) to see if the  *	input path (path)  *	starts with an acceptable prefix.  *  *	return codes:  0  |  FAIL  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	this routine will check the path table for the  *	machine or log name (non-null parameter) to see if the  *	input path (path) starts with an acceptable prefix.  *  *	return codes:  0  |  FAIL  */
 end_comment
 
 begin_macro
@@ -239,7 +243,7 @@ name|u
 operator|->
 name|us_mname
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 operator|==
 name|SAME
@@ -620,13 +624,13 @@ operator|->
 name|us_mname
 argument_list|)
 operator|>
-literal|7
+name|MAXBASENAME
 condition|)
 name|u
 operator|->
 name|us_mname
 index|[
-literal|7
+name|MAXBASENAME
 index|]
 operator|=
 literal|'\0'
