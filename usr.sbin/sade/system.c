@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.36 1995/05/26 19:28:05 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.37 1995/05/26 20:31:00 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -369,16 +369,31 @@ block|}
 comment|/* REALLY exit! */
 if|if
 condition|(
-name|getpid
-argument_list|()
-operator|==
-literal|1
+name|RunningAsInit
 condition|)
+block|{
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+comment|/* Put the console back */
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCCONS
+argument_list|,
+operator|&
+name|on
+argument_list|)
+expr_stmt|;
 name|reboot
 argument_list|(
 name|RB_HALT
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|exit
 argument_list|(
