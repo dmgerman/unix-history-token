@@ -45,7 +45,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: softmagic.c,v 1.26 1994/06/06 05:27:29 christos Exp $"
+literal|"@(#)$Id: softmagic.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -761,10 +761,6 @@ name|m
 operator|->
 name|desc
 argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|)
 name|v
 argument_list|)
 expr_stmt|;
