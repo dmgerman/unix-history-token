@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.28 81/12/22 */
+comment|/* ip_input.c 1.29 81/12/23 */
 end_comment
 
 begin_include
@@ -322,6 +322,13 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|m_off
+operator|>
+name|MMAXOFF
+operator|||
 name|m
 operator|->
 name|m_len
@@ -331,7 +338,11 @@ argument_list|(
 expr|struct
 name|ip
 argument_list|)
+operator|)
 operator|&&
+operator|(
+name|m
+operator|=
 name|m_pullup
 argument_list|(
 name|m
@@ -342,12 +353,11 @@ expr|struct
 name|ip
 argument_list|)
 argument_list|)
+operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return;
 name|ip
 operator|=
 name|mtod
@@ -378,18 +388,20 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|m
+operator|=
 name|m_pullup
 argument_list|(
 name|m
 argument_list|,
 name|hlen
 argument_list|)
+operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return;
 name|ip
 operator|=
 name|mtod
