@@ -1387,6 +1387,7 @@ name|getnetconfigent
 parameter_list|(
 name|netid
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|netid
