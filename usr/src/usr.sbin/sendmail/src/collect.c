@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -234,6 +234,15 @@ name|bool
 name|isheader
 parameter_list|()
 function_decl|;
+comment|/* drop out on error */
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|InChannel
+argument_list|)
+condition|)
+break|break;
 comment|/* if the line is too long, throw the rest away */
 if|if
 condition|(
@@ -358,6 +367,12 @@ if|if
 condition|(
 operator|!
 name|feof
+argument_list|(
+name|InChannel
+argument_list|)
+operator|&&
+operator|!
+name|ferror
 argument_list|(
 name|InChannel
 argument_list|)
@@ -606,10 +621,17 @@ expr_stmt|;
 comment|/* An EOF when running SMTP is an error */
 if|if
 condition|(
+operator|(
 name|feof
 argument_list|(
 name|InChannel
 argument_list|)
+operator|||
+name|ferror
+argument_list|(
+name|InChannel
+argument_list|)
+operator|)
 operator|&&
 name|OpMode
 operator|==
