@@ -423,26 +423,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* CBLOCK is the size of a clist block, must be power of 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBLOCK
+value|64
+end_define
+
 begin_define
 define|#
 directive|define
 name|CBSIZE
-value|28
+value|(CBLOCK - sizeof(struct cblock *))
 end_define
 
 begin_comment
-comment|/* number of chars in a clist block */
+comment|/* data chars/clist */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CROUND
-value|0x1F
+value|(CBLOCK - 1)
 end_define
 
 begin_comment
-comment|/* clist rounding; sizeof(int *) + CBSIZE -1*/
+comment|/* clist rounding */
 end_comment
 
 begin_ifndef
