@@ -65,6 +65,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|unsigned
+modifier|*
+name|secs
 parameter_list|)
 function_decl|;
 end_function_decl

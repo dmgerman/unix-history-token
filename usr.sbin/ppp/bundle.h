@@ -695,6 +695,9 @@ parameter_list|(
 name|struct
 name|bundle
 modifier|*
+parameter_list|,
+name|unsigned
+name|secs
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -235,6 +235,10 @@ name|u_short
 name|f_dstport
 decl_stmt|;
 comment|/* Destination port, compared with f_dstop */
+name|unsigned
+name|timeout
+decl_stmt|;
+comment|/* Keep alive value for passed packet */
 block|}
 struct|;
 end_struct

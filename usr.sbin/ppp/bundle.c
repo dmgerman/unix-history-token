@@ -974,6 +974,8 @@ comment|/* We may need to start our idle timer */
 name|bundle_StartIdleTimer
 argument_list|(
 name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1173,6 +1175,8 @@ expr_stmt|;
 name|bundle_StartIdleTimer
 argument_list|(
 name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bundle_Notify
@@ -2524,6 +2528,9 @@ name|datalink
 modifier|*
 name|dl
 decl_stmt|;
+name|unsigned
+name|secs
+decl_stmt|;
 if|if
 condition|(
 name|descriptor_IsSet
@@ -2794,6 +2801,8 @@ name|ntohl
 argument_list|(
 name|tun
 operator|.
+name|header
+operator|.
 name|family
 argument_list|)
 operator|!=
@@ -2859,6 +2868,8 @@ operator|->
 name|filter
 operator|.
 name|in
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -2943,6 +2954,8 @@ operator|.
 name|dial
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2966,6 +2979,10 @@ else|else
 comment|/*          * Drop the packet.  If we were to queue it, we'd just end up with          * a pile of timed-out data in our output queue by the time we get          * around to actually dialing.  We'd also prematurely reach the           * threshold at which we stop select()ing to read() the tun          * device - breaking auto-dial.          */
 return|return;
 block|}
+name|secs
+operator|=
+literal|0
+expr_stmt|;
 name|pri
 operator|=
 name|PacketCheck
@@ -2986,6 +3003,9 @@ operator|.
 name|out
 argument_list|,
 name|NULL
+argument_list|,
+operator|&
+name|secs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2994,6 +3014,16 @@ name|pri
 operator|>=
 literal|0
 condition|)
+block|{
+comment|/* Prepend the number of seconds timeout given in the filter */
+name|tun
+operator|.
+name|header
+operator|.
+name|timeout
+operator|=
+name|secs
+expr_stmt|;
 name|ip_Enqueue
 argument_list|(
 operator|&
@@ -3005,13 +3035,22 @@ name|ipcp
 argument_list|,
 name|pri
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|tun
-operator|.
-name|data
 argument_list|,
 name|n
+operator|+
+sizeof|sizeof
+name|tun
+operator|.
+name|header
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -6933,6 +6972,9 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+parameter_list|,
+name|unsigned
+name|secs
 parameter_list|)
 block|{
 name|timer_Stop
@@ -6976,9 +7018,20 @@ operator|.
 name|timeout
 condition|)
 block|{
-name|int
-name|secs
+name|time_t
+name|now
+init|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|secs
+operator|==
+literal|0
+condition|)
 name|secs
 operator|=
 name|bundle
@@ -6989,6 +7042,7 @@ name|idle
 operator|.
 name|timeout
 expr_stmt|;
+comment|/* We want at least `secs' */
 if|if
 condition|(
 name|bundle
@@ -7009,10 +7063,7 @@ block|{
 name|int
 name|up
 init|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|now
 operator|-
 name|bundle
 operator|->
@@ -7040,6 +7091,7 @@ name|long
 operator|)
 name|secs
 condition|)
+comment|/* Only increase from the current `remaining' value */
 name|secs
 operator|=
 name|bundle
@@ -7111,10 +7163,7 @@ name|idle
 operator|.
 name|done
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|now
 operator|+
 name|secs
 expr_stmt|;
@@ -7174,6 +7223,8 @@ condition|)
 name|bundle_StartIdleTimer
 argument_list|(
 name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
