@@ -1869,7 +1869,7 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear flags of the tty.  None should be set, and when the 	 * user sets them otherwise, this can cause the chown to fail. 	 * Since it isn't clear that flags are useful on character 	 * devices, we just clear them. 	 */
+comment|/* 	 * Clear flags of the tty.  None should be set, and when the 	 * user sets them otherwise, this can cause the chown to fail. 	 * Since it isn't clear that flags are useful on character 	 * devices, we just clear them. 	 * 	 * We don't log in the case of EOPNOTSUPP because dev might be 	 * on NFS, which doesn't support chflags. 	 * 	 * We don't log in the EROFS because that means that /dev is on 	 * a read only file system and we assume that the permissions there 	 * are sane. 	 */
 if|if
 condition|(
 name|ttyn
@@ -1882,10 +1882,16 @@ name|ttyn
 argument_list|,
 literal|0
 argument_list|)
-operator|&&
+condition|)
+if|if
+condition|(
 name|errno
 operator|!=
 name|EOPNOTSUPP
+operator|&&
+name|errno
+operator|!=
+name|EROFS
 condition|)
 name|syslog
 argument_list|(
@@ -1927,6 +1933,12 @@ name|pwd
 operator|->
 name|pw_gid
 argument_list|)
+condition|)
+if|if
+condition|(
+name|errno
+operator|!=
+name|EROFS
 condition|)
 name|syslog
 argument_list|(
