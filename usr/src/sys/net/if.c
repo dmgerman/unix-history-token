@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -81,12 +81,6 @@ directive|include
 file|<net/if_types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ether.h"
-end_include
-
 begin_decl_stmt
 name|int
 name|ifqmaxlen
@@ -113,12 +107,10 @@ begin_comment
 comment|/*  * Network interface utility routines.  *  * Routines with ifa_ifwith* names take sockaddr *'s as  * parameters.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ifinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -164,7 +156,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -176,20 +168,15 @@ begin_comment
 comment|/*  * Call each interface on a Unibus reset.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ifubareset
-argument_list|(
-argument|uban
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|uban
+parameter_list|)
 name|int
 name|uban
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -232,7 +219,7 @@ name|uban
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -256,14 +243,24 @@ name|ifnet_addrs
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sprint_d
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Attach an interface to the  * list of "active" interfaces.  */
@@ -1286,10 +1283,16 @@ literal|0
 operator|||
 name|rn_refines
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ifa
 operator|->
 name|ifa_netmask
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ifa_maybe
 operator|->
 name|ifa_netmask
@@ -1787,20 +1790,18 @@ begin_comment
 comment|/*  * Mark an interface down and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|if_down
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1854,26 +1855,24 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mark an interface up and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|if_up
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1924,26 +1923,24 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Flush an interface queue.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|if_qflush
-argument_list|(
+parameter_list|(
 name|ifq
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifqueue
-operator|*
+modifier|*
 name|ifq
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1998,7 +1995,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle interface watchdog timer routines.  Called  * from softclock, we decrement timers (if set) and  * call the appropriate interface routine on expiration.  */
@@ -2301,48 +2298,34 @@ begin_comment
 comment|/*  * Interface ioctls.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ifioctl
-argument_list|(
-argument|so
-argument_list|,
-argument|cmd
-argument_list|,
-argument|data
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|,
+name|cmd
+parameter_list|,
+name|data
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2380,62 +2363,6 @@ name|data
 argument_list|)
 operator|)
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|&&
-name|NETHER
-operator|>
-literal|0
-case|case
-name|SIOCSARP
-case|:
-case|case
-name|SIOCDARP
-case|:
-if|if
-condition|(
-name|error
-operator|=
-name|suser
-argument_list|(
-name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
-argument_list|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-comment|/* FALL THROUGH */
-case|case
-name|SIOCGARP
-case|:
-case|case
-name|OSIOCGARP
-case|:
-return|return
-operator|(
-name|arpioctl
-argument_list|(
-name|cmd
-argument_list|,
-name|data
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 name|ifr
 operator|=
@@ -2964,7 +2891,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return interface configuration  * of system.  List may be used  * in later ioctl's (above) to get  * other information.  */
@@ -2974,28 +2901,20 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ifconf
-argument_list|(
-argument|cmd
-argument_list|,
-argument|data
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|data
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3478,7 +3397,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
