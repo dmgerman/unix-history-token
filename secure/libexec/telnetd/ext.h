@@ -1420,12 +1420,35 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_IM
+value|"\r\n\r\nFreeBSD (%h) (%t)\r\n\r\r\n\r"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|DEFAULT_IM
 value|"\r\n\r\n4.4 BSD UNIX (%h) (%t)\r\n\r\r\n\r"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
