@@ -1528,7 +1528,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|{ if (++(x) == y) x = 0; }
+value|(x) = ((x) == ((y)-1)) ? 0 : (x)+1
 end_define
 
 begin_define
