@@ -413,13 +413,6 @@ name|random_dev
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|dev_t
-name|urandom_dev
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1352,8 +1345,6 @@ argument_list|,
 literal|"random"
 argument_list|)
 expr_stmt|;
-name|urandom_dev
-operator|=
 name|make_dev_alias
 argument_list|(
 name|random_dev
@@ -1559,11 +1550,6 @@ expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|random_dev
-argument_list|)
-expr_stmt|;
-name|destroy_dev
-argument_list|(
-name|urandom_dev
 argument_list|)
 expr_stmt|;
 return|return
