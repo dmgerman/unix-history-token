@@ -123,5 +123,9 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * The =pam_getenv function returns the value of an environment variable.  * Its semantics are similar to those of =getenv, but it accesses the PAM  * context's environment list instead of the application's.  *  *>pam_getenvlist  *>pam_putenv  *>pam_setenv  */
+end_comment
+
 end_unit
 

@@ -22,7 +22,7 @@ file|"openpam_impl.h"
 end_include
 
 begin_comment
-comment|/*  * Locate an environment variable  */
+comment|/*  * OpenPAM internal  *  * Locate an environment variable  */
 end_comment
 
 begin_function
@@ -115,6 +115,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * NODOC  */
+end_comment
 
 end_unit
 

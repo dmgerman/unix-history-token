@@ -224,5 +224,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *	PAM_SYSTEM_ERR  *	PAM_BUF_ERR  */
+end_comment
+
+begin_comment
+comment|/**  * The =pam_set_data function associates a pointer to an opaque object  * with an arbitrary string specified by the =module_data_name argument,  * in the PAM context specified by the =pamh argument.  *  * If not =NULL, the =cleanup argument should point to a function  * responsible for releasing the resources associated with the object.  *  * This function and its counterpart =pam_get_data are useful for managing  * data that are meaningful only to a particular service module.  */
+end_comment
+
 end_unit
 

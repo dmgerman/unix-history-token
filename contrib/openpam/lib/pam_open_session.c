@@ -52,5 +52,9 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *	=openpam_dispatch  *	=pam_sm_open_session  *	!PAM_IGNORE  */
+end_comment
+
 end_unit
 

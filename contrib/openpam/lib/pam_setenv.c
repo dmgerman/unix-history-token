@@ -190,5 +190,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *	=pam_putenv  *	PAM_SYSTEM_ERR  *	PAM_BUF_ERR  */
+end_comment
+
+begin_comment
+comment|/**  * The =pam_setenv function sets a environment variable.  * Its semantics are similar to those of =setenv, but it modifies the PAM  * context's environment list instead of the application's.  *  *>pam_getenv  *>pam_getenvlist  *>pam_putenv  */
+end_comment
+
 end_unit
 

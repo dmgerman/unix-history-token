@@ -113,5 +113,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *	PAM_SYSTEM_ERR  *	PAM_NO_MODULE_DATA  */
+end_comment
+
+begin_comment
+comment|/**  * The =pam_get_data function looks up the opaque object associated with  * the string specified by the =module_data_name argument, in the PAM  * context specified by the =pamh argument.  * A pointer to the object is stored in the location pointed to by the  * =data argument.  *  * This function and its counterpart =pam_set_data are useful for managing  * data that are meaningful only to a particular service module.  */
+end_comment
+
 end_unit
 

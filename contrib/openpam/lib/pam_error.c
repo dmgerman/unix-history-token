@@ -105,5 +105,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *     !PAM_SYMBOL_ERR  *	PAM_SYSTEM_ERR  *	PAM_BUF_ERR  *	PAM_CONV_ERR  */
+end_comment
+
+begin_comment
+comment|/**  * The =pam_info function displays an error message through the  * intermediary of the given PAM context's conversation function.  *  *>pam_info  *>pam_prompt  *>pam_verror  */
+end_comment
+
 end_unit
 

@@ -146,13 +146,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|PAM_NUM_ITEMS
-value|10
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -315,6 +308,29 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENPAM_STATIC_MODULES
+end_ifdef
+
+begin_function_decl
+name|pam_module_t
+modifier|*
+name|openpam_static
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

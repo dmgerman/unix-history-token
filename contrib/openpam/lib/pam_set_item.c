@@ -218,7 +218,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|PAM_SYSTEM_ERR
+name|PAM_SYMBOL_ERR
 operator|)
 return|;
 block|}
@@ -259,6 +259,14 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Error codes:  *  *	PAM_SYMBOL_ERR  *	PAM_SYSTEM_ERR  *	PAM_BUF_ERR  */
+end_comment
+
+begin_comment
+comment|/**  * The =pam_set_item function sets the item specified by the =item_type  * argument to a copy of the object pointed to by the =item argument.  * The item is stored in the PAM context specified by the =pamh argument.  * See =pam_get_item for a list of recognized item types.  */
+end_comment
 
 end_unit
 

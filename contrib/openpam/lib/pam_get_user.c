@@ -192,5 +192,9 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *	=pam_get_item  *	=pam_prompt  *	=pam_set_item  *	!PAM_SYMBOL_ERR  */
+end_comment
+
 end_unit
 

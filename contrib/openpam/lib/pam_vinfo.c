@@ -85,5 +85,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *     !PAM_SYMBOL_ERR  *	PAM_SYSTEM_ERR  *	PAM_BUF_ERR  *	PAM_CONV_ERR  */
+end_comment
+
+begin_comment
+comment|/**  * The =pam_vinfo function passes its arguments to =pam_vprompt with a  * =style argument of =PAM_TEXT_INFO, and discards the response.  *  *>pam_info  *>pam_verror  */
+end_comment
+
 end_unit
 

@@ -55,7 +55,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Log a message through syslog(3)  */
+comment|/*  * OpenPAM extension  *  * Log a message through syslog(3)  */
 end_comment
 
 begin_function
@@ -340,6 +340,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * NOLIST  */
+end_comment
 
 end_unit
 
