@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.45 1998/11/15 18:07:35 dfr Exp $"
+literal|"$Id: mkioconf.c,v 1.46 1999/02/04 10:24:45 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4321,7 +4321,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"0\n};\n"
+literal|"{ 0 }\n};\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4564,7 +4564,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"0\n};\n"
+literal|"{ 0 }\n};\n"
 argument_list|)
 expr_stmt|;
 block|}
