@@ -133,9 +133,9 @@ block|}
 block|}
 block|,
 block|{
-name|USB_VENDOR_KLSI
+name|USB_VENDOR_AOX
 block|,
-name|USB_PRODUCT_KLSI_USB101
+name|USB_PRODUCT_AOX_USB101
 block|,
 literal|0x002
 block|,
