@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.1 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.2 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -32,73 +32,73 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"include.4.1/sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"include.4.1/sys/stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/filsys.h>
+file|"include.4.1/sys/filsys.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ino.h>
+file|"include.4.1/sys/ino.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
+file|"include.4.1/sys/inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fblk.h>
+file|"include.4.1/sys/fblk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|"include.4.1/sys/dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|"include.4.1/utmp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|"include.4.1/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"include.4.1/signal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dumprestor.h>
+file|"include.4.1/dumprestor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fstab.h>
+file|"include.4.1/fstab.h"
 end_include
 
 begin_define
@@ -210,6 +210,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of the tape file */
+end_comment
+
+begin_decl_stmt
+name|char
+name|pipeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true => output to standard output */
 end_comment
 
 begin_decl_stmt

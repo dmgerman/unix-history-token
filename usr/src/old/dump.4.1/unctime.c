@@ -5,20 +5,20 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)unctime.c	1.1 (Berkeley) %G%"
+literal|"@(#)unctime.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"include.4.1/sys/types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|"include.4.1/time.h"
 end_include
 
 begin_comment
