@@ -4748,12 +4748,6 @@ name|um_e2fs
 expr_stmt|;
 name|ip
 operator|->
-name|i_dev
-operator|=
-name|dev
-expr_stmt|;
-name|ip
-operator|->
 name|i_number
 operator|=
 name|ino
@@ -5031,13 +5025,6 @@ operator|=
 name|ump
 operator|->
 name|um_devvp
-expr_stmt|;
-name|VREF
-argument_list|(
-name|ip
-operator|->
-name|i_devvp
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up a generation number for this inode if it does not 	 * already have one. This should only happen on old filesystems. 	 */
 if|if

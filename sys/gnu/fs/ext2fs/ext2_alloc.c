@@ -249,16 +249,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"dev = %s, bsize = %lu, size = %d, fs = %s\n"
-argument_list|,
-name|devtoname
+name|vn_printf
 argument_list|(
 name|ip
 operator|->
-name|i_dev
-argument_list|)
+name|i_devvp
+argument_list|,
+literal|"bsize = %lu, size = %d, fs = %s\n"
 argument_list|,
 name|fs
 operator|->
@@ -1961,14 +1958,11 @@ name|s_groups_count
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_vfree: range: dev = %s, ino = %d, fs = %s"
+literal|"ext2_vfree: range: devvp = %p, ino = %d, fs = %s"
 argument_list|,
-name|devtoname
-argument_list|(
 name|pip
 operator|->
-name|i_dev
-argument_list|)
+name|i_devvp
 argument_list|,
 name|ino
 argument_list|,

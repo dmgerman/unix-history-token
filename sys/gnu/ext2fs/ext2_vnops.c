@@ -1435,17 +1435,6 @@ expr_stmt|;
 comment|/* 	 * Copy from inode table 	 */
 name|vap
 operator|->
-name|va_fsid
-operator|=
-name|dev2udev
-argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|)
-expr_stmt|;
-name|vap
-operator|->
 name|va_fileid
 operator|=
 name|ip
@@ -4053,11 +4042,11 @@ if|if
 condition|(
 name|dp
 operator|->
-name|i_dev
+name|i_devvp
 operator|!=
 name|ip
 operator|->
-name|i_dev
+name|i_devvp
 condition|)
 name|panic
 argument_list|(
@@ -4181,19 +4170,19 @@ if|if
 condition|(
 name|xp
 operator|->
-name|i_dev
+name|i_devvp
 operator|!=
 name|dp
 operator|->
-name|i_dev
+name|i_devvp
 operator|||
 name|xp
 operator|->
-name|i_dev
+name|i_devvp
 operator|!=
 name|ip
 operator|->
-name|i_dev
+name|i_devvp
 condition|)
 name|panic
 argument_list|(
@@ -6285,9 +6274,13 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|printf
+name|vn_printf
 argument_list|(
-literal|"\tino %lu, on dev %s"
+name|ip
+operator|->
+name|i_devvp
+argument_list|,
+literal|"\tino %lu"
 argument_list|,
 operator|(
 name|u_long
@@ -6295,13 +6288,6 @@ operator|)
 name|ip
 operator|->
 name|i_number
-argument_list|,
-name|devtoname
-argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
