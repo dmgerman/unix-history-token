@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.29 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -91,25 +103,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -121,7 +121,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -133,7 +133,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -197,6 +197,28 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|DIRECTORY
+value|0x01
+end_define
+
+begin_comment
+comment|/* Tell install it's a directory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SETFLAGS
+value|0x02
+end_define
+
+begin_comment
+comment|/* Tell install to set flags. */
+end_comment
+
 begin_decl_stmt
 name|void
 name|copy
@@ -247,7 +269,29 @@ operator|,
 name|char
 operator|*
 operator|,
-name|int
+name|u_long
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|string_to_flags
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|,
+name|u_long
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -305,6 +349,12 @@ name|mode_t
 modifier|*
 name|set
 decl_stmt|;
+name|u_long
+name|fset
+decl_stmt|;
+name|u_int
+name|iflags
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -312,8 +362,15 @@ name|no_target
 decl_stmt|;
 name|char
 modifier|*
+name|flags
+decl_stmt|,
+modifier|*
 name|to_name
 decl_stmt|;
+name|iflags
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -325,7 +382,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cg:m:o:s"
+literal|"cf:g:m:o:s"
 argument_list|)
 operator|)
 operator|!=
@@ -345,6 +402,38 @@ case|:
 name|docopy
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|flags
+operator|=
+name|optarg
+expr_stmt|;
+if|if
+condition|(
+name|string_to_flags
+argument_list|(
+operator|&
+name|flags
+argument_list|,
+operator|&
+name|fset
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|"%s: invalid flag"
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|iflags
+operator||=
+name|SETFLAGS
 expr_stmt|;
 break|break;
 case|case
@@ -522,7 +611,11 @@ name|argv
 argument_list|,
 name|to_name
 argument_list|,
-literal|1
+name|fset
+argument_list|,
+name|iflags
+operator||
+name|DIRECTORY
 argument_list|)
 expr_stmt|;
 name|exit
@@ -621,7 +714,38 @@ argument_list|,
 name|to_name
 argument_list|)
 expr_stmt|;
-comment|/* unlink now... avoid ETXTBSY errors later */
+comment|/* 		 * Unlink now... avoid ETXTBSY errors later.  Try and turn 		 * off the append/immutable bits -- if we fail, go ahead, 		 * it might work. 		 */
+if|if
+condition|(
+name|to_sb
+operator|.
+name|st_mode
+operator|&
+operator|(
+name|IMMUTABLE
+operator||
+name|APPEND
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|chflags
+argument_list|(
+name|to_name
+argument_list|,
+name|to_sb
+operator|.
+name|st_flags
+operator|&
+operator|~
+operator|(
+name|APPEND
+operator||
+name|IMMUTABLE
+operator|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -638,7 +762,9 @@ name|argv
 argument_list|,
 name|to_name
 argument_list|,
-literal|0
+name|fset
+argument_list|,
+name|iflags
 argument_list|)
 expr_stmt|;
 name|exit
@@ -661,7 +787,9 @@ name|from_name
 parameter_list|,
 name|to_name
 parameter_list|,
-name|isdir
+name|fset
+parameter_list|,
+name|flags
 parameter_list|)
 name|char
 modifier|*
@@ -673,8 +801,14 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|int
-name|isdir
+name|u_long
+name|fset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -683,6 +817,8 @@ block|{
 name|struct
 name|stat
 name|from_sb
+decl_stmt|,
+name|to_sb
 decl_stmt|;
 name|int
 name|devnull
@@ -700,7 +836,9 @@ decl_stmt|;
 comment|/* If try to install NULL file to a directory, fails. */
 if|if
 condition|(
-name|isdir
+name|flags
+operator|&
+name|DIRECTORY
 operator|||
 name|strcmp
 argument_list|(
@@ -757,7 +895,9 @@ expr_stmt|;
 comment|/* Build the target path. */
 if|if
 condition|(
-name|isdir
+name|flags
+operator|&
+name|DIRECTORY
 condition|)
 block|{
 operator|(
@@ -808,7 +948,48 @@ name|devnull
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Unlink now... avoid ETXTBSY errors later. */
+comment|/* 	 * Unlink now... avoid ETXTBSY errors later.  Try and turn 	 * off the append/immutable bits -- if we fail, go ahead, 	 * it might work. 	 */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|to_name
+argument_list|,
+operator|&
+name|to_sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|to_sb
+operator|.
+name|st_flags
+operator|&
+operator|(
+name|APPEND
+operator||
+name|IMMUTABLE
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|chflags
+argument_list|(
+name|to_name
+argument_list|,
+name|to_sb
+operator|.
+name|st_flags
+operator|&
+operator|~
+operator|(
+name|APPEND
+operator||
+name|IMMUTABLE
+operator|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1024,13 +1205,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Always preserve the flags, except for the dump flag. */
+comment|/* 	 * If provided a set of flags, set them, otherwise, preserve the 	 * flags, except for the dump flag. 	 */
 if|if
 condition|(
 name|fchflags
 argument_list|(
 name|to_fd
 argument_list|,
+name|flags
+operator|&
+name|SETFLAGS
+condition|?
+name|fset
+else|:
 name|from_sb
 operator|.
 name|st_flags
@@ -1469,7 +1656,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: install [-cs] [-g group] [-m mode] [-o owner] file1 file2;\n\tor file1 ... fileN directory\n"
+literal|"usage: install [-cs] [-f flags] [-g group] [-m mode] [-o owner] file1 file2;\n\tor file1 ... fileN directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
