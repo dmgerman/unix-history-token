@@ -6479,6 +6479,10 @@ case|case
 literal|0x6269105a
 case|:
 comment|/* Promise TX2 ATA133 controllers */
+case|case
+literal|0x7275105a
+case|:
+comment|/* Promise TX2 ATA133 controllers */
 name|ATA_OUTB
 argument_list|(
 name|atadev
