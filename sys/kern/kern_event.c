@@ -1656,6 +1656,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|kn
+operator|->
+name|kn_hook
+operator|=
+name|calloutp
+expr_stmt|;
 name|callout_reset
 argument_list|(
 name|calloutp
@@ -1666,12 +1672,6 @@ name|filt_timerexpire
 argument_list|,
 name|kn
 argument_list|)
-expr_stmt|;
-name|kn
-operator|->
-name|kn_hook
-operator|=
-name|calloutp
 expr_stmt|;
 return|return
 operator|(
@@ -1708,7 +1708,7 @@ name|kn
 operator|->
 name|kn_hook
 expr_stmt|;
-name|callout_stop
+name|callout_drain
 argument_list|(
 name|calloutp
 argument_list|)
