@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_domain.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_domain.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -82,9 +82,17 @@ argument_list|(
 name|unix
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BBNNET
+argument_list|)
 name|ADDDOMAIN
 argument_list|(
 name|inet
@@ -469,7 +477,7 @@ name|pfctlinput
 argument_list|(
 argument|cmd
 argument_list|,
-argument|arg
+argument|sa
 argument_list|)
 end_macro
 
@@ -480,8 +488,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|caddr_t
-name|arg
+name|struct
+name|sockaddr
+modifier|*
+name|sa
 decl_stmt|;
 end_decl_stmt
 
@@ -545,7 +555,7 @@ call|)
 argument_list|(
 name|cmd
 argument_list|,
-name|arg
+name|sa
 argument_list|)
 expr_stmt|;
 block|}
