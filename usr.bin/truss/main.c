@@ -388,17 +388,12 @@ break|break;
 if|if
 condition|(
 name|funcs
+operator|->
+name|type
 operator|==
 name|NULL
 condition|)
 block|{
-name|warn
-argument_list|(
-literal|"Execution type %s is not supported -- using FreeBSD a.out\n"
-argument_list|,
-name|progt
-argument_list|)
-expr_stmt|;
 name|funcs
 operator|=
 operator|&
@@ -406,6 +401,17 @@ name|ex_types
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"Execution type %s is not supported -- using %s\n"
+argument_list|,
+name|progt
+argument_list|,
+name|funcs
+operator|->
+name|type
+argument_list|)
 expr_stmt|;
 block|}
 return|return
