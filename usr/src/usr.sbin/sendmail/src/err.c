@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.39
+literal|3.40
 operator|%
 name|G
 operator|%
@@ -54,7 +54,6 @@ endif|lint
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|char
 name|MsgBuf
 index|[

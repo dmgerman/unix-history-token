@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -232,6 +232,10 @@ operator|=
 name|SmtpOut
 operator|=
 name|NULL
+expr_stmt|;
+name|SmtpClosing
+operator|=
+name|FALSE
 expr_stmt|;
 name|SmtpPid
 operator|=
@@ -918,42 +922,34 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* if the connection is already closed, don't bother */
 if|if
 condition|(
+name|SmtpIn
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* send the quit message if not a forced quit */
+if|if
+condition|(
+operator|!
 name|SmtpClosing
 condition|)
 block|{
-name|SmtpClosing
-operator|=
-name|FALSE
-expr_stmt|;
-return|return;
-block|}
 name|smtpmessage
 argument_list|(
 literal|"QUIT"
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+operator|(
+name|void
+operator|)
 name|reply
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-literal|221
-condition|)
-name|syserr
-argument_list|(
-literal|"smtpquit %s: reply %d"
-argument_list|,
-name|name
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
+block|}
+comment|/* now actually close the connection */
 operator|(
 name|void
 operator|)
@@ -970,6 +966,13 @@ argument_list|(
 name|SmtpOut
 argument_list|)
 expr_stmt|;
+name|SmtpIn
+operator|=
+name|SmtpOut
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* and pick up the zombie */
 name|i
 operator|=
 name|endmailer
@@ -1099,9 +1102,51 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syserr
+specifier|extern
+name|char
+name|MsgBuf
+index|[]
+decl_stmt|;
+comment|/* err.c */
+specifier|extern
+name|char
+name|Arpa_TSyserr
+index|[]
+decl_stmt|;
+comment|/* conf.c */
+name|message
 argument_list|(
+name|Arpa_TSyserr
+argument_list|,
 literal|"reply: read error"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s"
+argument_list|,
+operator|&
+name|MsgBuf
+index|[
+literal|4
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
+name|SmtpClosing
+operator|=
+name|TRUE
+expr_stmt|;
+name|smtpquit
+argument_list|(
+literal|"reply error"
 argument_list|)
 expr_stmt|;
 return|return
