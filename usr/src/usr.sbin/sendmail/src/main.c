@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.40 (Berkeley) %G%"
+literal|"@(#)main.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2176,6 +2176,15 @@ case|:
 name|Verbose
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|MD_DAEMON
+case|:
+comment|/* remove things that don't make sense in daemon mode */
+name|FullName
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 block|}
