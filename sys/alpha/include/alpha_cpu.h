@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: alpha_cpu.h,v 1.2 1998/06/10 10:54:21 dfr Exp $ */
+comment|/* $Id: alpha_cpu.h,v 1.3 1998/06/14 13:45:10 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1056,8 +1056,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALPHA_AMASK_CIX
+name|ALPHA_AMASK_FIX
 value|0x0002
+end_define
+
+begin_comment
+comment|/* sqrt and f<-> i conversion extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALPHA_AMASK_CIX
+value|0x0004
 end_define
 
 begin_comment
@@ -1067,12 +1078,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALPHA_AMASK_MAX
+name|ALPHA_AMASK_MVI
 value|0x0100
 end_define
 
 begin_comment
 comment|/* multimedia extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALPHA_AMASK_PRECISE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Precise arithmetic traps */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.26 1998/12/04 22:54:42 archie Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.27 1998/12/16 16:28:56 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2023,6 +2023,58 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|u_int64_t
+name|type
+decl_stmt|,
+name|major
+decl_stmt|,
+name|minor
+decl_stmt|;
+name|u_int64_t
+name|amask
+decl_stmt|;
+name|struct
+name|pcs
+modifier|*
+name|pcsp
+decl_stmt|;
+name|char
+modifier|*
+name|cpuname
+index|[]
+init|=
+block|{
+literal|"unknown"
+block|,
+comment|/* 0 */
+literal|"EV3"
+block|,
+comment|/* 1 */
+literal|"EV4 (21064)"
+block|,
+comment|/* 2 */
+literal|"Simulation"
+block|,
+comment|/* 3 */
+literal|"LCA Family"
+block|,
+comment|/* 4 */
+literal|"EV5 (21164)"
+block|,
+comment|/* 5 */
+literal|"EV45 (21064A)"
+block|,
+comment|/* 6 */
+literal|"EV56 (21164A)"
+block|,
+comment|/* 7 */
+literal|"EV6 (21264)"
+block|,
+comment|/* 8 */
+literal|"PCA56 (21164PC)"
+comment|/* 9 */
+block|}
+decl_stmt|;
 comment|/* 	 * print out CPU identification information. 	 */
 name|printf
 argument_list|(
@@ -2072,6 +2124,145 @@ comment|/* and these aren't particularly useful! */
 block|printf("variation: 0x%lx, revision 0x%lx\n", 	    hwrpb->rpb_variation, *(long *)hwrpb->rpb_revision);
 endif|#
 directive|endif
+name|pcsp
+operator|=
+name|LOCATE_PCS
+argument_list|(
+name|hwrpb
+argument_list|,
+name|hwrpb
+operator|->
+name|rpb_primary_cpu_id
+argument_list|)
+expr_stmt|;
+comment|/* cpu type */
+name|type
+operator|=
+name|pcsp
+operator|->
+name|pcs_proc_type
+expr_stmt|;
+name|major
+operator|=
+operator|(
+name|type
+operator|&
+name|PCS_PROC_MAJOR
+operator|)
+operator|>>
+name|PCS_PROC_MAJORSHIFT
+expr_stmt|;
+name|minor
+operator|=
+operator|(
+name|type
+operator|&
+name|PCS_PROC_MINOR
+operator|)
+operator|>>
+name|PCS_PROC_MINORSHIFT
+expr_stmt|;
+if|if
+condition|(
+name|major
+operator|<
+sizeof|sizeof
+argument_list|(
+name|cpuname
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"CPU: %s major=%lu minor=%lu"
+argument_list|,
+name|cpuname
+index|[
+name|major
+index|]
+argument_list|,
+name|major
+argument_list|,
+name|minor
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"CPU: major=%lu minor=%lu\n"
+argument_list|,
+name|major
+argument_list|,
+name|minor
+argument_list|)
+expr_stmt|;
+comment|/* amask */
+if|if
+condition|(
+name|major
+operator|>=
+name|PCS_PROC_EV56
+condition|)
+block|{
+name|amask
+operator|=
+literal|0xffffffff
+expr_stmt|;
+comment|/* 32 bit for printf */
+name|amask
+operator|=
+operator|(
+operator|~
+name|alpha_amask
+argument_list|(
+name|amask
+argument_list|)
+operator|)
+operator|&
+name|amask
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" extensions=0x%b\n"
+argument_list|,
+operator|(
+name|u_int32_t
+operator|)
+name|amask
+argument_list|,
+literal|"\020"
+literal|"\001BWX"
+literal|"\002FIX"
+literal|"\003CIX"
+literal|"\011MVI"
+literal|"\012PRECISE"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* PAL code */
+name|printf
+argument_list|(
+literal|"OSF PAL rev: 0x%lx\n"
+argument_list|,
+name|pcsp
+operator|->
+name|pcs_palrevisions
+index|[
+name|PALvar_OSF1
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

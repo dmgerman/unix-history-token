@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ieeefp.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_INV
-value|0x01
+value|(1LL<< 1)
 end_define
 
 begin_comment
@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_DZ
-value|0x02
+value|(1LL<< 2)
 end_define
 
 begin_comment
@@ -56,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_OFL
-value|0x04
+value|(1LL<< 3)
 end_define
 
 begin_comment
@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_UFL
-value|0x08
+value|(1LL<< 4)
 end_define
 
 begin_comment
@@ -78,23 +78,34 @@ begin_define
 define|#
 directive|define
 name|FP_X_IMP
-value|0x10
+value|(1LL<< 5)
 end_define
 
 begin_comment
-comment|/* imprecise (loss of precision; "inexact") */
+comment|/* imprecise(inexact) exception */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
 directive|define
 name|FP_X_IOV
-value|0x20
+value|(1LL<< 6)
 end_define
 
 begin_comment
 comment|/* integer overflow XXX? */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
