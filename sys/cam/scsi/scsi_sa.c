@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.18 1999/02/05 08:49:34 mjacob Exp $  */
+comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.19 1999/02/10 00:03:15 ken Exp $  */
 end_comment
 
 begin_include
@@ -721,7 +721,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"HP"
 block|,
-literal|"T4000S*"
+literal|"T4000*"
 block|,
 literal|"*"
 block|}
@@ -5371,25 +5371,6 @@ name|buf
 modifier|*
 name|done_bp
 decl_stmt|;
-name|CAM_DEBUG
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-name|CAM_DEBUG_INFO
-argument_list|,
-operator|(
-literal|"sastart- coping with pending error %x\n"
-operator|,
-name|softc
-operator|->
-name|flags
-operator|&
-name|SA_FLAG_ERR_PENDING
-operator|)
-argument_list|)
-expr_stmt|;
 name|bufq_remove
 argument_list|(
 operator|&
@@ -5445,6 +5426,13 @@ name|b_error
 operator|=
 name|ENOSPC
 expr_stmt|;
+else|else
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5486,13 +5474,6 @@ operator|=
 name|EIO
 expr_stmt|;
 block|}
-name|softc
-operator|->
-name|flags
-operator|&=
-operator|~
-name|SA_FLAG_ERR_PENDING
-expr_stmt|;
 name|done_bp
 operator|=
 name|bp
@@ -5507,9 +5488,60 @@ operator|->
 name|buf_queue
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Only if we have no other buffers queued up 			 * do we clear the pending error flag. 			 */
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+name|softc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SA_FLAG_ERR_PENDING
+expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_INFO
+argument_list|,
+operator|(
+literal|"sastart- coping with pending error %x, %smore "
+literal|"buffers queued up\n"
+operator|,
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|SA_FLAG_ERR_PENDING
+operator|)
+operator|,
+operator|(
+name|bp
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|"no "
+else|:
+literal|" "
+operator|)
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|xpt_release_ccb
+argument_list|(
+name|start_ccb
 argument_list|)
 expr_stmt|;
 name|biodone
@@ -5936,7 +5968,7 @@ name|buf
 modifier|*
 name|q_bp
 decl_stmt|;
-comment|/* 			 * Catastrophic error.  Mark our pack as invalid, 			 * return all queued I/O with EIO, and unfreeze 			 * our queue so that future transactions that 			 * attempt to fix this problem can get to the 			 * device. 			 * 			 */
+comment|/* 			 * Catastrophic error. Mark the tape as not mounted. 			 * Return all queued I/O with EIO, and unfreeze 			 * our queue so that future transactions that 			 * attempt to fix this problem can get to the 			 * device. 			 * 			 */
 name|s
 operator|=
 name|splbio
@@ -6547,7 +6579,7 @@ name|saerror
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|SF_QUIET_IR
 argument_list|,
 operator|&
 name|softc
@@ -6586,12 +6618,10 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * In case device doesn't support it, do a REWIND instead 		 */
+comment|/* 		 * In case this doesn't work, do a REWIND instead 		 */
 if|if
 condition|(
 name|error
-operator|==
-name|EINVAL
 condition|)
 block|{
 name|scsi_rewind
@@ -7602,12 +7632,14 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|softc
 operator|->
 name|flags
 operator||=
 name|SA_FLAG_TAPE_MOUNTED
 expr_stmt|;
+block|}
 name|exit
 label|:
 if|if
@@ -7655,12 +7687,24 @@ name|MTIO_DSREG_NIL
 expr_stmt|;
 block|}
 else|else
+block|{
+name|softc
+operator|->
+name|fileno
+operator|=
+name|softc
+operator|->
+name|blkno
+operator|=
+literal|0
+expr_stmt|;
 name|softc
 operator|->
 name|dsreg
 operator|=
 name|MTIO_DSREG_REST
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|SA_2FM_AT_EOD
@@ -8310,6 +8354,11 @@ condition|)
 name|error
 operator|=
 name|ENOSPC
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|EIO
 expr_stmt|;
 block|}
 block|}
