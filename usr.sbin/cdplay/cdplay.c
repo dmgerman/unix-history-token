@@ -874,15 +874,6 @@ name|cd_toc_entry
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|toc_buffer
-index|[
-name|n
-index|]
-operator|.
-name|track
-operator|=
-literal|255
-expr_stmt|;
 if|if
 condition|(
 name|standalone
