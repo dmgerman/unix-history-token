@@ -569,7 +569,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short %slhs[] = {%42d,"
+literal|"const short %slhs[] = {%42d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -664,7 +664,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short %slen[] = {%42d,"
+literal|"const short %slen[] = {%42d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -778,7 +778,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short %sdefred[] = {%39d,"
+literal|"const short %sdefred[] = {%39d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -1547,7 +1547,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short %sdgoto[] = {%40d,"
+literal|"const short %sdgoto[] = {%40d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -3121,7 +3121,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short %ssindex[] = {%39d,"
+literal|"const short %ssindex[] = {%39d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -3206,7 +3206,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"\n};\nshort %srindex[] = {%39d,"
+literal|"\n};\nconst short %srindex[] = {%39d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -3295,7 +3295,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"\n};\nshort %sgindex[] = {%39d,"
+literal|"\n};\nconst short %sgindex[] = {%39d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -3430,7 +3430,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short %stable[] = {%40d,"
+literal|"const short %stable[] = {%40d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -3545,7 +3545,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"short %scheck[] = {%40d,"
+literal|"const short %scheck[] = {%40d,"
 argument_list|,
 name|symbol_prefix
 argument_list|,
@@ -4967,7 +4967,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"char *%srule[] = {\n"
+literal|"const char * const %srule[] = {\n"
 argument_list|,
 name|symbol_prefix
 argument_list|)

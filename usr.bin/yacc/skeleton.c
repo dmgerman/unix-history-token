@@ -115,23 +115,23 @@ name|tables
 index|[]
 init|=
 block|{
-literal|"extern short yylhs[];"
+literal|"extern const short yylhs[];"
 block|,
-literal|"extern short yylen[];"
+literal|"extern const short yylen[];"
 block|,
-literal|"extern short yydefred[];"
+literal|"extern const short yydefred[];"
 block|,
-literal|"extern short yydgoto[];"
+literal|"extern const short yydgoto[];"
 block|,
-literal|"extern short yysindex[];"
+literal|"extern const short yysindex[];"
 block|,
-literal|"extern short yyrindex[];"
+literal|"extern const short yyrindex[];"
 block|,
-literal|"extern short yygindex[];"
+literal|"extern const short yygindex[];"
 block|,
-literal|"extern short yytable[];"
+literal|"extern const short yytable[];"
 block|,
-literal|"extern short yycheck[];"
+literal|"extern const short yycheck[];"
 block|,
 literal|"#if YYDEBUG"
 block|,
