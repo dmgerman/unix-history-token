@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -29,9 +29,26 @@ begin_comment
 comment|/* implementation supports job control */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_NOTYET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_SAVED_IDS
+end_define
+
 begin_comment
-comment|/*#define	_POSIX_SAVED_IDS	/* saved set-user-ID and set-group-ID */
+comment|/* saved set-user-ID and set-group-ID */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
