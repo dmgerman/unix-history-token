@@ -242,9 +242,14 @@ name|PQ_CACHESIZE
 value|1024
 end_define
 
-begin_empty
-empty|#elsif defined(PQ_LARGECACHE)
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PQ_LARGECACHE
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -253,9 +258,14 @@ name|PQ_CACHESIZE
 value|512
 end_define
 
-begin_empty
-empty|#elsif defined(PQ_MEDIUMCACHE)
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PQ_MEDIUMCACHE
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -264,9 +274,14 @@ name|PQ_CACHESIZE
 value|256
 end_define
 
-begin_empty
-empty|#elsif defined(PQ_NORMALCACHE)
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PQ_NORMALCACHE
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -275,9 +290,14 @@ name|PQ_CACHESIZE
 value|64
 end_define
 
-begin_empty
-empty|#elsif defined(PQ_NOOPT)
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PQ_NOOPT
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -349,9 +369,13 @@ begin_comment
 comment|/* A number of colors opt for 1M cache */
 end_comment
 
-begin_empty
-empty|#elsif PQ_CACHESIZE>= 512
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|PQ_CACHESIZE
+operator|>=
+literal|512
+end_elif
 
 begin_define
 define|#
@@ -386,9 +410,13 @@ begin_comment
 comment|/* A number of colors opt for 512K cache */
 end_comment
 
-begin_empty
-empty|#elsif PQ_CACHESIZE>= 256
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|PQ_CACHESIZE
+operator|>=
+literal|256
+end_elif
 
 begin_define
 define|#
@@ -423,9 +451,13 @@ begin_comment
 comment|/* A number of colors opt for 256K cache */
 end_comment
 
-begin_empty
-empty|#elsif PQ_CACHESIZE>= 128
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|PQ_CACHESIZE
+operator|>=
+literal|128
+end_elif
 
 begin_define
 define|#
@@ -460,9 +492,13 @@ begin_comment
 comment|/* A number of colors opt for 128k cache */
 end_comment
 
-begin_empty
-empty|#elsif PQ_CACHESIZE>= 64
-end_empty
+begin_elif
+elif|#
+directive|elif
+name|PQ_CACHESIZE
+operator|>=
+literal|64
+end_elif
 
 begin_define
 define|#
