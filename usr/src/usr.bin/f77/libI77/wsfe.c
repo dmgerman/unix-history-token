@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wsfe.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wsfe.c	5.3	%G%  */
 end_comment
 
 begin_comment
@@ -242,10 +242,6 @@ else|else
 name|recpos
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|c
-condition|)
 name|putc
 argument_list|(
 name|c
@@ -330,10 +326,6 @@ else|else
 name|recpos
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|c
-condition|)
 name|putc
 argument_list|(
 name|c
@@ -422,6 +414,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|last
+condition|)
 return|return
 operator|(
 call|(
@@ -431,6 +427,12 @@ call|)
 argument_list|(
 name|last
 argument_list|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|OK
 operator|)
 return|;
 block|}
