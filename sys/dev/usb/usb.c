@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.38 2000/02/02 07:33:59 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.41 2000/03/16 00:46:38 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1400,6 +1400,15 @@ operator|(
 literal|"usb_event_thread: start\n"
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* Make sure first discover does something. */
+name|sc
+operator|->
+name|sc_bus
+operator|->
+name|needs_explore
+operator|=
+literal|1
 expr_stmt|;
 while|while
 condition|(
