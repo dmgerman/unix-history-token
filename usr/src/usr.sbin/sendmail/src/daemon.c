@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.62 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.63 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.62 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.63 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,15 +1793,9 @@ name|hp
 operator|==
 name|NULL
 condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"!My host name (%s) does not seem to exist!"
-argument_list|,
-name|hostbuf
-argument_list|)
-expr_stmt|;
-block|}
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|strchr
