@@ -765,6 +765,16 @@ comment|/* return to single user mode */
 end_comment
 
 begin_decl_stmt
+name|int
+name|rerun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* rerun fsck. Only used in non-preen mode */
+end_comment
+
+begin_decl_stmt
 name|daddr_t
 name|maxfsblock
 decl_stmt|;

@@ -1394,6 +1394,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rerun
+condition|)
+name|printf
+argument_list|(
+literal|"\n***** PLEASE RERUN FSCK *****\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|hotroot
 condition|)
 block|{
