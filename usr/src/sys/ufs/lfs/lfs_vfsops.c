@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)lfs_vfsops.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)lfs_vfsops.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ucred.h"
 end_include
 
 begin_include
@@ -947,12 +953,7 @@ name|dpart
 argument_list|,
 name|FREAD
 argument_list|,
-operator|(
-expr|struct
-name|ucred
-operator|*
-operator|)
-literal|0
+name|NOCRED
 argument_list|)
 operator|!=
 literal|0
@@ -987,6 +988,8 @@ argument_list|,
 name|SBLOCK
 argument_list|,
 name|SBSIZE
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|&
 name|bp
@@ -1424,6 +1427,8 @@ argument_list|)
 argument_list|,
 name|size
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|&
 name|bp
 argument_list|)
@@ -1602,6 +1607,15 @@ name|NULL
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|devvp
+operator|->
+name|v_mount
+operator|=
+name|mp
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Sanity checks for old file systems.			   XXX */
 end_comment
@@ -1703,12 +1717,7 @@ name|FREAD
 operator||
 name|FWRITE
 argument_list|,
-operator|(
-expr|struct
-name|ucred
-operator|*
-operator|)
-literal|0
+name|NOCRED
 argument_list|)
 expr_stmt|;
 end_if
@@ -2612,7 +2621,7 @@ name|ump
 operator|->
 name|um_devvp
 operator|->
-name|v_rdev
+name|v_mount
 argument_list|)
 expr_stmt|;
 return|return
