@@ -330,6 +330,9 @@ literal|"%s.%ld@%s"
 argument_list|,
 name|OPSYS
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|uid
 argument_list|,
 name|domain

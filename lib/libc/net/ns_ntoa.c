@@ -144,6 +144,9 @@ name|obuf
 argument_list|,
 literal|"%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|net

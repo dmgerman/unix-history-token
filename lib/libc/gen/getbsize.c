@@ -290,7 +290,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"maximum blocksize is %dG"
+literal|"maximum blocksize is %ldG"
 argument_list|,
 name|MAXB
 operator|/

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_perror.c,v 1.6 1996/12/30 14:19:34 peter Exp $"
+literal|"$Id: clnt_perror.c,v 1.9 1997/05/28 05:05:04 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,12 +322,18 @@ name|str
 argument_list|,
 literal|"; low version = %lu, high version = %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 operator|.
 name|re_vers
 operator|.
 name|low
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 operator|.
 name|re_vers
@@ -418,12 +424,18 @@ name|str
 argument_list|,
 literal|"; low version = %lu, high version = %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 operator|.
 name|re_vers
 operator|.
 name|low
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 operator|.
 name|re_vers
@@ -443,12 +455,18 @@ name|str
 argument_list|,
 literal|"; s1 = %lu, s2 = %lu\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|e
 operator|.
 name|re_lb
 operator|.
 name|s1
 argument_list|,
+operator|(
+name|long
+operator|)
 name|e
 operator|.
 name|re_lb
