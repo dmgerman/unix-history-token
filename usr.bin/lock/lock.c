@@ -119,6 +119,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -1003,7 +1009,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|tryagain
+goto|;
 block|}
 if|if
 condition|(
@@ -1090,6 +1098,8 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
+name|tryagain
+label|:
 if|if
 condition|(
 name|tcgetattr
@@ -1099,6 +1109,12 @@ argument_list|,
 operator|&
 name|ntty
 argument_list|)
+operator|&&
+operator|(
+name|errno
+operator|!=
+name|EINTR
+operator|)
 condition|)
 name|exit
 argument_list|(
