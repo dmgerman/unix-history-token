@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getmntopts.c	8.2 (Berkeley) %G%"
+literal|"@(#)getmntopts.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,14 @@ directive|include
 file|"mntopts.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|getmnt_silent
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|getmntopts
@@ -85,6 +93,8 @@ parameter_list|,
 name|m0
 parameter_list|,
 name|flagp
+parameter_list|,
+name|altflagp
 parameter_list|)
 specifier|const
 name|char
@@ -100,6 +110,10 @@ decl_stmt|;
 name|int
 modifier|*
 name|flagp
+decl_stmt|;
+name|int
+modifier|*
+name|altflagp
 decl_stmt|;
 block|{
 specifier|const
@@ -120,6 +134,10 @@ name|optbuf
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+name|int
+modifier|*
+name|thisflagp
 decl_stmt|;
 comment|/* Copy option string, since it is about to be torn asunder... */
 if|if
@@ -255,6 +273,16 @@ operator|->
 name|m_option
 condition|)
 block|{
+name|thisflagp
+operator|=
+name|m
+operator|->
+name|m_altloc
+condition|?
+name|altflagp
+else|:
+name|flagp
+expr_stmt|;
 if|if
 condition|(
 name|negative
@@ -264,7 +292,7 @@ operator|->
 name|m_inverse
 condition|)
 operator|*
-name|flagp
+name|thisflagp
 operator||=
 name|m
 operator|->
@@ -272,7 +300,7 @@ name|m_flag
 expr_stmt|;
 else|else
 operator|*
-name|flagp
+name|thisflagp
 operator|&=
 operator|~
 name|m
@@ -280,7 +308,13 @@ operator|->
 name|m_flag
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|getmnt_silent
+condition|)
+block|{
 name|errx
 argument_list|(
 literal|1
@@ -290,6 +324,7 @@ argument_list|,
 name|opt
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
