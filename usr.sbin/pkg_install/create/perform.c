@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.41 1998/02/16 17:16:28 jkh Exp $"
+literal|"$Id: perform.c,v 1.42 1998/07/28 11:55:39 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,9 @@ modifier|*
 name|suffix
 decl_stmt|;
 comment|/* What we tack on to the end of the finished package */
+name|int
+name|len
+decl_stmt|;
 comment|/* Preliminary setup */
 name|sanity_check
 argument_list|()
@@ -227,39 +230,42 @@ name|tail
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Break the package name into base and desired suffix (if any) */
-if|if
-condition|(
-operator|(
-name|cp
+comment|/* chop suffix off if already specified */
+name|len
 operator|=
-name|rindex
+name|strlen
 argument_list|(
 name|pkg
-argument_list|,
-literal|'.'
 argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|suffix
-operator|=
-name|cp
-operator|+
-literal|1
 expr_stmt|;
-operator|*
-name|cp
+if|if
+condition|(
+name|len
+operator|>
+literal|4
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+operator|&
+name|pkg
+index|[
+name|len
+operator|-
+literal|4
+index|]
+argument_list|,
+literal|".tgz"
+argument_list|)
+condition|)
+name|pkg
+index|[
+name|len
+operator|-
+literal|4
+index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-block|}
-else|else
-name|suffix
-operator|=
-literal|"tgz"
 expr_stmt|;
 comment|/* Stick the dependencies, if any, at the top */
 if|if
@@ -817,7 +823,7 @@ name|home
 argument_list|,
 name|pkg
 argument_list|,
-name|suffix
+literal|"tgz"
 argument_list|,
 operator|&
 name|plist
