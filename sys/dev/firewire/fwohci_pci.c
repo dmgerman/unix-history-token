@@ -599,15 +599,20 @@ name|int
 name|rid
 decl_stmt|;
 name|int
-name|intr
-decl_stmt|;
-name|int
 name|latency
 decl_stmt|,
 name|cache_line
 decl_stmt|;
 name|u_int16_t
 name|cmd
+decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+name|int
+name|intr
 decl_stmt|;
 comment|/* For the moment, put in a message stating what is wrong */
 name|intr
@@ -653,10 +658,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-name|ENXIO
-return|;
+if|#
+directive|if
+literal|0
+block|return ENXIO;
+endif|#
+directive|endif
 block|}
+endif|#
+directive|endif
 name|cmd
 operator|=
 name|pci_read_config
