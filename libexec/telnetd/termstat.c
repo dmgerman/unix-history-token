@@ -174,7 +174,43 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(CRAY2)&& defined(UNICOS5) */
-comment|/* 	 * Check for state of BINARY options. 	 */
+comment|/* 	 * Check for changes to flow control if client supports it. 	 */
+name|flowstat
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Check linemode on/off state 	 */
+name|uselinemode
+operator|=
+name|tty_linemode
+argument_list|()
+expr_stmt|;
+comment|/* 	 * If alwayslinemode is on, and pty is changing to turn it off, then 	 * force linemode back on. 	 */
+if|if
+condition|(
+name|alwayslinemode
+operator|&&
+name|linemode
+operator|&&
+operator|!
+name|uselinemode
+condition|)
+block|{
+name|uselinemode
+operator|=
+literal|1
+expr_stmt|;
+name|tty_setlinemode
+argument_list|(
+name|uselinemode
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|uselinemode
+condition|)
+block|{
+comment|/*              * Check for state of BINARY options.              *              * We only need to do the binary dance if we are actually going              * to use linemode.  As this confuses some telnet clients that dont              * support linemode, and doesnt gain us anything, we dont do it               * unless we're doing linemode.  -Crh (henrich@msu.edu)              */
 if|if
 condition|(
 name|tty_isbinaryin
@@ -251,36 +287,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check for changes to flow control if client supports it. 	 */
-name|flowstat
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Check linemode on/off state 	 */
-name|uselinemode
-operator|=
-name|tty_linemode
-argument_list|()
-expr_stmt|;
-comment|/* 	 * If alwayslinemode is on, and pty is changing to turn it off, then 	 * force linemode back on. 	 */
-if|if
-condition|(
-name|alwayslinemode
-operator|&&
-name|linemode
-operator|&&
-operator|!
-name|uselinemode
-condition|)
-block|{
-name|uselinemode
-operator|=
-literal|1
-expr_stmt|;
-name|tty_setlinemode
-argument_list|(
-name|uselinemode
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * Do echo mode handling as soon as we know what the 	 * linemode is going to be. 	 * If the pty has echo turned off, then tell the client that 	 * the server will echo.  If echo is on, then the server 	 * will echo if in character mode, but in linemode the 	 * client should do local echoing.  The state machine will 	 * not send anything if it is unnecessary, so don't worry 	 * about that here. 	 * 	 * If we need to send the WILL ECHO (because echo is off), 	 * then delay that until after we have changed the MODE. 	 * This way, when the user is turning off both editing 	 * and echo, the client will get editing turned off first. 	 * This keeps the client from going into encryption mode 	 * and then right back out if it is doing auto-encryption 	 * when passwords are being typed. 	 */
 if|if
