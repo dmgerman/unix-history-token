@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.15 (Berkeley) %G%"
+literal|"@(#)csh.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,14 @@ name|getuid
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|srcunit
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -1851,31 +1859,26 @@ name|insource
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|srcunit
-argument_list|(
+parameter_list|(
 name|unit
-argument_list|,
+parameter_list|,
 name|onlyown
-argument_list|,
+parameter_list|,
 name|hflg
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|unit
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|onlyown
 decl_stmt|,
 name|hflg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* We have to push down a lot of state here */
 comment|/* All this could go into a structure */
@@ -2338,7 +2341,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|rechist
