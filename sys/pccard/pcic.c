@@ -1720,7 +1720,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (mp->flags& MDF_16BITS == 1){
+block|if (mp->flags& MDF_16BITS == 1) {
 comment|/* 16bit */
 block|outb(PCIC98_REG2, inb(PCIC98_REG2)& (~PCIC98_8BIT)); 		}else{
 comment|/* 8bit */
@@ -2100,7 +2100,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (win =! 0){ 		printf("pcic98:Illegal PCIC I/O window request(%d)!", win); 		return(EINVAL); 	    }
+block|if (win =! 0) { 		printf("pcic98:Illegal PCIC I/O window request(%d)!", win); 		return(EINVAL); 	    }
 endif|#
 directive|endif
 if|if
