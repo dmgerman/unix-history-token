@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)protosw.h	8.1 (Berkeley) 6/2/93  * $Id: protosw.h,v 1.5 1994/10/08 22:22:57 phk Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)protosw.h	8.1 (Berkeley) 6/2/93  * $Id: protosw.h,v 1.6 1995/02/07 02:01:57 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -42,6 +42,7 @@ name|pr_flags
 decl_stmt|;
 comment|/* see below */
 comment|/* protocol-protocol hooks */
+comment|/* input to protocol (from below) */
 name|void
 function_decl|(
 modifier|*
@@ -49,7 +50,7 @@ name|pr_input
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* input to protocol (from below) */
+comment|/* output to protocol (from above) */
 name|int
 function_decl|(
 modifier|*
@@ -57,7 +58,7 @@ name|pr_output
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* output to protocol (from above) */
+comment|/* control input (from below) */
 name|void
 function_decl|(
 modifier|*
@@ -65,7 +66,7 @@ name|pr_ctlinput
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* control input (from below) */
+comment|/* control output (from above) */
 name|int
 function_decl|(
 modifier|*
@@ -73,8 +74,8 @@ name|pr_ctloutput
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* control output (from above) */
 comment|/* user-protocol hook */
+comment|/* user request: see list below */
 name|int
 function_decl|(
 modifier|*
@@ -82,48 +83,47 @@ name|pr_usrreq
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* user request: see list below */
 comment|/* utility hooks */
+comment|/* initialization hook */
 name|void
 function_decl|(
 modifier|*
 name|pr_init
 function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* initialization hook */
+parameter_list|(
 name|void
-function_decl|(
-modifier|*
-name|pr_fasttimo
-function_decl|)
-parameter_list|()
+parameter_list|)
 function_decl|;
 comment|/* fast timeout (200ms) */
 name|void
 function_decl|(
 modifier|*
-name|pr_slowtimo
+name|pr_fasttimo
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* slow timeout (500ms) */
 name|void
 function_decl|(
 modifier|*
-name|pr_drain
+name|pr_slowtimo
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* flush any excess space possible */
-name|int
+name|void
 function_decl|(
 modifier|*
-name|pr_sysctl
+name|pr_drain
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
-comment|/* sysctl for protocol */
 block|}
 struct|;
 end_struct
@@ -909,19 +909,38 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
 name|struct
 name|protosw
 modifier|*
 name|pffindproto
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|int
+name|family
+parameter_list|,
+name|int
+name|protocol
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|protosw
 modifier|*
 name|pffindtype
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|int
+name|family
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
