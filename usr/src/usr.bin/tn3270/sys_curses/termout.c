@@ -69,6 +69,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../general.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"terminal.h"
 end_include
 
@@ -300,6 +306,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ScreenImage
+name|Terminal
+index|[
+name|MAXSCREENSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -403,6 +418,11 @@ argument_list|)
 name|inHighlightMode
 operator|=
 literal|0
+expr_stmt|;
+name|ClearArray
+argument_list|(
+name|Terminal
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
