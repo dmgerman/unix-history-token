@@ -270,22 +270,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|phandle_t
-name|netdevice
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|ihandle_t
 name|netinstance
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ihandle_t
-name|memory
 decl_stmt|;
 end_decl_stmt
 
@@ -799,21 +785,6 @@ operator|=
 name|OF_finddevice
 argument_list|(
 literal|"/chosen"
-argument_list|)
-expr_stmt|;
-name|OF_getprop
-argument_list|(
-name|chosen
-argument_list|,
-literal|"memory"
-argument_list|,
-operator|&
-name|memory
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|memory
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pathlen
