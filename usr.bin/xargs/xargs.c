@@ -1553,6 +1553,10 @@ name|Rflag
 expr_stmt|;
 if|if
 condition|(
+name|argc
+operator|==
+literal|0
+operator|||
 name|repls
 operator|==
 literal|0
