@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3590,12 +3590,20 @@ begin_comment
 comment|/*  * Default modem control routine (for other line disciplines).  * Return argument flag, to turn off device on carrier drop.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|nullmodem
 argument_list|(
-argument|flag
+name|tp
+argument_list|,
+name|flag
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|tty
+operator|*
+name|tp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
