@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.75 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6311,12 +6311,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|errstring
-parameter_list|()
-function_decl|;
 comment|/* 	**  Compute status message from code. 	*/
 name|i
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.56 (Berkeley) %G%"
+literal|"@(#)conf.c	6.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1862,12 +1862,6 @@ directive|endif
 specifier|extern
 name|off_t
 name|lseek
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|errstring
 parameter_list|()
 function_decl|;
 specifier|extern
@@ -3835,12 +3829,6 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|errstring
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|MinBlocksFree
