@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.101 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.102 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2751,6 +2751,10 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2873,6 +2877,10 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
+name|tv
+operator|=
+name|time
+expr_stmt|;
 name|error
 operator|=
 name|VOP_UPDATE
@@ -2880,10 +2888,10 @@ argument_list|(
 name|tdvp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -3663,6 +3671,10 @@ name|struct
 name|dirtemplate
 name|dirbuf
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|int
 name|doingdirectory
 init|=
@@ -4030,6 +4042,10 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
+name|tv
+operator|=
+name|time
+expr_stmt|;
 name|error
 operator|=
 name|VOP_UPDATE
@@ -4037,10 +4053,10 @@ argument_list|(
 name|fvp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -4297,10 +4313,10 @@ name|dp
 argument_list|)
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -4352,10 +4368,10 @@ name|dp
 argument_list|)
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -5256,10 +5272,13 @@ decl_stmt|,
 modifier|*
 name|dtp
 decl_stmt|;
-name|int
-name|error
+name|struct
+name|timeval
+name|tv
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|dmode
 decl_stmt|;
 ifdef|#
@@ -5502,6 +5521,10 @@ name|i_nlink
 operator|=
 literal|2
 expr_stmt|;
+name|tv
+operator|=
+name|time
+expr_stmt|;
 name|error
 operator|=
 name|VOP_UPDATE
@@ -5512,10 +5535,10 @@ name|ip
 argument_list|)
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -5544,10 +5567,10 @@ name|dp
 argument_list|)
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -8334,6 +8357,10 @@ modifier|*
 name|pdir
 decl_stmt|;
 name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|tvp
@@ -8594,6 +8621,10 @@ operator|~
 name|ISGID
 expr_stmt|;
 comment|/* 	 * Make sure inode goes to disk before directory entry. 	 */
+name|tv
+operator|=
+name|time
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -8603,10 +8634,10 @@ argument_list|(
 name|tvp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
