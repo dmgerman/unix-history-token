@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.6 (Berkeley) %G%"
+literal|"@(#)glob.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1051,12 +1051,10 @@ begin_block
 block|{
 name|struct
 name|stat
-name|sbuf
+name|sb
 decl_stmt|;
 name|bool_t
 name|anymeta
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1068,6 +1066,9 @@ decl_stmt|;
 comment|/* 	 * loop over pattern segments until end of pattern or until 	 * segment with meta character found. 	 */
 for|for
 control|(
+name|anymeta
+operator|=
+literal|0
 init|;
 condition|;
 control|)
@@ -1088,31 +1089,26 @@ name|EOS
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|pathbuf
 argument_list|,
 operator|&
-name|sbuf
+name|sb
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* need error call here? */
 if|if
 condition|(
-operator|(
 name|pglob
 operator|->
 name|gl_flags
 operator|&
 name|GLOB_MARK
-operator|)
 operator|&&
 name|pathend
 index|[
@@ -1122,12 +1118,37 @@ index|]
 operator|!=
 name|SEP
 operator|&&
+operator|(
 name|S_ISDIR
 argument_list|(
-name|sbuf
+name|sb
 operator|.
 name|st_mode
 argument_list|)
+operator|||
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
+operator|!
+name|stat
+argument_list|(
+name|pathbuf
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|&&
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
