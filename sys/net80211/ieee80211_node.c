@@ -3385,7 +3385,16 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 		 * Create the neighbor table. 		 */
+comment|/* 		 * Create the neighbor table; it will already 		 * exist if we are simply switching mastership. 		 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_sta
+operator|==
+name|NULL
+condition|)
+block|{
 name|ic
 operator|->
 name|ic_sta
@@ -3412,11 +3421,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Should remain in SCAN state and retry. 			 */
+comment|/* 				 * Should remain in SCAN state and retry. 				 */
 comment|/* XXX stat+msg */
 return|return
 literal|0
 return|;
+block|}
 block|}
 block|}
 comment|/* 	 * Committed to selbs, setup state. 	 */
