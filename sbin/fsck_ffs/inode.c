@@ -989,7 +989,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|usedsoftdep
+name|preen
 condition|)
 block|{
 name|pfatal
