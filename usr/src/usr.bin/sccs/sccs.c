@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.68 %G%"
+literal|"@(#)sccs.c	1.69 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -975,7 +975,7 @@ name|p
 operator|=
 name|getenv
 argument_list|(
-literal|"PROJECT"
+literal|"PROJECTDIR"
 argument_list|)
 expr_stmt|;
 if|if
