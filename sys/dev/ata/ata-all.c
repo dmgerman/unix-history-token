@@ -903,82 +903,106 @@ case|case
 literal|0x12308086
 case|:
 return|return
-literal|"Intel PIIX IDE controller"
+literal|"Intel PIIX ATA controller"
 return|;
 case|case
 literal|0x70108086
 case|:
 return|return
-literal|"Intel PIIX3 IDE controller"
+literal|"Intel PIIX3 ATA controller"
 return|;
 case|case
 literal|0x71118086
 case|:
 return|return
-literal|"Intel PIIX4 IDE controller"
+literal|"Intel PIIX4 ATA controller"
 return|;
 case|case
 literal|0x522910b9
 case|:
 return|return
-literal|"AcerLabs Aladdin IDE controller"
+literal|"AcerLabs Aladdin ATA controller"
 return|;
 case|case
 literal|0x4d33105a
 case|:
 return|return
-literal|"Promise Ultra/33 IDE controller"
+literal|"Promise Ultra/33 ATA controller"
 return|;
 case|case
 literal|0x4d38105a
 case|:
 return|return
-literal|"Promise Ultra/66 IDE controller"
+literal|"Promise Ultra/66 ATA controller"
 return|;
 case|case
 literal|0x00041103
 case|:
 return|return
-literal|"HighPoint HPT366 IDE controller"
+literal|"HighPoint HPT366 ATA controller"
 return|;
 case|case
 literal|0x05711106
 case|:
 comment|/* 82c586& 82c686 */
+switch|switch
+condition|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x08
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+case|case
+literal|1
+case|:
 return|return
-literal|"VIA Apollo IDE controller"
+literal|"VIA 82C586 ATA controller"
+return|;
+case|case
+literal|6
+case|:
+return|return
+literal|"VIA 82C686 ATA controller"
+return|;
+block|}
+return|return
+literal|"VIA Apollo ATA controller"
 return|;
 comment|/* unsupported but known chipsets, generic DMA only */
 case|case
 literal|0x05961106
 case|:
-comment|/* 82c596 */
 return|return
-literal|"VIA Apollo IDE controller (generic mode)"
+literal|"VIA 82C596 ATA controller (generic mode)"
 return|;
 case|case
 literal|0x06401095
 case|:
 return|return
-literal|"CMD 640 IDE controller (generic mode)"
+literal|"CMD 640 ATA controller (generic mode)"
 return|;
 case|case
 literal|0x06461095
 case|:
 return|return
-literal|"CMD 646 IDE controller (generic mode)"
+literal|"CMD 646 ATA controller (generic mode)"
 return|;
 case|case
 literal|0xc6931080
 case|:
 return|return
-literal|"Cypress 82C693 IDE controller (generic mode)"
+literal|"Cypress 82C693 ATA controller (generic mode)"
 return|;
 case|case
 literal|0x01021078
 case|:
 return|return
-literal|"Cyrix 5530 IDE controller (generic mode)"
+literal|"Cyrix 5530 ATA controller (generic mode)"
 return|;
 default|default:
 if|if
@@ -1000,7 +1024,7 @@ name|PCIS_STORAGE_IDE
 operator|)
 condition|)
 return|return
-literal|"Unknown PCI IDE controller (generic mode)"
+literal|"Unknown PCI ATA controller (generic mode)"
 return|;
 block|}
 return|return
@@ -4512,11 +4536,23 @@ operator|->
 name|error
 argument_list|)
 expr_stmt|;
+name|scp
+operator|->
+name|active
+operator|=
+name|ATA_IDLE
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
 block|}
+name|scp
+operator|->
+name|active
+operator|=
+name|ATA_IDLE
+expr_stmt|;
 break|break;
 case|case
 name|ATA_IMMEDIATE
