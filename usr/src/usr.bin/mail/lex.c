@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.9 (Berkeley) %G%"
+literal|"@(#)lex.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2107,15 +2107,6 @@ begin_comment
 comment|/*  * Announce the presence of the current Mail version,  * give the message count, and print a header listing.  */
 end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
-name|greeting
-init|=
-literal|"Mail version %s.  Type ? for help.\n"
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|announce
 argument_list|(
@@ -2151,7 +2142,7 @@ name|NOSTR
 condition|)
 name|printf
 argument_list|(
-name|greeting
+literal|"Mail version %s.  Type ? for help.\n"
 argument_list|,
 name|version
 argument_list|)
@@ -2191,8 +2182,12 @@ name|msgCount
 operator|>
 literal|0
 operator|&&
-operator|!
-name|noheader
+name|value
+argument_list|(
+literal|"noheader"
+argument_list|)
+operator|==
+name|NOSTR
 condition|)
 block|{
 name|inithdr

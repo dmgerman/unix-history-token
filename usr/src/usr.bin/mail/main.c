@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,8 +452,12 @@ case|case
 literal|'N'
 case|:
 comment|/* 			 * Avoid initial header printing. 			 */
-name|noheader
-operator|++
+name|assign
+argument_list|(
+literal|"noheader"
+argument_list|,
+literal|""
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -829,19 +833,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|noheader
-operator|&&
-name|value
-argument_list|(
-literal|"noheader"
-argument_list|)
-operator|==
-name|NOSTR
-condition|)
-block|{
-if|if
-condition|(
 name|setjmp
 argument_list|(
 name|hdrjmp
@@ -890,7 +881,6 @@ argument_list|,
 name|prevint
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(

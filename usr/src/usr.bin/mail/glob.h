@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -87,16 +87,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Don't source /usr/lib/Mail.rc */
-end_comment
-
-begin_decl_stmt
-name|char
-name|noheader
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Suprress initial header listing */
 end_comment
 
 begin_decl_stmt
