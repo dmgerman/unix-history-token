@@ -91,5 +91,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * IEEE Std 1003.1c-95, adopted in X/Open CAE Specification Issue 5 Version 2  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199506
+operator|||
+name|__XSI_VISIBLE
+operator|>=
+literal|500
+end_if
+
+begin_define
+define|#
+directive|define
+name|LOGIN_NAME_MAX
+value|MAXLOGNAME
+end_define
+
+begin_comment
+comment|/* max login name length (incl. NUL) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
