@@ -886,6 +886,8 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|&&
+literal|0
 end_if
 
 begin_define
