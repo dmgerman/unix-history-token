@@ -1748,6 +1748,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|zflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zero stats */
+end_comment
+
+begin_decl_stmt
+name|int
 name|interval
 decl_stmt|;
 end_decl_stmt
@@ -1831,7 +1841,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdf:gI:iLlM:mN:np:rSstuWw:"
+literal|"Aabdf:gI:iLlM:mN:np:rSstuWw:z"
 argument_list|)
 operator|)
 operator|!=
@@ -2260,6 +2270,14 @@ name|optarg
 argument_list|)
 expr_stmt|;
 name|iflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|zflag
 operator|=
 literal|1
 expr_stmt|;
