@@ -2833,11 +2833,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|error
 operator|=
 name|VOP_MKNOD
