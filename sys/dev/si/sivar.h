@@ -122,6 +122,7 @@ name|int
 name|sc_type
 decl_stmt|;
 comment|/* adapter type */
+specifier|const
 name|char
 modifier|*
 name|sc_typename
@@ -225,6 +226,10 @@ name|x
 parameter_list|)
 value|si_dprintf x
 end_define
+
+begin_comment
+comment|/*  * Extensive debugging stuff - manipulated using siconfig(8)  */
+end_comment
 
 begin_define
 define|#

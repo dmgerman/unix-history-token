@@ -10,7 +10,7 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/*  * Macro to turn a device number into various parameters, and test for  * CONTROL device.  * max of 4 controllers with up to 32 ports per controller.  * minor device allocation is:  * adapter	port  *   0          0-31  *   1		32-63  *   2		64-95  *   3		96-127  */
+comment|/*  * We name devices with %r in make_dev() with a radix of 32.  */
 end_comment
 
 begin_define
@@ -18,197 +18,6 @@ define|#
 directive|define
 name|SI_MAXPORTPERCARD
 value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_MAXCONTROLLER
-value|4
-end_define
-
-begin_comment
-comment|/*  * breakup of minor device number:  * lowest 5 bits:	port number on card		0x1f  * next 2 bits:		card number			0x60  * top bit:		callout				0x80  * next 8 bits is the major number  * next 2 bits select initial/lock states  * next 1 bit selects the master control device  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SI_PORT_MASK
-value|0x1f
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_CARD_MASK
-value|0x60
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_TTY_MASK
-value|0x7f
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_CALLOUT_MASK
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_INIT_STATE_MASK
-value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_LOCK_STATE_MASK
-value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_STATE_MASK
-value|0x30000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_CONTROLDEV_MASK
-value|0x40000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_SPECIAL_MASK
-value|0x70000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_CARDSHIFT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_PORT
-parameter_list|(
-name|m
-parameter_list|)
-value|(m& SI_PORT_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_CARD
-parameter_list|(
-name|m
-parameter_list|)
-value|((m& SI_CARD_MASK)>> SI_CARDSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_TTY
-parameter_list|(
-name|m
-parameter_list|)
-value|(m& SI_TTY_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CALLOUT
-parameter_list|(
-name|m
-parameter_list|)
-value|(m& SI_CALLOUT_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_STATE
-parameter_list|(
-name|m
-parameter_list|)
-value|(m& SI_STATE_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CONTROLDEV
-parameter_list|(
-name|m
-parameter_list|)
-value|(m& SI_CONTROLDEV_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_SPECIAL
-parameter_list|(
-name|m
-parameter_list|)
-value|(m& SI_SPECIAL_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINOR2SC
-parameter_list|(
-name|m
-parameter_list|)
-value|((struct si_softc *)devclass_get_softc(si_devclass, SI_CARD(m)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINOR2PP
-parameter_list|(
-name|m
-parameter_list|)
-value|(MINOR2SC((m))->sc_ports + SI_PORT((m)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINOR2TP
-parameter_list|(
-name|m
-parameter_list|)
-value|(MINOR2PP((m))->sp_tty)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TP2PP
-parameter_list|(
-name|tp
-parameter_list|)
-value|(MINOR2PP(SI_TTY(minor((tp)->t_dev))))
 end_define
 
 begin_comment
@@ -224,8 +33,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|char
+name|uint8_t
 name|BYTE
 typedef|;
 end_typedef
@@ -236,8 +44,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|uint16_t
 name|WORD
 typedef|;
 end_typedef
@@ -1255,33 +1062,7 @@ name|int
 name|sp_state
 decl_stmt|;
 name|int
-name|sp_active_out
-decl_stmt|;
-comment|/* callout is open */
-name|int
 name|sp_delta_overflows
-decl_stmt|;
-name|u_int
-name|sp_wopeners
-decl_stmt|;
-comment|/* # procs waiting DCD */
-comment|/* Initial state. */
-name|struct
-name|termios
-name|sp_iin
-decl_stmt|;
-name|struct
-name|termios
-name|sp_iout
-decl_stmt|;
-comment|/* Lock state. */
-name|struct
-name|termios
-name|sp_lin
-decl_stmt|;
-name|struct
-name|termios
-name|sp_lout
 decl_stmt|;
 name|struct
 name|callout_handle
@@ -1295,6 +1076,12 @@ name|int
 name|sp_debug
 decl_stmt|;
 comment|/* debug mask */
+name|char
+name|sp_name
+index|[
+literal|5
+index|]
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -1305,22 +1092,8 @@ begin_comment
 comment|/* sp_state */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SS_CLOSED
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SS_OPEN
-value|0x0001
-end_define
-
 begin_comment
-comment|/* Port is active			*/
+comment|/*			0x0001	--					*/
 end_comment
 
 begin_comment
@@ -1373,34 +1146,13 @@ begin_comment
 comment|/* running an lstart induced t_oproc	*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SS_CLOSING
-value|0x0400
-end_define
-
 begin_comment
-comment|/* in the middle of a siclose()		*/
+comment|/*			0x0400	--					*/
 end_comment
 
 begin_comment
 comment|/*			0x0800	--					*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SS_WAITWRITE
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SS_BLOCKWRITE
-value|0x2000
-end_define
 
 begin_comment
 comment|/*  *	Command post flags  */
@@ -1427,161 +1179,6 @@ end_define
 begin_comment
 comment|/* Wait for complete */
 end_comment
-
-begin_comment
-comment|/*  * Extensive debugging stuff - manipulated using siconfig(8)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBG_ENTRY
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_DRAIN
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_OPEN
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_CLOSE
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_READ
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_WRITE
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_PARAM
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_INTR
-value|0x00000080
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_IOCTL
-value|0x00000100
-end_define
-
-begin_comment
-comment|/*				0x00000200 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBG_SELECT
-value|0x00000400
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_OPTIM
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_START
-value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_EXIT
-value|0x00002000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_FAIL
-value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_STOP
-value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_AUTOBOOT
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_MODEM
-value|0x00020000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_DOWNLOAD
-value|0x00040000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_LSTART
-value|0x00080000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_POLL
-value|0x00100000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBG_ALL
-value|0xffffffff
-end_define
 
 begin_comment
 comment|/*  *	SI ioctls  */
