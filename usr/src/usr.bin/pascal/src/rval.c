@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.6 %G%"
+literal|"@(#)rval.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3894,6 +3894,7 @@ block|{
 return|return
 name|NIL
 return|;
+block|}
 comment|/* 			     * since the second pass can't do 			     *	long op double  or  double op long 			     * we may have to do some coercing. 			     */
 if|if
 condition|(
@@ -3911,6 +3912,7 @@ argument_list|,
 literal|"d"
 argument_list|)
 condition|)
+block|{
 name|putop
 argument_list|(
 name|P2SCONV
