@@ -49,6 +49,12 @@ directive|include
 file|"sio.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -621,6 +627,32 @@ decl_stmt|;
 comment|/*  $<packet info>#<checksum>. */
 do|do
 block|{
+comment|/*  * This is a non-standard hack to allow use of the serial console for  * operation as well as debugging.  Simply turn on 'remotechat' in gdb.  *  * This extension is not part of the Cygnus protocol, is kinda gross,  * but gets the job done.  */
+ifdef|#
+directive|ifdef
+name|GDB_REMOTE_CHAT
+name|putDebugChar
+argument_list|(
+literal|'|'
+argument_list|)
+expr_stmt|;
+name|putDebugChar
+argument_list|(
+literal|'|'
+argument_list|)
+expr_stmt|;
+name|putDebugChar
+argument_list|(
+literal|'|'
+argument_list|)
+expr_stmt|;
+name|putDebugChar
+argument_list|(
+literal|'|'
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|putDebugChar
 argument_list|(
 literal|'$'
