@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_search.c	8.2 (Berkeley) %G%"
+literal|"@(#)rec_search.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ name|recno_t
 name|total
 decl_stmt|;
 name|int
-name|serrno
+name|sverrno
 decl_stmt|;
 name|BT_CLR
 argument_list|(
@@ -356,7 +356,7 @@ block|}
 comment|/* Try and recover the tree. */
 name|err
 label|:
-name|serrno
+name|sverrno
 operator|=
 name|errno
 expr_stmt|;
@@ -447,7 +447,7 @@ expr_stmt|;
 block|}
 name|errno
 operator|=
-name|serrno
+name|sverrno
 expr_stmt|;
 return|return
 operator|(

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	8.4 (Berkeley) %G%"
+literal|"@(#)bt_search.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,17 +146,17 @@ modifier|*
 name|n
 decl_stmt|;
 name|indx_t
+name|base
+decl_stmt|,
 name|index
+decl_stmt|,
+name|lim
 decl_stmt|;
 name|pgno_t
 name|pg
 decl_stmt|;
 name|int
-name|base
-decl_stmt|,
 name|cmp
-decl_stmt|,
-name|lim
 decl_stmt|;
 name|BT_CLR
 argument_list|(

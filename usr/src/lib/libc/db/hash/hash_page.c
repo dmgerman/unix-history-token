@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	8.2 (Berkeley) %G%"
+literal|"@(#)hash_page.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3015,7 +3015,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 operator|(
 operator|(
@@ -3032,7 +3032,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|BSSWAP
+name|M_16_SWAP
 argument_list|(
 name|bp
 index|[
@@ -3062,7 +3062,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|BSSWAP
+name|M_16_SWAP
 argument_list|(
 name|bp
 index|[
@@ -3205,7 +3205,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 operator|(
 operator|(
@@ -3250,7 +3250,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|BSSWAP
+name|M_16_SWAP
 argument_list|(
 operator|(
 operator|(

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	8.1 (Berkeley) %G%"
+literal|"@(#)bt_split.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,12 +42,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|__DBINTERFACE_PRIVATE
-end_define
 
 begin_include
 include|#
@@ -130,7 +124,7 @@ name|PAGE
 operator|*
 operator|*
 operator|,
-name|u_int
+name|indx_t
 operator|*
 operator|,
 name|size_t
@@ -175,7 +169,7 @@ operator|,
 name|PAGE
 operator|*
 operator|,
-name|u_int
+name|indx_t
 operator|*
 operator|,
 name|size_t
@@ -206,7 +200,7 @@ name|PAGE
 operator|*
 operator|*
 operator|,
-name|u_int
+name|indx_t
 operator|*
 operator|,
 name|size_t
@@ -316,7 +310,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|u_long
+name|int
 name|flags
 decl_stmt|;
 end_decl_stmt
@@ -328,7 +322,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|indx_t
 name|skip
 decl_stmt|;
 end_decl_stmt
@@ -1599,7 +1593,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|u_int
+name|indx_t
 modifier|*
 name|skip
 decl_stmt|;
@@ -2018,7 +2012,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|u_int
+name|indx_t
 modifier|*
 name|skip
 decl_stmt|;
@@ -2769,7 +2763,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|u_int
+name|indx_t
 modifier|*
 name|pskip
 decl_stmt|;

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_utils.c	8.2 (Berkeley) %G%"
+literal|"@(#)bt_utils.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -766,6 +766,10 @@ end_function
 begin_block
 block|{
 specifier|register
+name|size_t
+name|len
+decl_stmt|;
+specifier|register
 name|u_char
 modifier|*
 name|p1
@@ -773,12 +777,7 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
-specifier|register
-name|int
-name|diff
-decl_stmt|,
-name|len
-decl_stmt|;
+comment|/* 	 * XXX 	 * If a size_t doesn't fit in an int, this routine can lose. 	 * What we need is a integral type which is guaranteed to be 	 * larger than a size_t, and there is no such thing. 	 */
 name|len
 operator|=
 name|MIN
@@ -817,25 +816,39 @@ name|p2
 control|)
 if|if
 condition|(
-name|diff
-operator|=
 operator|*
 name|p1
-operator|-
+operator|!=
 operator|*
 name|p2
 condition|)
 return|return
 operator|(
-name|diff
+operator|(
+name|int
+operator|)
+operator|*
+name|p1
+operator|-
+operator|(
+name|int
+operator|)
+operator|*
+name|p2
 operator|)
 return|;
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|a
 operator|->
 name|size
 operator|-
+operator|(
+name|int
+operator|)
 name|b
 operator|->
 name|size
@@ -849,7 +862,7 @@ comment|/*  * __BT_DEFPFX -- Default prefix routine.  *  * Parameters:  *	a:	DBT
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|__bt_defpfx
 parameter_list|(
 name|a
@@ -877,11 +890,10 @@ modifier|*
 name|p2
 decl_stmt|;
 specifier|register
-name|int
-name|len
-decl_stmt|;
-name|int
+name|size_t
 name|cnt
+decl_stmt|,
+name|len
 decl_stmt|;
 name|cnt
 operator|=

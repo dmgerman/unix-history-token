@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ comment|/* Tree root page number. */
 end_comment
 
 begin_comment
-comment|/*  * There are five page layouts in the btree: btree internal pages (BINTERNAL),  * btree leaf pages (BLEAF), recno internal pages (RINTERNAL), recno leaf pages  * (RLEAF) and overflow pages.  All five page types have a page header (PAGE).  * This implementation requires that longs within structures are NOT padded.  * (ANSI C permits random padding.)  If your compiler pads randomly you'll have  * to do some work to get this package to run.  */
+comment|/*  * There are five page layouts in the btree: btree internal pages (BINTERNAL),  * btree leaf pages (BLEAF), recno internal pages (RINTERNAL), recno leaf pages  * (RLEAF) and overflow pages.  All five page types have a page header (PAGE).  * This implementation requires that values within structures NOT be padded.  * (ANSI C permits random padding.)  If your compiler pads randomly you'll have  * to do some work to get this package to run.  */
 end_comment
 
 begin_typedef
@@ -135,7 +135,7 @@ directive|define
 name|P_PRESERVE
 value|0x20
 comment|/* never delete this chain of pages */
-name|u_long
+name|u_int32_t
 name|flags
 decl_stmt|;
 name|indx_t
@@ -152,7 +152,7 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* long-aligned VARIABLE LENGTH DATA */
+comment|/* indx_t-aligned VAR. LENGTH DATA */
 block|}
 name|PAGE
 typedef|;
@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|BTDATAOFF
-value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) + \ 			    sizeof(u_long) + sizeof(indx_t) + sizeof(indx_t))
+value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) + \ 			    sizeof(u_int32_t) + sizeof(indx_t) + sizeof(indx_t))
 end_define
 
 begin_define
@@ -180,7 +180,7 @@ value|(((p)->lower - BTDATAOFF) / sizeof(indx_t))
 end_define
 
 begin_comment
-comment|/*  * For pages other than overflow pages, there is an array of offsets into the  * rest of the page immediately following the page header.  Each offset is to  * an item which is unique to the type of page.  The h_lower offset is just  * past the last filled-in index.  The h_upper offset is the first item on the  * page.  Offsets are from the beginning of the page.  *  * If an item is too big to store on a single page, a flag is set and the item  * is a { page, size } pair such that the page is the first page of an overflow  * chain with size bytes of item.  Overflow pages are simply bytes without any  * external structure.  *  * The size and page number fields in the items are long aligned so they can be  * manipulated without copying.  */
+comment|/*  * For pages other than overflow pages, there is an array of offsets into the  * rest of the page immediately following the page header.  Each offset is to  * an item which is unique to the type of page.  The h_lower offset is just  * past the last filled-in index.  The h_upper offset is the first item on the  * page.  Offsets are from the beginning of the page.  *  * If an item is too big to store on a single page, a flag is set and the item  * is a { page, size } pair such that the page is the first page of an overflow  * chain with size bytes of item.  Overflow pages are simply bytes without any  * external structure.  *  * The page number and size fields in the items are pgno_t-aligned so they can  * be manipulated without copying.  (This presumes that 32 bit items can be  * manipulated on this system.)  */
 end_comment
 
 begin_define
@@ -190,7 +190,8 @@ name|LALIGN
 parameter_list|(
 name|n
 parameter_list|)
-value|(((n) + sizeof(u_long) - 1)& ~(sizeof(u_long) - 1))
+define|\
+value|(((n) + sizeof(pgno_t) - 1)& ~(sizeof(pgno_t) - 1))
 end_define
 
 begin_define
@@ -606,23 +607,23 @@ typedef|typedef
 struct|struct
 name|_btmeta
 block|{
-name|u_long
+name|u_int32_t
 name|m_magic
 decl_stmt|;
 comment|/* magic number */
-name|u_long
+name|u_int32_t
 name|m_version
 decl_stmt|;
 comment|/* version */
-name|u_long
+name|u_int32_t
 name|m_psize
 decl_stmt|;
 comment|/* page size */
-name|u_long
+name|u_int32_t
 name|m_free
 decl_stmt|;
 comment|/* page number of first free page */
-name|u_long
+name|u_int32_t
 name|m_nrecs
 decl_stmt|;
 comment|/* R: number of records */
@@ -630,11 +631,11 @@ define|#
 directive|define
 name|SAVEMETA
 value|(B_NODUPS | R_RECNO)
-name|u_long
+name|u_int32_t
 name|m_flags
 decl_stmt|;
 comment|/* bt_flags& SAVEMETA */
-name|u_long
+name|u_int32_t
 name|m_unused
 decl_stmt|;
 comment|/* unused */
@@ -732,7 +733,7 @@ name|pgno_t
 name|bt_free
 decl_stmt|;
 comment|/* next free page */
-name|u_long
+name|u_int32_t
 name|bt_psize
 decl_stmt|;
 comment|/* page size */
@@ -778,7 +779,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* B: prefix comparison function */
-name|int
+name|size_t
 argument_list|(
 argument|*bt_pfx
 argument_list|)
@@ -944,7 +945,7 @@ directive|define
 name|B_DB_TXN
 value|0x40000
 comment|/* DB_TXN specified. */
-name|u_long
+name|u_int32_t
 name|bt_flags
 decl_stmt|;
 comment|/* btree state */

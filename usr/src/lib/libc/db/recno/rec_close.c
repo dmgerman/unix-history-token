@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_close.c	8.2 (Berkeley) %G%"
+literal|"@(#)rec_close.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ modifier|*
 name|t
 decl_stmt|;
 name|int
-name|rval
+name|status
 decl_stmt|;
 name|t
 operator|=
@@ -166,7 +166,7 @@ name|RET_ERROR
 operator|)
 return|;
 comment|/* Committed to closing. */
-name|rval
+name|status
 operator|=
 name|RET_SUCCESS
 expr_stmt|;
@@ -190,7 +190,7 @@ operator|->
 name|bt_msize
 argument_list|)
 condition|)
-name|rval
+name|status
 operator|=
 name|RET_ERROR
 expr_stmt|;
@@ -223,7 +223,7 @@ operator|->
 name|bt_rfp
 argument_list|)
 condition|)
-name|rval
+name|status
 operator|=
 name|RET_ERROR
 expr_stmt|;
@@ -238,7 +238,7 @@ operator|->
 name|bt_rfd
 argument_list|)
 condition|)
-name|rval
+name|status
 operator|=
 name|RET_ERROR
 expr_stmt|;
@@ -251,13 +251,13 @@ argument_list|)
 operator|==
 name|RET_ERROR
 condition|)
-name|rval
+name|status
 operator|=
 name|RET_ERROR
 expr_stmt|;
 return|return
 operator|(
-name|rval
+name|status
 operator|)
 return|;
 block|}

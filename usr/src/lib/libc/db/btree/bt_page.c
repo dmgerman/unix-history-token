@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_page.c	8.1 (Berkeley) %G%"
+literal|"@(#)bt_page.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,12 +42,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|__DBINTERFACE_PRIVATE
-end_define
 
 begin_include
 include|#

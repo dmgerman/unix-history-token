@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	8.2 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1002,7 +1002,7 @@ name|PAGE
 modifier|*
 name|h
 decl_stmt|;
-name|int
+name|indx_t
 name|index
 decl_stmt|;
 block|{
@@ -1013,6 +1013,8 @@ name|bl
 decl_stmt|;
 specifier|register
 name|indx_t
+name|cnt
+decl_stmt|,
 modifier|*
 name|ip
 decl_stmt|,
@@ -1021,10 +1023,6 @@ decl_stmt|;
 specifier|register
 name|size_t
 name|nbytes
-decl_stmt|;
-specifier|register
-name|int
-name|cnt
 decl_stmt|;
 name|char
 modifier|*

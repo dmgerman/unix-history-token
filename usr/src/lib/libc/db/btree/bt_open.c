@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	8.3 (Berkeley) %G%"
+literal|"@(#)bt_open.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,12 +100,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|__DBINTERFACE_PRIVATE
-end_define
 
 begin_include
 include|#
@@ -196,6 +190,10 @@ modifier|*
 name|openinfo
 decl_stmt|;
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|BTMETA
 name|m
 decl_stmt|;
@@ -213,14 +211,11 @@ decl_stmt|;
 name|pgno_t
 name|ncache
 decl_stmt|;
-name|struct
-name|stat
-name|sb
+name|ssize_t
+name|nr
 decl_stmt|;
 name|int
 name|machine_lorder
-decl_stmt|,
-name|nr
 decl_stmt|;
 name|t
 operator|=
@@ -816,42 +811,42 @@ argument_list|,
 name|B_NEEDSWAP
 argument_list|)
 expr_stmt|;
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 name|m
 operator|.
 name|m_magic
 argument_list|)
 expr_stmt|;
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 name|m
 operator|.
 name|m_version
 argument_list|)
 expr_stmt|;
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 name|m
 operator|.
 name|m_psize
 argument_list|)
 expr_stmt|;
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 name|m
 operator|.
 name|m_free
 argument_list|)
 expr_stmt|;
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 name|m
 operator|.
 name|m_nrecs
 argument_list|)
 expr_stmt|;
-name|BLSWAP
+name|M_32_SWAP
 argument_list|(
 name|m
 operator|.
@@ -1706,10 +1701,9 @@ name|int
 name|byteorder
 parameter_list|()
 block|{
-name|u_long
+name|u_int32_t
 name|x
 decl_stmt|;
-comment|/* XXX: 32-bit assumption. */
 name|u_char
 modifier|*
 name|p

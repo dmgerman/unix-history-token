@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -229,14 +229,22 @@ name|int
 name|exsegs
 decl_stmt|;
 comment|/* Number of extra allocated segments */
-name|int
-function_decl|(
-modifier|*
-name|hash
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Hash Function */
+name|u_int32_t
+comment|/* Hash function */
+argument_list|(
+argument|*hash
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
 name|flags
 decl_stmt|;

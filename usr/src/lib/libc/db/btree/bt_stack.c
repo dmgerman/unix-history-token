@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_stack.c	8.1 (Berkeley) %G%"
+literal|"@(#)bt_stack.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ decl_stmt|;
 name|pgno_t
 name|pgno
 decl_stmt|;
-name|int
+name|indx_t
 name|index
 decl_stmt|;
 block|{

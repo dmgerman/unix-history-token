@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_debug.c	8.1 (Berkeley) %G%"
+literal|"@(#)bt_debug.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1170,18 +1170,16 @@ name|u_long
 name|bt_cache_hit
 decl_stmt|,
 name|bt_cache_miss
+decl_stmt|,
+name|bt_pfxsaved
+decl_stmt|,
+name|bt_rootsplit
 decl_stmt|;
 specifier|extern
 name|u_long
-name|bt_rootsplit
+name|bt_sortsplit
 decl_stmt|,
 name|bt_split
-decl_stmt|,
-name|bt_sortsplit
-decl_stmt|;
-specifier|extern
-name|u_long
-name|bt_pfxsaved
 decl_stmt|;
 name|BTREE
 modifier|*

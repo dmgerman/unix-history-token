@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_func.c	8.1 (Berkeley) %G%"
+literal|"@(#)hash_func.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,15 +69,16 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int32_t
 name|hash1
 name|__P
 argument_list|(
 operator|(
-name|u_char
+specifier|const
+name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -85,15 +86,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int32_t
 name|hash2
 name|__P
 argument_list|(
 operator|(
-name|u_char
+specifier|const
+name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -101,15 +103,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int32_t
 name|hash3
 name|__P
 argument_list|(
 operator|(
-name|u_char
+specifier|const
+name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -117,15 +120,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int32_t
 name|hash4
 name|__P
 argument_list|(
 operator|(
-name|u_char
+specifier|const
+name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -136,7 +140,7 @@ comment|/* Global default hash function */
 end_comment
 
 begin_macro
-name|int
+name|u_int32_t
 argument_list|(
 argument|*__default_hash
 argument_list|)
@@ -146,10 +150,11 @@ begin_expr_stmt
 name|__P
 argument_list|(
 operator|(
-name|u_char
+specifier|const
+name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 operator|=
@@ -158,11 +163,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/******************************* HASH FUNCTIONS **************************/
-end_comment
-
-begin_comment
-comment|/*  * Assume that we've already split the bucket to which this key hashes,  * calculate that bucket, and check that in fact we did already split it.  *  * This came from ejb's hsearch.  */
+comment|/*  * HASH FUNCTIONS  *  * Assume that we've already split the bucket to which this key hashes,  * calculate that bucket, and check that in fact we did already split it.  *  * This came from ejb's hsearch.  */
 end_comment
 
 begin_define
@@ -181,37 +182,48 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|hash1
 parameter_list|(
-name|key
+name|keyarg
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
+name|void
+modifier|*
+name|keyarg
+decl_stmt|;
 specifier|register
+name|size_t
+name|len
+decl_stmt|;
+block|{
+specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|key
 decl_stmt|;
 specifier|register
-name|int
-name|len
-decl_stmt|;
-block|{
-specifier|register
-name|int
+name|u_int32_t
 name|h
 decl_stmt|;
+comment|/* Convert string to integer */
+for|for
+control|(
+name|key
+operator|=
+name|keyarg
+operator|,
 name|h
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Convert string to integer */
-while|while
-condition|(
+init|;
 name|len
 operator|--
-condition|)
+condition|;
+control|)
 name|h
 operator|=
 name|h
@@ -256,33 +268,43 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|hash2
 parameter_list|(
-name|key
+name|keyarg
 parameter_list|,
 name|len
 parameter_list|)
-specifier|register
-name|u_char
+specifier|const
+name|void
 modifier|*
-name|key
+name|keyarg
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 block|{
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|e
 decl_stmt|,
-name|c
+modifier|*
+name|key
 decl_stmt|;
 specifier|register
-name|int
+name|u_int32_t
 name|h
 decl_stmt|;
+specifier|register
+name|u_char
+name|c
+decl_stmt|;
+name|key
+operator|=
+name|keyarg
+expr_stmt|;
 name|e
 operator|=
 name|key
@@ -339,36 +361,48 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|hash3
 parameter_list|(
-name|key
+name|keyarg
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
+name|void
+modifier|*
+name|keyarg
+decl_stmt|;
 specifier|register
+name|size_t
+name|len
+decl_stmt|;
+block|{
+specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|key
 decl_stmt|;
 specifier|register
-name|int
-name|len
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|n
-decl_stmt|,
+name|size_t
 name|loop
+decl_stmt|;
+specifier|register
+name|u_int32_t
+name|h
 decl_stmt|;
 define|#
 directive|define
 name|HASHC
-value|n = *key++ + 65599 * n
-name|n
+value|h = *key++ + 65599 * h
+name|h
 operator|=
 literal|0
+expr_stmt|;
+name|key
+operator|=
+name|keyarg
 expr_stmt|;
 if|if
 condition|(
@@ -405,39 +439,45 @@ literal|0
 case|:
 do|do
 block|{
-comment|/* All fall throughs */
 name|HASHC
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|7
 case|:
 name|HASHC
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|6
 case|:
 name|HASHC
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|5
 case|:
 name|HASHC
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
 name|HASHC
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|3
 case|:
 name|HASHC
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
 name|HASHC
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -454,7 +494,7 @@ block|}
 block|}
 return|return
 operator|(
-name|n
+name|h
 operator|)
 return|;
 block|}
@@ -466,28 +506,36 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|hash4
 parameter_list|(
-name|key
+name|keyarg
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
+name|void
+modifier|*
+name|keyarg
+decl_stmt|;
 specifier|register
+name|size_t
+name|len
+decl_stmt|;
+block|{
+specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|key
 decl_stmt|;
 specifier|register
-name|int
-name|len
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|h
-decl_stmt|,
+name|size_t
 name|loop
+decl_stmt|;
+specifier|register
+name|u_int32_t
+name|h
 decl_stmt|;
 define|#
 directive|define
@@ -505,6 +553,10 @@ name|h
 operator|=
 literal|0
 expr_stmt|;
+name|key
+operator|=
+name|keyarg
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -540,39 +592,45 @@ literal|0
 case|:
 do|do
 block|{
-comment|/* All fall throughs */
 name|HASH4
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|7
 case|:
 name|HASH4
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|6
 case|:
 name|HASH4
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|5
 case|:
 name|HASH4
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
 name|HASH4
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|3
 case|:
 name|HASH4
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
 name|HASH4
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
