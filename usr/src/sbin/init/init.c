@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	8.1 (Berkeley) %G%"
+literal|"@(#)init.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -975,6 +975,21 @@ condition|)
 name|warning
 argument_list|(
 literal|"initial setsid() failed: %m"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Establish an initial user so that programs running 	 * single user do not freak out and die (like passwd). 	 */
+if|if
+condition|(
+name|setlogin
+argument_list|(
+literal|"root"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|warning
+argument_list|(
+literal|"setlogin() failed: %m"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This code assumes that we always get arguments through flags, 	 * never through bits set in some random machine register. 	 */
