@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.11	82/11/22	*/
+comment|/*	mem.c	4.11	82/12/05	*/
 end_comment
 
 begin_comment
@@ -306,10 +306,16 @@ name|mmap
 operator|=
 name|v
 operator||
-operator|(
 name|PG_V
 operator||
+operator|(
+name|rw
+operator|==
+name|UIO_READ
+condition|?
 name|PG_KR
+else|:
+name|PG_KW
 operator|)
 expr_stmt|;
 name|mtpr
