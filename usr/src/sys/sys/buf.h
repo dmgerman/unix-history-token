@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	6.3	84/12/03	*/
+comment|/*	buf.h	6.4	85/01/10	*/
 end_comment
 
 begin_comment
@@ -797,22 +797,6 @@ parameter_list|(
 name|bp
 parameter_list|)
 value|{ \ 	blkclr(bp->b_un.b_addr, bp->b_bcount); \ 	bp->b_resid = 0; \ }
-end_define
-
-begin_comment
-comment|/*  * Swap two buffer's data areas  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|swapbuf
-parameter_list|(
-name|bp1
-parameter_list|,
-name|bp2
-parameter_list|)
-value|{ \ 	long bcount = (bp1)->b_bcount; \ 	long bufsize = (bp1)->b_bufsize; \ 	caddr_t addr = (bp1)->b_un.b_addr; \ 	(bp1)->b_bcount = (bp2)->b_bcount; \ 	(bp1)->b_bufsize = (bp2)->b_bufsize; \ 	(bp1)->b_un.b_addr = (bp2)->b_un.b_addr; \ 	(bp2)->b_bcount = bcount; \ 	(bp2)->b_bufsize = bufsize; \ 	(bp2)->b_un.b_addr = addr; \ }
 end_define
 
 end_unit
