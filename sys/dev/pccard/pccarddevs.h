@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.36 2002/10/11 07:00:30 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.37 2002/11/14 05:06:25 imp Exp   */
 end_comment
 
 begin_comment
@@ -2963,7 +2963,28 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_STR_NEWMEDIA_BUSTOASTER
-value|"New Media BusToaster SCSI Host Adapter"
+value|"New Media SCSI Bus Toaster"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NEWMEDIA_BUSTOASTER3
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA_BUSTOASTER3
+value|0xd302
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA_BUSTOASTER3
+value|"New Media SCSI Bus Toaster"
 end_define
 
 begin_define
