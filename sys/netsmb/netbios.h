@@ -276,7 +276,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* truncation occured */
+comment|/* truncation occurred */
 end_comment
 
 begin_define

@@ -589,7 +589,7 @@ operator|>=
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * An event of our interest may occur during locking a process. 			 * In order to avoid missing the event that occured during locking 			 * the process, test P_SELECT and rescan file descriptors if 			 * necessary. 			 */
+comment|/* 			 * An event of our interest may occur during locking a process. 			 * In order to avoid missing the event that occurred during locking 			 * the process, test P_SELECT and rescan file descriptors if 			 * necessary. 			 */
 name|mtx_lock_spin
 argument_list|(
 operator|&

@@ -2304,7 +2304,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * Now we have to get all subseqent responses. The CIFS specification 	 * says that they can be misordered which is weird. 	 * TODO: timo 	 */
+comment|/* 	 * Now we have to get all subsequent responses. The CIFS specification 	 * says that they can be disordered which is weird. 	 * TODO: timo 	 */
 name|totpgot
 operator|=
 name|totdgot
@@ -2485,7 +2485,7 @@ condition|)
 block|{
 name|SMBERROR
 argument_list|(
-literal|"Can't handle misordered parameters %d:%d\n"
+literal|"Can't handle disordered parameters %d:%d\n"
 argument_list|,
 name|pdisp
 argument_list|,
@@ -2556,7 +2556,7 @@ condition|)
 block|{
 name|SMBERROR
 argument_list|(
-literal|"Can't handle misordered data\n"
+literal|"Can't handle disordered data\n"
 argument_list|)
 expr_stmt|;
 name|error

@@ -430,7 +430,7 @@ name|struct
 name|mdchain
 name|t2_rparam
 decl_stmt|;
-comment|/* received paramters */
+comment|/* received parameters */
 name|struct
 name|mdchain
 name|t2_rdata

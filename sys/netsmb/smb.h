@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2000-2001 Boris Popov  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/*  * Common definintions and structures for SMB/CIFS protocol  */
+comment|/*  * Common definitions and structures for SMB/CIFS protocol  */
 end_comment
 
 begin_ifndef
@@ -289,7 +289,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* use challenge/responce */
+comment|/* use challenge/response */
 end_comment
 
 begin_comment
@@ -1756,7 +1756,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* The server did not recognise the command */
+comment|/* The server did not recognize the command */
 end_comment
 
 begin_define
@@ -1910,7 +1910,7 @@ value|251
 end_define
 
 begin_comment
-comment|/* Temporarily unable to support Raw, use stdandard r/w */
+comment|/* Temporarily unable to support Raw, use standard r/w */
 end_comment
 
 begin_define
