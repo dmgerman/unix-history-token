@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3128,29 +3128,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Decide what to transmit: 		 * If we have a new packet, send that 		 * (So long as it is in our allocation) 		 * If it is time to retransmit a packet, 		 * send that. 		 * Otherwise, see if it time to bang on them 		 * to ask for our current allocation. 		 */
-if|if
-condition|(
-name|SSEQ_LT
-argument_list|(
-name|cb
-operator|->
-name|s_snt
-argument_list|,
-name|cb
-operator|->
-name|s_ralo
-argument_list|)
-condition|)
-name|lookfor
-operator|=
-name|cb
-operator|->
-name|s_snt
-operator|+
-literal|1
-expr_stmt|;
-elseif|else
+comment|/* 		 * Decide what to transmit: 		 * If it is time to retransmit a packet, 		 * send that. 		 * If we have a new packet, send that 		 * (So long as it is in our allocation) 		 * Otherwise, see if it time to bang on them 		 * to ask for our current allocation. 		 */
 if|if
 condition|(
 name|cb
@@ -3169,6 +3147,30 @@ operator|=
 name|cb
 operator|->
 name|s_rack
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|SSEQ_LT
+argument_list|(
+name|cb
+operator|->
+name|s_snt
+argument_list|,
+name|cb
+operator|->
+name|s_ralo
+argument_list|)
+condition|)
+block|{
+name|lookfor
+operator|=
+name|cb
+operator|->
+name|s_snt
+operator|+
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -3825,12 +3827,6 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|so
@@ -3856,6 +3852,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
