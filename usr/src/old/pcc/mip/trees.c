@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.27 (Berkeley) %G%"
+literal|"@(#)trees.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2441,13 +2441,13 @@ argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;
 ifdef|#
 directive|ifdef
 name|tahoe
-argument|if( asgop(o) ){
+argument|if( asgop(o) )
 else|#
 directive|else
-argument|if( o == ASSIGN || o == CAST || o == RETURN ){
+argument|if( o == ASSIGN || o == CAST || o == RETURN )
 endif|#
 directive|endif
-argument|tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
+argument|{ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
 comment|/* because expressions have values that are at least as wide 	   as INT or UNSIGNED, the only conversions needed 	   are those involving FLOAT/DOUBLE, and those 	   from LONG to INT and ULONG to UNSIGNED */
 ifdef|#
 directive|ifdef
