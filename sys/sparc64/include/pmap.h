@@ -62,6 +62,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PG_UNCACHEABLE
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|pmap_resident_count
 parameter_list|(
 name|pm
@@ -94,6 +101,9 @@ name|colors
 index|[
 name|DCACHE_COLORS
 index|]
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|}
 struct|;
