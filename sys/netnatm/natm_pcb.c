@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: natm_pcb.c,v 1.4 1996/11/09 03:26:27 chuck Exp $	*/
 end_comment
 
