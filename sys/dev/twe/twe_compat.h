@@ -462,15 +462,28 @@ operator|<
 literal|500003
 end_if
 
-begin_comment
-comment|/* old buf style */
-end_comment
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|INTR_ENTROPY
+value|0
+end_define
 
 begin_include
 include|#
 directive|include
 file|<sys/buf.h>
 end_include
+
+begin_comment
+comment|/* old buf style */
+end_comment
 
 begin_typedef
 typedef|typedef

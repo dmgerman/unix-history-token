@@ -212,9 +212,6 @@ block|,
 name|nopsize
 block|,
 literal|0
-block|,
-operator|-
-literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -237,10 +234,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -295,10 +291,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -357,10 +352,9 @@ parameter_list|,
 name|int32_t
 name|flag
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1029,6 +1023,8 @@ operator|->
 name|twe_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|twe_pci_intr
 argument_list|,
@@ -1947,6 +1943,80 @@ block|}
 end_function
 
 begin_comment
+comment|/********************************************************************************  * Clear a PCI parity error.  */
+end_comment
+
+begin_function
+name|void
+name|twe_clear_pci_parity_error
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|TWE_CONTROL
+argument_list|(
+name|sc
+argument_list|,
+name|TWE_CONTROL_CLEAR_PARITY_ERROR
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|sc
+operator|->
+name|twe_dev
+argument_list|,
+name|PCIR_STATUS
+argument_list|,
+name|TWE_PCI_CLEAR_PARITY_ERROR
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/********************************************************************************  * Clear a PCI abort.  */
+end_comment
+
+begin_function
+name|void
+name|twe_clear_pci_abort
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|TWE_CONTROL
+argument_list|(
+name|sc
+argument_list|,
+name|TWE_CONTROL_CLEAR_PCI_ABORT
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|sc
+operator|->
+name|twe_dev
+argument_list|,
+name|PCIR_STATUS
+argument_list|,
+name|TWE_PCI_CLEAR_PCI_ABORT
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                                       Disk device  ********************************************************************************  ********************************************************************************/
 end_comment
 
@@ -2226,9 +2296,6 @@ block|,
 name|nopsize
 block|,
 name|D_DISK
-block|,
-operator|-
-literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2279,10 +2346,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2457,10 +2523,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2563,33 +2628,6 @@ name|printf
 argument_list|(
 literal|"twe: bio for invalid disk!\n"
 argument_list|)
-expr_stmt|;
-name|TWE_BIO_DONE
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|TWED_BIO_OUT
-expr_stmt|;
-return|return;
-block|}
-comment|/* do-nothing operation? */
-if|if
-condition|(
-name|TWE_BIO_LENGTH
-argument_list|(
-name|bp
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|TWE_BIO_RESID
-argument_list|(
-name|bp
-argument_list|)
-operator|=
-literal|0
 expr_stmt|;
 name|TWE_BIO_DONE
 argument_list|(
@@ -3534,7 +3572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Map/unmap (tr)'s command and data in the controller's addressable space.  *  * These routines ensure that the data which the controller is going to try to  * access is actually visible to the controller, in a machine-independant   * fasion.  Due to a hardware limitation, I/O buffers must be 512-byte aligned  * and we take care of that here as well.  */
+comment|/********************************************************************************  * Map/unmap (tr)'s command and data in the controller's addressable space.  *  * These routines ensure that the data which the controller is going to try to  * access is actually visible to the controller, in a machine-independant   * fashion.  Due to a hardware limitation, I/O buffers must be 512-byte aligned  * and we take care of that here as well.  */
 end_comment
 
 begin_function

@@ -22,7 +22,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {										\ 	    if (level<= TWE_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args);	\ 	} while(0)
+value|do {										\ 	    if (level<= TWE_DEBUG) printf("%s: " fmt "\n", __func__ , ##args);	\ 	} while(0)
 end_define
 
 begin_define
@@ -33,7 +33,7 @@ parameter_list|(
 name|level
 parameter_list|)
 define|\
-value|do {								\ 	    if (level<= TWE_DEBUG) printf(__FUNCTION__ ": called\n");	\ 	} while(0)
+value|do {								\ 	    if (level<= TWE_DEBUG) printf("%s: called\n", __func__);	\ 	} while(0)
 end_define
 
 begin_else
@@ -558,6 +558,32 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
+name|twe_clear_pci_parity_error
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_clear_pci_abort
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|twed_intr
 parameter_list|(
 name|twe_bio
@@ -776,8 +802,7 @@ name|twe_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|bio
+name|twe_bio
 modifier|*
 name|bp
 parameter_list|)
@@ -814,29 +839,31 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
 name|__inline
-expr|struct
-name|bio
-operator|*
+name|twe_bio
+modifier|*
 name|twe_dequeue_bio
-argument_list|(
-argument|struct twe_softc *sc
-argument_list|)
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
 block|{
 name|int
 name|s
-block|;     struct
-name|bio
-operator|*
+decl_stmt|;
+name|twe_bio
+modifier|*
 name|bp
-block|;
+decl_stmt|;
 name|s
 operator|=
 name|splbio
 argument_list|()
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -875,16 +902,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|bp
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 
