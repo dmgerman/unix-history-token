@@ -1785,7 +1785,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{
@@ -1796,7 +1796,7 @@ case|:
 comment|/* Error. */
 name|warn
 argument_list|(
-literal|"vfork"
+literal|"fork"
 argument_list|)
 expr_stmt|;
 name|free
