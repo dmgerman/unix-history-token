@@ -918,6 +918,33 @@ goto|goto
 name|drop
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|ALTQ
+comment|/* 	 * Is packet dropped by traffic conditioner? 	 */
+if|if
+condition|(
+name|altq_input
+operator|!=
+name|NULL
+operator|&&
+call|(
+modifier|*
+name|altq_input
+call|)
+argument_list|(
+name|m
+argument_list|,
+name|AF_INET
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 comment|/* 	 * Step 2: fallback conditions to normal ip_input path processing 	 */
 comment|/* 	 * Only IP packets without options 	 */
 if|if
@@ -2372,6 +2399,9 @@ goto|goto
 name|consumed
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|ALTQ
 comment|/* 	 * Check if there is enough space in the interface queue 	 */
 if|if
 condition|(
@@ -2410,6 +2440,8 @@ goto|goto
 name|drop
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Check if media link state of interface is not down 	 */
 if|if
 condition|(
