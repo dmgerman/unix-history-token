@@ -307,7 +307,7 @@ name|SYSINIT
 argument_list|(
 argument|mtxpooli
 argument_list|,
-argument|SI_SUB_MUTEX
+argument|SI_SUB_MTX_POOL
 argument_list|,
 argument|SI_ORDER_FIRST
 argument_list|,
