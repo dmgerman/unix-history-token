@@ -2648,6 +2648,16 @@ name|p
 argument_list|)
 operator|&&
 operator|(
+name|p
+operator|->
+name|p_suspcount
+operator|==
+name|p
+operator|->
+name|p_numthreads
+operator|)
+operator|&&
+operator|(
 operator|(
 name|p
 operator|->
