@@ -5141,7 +5141,7 @@ argument_list|)
 expr_stmt|;
 name|GETSYSCTL
 argument_list|(
-literal|"debug.numvnodes"
+literal|"vfs.numvnodes"
 argument_list|,
 name|ls
 operator|->
@@ -5150,7 +5150,7 @@ argument_list|)
 expr_stmt|;
 name|GETSYSCTL
 argument_list|(
-literal|"debug.freevnodes"
+literal|"vfs.freevnodes"
 argument_list|,
 name|ls
 operator|->
