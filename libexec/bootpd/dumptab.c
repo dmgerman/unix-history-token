@@ -182,6 +182,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -235,6 +241,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -1340,6 +1351,9 @@ name|fp
 argument_list|,
 literal|"\\\n\t:to=%ld:"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|hp
 operator|->
 name|time_offset

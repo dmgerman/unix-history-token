@@ -455,8 +455,11 @@ name|bp_xid
 condition|)
 name|printf
 argument_list|(
-literal|" xid:%d"
+literal|" xid:%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|bp
@@ -1352,8 +1355,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|ul

@@ -47,6 +47,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
@@ -570,38 +576,24 @@ directive|include
 file|<net/if_types.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|getether
-argument_list|(
-argument|ifname
-argument_list|,
-argument|eap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifname
+parameter_list|,
+name|eap
+parameter_list|)
 name|char
 modifier|*
 name|ifname
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* interface name from ifconfig structure */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|eap
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Ether address (output) */
-end_comment
-
-begin_block
 block|{
 name|int
 name|fd
@@ -621,8 +613,6 @@ name|ibuf
 index|[
 literal|16
 index|]
-decl_stmt|,
-name|ifr
 decl_stmt|;
 name|struct
 name|ifconf
@@ -895,7 +885,7 @@ name|rc
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
