@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeBSD Connectix QuickCam parallel-port camera video capture driver.  * Copyright (c) 1996, Paul Traina.  *  * This driver is based in part on the Linux QuickCam driver which is  * Copyright (c) 1996, Thomas Davis.  *  * QuickCam(TM) is a registered trademark of Connectix Inc.  * Use this driver at your own risk, it is not warranted by  * Connectix or the authors.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The information in this file is private and shared between various  * parts of the QuickCam(TM) driver.  */
+comment|/*  * Connectix QuickCam parallel-port camera video capture driver.  * Copyright (c) 1996, Paul Traina.  *  * This driver is based in part on work  * Copyright (c) 1996, Thomas Davis.  *  * QuickCam(TM) is a registered trademark of Connectix Inc.  * Use this driver at your own risk, it is not warranted by  * Connectix or the authors.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The information in this file is private and shared between various  * parts of the QuickCam(TM) driver.  */
 end_comment
 
 begin_ifndef
@@ -27,6 +27,26 @@ begin_struct
 struct|struct
 name|qcam_softc
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|bsdi
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+comment|/* must be first in structure */
+name|struct
+name|device
+name|sc_dev
+decl_stmt|;
+comment|/* kernel configuration */
+endif|#
+directive|endif
+comment|/* bsdi KERNEL */
 name|u_char
 modifier|*
 name|buffer
@@ -103,12 +123,17 @@ decl_stmt|;
 name|u_char
 name|whitebalance
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KERNEL
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
 name|struct
 name|kern_devconf
 name|kdc
@@ -121,15 +146,13 @@ name|void
 modifier|*
 name|devfs_token
 decl_stmt|;
+comment|/* device filesystem handle */
 endif|#
 directive|endif
 comment|/* DEVFS */
 endif|#
 directive|endif
-comment|/* __FreeBSD__ */
-endif|#
-directive|endif
-comment|/* KERNEL */
+comment|/* __FreeBSD__ KERNEL */
 block|}
 struct|;
 end_struct
@@ -265,6 +288,16 @@ parameter_list|)
 value|outb((V), (P)+2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LONGDELAY
+parameter_list|(
+name|n
+parameter_list|)
+value|tsleep((n)/1000)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -339,6 +372,60 @@ name|V
 parameter_list|)
 value|outb((P)+2, (V))
 end_define
+
+begin_define
+define|#
+directive|define
+name|LONGDELAY
+parameter_list|(
+name|n
+parameter_list|)
+value|DELAY(n)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|n
+parameter_list|)
+value|usleep(n)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|min
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)< (b) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -450,6 +537,48 @@ expr|struct
 name|qcam_softc
 operator|*
 name|qs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|qcam_ioctl_get
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|qcam_softc
+operator|*
+name|qs
+operator|,
+expr|struct
+name|qcam
+operator|*
+name|info
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|qcam_ioctl_set
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|qcam_softc
+operator|*
+name|qs
+operator|,
+expr|struct
+name|qcam
+operator|*
+name|info
 operator|)
 argument_list|)
 decl_stmt|;
