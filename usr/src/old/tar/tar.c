@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.5 (Berkeley) %G%"
+literal|"@(#)tar.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4603,7 +4603,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Make all directories needed by `name'.  If `name' is a  * directory itself on the tar tape (indicated by a trailing '/'),  * return 1; else 0.  */
+comment|/*  * Make all directories needed by `name'.  If `name' is itself  * a directory on the tar tape (indicated by a trailing '/'),  * return 1; else 0.  */
 end_comment
 
 begin_expr_stmt
@@ -4777,6 +4777,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+comment|/* dir on the tape */
 name|chmod
 argument_list|(
 name|name
@@ -4785,7 +4786,7 @@ name|stbuf
 operator|.
 name|st_mode
 operator|&
-literal|0777
+literal|07777
 argument_list|)
 expr_stmt|;
 block|}
@@ -6950,7 +6951,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * We are really keeping a directory stack, but since all the  * elements of it share a common prefix, we can make do with one  * string.  We keep only the current directory path, with an associated  * array of mtime's, one for each '/' in the path.  A negative mtime  * means no mtime.  The mtime's are offset by one (first index 1, not  * 0) because calling this with the null string causes mtime[0] to be set.  *  * This stack algorithm is not guaranteed to work for tapes created  * with the 'r' option, but the vast majority of tapes with  * directories are not.  This avoids saving every directory record on  * the tape and setting all the times at the end.  */
+comment|/*  * Save this directory and its mtime on the stack, popping and setting  * the mtimes of any stacked dirs which aren't parents of this one.  * A null directory causes the entire stack to be unwound and set.  *  * Since all the elements of the directory "stack" share a common  * prefix, we can make do with one string.  We keep only the current  * directory path, with an associated array of mtime's, one for each  * '/' in the path.  A negative mtime means no mtime.  The mtime's are  * offset by one (first index 1, not 0) because calling this with a null  * directory causes mtime[0] to be set.  *   * This stack algorithm is not guaranteed to work for tapes created  * with the 'r' option, but the vast majority of tapes with  * directories are not.  This avoids saving every directory record on  * the tape and setting all the times at the end.  */
 end_comment
 
 begin_decl_stmt
