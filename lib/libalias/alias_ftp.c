@@ -324,6 +324,7 @@ name|dlen
 operator|<=
 name|MAX_MESSAGE_SIZE
 operator|&&
+operator|!
 operator|(
 name|pflags
 operator|&
