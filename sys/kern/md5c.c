@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  *  * Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All  * rights reserved.  *  * License to copy and use this software is granted provided that it  * is identified as the "RSA Data Security, Inc. MD5 Message-Digest  * Algorithm" in all material mentioning or referencing this software  * or this function.  *  * License is also granted to make and use derivative works provided  * that such works are identified as "derived from the RSA Data  * Security, Inc. MD5 Message-Digest Algorithm" in all material  * mentioning or referencing the derived work.  *  * RSA Data Security, Inc. makes no representations concerning either  * the merchantability of this software or the suitability of this  * software for any particular purpose. It is provided "as is"  * without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this  * documentation and/or software.  *  * $Id: md5c.c,v 1.8 1997/02/22 09:39:14 peter Exp $  *  * This code is the same as the code published by RSA Inc.  It has been  * edited for clarity and style only.  */
+comment|/*  * MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  *  * Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All  * rights reserved.  *  * License to copy and use this software is granted provided that it  * is identified as the "RSA Data Security, Inc. MD5 Message-Digest  * Algorithm" in all material mentioning or referencing this software  * or this function.  *  * License is also granted to make and use derivative works provided  * that such works are identified as "derived from the RSA Data  * Security, Inc. MD5 Message-Digest Algorithm" in all material  * mentioning or referencing the derived work.  *  * RSA Data Security, Inc. makes no representations concerning either  * the merchantability of this software or the suitability of this  * software for any particular purpose. It is provided "as is"  * without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this  * documentation and/or software.  *  * $Id: md5c.c,v 1.9 1997/08/02 14:31:35 bde Exp $  *  * This code is the same as the code published by RSA Inc.  It has been  * edited for clarity and style only.  */
 end_comment
 
 begin_include
@@ -939,6 +939,7 @@ name|index
 index|]
 argument_list|,
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -1013,6 +1014,7 @@ name|index
 index|]
 argument_list|,
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
