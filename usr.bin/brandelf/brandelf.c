@@ -236,7 +236,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"f option incompatable with t option"
+literal|"f option incompatible with t option"
 argument_list|)
 expr_stmt|;
 name|force
@@ -307,7 +307,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"t option incompatable with f option"
+literal|"t option incompatible with f option"
 argument_list|)
 expr_stmt|;
 name|change
