@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.12 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|fd_set
 name|dsmask
 decl_stmt|;
 name|struct
@@ -959,11 +959,19 @@ literal|0
 expr_stmt|;
 name|wait
 label|:
+name|FD_ZERO
+argument_list|(
+operator|&
 name|dsmask
-operator|=
-literal|1
-operator|<<
+argument_list|)
+expr_stmt|;
+name|FD_SET
+argument_list|(
 name|s
+argument_list|,
+operator|&
+name|dsmask
+argument_list|)
 expr_stmt|;
 name|n
 operator|=
