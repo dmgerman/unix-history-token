@@ -198,6 +198,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|p
 operator|)
 return|;
