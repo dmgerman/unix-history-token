@@ -1301,34 +1301,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_dumpeeprom
+name|ath_hal_getdiagstate
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_id
+parameter_list|,
+name|_data
+parameter_list|,
+name|_size
 parameter_list|)
 define|\
-value|((*(_ah)->ah_dumpEeprom)((_ah)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_dumprfgain
-parameter_list|(
-name|_ah
-parameter_list|)
-define|\
-value|((*(_ah)->ah_dumpRfGain)((_ah)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_dumpani
-parameter_list|(
-name|_ah
-parameter_list|)
-define|\
-value|((*(_ah)->ah_dumpAni)((_ah)))
+value|((*(_ah)->ah_getDiagState)((_ah), (_id), (_data), (_size)))
 end_define
 
 begin_define
@@ -1453,9 +1437,13 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_ds
+parameter_list|,
+name|_dspa
+parameter_list|,
+name|_dsnext
 parameter_list|)
 define|\
-value|((*(_ah)->ah_procRxDesc)((_ah), (_ds)))
+value|((*(_ah)->ah_procRxDesc)((_ah), (_ds), (_dspa), (_dsnext)))
 end_define
 
 begin_define

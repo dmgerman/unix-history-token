@@ -213,6 +213,37 @@ name|SIOCGATHSTATS
 value|_IOWR('i', 137, struct ifreq)
 end_define
 
+begin_struct
+struct|struct
+name|ath_diag
+block|{
+name|char
+name|ad_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "ath0" */
+name|u_int
+name|ad_id
+decl_stmt|;
+name|caddr_t
+name|ad_data
+decl_stmt|;
+name|u_int
+name|ad_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCGATHDIAG
+value|_IOWR('i', 138, struct ath_diag)
+end_define
+
 begin_comment
 comment|/*  * Radio capture format.  */
 end_comment
