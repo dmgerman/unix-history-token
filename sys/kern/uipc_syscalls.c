@@ -1596,17 +1596,13 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+comment|/* soref() and so_state update */
 name|soref
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
 comment|/* file descriptor reference */
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1648,6 +1644,11 @@ operator|->
 name|so_head
 operator|=
 name|NULL
+expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()
