@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_include
@@ -153,6 +159,21 @@ include|#
 directive|include
 file|"extern.h"
 end_include
+
+begin_comment
+comment|/*  * Set the amount of running time that getty should accumulate  * before deciding that something is wrong and exit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETTY_TIMEOUT
+value|60
+end_define
+
+begin_comment
+comment|/* seconds */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -670,6 +691,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Action to take when getty is running too long.  */
+end_comment
+
+begin_function
+name|void
+name|timeoverrun
+parameter_list|()
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"getty exiting due to excessive running time\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -799,6 +844,10 @@ name|repcnt
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|rlimit
+name|limit
+decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -842,6 +891,34 @@ argument_list|(
 name|hostname
 argument_list|,
 literal|"Amnesiac"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Limit running time to deal with broken or dead lines. 	 */
+name|signal
+argument_list|(
+name|SIGXCPU
+argument_list|,
+name|timeoverrun
+argument_list|)
+expr_stmt|;
+name|limit
+operator|.
+name|rlim_max
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+name|limit
+operator|.
+name|rlim_cur
+operator|=
+name|GETTY_TIMEOUT
+expr_stmt|;
+name|setrlimit
+argument_list|(
+name|RLIMIT_CPU
+argument_list|,
+operator|&
+name|limit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The following is a work around for vhangup interactions 	 * which cause great problems getting window systems started. 	 * If the tty line is "-", we do the old style getty presuming 	 * that the file descriptors are already set up for us.  	 * J. Gettys - MIT Project Athena. 	 */
