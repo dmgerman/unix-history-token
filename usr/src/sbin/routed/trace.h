@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.2	83/01/31	*/
+comment|/*	trace.h	4.3	83/05/25	*/
 end_comment
 
 begin_comment
@@ -129,7 +129,7 @@ name|src
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src, packet, size, \ 				ifp->int_metric); \ 	  } \ 	  if (tracepackets) \ 		dumppacket(stdout, "from", src, packet, size); \ 	}
+value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src, packet, size, \ 				ntohl(ifp->int_metric)); \ 	  } \ 	  if (tracepackets) \ 		dumppacket(stdout, "from", src, packet, size); \ 	}
 end_define
 
 begin_define

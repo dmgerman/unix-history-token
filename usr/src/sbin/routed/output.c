@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	4.2 %G%"
+literal|"@(#)output.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ name|int_flags
 operator|&
 name|IFF_INTERFACE
 condition|?
-name|SOF_DONTROUTE
+name|MSG_DONTROUTE
 else|:
 literal|0
 expr_stmt|;
@@ -332,6 +332,12 @@ name|rip_cmd
 operator|=
 name|RIPCMD_RESPONSE
 expr_stmt|;
+name|msg
+operator|->
+name|rip_vers
+operator|=
+name|RIPVERSION
+expr_stmt|;
 name|again
 label|:
 for|for
@@ -451,6 +457,37 @@ argument_list|,
 name|HOPCNT_INFINITY
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+name|n
+operator|->
+name|rip_dst
+operator|.
+name|sa_family
+operator|=
+name|htons
+argument_list|(
+name|n
+operator|->
+name|rip_dst
+operator|.
+name|sa_family
+argument_list|)
+expr_stmt|;
+name|n
+operator|->
+name|rip_metric
+operator|=
+name|htonl
+argument_list|(
+name|n
+operator|->
+name|rip_metric
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|++
 expr_stmt|;

@@ -1,11 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	routed.h	82/08/18	4.8	*/
+comment|/*	routed.h	83/05/25	4.9	*/
 end_comment
 
 begin_comment
 comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPVERSION
+value|1
+end_define
 
 begin_struct
 struct|struct
@@ -33,9 +40,13 @@ name|rip_cmd
 decl_stmt|;
 comment|/* request/response */
 name|u_char
+name|rip_vers
+decl_stmt|;
+comment|/* protocol version # */
+name|u_char
 name|rip_res1
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* pad to 32-bit boundary */
@@ -70,6 +81,10 @@ value|ripun.ru_tracefile
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Packet types.  */
+end_comment
 
 begin_define
 define|#

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.4 %G%"
+literal|"@(#)main.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -537,6 +537,12 @@ name|RIPCMD_REQUEST
 expr_stmt|;
 name|msg
 operator|->
+name|rip_vers
+operator|=
+name|RIPVERSION
+expr_stmt|;
+name|msg
+operator|->
 name|rip_nets
 index|[
 literal|0
@@ -559,6 +565,41 @@ name|rip_metric
 operator|=
 name|HOPCNT_INFINITY
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+name|msg
+operator|->
+name|rip_nets
+index|[
+literal|0
+index|]
+operator|.
+name|rip_dst
+operator|.
+name|sa_family
+operator|=
+name|htons
+argument_list|(
+name|AF_UNSPEC
+argument_list|)
+expr_stmt|;
+name|msg
+operator|->
+name|rip_nets
+index|[
+literal|0
+index|]
+operator|.
+name|rip_metric
+operator|=
+name|htonl
+argument_list|(
+name|HOPCNT_INFINITY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|toall
 argument_list|(
 name|sendmsg

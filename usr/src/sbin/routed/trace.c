@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	4.2 %G%"
+literal|"@(#)trace.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
