@@ -1348,6 +1348,13 @@ name|name
 operator|=
 literal|"UNKNOWN"
 expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
