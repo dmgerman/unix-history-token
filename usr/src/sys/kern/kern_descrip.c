@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3381,7 +3381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal form of close.  * Decrement reference count on file structure.  */
+comment|/*  * Internal form of close.  * Decrement reference count on file structure.  * Note: p may be NULL when closing a file  * that was being passed in a message.  */
 end_comment
 
 begin_expr_stmt
@@ -3433,9 +3433,11 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 */
+comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descriptor. 	 */
 if|if
 condition|(
+name|p
+operator|&&
 operator|(
 name|p
 operator|->
