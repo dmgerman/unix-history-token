@@ -78,12 +78,6 @@ directive|include
 file|<stdarg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -804,13 +798,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|oobflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|off_t
 name|file_size
 decl_stmt|;
@@ -820,13 +807,6 @@ begin_decl_stmt
 specifier|extern
 name|off_t
 name|byte_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|jmp_buf
-name|urgcatch
 decl_stmt|;
 end_decl_stmt
 
@@ -888,13 +868,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|usedefault
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|transflag
 decl_stmt|;
 end_decl_stmt
 

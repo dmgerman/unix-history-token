@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: context.c,v 1.83 2003/03/10 00:24:13 lha Exp $"
+literal|"$Id: context.c,v 1.83.2.1 2004/08/20 15:30:24 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1931,6 +1931,16 @@ name|strerror
 argument_list|(
 name|code
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+literal|"Unknown error"
 expr_stmt|;
 return|return
 name|p

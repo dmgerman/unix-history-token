@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: ftpd_locl.h,v 1.13 2003/03/18 13:37:13 lha Exp $ */
+comment|/* $Id: ftpd_locl.h,v 1.13.2.1 2004/08/20 15:17:07 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -414,12 +414,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
 
 begin_include
 include|#

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: state.c,v 1.14 2000/10/02 05:06:02 assar Exp $"
+literal|"$Id: state.c,v 1.14.12.1 2004/06/21 08:21:58 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -114,7 +114,9 @@ name|unsigned
 name|char
 name|subbuffer
 index|[
-literal|2048
+literal|1024
+operator|*
+literal|64
 index|]
 decl_stmt|,
 modifier|*
@@ -3846,6 +3848,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|ADD
+end_undef
 
 begin_define
 define|#

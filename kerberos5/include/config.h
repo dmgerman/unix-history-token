@@ -4246,7 +4246,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Heimdal 0.6.1 (FreeBSD)"
+value|"Heimdal 0.6.3 (FreeBSD)"
 end_define
 
 begin_comment
@@ -4268,7 +4268,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.6.1"
+value|"0.6.3"
 end_define
 
 begin_comment
@@ -4360,7 +4360,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.6.1"
+value|"0.6.3"
 end_define
 
 begin_comment

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kinit.c,v 1.90.4.4 2004/01/13 10:13:55 lha Exp $"
+literal|"$Id: kinit.c,v 1.90.4.5 2004/06/21 08:17:06 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3064,14 +3064,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|k_hasafs
-argument_list|()
-condition|)
-name|k_setpag
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 endif|#
@@ -3103,6 +3095,18 @@ name|ret
 argument_list|,
 literal|"resolving credentials cache"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|k_hasafs
+argument_list|()
+condition|)
+name|k_setpag
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

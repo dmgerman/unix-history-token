@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.75 2002/10/16 15:46:43 joda Exp $"
+literal|"$Id: ftp.c,v 1.75.2.1 2004/08/20 14:59:06 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8395,9 +8395,28 @@ name|fprintf
 argument_list|(
 name|cout
 argument_list|,
-literal|"%cABOR\r\n"
+literal|"%c"
 argument_list|,
 name|DM
+argument_list|)
+expr_stmt|;
+name|sec_fprintf
+argument_list|(
+name|cout
+argument_list|,
+literal|"ABOR"
+argument_list|)
+expr_stmt|;
+name|sec_fflush
+argument_list|(
+name|cout
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|cout
+argument_list|,
+literal|"\r\n"
 argument_list|)
 expr_stmt|;
 name|fflush
