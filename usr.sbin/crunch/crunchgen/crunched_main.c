@@ -321,7 +321,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s<prog><args> ..., where<prog> is one of:\n"
+literal|"usage: %s<prog><args> ..., where<prog> is one of:\n"
 argument_list|,
 name|EXECNAME
 argument_list|)
