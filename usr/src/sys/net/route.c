@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1546,7 +1546,7 @@ name|ROUNDUP
 parameter_list|(
 name|a
 parameter_list|)
-value|(1 + (((a) - 1) | (sizeof(long) - 1)))
+value|(a>0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
 end_define
 
 begin_macro
@@ -2098,16 +2098,6 @@ name|RTF_UP
 operator||
 name|flags
 expr_stmt|;
-name|rn
-operator|->
-name|rn_key
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|ndst
-expr_stmt|;
-comment|/* == rt_dst */
 name|rt
 operator|->
 name|rt_gateway
@@ -2408,9 +2398,17 @@ name|rtrequest
 argument_list|(
 name|cmd
 argument_list|,
+name|flags
+operator|&
+name|RTF_HOST
+condition|?
 name|ifa
 operator|->
 name|ifa_dstaddr
+else|:
+name|ifa
+operator|->
+name|ifa_addr
 argument_list|,
 name|ifa
 operator|->
