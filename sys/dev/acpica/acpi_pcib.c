@@ -90,7 +90,7 @@ file|"pcib_if.h"
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure. */
 end_comment
 
 begin_define
@@ -154,7 +154,7 @@ argument_list|(
 name|ENXIO
 argument_list|)
 expr_stmt|;
-comment|/*      * Get the PCI interrupt routing table for this bus.      */
+comment|/*      * Get the PCI interrupt routing table for this bus.  If we can't      * get it, this is not an error but may reduce functionality.      */
 name|prt
 operator|->
 name|Length
@@ -180,7 +180,6 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-comment|/* This is not an error, but it may reduce functionality. */
 name|device_printf
 argument_list|(
 name|dev
@@ -395,10 +394,11 @@ name|interrupt
 operator|=
 literal|255
 expr_stmt|;
-comment|/* ACPI numbers pins 0-3, not 1-4 like the BIOS */
+comment|/* ACPI numbers pins 0-3, not 1-4 like the BIOS. */
 name|pin
 operator|--
 expr_stmt|;
+comment|/* We failed to retrieve the routing table. */
 name|prtp
 operator|=
 name|prtbuf
@@ -411,11 +411,10 @@ name|prtp
 operator|==
 name|NULL
 condition|)
-comment|/* didn't get routing table */
 goto|goto
 name|out
 goto|;
-comment|/* scan the table looking for this device */
+comment|/* Scan the table to look for this device. */
 for|for
 control|(
 init|;
@@ -430,6 +429,7 @@ operator|*
 operator|)
 name|prtp
 expr_stmt|;
+comment|/* We hit the end of the table. */
 if|if
 condition|(
 name|prt
@@ -438,14 +438,12 @@ name|Length
 operator|==
 literal|0
 condition|)
-comment|/* end of table */
 goto|goto
 name|out
 goto|;
 comment|/* 	 * Compare the slot number (high word of Address) and pin number 	 * (note that ACPI uses 0 for INTA) to check for a match. 	 * 	 * Note that the low word of the Address field (function number) 	 * is required by the specification to be 0xffff.  We don't risk 	 * checking it here. 	 */
 if|if
 condition|(
-operator|(
 operator|(
 operator|(
 name|prt
@@ -462,15 +460,12 @@ name|pci_get_slot
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 operator|&&
-operator|(
 name|prt
 operator|->
 name|Pin
 operator|==
 name|pin
-operator|)
 condition|)
 block|{
 if|if
@@ -504,7 +499,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* skip to next entry */
+comment|/* Skip to the next entry. */
 name|prtp
 operator|+=
 name|prt
@@ -515,15 +510,12 @@ block|}
 comment|/*      * If source is empty/NULL, the source index is the global IRQ number.      */
 if|if
 condition|(
-operator|(
 name|prt
 operator|->
 name|Source
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|prt
 operator|->
 name|Source
@@ -532,7 +524,6 @@ literal|0
 index|]
 operator|==
 literal|'\0'
-operator|)
 condition|)
 block|{
 if|if
@@ -560,7 +551,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * We have to find the source device (PCI interrupt link device)      */
+comment|/*      * We have to find the source device (PCI interrupt link device).      */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -594,7 +585,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Verify that this is a PCI link device, and that it's present.      */
+comment|/*      * Verify that this is a PCI link device and that it's present.      */
 name|buf
 operator|.
 name|Length
@@ -725,7 +716,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Get the current and possible resources for the interrupt link device.      */
+comment|/*      * Get the current and possible resources for the interrupt link device.      * If we fail to get the current resources, this is a fatal error.      */
 name|crsbuf
 operator|.
 name|Length
@@ -763,7 +754,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* this is fatal */
 block|}
 name|prsbuf
 operator|.
@@ -799,7 +789,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* this is not fatal, since it may be hardwired */
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -843,7 +832,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * The interrupt may already be routed, so check _CRS first.  We don't check the      * 'decoding' bit in the _STA result, since there's nothing in the spec that       * mandates it be set, however some BIOS' will set it if the decode is active.      *      * The Source Index points to the particular resource entry we're interested in.      */
+comment|/*      * The interrupt may already be routed, so check _CRS first.  We don't      * check the 'decoding' bit in the _STA result, since there's nothing in      * the spec that mandates it be set, however some BIOS' will set it if      * the decode is active.      *      * The Source Index points to the particular resource entry we're      * interested in.      */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -874,7 +863,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* type-check the resource we've got */
+comment|/* Type-check the resource we've found. */
 if|if
 condition|(
 name|crsres
@@ -905,7 +894,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* set variables based on resource type */
+comment|/* Set variables based on resource type. */
 if|if
 condition|(
 name|crsres
@@ -959,7 +948,7 @@ operator|.
 name|Interrupts
 expr_stmt|;
 block|}
-comment|/* if there's more than one interrupt, we are confused */
+comment|/* If there's more than one interrupt, this is an error. */
 if|if
 condition|(
 name|NumberOfInterrupts
@@ -980,23 +969,19 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*       * If there's only one interrupt, and it's not zero, then we're already routed.      *      * Note that we could also check the 'decoding' bit in _STA, but can't depend on      * it since it's not part of the spec.      *      * XXX check ASL examples to see if this is an acceptable set of tests      */
+comment|/*       * If there's only one interrupt, and it's not zero, then it's already      * routed.      *      * Note that we could also check the 'decoding' bit in _STA, but can't      * depend on it since it's not part of the spec.      *      * XXX check ASL examples to see if this is an acceptable set of tests      */
 if|if
 condition|(
-operator|(
 name|NumberOfInterrupts
 operator|==
 literal|1
-operator|)
 operator|&&
-operator|(
 name|Interrupts
 index|[
 literal|0
 index|]
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|device_printf
@@ -1181,7 +1166,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* there has to be at least one interrupt available */
+comment|/* There has to be at least one interrupt available. */
 if|if
 condition|(
 name|NumberOfInterrupts
@@ -1236,6 +1221,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* This should never happen. */
 if|if
 condition|(
 name|crsbuf
@@ -1244,7 +1230,6 @@ name|Pointer
 operator|!=
 name|NULL
 condition|)
-comment|/* should never happen */
 name|AcpiOsFree
 argument_list|(
 name|crsbuf
@@ -1252,6 +1237,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+comment|/* XXX Data.Irq and Data.ExtendedIrq are implicitly structure-copied. */
 name|crsbuf
 operator|.
 name|Pointer
@@ -1294,7 +1280,6 @@ name|Data
 operator|.
 name|Irq
 expr_stmt|;
-comment|/* structure copy other fields */
 name|resbuf
 operator|.
 name|Data
@@ -1321,7 +1306,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* just take first... */
 block|}
 else|else
 block|{
@@ -1352,7 +1336,6 @@ name|Data
 operator|.
 name|ExtendedIrq
 expr_stmt|;
-comment|/* structure copy other fields */
 name|resbuf
 operator|.
 name|Data
@@ -1379,7 +1362,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* just take first... */
 block|}
 if|if
 condition|(
@@ -1466,7 +1448,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* successful, return the interrupt we just routed */
+comment|/* Return the interrupt we just routed. */
 name|device_printf
 argument_list|(
 name|pcib
