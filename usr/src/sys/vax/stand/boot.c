@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	4.2	81/03/15	*/
+comment|/*	boot.c	4.3	81/03/16	*/
 end_comment
 
 begin_include
@@ -124,6 +124,19 @@ name|io
 decl_stmt|,
 name|retry
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|howto
+operator|=
+literal|0
+expr_stmt|;
+name|devtype
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\nBoot\n"
@@ -265,8 +278,6 @@ literal|0
 condition|)
 name|copyunix
 argument_list|(
-name|howto
-argument_list|,
 name|io
 argument_list|)
 expr_stmt|;
@@ -290,13 +301,9 @@ end_function
 begin_expr_stmt
 name|copyunix
 argument_list|(
-name|howto
-argument_list|,
 name|io
 argument_list|)
 specifier|register
-name|howto
-operator|,
 name|io
 expr_stmt|;
 end_expr_stmt

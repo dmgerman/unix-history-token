@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.3	81/03/15	*/
+comment|/*	ht.c	4.4	81/03/16	*/
 end_comment
 
 begin_comment
@@ -300,11 +300,11 @@ if|if
 condition|(
 name|func
 operator|==
-name|HT_RCOM
+name|READ
 operator|||
 name|func
 operator|==
-name|HT_WCOM
+name|WRITE
 condition|)
 name|mbastart
 argument_list|(

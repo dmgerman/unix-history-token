@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys.c	4.2	%G%	*/
+comment|/*	sys.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -2131,6 +2131,34 @@ literal|'0'
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|cp
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|cp
+operator|<=
+literal|'9'
+condition|)
+name|file
+operator|->
+name|i_unit
+operator|=
+name|file
+operator|->
+name|i_unit
+operator|*
+literal|10
+operator|+
+operator|*
+name|cp
+operator|++
+operator|-
+literal|'0'
+expr_stmt|;
+if|if
+condition|(
 name|file
 operator|->
 name|i_unit
@@ -2141,7 +2169,7 @@ name|file
 operator|->
 name|i_unit
 operator|>
-literal|7
+literal|31
 condition|)
 block|{
 name|printf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.6	81/03/15	*/
+comment|/*	conf.c	4.7	81/03/16	*/
 end_comment
 
 begin_include
@@ -319,7 +319,7 @@ name|nullsys
 block|,
 literal|"ts"
 block|,
-name|tsstragety
+name|tsstrategy
 block|,
 name|tsopen
 block|,

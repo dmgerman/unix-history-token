@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	savax.h	4.1	81/03/15	*/
+comment|/*	savax.h	4.2	81/03/16	*/
 end_comment
 
 begin_comment
@@ -124,8 +124,7 @@ name|unit
 parameter_list|,
 name|off
 parameter_list|)
-define|\
-value|((struct device *)(umaddr[UNITTOUBA(unit)]+(off&017777)))
+value|((umaddr[UNITTOUBA(unit)]+(off&017777)))
 end_define
 
 end_unit
