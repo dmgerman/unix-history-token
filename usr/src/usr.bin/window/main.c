@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.29 %G%"
+literal|"@(#)main.c	3.30 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -720,12 +720,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|mloop
-argument_list|()
-expr_stmt|;
-name|wwupdate
-argument_list|()
-expr_stmt|;
-name|wwflush
 argument_list|()
 expr_stmt|;
 name|bad

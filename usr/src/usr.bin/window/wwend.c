@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwend.c	3.7 %G%"
+literal|"@(#)wwend.c	3.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,41 @@ end_macro
 
 begin_block
 block|{
+name|wwupdate
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_insert
+condition|)
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_setinsert
+call|)
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_modes
+condition|)
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_setmodes
+call|)
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|tt
