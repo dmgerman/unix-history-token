@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.2 1996/07/23 07:46:39 asami Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.3 1996/08/30 10:43:09 asami Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * modified for PC98  *    $Id: spkr.c,v 1.2 1996/07/23 07:46:39 asami Exp $  */
+comment|/*  * modified for PC98  *    $Id: spkr.c,v 1.3 1996/08/30 10:43:09 asami Exp $  */
 end_comment
 
 begin_include
@@ -79,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<pc98/pc98/pc98.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_device.h>
 end_include
 
 begin_include
