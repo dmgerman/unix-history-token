@@ -9,6 +9,10 @@ begin_comment
 comment|/* You may want to change these names */
 end_comment
 
+begin_comment
+comment|/* these SHOULD be defined in the makefile */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -20,6 +24,42 @@ define|#
 directive|define
 name|FONTDIR
 value|"/usr/lib/font"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACROLIB
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACROLIB
+value|"/usr/lib/tmac/tmac.xxxxx"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACROINDEX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACROINDEX
+value|19
 end_define
 
 begin_endif
@@ -253,7 +293,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/local/lib/ditmac/tmac.xxxxx"
+name|MACROLIB
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +301,7 @@ begin_decl_stmt
 name|int
 name|nfi
 init|=
-literal|27
+name|MACROINDEX
 decl_stmt|;
 end_decl_stmt
 
