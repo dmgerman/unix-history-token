@@ -6171,9 +6171,13 @@ operator|->
 name|valid
 condition|)
 block|{
-name|vm_page_test_dirty
+name|pmap_page_protect
 argument_list|(
 name|p
+argument_list|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_EXECUTE
 argument_list|)
 expr_stmt|;
 if|if
