@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.1.1.1 1994/05/18 08:00:45 csgr Exp $"
+literal|"$Id: ac.c,v 1.1 1994/09/26 22:12:27 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1036,12 +1036,7 @@ name|name
 argument_list|,
 name|name
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|up
-operator|->
-name|name
-argument_list|)
+name|UT_NAMESIZE
 argument_list|)
 operator|==
 literal|0
