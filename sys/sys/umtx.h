@@ -73,7 +73,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_UNLOCK_AND_WAIT
+name|UMTX_OP_WAIT
 value|2
 end_define
 
@@ -494,10 +494,6 @@ name|umtx
 parameter_list|,
 name|long
 name|id
-parameter_list|,
-name|void
-modifier|*
-name|uaddr
 parameter_list|)
 block|{
 if|if
@@ -506,11 +502,11 @@ name|_umtx_op
 argument_list|(
 name|umtx
 argument_list|,
-name|UMTX_OP_UNLOCK_AND_WAIT
+name|UMTX_OP_WAIT
 argument_list|,
 name|id
 argument_list|,
-name|uaddr
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -545,10 +541,6 @@ parameter_list|,
 name|long
 name|id
 parameter_list|,
-name|void
-modifier|*
-name|uaddr
-parameter_list|,
 specifier|const
 name|struct
 name|timespec
@@ -562,11 +554,11 @@ name|_umtx_op
 argument_list|(
 name|umtx
 argument_list|,
-name|UMTX_OP_UNLOCK_AND_WAIT
+name|UMTX_OP_WAIT
 argument_list|,
 name|id
 argument_list|,
-name|uaddr
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -601,9 +593,10 @@ name|__inline
 name|int
 name|umtx_wake
 parameter_list|(
-name|void
+name|struct
+name|umtx
 modifier|*
-name|uaddr
+name|umtx
 parameter_list|,
 name|int
 name|nr_wakeup
@@ -613,13 +606,13 @@ comment|/* return how many threads were woke up, -1 if error */
 return|return
 name|_umtx_op
 argument_list|(
-literal|0
+name|umtx
 argument_list|,
 name|UMTX_OP_WAKE
 argument_list|,
 name|nr_wakeup
 argument_list|,
-name|uaddr
+literal|0
 argument_list|,
 literal|0
 argument_list|)
