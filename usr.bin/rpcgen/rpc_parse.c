@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_parse.c,v 1.1 1993/09/13 23:20:16 jtc Exp $"
+literal|"$Id: rpc_parse.c,v 1.1 1994/08/07 18:01:32 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,6 +680,11 @@ operator|!=
 name|TOK_RBRACE
 condition|)
 do|;
+operator|*
+name|ptailp
+operator|=
+name|NULL
+expr_stmt|;
 operator|*
 name|vtailp
 operator|=
