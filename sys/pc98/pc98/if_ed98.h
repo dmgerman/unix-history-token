@@ -161,7 +161,7 @@ value|sc->edreg.reset
 end_define
 
 begin_comment
-comment|/*  * Card types.  *  * Type  Card  * 0x00  Allied Telesis CenterCom LA-98-T.  * 0x10  MELCO LPC-TJ, LPC-TS / IO-DATA PCLA/T.  * 0x20  PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A.  * 0x30  MELCO EGY-98 / Contec C-NET(98)E-A/L-A.  * 0x40  MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX).  * 0x50  ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}.  * 0x60  Allied Telesis SIC-98.  * 0x80  NEC PC-9801-108.  * 0x90  IO-DATA LA-98.  * 0xa0  Contec C-NET(98).  * 0xb0  Contec C-NET(98)E/L.  */
+comment|/*  * Card types.  *  * Type  Card  * 0x00  Allied Telesis CenterCom LA-98-T.  * 0x10  MELCO LPC-TJ, LPC-TS / IO-DATA PCLA/T.  * 0x20  PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A.  * 0x30  MELCO EGY-98 / Contec C-NET(98)E-A/L-A.  * 0x40  MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX).  * 0x50  ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}.  * 0x60  Allied Telesis SIC-98.  * 0x80  NEC PC-9801-108.  * 0x90  IO-DATA LA-98 / NEC PC-9801-77.  * 0xa0  Contec C-NET(98).  * 0xb0  Contec C-NET(98)E/L.  * 0xd0  Networld EC/EP-98X.  */
 end_comment
 
 begin_define
@@ -1538,7 +1538,7 @@ comment|/*  * Networld EC/EP-98X  */
 end_comment
 
 begin_comment
-comment|/*  * Interrupt Status Register (offset from ASIC base).  */
+comment|/*  * Interrupt Configuration Register (offset from ASIC base).  */
 end_comment
 
 begin_define
@@ -1580,6 +1580,56 @@ begin_define
 define|#
 directive|define
 name|ED_NW98X_IRQ13
+value|0x02
+end_define
+
+begin_comment
+comment|/*  * NEC PC-9801-77/78  */
+end_comment
+
+begin_comment
+comment|/*  * Interrupt Status Register (offset from ASIC base).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_NEC77_IRQ
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NEC77_IRQ3
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NEC77_IRQ5
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NEC77_IRQ6
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NEC77_IRQ12
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NEC77_IRQ13
 value|0x02
 end_define
 
@@ -2005,6 +2055,7 @@ condition|(
 name|type
 condition|)
 block|{
+default|default:
 case|case
 name|ED_TYPE98_GENERIC
 case|:
