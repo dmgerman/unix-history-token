@@ -358,6 +358,7 @@ index|[]
 init|=
 block|{
 comment|/*	cred1		cred2		ptrace	ktrace, sighup	sigsegv	see	sched	name */
+comment|/* privileged on privileged */
 block|{
 operator|&
 name|creds
