@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id: wdreg.h,v 1.25 1999/01/17 05:46:24 bde Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id: wdreg.h,v 1.26 1999/04/13 20:22:32 peter Exp $  */
 end_comment
 
 begin_comment
@@ -734,12 +734,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WDCC_DEFECT
+value|0xF0
+end_define
+
+begin_comment
+comment|/* read defect list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDFEA_NORCACHE
+value|0x55
+end_define
+
+begin_comment
+comment|/* read cache disable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WDFEA_RCACHE
 value|0xAA
 end_define
 
 begin_comment
 comment|/* read cache enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDFEA_NOWCACHE
+value|0x82
+end_define
+
+begin_comment
+comment|/* write cache disable */
 end_comment
 
 begin_define
@@ -811,41 +844,43 @@ begin_struct
 struct|struct
 name|wdparams
 block|{
-comment|/* 	 * XXX partly based on DRAFT X3T13/1153D rev 14.   	 * by the time you read this it will have changed. 	 */
+comment|/* 	 * XXX partly based on DRAFT X3T13/1153D rev 14.   	 * by the time you read this it will have changed. 	 * Offsets in words 	 * (as that's how they are usually presented in tables 	 * e.g. QUANTUM Product manuals) 	 */
 comment|/* drive info */
 name|short
 name|wdp_config
 decl_stmt|;
-comment|/* general configuration bits */
+comment|/*0 general configuration bits */
 name|u_short
 name|wdp_cylinders
 decl_stmt|;
-comment|/* number of cylinders */
+comment|/*1 number of cylinders */
 name|short
 name|wdp_reserved2
 decl_stmt|;
+comment|/*2*/
 name|u_short
 name|wdp_heads
 decl_stmt|;
-comment|/* number of heads */
+comment|/*3 number of heads */
 name|short
 name|wdp_unfbytespertrk
 decl_stmt|;
-comment|/* number of unformatted bytes/track */
+comment|/*4 number of unformatted bytes/track */
 name|short
 name|wdp_unfbytes
 decl_stmt|;
-comment|/* number of unformatted bytes/sector */
+comment|/*5 number of unformatted bytes/sec */
 name|u_short
 name|wdp_sectors
 decl_stmt|;
-comment|/* number of sectors per track */
+comment|/*6 number of sectors per track */
 name|short
 name|wdp_vendorunique
 index|[
 literal|3
 index|]
 decl_stmt|;
+comment|/*7,8,9*/
 comment|/* controller info */
 name|char
 name|wdp_serial
@@ -853,11 +888,11 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* serial number */
+comment|/*10-19 serial number */
 name|short
 name|wdp_buffertype
 decl_stmt|;
-comment|/* buffer type */
+comment|/*20 buffer type */
 define|#
 directive|define
 name|WDTYPE_SINGLEPORTSECTOR
@@ -876,199 +911,236 @@ comment|/* above plus track cache */
 name|short
 name|wdp_buffersize
 decl_stmt|;
-comment|/* buffer size, in 512-byte units */
+comment|/*21 buffer size, in 512-byte units */
 name|short
 name|wdp_necc
 decl_stmt|;
-comment|/* ecc bytes appended */
+comment|/*22 ecc bytes appended */
 name|char
 name|wdp_rev
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* firmware revision */
+comment|/*23-26 firmware revision */
 name|char
 name|wdp_model
 index|[
 literal|40
 index|]
 decl_stmt|;
-comment|/* model name */
+comment|/*27-46 model name */
 name|char
 name|wdp_nsecperint
 decl_stmt|;
-comment|/* sectors per interrupt */
+comment|/*47L sectors per interrupt */
 name|char
 name|wdp_vendorunique1
 decl_stmt|;
+comment|/*47H*/
 name|short
 name|wdp_usedmovsd
 decl_stmt|;
-comment|/* can use double word read/write? */
+comment|/*48 can use double word read/write? */
 name|char
 name|wdp_vendorunique2
 decl_stmt|;
+comment|/*49L*/
 name|char
 name|wdp_capability
 decl_stmt|;
-comment|/* various capability bits */
+comment|/*49H various capability bits */
 name|short
 name|wdp_cap_validate
 decl_stmt|;
-comment|/* validation for above */
+comment|/*50 validation for above */
 name|char
 name|wdp_vendorunique3
 decl_stmt|;
+comment|/*51L*/
 name|char
 name|wdp_opiomode
 decl_stmt|;
-comment|/* PIO modes 0-2 */
+comment|/*51H PIO modes 0-2 */
 name|char
 name|wdp_vendorunique4
 decl_stmt|;
+comment|/*52*/
 name|char
 name|wdp_odmamode
 decl_stmt|;
-comment|/* old DMA modes, not in ATA-3 */
+comment|/*52 old DMA modes, not in ATA-3 */
 name|short
 name|wdp_atavalid
 decl_stmt|;
-comment|/* validation for newer fields */
+comment|/*53 validation for newer fields */
 name|short
 name|wdp_currcyls
 decl_stmt|;
+comment|/*54 */
 name|short
 name|wdp_currheads
 decl_stmt|;
+comment|/*55 */
 name|short
 name|wdp_currsectors
 decl_stmt|;
+comment|/*56 */
 name|short
 name|wdp_currsize0
 decl_stmt|;
+comment|/*57 CHS size*/
 name|short
 name|wdp_currsize1
 decl_stmt|;
+comment|/*58 CHS size*/
 name|char
 name|wdp_currmultsect
 decl_stmt|;
+comment|/*59L */
 name|char
 name|wdp_multsectvalid
 decl_stmt|;
+comment|/*59H */
 name|int
 name|wdp_lbasize
 decl_stmt|;
+comment|/*60,61*/
 name|short
 name|wdp_dmasword
 decl_stmt|;
-comment|/* obsolete in ATA-3 */
+comment|/*62 obsolete in ATA-3 */
 name|short
 name|wdp_dmamword
 decl_stmt|;
-comment|/* multiword DMA modes */
+comment|/*63 multiword DMA modes */
 name|short
 name|wdp_eidepiomodes
 decl_stmt|;
-comment|/* advanced PIO modes */
+comment|/*64 advanced PIO modes */
 name|short
 name|wdp_eidedmamin
 decl_stmt|;
-comment|/* fastest possible DMA timing */
+comment|/*65 fastest possible DMA timing */
 name|short
 name|wdp_eidedmanorm
 decl_stmt|;
-comment|/* recommended DMA timing */
+comment|/*66 recommended DMA timing */
 name|short
 name|wdp_eidepioblind
 decl_stmt|;
-comment|/* fastest possible blind PIO */
+comment|/*67 fastest possible blind PIO */
 name|short
 name|wdp_eidepioacked
 decl_stmt|;
-comment|/* fastest possible IORDY PIO */
+comment|/*68 fastest possible IORDY PIO */
 name|short
 name|wdp_reserved69
 decl_stmt|;
+comment|/*69*/
 name|short
 name|wdp_reserved70
 decl_stmt|;
+comment|/*70*/
 name|short
 name|wdp_reserved71
 decl_stmt|;
+comment|/*71*/
 name|short
 name|wdp_reserved72
 decl_stmt|;
+comment|/*72*/
 name|short
 name|wdp_reserved73
 decl_stmt|;
+comment|/*73*/
 name|short
 name|wdp_reserved74
 decl_stmt|;
+comment|/*74*/
 name|short
 name|wdp_queuelen
 decl_stmt|;
+comment|/*75*/
 name|short
 name|wdp_reserved76
 decl_stmt|;
+comment|/*76*/
 name|short
 name|wdp_reserved77
 decl_stmt|;
+comment|/*77*/
 name|short
 name|wdp_reserved78
 decl_stmt|;
+comment|/*78*/
 name|short
 name|wdp_reserved79
 decl_stmt|;
+comment|/*79*/
 name|short
 name|wdp_versmaj
 decl_stmt|;
+comment|/*80*/
 name|short
 name|wdp_versmin
 decl_stmt|;
+comment|/*81*/
 name|short
 name|wdp_featsupp1
 decl_stmt|;
+comment|/*82*/
 name|short
 name|wdp_featsupp2
 decl_stmt|;
+comment|/*83*/
 name|short
 name|wdp_featsupp3
 decl_stmt|;
+comment|/*84*/
 name|short
 name|wdp_featenab1
 decl_stmt|;
+comment|/*85*/
 name|short
 name|wdp_featenab2
 decl_stmt|;
+comment|/*86*/
 name|short
 name|wdp_featenab3
 decl_stmt|;
+comment|/*87*/
 name|short
 name|wdp_udmamode
 decl_stmt|;
-comment|/* UltraDMA modes */
+comment|/*88 UltraDMA modes */
 name|short
 name|wdp_erasetime
 decl_stmt|;
+comment|/*89*/
 name|short
 name|wdp_enherasetime
 decl_stmt|;
+comment|/*90*/
 name|short
 name|wdp_apmlevel
 decl_stmt|;
+comment|/*91*/
 name|short
 name|wdp_reserved92
 index|[
 literal|34
 index|]
 decl_stmt|;
+comment|/*92*/
 name|short
 name|wdp_rmvcap
 decl_stmt|;
+comment|/*93*/
 name|short
 name|wdp_securelevel
 decl_stmt|;
+comment|/*94*/
 block|}
 struct|;
 end_struct
