@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	3.5	%G%	*/
+comment|/*	cons.c	3.6	%G%	*/
 end_comment
 
 begin_comment
@@ -921,25 +921,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
-name|char
-modifier|*
-name|msgbufp
-init|=
-name|msgbuf
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Next saved printf character */
-end_comment
-
-begin_comment
-comment|/*  * Print a character on console.  * Attempts to save and restore device  * status.  * If the switches are 0, all  * printing is inhibited.  *  * Whether or not printing is inhibited,  * the last MSGBUFS characters  * are saved in msgbuf for inspection later.  */
+comment|/*  * Print a character on console.  * Attempts to save and restore device  * status.  */
 end_comment
 
 begin_expr_stmt
-name|putchar
+name|cnputc
 argument_list|(
 name|c
 argument_list|)
@@ -955,42 +942,6 @@ name|s
 operator|,
 name|timo
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|!=
-literal|'\0'
-operator|&&
-name|c
-operator|!=
-literal|'\r'
-operator|&&
-name|c
-operator|!=
-literal|0177
-condition|)
-block|{
-operator|*
-name|msgbufp
-operator|++
-operator|=
-name|c
-expr_stmt|;
-if|if
-condition|(
-name|msgbufp
-operator|>=
-operator|&
-name|msgbuf
-index|[
-name|MSGBUFS
-index|]
-condition|)
-name|msgbufp
-operator|=
-name|msgbuf
-expr_stmt|;
-block|}
 name|timo
 operator|=
 literal|30000
@@ -1053,12 +1004,12 @@ name|c
 operator|==
 literal|'\n'
 condition|)
-name|putchar
+name|cnputc
 argument_list|(
 literal|'\r'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|cnputc
 argument_list|(
 literal|0
 argument_list|)
