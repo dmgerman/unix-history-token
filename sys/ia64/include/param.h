@@ -638,30 +638,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* pages ("clicks") to disk blocks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ctod
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< (PAGE_SHIFT - DEV_BSHIFT))
-end_define
-
-begin_define
-define|#
-directive|define
-name|dtoc
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)>> (PAGE_SHIFT - DEV_BSHIFT))
-end_define
-
-begin_comment
 comment|/* pages to bytes */
 end_comment
 
