@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.11 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.12 %G%"; */
 end_comment
 
 begin_include
@@ -43,13 +43,6 @@ define|#
 directive|define
 name|HZ
 value|100
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXLVL
-value|20
 end_define
 
 begin_define
@@ -438,158 +431,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * runtime display structure  */
-end_comment
-
-begin_struct
-struct|struct
-name|disp
-block|{
-name|char
-modifier|*
-name|locvars
-decl_stmt|;
-comment|/* pointer to local variables */
-name|struct
-name|stack
-modifier|*
-name|stp
-decl_stmt|;
-comment|/* pointer to local stack frame */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|stack
-block|{
-name|char
-modifier|*
-name|tos
-decl_stmt|;
-comment|/* pointer to top of stack frame */
-name|struct
-name|iorec
-modifier|*
-name|file
-decl_stmt|;
-comment|/* pointer to active file name */
-struct|struct
-name|hdr
-block|{
-name|long
-name|framesze
-decl_stmt|;
-comment|/* number of bytes of local vars */
-name|long
-name|nargs
-decl_stmt|;
-comment|/* number of bytes of arguments */
-name|bool
-name|tests
-decl_stmt|;
-comment|/* TRUE => perform runtime tests */
-name|short
-name|offset
-decl_stmt|;
-comment|/* offset of procedure in source file */
-name|char
-name|name
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* name of active procedure */
-block|}
-modifier|*
-name|entry
-struct|;
-name|struct
-name|disp
-name|odisp
-decl_stmt|;
-comment|/* previous display value for this level */
-name|struct
-name|disp
-modifier|*
-name|dp
-decl_stmt|;
-comment|/* pointer to active display entry */
-name|union
-name|progcntr
-name|pc
-decl_stmt|;
-comment|/* previous location counter */
-name|long
-name|lino
-decl_stmt|;
-comment|/* previous line number */
-block|}
-struct|;
-end_struct
-
-begin_union
-union|union
-name|disply
-block|{
-name|struct
-name|disp
-name|frame
-index|[
-name|MAXLVL
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|raw
-index|[
-literal|2
-operator|*
-name|MAXLVL
-index|]
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_comment
-comment|/*  * formal routine structure  */
-end_comment
-
-begin_struct
-struct|struct
-name|formalrtn
-block|{
-name|char
-modifier|*
-name|fentryaddr
-decl_stmt|;
-comment|/* formal entry point */
-name|long
-name|fbn
-decl_stmt|;
-comment|/* block number of function */
-name|struct
-name|disp
-name|fdisp
-index|[
-name|MAXLVL
-index|]
-decl_stmt|;
-comment|/* saved at first passing */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * program variables  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|union
-name|disply
+name|display
 name|_display
 decl_stmt|;
 end_decl_stmt
@@ -601,7 +449,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|disp
+name|dispsave
 modifier|*
 name|_dp
 decl_stmt|;
@@ -659,7 +507,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|long
 name|_runtst
 decl_stmt|;
 end_decl_stmt
