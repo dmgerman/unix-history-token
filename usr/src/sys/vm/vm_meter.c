@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	6.5	85/03/03	*/
+comment|/*	vm_meter.c	6.6	85/03/18	*/
 end_comment
 
 begin_include
@@ -570,37 +570,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * Kick out deadwood. 			 */
-operator|(
-name|void
-operator|)
-name|spl6
-argument_list|()
-expr_stmt|;
 name|rp
 operator|->
 name|p_flag
 operator|&=
 operator|~
 name|SLOAD
-expr_stmt|;
-if|if
-condition|(
-name|rp
-operator|->
-name|p_stat
-operator|==
-name|SRUN
-condition|)
-name|remrq
-argument_list|(
-name|rp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -636,7 +611,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 if|if
@@ -1156,7 +1131,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|p
@@ -1271,7 +1246,7 @@ comment|/* 	 * Want to swap someone in, but can't 	 * so wait on runin. 	 */
 operator|(
 name|void
 operator|)
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|runin
