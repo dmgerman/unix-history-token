@@ -1329,7 +1329,7 @@ name|rv
 operator|=
 name|mount
 argument_list|(
-name|MOUNT_UFS
+literal|"ufs"
 argument_list|,
 name|oarg
 argument_list|,
