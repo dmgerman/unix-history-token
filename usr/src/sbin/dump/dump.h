@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.7 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.8 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -267,6 +267,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* tape file descriptor */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pipeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true => output to standard output */
 end_comment
 
 begin_decl_stmt

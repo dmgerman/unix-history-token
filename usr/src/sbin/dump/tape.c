@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tape.c	1.6 (Berkeley) %G%"
+literal|"@(#)tape.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +369,28 @@ operator|!=
 name|writesize
 condition|)
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Tape write error on %s\n"
+argument_list|,
+name|tape
+argument_list|)
+expr_stmt|;
+name|msg
+argument_list|(
+literal|"Cannot recover\n"
+argument_list|)
+expr_stmt|;
+name|dumpabort
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|msg
 argument_list|(
 literal|"Tape write error on tape %d\n"
@@ -452,6 +474,9 @@ name|ntrec
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|pipeout
+operator|&&
 name|asize
 operator|>
 name|tsize
@@ -483,6 +508,11 @@ decl_stmt|;
 name|int
 name|f
 decl_stmt|;
+if|if
+condition|(
+name|pipeout
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -548,6 +578,11 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+return|return;
 name|close
 argument_list|(
 name|to
@@ -914,6 +949,15 @@ endif|#
 directive|endif
 do|do
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+name|to
+operator|=
+literal|1
+expr_stmt|;
+else|else
 name|to
 operator|=
 name|creat

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.11 (Berkeley) %G%"
+literal|"@(#)main.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,8 +465,10 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"bad key '%c%'\n"
 argument_list|,
 name|arg
@@ -499,6 +501,26 @@ name|disk
 operator|=
 operator|*
 name|argv
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|tape
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|pipeout
+operator|++
+expr_stmt|;
+name|tape
+operator|=
+literal|"standard output"
 expr_stmt|;
 block|}
 comment|/* 	 * Determine how to default tape size and density 	 * 	 *         	density				tape size 	 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 	 * 9-track	6250 bpi (625 bytes/.1")	2300 ft. 	 * cartridge	8000 bpi (100 bytes/.1")	4000 ft. (450*9 - slop) 	 */
@@ -1264,11 +1286,21 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|RDUMP
+if|if
+condition|(
+operator|!
+name|pipeout
+condition|)
+block|{
 name|close
 argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
+name|rewind
+argument_list|()
+expr_stmt|;
+block|}
 else|#
 directive|else
 name|tflush
@@ -1276,11 +1308,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|rewind
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|broadcast
 argument_list|(
 literal|"DUMP IS DONE!\7\7\n"
@@ -1413,6 +1445,20 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Unknown signal, cannot recover\n"
+argument_list|)
+expr_stmt|;
+name|dumpabort
+argument_list|()
+expr_stmt|;
+block|}
 name|msg
 argument_list|(
 literal|"Rewriting attempted as response to unknown signal.\n"
