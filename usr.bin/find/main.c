@@ -377,6 +377,12 @@ argument_list|,
 literal|".:"
 argument_list|)
 expr_stmt|;
+comment|/* make output interperse properly with subprocesses */
+name|setlinebuf
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|find_execute
 argument_list|(
 name|find_formplan
