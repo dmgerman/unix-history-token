@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.9	82/10/21	*/
+comment|/*	mem.c	4.10	82/10/31	*/
 end_comment
 
 begin_comment
@@ -207,6 +207,12 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|;
+specifier|extern
+name|int
+name|umbabeg
+decl_stmt|,
+name|umbaend
 decl_stmt|;
 while|while
 condition|(
