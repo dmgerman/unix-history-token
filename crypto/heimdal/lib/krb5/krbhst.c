@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krbhst.c,v 1.40 2001/07/19 16:57:15 assar Exp $"
+literal|"$Id: krbhst.c,v 1.41 2002/08/16 18:48:19 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2453,6 +2453,9 @@ modifier|*
 name|host
 parameter_list|)
 block|{
+name|krb5_error_code
+name|ret
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2580,7 +2583,8 @@ name|get_next
 operator|=
 name|admin_get_next
 expr_stmt|;
-return|return
+name|ret
+operator|=
 call|(
 modifier|*
 name|kd
@@ -2594,6 +2598,24 @@ name|kd
 argument_list|,
 name|host
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+operator|(
+operator|*
+name|host
+operator|)
+operator|->
+name|proto
+operator|=
+name|KRB5_KRBHST_UDP
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 return|return

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"der_locl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<com_err.h>
 end_include
 
 begin_include
@@ -36,19 +42,10 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: asn1_print.c,v 1.8 2001/08/21 09:42:51 assar Exp $"
+literal|"$Id: asn1_print.c,v 1.11 2002/08/29 20:45:35 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|et_list
-modifier|*
-name|et_list
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -261,10 +258,8 @@ literal|1
 argument_list|,
 literal|"der_get_tag: %s"
 argument_list|,
-name|com_right
+name|error_message
 argument_list|(
-name|et_list
-argument_list|,
 name|ret
 argument_list|)
 argument_list|)
@@ -383,10 +378,8 @@ literal|1
 argument_list|,
 literal|"der_get_tag: %s"
 argument_list|,
-name|com_right
+name|error_message
 argument_list|(
-name|et_list
-argument_list|,
 name|ret
 argument_list|)
 argument_list|)
@@ -510,10 +503,8 @@ literal|1
 argument_list|,
 literal|"der_get_int: %s"
 argument_list|,
-name|com_right
+name|error_message
 argument_list|(
-name|et_list
-argument_list|,
 name|ret
 argument_list|)
 argument_list|)
@@ -566,10 +557,8 @@ literal|1
 argument_list|,
 literal|"der_get_octet_string: %s"
 argument_list|,
-name|com_right
+name|error_message
 argument_list|(
-name|et_list
-argument_list|,
 name|ret
 argument_list|)
 argument_list|)
@@ -667,10 +656,8 @@ literal|1
 argument_list|,
 literal|"der_get_general_string: %s"
 argument_list|,
-name|com_right
+name|error_message
 argument_list|(
-name|et_list
-argument_list|,
 name|ret
 argument_list|)
 argument_list|)
@@ -685,6 +672,98 @@ expr_stmt|;
 name|free
 argument_list|(
 name|str
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|UT_OID
+case|:
+block|{
+name|oid
+name|o
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|ret
+operator|=
+name|der_get_oid
+argument_list|(
+name|buf
+argument_list|,
+name|length
+argument_list|,
+operator|&
+name|o
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"der_get_oid: %s"
+argument_list|,
+name|error_message
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|o
+operator|.
+name|length
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"%d%s"
+argument_list|,
+name|o
+operator|.
+name|components
+index|[
+name|i
+index|]
+argument_list|,
+name|i
+operator|<
+name|o
+operator|.
+name|length
+operator|-
+literal|1
+condition|?
+literal|"."
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|free_oid
+argument_list|(
+operator|&
+name|o
 argument_list|)
 expr_stmt|;
 break|break;
@@ -816,6 +895,9 @@ literal|1
 argument_list|,
 literal|"malloc %u"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -985,11 +1067,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|initialize_asn1_error_table_r
-argument_list|(
-operator|&
-name|et_list
-argument_list|)
+name|initialize_asn1_error_table
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

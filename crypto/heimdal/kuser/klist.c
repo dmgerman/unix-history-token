@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: klist.c,v 1.64 2001/05/11 19:55:13 assar Exp $"
+literal|"$Id: klist.c,v 1.67 2002/08/20 09:05:18 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1856,7 +1856,9 @@ name|TKT_FILE
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"v4-ticket file:	%s\n"
+literal|"%17s: %s\n"
+argument_list|,
+literal|"V4-ticket file"
 argument_list|,
 name|file
 argument_list|)
@@ -1983,7 +1985,9 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"Principal:\t%s\n"
+literal|"%17s: %s\n"
+argument_list|,
+literal|"Principal"
 argument_list|,
 name|krb_unparse_name
 argument_list|(
@@ -2328,7 +2332,7 @@ name|unsigned
 name|char
 name|t
 index|[
-literal|128
+literal|4096
 index|]
 decl_stmt|;
 name|struct
@@ -2380,19 +2384,6 @@ name|i
 operator|=
 literal|0
 init|;
-name|k_pioctl
-argument_list|(
-name|NULL
-argument_list|,
-name|VIOCGETTOK
-argument_list|,
-operator|&
-name|parms
-argument_list|,
-literal|0
-argument_list|)
-operator|==
-literal|0
 condition|;
 name|i
 operator|++
@@ -2434,6 +2425,65 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|k_pioctl
+argument_list|(
+name|NULL
+argument_list|,
+name|VIOCGETTOK
+argument_list|,
+operator|&
+name|parms
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EDOM
+condition|)
+break|break;
+continue|continue;
+block|}
+if|if
+condition|(
+name|parms
+operator|.
+name|out_size
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|t
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|parms
+operator|.
+name|out_size
+operator|<
+sizeof|sizeof
+argument_list|(
+name|size_secret_tok
+argument_list|)
+condition|)
+continue|continue;
+name|t
+index|[
+name|parms
+operator|.
+name|out_size
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -2457,6 +2507,24 @@ argument_list|(
 name|size_secret_tok
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|parms
+operator|.
+name|out_size
+operator|<
+operator|(
+name|r
+operator|-
+name|t
+operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|size_public_tok
+argument_list|)
+condition|)
+continue|continue;
 name|memcpy
 argument_list|(
 operator|&
@@ -2477,6 +2545,26 @@ argument_list|(
 name|size_public_tok
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|parms
+operator|.
+name|out_size
+operator|<
+operator|(
+name|r
+operator|-
+name|t
+operator|)
+operator|+
+name|size_public_tok
+operator|+
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+condition|)
+continue|continue;
 name|memcpy
 argument_list|(
 operator|&

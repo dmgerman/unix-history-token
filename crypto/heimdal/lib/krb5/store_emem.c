@@ -9,10 +9,16 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"store-int.h"
+end_include
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: store_emem.c,v 1.11 2002/02/11 13:03:25 joda Exp $"
+literal|"$Id: store_emem.c,v 1.12 2002/04/18 14:00:34 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -523,6 +529,12 @@ operator|->
 name|flags
 operator|=
 literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|eof_code
+operator|=
+name|HEIM_ERR_EOF
 expr_stmt|;
 name|s
 operator|->

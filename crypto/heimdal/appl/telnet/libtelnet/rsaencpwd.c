@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rsaencpwd.c,v 1.18 1999/09/16 20:41:34 assar Exp $"
+literal|"$Id: rsaencpwd.c,v 1.19 2002/08/12 15:09:17 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -605,7 +605,8 @@ argument_list|(
 name|key_file
 argument_list|)
 argument_list|,
-literal|"/etc/.%s_privkey"
+name|SYSCONFDIR
+literal|"/.%s_privkey"
 argument_list|,
 name|lhostname
 argument_list|)

@@ -78,42 +78,42 @@ begin_define
 define|#
 directive|define
 name|_PATH_FTPUSERS
-value|"/etc/ftpusers"
+value|SYSCONFDIR "/ftpusers"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_FTPCHROOT
-value|"/etc/ftpchroot"
+value|SYSCONFDIR "/ftpchroot"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_FTPWELCOME
-value|"/etc/ftpwelcome"
+value|SYSCONFDIR "/ftpwelcome"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_FTPLOGINMESG
-value|"/etc/motd"
+value|SYSCONFDIR "/motd"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_ISSUE
-value|"/etc/issue"
+value|SYSCONFDIR "/issue"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_ISSUE_NET
-value|"/etc/issue.net"
+value|SYSCONFDIR "/issue.net"
 end_define
 
 end_unit

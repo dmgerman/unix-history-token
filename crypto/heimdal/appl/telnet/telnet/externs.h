@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1990, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: externs.h,v 1.24 2001/12/20 20:39:52 joda Exp $ */
+comment|/* $Id: externs.h,v 1.25 2002/08/28 20:58:23 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -1214,6 +1214,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|set_forward_options
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* network.c */
 end_comment
@@ -1722,15 +1731,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|TerminalSaveState
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|tninit
 parameter_list|(
 name|void
 parameter_list|)

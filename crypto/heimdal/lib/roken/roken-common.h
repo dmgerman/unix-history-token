@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: roken-common.h,v 1.48 2001/09/03 12:04:34 joda Exp $ */
+comment|/* $Id: roken-common.h,v 1.49 2002/08/20 11:55:04 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -815,6 +815,21 @@ name|AI_CANONNAME
 value|0x02
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AI_PASSIVE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AI_NUMERICHOST
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -826,10 +841,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* AI_PASSIVE */
-end_comment
 
 begin_comment
 comment|/* flags for getnameinfo() */

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: copy.c,v 1.7 2001/05/11 00:54:01 assar Exp $"
+literal|"$Id: copy.c,v 1.8 2002/08/12 15:09:12 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -730,7 +730,7 @@ begin_define
 define|#
 directive|define
 name|KEYFILE
-value|"/etc/srvtab"
+value|SYSCONFDIR "/srvtab"
 end_define
 
 begin_endif

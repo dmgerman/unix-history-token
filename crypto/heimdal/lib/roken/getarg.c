@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getarg.c,v 1.44 2001/09/10 13:22:43 assar Exp $"
+literal|"$Id: getarg.c,v 1.46 2002/08/20 16:23:07 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -807,7 +807,7 @@ name|long_name
 condition|)
 name|printf
 argument_list|(
-literal|" Ns ,"
+literal|" ,"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2015,7 +2015,7 @@ name|rargv
 parameter_list|,
 name|int
 modifier|*
-name|optind
+name|goptind
 parameter_list|)
 block|{
 name|int
@@ -2023,7 +2023,7 @@ name|i
 decl_stmt|;
 name|char
 modifier|*
-name|optarg
+name|goptarg
 init|=
 name|NULL
 decl_stmt|;
@@ -2057,6 +2057,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|p_len
 decl_stmt|;
 name|argv_len
 operator|=
@@ -2123,17 +2126,14 @@ operator|.
 name|long_name
 argument_list|)
 decl_stmt|;
-name|char
-modifier|*
 name|p
-init|=
+operator|=
 name|argv
-decl_stmt|;
-name|int
+expr_stmt|;
 name|p_len
-init|=
+operator|=
 name|argv_len
-decl_stmt|;
+expr_stmt|;
 name|negate
 operator|=
 literal|0
@@ -2191,7 +2191,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-name|optarg
+name|goptarg
 operator|=
 name|p
 operator|+
@@ -2270,7 +2270,7 @@ block|}
 if|if
 condition|(
 operator|*
-name|optarg
+name|goptarg
 operator|==
 literal|'\0'
 operator|&&
@@ -2314,7 +2314,7 @@ if|if
 condition|(
 name|sscanf
 argument_list|(
-name|optarg
+name|goptarg
 operator|+
 literal|1
 argument_list|,
@@ -2358,7 +2358,7 @@ name|current
 operator|->
 name|value
 operator|=
-name|optarg
+name|goptarg
 operator|+
 literal|1
 expr_stmt|;
@@ -2380,7 +2380,7 @@ name|current
 operator|->
 name|value
 argument_list|,
-name|optarg
+name|goptarg
 operator|+
 literal|1
 argument_list|)
@@ -2407,13 +2407,13 @@ decl_stmt|;
 if|if
 condition|(
 operator|*
-name|optarg
+name|goptarg
 operator|==
 literal|'\0'
 operator|||
 name|strcmp
 argument_list|(
-name|optarg
+name|goptarg
 operator|+
 literal|1
 argument_list|,
@@ -2424,7 +2424,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-name|optarg
+name|goptarg
 operator|+
 literal|1
 argument_list|,
@@ -2448,11 +2448,11 @@ elseif|else
 if|if
 condition|(
 operator|*
-name|optarg
+name|goptarg
 operator|&&
 name|strcmp
 argument_list|(
-name|optarg
+name|goptarg
 operator|+
 literal|1
 argument_list|,
@@ -2511,7 +2511,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|*
-name|optarg
+name|goptarg
 operator|==
 literal|'\0'
 condition|)
@@ -2524,7 +2524,7 @@ if|if
 condition|(
 name|sscanf
 argument_list|(
-name|optarg
+name|goptarg
 operator|+
 literal|1
 argument_list|,
@@ -2565,7 +2565,7 @@ if|if
 condition|(
 name|sscanf
 argument_list|(
-name|optarg
+name|goptarg
 operator|+
 literal|1
 argument_list|,
@@ -2616,7 +2616,7 @@ operator|-
 name|rargv
 index|[
 operator|*
-name|optind
+name|goptind
 index|]
 decl_stmt|;
 return|return
@@ -2633,7 +2633,7 @@ name|argc
 argument_list|,
 name|rargv
 argument_list|,
-name|optind
+name|goptind
 argument_list|,
 operator|&
 name|o
@@ -2679,7 +2679,7 @@ name|rargv
 parameter_list|,
 name|int
 modifier|*
-name|optind
+name|goptind
 parameter_list|)
 block|{
 name|int
@@ -2704,7 +2704,7 @@ argument_list|(
 name|rargv
 index|[
 operator|*
-name|optind
+name|goptind
 index|]
 argument_list|)
 condition|;
@@ -2728,7 +2728,7 @@ control|)
 block|{
 name|char
 modifier|*
-name|optarg
+name|goptarg
 decl_stmt|;
 if|if
 condition|(
@@ -2879,7 +2879,7 @@ name|argc
 argument_list|,
 name|rargv
 argument_list|,
-name|optind
+name|goptind
 argument_list|,
 operator|&
 name|j
@@ -2903,7 +2903,7 @@ operator|+
 literal|1
 index|]
 condition|)
-name|optarg
+name|goptarg
 operator|=
 operator|&
 name|argv
@@ -2917,27 +2917,27 @@ else|else
 block|{
 operator|++
 operator|*
-name|optind
+name|goptind
 expr_stmt|;
-name|optarg
+name|goptarg
 operator|=
 name|rargv
 index|[
 operator|*
-name|optind
+name|goptind
 index|]
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|optarg
+name|goptarg
 operator|==
 name|NULL
 condition|)
 block|{
 operator|--
 operator|*
-name|optind
+name|goptind
 expr_stmt|;
 return|return
 name|ARG_ERR_NO_ARG
@@ -2962,7 +2962,7 @@ if|if
 condition|(
 name|sscanf
 argument_list|(
-name|optarg
+name|goptarg
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -3019,7 +3019,7 @@ index|]
 operator|.
 name|value
 operator|=
-name|optarg
+name|goptarg
 expr_stmt|;
 return|return
 literal|0
@@ -3051,7 +3051,7 @@ index|]
 operator|.
 name|value
 argument_list|,
-name|optarg
+name|goptarg
 argument_list|)
 expr_stmt|;
 return|return
@@ -3078,7 +3078,7 @@ if|if
 condition|(
 name|sscanf
 argument_list|(
-name|optarg
+name|goptarg
 argument_list|,
 literal|"%lf"
 argument_list|,
@@ -3152,7 +3152,7 @@ name|argv
 parameter_list|,
 name|int
 modifier|*
-name|optind
+name|goptind
 parameter_list|)
 block|{
 name|int
@@ -3200,7 +3200,7 @@ endif|#
 directive|endif
 operator|(
 operator|*
-name|optind
+name|goptind
 operator|)
 operator|++
 expr_stmt|;
@@ -3209,7 +3209,7 @@ control|(
 name|i
 operator|=
 operator|*
-name|optind
+name|goptind
 init|;
 name|i
 operator|<
@@ -3318,7 +3318,7 @@ condition|)
 break|break;
 block|}
 operator|*
-name|optind
+name|goptind
 operator|=
 name|i
 expr_stmt|;
@@ -3489,7 +3489,7 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|optind
+name|goptind
 init|=
 literal|0
 decl_stmt|;
@@ -3506,7 +3506,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|goptind
 argument_list|)
 condition|)
 name|printf
@@ -3515,7 +3515,7 @@ literal|"Bad arg: %s\n"
 argument_list|,
 name|argv
 index|[
-name|optind
+name|goptind
 index|]
 argument_list|)
 expr_stmt|;

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popen.c,v 1.25 2001/06/19 10:00:25 assar Exp $"
+literal|"$Id: popen.c,v 1.26 2002/04/02 11:57:39 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -600,6 +600,12 @@ argument_list|,
 operator|&
 name|gl
 argument_list|)
+operator|||
+name|gl
+operator|.
+name|gl_pathc
+operator|==
+literal|0
 condition|)
 name|gargv
 index|[
