@@ -628,7 +628,12 @@ name|WNOHANG
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
+block|{
+comment|/* nothing */
+block|}
 empty_stmt|;
 block|}
 end_function
