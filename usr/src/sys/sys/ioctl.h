@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.1	%G%	*/
+comment|/*	ioctl.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -458,6 +458,27 @@ begin_comment
 comment|/* get special characters */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TIOCIOANS
+value|(('t'<<8)|20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCSIGNAL
+value|(('t'<<8)|21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCUTTY
+value|(('t'<<8)|22)
+end_define
+
 begin_comment
 comment|/* locals, from 127 down */
 end_comment
@@ -623,6 +644,10 @@ name|OTTYDISC
 value|0
 end_define
 
+begin_comment
+comment|/* old, v7 std tty driver */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -641,6 +666,43 @@ name|NTTYDISC
 value|2
 end_define
 
+begin_comment
+comment|/* new tty discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKDISC
+value|3
+end_define
+
+begin_comment
+comment|/* packet driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRDISC
+value|4
+end_define
+
+begin_comment
+comment|/* datakit trailer protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDKDISC
+value|5
+end_define
+
+begin_comment
+comment|/* datakit terminal protocol */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -651,7 +713,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIOCNTRL
+name|DIOCMD
 value|(('d'<<8)|2)
 end_define
 
@@ -749,7 +811,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIOCPAD
+name|DIOCUMERGE
 value|(('d'<<8)|16)
 end_define
 
@@ -791,6 +853,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIOCLOOP
+value|(('d'<<8)|22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCPROTOCOL
+value|(('d'<<8)|23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCTRL
+value|(('d'<<8)|24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCDMETA
+value|(('d'<<8)|25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCSWR
+value|(('d'<<8)|26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FIOCLEX
 value|(('f'<<8)|1)
 end_define
@@ -818,7 +915,33 @@ comment|/* get # bytes to read */
 end_comment
 
 begin_comment
-comment|/* FIONREAD is not implemented on mpx channels yet */
+comment|/* mag tape io control commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCTOP
+value|(('m'<<8)|1)
+end_define
+
+begin_comment
+comment|/* do a mag tape op (see<mtio.h>) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCGET
+value|(('m'<<8)|2)
+end_define
+
+begin_comment
+comment|/* get mag tape status (see<mtio.h>*/
+end_comment
+
+begin_comment
+comment|/* mux io controls */
 end_comment
 
 begin_define
@@ -835,9 +958,52 @@ name|MXNBLK
 value|(('x'<<8)|2)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
-comment|/*  * These are defined in sys/vcmd.h  * #define	VGETSTATE	(('v'<<8)|0) #define	VSETSTATE	(('v'<<8)|1)  */
+comment|/* varian ioctls, which are defined in sys/vcmd.h */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VGETSTATE
+value|(('v'<<8)|0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VSETSTATE
+value|(('v'<<8)|1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* printer ioctls, see<lpio.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LGETSTATE
+value|(('v'<<8)|2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSETSTATE
+value|(('v'<<8)|3)
+end_define
 
 begin_endif
 endif|#
