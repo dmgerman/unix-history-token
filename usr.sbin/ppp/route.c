@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.6 1996/05/11 20:48:42 phk Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.7 1996/08/13 09:19:45 peter Exp $  *  */
 end_comment
 
 begin_include
@@ -1978,6 +1978,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*   * 960603 - Modified to use dynamic buffer allocator as in ifconfig   */
+end_comment
+
 begin_function
 name|int
 name|GetIfIndex
@@ -1989,6 +1993,10 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|buffer
+decl_stmt|;
 name|struct
 name|ifreq
 modifier|*
@@ -2007,12 +2015,17 @@ name|struct
 name|ifconf
 name|ifconfs
 decl_stmt|;
-name|struct
+comment|/* struct ifreq reqbuf[256]; -- obsoleted :) */
+name|int
+name|oldbufsize
+decl_stmt|,
+name|bufsize
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
 name|ifreq
-name|reqbuf
-index|[
-literal|32
-index|]
+argument_list|)
 decl_stmt|;
 name|s
 operator|=
@@ -2044,23 +2057,77 @@ literal|1
 operator|)
 return|;
 block|}
+name|buffer
+operator|=
+name|malloc
+argument_list|(
+name|bufsize
+argument_list|)
+expr_stmt|;
+comment|/* allocate first buffer */
 name|ifconfs
 operator|.
 name|ifc_len
 operator|=
+name|bufsize
+expr_stmt|;
+comment|/* Initial setting */
+comment|/*    * Iterate through here until we don't get many more data     */
+do|do
+block|{
+name|oldbufsize
+operator|=
+name|ifconfs
+operator|.
+name|ifc_len
+expr_stmt|;
+name|bufsize
+operator|+=
+literal|1
+operator|+
 sizeof|sizeof
 argument_list|(
-name|reqbuf
+expr|struct
+name|ifreq
 argument_list|)
+expr_stmt|;
+name|buffer
+operator|=
+name|realloc
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|buffer
+argument_list|,
+name|bufsize
+argument_list|)
+expr_stmt|;
+comment|/* Make it bigger */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|logprintf
+argument_list|(
+literal|"Growing buffer to %d\n"
+argument_list|,
+name|bufsize
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ifconfs
+operator|.
+name|ifc_len
+operator|=
+name|bufsize
 expr_stmt|;
 name|ifconfs
 operator|.
 name|ifc_buf
 operator|=
-operator|(
-name|caddr_t
-operator|)
-name|reqbuf
+name|buffer
 expr_stmt|;
 if|if
 condition|(
@@ -2082,6 +2149,11 @@ argument_list|(
 literal|"IFCONF"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buffer
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -2089,6 +2161,16 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+do|while
+condition|(
+name|ifconfs
+operator|.
+name|ifc_len
+operator|>
+name|oldbufsize
+condition|)
+do|;
 name|ifrp
 operator|=
 name|ifconfs
@@ -2191,6 +2273,11 @@ name|IfIndex
 operator|=
 name|index
 expr_stmt|;
+name|free
+argument_list|(
+name|buffer
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|index
@@ -2229,6 +2316,11 @@ block|}
 name|close
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buffer
 argument_list|)
 expr_stmt|;
 return|return
