@@ -2792,12 +2792,6 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|unlock_things
-argument_list|(
-operator|&
-name|fs
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Sanity check: page must be completely valid or it is not fit to 	 * map into user space.  vm_pager_get_pages() ensures this. 	 */
 if|if
 condition|(
@@ -2829,6 +2823,12 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|unlock_things
+argument_list|(
+operator|&
+name|fs
+argument_list|)
+expr_stmt|;
 name|pmap_enter
 argument_list|(
 name|fs
@@ -3294,11 +3294,6 @@ operator|=
 name|backing_object
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|lobject
-argument_list|)
-expr_stmt|;
 comment|/* 		 * give-up when a page is not in memory 		 */
 if|if
 condition|(
@@ -3306,7 +3301,14 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|lobject
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3376,6 +3378,11 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|lobject
+argument_list|)
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_enter_quick
@@ -3389,6 +3396,11 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|lobject
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3400,6 +3412,11 @@ expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|lobject
+argument_list|)
 expr_stmt|;
 block|}
 block|}
