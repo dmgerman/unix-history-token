@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -102,26 +102,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|isascii
-parameter_list|(
-name|c
-parameter_list|)
-value|((unsigned)(c)<= 0177)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isblank
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) == '\t' || (c) == ' ')
-end_define
-
-begin_define
-define|#
-directive|define
 name|iscntrl
 parameter_list|(
 name|c
@@ -212,16 +192,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|toascii
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)& 0177)
-end_define
-
-begin_define
-define|#
-directive|define
 name|tolower
 parameter_list|(
 name|c
@@ -238,6 +208,57 @@ name|c
 parameter_list|)
 value|((c) - 'a' + 'A')
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|isascii
+parameter_list|(
+name|c
+parameter_list|)
+value|((unsigned)(c)<= 0177)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isblank
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == '\t' || (c) == ' ')
+end_define
+
+begin_define
+define|#
+directive|define
+name|toascii
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)& 0177)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
