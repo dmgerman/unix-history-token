@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -692,6 +692,10 @@ argument_list|,
 name|bn
 argument_list|,
 name|nsize
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bp
@@ -886,6 +890,10 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bp
@@ -1132,6 +1140,10 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -1302,6 +1314,10 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -1434,6 +1450,10 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nbp
