@@ -2436,7 +2436,7 @@ operator|>
 literal|0
 condition|)
 break|break;
-comment|/* 			 * Unlock the pipe buffer for our remaining processing.  			 * We will either break out with an error or we will 			 * sleep and relock to loop. 			 */
+comment|/* 			 * Unlock the pipe buffer for our remaining processing. 			 * We will either break out with an error or we will 			 * sleep and relock to loop. 			 */
 name|pipeunlock
 argument_list|(
 name|rpipe
@@ -4315,7 +4315,7 @@ goto|goto
 name|retrywrite
 goto|;
 block|}
-comment|/*  				 * If a process blocked in uiomove, our 				 * value for space might be bad. 				 * 				 * XXX will we be ok if the reader has gone 				 * away here? 				 */
+comment|/* 				 * If a process blocked in uiomove, our 				 * value for space might be bad. 				 * 				 * XXX will we be ok if the reader has gone 				 * away here? 				 */
 if|if
 condition|(
 name|space
@@ -4362,7 +4362,7 @@ name|size
 operator|=
 name|space
 expr_stmt|;
-comment|/* 				 * First segment to transfer is minimum of  				 * transfer size and contiguous space in 				 * pipe buffer.  If first segment to transfer 				 * is less than the transfer size, we've got 				 * a wraparound in the buffer. 				 */
+comment|/* 				 * First segment to transfer is minimum of 				 * transfer size and contiguous space in 				 * pipe buffer.  If first segment to transfer 				 * is less than the transfer size, we've got 				 * a wraparound in the buffer. 				 */
 name|segsize
 operator|=
 name|wpipe
@@ -4432,7 +4432,7 @@ operator|<
 name|size
 condition|)
 block|{
-comment|/*  					 * Transfer remaining part now, to 					 * support atomic writes.  Wraparound 					 * happened. 					 */
+comment|/* 					 * Transfer remaining part now, to 					 * support atomic writes.  Wraparound 					 * happened. 					 */
 if|if
 condition|(
 name|wpipe
