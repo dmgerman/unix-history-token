@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.7 1995/07/04 15:12:53 shun Exp $  */
+comment|/*  * Copyright (c) 1995 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.1 1995/10/31 17:25:58 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -344,7 +344,7 @@ name|dk_slices
 decl_stmt|;
 comment|/* virtual drives */
 name|struct
-name|buf
+name|buf_queue_head
 name|buf_queue
 decl_stmt|;
 name|int
@@ -849,6 +849,14 @@ operator|->
 name|opennings
 operator|=
 name|ODOUTSTANDING
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|od
+operator|->
+name|buf_queue
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
 name|od_get_parms
@@ -1614,11 +1622,6 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
 name|u_int32
 name|opri
 decl_stmt|;
@@ -1718,13 +1721,6 @@ operator|=
 name|SPLOD
 argument_list|()
 expr_stmt|;
-name|dp
-operator|=
-operator|&
-name|od
-operator|->
-name|buf_queue
-expr_stmt|;
 comment|/* 	 * Use a bounce buffer if necessary 	 */
 ifdef|#
 directive|ifdef
@@ -1745,11 +1741,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Place it in the queue of disk activities for this disk 	 */
-name|disksort
+name|TAILQ_INSERT_TAIL
 argument_list|(
-name|dp
+operator|&
+name|od
+operator|->
+name|buf_queue
 argument_list|,
 name|bp
+argument_list|,
+name|b_act
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Tell the device to get going on the transfer if it's 	 * not doing anything, otherwise just wait for completion 	 */
@@ -1865,11 +1866,6 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
-name|struct
 name|scsi_rw_big
 name|cmd
 decl_stmt|;
@@ -1910,22 +1906,17 @@ block|{
 return|return;
 block|}
 comment|/* 		 * See if there is a buf with work for us to do.. 		 */
-name|dp
+name|bp
 operator|=
-operator|&
 name|od
 operator|->
 name|buf_queue
+operator|.
+name|tqh_first
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
-operator|=
-name|dp
-operator|->
-name|b_actf
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -1933,13 +1924,17 @@ block|{
 comment|/* yes, an assign */
 return|return;
 block|}
-name|dp
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|od
 operator|->
-name|b_actf
-operator|=
+name|buf_queue
+argument_list|,
 name|bp
-operator|->
-name|b_actf
+argument_list|,
+name|b_act
+argument_list|)
 expr_stmt|;
 comment|/* 		 *  If the device has become invalid, abort all the 		 * reads and writes until all files have been closed and 		 * re-openned 		 */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.68 1995/10/21 23:13:09 phk Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.69 1995/11/06 08:19:24 davidg Exp $  */
 end_comment
 
 begin_define
@@ -343,7 +343,7 @@ name|dk_slices
 decl_stmt|;
 comment|/* virtual drives */
 name|struct
-name|buf
+name|buf_queue_head
 name|buf_queue
 decl_stmt|;
 name|int
@@ -853,6 +853,14 @@ operator|->
 name|opennings
 operator|=
 name|SDOUTSTANDING
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sd
+operator|->
+name|buf_queue
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
 name|sd_get_parms
@@ -1581,11 +1589,6 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
 name|u_int32
 name|opri
 decl_stmt|;
@@ -1694,13 +1697,6 @@ operator|=
 name|SPLSD
 argument_list|()
 expr_stmt|;
-name|dp
-operator|=
-operator|&
-name|sd
-operator|->
-name|buf_queue
-expr_stmt|;
 comment|/* 	 * Use a bounce buffer if necessary 	 */
 ifdef|#
 directive|ifdef
@@ -1721,11 +1717,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Place it in the queue of disk activities for this disk 	 */
-name|disksort
+name|TAILQ_INSERT_TAIL
 argument_list|(
-name|dp
+operator|&
+name|sd
+operator|->
+name|buf_queue
 argument_list|,
 name|bp
+argument_list|,
+name|b_act
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Tell the device to get going on the transfer if it's 	 * not doing anything, otherwise just wait for completion 	 */
@@ -1841,11 +1842,6 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
-name|struct
 name|scsi_rw_big
 name|cmd
 decl_stmt|;
@@ -1886,22 +1882,17 @@ block|{
 return|return;
 block|}
 comment|/* 		 * See if there is a buf with work for us to do.. 		 */
-name|dp
+name|bp
 operator|=
-operator|&
 name|sd
 operator|->
 name|buf_queue
+operator|.
+name|tqh_first
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
-operator|=
-name|dp
-operator|->
-name|b_actf
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -1909,19 +1900,17 @@ block|{
 comment|/* yes, an assign */
 return|return;
 block|}
-name|dp
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|sd
 operator|->
-name|b_actf
-operator|=
+name|buf_queue
+argument_list|,
 name|bp
-operator|->
-name|b_actf
-expr_stmt|;
-name|bp
-operator|->
-name|b_actf
-operator|=
-name|NULL
+argument_list|,
+name|b_act
+argument_list|)
 expr_stmt|;
 comment|/* 		 *  If the device has become invalid, abort all the 		 * reads and writes until all files have been closed and 		 * re-openned 		 */
 if|if
