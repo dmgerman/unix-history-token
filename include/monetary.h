@@ -54,7 +54,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SIZE_T_DECLARED
+name|_SSIZE_T_DECLARED
 end_ifndef
 
 begin_typedef
@@ -67,7 +67,7 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|_SIZE_T_DECLARED
+name|_SSIZE_T_DECLARED
 end_define
 
 begin_endif
@@ -82,12 +82,14 @@ name|strfmon
 parameter_list|(
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|size_t
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 modifier|...
 parameter_list|)
