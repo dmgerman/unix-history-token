@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pnet.c	4.1 (Berkeley) %G%"
+literal|"@(#)pnet.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,11 @@ name|flds
 index|[
 name|F_PHONE
 index|]
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
