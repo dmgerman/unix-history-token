@@ -382,7 +382,11 @@ comment|/* calculated bandwidth or 0 */
 name|tcp_seq
 name|snd_recover
 decl_stmt|;
-comment|/* for use in fast recovery */
+comment|/* for use in NewReno Fast Recovery */
+name|tcp_seq
+name|snd_high
+decl_stmt|;
+comment|/* for use in NewReno Fast Recovery */
 name|u_int
 name|t_maxopd
 decl_stmt|;
@@ -513,6 +517,10 @@ name|u_long
 name|snd_ssthresh_prev
 decl_stmt|;
 comment|/* ssthresh prior to retransmit */
+name|tcp_seq
+name|snd_high_prev
+decl_stmt|;
+comment|/* snd_high prior to retransmit */
 name|u_long
 name|t_badrxtwin
 decl_stmt|;

@@ -2038,6 +2038,14 @@ name|snd_ssthresh
 expr_stmt|;
 name|tp
 operator|->
+name|snd_high_prev
+operator|=
+name|tp
+operator|->
+name|snd_high
+expr_stmt|;
+name|tp
+operator|->
 name|t_badrxtwin
 operator|=
 name|ticks
@@ -2217,10 +2225,9 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
-comment|/* 	 * Note:  We overload snd_recover to function also as the 	 * snd_last variable described in RFC 2582 	 */
 name|tp
 operator|->
-name|snd_recover
+name|snd_high
 operator|=
 name|tp
 operator|->
