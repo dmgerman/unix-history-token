@@ -881,7 +881,7 @@ define|#
 directive|define
 name|IPQ_LOCK_INIT
 parameter_list|()
-value|mtx_init(&ipqlock, "ipqlock", NULL, MTX_DEF);
+value|mtx_init(&ipqlock, "ipqlock", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -889,7 +889,7 @@ define|#
 directive|define
 name|IPQ_LOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&ipqlock, MA_OWNED);
+value|mtx_assert(&ipqlock, MA_OWNED)
 end_define
 
 begin_ifdef
