@@ -1083,6 +1083,9 @@ decl_stmt|;
 name|uint8_t
 name|tpc
 decl_stmt|;
+name|uint8_t
+name|txidle
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1495,6 +1498,13 @@ name|TPC_RTS
 operator|)
 expr_stmt|;
 block|}
+name|z8530
+operator|->
+name|txidle
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Report UART_IPEND_TXIDLE. */
 name|sc
 operator|->
 name|sc_rxfifosz
@@ -1881,6 +1891,18 @@ name|sc
 parameter_list|)
 block|{
 name|struct
+name|z8530_softc
+modifier|*
+name|z8530
+init|=
+operator|(
+expr|struct
+name|z8530_softc
+operator|*
+operator|)
+name|sc
+decl_stmt|;
+name|struct
 name|uart_bas
 modifier|*
 name|bas
@@ -1964,6 +1986,10 @@ condition|(
 name|bes
 operator|&
 name|BES_TXE
+operator|&&
+name|z8530
+operator|->
+name|txidle
 condition|)
 block|{
 name|uart_setreg
@@ -1979,6 +2005,13 @@ name|ipend
 operator||=
 name|UART_IPEND_TXIDLE
 expr_stmt|;
+name|z8530
+operator|->
+name|txidle
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Suppress UART_IPEND_TXIDLE. */
 block|}
 if|if
 condition|(
@@ -2690,6 +2723,18 @@ name|sc
 parameter_list|)
 block|{
 name|struct
+name|z8530_softc
+modifier|*
+name|z8530
+init|=
+operator|(
+expr|struct
+name|z8530_softc
+operator|*
+operator|)
+name|sc
+decl_stmt|;
+name|struct
 name|uart_bas
 modifier|*
 name|bas
@@ -2749,6 +2794,13 @@ name|sc_txbusy
 operator|=
 literal|1
 expr_stmt|;
+name|z8530
+operator|->
+name|txidle
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Report UART_IPEND_TXIDLE again. */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
