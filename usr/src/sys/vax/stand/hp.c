@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	6.3	83/09/23	*/
+comment|/*	hp.c	6.4	84/02/06	*/
 end_comment
 
 begin_comment
@@ -641,6 +641,17 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|st
+operator|=
+operator|&
+name|hpst
+index|[
+name|hp_type
+index|[
+name|unit
+index|]
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|io

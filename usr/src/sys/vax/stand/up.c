@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	6.2	83/09/23	*/
+comment|/*	up.c	6.3	84/02/06	*/
 end_comment
 
 begin_comment
@@ -578,6 +578,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|st
+operator|=
+operator|&
+name|upst
+index|[
+name|up_type
+index|[
+name|unit
+index|]
+index|]
+expr_stmt|;
 name|io
 operator|->
 name|i_boff
