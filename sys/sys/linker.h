@@ -313,6 +313,26 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Obtain a reference to a module, loading it if required.  */
+end_comment
+
+begin_function_decl
+name|int
+name|linker_reference_module
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|_modname
+parameter_list|,
+name|linker_file_t
+modifier|*
+name|_result
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Find a currently loaded file given its filename.  */
 end_comment
 
