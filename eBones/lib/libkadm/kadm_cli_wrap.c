@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid_kadm_cli_wrap_c[] = "from: Id: kadm_cli_wrap.c,v 4.6 89/12/30 20:09:45 qjb Exp"; static const char rcsid[] = 	"$Id: kadm_cli_wrap.c,v 1.4 1995/09/07 21:38:47 markm Exp $";
+unit|static char rcsid_kadm_cli_wrap_c[] = "from: Id: kadm_cli_wrap.c,v 4.6 89/12/30 20:09:45 qjb Exp"; static const char rcsid[] = 	"$Id: kadm_cli_wrap.c,v 1.5 1995/10/05 21:29:35 gibbs Exp $";
 endif|#
 directive|endif
 endif|lint
@@ -2357,7 +2357,7 @@ operator|)
 operator|&
 name|client_parm
 operator|.
-name|admin_addr
+name|my_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
