@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  ******************************  trlld.h  ***********************************  *  *                          Copyright (c) 1997  *                          OLICOM A/S  *                          Denmark  *  *                          All Rights Reserved  *  *      This source file is subject to the terms and conditions of the  *      OLICOM Software License Agreement which restricts the manner  *      in which it may be used.  *  *---------------------------------------------------------------------------  *  * Description: PowerMACH Works header file  *  *---------------------------------------------------------------------------  * $Log:   O:/USR/PROJECT/trlld/libsrc/include/trlld.h_v  $  *   *    Rev 1.8   10 Dec 1998 12:24:52   JHM  * version 1.2.0,prominfo structure with shorts.  *   *    Rev 1.7   25 Nov 1998 16:18:48   JHM  * Bullseye mac, 100MBPS, mactype in config structure,  * 3540 adapter, TRlldTransmitFree, TRlldReceiveFree,  * TRlldAdapterName  *   *    Rev 1.6   23 Oct 1998 16:00:36   JHM  * hawkeye adapter types  *   *    Rev 1.5   11 Aug 1998 12:22:06   JHM  * split hawkeye types into PCI4,5,6  *   *    Rev 1.4   10 Jul 1998 14:39:22   JHM  * OC_3140,OC_3250  *   *    Rev 1.3   18 Jun 1998 11:32:20   JHM  * AddMemory,OC_3250  *   *    Rev 1.2   18 Apr 1998 15:11:20   JHM  *   *    Rev 1.1   09 Dec 1997 18:17:52   JHM  * rel111: TRlldDataPtr_t  *   *    Rev 1.0   24 Nov 1997 11:08:58   JHM  * Initial revision.           Rev 1.5   18 Jun 1997 11:31:36   JHM    Checks for version           Rev 1.4   13 Jun 1997 13:47:34   JHM           Rev 1.3   13 Jun 1997 13:27:56   JHM    DTR support, version change           Rev 1.2   12 Jun 1997 11:43:20   JHM    TRLLD_INTERRUPT_TIMEOUT defined           Rev 1.1   11 Apr 1997 15:24:18   JHM    replaced tabs with spaces           Rev 1.0   11 Apr 1997 14:43:04   JHM    Initial revision.  *  **************************************************************************** */
+comment|/*  ******************************  trlld.h  ***********************************  *  *                          Copyright (c) 1997  *                          OLICOM A/S  *                          Denmark  *  *                          All Rights Reserved  *  *      This source file is subject to the terms and conditions of the  *      OLICOM Software License Agreement which restricts the manner  *      in which it may be used.  *  *---------------------------------------------------------------------------  *  * Description: PowerMACH Works header file  * $FreeBSD$  *  *---------------------------------------------------------------------------  * $Log:   J:/usr/project/trlld/libsrc/include/trlld.h_v  $  *   *    Rev 1.9   25 Jan 1999 09:56:28   EGS  * Added 3150  *   *    Rev 1.8   10 Dec 1998 12:24:52   JHM  * version 1.2.0,prominfo structure with shorts.  *   *    Rev 1.7   25 Nov 1998 16:18:48   JHM  * Bullseye mac, 100MBPS, mactype in config structure,  * 3540 adapter, TRlldTransmitFree, TRlldReceiveFree,  * TRlldAdapterName  *   *    Rev 1.6   23 Oct 1998 16:00:36   JHM  * hawkeye adapter types  *   *    Rev 1.5   11 Aug 1998 12:22:06   JHM  * split hawkeye types into PCI4,5,6  *   *    Rev 1.4   10 Jul 1998 14:39:22   JHM  * OC_3140,OC_3250  *   *    Rev 1.3   18 Jun 1998 11:32:20   JHM  * AddMemory,OC_3250  *   *    Rev 1.2   18 Apr 1998 15:11:20   JHM  *   *    Rev 1.1   09 Dec 1997 18:17:52   JHM  * rel111: TRlldDataPtr_t  *   *    Rev 1.0   24 Nov 1997 11:08:58   JHM  * Initial revision.           Rev 1.5   18 Jun 1997 11:31:36   JHM    Checks for version           Rev 1.4   13 Jun 1997 13:47:34   JHM           Rev 1.3   13 Jun 1997 13:27:56   JHM    DTR support, version change           Rev 1.2   12 Jun 1997 11:43:20   JHM    TRLLD_INTERRUPT_TIMEOUT defined           Rev 1.1   11 Apr 1997 15:24:18   JHM    replaced tabs with spaces           Rev 1.0   11 Apr 1997 14:43:04   JHM    Initial revision.  *  **************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -162,7 +162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 3540                   */
+comment|/* 3150,3540              */
 end_comment
 
 begin_comment
@@ -2030,6 +2030,17 @@ begin_comment
 comment|/* OC-3540 id 108d0008 rev 1 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TRLLD_ADAPTER_PCI8
+value|20
+end_define
+
+begin_comment
+comment|/* OC-3150 id 108d000a rev 1 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2455,7 +2466,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* BUllseye adapter */
+comment|/* Bullseye adapters */
 end_comment
 
 begin_define
@@ -2613,12 +2624,28 @@ begin_decl_stmt
 specifier|extern
 name|TRlldAdapterType_t
 name|CDECL
+name|TRlld3150Boot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|TRlldAdapterType_t
+name|CDECL
+name|TRlld3250Boot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|TRlldAdapterType_t
+name|CDECL
 name|TRlld3540Boot
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Bullseye adapters */
+comment|/* Bullseye adapter */
 end_comment
 
 begin_define
@@ -2675,6 +2702,20 @@ define|#
 directive|define
 name|B3139
 value|&TRlld3139Boot
+end_define
+
+begin_define
+define|#
+directive|define
+name|B3150
+value|&TRlld3150Boot
+end_define
+
+begin_define
+define|#
+directive|define
+name|B3250
+value|&TRlld3250Boot
 end_define
 
 begin_define
@@ -3658,6 +3699,13 @@ define|#
 directive|define
 name|OC_3540
 value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|OC_3150
+value|0x1000
 end_define
 
 begin_ifdef

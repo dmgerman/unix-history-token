@@ -1,25 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  ******************************  trlld.h  ***********************************  *  *                          Copyright (c) 1997  *                          OLICOM A/S  *                          Denmark  *  *                          All Rights Reserved  *  *      This source file is subject to the terms and conditions of the  *      OLICOM Software License Agreement which restricts the manner  *      in which it may be used.  *  *---------------------------------------------------------------------------  *  * Description: Olicom TMS-380 adapter microcode  *  *---------------------------------------------------------------------------  */
+comment|/*  * $FreeBSD$  *  *      Copyright (c) 1997  *      OLICOM A/S  *      Denmark  *  *      All Rights Reserved  *  *      This source file is subject to the terms and conditions of the  *      OLICOM Software License Agreement which restricts the manner  *      in which it may be used.  *  *---------------------------------------------------------------------------  *  *      Description: Olicom adapter micro-code  *  *---------------------------------------------------------------------------  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_oltr.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OLTR_NO_TMS_MAC
-end_ifndef
 
 begin_decl_stmt
 name|unsigned
 name|char
 name|TRlldMacCode
 index|[]
+name|__attribute
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|2
+argument_list|)
+operator|)
+argument_list|)
 init|=
 block|{
 literal|0x52
@@ -62868,15 +62865,6 @@ literal|0x00
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OLTR_NO_TMS_MAC */
-end_comment
 
 end_unit
 
