@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.4	83/08/19  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
+comment|/* vsort.c	1.5	83/09/23  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
 end_comment
 
 begin_include
@@ -118,12 +118,27 @@ name|HALF
 value|(INCH/2)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUGABLE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|BAND
 value|3
 end_define
+
+begin_comment
+comment|/* or defined below.... */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -183,6 +198,14 @@ end_decl_stmt
 begin_comment
 comment|/* debug flag != 0 means do debug output */
 end_comment
+
+begin_decl_stmt
+name|float
+name|BAND
+init|=
+literal|3.0
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -480,6 +503,10 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|double
+name|atof
+parameter_list|()
+function_decl|;
 name|vlp
 operator|=
 operator|&
@@ -541,6 +568,24 @@ break|break;
 ifdef|#
 directive|ifdef
 name|DEBUGABLE
+case|case
+literal|'B'
+case|:
+name|BAND
+operator|=
+name|atof
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
