@@ -1,11 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)rpc_scan.c	2.1 88/08/01 4.0 RPCSRC */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
-begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
-end_comment
+begin_empty
+empty|#ident	"@(#)rpc_scan.c	1.13	93/07/05 SMI"
+end_empty
 
 begin_ifndef
 ifndef|#
@@ -13,17 +13,13 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)rpc_scan.c 1.6 87/06/24 (C) 1987 SMI";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Id: rpc_scan.c,v 1.1 1994/08/07 18:01:34 wollman Exp $"
+literal|"@(#)rpc_scan.c 1.11 89/02/22 (C) 1987 SMI"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,8 +29,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * rpc_scan.c, Scanner for the RPC protocol compiler  * Copyright (C) 1987, Sun Microsystems, Inc.  */
+comment|/*  * rpc_scan.c, Scanner for the RPC protocol compiler   * Copyright (C) 1987, Sun Microsystems, Inc.   */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
 
 begin_include
 include|#
@@ -51,13 +53,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"rpc_scan.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rpc_parse.h"
 end_include
 
 begin_include
@@ -114,33 +122,156 @@ begin_decl_stmt
 specifier|static
 name|int
 name|unget_token
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|token
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|findstrconst
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|findchrconst
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|findconst
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|findkind
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|token
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|cppline
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|directive
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|printdirective
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|docppline
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * scan expecting 1 given token  */
+comment|/*  * scan expecting 1 given token   */
 end_comment
 
 begin_function
@@ -183,7 +314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * scan expecting 2 given tokens  */
+comment|/*  * scan expecting any of the 2 given tokens   */
 end_comment
 
 begin_function
@@ -239,7 +370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * scan expecting 3 given token  */
+comment|/*  * scan expecting any of the 3 given token   */
 end_comment
 
 begin_function
@@ -308,7 +439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * scan expecting a constant, possibly symbolic  */
+comment|/*  * scan expecting a constant, possibly symbolic   */
 end_comment
 
 begin_function
@@ -349,7 +480,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Peek at the next token  */
+comment|/*  * Peek at the next token   */
 end_comment
 
 begin_function
@@ -377,7 +508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Peek at the next token and scan it if it matches what you expect  */
+comment|/*  * Peek at the next token and scan it if it matches what you expect   */
 end_comment
 
 begin_function
@@ -430,7 +561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the next token, printing out any directive that are encountered.  */
+comment|/*  * Get the next token, printing out any directive that are encountered.   */
 end_comment
 
 begin_function
@@ -446,6 +577,11 @@ decl_stmt|;
 block|{
 name|int
 name|commenting
+decl_stmt|;
+name|int
+name|stat
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -506,6 +642,32 @@ name|kind
 operator|=
 name|TOK_EOF
 expr_stmt|;
+comment|/* now check if cpp returned non NULL value */
+name|waitpid
+argument_list|(
+name|childpid
+argument_list|,
+operator|&
+name|stat
+argument_list|,
+name|WUNTRACED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Set return value from rpcgen */
+name|nonfatalerrors
+operator|=
+name|stat
+operator|>>
+literal|8
+expr_stmt|;
+block|}
 operator|*
 name|where
 operator|=
@@ -600,9 +762,18 @@ condition|(
 name|commenting
 condition|)
 block|{
+for|for
+control|(
 name|where
 operator|++
-expr_stmt|;
+init|;
+operator|*
+name|where
+condition|;
+name|where
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|endcomment
@@ -617,6 +788,8 @@ expr_stmt|;
 name|commenting
 operator|--
 expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 elseif|else
@@ -641,7 +814,7 @@ block|{
 break|break;
 block|}
 block|}
-comment|/* 	 * 'where' is not whitespace, comment or directive Must be a token! 	 */
+comment|/* 	 * 'where' is not whitespace, comment or directive Must be a token!  	 */
 switch|switch
 condition|(
 operator|*
@@ -827,6 +1000,27 @@ operator|=
 name|TOK_STRCONST
 expr_stmt|;
 name|findstrconst
+argument_list|(
+operator|&
+name|where
+argument_list|,
+operator|&
+name|tokp
+operator|->
+name|str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'\''
+case|:
+name|tokp
+operator|->
+name|kind
+operator|=
+name|TOK_CHARCONST
+expr_stmt|;
+name|findchrconst
 argument_list|(
 operator|&
 name|where
@@ -1134,6 +1328,140 @@ end_block
 
 begin_expr_stmt
 specifier|static
+name|findchrconst
+argument_list|(
+argument|str
+argument_list|,
+argument|val
+argument_list|)
+name|char
+operator|*
+operator|*
+name|str
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|val
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|size
+decl_stmt|;
+name|p
+operator|=
+operator|*
+name|str
+expr_stmt|;
+do|do
+block|{
+operator|*
+name|p
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|*
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\''
+condition|)
+do|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"unterminated string constant"
+argument_list|)
+expr_stmt|;
+block|}
+name|p
+operator|++
+expr_stmt|;
+name|size
+operator|=
+name|p
+operator|-
+operator|*
+name|str
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|!=
+literal|3
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"empty char string"
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|val
+operator|=
+name|alloc
+argument_list|(
+name|size
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+operator|*
+name|val
+argument_list|,
+operator|*
+name|str
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|val
+operator|)
+index|[
+name|size
+index|]
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|str
+operator|=
+name|p
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+specifier|static
 name|findconst
 argument_list|(
 argument|str
@@ -1376,6 +1704,12 @@ literal|"long"
 block|}
 block|,
 block|{
+name|TOK_HYPER
+block|,
+literal|"hyper"
+block|}
+block|,
+block|{
 name|TOK_FLOAT
 block|,
 literal|"float"
@@ -1385,6 +1719,12 @@ block|{
 name|TOK_DOUBLE
 block|,
 literal|"double"
+block|}
+block|,
+block|{
+name|TOK_QUAD
+block|,
+literal|"quadruple"
 block|}
 block|,
 block|{
