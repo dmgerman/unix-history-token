@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.19 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,11 +132,19 @@ begin_comment
 comment|/*  * Disklabel: read and write disklabels.  * The label is usually placed on one of the first sectors of the disk.  * Many machines (VAX 11/750) also place a bootstrap in the same area,  * in which case the label is embedded in the bootstrap.  * The bootstrap source must leave space at the proper offset  * for the label on such machines.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -184,11 +192,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
 
 begin_define
 define|#
