@@ -79,7 +79,7 @@ name|char
 name|w
 index|[]
 init|=
-literal|"warning: this program uses gets(), which is unsafe.\r\n"
+literal|"warning: this program uses gets(), which is unsafe.\n"
 decl_stmt|;
 if|if
 condition|(
