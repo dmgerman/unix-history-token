@@ -917,7 +917,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 expr_stmt|;
 comment|/* this uses SIGSTOP */
 break|break;
@@ -1328,7 +1328,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 expr_stmt|;
 name|setrunnable
 argument_list|(

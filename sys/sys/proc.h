@@ -1768,7 +1768,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 value|0x20000
 end_define
 
@@ -1790,12 +1790,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 value|0x80000
 end_define
 
 begin_comment
-comment|/* Only one thread can continue (not to user) */
+comment|/* Only one thread can continue */
+end_comment
+
+begin_comment
+comment|/* (not to user) */
 end_comment
 
 begin_define
@@ -1806,7 +1810,11 @@ value|0x00400
 end_define
 
 begin_comment
-comment|/* Threads suspending should exit, not wait */
+comment|/* Threads suspending should exit, */
+end_comment
+
+begin_comment
+comment|/* not wait */
 end_comment
 
 begin_define
@@ -1824,7 +1832,7 @@ begin_define
 define|#
 directive|define
 name|P_STOPPED
-value|(P_STOPPED_SGNL|P_STOPPED_SNGL|P_STOPPED_TRACE)
+value|(P_STOPPED_SIG|P_STOPPED_SINGLE|P_STOPPED_TRACE)
 end_define
 
 begin_define
@@ -4046,7 +4054,7 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|SNGLE_NO_EXIT
+name|SINGLE_NO_EXIT
 value|0
 end_define
 
@@ -4057,7 +4065,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SNGLE_EXIT
+name|SINGLE_EXIT
 value|1
 end_define
 

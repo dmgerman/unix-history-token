@@ -1334,7 +1334,7 @@ operator|->
 name|kg_numthreads
 operator|--
 expr_stmt|;
-comment|/* 	 * The test below is NOT true if we are the 	 * sole exiting thread. P_STOPPED_SNGL is unset 	 * in exit1() after it is the only survivor. 	 */
+comment|/* 	 * The test below is NOT true if we are the 	 * sole exiting thread. P_STOPPED_SINGLE is unset 	 * in exit1() after it is the only survivor. 	 */
 if|if
 condition|(
 name|P_SHOULDSTOP
@@ -1342,7 +1342,7 @@ argument_list|(
 name|p
 argument_list|)
 operator|==
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 condition|)
 block|{
 if|if
@@ -2061,7 +2061,7 @@ if|if
 condition|(
 name|force_exit
 operator|==
-name|SNGLE_EXIT
+name|SINGLE_EXIT
 condition|)
 name|p
 operator|->
@@ -2081,7 +2081,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 expr_stmt|;
 name|p
 operator|->
@@ -2132,7 +2132,7 @@ if|if
 condition|(
 name|force_exit
 operator|==
-name|SNGLE_EXIT
+name|SINGLE_EXIT
 condition|)
 block|{
 name|mtx_lock_spin
@@ -2330,7 +2330,7 @@ argument_list|(
 name|p
 argument_list|)
 operator|==
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 condition|)
 block|{
 name|KASSERT
@@ -2371,7 +2371,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 		 * If the process is waiting for us to exit, 		 * this thread should just suicide. 		 * Assumes that P_SINGLE_EXIT implies P_STOPPED_SNGL. 		 */
+comment|/* 		 * If the process is waiting for us to exit, 		 * this thread should just suicide. 		 * Assumes that P_SINGLE_EXIT implies P_STOPPED_SINGLE. 		 */
 if|if
 condition|(
 operator|(
@@ -2429,7 +2429,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 operator|)
 operator|&&
 operator|(
@@ -2542,7 +2542,7 @@ argument_list|(
 name|p
 argument_list|)
 operator|==
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 condition|)
 block|{
 if|if
@@ -2841,7 +2841,7 @@ argument_list|(
 name|p
 argument_list|)
 operator|==
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 operator|)
 operator|&&
 operator|(
@@ -2906,7 +2906,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 expr_stmt|;
 name|p
 operator|->

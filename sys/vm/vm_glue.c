@@ -2382,7 +2382,7 @@ operator|->
 name|p_flag
 operator|&
 operator|(
-name|P_STOPPED_SNGL
+name|P_STOPPED_SINGLE
 operator||
 name|P_TRACED
 operator||

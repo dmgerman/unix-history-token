@@ -1125,7 +1125,7 @@ if|if
 condition|(
 name|thread_single
 argument_list|(
-name|SNGLE_NO_EXIT
+name|SINGLE_NO_EXIT
 argument_list|)
 condition|)
 block|{

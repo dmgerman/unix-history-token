@@ -487,7 +487,7 @@ if|if
 condition|(
 name|thread_single
 argument_list|(
-name|SNGLE_EXIT
+name|SINGLE_EXIT
 argument_list|)
 condition|)
 block|{

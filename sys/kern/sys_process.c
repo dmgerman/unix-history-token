@@ -1964,7 +1964,7 @@ operator|~
 operator|(
 name|P_STOPPED_TRACE
 operator||
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 operator|)
 expr_stmt|;
 name|setrunnable

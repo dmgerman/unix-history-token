@@ -6370,7 +6370,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 expr_stmt|;
 name|p
 operator|->
@@ -6442,7 +6442,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 expr_stmt|;
 name|SIGDELSET
 argument_list|(
@@ -7725,7 +7725,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|P_STOPPED_SGNL
+name|P_STOPPED_SIG
 expr_stmt|;
 name|p
 operator|->
