@@ -569,11 +569,6 @@ modifier|*
 name|vm_shm
 decl_stmt|;
 comment|/* SYS5 shared memory private data XXX */
-comment|/* we copy between vm_startcopy and vm_endcopy on fork */
-define|#
-directive|define
-name|vm_startcopy
-value|vm_swrss
 name|segsz_t
 name|vm_swrss
 decl_stmt|;
@@ -602,10 +597,6 @@ name|caddr_t
 name|vm_maxsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
-define|#
-directive|define
-name|vm_endcopy
-value|vm_exitingcnt
 name|int
 name|vm_exitingcnt
 decl_stmt|;
