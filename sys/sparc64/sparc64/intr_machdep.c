@@ -521,6 +521,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|intr_setup
 argument_list|(
 name|PIL_LOW
@@ -535,12 +536,14 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
-name|uintptr_t
-operator|)
+operator|&
+name|intr_vectors
+index|[
 name|i
+index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
