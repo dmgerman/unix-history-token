@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.11 (Berkeley) %G%"
+literal|"@(#)io.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,30 +1283,6 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|paren_target
-operator|=
-operator|(
-name|ps
-operator|.
-name|paren_level
-operator|>
-literal|0
-condition|?
-operator|-
-name|ps
-operator|.
-name|paren_indents
-index|[
-name|ps
-operator|.
-name|paren_level
-operator|-
-literal|1
-index|]
-else|:
-literal|0
-operator|)
-expr_stmt|;
 name|not_first_line
 operator|=
 literal|1
@@ -1314,10 +1290,6 @@ expr_stmt|;
 return|return;
 block|}
 end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_macro
 name|compute_code_target
@@ -1608,12 +1580,6 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|-
-name|in_buffer
-operator|>
-literal|3
-operator|&&
 name|p
 index|[
 operator|-
@@ -1958,10 +1924,6 @@ return|return;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *   * All rights reserved  *   *   * NAME: pad_output  *   * FUNCTION: Writes tabs and spaces to move the current column up to the desired  * position.  *   * ALGORITHM: Put tabs and/or blanks into pobuf, then write pobuf.  *   * PARAMETERS: current		integer		The current column target  * nteger		The desired column  *   * RETURNS: Integer value of the new column.  (If current>= target, no action is  * taken, and current is returned.  *   * GLOBALS: None  *   * CALLS: write (sys)  *   * CALLED BY: dump_line  *   * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *   */
 end_comment
@@ -2109,10 +2071,6 @@ return|;
 block|}
 end_block
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *   * All rights reserved  *   *   * NAME: count_spaces  *   * FUNCTION: Find out where printing of a given string will leave the current  * character position on output.  *   * ALGORITHM: Run thru input string and add appropriate values to current  * position.  *   * RETURNS: Integer value of position after printing "buffer" starting in column  * "current".  *   * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *   */
 end_comment
@@ -2206,10 +2164,9 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'
-literal|'
+literal|010
 case|:
-comment|/* this is a backspace */
+comment|/* backspace */
 operator|--
 name|cur
 expr_stmt|;
@@ -2231,15 +2188,15 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
 name|int
 name|found_err
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* VARARGS2 */
+end_comment
 
 begin_macro
 name|diag

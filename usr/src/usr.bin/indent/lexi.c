@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.11 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ctype.h"
+file|<ctype.h>
 end_include
 
 begin_define
@@ -2295,10 +2295,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/*  * Add the given keyword to the keyword table, using val as the keyword type  */
