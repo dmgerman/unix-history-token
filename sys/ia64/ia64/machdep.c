@@ -2728,6 +2728,16 @@ comment|/* Get FPSWA interface */
 name|fpswa_interface
 operator|=
 operator|(
+name|bootinfo
+operator|.
+name|bi_fpswa
+operator|==
+literal|0
+operator|)
+condition|?
+name|NULL
+else|:
+operator|(
 name|FPSWA_INTERFACE
 operator|*
 operator|)
