@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)EXCEPT.c 1.1 %G%"
+literal|"@(#)EXCEPT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,8 +63,10 @@ argument_list|(
 literal|"Overflow, underflow, or division by zero in arithmetic operation\n"
 argument_list|)
 expr_stmt|;
+return|return;
 else|#
 directive|else
+comment|/* 	 * The values for this switch statement come from page 12-5 of 	 * Volume 1 of the 1978 VAX 11/780 Architecture Handbook 	 */
 switch|switch
 condition|(
 name|type
@@ -78,6 +80,7 @@ argument_list|(
 literal|"Integer overflow\n"
 argument_list|)
 expr_stmt|;
+return|return;
 case|case
 literal|2
 case|:
@@ -86,6 +89,7 @@ argument_list|(
 literal|"Integer division by zero\n"
 argument_list|)
 expr_stmt|;
+return|return;
 case|case
 literal|3
 case|:
@@ -94,6 +98,7 @@ argument_list|(
 literal|"Real overflow\n"
 argument_list|)
 expr_stmt|;
+return|return;
 case|case
 literal|4
 case|:
@@ -102,6 +107,7 @@ argument_list|(
 literal|"Real division by zero\n"
 argument_list|)
 expr_stmt|;
+return|return;
 case|case
 literal|5
 case|:
@@ -110,12 +116,14 @@ argument_list|(
 literal|"Real underflow\n"
 argument_list|)
 expr_stmt|;
+return|return;
 default|default:
 name|ERROR
 argument_list|(
 literal|"Panic: Computational error in interpreter\n"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 endif|#
 directive|endif
