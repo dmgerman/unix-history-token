@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.10 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.11 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.10 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.11 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1282,6 +1282,12 @@ case|case
 literal|'/'
 case|:
 comment|/* look up remote name */
+name|up
+operator|->
+name|udb_dbname
+operator|=
+name|spec
+expr_stmt|;
 name|up
 operator|->
 name|udb_dbp
