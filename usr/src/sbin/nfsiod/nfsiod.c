@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsiod.c	8.2 (Berkeley) %G%"
+literal|"@(#)nfsiod.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,7 @@ value|20
 define|#
 directive|define
 name|DEFNFSDCNT
-value|4
+value|1
 name|num_servers
 operator|=
 name|DEFNFSDCNT
