@@ -2188,6 +2188,32 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* This had probably better not go into a release. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|face
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|"\\|/ ____ \\|/"
+block|,
+literal|"\"@'/ .. \\`@\""
+block|,
+literal|"/_| \\__/ |_\\"
+block|,
+literal|"   \\__U_/   "
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  *  * MPSAFE  */
 end_comment
 
@@ -2205,6 +2231,10 @@ parameter_list|)
 block|{
 name|int
 name|bootopt
+decl_stmt|,
+name|i
+decl_stmt|,
+name|offset
 decl_stmt|;
 if|#
 directive|if
@@ -2305,12 +2335,45 @@ operator|=
 name|fmt
 expr_stmt|;
 comment|/* Test that the console is still working. */
+name|offset
+operator|=
+operator|(
+literal|60
+operator|+
+name|strlen
+argument_list|(
+name|face
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|4
+condition|;
+name|i
+operator|++
+control|)
 name|printf
 argument_list|(
-literal|"              \\|/ ____ \\|/\n"
-literal|"              \"@'/ .. \\`@\"\n"
-literal|"              /_| \\__/ |_\\\n"
-literal|"                 \\__U_/\n"
+literal|"%*s\n"
+argument_list|,
+name|offset
+argument_list|,
+name|face
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|va_start
