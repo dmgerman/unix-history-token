@@ -1310,8 +1310,6 @@ condition|(
 name|ATA_LOCK_CH
 argument_list|(
 name|ch
-argument_list|,
-name|ATA_CONTROL
 argument_list|)
 condition|)
 block|{

@@ -176,7 +176,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|ata_isa_lock
+name|ata_isa_locknoop
 parameter_list|(
 name|struct
 name|ata_channel
@@ -474,7 +474,7 @@ name|ch
 operator|->
 name|locking
 operator|=
-name|ata_isa_lock
+name|ata_isa_locknoop
 expr_stmt|;
 name|ch
 operator|->

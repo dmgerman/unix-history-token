@@ -623,7 +623,7 @@ name|dev
 expr_stmt|;
 name|ch
 operator|->
-name|state
+name|lock
 operator|=
 name|ATA_IDLE
 expr_stmt|;
@@ -1368,8 +1368,6 @@ expr_stmt|;
 name|ATA_FORCELOCK_CH
 argument_list|(
 name|ch
-argument_list|,
-name|ATA_CONTROL
 argument_list|)
 expr_stmt|;
 name|ch
@@ -1982,8 +1980,6 @@ expr_stmt|;
 name|ATA_SLEEPLOCK_CH
 argument_list|(
 name|ch
-argument_list|,
-name|ATA_CONTROL
 argument_list|)
 expr_stmt|;
 return|return

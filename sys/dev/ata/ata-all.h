@@ -1901,9 +1901,9 @@ directive|define
 name|ATA_ATAPI_SLAVE
 value|0x08
 name|int
-name|state
+name|lock
 decl_stmt|;
-comment|/* ATA channel state control */
+comment|/* ATA channel lock */
 define|#
 directive|define
 name|ATA_IDLE
@@ -1912,10 +1912,6 @@ define|#
 directive|define
 name|ATA_ACTIVE
 value|0x0001
-define|#
-directive|define
-name|ATA_CONTROL
-value|0x0002
 name|void
 function_decl|(
 modifier|*
@@ -2581,11 +2577,9 @@ directive|define
 name|ATA_LOCK_CH
 parameter_list|(
 name|ch
-parameter_list|,
-name|value
 parameter_list|)
 define|\
-value|atomic_cmpset_acq_int(&(ch)->state, ATA_IDLE, (value))
+value|atomic_cmpset_acq_int(&(ch)->lock, ATA_IDLE, ATA_ACTIVE)
 end_define
 
 begin_define
@@ -2594,11 +2588,9 @@ directive|define
 name|ATA_SLEEPLOCK_CH
 parameter_list|(
 name|ch
-parameter_list|,
-name|value
 parameter_list|)
 define|\
-value|while (!atomic_cmpset_acq_int(&(ch)->state, ATA_IDLE, (value))) \ 	    tsleep((caddr_t)&(ch), PRIBIO, "atalck", 1);
+value|while (!ATA_LOCK_CH(ch)) tsleep((caddr_t)&(ch), PRIBIO, "atalck", 1);
 end_define
 
 begin_define
@@ -2607,10 +2599,9 @@ directive|define
 name|ATA_FORCELOCK_CH
 parameter_list|(
 name|ch
-parameter_list|,
-name|value
 parameter_list|)
-value|atomic_store_rel_int(&(ch)->state, (value))
+define|\
+value|atomic_store_rel_int(&(ch)->lock, ATA_ACTIVE)
 end_define
 
 begin_define
@@ -2620,7 +2611,8 @@ name|ATA_UNLOCK_CH
 parameter_list|(
 name|ch
 parameter_list|)
-value|atomic_store_rel_int(&(ch)->state, ATA_IDLE)
+define|\
+value|atomic_store_rel_int(&(ch)->lock, ATA_IDLE)
 end_define
 
 begin_comment
@@ -2850,19 +2842,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_IDX_SET
-parameter_list|(
-name|ch
-parameter_list|,
-name|idx
-parameter_list|)
-define|\
-value|ATA_OUTB(ch->r_io[ATA_IDX_ADDR].res, ch->r_io[ATA_IDX_ADDR].offset, \ 		 ch->r_io[idx].offset)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATA_IDX_INB
 parameter_list|(
 name|ch
@@ -2870,7 +2849,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_INB(ch->r_io[idx].res, ch->r_io[idx].offset) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_INB(ch->r_io[ATA_IDX_DATA].res, ch->r_io[ATA_IDX_DATA].offset)))
+value|ATA_INB(ch->r_io[idx].res, ch->r_io[idx].offset)
 end_define
 
 begin_define
@@ -2883,7 +2862,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_INW(ch->r_io[idx].res, ch->r_io[idx].offset) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_INW(ch->r_io[ATA_IDX_DATA].res, ch->r_io[ATA_IDX_DATA].offset)))
+value|ATA_INW(ch->r_io[idx].res, ch->r_io[idx].offset)
 end_define
 
 begin_define
@@ -2896,7 +2875,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_INL(ch->r_io[idx].res, ch->r_io[idx].offset) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_INL(ch->r_io[ATA_IDX_DATA].res, ch->r_io[ATA_IDX_DATA].offset)))
+value|ATA_INL(ch->r_io[idx].res, ch->r_io[idx].offset)
 end_define
 
 begin_define
@@ -2913,7 +2892,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_INSW(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_INSW(ch->r_io[ATA_IDX_DATA].res, \ 		    ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_INSW(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 begin_define
@@ -2930,7 +2909,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_INSW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_INSW_STRM(ch->r_io[ATA_IDX_DATA].res, \ 			 ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_INSW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 begin_define
@@ -2947,7 +2926,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_INSL(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_INSL(ch->r_io[ATA_IDX_DATA].res, \ 		    ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_INSL(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 begin_define
@@ -2964,7 +2943,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_INSL_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_INSL_STRM(ch->r_io[ATA_IDX_DATA].res, \ 			 ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_INSL_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 begin_define
@@ -2979,7 +2958,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_OUTB(ch->r_io[idx].res, ch->r_io[idx].offset, value) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_OUTB(ch->r_io[ATA_IDX_DATA].res, \ 		    ch->r_io[ATA_IDX_DATA].offset, value)))
+value|ATA_OUTB(ch->r_io[idx].res, ch->r_io[idx].offset, value)
 end_define
 
 begin_define
@@ -2994,7 +2973,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_OUTW(ch->r_io[idx].res, ch->r_io[idx].offset, value) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_OUTW(ch->r_io[ATA_IDX_DATA].res, \ 		    ch->r_io[ATA_IDX_DATA].offset, value)))
+value|ATA_OUTW(ch->r_io[idx].res, ch->r_io[idx].offset, value)
 end_define
 
 begin_define
@@ -3009,7 +2988,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_OUTL(ch->r_io[idx].res, ch->r_io[idx].offset, value) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_OUTL(ch->r_io[ATA_IDX_DATA].res, \ 		    ch->r_io[ATA_IDX_DATA].offset, value)))
+value|ATA_OUTL(ch->r_io[idx].res, ch->r_io[idx].offset, value)
 end_define
 
 begin_define
@@ -3026,7 +3005,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_OUTSW(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_OUTSW(ch->r_io[ATA_IDX_DATA].res, \ 		     ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_OUTSW(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 begin_define
@@ -3043,7 +3022,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_OUTSW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_OUTSW_STRM(ch->r_io[ATA_IDX_DATA].res, \ 			  ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_OUTSW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 begin_define
@@ -3060,7 +3039,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_OUTSL(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_OUTSL(ch->r_io[ATA_IDX_DATA].res, \ 		     ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_OUTSL(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 begin_define
@@ -3077,7 +3056,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|((ch->r_io[idx].res) \ 	? ATA_OUTSL_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count) \ 	: (ATA_IDX_SET(ch, idx), \ 	   ATA_OUTSL_STRM(ch->r_io[ATA_IDX_DATA].res, \ 			  ch->r_io[ATA_IDX_DATA].offset, addr, count)))
+value|ATA_OUTSL_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 end_unit

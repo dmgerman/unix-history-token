@@ -761,8 +761,6 @@ operator|!
 name|ATA_LOCK_CH
 argument_list|(
 name|ch
-argument_list|,
-name|ATA_ACTIVE
 argument_list|)
 condition|)
 block|{
