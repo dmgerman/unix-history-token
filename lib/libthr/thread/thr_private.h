@@ -1287,7 +1287,10 @@ name|active_priority
 decl_stmt|;
 comment|/* Number of priority ceiling or protection mutexes owned. */
 name|int
-name|priority_mutex_count
+name|prio_inherit_count
+decl_stmt|;
+name|int
+name|prio_protect_count
 decl_stmt|;
 comment|/* 	 * Queue of currently owned mutexes. 	 */
 name|TAILQ_HEAD
@@ -2393,6 +2396,28 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|adjust_prio_inheritance
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|adjust_prio_protection
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|init_td_common
 parameter_list|(
 name|struct
@@ -2443,6 +2468,21 @@ name|int
 parameter_list|,
 name|struct
 name|sigaction
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|readjust_priorities
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|,
+name|struct
+name|pthread_mutex
 modifier|*
 parameter_list|)
 function_decl|;
