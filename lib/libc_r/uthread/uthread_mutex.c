@@ -1453,6 +1453,15 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|_thread_initial
+operator|==
+name|NULL
+condition|)
+name|_thread_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|mutex
 operator|==
 name|NULL
