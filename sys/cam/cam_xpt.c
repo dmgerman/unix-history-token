@@ -1660,6 +1660,29 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* EasyRAID E5A aka. areca ARC-6010 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"easyRAID"
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_NOHILUNS
+block|,
+comment|/*mintags*/
+literal|2
+block|,
+comment|/*maxtags*/
+literal|255
+block|}
+block|,
+block|{
 comment|/* Default tagged queuing parameters for all devices */
 block|{
 name|T_ANY
