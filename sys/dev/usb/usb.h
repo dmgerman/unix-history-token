@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.63 2002/02/25 00:46:37 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.66 2002/07/11 21:14:34 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -253,7 +253,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*   * On little-endian machines that can handle unanliged accesses  * (e.g. i386) these macros can be replaced by the following.  */
+comment|/*  * On little-endian machines that can handle unanliged accesses  * (e.g. i386) these macros can be replaced by the following.  */
 end_comment
 
 begin_define
@@ -2219,7 +2219,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*   * Minimum time a device needs to be powered down to go through   * a power cycle.  XXX Are these time in the spec?  */
+comment|/*  * Minimum time a device needs to be powered down to go through  * a power cycle.  XXX Are these time in the spec?  */
 end_comment
 
 begin_define
