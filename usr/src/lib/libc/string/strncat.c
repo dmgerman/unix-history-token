@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strncat.c	5.3 (Berkeley) %G%"
+literal|"@(#)strncat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+name|ch
+decl_stmt|;
 name|char
 modifier|*
 name|save
@@ -87,6 +91,14 @@ for|for
 control|(
 init|;
 name|cnt
+operator|&&
+operator|(
+name|ch
+operator|=
+operator|*
+name|append
+operator|++
+operator|)
 condition|;
 operator|--
 name|cnt
@@ -95,9 +107,7 @@ operator|*
 name|s
 operator|++
 operator|=
-operator|*
-name|append
-operator|++
+name|ch
 expr_stmt|;
 operator|*
 name|s
