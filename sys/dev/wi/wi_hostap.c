@@ -19,11 +19,24 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500033
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/endian.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2143,14 +2156,6 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-name|sta
-operator|->
-name|inactivity_timer
-operator|=
-name|whi
-operator|->
-name|inactivity_time
-expr_stmt|;
 return|return
 operator|(
 name|sta
@@ -2669,14 +2674,6 @@ name|fail
 goto|;
 block|}
 block|}
-name|sta
-operator|->
-name|inactivity_timer
-operator|=
-name|whi
-operator|->
-name|inactivity_time
-expr_stmt|;
 comment|/* Note: it's okay to leave the station info structure around 	 * if the authen fails.  It'll be timed out eventually. 	 */
 switch|switch
 condition|(
@@ -4614,13 +4611,16 @@ operator|)
 condition|)
 block|{
 comment|/* Keep it active. */
+name|untimeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
 name|sta
 operator|->
-name|inactivity_timer
-operator|=
-name|whi
-operator|->
-name|inactivity_time
+name|tmo
+argument_list|)
 expr_stmt|;
 name|sta
 operator|->
@@ -4751,6 +4751,17 @@ operator|)
 condition|)
 block|{
 comment|/* Keep it active. */
+name|untimeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|sta
+operator|->
+name|tmo
+argument_list|)
+expr_stmt|;
 name|sta
 operator|->
 name|tmo
@@ -5021,6 +5032,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|untimeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|sta
+operator|->
+name|tmo
+argument_list|)
+expr_stmt|;
 name|sta
 operator|->
 name|tmo
