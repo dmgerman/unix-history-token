@@ -81,7 +81,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.27 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.28 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.27 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.28 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,7 +122,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.27 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.28 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.27 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.28 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3099,6 +3099,18 @@ block|{
 ifdef|#
 directive|ifdef
 name|YPCOMPAT
+specifier|static
+name|void
+name|nis_magic
+name|P
+argument_list|(
+operator|(
+name|DBM
+operator|*
+name|dbmp
+operator|)
+argument_list|)
+decl_stmt|;
 name|nis_magic
 argument_list|(
 name|dbmp
@@ -3348,7 +3360,7 @@ index|[
 literal|1
 index|]
 operator|.
-name|dptr
+name|dsize
 operator|=
 name|strlen
 argument_list|(
