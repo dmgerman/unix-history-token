@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -998,6 +992,14 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* No error on unfound file. */
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+continue|continue;
 name|free
 argument_list|(
 name|record
@@ -2064,8 +2066,6 @@ operator|=
 name|data
 operator|.
 name|size
-operator|-
-literal|1
 expr_stmt|;
 comment|/* 	 * Get the record. 	 */
 if|if
