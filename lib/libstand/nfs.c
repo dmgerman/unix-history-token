@@ -461,7 +461,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|nfs_iodesc
 name|nfs_root_node
