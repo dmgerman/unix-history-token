@@ -15,18 +15,6 @@ directive|define
 name|PORT_AFTER_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PORT_AFTER_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PORT_AFTER_H
-end_define
-
 begin_define
 define|#
 directive|define
