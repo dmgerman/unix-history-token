@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_open[] = "@(#)open.c	1.5";  *  * open.c  -  f77 file open routines  */
+comment|/* char id_open[] = "@(#)open.c	1.6";  *  * open.c  -  f77 file open routines  */
 end_comment
 
 begin_include
@@ -74,6 +74,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* open at beginning of file */
+end_comment
+
+begin_decl_stmt
+name|short
+name|ccntrl_
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* recognize carriage control */
+end_comment
+
+begin_decl_stmt
+name|short
+name|blzero_
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* blanks count as zero */
 end_comment
 
 begin_decl_stmt
@@ -726,15 +746,16 @@ name|a
 operator|->
 name|orl
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|oblnk
+condition|)
 name|b
 operator|->
 name|ublnk
 operator|=
-operator|(
-name|a
-operator|->
-name|oblnk
-operator|&&
 operator|(
 name|lcase
 argument_list|(
@@ -746,7 +767,26 @@ argument_list|)
 operator|==
 literal|'z'
 operator|)
-operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lunit
+operator|==
+name|STDERR
+condition|)
+name|b
+operator|->
+name|ublnk
+operator|=
+name|NO
+expr_stmt|;
+else|else
+name|b
+operator|->
+name|ublnk
+operator|=
+name|blzero_
 expr_stmt|;
 if|if
 condition|(
@@ -846,11 +886,24 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|lunit
+operator|==
+name|STDERR
+condition|)
 name|b
 operator|->
 name|uprnt
 operator|=
 name|NO
+expr_stmt|;
+else|else
+name|b
+operator|->
+name|uprnt
+operator|=
+name|ccntrl_
 expr_stmt|;
 block|}
 if|if
