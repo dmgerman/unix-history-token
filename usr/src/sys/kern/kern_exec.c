@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.52 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1065,10 +1065,22 @@ break|break;
 case|case
 name|ZMAGIC
 case|:
+ifdef|#
+directive|ifdef
+name|HPUXCOMPAT
+name|paged
+operator||=
+literal|1
+expr_stmt|;
+comment|/* XXX fix me */
+else|#
+directive|else
 name|paged
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* FALLTHROUGH */
 case|case
 name|NMAGIC
@@ -2499,25 +2511,18 @@ name|a_mid
 operator|==
 name|MID_HPUX
 condition|)
-block|{
-if|if
-condition|(
+name|toff
+operator|=
 name|paged
-condition|)
-name|toff
-operator|=
+condition|?
 name|CLBYTES
-expr_stmt|;
-else|else
-name|toff
-operator|=
+else|:
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|hpux_exec
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 endif|#
 directive|endif
