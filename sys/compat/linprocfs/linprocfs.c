@@ -255,11 +255,19 @@ begin_comment
 comment|/* __alpha__ */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -279,7 +287,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* __i386__ || __amd64__ */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_compat.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|COMPAT_LINUX32
+end_if
+
+begin_comment
+comment|/* XXX */
 end_comment
 
 begin_include
@@ -287,6 +312,22 @@ include|#
 directive|include
 file|<machine/../linux/linux.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux32/linux.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -901,14 +942,22 @@ begin_comment
 comment|/* __alpha__ */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_comment
-comment|/*  * Filler function for proc/cpuinfo (i386 version)  */
+comment|/*  * Filler function for proc/cpuinfo (i386& amd64 version)  */
 end_comment
 
 begin_function
@@ -1007,6 +1056,9 @@ condition|(
 name|cpu_class
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 case|case
 name|CPUCLASS_286
 case|:
@@ -1053,6 +1105,16 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+else|#
+directive|else
+default|default:
+name|class
+operator|=
+literal|6
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -1249,7 +1311,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* __i386__ || __amd64__ */
 end_comment
 
 begin_comment
