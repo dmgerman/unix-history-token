@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -111,6 +111,12 @@ directive|include
 file|<isofs/cd9660/cd9660_node.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<isofs/cd9660/cd9660_mount.h>
+end_include
+
 begin_function_decl
 specifier|extern
 name|int
@@ -146,7 +152,9 @@ block|,
 name|cd9660_vptofh
 block|,
 name|cd9660_init
-block|, }
+block|,
+name|cd9660_sysctl
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1539,7 +1547,11 @@ index|[
 literal|1
 index|]
 operator|=
-name|MOUNT_CD9660
+name|mp
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_typenum
 expr_stmt|;
 name|mp
 operator|->
