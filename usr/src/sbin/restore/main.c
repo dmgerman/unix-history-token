@@ -14,7 +14,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.6 %G%"
+literal|"@(#)main.c 2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
 
 begin_include
 include|#
