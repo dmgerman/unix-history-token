@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)errlst.c	4.1 (Berkeley) %G% */
+comment|/* @(#)errlst.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_decl_stmt
@@ -79,6 +79,23 @@ block|,
 literal|"Argument too large"
 block|,
 literal|"Result too large"
+block|,
+comment|/* bbnnet errors */
+literal|"User status available (not an error)"
+block|,
+literal|"Open attempted when net not initialized"
+block|,
+literal|"Too many net connections"
+block|,
+literal|"No more net buffer space"
+block|,
+literal|"Error from network"
+block|,
+literal|"Error in raw link or protocol range"
+block|,
+literal|"Unable to open connection"
+block|,
+literal|"Unable to send on raw connection"
 block|, }
 decl_stmt|;
 end_decl_stmt
