@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.22 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,11 +345,27 @@ name|pvp
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|20
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"parseaddr-->NULL\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 comment|/* 	**  Apply rewriting rules. 	**	Ruleset 0 does basic parsing.  It must resolve. 	*/
 name|rewrite
 argument_list|(
