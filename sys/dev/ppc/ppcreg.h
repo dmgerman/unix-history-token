@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppcreg.h,v 1.3 1998/08/03 19:14:33 msmith Exp $  *  */
+comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppcreg.h,v 1.4 1998/09/13 18:26:44 nsouch Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -23,42 +23,42 @@ begin_define
 define|#
 directive|define
 name|SMC_LIKE
-value|0x0
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMC_37C665GT
-value|0x1
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMC_37C666GT
-value|0x2
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|NS_PC87332
-value|0x3
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|NS_PC87306
-value|0x4
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTEL_820191AA
-value|0x5
+value|5
 end_define
 
 begin_comment
@@ -69,28 +69,35 @@ begin_define
 define|#
 directive|define
 name|GENERIC
-value|0x6
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINB_W83877F
-value|0x7
+value|7
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINB_W83877AF
-value|0x8
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINB_UNKNOWN
-value|0x9
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_PC87334
+value|10
 end_define
 
 begin_comment
@@ -402,6 +409,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PC873_EXTENDED
+value|(1<<7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC873_LPTBIRQ7
+value|(1<<3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PC873_FCR
 value|0x03
 end_define
@@ -474,6 +495,27 @@ define|#
 directive|define
 name|PC873_SID
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC873_PNP0
+value|0x1b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC873_PNP1
+value|0x1c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC873_LPTBA
+value|0x19
 end_define
 
 begin_comment

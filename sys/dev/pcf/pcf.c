@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu, Marc Bouget  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pcf.c,v 1.1 1998/09/03 21:01:22 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu, Marc Bouget  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pcf.c,v 1.2 1998/10/22 05:58:40 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|TIMEOUT
-value|99999
+value|9999
 end_define
 
 begin_comment
@@ -246,6 +246,13 @@ name|SLAVE_RECEIVER
 value|0x2
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCF_DEFAULT_ADDR
+value|0xaa
+end_define
+
 begin_struct
 struct|struct
 name|pcf_softc
@@ -254,17 +261,18 @@ name|int
 name|pcf_base
 decl_stmt|;
 comment|/* isa port */
-name|int
-name|pcf_count
+name|u_char
+name|pcf_addr
 decl_stmt|;
-name|int
-name|pcf_own_address
-decl_stmt|;
-comment|/* own address */
+comment|/* interface I2C address */
 name|int
 name|pcf_slave_mode
 decl_stmt|;
 comment|/* receiver or transmitter */
+name|int
+name|pcf_started
+decl_stmt|;
+comment|/* 1 if start condition sent */
 name|device_t
 name|iicbus
 decl_stmt|;
@@ -404,6 +412,8 @@ parameter_list|(
 name|device_t
 parameter_list|,
 name|u_char
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -416,6 +426,8 @@ parameter_list|(
 name|device_t
 parameter_list|,
 name|u_char
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -516,6 +528,13 @@ name|pcf_print_child
 argument_list|)
 block|,
 comment|/* iicbus interface */
+name|DEVMETHOD
+argument_list|(
+name|iicbus_callback
+argument_list|,
+name|iicbus_null_callback
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|iicbus_repeated_start
@@ -731,6 +750,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|device_probe_and_attach
+argument_list|(
+name|pcfdev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -813,6 +837,38 @@ argument_list|(
 name|pcfdev
 argument_list|)
 decl_stmt|;
+name|int
+name|unit
+init|=
+name|device_get_unit
+argument_list|(
+name|pcfdev
+argument_list|)
+decl_stmt|;
+comment|/* retrieve base address from isa initialization 	 * 	 * XXX should use ivars with isabus 	 */
+name|pcf
+operator|->
+name|pcf_base
+operator|=
+name|pcfdata
+index|[
+name|unit
+index|]
+operator|->
+name|pcf_base
+expr_stmt|;
+comment|/* reset the chip */
+name|pcf_rst_card
+argument_list|(
+name|pcfdev
+argument_list|,
+name|IIC_FASTEST
+argument_list|,
+name|PCF_DEFAULT_ADDR
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* XXX try do detect chipset */
 name|device_set_desc
 argument_list|(
@@ -821,27 +877,6 @@ argument_list|,
 literal|"PCF8584 I2C bus controller"
 argument_list|)
 expr_stmt|;
-name|pcf
-operator|->
-name|iicbus
-operator|=
-name|iicbus_alloc_bus
-argument_list|(
-name|pcfdev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pcf
-operator|->
-name|iicbus
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 return|return
 operator|(
 literal|0
@@ -874,26 +909,27 @@ argument_list|(
 name|pcfdev
 argument_list|)
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|device_get_unit
+name|pcf
+operator|->
+name|iicbus
+operator|=
+name|iicbus_alloc_bus
 argument_list|(
 name|pcfdev
 argument_list|)
-decl_stmt|;
-comment|/* retrieve base address from isa initialization 	 * 	 * XXX should use ivars with isabus 	 */
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|pcf
 operator|->
-name|pcf_base
-operator|=
-name|pcfdata
-index|[
-name|unit
-index|]
-operator|->
-name|pcf_base
-expr_stmt|;
+name|iicbus
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* probe and attach the iicbus */
 name|device_probe_and_attach
 argument_list|(
@@ -922,6 +958,21 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|pcf_softc
+modifier|*
+name|pcf
+init|=
+operator|(
+expr|struct
+name|pcf_softc
+operator|*
+operator|)
+name|device_get_softc
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
 name|printf
 argument_list|(
 literal|" on %s%d addr 0x%x"
@@ -936,10 +987,12 @@ argument_list|(
 name|bus
 argument_list|)
 argument_list|,
-name|iicbus_get_own_address
-argument_list|(
-name|dev
-argument_list|)
+operator|(
+name|int
+operator|)
+name|pcf
+operator|->
+name|pcf_addr
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1184,6 +1237,14 @@ argument_list|(
 name|pcfdev
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Send STOP condition iff the START condition was previously sent. 	 * STOP is sent only once even if a iicbus_stop() is called after 	 * an iicbus_read()... see pcf_read(): the pcf needs to send the stop 	 * before the last char is read. 	 */
+if|if
+condition|(
+name|pcf
+operator|->
+name|pcf_started
+condition|)
+block|{
 comment|/* set stop condition and enable IT */
 name|PCF_SET_S1
 argument_list|(
@@ -1200,9 +1261,78 @@ operator||
 name|ACK
 argument_list|)
 expr_stmt|;
+name|pcf
+operator|->
+name|pcf_started
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|pcf_noack
+parameter_list|(
+name|struct
+name|pcf_softc
+modifier|*
+name|pcf
+parameter_list|,
+name|int
+name|timeout
+parameter_list|)
+block|{
+name|int
+name|noack
+decl_stmt|;
+name|int
+name|k
+init|=
+name|timeout
+operator|/
+literal|10
+decl_stmt|;
+do|do
+block|{
+name|noack
+operator|=
+name|PCF_GET_S1
+argument_list|(
+name|pcf
+argument_list|)
+operator|&
+name|LRB
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|noack
+condition|)
+break|break;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+comment|/* XXX wait 10 us */
+block|}
+do|while
+condition|(
+name|k
+operator|--
+condition|)
+do|;
+return|return
+operator|(
+name|noack
 operator|)
 return|;
 block|}
@@ -1218,6 +1348,9 @@ name|pcfdev
 parameter_list|,
 name|u_char
 name|slave
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 block|{
 name|struct
@@ -1272,15 +1405,15 @@ condition|)
 goto|goto
 name|error
 goto|;
-comment|/* check ACK */
+comment|/* check for ack */
 if|if
 condition|(
-name|PCF_GET_S1
+name|pcf_noack
 argument_list|(
 name|pcf
+argument_list|,
+name|timeout
 argument_list|)
-operator|&
-name|LRB
 condition|)
 block|{
 name|error
@@ -1321,6 +1454,9 @@ name|pcfdev
 parameter_list|,
 name|u_char
 name|slave
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 block|{
 name|struct
@@ -1376,6 +1512,12 @@ operator||
 name|ACK
 argument_list|)
 expr_stmt|;
+name|pcf
+operator|->
+name|pcf_started
+operator|=
+literal|1
+expr_stmt|;
 comment|/* wait for address sent, polling */
 if|if
 condition|(
@@ -1391,15 +1533,15 @@ condition|)
 goto|goto
 name|error
 goto|;
-comment|/* check ACK */
+comment|/* check for ACK */
 if|if
 condition|(
-name|PCF_GET_S1
+name|pcf_noack
 argument_list|(
 name|pcf
+argument_list|,
+name|timeout
 argument_list|)
-operator|&
-name|LRB
 condition|)
 block|{
 name|error
@@ -1811,6 +1953,13 @@ name|pcfdev
 parameter_list|,
 name|u_char
 name|speed
+parameter_list|,
+name|u_char
+name|addr
+parameter_list|,
+name|u_char
+modifier|*
+name|oldaddr
 parameter_list|)
 block|{
 name|struct
@@ -1823,28 +1972,35 @@ argument_list|(
 name|pcfdev
 argument_list|)
 decl_stmt|;
-name|u_char
-name|ownaddr
-decl_stmt|;
+if|if
+condition|(
+name|oldaddr
+condition|)
+operator|*
+name|oldaddr
+operator|=
+name|pcf
+operator|->
+name|pcf_addr
+expr_stmt|;
 comment|/* retrieve own address from bus level */
 if|if
 condition|(
-operator|(
-name|ownaddr
-operator|=
-name|iicbus_get_own_address
-argument_list|(
+operator|!
+name|addr
+condition|)
 name|pcf
 operator|->
-name|iicbus
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|ownaddr
+name|pcf_addr
 operator|=
-literal|0xaa
+name|PCF_DEFAULT_ADDR
+expr_stmt|;
+else|else
+name|pcf
+operator|->
+name|pcf_addr
+operator|=
+name|addr
 expr_stmt|;
 name|PCF_SET_S1
 argument_list|(
@@ -1859,7 +2015,9 @@ name|PCF_SET_S0
 argument_list|(
 name|pcf
 argument_list|,
-name|ownaddr
+name|pcf
+operator|->
+name|pcf_addr
 operator|>>
 literal|1
 argument_list|)
@@ -1964,6 +2122,10 @@ parameter_list|,
 name|int
 modifier|*
 name|sent
+parameter_list|,
+name|int
+name|timeout
+comment|/* us */
 parameter_list|)
 block|{
 name|struct
@@ -2018,6 +2180,7 @@ name|buf
 operator|++
 argument_list|)
 expr_stmt|;
+comment|/* wait for the byte to be send */
 if|if
 condition|(
 operator|(
@@ -2032,14 +2195,15 @@ condition|)
 goto|goto
 name|error
 goto|;
+comment|/* check if ack received */
 if|if
 condition|(
-name|PCF_GET_S1
+name|pcf_noack
 argument_list|(
 name|pcf
+argument_list|,
+name|timeout
 argument_list|)
-operator|&
-name|LRB
 condition|)
 block|{
 name|error
@@ -2109,6 +2273,13 @@ parameter_list|,
 name|int
 modifier|*
 name|read
+parameter_list|,
+name|int
+name|last
+parameter_list|,
+name|int
+name|delay
+comment|/* us */
 parameter_list|)
 block|{
 name|struct
@@ -2156,6 +2327,8 @@ condition|(
 name|len
 operator|==
 literal|1
+operator|&&
+name|last
 condition|)
 comment|/* just one byte to read */
 name|PCF_SET_S1
@@ -2181,6 +2354,8 @@ condition|(
 name|len
 condition|)
 block|{
+comment|/* XXX delay needed here */
+comment|/* wait for trigged byte */
 if|if
 condition|(
 operator|(
@@ -2207,30 +2382,23 @@ condition|(
 name|len
 operator|==
 literal|1
+operator|&&
+name|last
 condition|)
-block|{
-comment|/* ok, last data byte already in S0 */
+comment|/* ok, last data byte already in S0, no I2C activity 			 * on next PCF_GET_S0() */
 name|pcf_stop
 argument_list|(
 name|pcfdev
 argument_list|)
 expr_stmt|;
-operator|*
-name|buf
-operator|=
-name|PCF_GET_S0
-argument_list|(
-name|pcf
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|len
 operator|==
 literal|2
+operator|&&
+name|last
 condition|)
 comment|/* next trigged byte with no ack */
 name|PCF_SET_S1
@@ -2240,7 +2408,7 @@ argument_list|,
 name|ES0
 argument_list|)
 expr_stmt|;
-comment|/* read last data byte, trig for next data byte */
+comment|/* receive byte, trig next byte */
 operator|*
 name|buf
 operator|++
@@ -2250,7 +2418,6 @@ argument_list|(
 name|pcf
 argument_list|)
 expr_stmt|;
-block|}
 name|len
 operator|--
 expr_stmt|;
