@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NecBSD: bs.c,v 1.1 1997/07/18 09:18:59 kmatsuda Exp $	*/
+end_comment
+
+begin_comment
 comment|/*	$NetBSD$	*/
 end_comment
 
@@ -20,7 +24,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bsif.h>
+file|<i386/Cbus/dev/bs/bsif.h>
 end_include
 
 begin_endif
@@ -799,12 +803,16 @@ argument_list|()
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
-argument|&ti->ti_ctab
+operator|&
+name|ti
+operator|->
+name|ti_ctab
 argument_list|,
-argument|cb
+name|cb
 argument_list|,
-argument|ccb_chain
+name|ccb_chain
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ti
@@ -1554,12 +1562,16 @@ expr_stmt|;
 block|}
 name|TAILQ_REMOVE
 argument_list|(
-argument|&ti->ti_ctab
+operator|&
+name|ti
+operator|->
+name|ti_ctab
 argument_list|,
-argument|cb
+name|cb
 argument_list|,
-argument|ccb_chain
+name|ccb_chain
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xs
@@ -5350,12 +5362,6 @@ name|bs_err
 modifier|*
 name|pep
 decl_stmt|;
-name|char
-modifier|*
-name|s
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -5856,11 +5862,6 @@ block|{
 name|bs_debug_print_all
 argument_list|(
 name|bsc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s strange scsi bus status\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6694,6 +6695,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|ti
 operator|=
 name|bsc
@@ -6702,6 +6704,9 @@ name|sc_ti
 index|[
 name|i
 index|]
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ti
@@ -6712,6 +6717,7 @@ name|BSFORCEIOPOLL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cb
 operator|=
 name|ti
@@ -6719,6 +6725,9 @@ operator|->
 name|ti_ctab
 operator|.
 name|tqh_first
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|cb
 operator|->
@@ -7008,7 +7017,7 @@ name|softintr
 argument_list|(
 name|bsc
 operator|->
-name|sc_irqmasks
+name|sc_irq
 argument_list|)
 expr_stmt|;
 name|splx

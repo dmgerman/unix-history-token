@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NecBSD: bshw.h,v 1.2 1997/10/31 17:43:38 honda Exp $	*/
+end_comment
+
+begin_comment
 comment|/*	$NetBSD$	*/
 end_comment
 
@@ -83,6 +87,13 @@ define|#
 directive|define
 name|BSHW_WRITE
 value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSHW_SMITFIFO_OFFSET
+value|0x1000
 end_define
 
 begin_define

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NecBSD: bshw.c,v 1.1 1997/07/18 09:19:03 kmatsuda Exp $	*/
+end_comment
+
+begin_comment
 comment|/*	$NetBSD$	*/
 end_comment
 
@@ -26,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bsif.h>
+file|<i386/Cbus/dev/bs/bsif.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bshw.lst>
+file|<i386/Cbus/dev/bs/bshw.lst>
 end_include
 
 begin_endif
@@ -1391,6 +1395,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|ti
 operator|=
 name|bsc
@@ -1399,6 +1404,9 @@ name|sc_ti
 index|[
 name|i
 index|]
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ti
@@ -1535,15 +1543,11 @@ name|drq
 expr_stmt|;
 name|bsc
 operator|->
-name|sc_irqmasks
+name|sc_irq
 operator|=
-operator|(
-literal|1
-operator|<<
 operator|(
 operator|*
 name|irq
-operator|)
 operator|)
 expr_stmt|;
 name|bsc
@@ -1934,15 +1938,6 @@ name|ti
 decl_stmt|;
 block|{
 name|struct
-name|bshw
-modifier|*
-name|hw
-init|=
-name|bsc
-operator|->
-name|sc_hw
-decl_stmt|;
-name|struct
 name|syncdata
 name|sd
 decl_stmt|;
@@ -2272,13 +2267,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bshw_dma.c>
+file|<i386/Cbus/dev/bs/bshw_dma.c>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bshw_pdma.c>
+file|<i386/Cbus/dev/bs/bshw_pdma.c>
 end_include
 
 begin_endif

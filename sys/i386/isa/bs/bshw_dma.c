@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NecBSD: bshw_dma.c,v 1.3 1997/07/26 06:03:16 honda Exp $	*/
+end_comment
+
+begin_comment
 comment|/*	$NetBSD$	*/
 end_comment
 
@@ -119,6 +123,7 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
 name|tmpti
 operator|=
 name|bsc
@@ -127,6 +132,9 @@ name|sc_ti
 index|[
 name|i
 index|]
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|tmpti
 operator|->
@@ -702,7 +710,7 @@ begin_define
 define|#
 directive|define
 name|DMA1_SMSK
-value|(IO_DMA + 0x14)
+value|(0x15)
 end_define
 
 begin_undef
@@ -715,7 +723,7 @@ begin_define
 define|#
 directive|define
 name|DMA1_MODE
-value|(IO_DMA + 0x16)
+value|(0x17)
 end_define
 
 begin_undef
@@ -728,7 +736,7 @@ begin_define
 define|#
 directive|define
 name|DMA1_FFC
-value|(IO_DMA + 0x18)
+value|(0x19)
 end_define
 
 begin_undef
@@ -757,7 +765,7 @@ name|DMA1_CHN
 parameter_list|(
 name|c
 parameter_list|)
-value|(IO_DMA + ((c)<< 2))
+value|(0x01 + ((c)<< 2))
 end_define
 
 begin_function
@@ -820,17 +828,22 @@ directive|else
 comment|/* NetBSD/pc98 */
 if|if
 condition|(
-name|cpuspec
+name|bsc
 operator|->
-name|cpuspec_cache_flush_before
+name|sc_dmadir
+operator|&
+name|BSHW_READ
 condition|)
-call|(
-modifier|*
-name|cpuspec
-operator|->
-name|cpuspec_cache_flush_before
-call|)
-argument_list|()
+name|cpu_cf_preRead
+argument_list|(
+name|curcpu
+argument_list|)
+expr_stmt|;
+else|else
+name|cpu_cf_preWrite
+argument_list|(
+name|curcpu
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1055,17 +1068,22 @@ else|#
 directive|else
 if|if
 condition|(
-name|cpuspec
+name|bsc
 operator|->
-name|cpuspec_cache_flush_after
+name|sc_dmadir
+operator|&
+name|BSHW_READ
 condition|)
-call|(
-modifier|*
-name|cpuspec
-operator|->
-name|cpuspec_cache_flush_after
-call|)
-argument_list|()
+name|cpu_cf_postRead
+argument_list|(
+name|curcpu
+argument_list|)
+expr_stmt|;
+else|else
+name|cpu_cf_postWrite
+argument_list|(
+name|curcpu
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

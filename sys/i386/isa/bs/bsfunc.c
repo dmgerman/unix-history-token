@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NecBSD: bsfunc.c,v 1.2 1997/10/31 17:43:37 honda Exp $	*/
+end_comment
+
+begin_comment
 comment|/*	$NetBSD$	*/
 end_comment
 
@@ -20,7 +24,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bsif.h>
+file|<i386/Cbus/dev/bs/bsif.h>
 end_include
 
 begin_endif
@@ -2011,11 +2015,6 @@ name|nextti
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|ccb
-modifier|*
-name|cb
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -2393,6 +2392,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cb
 operator|=
 name|ti
@@ -2400,6 +2400,9 @@ operator|->
 name|ti_ctab
 operator|.
 name|tqh_first
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3123,13 +3126,9 @@ name|target
 expr_stmt|;
 name|ti
 operator|->
-name|sm_vaddr
+name|sm_offset
 operator|=
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|MADDRUNK
+literal|0
 expr_stmt|;
 name|ti
 operator|->
@@ -3454,7 +3453,7 @@ name|BS_SCSI_LINK
 expr_stmt|;
 name|ti
 operator|->
-name|sm_vaddr
+name|sm_offset
 operator|=
 operator|(
 name|flags
@@ -3462,27 +3461,19 @@ operator|&
 name|BS_SCSI_NOSMIT
 operator|)
 condition|?
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|MADDRUNK
+literal|0
 else|:
 name|bsc
 operator|->
-name|sm_vaddr
+name|sm_offset
 expr_stmt|;
 if|if
 condition|(
 name|ti
 operator|->
-name|sm_vaddr
+name|sm_offset
 operator|==
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|MADDRUNK
+literal|0
 condition|)
 name|flags
 operator||=
@@ -4058,20 +4049,26 @@ decl_stmt|;
 comment|/* host stat */
 name|printf
 argument_list|(
-literal|"%s<DEBUG INFO> nexus %x bs %x bus status %x \n"
+literal|"%s<DEBUG INFO> nexus %lx bs %lx bus status %lx \n"
 argument_list|,
 name|bsc
 operator|->
 name|sc_dvname
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ti
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|bsc
 operator|->
 name|sc_nexus
 argument_list|,
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|bsc
 operator|->
@@ -4123,7 +4120,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"msgptr %x msg[0] %x status %x tqh %x fl %x\n"
+literal|"msgptr %x msg[0] %x status %x tqh %lx fl %x\n"
 argument_list|,
 call|(
 name|u_int
@@ -4150,6 +4147,10 @@ name|ti
 operator|->
 name|ti_status
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|cb
 operator|=
 name|ti
@@ -4157,6 +4158,7 @@ operator|->
 name|ti_ctab
 operator|.
 name|tqh_first
+argument_list|)
 argument_list|,
 name|ti
 operator|->
@@ -4169,12 +4171,15 @@ name|cb
 condition|)
 name|printf
 argument_list|(
-literal|"cmdlen %x cmdaddr %x cmd[0] %x\n"
+literal|"cmdlen %x cmdaddr %lx cmd[0] %x\n"
 argument_list|,
 name|cb
 operator|->
 name|cmdlen
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|cb
 operator|->
 name|cmd
@@ -4192,12 +4197,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"datalen %x dataaddr %x seglen %x "
+literal|"datalen %x dataaddr %lx seglen %x "
 argument_list|,
 name|sp
 operator|->
 name|datalen
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|data
