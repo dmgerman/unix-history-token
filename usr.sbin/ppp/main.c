@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.15 1997/05/19 03:04:06 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.16 1997/05/23 05:24:21 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<alias.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"modem.h"
 end_include
 
@@ -151,12 +157,6 @@ begin_include
 include|#
 directive|include
 file|"ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"alias.h"
 end_include
 
 begin_include
@@ -1520,7 +1520,7 @@ expr_stmt|;
 name|IpcpDefAddress
 argument_list|()
 expr_stmt|;
-name|InitAlias
+name|InitPacketAlias
 argument_list|()
 expr_stmt|;
 if|if
@@ -4512,11 +4512,9 @@ condition|)
 block|{
 name|PacketAliasOut
 argument_list|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
+name|rbuff
+argument_list|,
+sizeof|sizeof
 name|rbuff
 argument_list|)
 expr_stmt|;
@@ -4581,11 +4579,9 @@ condition|)
 block|{
 name|PacketAliasOut
 argument_list|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
+name|rbuff
+argument_list|,
+sizeof|sizeof
 name|rbuff
 argument_list|)
 expr_stmt|;
