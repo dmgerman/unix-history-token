@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.7 %G%"
+literal|"@(#)process.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1144,7 +1144,12 @@ end_define
 begin_function
 name|public
 name|cont
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|dbintr
 operator|=
@@ -1183,7 +1188,7 @@ name|isstopped
 operator|=
 name|false
 expr_stmt|;
-name|step
+name|stepover
 argument_list|()
 expr_stmt|;
 block|}
@@ -1208,7 +1213,9 @@ name|setallbps
 argument_list|()
 expr_stmt|;
 name|resume
-argument_list|()
+argument_list|(
+name|signo
+argument_list|)
 expr_stmt|;
 name|unsetallbps
 argument_list|()
@@ -1225,7 +1232,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|step
+name|stepover
 argument_list|()
 expr_stmt|;
 block|}
@@ -1274,7 +1281,12 @@ end_comment
 begin_function
 name|public
 name|resume
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 specifier|register
 name|Process
@@ -1310,6 +1322,8 @@ block|}
 name|pcont
 argument_list|(
 name|p
+argument_list|,
+name|signo
 argument_list|)
 expr_stmt|;
 name|pc
@@ -1357,6 +1371,27 @@ operator|!=
 name|STOPPED
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|signo
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"program terminated by signal %d"
+argument_list|,
+name|p
+operator|->
+name|signo
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|error
 argument_list|(
 literal|"program unexpectedly exited with %d"
@@ -1366,6 +1401,7 @@ operator|->
 name|exitval
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -1444,16 +1480,49 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Single-step over the current machine instruction.  *  * If we're single-stepping by source line we want to step to the  * next source line.  Otherwise we're going to continue so there's  * no reason to do all the work necessary to single-step to the next  * source line.  */
+end_comment
+
 begin_function
-name|public
-name|step
+name|private
+name|stepover
 parameter_list|()
+block|{
+name|Boolean
+name|b
+decl_stmt|;
+if|if
+condition|(
+name|single_stepping
+condition|)
 block|{
 name|dostep
 argument_list|(
 name|false
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|b
+operator|=
+name|inst_tracing
+expr_stmt|;
+name|inst_tracing
+operator|=
+name|true
+expr_stmt|;
+name|dostep
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+name|inst_tracing
+operator|=
+name|b
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1477,7 +1546,9 @@ name|addr
 argument_list|)
 expr_stmt|;
 name|resume
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|unsetbp
 argument_list|(
@@ -2663,7 +2734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Continue a stopped process.  The argument points to a PROCESS structure.  * Before the process is restarted it's user area is modified according to  * the values in the structure.  When this routine finishes,  * the structure has the new values from the process's user area.  *  * Pcont terminates when the process stops with a signal pending that  * is being traced (via psigtrace), or when the process terminates.  */
+comment|/*  * Continue a stopped process.  The first argument points to a Process  * structure.  Before the process is restarted it's user area is modified  * according to the values in the structure.  When this routine finishes,  * the structure has the new values from the process's user area.  *  * Pcont terminates when the process stops with a signal pending that  * is being traced (via psigtrace), or when the process terminates.  */
 end_comment
 
 begin_function
@@ -2671,9 +2742,14 @@ name|private
 name|pcont
 parameter_list|(
 name|p
+parameter_list|,
+name|signo
 parameter_list|)
 name|Process
 name|p
+decl_stmt|;
+name|int
+name|signo
 decl_stmt|;
 block|{
 name|int
@@ -2699,6 +2775,8 @@ block|{
 name|setinfo
 argument_list|(
 name|p
+argument_list|,
+name|signo
 argument_list|)
 expr_stmt|;
 name|sigs_off
@@ -2794,6 +2872,8 @@ decl_stmt|;
 name|setinfo
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sigs_off
@@ -3262,10 +3342,15 @@ name|private
 name|setinfo
 parameter_list|(
 name|p
+parameter_list|,
+name|signo
 parameter_list|)
 specifier|register
 name|Process
 name|p
+decl_stmt|;
+name|int
+name|signo
 decl_stmt|;
 block|{
 specifier|register
@@ -3288,7 +3373,7 @@ name|p
 operator|->
 name|signo
 operator|=
-literal|0
+name|signo
 expr_stmt|;
 block|}
 for|for
