@@ -1336,10 +1336,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|ifnet
+modifier|*
 name|loif
-index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* first loopback interface */
+end_comment
 
 begin_decl_stmt
 specifier|extern
