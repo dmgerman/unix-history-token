@@ -483,7 +483,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"al"
 block|,
-literal|"ADMtek AL981 PCI ethernet card"
+literal|"ADMtek AL981/AN985 PCI ethernet card"
 block|}
 block|,
 block|{
