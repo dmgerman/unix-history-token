@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 2.5 2000/03/13 22:10:21 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 2.1.2.2 1999/09/21 11:55:44 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -78,9 +78,39 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|IPFILTER_LKM
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|_KERNEL
 argument_list|)
-operator|&&
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -108,6 +138,11 @@ include|#
 directive|include
 file|"opt_ipfilter.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
