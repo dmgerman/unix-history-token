@@ -2159,6 +2159,9 @@ name|rxcycles
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|in_tick
+decl_stmt|;
 name|struct
 name|mtx
 name|sis_mtx
