@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Log:	if_edreg.h,v $  * Revision 1.3  93/07/20  15:25:25  davidg  * added config flags for forcing 8/16bit mode and disabling double  * xmit buffers.  *   * Revision 1.2  93/06/23  03:03:05  davidg  * added some additional definitions for the 83C584 bus interface  * chip (SMC/WD boards)  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
+comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Log:	if_edreg.h,v $  * Revision 1.5  93/08/25  20:38:34  davidg  * added define for card type WD8013WC (10BaseT)  *   * Revision 1.4  93/08/14  20:07:55  davidg  * fix board type definition for 8013EP  *   * Revision 1.3  93/07/20  15:25:25  davidg  * added config flags for forcing 8/16bit mode and disabling double  * xmit buffers.  *   * Revision 1.2  93/06/23  03:03:05  davidg  * added some additional definitions for the 83C584 bus interface  * chip (SMC/WD boards)  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
 end_comment
 
 begin_comment
@@ -1857,8 +1857,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_TYPE_WD8013EB
+name|ED_TYPE_WD8013EP
 value|0x27
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE_WD8013WC
+value|0x28
 end_define
 
 begin_define

@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390 based ethernet  * 
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.19  93/08/02  02:57:53  davidg  * Fixed problem where some rev 8013EBT boards want the DCR_LS flag  * set in order to work in 16bit mode.  *   * Revision 1.18  93/07/27  03:41:36  davidg  * removed unnecessary variable assignment in ed_reset()  *   * Revision 1.17  93/07/26  18:40:57  davidg  * Added include of systm.h to pick up inlined min/max/bcmp if you have  * them in cpufunc.h. Modified wait loop in reset to look a little better.  * Added read for talley counters to prevent an infinite loop on old  * 8003E's if they (the counters) overflow.  *   * Revision 1.16  93/07/25  14:27:12  davidg  * added parans to the previous fix so that it can cope with outb  * being a macro.  *   * Revision 1.15  93/07/25  14:07:56  davidg  * fixed logic problem where a 3c503 register was being written  * even if the board wasn't a 3Com. Wolfgang Solfrank pointed this  * out.  *   * Revision 1.14  93/07/20  15:24:25  davidg  * ommision for force 16bit case fixed from last patch  *   * Revision 1.13  93/07/20  15:13:55  davidg  * Added config file override for memsize by using 'iosiz'. Also added  * config flags overrides to force 8/16bit mode and disable the use of  * double xmit buffers.  *   * Revision 1.12  93/07/07  06:27:44  davidg  * moved call to bpfattach to after this drivers attach printf -  * improves readability of startup messages.  *   * Revision 1.11  93/06/27  03:07:01  davidg  * fixed bugs in the 3Com part of the probe routine that were uncovered by  * the previous fix.  *   * Revision 1.10  93/06/25  19:23:19  davidg  * fixed bug that caused erroneous 'Invalid irq configuration' message when  * no board is present (during autoconfiguration).  *   * Revision 1.9  93/06/23  03:48:14  davidg  * fixed minor typo introduced when cleaning up probe routine  *   * Revision 1.8  93/06/23  03:37:19  davidg  * cleaned up/added some comments. Also improved readability of a part of  * the probe routine.  *   * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
+comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.25  93/09/08  23:04:25  davidg  * fixed problem where 3c503 boards lock up if the cable is   * disconnected at boot time. Added printing of irq number if  * the kernel config and board don't match  *   * Revision 1.24  93/09/07  12:08:36  davidg  * ED_FLAGS_NO_DOUBLE_BUFFERING was being checked against wrong variable  *   * Revision 1.23  93/09/07  10:32:53  davidg  * split wd and 3Com probe code into seperate routines  *   * Revision 1.22  93/09/06  20:28:22  davidg  * change references to LAAR to use shadow/prototype rather than the  * real thing because 8013EBT asic regs are write-only.  *   * Revision 1.21  93/08/25  20:38:02  davidg  * added recognition for WD8013WC (10BaseT) card type  *   * Revision 1.20  93/08/14  20:07:35  davidg  * one more stab at getting the 8013EBT working  *   * Revision 1.19  93/08/02  02:57:53  davidg  * Fixed problem where some rev 8013EBT boards want the DCR_LS flag  * set in order to work in 16bit mode. Also improves performance on  * all types of boards.  *  *...(part of log nuked for brevity)  *   * Revision 1.12  93/07/07  06:27:44  davidg  * moved call to bpfattach to after this drivers attach printf -  * improves readability of startup messages.  *   *...(part of log nuked for brevity)  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
 end_comment
 
 begin_include
@@ -213,6 +213,28 @@ file|"i386/include/pio.h"
 end_include
 
 begin_comment
+comment|/* For backwards compatibility */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IFF_ALTPHYS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IFF_ALTPHYS
+value|IFF_LLC0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * ed_softc: per line info and status  */
 end_comment
 
@@ -310,6 +332,10 @@ name|u_char
 name|next_packet
 decl_stmt|;
 comment|/* pointer to next unread RX packet */
+comment|/*  * The following 'proto' variable is part of a work-around for 8013EBT asics  *	being write-only. It's sort of a prototype/shadow of the real thing.  */
+name|u_char
+name|wd_laar_proto
+decl_stmt|;
 block|}
 name|ed_softc
 index|[
@@ -495,20 +521,9 @@ index|]
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|x
-decl_stmt|;
-name|u_int
-name|memsize
 decl_stmt|;
 name|u_char
-name|iptr
-decl_stmt|,
-name|memwidth
-decl_stmt|,
 name|sum
-decl_stmt|,
-name|tmp
 decl_stmt|;
 comment|/* 	 * Setup initial i/o address for ASIC and NIC 	 */
 name|sc
@@ -578,20 +593,74 @@ operator|==
 name|ED_WD_ROM_CHECKSUM_TOTAL
 condition|)
 block|{
-goto|goto
-name|type_WD80x3
-goto|;
+return|return
+operator|(
+name|ed_probe_WD80x3
+argument_list|(
+name|isa_dev
+argument_list|)
+operator|)
+return|;
 block|}
 else|else
 block|{
-comment|/* 		 * Do additional checking to make sure its a 3Com and 		 * not a broken WD clone 		 */
-goto|goto
-name|type_3Com
-goto|;
+comment|/* 		 * XXX - Should do additional checking to make sure its a 3Com 		 *	and not a broken WD clone 		 */
+return|return
+operator|(
+name|ed_probe_3Com
+argument_list|(
+name|isa_dev
+argument_list|)
+operator|)
+return|;
 block|}
-name|type_WD80x3
-label|:
-comment|/* 	 * Looks like a WD/SMC board 	 */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Probe and vendor-specific initialization routine for SMC/WD80x3 boards  */
+end_comment
+
+begin_function
+name|int
+name|ed_probe_WD80x3
+parameter_list|(
+name|isa_dev
+parameter_list|)
+name|struct
+name|isa_device
+modifier|*
+name|isa_dev
+decl_stmt|;
+block|{
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|ed_softc
+index|[
+name|isa_dev
+operator|->
+name|id_unit
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|u_int
+name|memsize
+decl_stmt|;
+name|u_char
+name|iptr
+decl_stmt|,
+name|memwidth
+decl_stmt|,
+name|sum
+decl_stmt|,
+name|tmp
+decl_stmt|;
 name|sc
 operator|->
 name|vendor
@@ -728,7 +797,7 @@ literal|16
 expr_stmt|;
 break|break;
 case|case
-name|ED_TYPE_WD8013EB
+name|ED_TYPE_WD8013EP
 case|:
 comment|/* also WD8003EP */
 if|if
@@ -757,7 +826,7 @@ name|sc
 operator|->
 name|type_str
 operator|=
-literal|"WD8013EB"
+literal|"WD8013EP"
 expr_stmt|;
 block|}
 else|else
@@ -777,6 +846,24 @@ operator|=
 literal|8
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|ED_TYPE_WD8013WC
+case|:
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"WD8013WC"
+expr_stmt|;
+name|memsize
+operator|=
+literal|16384
+expr_stmt|;
+name|memwidth
+operator|=
+literal|16
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8013EBP
@@ -841,6 +928,14 @@ literal|16
 operator|)
 operator|&&
 operator|(
+name|sc
+operator|->
+name|type
+operator|!=
+name|ED_TYPE_WD8013EBT
+operator|)
+operator|&&
+operator|(
 operator|(
 name|inb
 argument_list|(
@@ -867,25 +962,13 @@ operator|=
 literal|8192
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_ICR
-argument_list|)
-operator|&
-name|ED_WD_ICR_MSZ
-condition|)
-block|{
-name|memsize
-operator|=
-literal|32768
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* This has caused more problems than it's worth */
+block|if (inb(sc->asic_addr + ED_WD_ICR)& ED_WD_ICR_MSZ) { 		memsize = 32768; 	}
+endif|#
+directive|endif
 if|#
 directive|if
 name|ED_DEBUG
@@ -1037,11 +1120,30 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ed%d: kernel configured irq doesn't match board configured irq\n"
+literal|"ed%d: kernel configured irq %d doesn't match board configured irq %d\n"
 argument_list|,
 name|isa_dev
 operator|->
 name|id_unit
+argument_list|,
+name|ffs
+argument_list|(
+name|isa_dev
+operator|->
+name|id_irq
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|ffs
+argument_list|(
+name|ed_intr_mask
+index|[
+name|iptr
+index|]
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1090,7 +1192,7 @@ operator|||
 operator|(
 name|isa_dev
 operator|->
-name|id_msize
+name|id_flags
 operator|&
 name|ED_FLAGS_NO_DOUBLE_BUFFERING
 operator|)
@@ -1250,11 +1352,21 @@ expr_stmt|;
 comment|/* 	 * Set upper address bits and 8/16 bit access to shared memory 	 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|type
 operator|&
 name|ED_WD_SOFTCONFIG
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|type
+operator|==
+name|ED_TYPE_WD8013EBT
+operator|)
 condition|)
 block|{
 if|if
@@ -1273,6 +1385,11 @@ operator|+
 name|ED_WD_LAAR
 argument_list|,
 operator|(
+name|sc
+operator|->
+name|wd_laar_proto
+operator|=
+operator|(
 operator|(
 name|kvtop
 argument_list|(
@@ -1285,6 +1402,7 @@ literal|19
 operator|)
 operator|&
 name|ED_WD_LAAR_ADDRHI
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1299,6 +1417,11 @@ name|asic_addr
 operator|+
 name|ED_WD_LAAR
 argument_list|,
+operator|(
+name|sc
+operator|->
+name|wd_laar_proto
+operator|=
 name|ED_WD_LAAR_L16EN
 operator||
 name|ED_WD_LAAR_M16EN
@@ -1316,6 +1439,7 @@ literal|19
 operator|)
 operator|&
 name|ED_WD_LAAR_ADDRHI
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1384,17 +1508,14 @@ name|asic_addr
 operator|+
 name|ED_WD_LAAR
 argument_list|,
-name|inb
-argument_list|(
+operator|(
 name|sc
 operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|)
-operator|&
+name|wd_laar_proto
+operator|&=
 operator|~
 name|ED_WD_LAAR_M16EN
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1418,17 +1539,14 @@ name|asic_addr
 operator|+
 name|ED_WD_LAAR
 argument_list|,
-name|inb
-argument_list|(
+operator|(
 name|sc
 operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|)
-operator|&
+name|wd_laar_proto
+operator|&=
 operator|~
 name|ED_WD_LAAR_M16EN
+operator|)
 argument_list|)
 expr_stmt|;
 name|isa_dev
@@ -1442,9 +1560,54 @@ operator|(
 name|ED_WD_IO_PORTS
 operator|)
 return|;
-name|type_3Com
-label|:
-comment|/* 	 * Looks like a 3Com board 	 */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Probe and vendor-specific initialization routine for 3Com 3c503 boards  */
+end_comment
+
+begin_macro
+name|ed_probe_3Com
+argument_list|(
+argument|isa_dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|isa_device
+modifier|*
+name|isa_dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|ed_softc
+index|[
+name|isa_dev
+operator|->
+name|id_unit
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|u_int
+name|memsize
+decl_stmt|;
+name|u_char
+name|memwidth
+decl_stmt|,
+name|sum
+decl_stmt|;
 name|sc
 operator|->
 name|vendor
@@ -1737,7 +1900,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Reset NIC and ASIC 	 */
+comment|/* 	 * Reset NIC and ASIC. Enable on-board transceiver through reset sequence 	 *	because it'll lock up if the cable isn't connected if we don't. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -1747,14 +1910,17 @@ operator|+
 name|ED_3COM_CR
 argument_list|,
 name|ED_3COM_CR_RST
+operator||
+name|ED_3COM_CR_XSEL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for a while, then un-reset it 	 */
 name|DELAY
 argument_list|(
-literal|5000
+literal|50
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The 3Com ASIC defaults to rather strange settings for the CR after 	 *	a reset - it's important to set it again after the following 	 *	outb (this is done when we map the PROM below). 	 */
 name|outb
 argument_list|(
 name|sc
@@ -1763,16 +1929,17 @@ name|asic_addr
 operator|+
 name|ED_3COM_CR
 argument_list|,
-literal|0
+name|ED_3COM_CR_XSEL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait a bit for the NIC to recover from the reset 	 */
 name|DELAY
 argument_list|(
-literal|5000
+literal|50
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The 3Com ASIC defaults to rather strange settings for the CR after 	 *	a reset - it's important to set it so that the NIC I/O 	 *	registers are mapped. The above setting of it to '0' only 	 *	resets the reset condition - the CR is *not* set to zeros. 	 */
+comment|/* 	 * Get station address from on-board ROM 	 */
+comment|/* 	 * First, map ethernet address PROM over the top of where the NIC 	 *	registers normally appear. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -1781,7 +1948,52 @@ name|asic_addr
 operator|+
 name|ED_3COM_CR
 argument_list|,
+name|ED_3COM_CR_EALO
+operator||
+name|ED_3COM_CR_XSEL
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
+init|;
+name|i
+operator|<
+name|ETHER_ADDR_LEN
+condition|;
+operator|++
+name|i
+control|)
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+index|[
+name|i
+index|]
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Unmap PROM - select NIC registers. The proper setting of the 	 *	tranceiver is set in ed_init so that the attach code 	 *	is given a chance to set the default based on a compile-time 	 *	config option 	 */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_3COM_CR
+argument_list|,
+name|ED_3COM_CR_XSEL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Determine if this is an 8bit or 16bit board 	 */
@@ -2028,11 +2240,20 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"ed%d: Invalid irq configuration\n"
+literal|"ed%d: Invalid irq configuration (%d) must be 2-5 for 3c503\n"
 argument_list|,
 name|isa_dev
 operator|->
 name|id_unit
+argument_list|,
+name|ffs
+argument_list|(
+name|isa_dev
+operator|->
+name|id_irq
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2089,74 +2310,6 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get station address from on-board ROM 	 */
-comment|/* 	 * First, map ethernet address PROM over the top of where the NIC 	 *	registers normally appear. 	 */
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_3COM_CR
-argument_list|,
-name|ED_3COM_CR_EALO
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ETHER_ADDR_LEN
-condition|;
-operator|++
-name|i
-control|)
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-index|[
-name|i
-index|]
-operator|=
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Unmap PROM - select NIC registers. Tranceiver remains disabled at 	 *	this point. It's enabled in ed_init so that the attach code 	 *	is given a chance to set the default based on a compile-time 	 *	config option 	 */
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_3COM_CR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("Starting write\n"); for (i = 0; i< 8192; ++i) 	bzero(sc->smem_start, 8192); printf("Done.\n");
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|{ char	test_buf[1024]; printf("starting write\n"); 	for (i = 0; i< 8*8192; ++i) 	bcopy(test_buf, sc->smem_start, 1024); printf("starting read\n"); 	for (i = 0; i< 8*8192; ++i) 	bcopy(sc->smem_start, test_buf, 1024); printf("done.\n"); }
-endif|#
-directive|endif
 comment|/* 	 * Zero memory and verify that it is clear 	 */
 name|bzero
 argument_list|(
@@ -2223,7 +2376,7 @@ name|ED_3COM_IO_PORTS
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Install interface into kernel networking data structures  */
@@ -2341,7 +2494,7 @@ name|if_watchdog
 operator|=
 name|ed_watchdog
 expr_stmt|;
-comment|/* 	 * Set default state for LLC0 flag (used to disable the tranceiver 	 *	for AUI operation), based on compile-time config option. 	 */
+comment|/* 	 * Set default state for ALTPHYS flag (used to disable the tranceiver 	 *	for AUI operation), based on compile-time config option. 	 */
 if|if
 condition|(
 name|isa_dev
@@ -2361,7 +2514,7 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
 operator||
-name|IFF_LLC0
+name|IFF_ALTPHYS
 operator|)
 expr_stmt|;
 else|else
@@ -2527,7 +2680,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_LLC0
+name|IFF_ALTPHYS
 operator|)
 operator|)
 condition|?
@@ -3152,7 +3305,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_LLC0
+name|IFF_ALTPHYS
 condition|)
 block|{
 name|outb
@@ -3425,9 +3578,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|u_char
-name|laar_tmp
-decl_stmt|;
 name|outloop
 label|:
 comment|/* 	 * See if there is room to send more data (i.e. one or both of the 	 *	buffers is empty). 	 */
@@ -3494,7 +3644,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Copy the mbuf chain into the transmit buffer 	 */
-comment|/* 	 * Enable 16bit access to shared memory on WD/SMC boards 	 */
+comment|/* 	 * Enable 16bit access to shared memory on WD/SMC boards 	 *	Don't update wd_laar_proto because we want to restore the 	 *	previous state (because an arp reply in the input code 	 *	may cause a call-back to ed_start) 	 */
 if|if
 condition|(
 name|sc
@@ -3512,17 +3662,6 @@ operator|==
 name|ED_VENDOR_WD_SMC
 condition|)
 block|{
-name|laar_tmp
-operator|=
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|)
-expr_stmt|;
 name|outb
 argument_list|(
 name|sc
@@ -3531,9 +3670,13 @@ name|asic_addr
 operator|+
 name|ED_WD_LAAR
 argument_list|,
-name|laar_tmp
+operator|(
+name|sc
+operator|->
+name|wd_laar_proto
 operator||
 name|ED_WD_LAAR_M16EN
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3629,7 +3772,9 @@ name|asic_addr
 operator|+
 name|ED_WD_LAAR
 argument_list|,
-name|laar_tmp
+name|sc
+operator|->
+name|wd_laar_proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -4552,16 +4697,13 @@ name|asic_addr
 operator|+
 name|ED_WD_LAAR
 argument_list|,
-name|inb
-argument_list|(
+operator|(
 name|sc
 operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|)
-operator||
+name|wd_laar_proto
+operator||=
 name|ED_WD_LAAR_M16EN
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4596,17 +4738,14 @@ name|asic_addr
 operator|+
 name|ED_WD_LAAR
 argument_list|,
-name|inb
-argument_list|(
+operator|(
 name|sc
 operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|)
-operator|&
+name|wd_laar_proto
+operator|&=
 operator|~
 name|ED_WD_LAAR_M16EN
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5103,7 +5242,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 		 * An unfortunate hack to provide the (required) software control 		 *	of the tranceiver for 3Com boards. The LLC0 flag disables 		 *	the tranceiver if set. 		 */
+comment|/* 		 * An unfortunate hack to provide the (required) software control 		 *	of the tranceiver for 3Com boards. The ALTPHYS flag disables 		 *	the tranceiver if set. 		 */
 if|if
 condition|(
 name|sc
@@ -5119,7 +5258,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_LLC0
+name|IFF_ALTPHYS
 condition|)
 block|{
 name|outb
