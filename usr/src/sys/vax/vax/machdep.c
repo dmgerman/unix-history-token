@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.9	%G%	*/
+comment|/*	machdep.c	3.10	%G%	*/
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.9) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.10) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,26 +225,12 @@ argument_list|)
 expr_stmt|;
 name|mfree
 argument_list|(
-name|swapmap
-argument_list|,
-name|nswap
-operator|-
-name|CLSIZE
-argument_list|,
-name|CLSIZE
-argument_list|)
-expr_stmt|;
-name|mfree
-argument_list|(
 name|kernelmap
 argument_list|,
 name|USRPTSIZE
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|swplo
-operator|--
 expr_stmt|;
 name|mbainit
 argument_list|()
