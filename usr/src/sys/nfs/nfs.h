@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -704,6 +704,26 @@ name|uid
 parameter_list|)
 value|((uid)& (NUIDHASHSIZ - 1))
 end_define
+
+begin_comment
+comment|/*  * Network address hash list element  */
+end_comment
+
+begin_union
+union|union
+name|nethostaddr
+block|{
+name|u_long
+name|had_inetaddr
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|had_nam
+decl_stmt|;
+block|}
+union|;
+end_union
 
 begin_struct
 struct|struct
