@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	5.7 (Berkeley) %G%"
+literal|"@(#)opendir.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,12 @@ name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|long
+name|_rewinddir
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * open a directory.  */
@@ -234,6 +240,14 @@ operator|->
 name|dd_seek
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * Set up seek point for rewinddir. 	 */
+name|_rewinddir
+operator|=
+name|telldir
+argument_list|(
+name|dirp
+argument_list|)
 expr_stmt|;
 return|return
 name|dirp
