@@ -1584,7 +1584,12 @@ argument_list|(
 name|tmpfname
 argument_list|)
 argument_list|,
-literal|".!%ld!%s"
+literal|"%s/.!%ld!%s"
+argument_list|,
+name|dirname
+argument_list|(
+name|fname
+argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -1592,7 +1597,10 @@ operator|)
 name|getpid
 argument_list|()
 argument_list|,
+name|basename
+argument_list|(
 name|fname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
