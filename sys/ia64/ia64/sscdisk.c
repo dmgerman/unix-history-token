@@ -454,8 +454,6 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-operator||
-name|D_CANFREE
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -854,21 +852,6 @@ operator|->
 name|stats
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|bio_cmd
-operator|==
-name|BIO_DELETE
-condition|)
-block|{
-name|dop
-operator|=
-name|DEVSTAT_NO_DATA
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|bp
