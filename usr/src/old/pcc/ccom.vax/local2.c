@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.14 (Berkeley) %G%"
+literal|"@(#)local2.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4768,6 +4768,8 @@ begin_expr_stmt
 name|upput
 argument_list|(
 name|p
+argument_list|,
+name|off
 argument_list|)
 specifier|register
 name|NODE
@@ -4775,6 +4777,12 @@ operator|*
 name|p
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|off
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
