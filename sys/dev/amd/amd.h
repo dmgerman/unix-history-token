@@ -582,6 +582,21 @@ name|bus_dma_tag_t
 name|buffer_dmat
 decl_stmt|;
 comment|/* dmat for buffer I/O */
+name|bus_dma_tag_t
+name|sense_dmat
+decl_stmt|;
+comment|/* dmat for sense buffer */
+name|bus_dmamap_t
+name|sense_dmamap
+decl_stmt|;
+name|struct
+name|scsi_sense_data
+modifier|*
+name|sense_buffers
+decl_stmt|;
+name|bus_addr_t
+name|sense_busaddr
+decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
