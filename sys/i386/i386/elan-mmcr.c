@@ -354,6 +354,8 @@ operator|/
 literal|4
 block|,
 literal|"ELAN"
+block|,
+literal|1000
 block|}
 decl_stmt|;
 end_decl_stmt
