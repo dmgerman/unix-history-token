@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -320,6 +320,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Due to a "feature" in some operating systems such as Ultrix 4.3 and **  HPUX 8.0, if you receive a "No route to host" message (ICMP message **  ICMP_UNREACH_HOST) on _any_ connection, all connections to that host **  are closed.  Some firewalls return this error if you try to connect **  to the IDENT port (113), so you can't receive email from these hosts **  on these systems.  The firewall really should use a more specific **  message such as ICMP_UNREACH_PROTOCOL or _PORT or _NET_PROHIB.  This **  will get #undefed below as needed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|1
+end_define
+
+begin_comment
+comment|/* use IDENT proto (RFC 1413) */
+end_comment
+
+begin_comment
 comment|/********************************************************************** **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. **********************************************************************/
 end_comment
 
@@ -384,6 +399,12 @@ directive|define
 name|_PATH_UNIX
 value|"/hp-ux"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|IDENTPROTO
+end_undef
 
 begin_endif
 endif|#
@@ -689,6 +710,12 @@ directive|define
 name|LA_AVENRUN
 value|"avenrun"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|IDENTPROTO
+end_undef
 
 begin_endif
 endif|#
@@ -1067,6 +1094,12 @@ name|LA_TYPE
 value|LA_FLOAT
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|IDENTPROTO
+end_undef
+
 begin_endif
 endif|#
 directive|endif
@@ -1385,42 +1418,6 @@ end_define
 
 begin_comment
 comment|/* has waitpid(2) call */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* **  Due to a "feature" in some operating systems such as Ultrix 4.3 and **  HPUX 8.0, if you receive a "No route to host" message (ICMP message **  ICMP_UNREACH_HOST) on _any_ connection, all connections to that host **  are closed.  Some firewalls return this error if you try to connect **  to the IDENT port (113), so you can't receive email from these hosts **  on these systems.  The firewall really should use a more specific **  message such as ICMP_UNREACH_PROTOCOL or _PORT or _NET_PROHIB. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__hpux
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|IDENTPROTO
-value|1
-end_define
-
-begin_comment
-comment|/* use IDENT proto (RFC 1413) */
 end_comment
 
 begin_endif
