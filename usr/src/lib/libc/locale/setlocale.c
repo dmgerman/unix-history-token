@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setlocale.c	8.1 (Berkeley) %G%"
+literal|"@(#)setlocale.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -988,7 +988,7 @@ comment|/* 	 * Some day we will actually look at this file. 	 */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|name
 argument_list|,
