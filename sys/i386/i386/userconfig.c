@@ -8,19 +8,13 @@ comment|/**  ** USERCONFIG  **  ** Kernel boot-time configuration manipulation t
 end_comment
 
 begin_comment
-comment|/**  ** USERCONFIG, visual mode.  **  **   msmith@freebsd.org  **  ** Look for "EDIT THIS LIST" to add to the list of known devices  **   **  ** There are a number of assumptions made in this code.  **   ** - That the console supports a minimal set of ANSI escape sequences  **   (See the screen manipulation section for a summary)  **   and has at least 24 rows.  ** - That values less than or equal to zero for any of the device  **   parameters indicate that the driver does not use the parameter.  ** - That the only tunable parameter for PCI devices are their flags.  ** - That flags are _always_ editable.  **  ** Devices marked as disabled are imported as such.  PCI devices are   ** listed under a seperate heading for informational purposes only.  ** To date, there is no means for changing the behaviour of PCI drivers  ** from UserConfig.  **  ** Note that some EISA devices probably fall into this category as well,  ** and in fact the actual bus supported by some drivers is less than clear.  ** A longer-term goal might be to list drivers by instance rather than  ** per bus-presence.  **   ** For this tool to be useful, the list of devices below _MUST_ be updated   ** when a new driver is brought into the kernel.  It is not possible to   ** extract this information from the drivers in the kernel.  **  ** XXX - TODO:  **   ** - Display _what_ a device conflicts with.  ** - Implement page up/down (as what?)  ** - Wizard mode (no restrictions)  ** - Find out how to put syscons back into low-intensity mode so that the  **   !b escape is useful on the console.  (It seems to be that it actually  **   gets low/high intensity backwards. That looks OK.)  **  ** - Only display headings with devices under them. (difficult)  **/
+comment|/**  ** USERCONFIG, visual mode.  **  **   msmith@freebsd.org  **  ** Look for "EDIT THIS LIST" to add to the list of known devices  **   **  ** There are a number of assumptions made in this code.  **   ** - That the console supports a minimal set of ANSI escape sequences  **   (See the screen manipulation section for a summary)  **   and has at least 24 rows.  ** - That values less than or equal to zero for any of the device  **   parameters indicate that the driver does not use the parameter.  ** - That flags are _always_ editable.  **  ** Devices marked as disabled are imported as such.  **  ** For this tool to be useful, the list of devices below _MUST_ be updated   ** when a new driver is brought into the kernel.  It is not possible to   ** extract this information from the drivers in the kernel.  **  ** XXX - TODO:  **   ** - Display _what_ a device conflicts with.  ** - Implement page up/down (as what?)  ** - Wizard mode (no restrictions)  ** - Find out how to put syscons back into low-intensity mode so that the  **   !b escape is useful on the console.  (It seems to be that it actually  **   gets low/high intensity backwards. That looks OK.)  **  ** - Only display headings with devices under them. (difficult)  **/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"opt_userconfig.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pci.h"
 end_include
 
 begin_include
@@ -120,27 +114,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/pnp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-operator|&&
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<pci/pcivar.h>
 end_include
 
 begin_endif
@@ -979,17 +952,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLS_PCI
-value|254
-end_define
-
-begin_comment
-comment|/* PCI devices */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CLS_MISC
 value|255
 end_define
@@ -1054,12 +1016,6 @@ name|CLS_MMEDIA
 block|}
 block|,
 block|{
-literal|"PCI :            "
-block|,
-name|CLS_PCI
-block|}
-block|,
-block|{
 literal|"Miscellaneous :  "
 block|,
 name|CLS_MISC
@@ -1079,7 +1035,7 @@ comment|/********************* EDIT THIS LIST **********************/
 end_comment
 
 begin_comment
-comment|/** Notes :  **   ** - PCI devices should be marked FLG_IMMUTABLE.  They should not be movable  **   or editable, and have no attributes.  This is handled in getdevs() and  **   devinfo(), so drivers that have a presence on busses other than PCI  **   should have appropriate flags set below.  ** - Devices that shouldn't be seen or removed should be marked FLG_INVISIBLE.  ** - XXX The list below should be reviewed by the driver authors to verify  **   that the correct flags have been set for each driver, and that the  **   descriptions are accurate.  **/
+comment|/** Notes :  **   ** - Devices that shouldn't be seen or removed should be marked FLG_INVISIBLE.  ** - XXX The list below should be reviewed by the driver authors to verify  **   that the correct flags have been set for each driver, and that the  **   descriptions are accurate.  **/
 end_comment
 
 begin_decl_stmt
@@ -1091,39 +1047,9 @@ init|=
 block|{
 comment|/*---Name-----   ---Description---------------------------------------------- */
 block|{
-literal|"isp"
-block|,
-literal|"QLogic ISP SCSI Controller"
-block|,
-name|FLG_IMMUTABLE
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"dpt"
-block|,
-literal|"DPT SCSI RAID Controller"
-block|,
-name|FLG_IMMUTABLE
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
 literal|"adv"
 block|,
 literal|"AdvanSys SCSI narrow controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"adw"
-block|,
-literal|"AdvanSys SCSI WIDE controller"
 block|,
 literal|0
 block|,
@@ -1141,39 +1067,9 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
-literal|"ahc"
-block|,
-literal|"Adaptec 274x/284x/294x SCSI controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"ahb"
-block|,
-literal|"Adaptec 174x SCSI controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
 literal|"aha"
 block|,
 literal|"Adaptec 154x SCSI controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"uha"
-block|,
-literal|"Ultrastor 14F/24F/34F SCSI controller"
 block|,
 literal|0
 block|,
@@ -1206,26 +1102,6 @@ block|,
 literal|"Seagate ST01/ST02 SCSI and compatibles"
 block|,
 literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"wds"
-block|,
-literal|"Western Digitial WD7000 SCSI controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"ncr"
-block|,
-literal|"NCR/Symbios 53C810/15/25/60/75 SCSI controller"
-block|,
-name|FLG_FIXED
 block|,
 name|CLS_STORAGE
 block|}
@@ -1331,56 +1207,6 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
-literal|"amd"
-block|,
-literal|"Tekram DC-390(T) / AMD 53c974 based PCI SCSI"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"plip"
-block|,
-literal|"Parallel Port IP link"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"aue"
-block|,
-literal|"ADMtek AN986 USB ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"cue"
-block|,
-literal|"CATC USB ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"kue"
-block|,
-literal|"Kawasaki LSI USB ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
 literal|"cs"
 block|,
 literal|"IBM EtherJet, CS89x0-based Ethernet adapters"
@@ -1441,39 +1267,9 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
-literal|"fea"
-block|,
-literal|"DEC DEFEA EISA FDDI adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"fxp"
-block|,
-literal|"Intel EtherExpress Pro/100B Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
 literal|"ie"
 block|,
 literal|"AT&T Starlan 10 and EN100, 3C507, NI5210 Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ix"
-block|,
-literal|"Intel EtherExpress Ethernet adapter"
 block|,
 literal|0
 block|,
@@ -1501,89 +1297,9 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
-literal|"sf"
-block|,
-literal|"Adaptec AIC-6915 PCI Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"sis"
-block|,
-literal|"Sis 900/SiS 7016 Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"sk"
-block|,
-literal|"SysKonnect SK-984x gigabit Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
 literal|"sn"
 block|,
 literal|"SMC/Megahertz Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ste"
-block|,
-literal|"Sundance ST201 PCI Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ti"
-block|,
-literal|"Alteon Networks Tigon gigabit Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"tl"
-block|,
-literal|"Texas Instruments ThunderLAN Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"tx"
-block|,
-literal|"SMC 9432TX Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"vx"
-block|,
-literal|"3COM 3C590/3C595 Ethernet adapters"
 block|,
 literal|0
 block|,
@@ -1596,86 +1312,6 @@ block|,
 literal|"Xircom PC Card Ethernet adapter"
 block|,
 literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"dc"
-block|,
-literal|"DEC/Intel 21143 or clone Ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"de"
-block|,
-literal|"DEC DC21040 Ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"fpa"
-block|,
-literal|"DEC DEFPA PCI FDDI adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"rl"
-block|,
-literal|"RealTek 8129/8139 ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"tl"
-block|,
-literal|"Texas Instruments ThunderLAN ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"vr"
-block|,
-literal|"VIA Rhine/Rhine II ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"wb"
-block|,
-literal|"Winbond W89C840F ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"xl"
-block|,
-literal|"3COM 3C90x PCI ethernet adapter"
-block|,
-name|FLG_FIXED
 block|,
 name|CLS_NETWORK
 block|}
@@ -1731,16 +1367,6 @@ name|CLS_COMMS
 block|}
 block|,
 block|{
-literal|"cyy"
-block|,
-literal|"Cyclades Ye/PCI multiport async adapter"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
 literal|"dgb"
 block|,
 literal|"Digiboard PC/Xe, PC/Xi async adapter"
@@ -1791,51 +1417,11 @@ name|CLS_COMMS
 block|}
 block|,
 block|{
-literal|"ppi"
-block|,
-literal|"Generic Parallel Port I/O device"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
-literal|"lpt"
-block|,
-literal|"Line Printer driver"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
 literal|"gp"
 block|,
 literal|"National Instruments AT-GPIB/TNT driver"
 block|,
 literal|0
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
-literal|"uhci"
-block|,
-literal|"UHCI USB host controller driver"
-block|,
-name|FLG_IMMUTABLE
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
-literal|"ohci"
-block|,
-literal|"OHCI USB host controller driver"
-block|,
-name|FLG_IMMUTABLE
 block|,
 name|CLS_COMMS
 block|}
@@ -1911,9 +1497,19 @@ name|CLS_INPUT
 block|}
 block|,
 block|{
-literal|"bktr"
+literal|"sbc"
 block|,
-literal|"Brooktree BT848 based frame grabber/tuner card"
+literal|"PCM Creative SoundBlaster/ESS/Avance sounce cards"
+block|,
+literal|0
+block|,
+name|CLS_MMEDIA
+block|}
+block|,
+block|{
+literal|"gusc"
+block|,
+literal|"PCM Gravis UltraSound sound cards"
 block|,
 literal|0
 block|,
@@ -1923,7 +1519,7 @@ block|,
 block|{
 literal|"pcm"
 block|,
-literal|"New Luigi audio driver for all supported sound cards"
+literal|"PCM Generic soundcard support"
 block|,
 literal|0
 block|,
@@ -1933,7 +1529,7 @@ block|,
 block|{
 literal|"sb"
 block|,
-literal|"Soundblaster PCM (SB, SBPro, SB16, ProAudio Spectrum)"
+literal|"VOXWARE Soundblaster PCM (SB, SBPro, SB16, ProAudio Spectrum)"
 block|,
 literal|0
 block|,
@@ -1943,7 +1539,7 @@ block|,
 block|{
 literal|"sbxvi"
 block|,
-literal|"Soundblaster 16"
+literal|"VOXWARE Soundblaster 16"
 block|,
 literal|0
 block|,
@@ -1953,7 +1549,7 @@ block|,
 block|{
 literal|"sbmidi"
 block|,
-literal|"Soundblaster MIDI interface"
+literal|"VOXWARE Soundblaster MIDI interface"
 block|,
 literal|0
 block|,
@@ -1963,7 +1559,7 @@ block|,
 block|{
 literal|"awe"
 block|,
-literal|"AWE32 MIDI"
+literal|"VOXWARE AWE32 MIDI"
 block|,
 literal|0
 block|,
@@ -1973,7 +1569,7 @@ block|,
 block|{
 literal|"pas"
 block|,
-literal|"ProAudio Spectrum PCM and MIDI"
+literal|"VOXWARE ProAudio Spectrum PCM and MIDI"
 block|,
 literal|0
 block|,
@@ -1983,7 +1579,7 @@ block|,
 block|{
 literal|"gus"
 block|,
-literal|"Gravis Ultrasound, Ultrasound 16 and Ultrasound MAX"
+literal|"VOXWARE Gravis Ultrasound, Ultrasound 16 and Ultrasound MAX"
 block|,
 literal|0
 block|,
@@ -1993,7 +1589,7 @@ block|,
 block|{
 literal|"gusxvi"
 block|,
-literal|"Gravis Ultrasound 16-bit PCM"
+literal|"VOXWARE Gravis Ultrasound 16-bit PCM"
 block|,
 literal|0
 block|,
@@ -2003,7 +1599,7 @@ block|,
 block|{
 literal|"gusmax"
 block|,
-literal|"Gravis Ultrasound MAX"
+literal|"VOXWARE Gravis Ultrasound MAX"
 block|,
 literal|0
 block|,
@@ -2013,7 +1609,7 @@ block|,
 block|{
 literal|"mss"
 block|,
-literal|"Microsoft Sound System"
+literal|"VOXWARE Microsoft Sound System"
 block|,
 literal|0
 block|,
@@ -2023,7 +1619,7 @@ block|,
 block|{
 literal|"opl"
 block|,
-literal|"OPL-2/3 FM, Soundblaster, SBPro, SB16, ProAudio Spectrum"
+literal|"VOXWARE OPL-2/3 FM, Soundblaster, SBPro, SB16, ProAudio Spectrum"
 block|,
 literal|0
 block|,
@@ -2033,7 +1629,7 @@ block|,
 block|{
 literal|"mpu"
 block|,
-literal|"Roland MPU401 MIDI"
+literal|"VOXWARE Roland MPU401 MIDI"
 block|,
 literal|0
 block|,
@@ -2043,7 +1639,7 @@ block|,
 block|{
 literal|"sscape"
 block|,
-literal|"Ensoniq Soundscape MIDI interface"
+literal|"VOXWARE Ensoniq Soundscape MIDI interface"
 block|,
 literal|0
 block|,
@@ -2053,7 +1649,7 @@ block|,
 block|{
 literal|"sscape_mss"
 block|,
-literal|"Ensoniq Soundscape PCM"
+literal|"VOXWARE Ensoniq Soundscape PCM"
 block|,
 literal|0
 block|,
@@ -2063,7 +1659,7 @@ block|,
 block|{
 literal|"uart"
 block|,
-literal|"6850 MIDI UART"
+literal|"VOXWARE 6850 MIDI UART"
 block|,
 literal|0
 block|,
@@ -2131,16 +1727,6 @@ name|CLS_MMEDIA
 block|}
 block|,
 block|{
-literal|"qcam"
-block|,
-literal|"QuickCam parallel port camera"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
 literal|"apm"
 block|,
 literal|"Advanced Power Management"
@@ -2181,49 +1767,9 @@ name|CLS_MISC
 block|}
 block|,
 block|{
-literal|"lkm"
-block|,
-literal|"Loadable PCI driver support"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
 literal|"vga"
 block|,
 literal|"Catchall PCI VGA driver"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
-literal|"chip"
-block|,
-literal|"PCI chipset support"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
-literal|"piix"
-block|,
-literal|"Intel 82371 Bus-master IDE controller"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
-literal|"ide_pci"
-block|,
-literal|"PCI IDE controller"
 block|,
 name|FLG_INVISIBLE
 block|,
@@ -2606,17 +2152,6 @@ name|int
 name|enabled
 parameter_list|)
 block|{
-if|if
-condition|(
-name|dev
-operator|->
-name|iobase
-operator|==
-operator|-
-literal|2
-condition|)
-comment|/* PCI device */
-return|return;
 name|dev
 operator|->
 name|device
@@ -2914,187 +2449,11 @@ name|inactive
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-operator|&&
-literal|0
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|pcidevice_set
-operator|.
-name|ls_length
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|pcidevice_set
-operator|.
-name|ls_items
-index|[
-name|i
-index|]
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-specifier|const
-expr|struct
-name|pci_device
-operator|*
-operator|)
-name|pcidevice_set
-operator|.
-name|ls_items
-index|[
-name|i
-index|]
-operator|)
-operator|->
-name|pd_name
-condition|)
-block|{
-name|strcpy
-argument_list|(
-name|scratch
-operator|.
-name|dev
-argument_list|,
-operator|(
-operator|(
-specifier|const
-expr|struct
-name|pci_device
-operator|*
-operator|)
-name|pcidevice_set
-operator|.
-name|ls_items
-index|[
-name|i
-index|]
-operator|)
-operator|->
-name|pd_name
-argument_list|)
-expr_stmt|;
-name|scratch
-operator|.
-name|iobase
-operator|=
-operator|-
-literal|2
-expr_stmt|;
-comment|/* mark as PCI for future reference */
-name|scratch
-operator|.
-name|irq
-operator|=
-operator|-
-literal|2
-expr_stmt|;
-name|scratch
-operator|.
-name|drq
-operator|=
-operator|-
-literal|2
-expr_stmt|;
-name|scratch
-operator|.
-name|maddr
-operator|=
-operator|-
-literal|2
-expr_stmt|;
-name|scratch
-operator|.
-name|msize
-operator|=
-operator|-
-literal|2
-expr_stmt|;
-name|scratch
-operator|.
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|scratch
-operator|.
-name|comment
-operator|=
-name|DEV_DEVICE
-expr_stmt|;
-comment|/* is a device */
-name|scratch
-operator|.
-name|unit
-operator|=
-literal|0
-expr_stmt|;
-comment|/* arbitrary number of them */
-name|scratch
-operator|.
-name|conflicts
-operator|=
-literal|0
-expr_stmt|;
-name|scratch
-operator|.
-name|device
-operator|=
-name|NULL
-expr_stmt|;
-name|scratch
-operator|.
-name|changed
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|devinfo
-argument_list|(
-operator|&
-name|scratch
-argument_list|)
-condition|)
-comment|/* look up name, set class and flags */
-name|insdev
-argument_list|(
-operator|&
-name|scratch
-argument_list|,
-name|active
-argument_list|)
-expr_stmt|;
-comment|/* always active */
-block|}
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* NPCI> 0 */
 block|}
 end_function
 
 begin_comment
-comment|/**  ** Devinfo  **  ** Fill in (dev->name), (dev->attrib) and (dev->type) from the device_info array.  ** If the device is unknown, put it in the CLS_MISC class, with no flags.  **  ** If the device is marked "invisible", return nonzero; the caller should  ** not insert any such device into either list.  **  ** PCI devices are always inserted into CLS_PCI, regardless of the class associated  ** with the driver type.  **/
+comment|/**  ** Devinfo  **  ** Fill in (dev->name), (dev->attrib) and (dev->type) from the device_info array.  ** If the device is unknown, put it in the CLS_MISC class, with no flags.  **  ** If the device is marked "invisible", return nonzero; the caller should  ** not insert any such device into either list.  **  **/
 end_comment
 
 begin_function
@@ -3177,33 +2536,6 @@ name|name
 argument_list|)
 expr_stmt|;
 comment|/* get the name */
-if|if
-condition|(
-name|dev
-operator|->
-name|iobase
-operator|==
-operator|-
-literal|2
-condition|)
-block|{
-comment|/* is this a PCI device? */
-name|dev
-operator|->
-name|attrib
-operator|=
-name|FLG_IMMUTABLE
-expr_stmt|;
-comment|/* dark green ones up the back... */
-name|dev
-operator|->
-name|class
-operator|=
-name|CLS_PCI
-expr_stmt|;
-block|}
-else|else
-block|{
 name|dev
 operator|->
 name|attrib
@@ -3215,7 +2547,6 @@ index|]
 operator|.
 name|attrib
 expr_stmt|;
-comment|/* light green ones up the front */
 name|dev
 operator|->
 name|class
@@ -3227,7 +2558,6 @@ index|]
 operator|.
 name|class
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -3418,17 +2748,6 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* search for a previous instance of the same device */
-if|if
-condition|(
-name|dev
-operator|->
-name|iobase
-operator|!=
-operator|-
-literal|2
-condition|)
-comment|/* avoid PCI devices grouping with non-PCI devices */
-block|{
 for|for
 control|(
 name|ap
@@ -3453,17 +2772,6 @@ operator|!=
 name|DEV_DEVICE
 condition|)
 comment|/* ignore comments */
-continue|continue;
-if|if
-condition|(
-name|ap
-operator|->
-name|iobase
-operator|==
-operator|-
-literal|2
-condition|)
-comment|/* don't group with a PCI device */
 continue|continue;
 if|if
 condition|(
@@ -3548,7 +2856,6 @@ argument_list|)
 condition|)
 comment|/* next is a different device */
 break|break;
-block|}
 block|}
 block|}
 block|}
@@ -4054,16 +3361,6 @@ name|changed
 operator|)
 operator|&&
 comment|/* has been changed */
-operator|(
-name|list
-operator|->
-name|iobase
-operator|!=
-operator|-
-literal|2
-operator|)
-operator|&&
-comment|/* is not a PCI device */
 operator|(
 name|list
 operator|->
@@ -4703,17 +4000,6 @@ name|DEV_DEVICE
 condition|)
 comment|/* comments don't usually conflict */
 continue|continue;
-if|if
-condition|(
-name|dp
-operator|->
-name|iobase
-operator|==
-operator|-
-literal|2
-condition|)
-comment|/* it's a PCI device, not interested */
-continue|continue;
 name|dp
 operator|->
 name|conflicts
@@ -4746,17 +4032,6 @@ operator|!=
 name|DEV_DEVICE
 condition|)
 comment|/* likewise */
-continue|continue;
-if|if
-condition|(
-name|dp
-operator|->
-name|iobase
-operator|==
-operator|-
-literal|2
-condition|)
-comment|/* it's a PCI device, not interested */
 continue|continue;
 if|if
 condition|(
@@ -6559,25 +5834,6 @@ argument_list|,
 literal|18
 argument_list|,
 name|buf
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|dev
-operator|->
-name|iobase
-operator|==
-operator|-
-literal|2
-condition|)
-comment|/* a PCI device */
-name|putmsg
-argument_list|(
-literal|" PCI devices are displayed for informational purposes only, and\n"
-literal|" cannot be disabled or configured here."
 argument_list|)
 expr_stmt|;
 block|}
@@ -9265,17 +8521,6 @@ name|DEV_DEVICE
 condition|)
 comment|/* can't edit comments, zoom? */
 block|{
-if|if
-condition|(
-name|dp
-operator|->
-name|iobase
-operator|!=
-operator|-
-literal|2
-condition|)
-comment|/* can't edit PCI devices */
-block|{
 name|masterhelp
 argument_list|(
 literal|"  [!bTAB!n]   Change fields           [!bQ!n]   Save device parameters"
@@ -9308,7 +8553,6 @@ name|active
 argument_list|)
 expr_stmt|;
 comment|/* update conflict tags */
-block|}
 block|}
 else|else
 block|{
