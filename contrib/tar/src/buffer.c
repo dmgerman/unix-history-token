@@ -446,6 +446,13 @@ begin_comment
 comment|/* volume number to print in external 				   messages */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|grandchild_pid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* The pointer save_name, which is set in function dump_file() of module    create.c, points to the original long filename instead of the new,    shorter mangled name that is set in start_header() of module create.c.    The pointer save_name is only used in multi-volume mode when the file    being processed is non-sparse; if a file is split between volumes, the    save_name is used in generating the LF_MULTIVOL record on the second    volume.  (From Pierce Cantrell, 1991-08-13.)  */
 end_comment
@@ -1251,9 +1258,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|pid_t
-name|grandchild_pid
-decl_stmt|;
 name|int
 name|wait_status
 decl_stmt|;
@@ -1811,6 +1815,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|sig_propagate
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+name|kill
+argument_list|(
+name|grandchild_pid
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|TAREXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Set ARCHIVE for uncompressing, then reading an archive.  */
 end_comment
@@ -1834,9 +1862,6 @@ name|child_pipe
 index|[
 literal|2
 index|]
-decl_stmt|;
-name|pid_t
-name|grandchild_pid
 decl_stmt|;
 name|int
 name|wait_status
@@ -2064,6 +2089,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* The child tar is still here!  */
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|sig_propagate
+argument_list|)
+expr_stmt|;
 comment|/* Prepare for unblocking the data from the archive into the      uncompressor.  */
 name|xdup2
 argument_list|(
