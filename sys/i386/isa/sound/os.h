@@ -194,7 +194,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"soundcard.h"
+file|<machine/soundcard.h>
 end_include
 
 begin_comment

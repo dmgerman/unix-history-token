@@ -30,13 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ultrasound.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
+file|<machine/ultrasound.h>
 end_include
 
 begin_include

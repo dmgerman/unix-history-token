@@ -30,19 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/soundcard.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ultrasound.h>
+file|<machine/ultrasound.h>
 end_include
 
 begin_include
