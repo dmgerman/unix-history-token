@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: commands.c,v 1.3 1998/10/27 06:10:45 grog Exp grog $ */
+comment|/* $Id: commands.c,v 1.2 1998/11/02 04:12:28 grog Exp $ */
 end_comment
 
 begin_include
@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vinumhdr.h"
+file|<dev/vinum/vinumhdr.h>
 end_include
 
 begin_include
