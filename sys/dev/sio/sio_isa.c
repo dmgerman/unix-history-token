@@ -443,6 +443,13 @@ block|}
 block|,
 comment|/* NECE761 - 33.6Modem */
 block|{
+literal|0x0160633a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NSC6001 - National Semi's IrDA Controller*/
+block|{
 literal|0x08804f3f
 block|,
 name|NULL
@@ -715,6 +722,13 @@ name|NULL
 block|}
 block|,
 comment|/* USR9190 - USR 56k Voice INT */
+block|{
+literal|0x04f0235c
+block|,
+name|NULL
+block|}
+block|,
+comment|/* WACF004 - Wacom Tablet PC Screen*/
 block|{
 literal|0x0300695c
 block|,
