@@ -750,7 +750,7 @@ parameter_list|,
 name|ke
 parameter_list|)
 define|\
-value|(ke->ke_thread->td_priority != kg->kg_user_pri ||			\     SCHED_INTERACTIVE(kg))
+value|(ke->ke_thread->td_priority< kg->kg_user_pri ||			\     SCHED_INTERACTIVE(kg))
 end_define
 
 begin_comment
@@ -5263,17 +5263,6 @@ name|td
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-condition|)
-block|{
 name|kseq_load_rem
 argument_list|(
 name|KSEQ_CPU
@@ -5289,16 +5278,6 @@ expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|kseq_runq_add
-argument_list|(
-name|KSEQ_SELF
-argument_list|()
-argument_list|,
-name|ke
 argument_list|)
 expr_stmt|;
 block|}
