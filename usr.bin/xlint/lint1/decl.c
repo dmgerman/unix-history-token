@@ -1150,9 +1150,12 @@ block|}
 block|, 	}
 struct|;
 comment|/* declaration stack */
+if|if
+condition|(
+operator|(
 name|dcs
 operator|=
-name|xcalloc
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1161,6 +1164,12 @@ argument_list|(
 name|dinfo_t
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 name|dcs
 operator|->
@@ -1257,9 +1266,12 @@ name|tt_sz
 expr_stmt|;
 block|}
 comment|/* shared type structures */
+if|if
+condition|(
+operator|(
 name|typetab
 operator|=
-name|xcalloc
+name|calloc
 argument_list|(
 name|NTSPEC
 argument_list|,
@@ -1268,6 +1280,12 @@ argument_list|(
 name|type_t
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2755,9 +2773,12 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* put a new element on the declaration stack */
+if|if
+condition|(
+operator|(
 name|di
 operator|=
-name|xcalloc
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -2766,6 +2787,12 @@ argument_list|(
 name|dinfo_t
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 name|di
 operator|->

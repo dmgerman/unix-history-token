@@ -247,9 +247,12 @@ name|cstk_t
 modifier|*
 name|ci
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|ci
 operator|=
-name|xcalloc
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -258,6 +261,12 @@ argument_list|(
 name|cstk_t
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 name|ci
 operator|->
@@ -1353,9 +1362,12 @@ argument_list|(
 name|tn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|nv
 operator|=
-name|xcalloc
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1364,6 +1376,12 @@ argument_list|(
 name|val_t
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 name|cvtcon
 argument_list|(
@@ -1472,9 +1490,12 @@ block|}
 else|else
 block|{
 comment|/* 				 * append the value to the list of 				 * case values 				 */
+if|if
+condition|(
+operator|(
 name|cl
 operator|=
-name|xcalloc
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1483,6 +1504,12 @@ argument_list|(
 name|clst_t
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 name|STRUCT_ASSIGN
 argument_list|(
@@ -1861,9 +1888,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Remember the type of the expression. Because its possible 	 * that (*tp) is allocated on tree memory the type must be 	 * duplicated. This is not too complicated because it is 	 * only an integer type. 	 */
+if|if
+condition|(
+operator|(
 name|tp
 operator|=
-name|xcalloc
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1872,6 +1902,12 @@ argument_list|(
 name|type_t
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
