@@ -1270,7 +1270,7 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-comment|/* Determine our login name before the we reopen() stdout */
+comment|/* Determine our login name before we reopen() stdout */
 if|if
 condition|(
 operator|(
