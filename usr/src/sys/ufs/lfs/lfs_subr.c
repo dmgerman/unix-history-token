@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -205,98 +205,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Search a block for a specific dinode. */
-end_comment
-
-begin_function
-name|DINODE
-modifier|*
-name|lfs_ifind
-parameter_list|(
-name|fs
-parameter_list|,
-name|ino
-parameter_list|,
-name|page
-parameter_list|)
-name|struct
-name|lfs
-modifier|*
-name|fs
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-name|void
-modifier|*
-name|page
-decl_stmt|;
-block|{
-specifier|register
-name|DINODE
-modifier|*
-name|dip
-decl_stmt|;
-specifier|register
-name|int
-name|cnt
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_ifind: inode %d\n"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|dip
-operator|=
-name|page
-expr_stmt|;
-for|for
-control|(
-name|cnt
-operator|=
-name|INOPB
-argument_list|(
-name|fs
-argument_list|)
-init|;
-name|cnt
-operator|--
-condition|;
-operator|++
-name|dip
-control|)
-if|if
-condition|(
-name|dip
-operator|->
-name|di_inum
-operator|==
-name|ino
-condition|)
-return|return
-operator|(
-name|dip
-operator|)
-return|;
-name|panic
-argument_list|(
-literal|"lfs_ifind: dinode %u not found"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
