@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|(0x5ffffffffff)
+value|(0x7fe00000000)
 end_define
 
 begin_define
@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|VM_MIN_ADDRESS
-value|(0)
+value|(0x100000)
 end_define
 
 begin_comment
@@ -209,21 +209,21 @@ begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|(0x60000000000)
+value|(0x400000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(0x6e000000000)
+value|(0xd0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|(0x60000000000)
+value|(0x400000)
 end_define
 
 begin_comment
