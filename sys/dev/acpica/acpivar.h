@@ -1445,7 +1445,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Battery Abstruction and Generalized Power Management interface.  */
+comment|/*  * Battery Abstruction.  */
 end_comment
 
 begin_struct_decl
@@ -1469,16 +1469,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|acpi_acad_get_acline
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|acpi_cmbat_get_battinfo
 parameter_list|(
 name|int
@@ -1489,6 +1479,69 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * System power API.  *  * XXX should this be further generalised?  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POWERPROFILE_PERFORMANCE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|POWERPROFILE_ECONOMY
+value|1
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|powerprofile_get_state
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|powerprofile_set_state
+parameter_list|(
+name|int
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|powerprofile_change_hook
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|powerprofile_change
+argument_list|,
+name|powerprofile_change_hook
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -284,6 +284,18 @@ literal|"Off Line"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* set system power profile based on AC adapter status */
+name|powerprofile_set_state
+argument_list|(
+name|sc
+operator|->
+name|status
+condition|?
+name|POWERPROFILE_PERFORMANCE
+else|:
+name|POWERPROFILE_ECONOMY
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
