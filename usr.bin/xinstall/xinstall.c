@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.7 1996/04/08 10:59:36 joerg Exp $"
+literal|"$Id: xinstall.c,v 1.8 1996/06/23 12:59:18 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,8 @@ decl_stmt|,
 name|dopreserve
 decl_stmt|,
 name|dostrip
+decl_stmt|,
+name|verbose
 decl_stmt|;
 end_decl_stmt
 
@@ -530,7 +532,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Ccdf:g:m:o:ps"
+literal|"Ccdf:g:m:o:psv"
 argument_list|)
 operator|)
 operator|!=
@@ -669,6 +671,14 @@ case|case
 literal|'s'
 case|:
 name|dostrip
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|verbose
 operator|=
 literal|1
 expr_stmt|;
@@ -1794,6 +1804,21 @@ name|moveit
 label|:
 if|if
 condition|(
+name|verbose
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"install: %s -> %s\n"
+argument_list|,
+name|from_name
+argument_list|,
+name|old_to_name
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|rename
 argument_list|(
 name|to_name
@@ -2634,9 +2659,9 @@ expr_stmt|;
 case|case
 literal|0
 case|:
-name|execl
+name|execlp
 argument_list|(
-name|_PATH_STRIP
+literal|"strip"
 argument_list|,
 literal|"strip"
 argument_list|,
@@ -2649,9 +2674,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"exec("
-name|_PATH_STRIP
-literal|")"
+literal|"exec(strip)"
 argument_list|)
 expr_stmt|;
 default|default:
