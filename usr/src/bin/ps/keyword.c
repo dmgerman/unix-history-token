@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.12 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,7 +426,7 @@ argument_list|(
 name|p_acflag
 argument_list|)
 block|,
-name|SHORT
+name|USHORT
 block|,
 literal|"x"
 block|}
@@ -1182,7 +1182,7 @@ operator|.
 name|p_rgid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|UIDFMT
 block|}
@@ -1266,7 +1266,7 @@ operator|.
 name|p_ruid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|UIDFMT
 block|}
@@ -1481,7 +1481,7 @@ operator|.
 name|p_svgid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|UIDFMT
 block|}
@@ -1506,7 +1506,7 @@ operator|.
 name|p_svuid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|UIDFMT
 block|}
@@ -1661,7 +1661,7 @@ operator|.
 name|cr_uid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|UIDFMT
 block|}
