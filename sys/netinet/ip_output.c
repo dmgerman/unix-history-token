@@ -1427,7 +1427,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|notdef
-comment|/* 	 * If the source address is not specified yet, use the address 	 * of the outoing interface. In case, keep note we did that, so 	 * if the the firewall changes the next-hop causing the output 	 * interface to change, we can fix that. 	 */
+comment|/* 	 * If the source address is not specified yet, use the address 	 * of the outoing interface. 	 */
 if|if
 condition|(
 name|ip
