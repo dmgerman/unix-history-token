@@ -561,7 +561,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This priority range has 20 priorities on either end that are reachable  * only through nice values.  *  * PRI_RANGE:	Total priority range for timeshare threads.  * PRI_NRESV:	Reserved priorities for nice.  * PRI_BASE:	The start of the dynamic range.  * DYN_RANGE:	Number of priorities that are available int the dynamic  *		priority range.  */
+comment|/*  * The priority is primarily determined by the interactivity score.  Thus, we  * give lower(better) priorities to kse groups that use less CPU.  The nice  * value is then directly added to this to allow nice to have some effect  * on latency.  *  * PRI_RANGE:	Total priority range for timeshare threads.  * PRI_NRESV:	Number of nice values.  * PRI_BASE:	The start of the dynamic range.  */
 end_comment
 
 begin_define
@@ -596,14 +596,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_BASE
-value|((SCHED_PRI_NRESV / 2) + PRI_MIN_TIMESHARE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCHED_DYN_RANGE
-value|(SCHED_PRI_RANGE - SCHED_PRI_NRESV)
+value|(PRI_MIN_TIMESHARE)
 end_define
 
 begin_define
@@ -614,7 +607,7 @@ parameter_list|(
 name|score
 parameter_list|)
 define|\
-value|((score) * SCHED_DYN_RANGE / SCHED_INTERACT_MAX)
+value|((score) * SCHED_PRI_RANGE / SCHED_INTERACT_MAX)
 end_define
 
 begin_comment
