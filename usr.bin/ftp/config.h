@@ -176,6 +176,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the fseeko function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSEEKO
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the getaddrinfo function.  */
 end_comment
 
@@ -234,7 +245,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_GLOB
+name|USE_GLOB_H
 value|1
 end_define
 
@@ -312,6 +323,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SELECT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the setprogname function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPROGNAME
 value|1
 end_define
 
@@ -459,6 +481,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<arpa/nameser.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARPA_NAMESER_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<dirent.h> header file.  */
 end_comment
 
@@ -477,6 +510,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ERR_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<libutil.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBUTIL_H
 value|1
 end_define
 
@@ -638,6 +682,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_IN_PORT_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if sa_family_t exists in<sys/socket.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SA_FAMILY_T
 value|1
 end_define
 
