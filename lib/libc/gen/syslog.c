@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslog.c,v 1.14 1998/03/05 22:17:59 brian Exp $"
+literal|"$Id: syslog.c,v 1.15 1998/03/06 02:12:02 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1323,23 +1323,7 @@ sizeof|sizeof
 name|SyslogAddr
 operator|.
 name|sun_path
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|SyslogAddr
-operator|.
-name|sun_path
-index|[
-sizeof|sizeof
-name|SyslogAddr
-operator|.
-name|sun_path
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|connected
 operator|=
@@ -1386,8 +1370,6 @@ sizeof|sizeof
 name|SyslogAddr
 operator|.
 name|sun_path
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|connected
