@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -728,23 +728,6 @@ operator|,
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-specifier|extern
-name|char
-name|_sobuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
 argument_list|)
 expr_stmt|;
 block|}
