@@ -154,7 +154,7 @@ value|7648
 end_define
 
 begin_comment
-comment|/* TCP Handling Routines      TcpMonitorIn()  -- These routines monitor TCP connections, and     TcpMonitorOut()    delete a link when a connection is closed.  These routines look for SYN, ACK and RST flags to determine when TCP connections open and close.  When a TCP connection closes, the data structure containing packet aliasing information is deleted after a timeout period. */
+comment|/* TCP Handling Routines      TcpMonitorIn()  -- These routines monitor TCP connections, and     TcpMonitorOut()    delete a link when a connection is closed.  These routines look for SYN, FIN and RST flags to determine when TCP connections open and close.  When a TCP connection closes, the data structure containing packet aliasing information is deleted after a timeout period. */
 end_comment
 
 begin_comment
@@ -254,6 +254,22 @@ name|tc
 operator|->
 name|th_flags
 operator|&
+name|TH_RST
+condition|)
+name|SetStateIn
+argument_list|(
+name|link
+argument_list|,
+name|ALIAS_TCP_STATE_DISCONNECTED
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|tc
+operator|->
+name|th_flags
+operator|&
 name|TH_SYN
 condition|)
 name|SetStateIn
@@ -263,7 +279,7 @@ argument_list|,
 name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
 expr_stmt|;
-comment|/*FALLTHROUGH*/
+break|break;
 case|case
 name|ALIAS_TCP_STATE_CONNECTED
 case|:
@@ -273,13 +289,11 @@ name|tc
 operator|->
 name|th_flags
 operator|&
+operator|(
 name|TH_FIN
-operator|||
-name|tc
-operator|->
-name|th_flags
-operator|&
+operator||
 name|TH_RST
+operator|)
 condition|)
 name|SetStateIn
 argument_list|(
@@ -354,6 +368,22 @@ name|tc
 operator|->
 name|th_flags
 operator|&
+name|TH_RST
+condition|)
+name|SetStateOut
+argument_list|(
+name|link
+argument_list|,
+name|ALIAS_TCP_STATE_DISCONNECTED
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|tc
+operator|->
+name|th_flags
+operator|&
 name|TH_SYN
 condition|)
 name|SetStateOut
@@ -363,7 +393,7 @@ argument_list|,
 name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
 expr_stmt|;
-comment|/*FALLTHROUGH*/
+break|break;
 case|case
 name|ALIAS_TCP_STATE_CONNECTED
 case|:
@@ -373,13 +403,11 @@ name|tc
 operator|->
 name|th_flags
 operator|&
+operator|(
 name|TH_FIN
-operator|||
-name|tc
-operator|->
-name|th_flags
-operator|&
+operator||
 name|TH_RST
+operator|)
 condition|)
 name|SetStateOut
 argument_list|(
