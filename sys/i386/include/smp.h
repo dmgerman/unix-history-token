@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.25 1997/08/15 02:34:32 fsmp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.26 1997/08/18 03:35:59 fsmp Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -230,6 +230,13 @@ name|mp_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|isr_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* functions in mplock.s */
 end_comment
@@ -326,10 +333,33 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|volatile
 name|struct
 name|simplelock
 name|imen_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|cpl_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|fast_intr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|intr_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -602,6 +632,14 @@ specifier|extern
 name|u_char
 name|SMP_ioapic
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|com_lock
 decl_stmt|;
 end_decl_stmt
 
