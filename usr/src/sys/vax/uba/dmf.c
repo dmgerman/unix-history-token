@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	6.1	83/07/29	*/
+comment|/*	dmf.c	6.2	84/02/16	*/
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"bk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"uba.h"
 end_include
 
 begin_include
@@ -319,7 +325,7 @@ begin_decl_stmt
 name|int
 name|dmf_ubinfo
 index|[
-name|MAXNUBA
+name|NUBA
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -333,7 +339,7 @@ specifier|static
 name|int
 name|cbase
 index|[
-name|MAXNUBA
+name|NUBA
 index|]
 decl_stmt|;
 end_decl_stmt
