@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.1	83/07/29	*/
+comment|/*	machdep.c	4.87	83/08/14	*/
 end_comment
 
 begin_include
@@ -1286,7 +1286,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * in u. to call routine, followed by chmk  * to sigcleanup routine below.  After sigcleanup  * resets the signal mask and the notion of  * onsigstack, it returns to user who then  * unwinds with the rei at the bottom of sigcode.  */
+comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * in u. to call routine, followed by chmk  * to sigcleanup routine below.  After sigcleanup  * resets the signal mask and the stack, it  * returns to user who then unwinds with the  * rei at the bottom of sigcode.  */
 end_comment
 
 begin_macro
@@ -1323,6 +1323,9 @@ name|usp
 decl_stmt|,
 modifier|*
 name|regs
+decl_stmt|,
+modifier|*
+name|osp
 decl_stmt|;
 name|int
 name|oonstack
@@ -1338,6 +1341,17 @@ operator|=
 name|u
 operator|.
 name|u_onstack
+expr_stmt|;
+name|osp
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|regs
+index|[
+name|SP
+index|]
 expr_stmt|;
 define|#
 directive|define
@@ -1385,18 +1399,75 @@ block|}
 else|else
 name|usp
 operator|=
+name|osp
+operator|-
+literal|5
+expr_stmt|;
+comment|/* 	 * Must build signal context on stack to be returned to 	 * so that rei instruction in sigcode will pop ps and pc 	 * off correct stack.  The remainder of the signal state 	 * used in calling the handler must be placed on the stack 	 * on which the handler is to operate so that the calls 	 * in sigcode will save the registers and such correctly. 	 */
+name|osp
+operator|-=
+literal|5
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|oonstack
+operator|&&
 operator|(
 name|int
-operator|*
 operator|)
-name|regs
-index|[
-name|SP
-index|]
+name|osp
+operator|<=
+name|USRSTACK
+operator|-
+name|ctob
+argument_list|(
+name|u
+operator|.
+name|u_ssize
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|grow
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|osp
+argument_list|)
 expr_stmt|;
+empty_stmt|;
+ifndef|#
+directive|ifndef
+name|lint
+asm|asm("probew $3,$20,(r9)");
+asm|asm("jeql bad");
+else|#
+directive|else
+if|if
+condition|(
+name|useracc
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|osp
+argument_list|,
+literal|20
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+endif|#
+directive|endif
 name|usp
 operator|-=
-literal|8
+literal|5
 expr_stmt|;
 if|if
 condition|(
@@ -1435,7 +1506,7 @@ comment|/* Avoid asm() label botch */
 ifndef|#
 directive|ifndef
 name|lint
-asm|asm("probew $3,$32,(r11)");
+asm|asm("probew $3,$20,(r11)");
 asm|asm("beql bad");
 else|#
 directive|else
@@ -1448,7 +1519,7 @@ name|caddr_t
 operator|)
 name|usp
 argument_list|,
-literal|32
+literal|20
 argument_list|,
 literal|1
 argument_list|)
@@ -1499,18 +1570,12 @@ literal|0
 expr_stmt|;
 operator|*
 name|usp
-operator|=
-call|(
-name|int
-call|)
-argument_list|(
-name|usp
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-name|usp
 operator|++
+operator|=
+operator|(
+name|int
+operator|)
+name|osp
 expr_stmt|;
 operator|*
 name|usp
@@ -1521,21 +1586,46 @@ name|int
 operator|)
 name|p
 expr_stmt|;
-comment|/* struct sigcontext used for the inward return */
+comment|/* 	 * Duplicate the pointer to the sigcontext structure. 	 * This one doesn't get popped by the ret, and is used  	 * by sigcleanup to reset the stack as well as locate 	 * the information for reseting the signal state on 	 * inward return. 	 */
 operator|*
 name|usp
+operator|++
+operator|=
+operator|(
+name|int
+operator|)
+name|osp
+expr_stmt|;
+comment|/* sigcontext goes on previous stack */
+operator|*
+name|osp
 operator|++
 operator|=
 name|oonstack
 expr_stmt|;
 operator|*
-name|usp
+name|osp
 operator|++
 operator|=
 name|sigmask
 expr_stmt|;
 operator|*
-name|usp
+name|osp
+operator|=
+call|(
+name|int
+call|)
+argument_list|(
+name|osp
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|osp
+operator|++
+expr_stmt|;
+operator|*
+name|osp
 operator|++
 operator|=
 name|regs
@@ -1544,7 +1634,7 @@ name|PC
 index|]
 expr_stmt|;
 operator|*
-name|usp
+name|osp
 operator|++
 operator|=
 name|regs
@@ -1563,7 +1653,7 @@ call|)
 argument_list|(
 name|usp
 operator|-
-literal|8
+literal|5
 argument_list|)
 expr_stmt|;
 name|regs
@@ -1653,7 +1743,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Routine to cleanup state after a signal  * has been taken.  Reset signal mask and  * notion of on signal stack from context  * left there by sendsig (above).  Pop these  * values in preparation for rei which follows  * return from this routine.  */
+comment|/*  * Routine to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Pop these values in preparation for rei which  * follows return from this routine.  */
 end_comment
 
 begin_macro
@@ -1664,13 +1754,22 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|int
+name|struct
+name|sigcontext
 modifier|*
-name|usp
-init|=
+name|scp
+decl_stmt|;
+name|scp
+operator|=
 operator|(
-name|int
+expr|struct
+name|sigcontext
 operator|*
+operator|)
+name|fuword
+argument_list|(
+operator|(
+name|caddr_t
 operator|)
 name|u
 operator|.
@@ -1678,11 +1777,23 @@ name|u_ar0
 index|[
 name|SP
 index|]
-decl_stmt|;
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|scp
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
 ifndef|#
 directive|ifndef
 name|lint
-asm|asm("prober $3,$8,(r11)");
+asm|asm("prober $3,$12,(r11)");
 asm|asm("bnequ 1f; ret; 1:");
 else|#
 directive|else
@@ -1693,9 +1804,13 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|usp
+name|scp
 argument_list|,
-literal|8
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scp
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -1707,9 +1822,9 @@ name|u
 operator|.
 name|u_onstack
 operator|=
-operator|*
-name|usp
-operator|++
+name|scp
+operator|->
+name|sc_onstack
 operator|&
 literal|01
 expr_stmt|;
@@ -1719,9 +1834,9 @@ name|u_procp
 operator|->
 name|p_sigmask
 operator|=
-operator|*
-name|usp
-operator|++
+name|scp
+operator|->
+name|sc_mask
 operator|&
 operator|~
 operator|(
@@ -1748,10 +1863,9 @@ index|[
 name|SP
 index|]
 operator|=
-operator|(
-name|int
-operator|)
-name|usp
+name|scp
+operator|->
+name|sc_sp
 expr_stmt|;
 block|}
 end_block
