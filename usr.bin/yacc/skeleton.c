@@ -90,7 +90,7 @@ literal|"#ifndef lint"
 block|,
 literal|"static char const "
 block|,
-literal|"_yacc-parser_rcsid[] = \"$Id: skeleton.c,v 1.20 1999/07/30 12:53:21 hoek Exp $\";"
+literal|"_yacc_parser_rcsid[] = \"$Id: skeleton.c,v 1.21 1999/07/30 13:04:19 hoek Exp $\";"
 block|,
 literal|"#endif"
 block|,
