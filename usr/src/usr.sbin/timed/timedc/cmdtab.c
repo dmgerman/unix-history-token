@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	2.2 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|"election"
+block|,
+name|testinghelp
+block|,
+name|testing
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"help"
 block|,
 name|helphelp
@@ -155,17 +165,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"testing"
-block|,
-name|testinghelp
-block|,
-name|testing
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"tracing"
+literal|"trace"
 block|,
 name|tracinghelp
 block|,
