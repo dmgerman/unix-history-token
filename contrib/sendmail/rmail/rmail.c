@@ -782,6 +782,16 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|fplen
+operator|=
+name|fptlen
+operator|=
+literal|0
+expr_stmt|;
+name|addrp
+operator|=
+literal|""
+expr_stmt|;
 name|from_path
 operator|=
 name|from_sys
@@ -1438,6 +1448,9 @@ operator|=
 literal|"-oee"
 expr_stmt|;
 comment|/* No errors, just status. */
+ifdef|#
+directive|ifdef
+name|QUEUE_ONLY
 name|args
 index|[
 name|i
@@ -1447,6 +1460,19 @@ operator|=
 literal|"-odq"
 expr_stmt|;
 comment|/* Queue it, don't try to deliver. */
+else|#
+directive|else
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-odi"
+expr_stmt|;
+comment|/* Deliver in foreground. */
+endif|#
+directive|endif
 name|args
 index|[
 name|i
