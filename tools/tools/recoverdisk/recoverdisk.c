@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -36,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -227,6 +233,11 @@ decl_stmt|;
 name|u_int
 name|sectorsize
 decl_stmt|;
+name|time_t
+name|t1
+decl_stmt|,
+name|t2
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -406,6 +417,10 @@ name|d
 operator|=
 literal|0
 expr_stmt|;
+name|t1
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -488,6 +503,25 @@ name|i
 operator|=
 name|sectorsize
 expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|t2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t1
+operator|!=
+name|t2
+operator|||
+name|lp
+operator|->
+name|len
+operator|<
+name|BIGSIZE
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\r%13jd %7jd %13jd %3d %13jd %13jd %.8f"
@@ -540,6 +574,11 @@ operator|)
 name|t
 argument_list|)
 expr_stmt|;
+name|t1
+operator|=
+name|t2
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
