@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: xebec.c,v 2.2 88/09/19 12:55:37 nhall Exp $ */
-end_comment
-
-begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/xebec.c,v $ */
+comment|/*  *	from: xebec.c,v 2.2 88/09/19 12:55:37 nhall Exp  *	$Id$  */
 end_comment
 
 begin_include

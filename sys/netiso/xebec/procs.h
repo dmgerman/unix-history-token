@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: procs.h,v 2.1 88/09/19 12:56:30 nhall Exp $ */
-end_comment
-
-begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/procs.h,v $ */
+comment|/*  *	from: procs.h,v 2.1 88/09/19 12:56:30 nhall Exp  *	$Id$  */
 end_comment
 
 begin_function_decl

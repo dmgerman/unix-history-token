@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: putdriver.c,v 2.2 88/09/19 12:55:27 nhall Exp $ */
-end_comment
-
-begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/putdriver.c,v $ */
+comment|/*  *	from: putdriver.c,v 2.2 88/09/19 12:55:27 nhall Exp  *	$Id$  */
 end_comment
 
 begin_comment

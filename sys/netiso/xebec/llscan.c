@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: llscan.c,v 2.2 88/09/19 12:55:06 nhall Exp $ */
-end_comment
-
-begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/llscan.c,v $ */
+comment|/*  *	from: llscan.c,v 2.2 88/09/19 12:55:06 nhall Exp  *	$Id$  */
 end_comment
 
 begin_comment
