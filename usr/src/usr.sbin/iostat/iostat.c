@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.13 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -896,8 +896,16 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|read_names
 argument_list|()
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
