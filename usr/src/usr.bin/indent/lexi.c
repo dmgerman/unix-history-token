@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley and the University  * of Illinois, Urbana.  The name of either  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.8 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,26 +29,21 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * NAME:  *	lexi  *  * FUNCTION:  *	This is the token scanner for indent  *  * ALGORITHM:  *	1) Strip off intervening blanks and/or tabs.  *	2) If it is an alphanumeric token, move it to the token buffer "token".  *	   Check if it is a special reserved word that indent will want to  *	   know about.  *	3) Non-alphanumeric tokens are handled with a big switch statement.  A  *	   flag is kept to remember if the last token was a "unary delimiter",  *	   which forces a following operator to be unary as opposed to binary.  *  * PARAMETERS:  *	None  *  * RETURNS:  *	An integer code indicating the type of token scanned.  *  * GLOBALS:  *	buf_ptr =  *	had_eof  *	ps.last_u_d =	Set to true iff this token is a "unary delimiter"  *  * CALLS:  *	fill_buffer  *	printf (lib)  *  * CALLED BY:  *	main  *  * NOTES:  *	Start of comment is passed back so that the comment can be scanned by  *	pr_comment.  *  *	Strings and character literals are returned just like identifiers.  *  * HISTORY:  *	initial coding 	November 1976	D A Willcox of CAC  *	1/7/77		D A Willcox of CAC	Fix to provide proper handling  *						of "int a -1;"  *  */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/*  * Here we have the token scanner for indent.  It scans off one token and  * puts it in the global variable "token".  It returns a code, indicating  * the type of token scanned.   */
+comment|/*  * Here we have the token scanner for indent.  It scans off one token and puts  * it in the global variable "token".  It returns a code, indicating the type  * of token scanned.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"indent_globs.h"
+include|;
 end_include
 
 begin_include
 include|#
 directive|include
 file|"indent_codes.h"
+include|;
 end_include
 
 begin_include
@@ -222,7 +217,7 @@ literal|128
 index|]
 init|=
 block|{
-comment|/* this is used to facilitate the decision 				 * of what type (alphanumeric, operator) 				 * each character is */
+comment|/* this is used to facilitate the decision of 				 * what type (alphanumeric, operator) each 				 * character is */
 literal|0
 block|,
 literal|0
@@ -315,7 +310,7 @@ literal|0
 block|,
 literal|3
 block|,
-literal|3
+literal|0
 block|,
 literal|3
 block|,
@@ -496,7 +491,7 @@ comment|/* local pointer to next char in token */
 name|int
 name|unary_delim
 decl_stmt|;
-comment|/* this is set to 1 if the current token  				 * 				 * forces a following operator to be unary */
+comment|/* this is set to 1 if the current token 				 *  				 * forces a following operator to be unary */
 specifier|static
 name|int
 name|last_code
@@ -532,7 +527,7 @@ name|ps
 operator|.
 name|last_nl
 expr_stmt|;
-comment|/* tell world that this token started in 				 * column 1 iff the last thing scanned was 				 * nl */
+comment|/* tell world that this token started in 				 * column 1 iff the last thing scanned was nl */
 name|ps
 operator|.
 name|last_nl
@@ -559,7 +554,7 @@ name|col_1
 operator|=
 name|false
 expr_stmt|;
-comment|/* leading blanks imply token is not in 				 * column 1 */
+comment|/* leading blanks imply token is not in column 				 * 1 */
 if|if
 condition|(
 operator|++
@@ -571,38 +566,267 @@ name|fill_buffer
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Scan an alphanumeric token.  Note that we must also handle      * stuff like "1.0e+03" and "7e-6". */
+comment|/* Scan an alphanumeric token */
 if|if
 condition|(
 name|chartype
 index|[
 operator|*
 name|buf_ptr
-operator|&
-literal|0177
 index|]
 operator|==
 name|alphanum
+operator|||
+name|buf_ptr
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|isdigit
+argument_list|(
+name|buf_ptr
+index|[
+literal|1
+index|]
+argument_list|)
 condition|)
 block|{
-comment|/* we have a character 							 * or number */
+comment|/* 	 * we have a character or number 	 */
 specifier|register
 name|char
 modifier|*
 name|j
 decl_stmt|;
-comment|/* used for searching thru list of  				 * reserved words */
+comment|/* used for searching thru list of 				 *  				 * reserved words */
 specifier|register
 name|struct
 name|templ
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
+if|if
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+name|buf_ptr
+argument_list|)
+operator|||
+name|buf_ptr
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|isdigit
+argument_list|(
+name|buf_ptr
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+block|{
 name|int
-name|c
+name|seendot
+init|=
+literal|0
+decl_stmt|,
+name|seenexp
+init|=
+literal|0
 decl_stmt|;
-do|do
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'0'
+operator|&&
+operator|(
+name|buf_ptr
+index|[
+literal|1
+index|]
+operator|==
+literal|'x'
+operator|||
+name|buf_ptr
+index|[
+literal|1
+index|]
+operator|==
+literal|'X'
+operator|)
+condition|)
+block|{
+operator|*
+name|tok
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+operator|*
+name|tok
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+while|while
+condition|(
+name|isxdigit
+argument_list|(
+operator|*
+name|buf_ptr
+argument_list|)
+condition|)
+operator|*
+name|tok
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+block|}
+else|else
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'.'
+condition|)
+if|if
+condition|(
+name|seendot
+condition|)
+break|break;
+else|else
+name|seendot
+operator|++
+expr_stmt|;
+operator|*
+name|tok
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|buf_ptr
+argument_list|)
+operator|&&
+operator|*
+name|buf_ptr
+operator|!=
+literal|'.'
+condition|)
+if|if
+condition|(
+operator|(
+operator|*
+name|buf_ptr
+operator|!=
+literal|'E'
+operator|&&
+operator|*
+name|buf_ptr
+operator|!=
+literal|'e'
+operator|)
+operator|||
+name|seenexp
+condition|)
+break|break;
+else|else
+block|{
+name|seenexp
+operator|++
+expr_stmt|;
+name|seendot
+operator|++
+expr_stmt|;
+operator|*
+name|tok
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'+'
+operator|||
+operator|*
+name|buf_ptr
+operator|==
+literal|'-'
+condition|)
+operator|*
+name|tok
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'L'
+operator|||
+operator|*
+name|buf_ptr
+operator|==
+literal|'l'
+condition|)
+operator|*
+name|tok
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+block|}
+else|else
+while|while
+condition|(
+name|chartype
+index|[
+operator|*
+name|buf_ptr
+index|]
+operator|==
+name|alphanum
+condition|)
 block|{
 comment|/* copy it over */
 operator|*
@@ -623,57 +847,6 @@ name|fill_buffer
 argument_list|()
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|chartype
-index|[
-name|c
-operator|=
-operator|*
-name|buf_ptr
-operator|&
-literal|0177
-index|]
-operator|==
-name|alphanum
-operator|||
-name|isdigit
-argument_list|(
-name|token
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-operator|(
-name|c
-operator|==
-literal|'+'
-operator|||
-name|c
-operator|==
-literal|'-'
-operator|)
-operator|&&
-operator|(
-name|tok
-index|[
-operator|-
-literal|1
-index|]
-operator|==
-literal|'e'
-operator|||
-name|tok
-index|[
-operator|-
-literal|1
-index|]
-operator|==
-literal|'E'
-operator|)
-condition|)
-do|;
 operator|*
 name|tok
 operator|++
@@ -722,7 +895,7 @@ condition|(
 name|l_struct
 condition|)
 block|{
-comment|/* if last token was 'struct', then this 				 * token should be treated as a 				 * declaration */
+comment|/* if last token was 'struct', then this token 				 * should be treated as a declaration */
 name|l_struct
 operator|=
 name|false
@@ -755,7 +928,7 @@ operator|=
 name|ident
 expr_stmt|;
 comment|/* Remember that this is the code we will 				 * return */
-comment|/* 	 * This loop will check if the token is a keyword.  	 */
+comment|/* 	 * This loop will check if the token is a keyword. 	 */
 for|for
 control|(
 name|p
@@ -800,7 +973,7 @@ name|tok
 operator|++
 condition|)
 continue|continue;
-comment|/* This test depends on the fact that 				 * identifiers are always at least 1 				 * character long (ie. the first two bytes 				 * of the identifier are always 				 * meaningful) */
+comment|/* This test depends on the fact that 				 * identifiers are always at least 1 character 				 * long (ie. the first two bytes of the 				 * identifier are always meaningful) */
 if|if
 condition|(
 name|tok
@@ -898,7 +1071,7 @@ name|l_struct
 operator|=
 name|true
 expr_stmt|;
-comment|/* 		     * Next time around, we will want to know that we have 		     * had a 'struct'  		     */
+comment|/* 		 * Next time around, we will want to know that we have had a 		 * 'struct' 		 */
 case|case
 literal|4
 case|:
@@ -988,24 +1161,37 @@ operator|.
 name|ind_level
 operator|==
 literal|0
-operator|&&
-operator|(
-name|buf_ptr
-index|[
-literal|1
-index|]
-operator|!=
-literal|')'
-operator|||
-name|buf_ptr
-index|[
-literal|2
-index|]
-operator|!=
-literal|';'
-operator|)
 condition|)
 block|{
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|buf_ptr
+decl_stmt|;
+while|while
+condition|(
+name|p
+operator|<
+name|buf_end
+condition|)
+if|if
+condition|(
+operator|*
+name|p
+operator|++
+operator|==
+literal|')'
+operator|&&
+operator|*
+name|p
+operator|==
+literal|';'
+condition|)
+goto|goto
+name|not_proc
+goto|;
 name|strncpy
 argument_list|(
 name|ps
@@ -1028,8 +1214,11 @@ name|in_parameter_declaration
 operator|=
 literal|1
 expr_stmt|;
+name|not_proc
+label|:
+empty_stmt|;
 block|}
-comment|/* 	 * The following hack attempts to guess whether or not the current 	 * token is in fact a declaration keyword -- one that has been 	 * typedefd  	 */
+comment|/* 	 * The following hack attempts to guess whether or not the current 	 * token is in fact a declaration keyword -- one that has been 	 * typedefd 	 */
 if|if
 condition|(
 operator|(
@@ -1052,12 +1241,22 @@ argument_list|(
 operator|*
 name|buf_ptr
 argument_list|)
+operator|||
+operator|*
+name|buf_ptr
+operator|==
+literal|'_'
 operator|)
 operator|&&
 operator|!
 name|ps
 operator|.
 name|p_l_follow
+operator|&&
+operator|!
+name|ps
+operator|.
+name|block_init
 operator|&&
 operator|(
 name|ps
@@ -1138,7 +1337,7 @@ return|;
 comment|/* the ident is not in the list */
 block|}
 comment|/* end of procesing for alpanum character */
-comment|/* Scan a non-alphanumeric token */
+comment|/* l l l Scan a non-alphanumeric token */
 operator|*
 name|tok
 operator|++
@@ -1146,7 +1345,7 @@ operator|=
 operator|*
 name|buf_ptr
 expr_stmt|;
-comment|/* if it is only a one-character token, it 				 * is moved here */
+comment|/* if it is only a one-character token, it is 				 * moved here */
 operator|*
 name|tok
 operator|=
@@ -1194,7 +1393,7 @@ else|:
 name|newline
 operator|)
 expr_stmt|;
-comment|/* 	     * if data has been exausted, the newline is a dummy, and we 	     * should return code to stop  	     */
+comment|/* 	 * if data has been exausted, the newline is a dummy, and we should 	 * return code to stop 	 */
 break|break;
 case|case
 literal|'\''
@@ -1234,23 +1433,18 @@ operator|++
 operator|=
 literal|'`'
 expr_stmt|;
-operator|*
 name|tok
-operator|++
 operator|=
-name|BACKSLASH
-expr_stmt|;
-operator|*
+name|chfont
+argument_list|(
+operator|&
+name|bodyf
+argument_list|,
+operator|&
+name|stringf
+argument_list|,
 name|tok
-operator|++
-operator|=
-literal|'f'
-expr_stmt|;
-operator|*
-name|tok
-operator|++
-operator|=
-literal|'L'
+argument_list|)
 expr_stmt|;
 block|}
 do|do
@@ -1337,7 +1531,7 @@ operator|==
 name|BACKSLASH
 condition|)
 block|{
-comment|/* if escape, copy extra 						 * char */
+comment|/* if escape, copy extra char */
 if|if
 condition|(
 operator|*
@@ -1345,7 +1539,7 @@ name|buf_ptr
 operator|==
 literal|'\n'
 condition|)
-comment|/* check for escaped 						 * newline */
+comment|/* check for escaped newline */
 operator|++
 name|line_no
 expr_stmt|;
@@ -1417,30 +1611,19 @@ name|troff
 condition|)
 block|{
 name|tok
-index|[
+operator|=
+name|chfont
+argument_list|(
+operator|&
+name|stringf
+argument_list|,
+operator|&
+name|bodyf
+argument_list|,
+name|tok
 operator|-
 literal|1
-index|]
-operator|=
-name|BACKSLASH
-expr_stmt|;
-operator|*
-name|tok
-operator|++
-operator|=
-literal|'f'
-expr_stmt|;
-operator|*
-name|tok
-operator|++
-operator|=
-literal|'R'
-expr_stmt|;
-operator|*
-name|tok
-operator|++
-operator|=
-literal|'\''
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1559,15 +1742,10 @@ name|unary_delim
 operator|=
 name|true
 expr_stmt|;
-comment|/* 	     * if (ps.in_or_st) ps.block_init = 1;  	     */
+comment|/* 	 * if (ps.in_or_st) ps.block_init = 1; 	 */
+comment|/* ?	code = ps.block_init ? lparen : lbrace; */
 name|code
 operator|=
-name|ps
-operator|.
-name|block_init
-condition|?
-name|lparen
-else|:
 name|lbrace
 expr_stmt|;
 break|break;
@@ -1580,14 +1758,9 @@ name|unary_delim
 operator|=
 name|true
 expr_stmt|;
+comment|/* ?	code = ps.block_init ? rparen : rbrace; */
 name|code
 operator|=
-name|ps
-operator|.
-name|block_init
-condition|?
-name|rparen
-else|:
 name|rbrace
 expr_stmt|;
 break|break;
@@ -1733,13 +1906,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|token
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-operator|&&
 operator|*
 name|buf_ptr
 operator|==
@@ -1761,13 +1927,13 @@ operator|!
 name|pointer_as_binop
 condition|)
 block|{
-name|code
-operator|=
-name|unary_op
-expr_stmt|;
 name|unary_delim
 operator|=
 name|false
+expr_stmt|;
+name|code
+operator|=
+name|unary_op
 expr_stmt|;
 name|ps
 operator|.
@@ -1777,8 +1943,8 @@ name|false
 expr_stmt|;
 block|}
 block|}
-comment|/* buffer overflow will be checked at end of switch */
 break|break;
+comment|/* buffer overflow will be checked at end of 				 * switch */
 case|case
 literal|'='
 case|:
@@ -1794,6 +1960,9 @@ name|block_init
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|undef
 if|if
 condition|(
 name|chartype
@@ -1805,7 +1974,7 @@ operator|==
 name|opchar
 condition|)
 block|{
-comment|/* we have two char 						 * assignment */
+comment|/* we have two char assignment */
 name|tok
 index|[
 operator|-
@@ -1866,6 +2035,35 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'='
+condition|)
+block|{
+comment|/* == */
+operator|*
+name|tok
+operator|++
+operator|=
+literal|'='
+expr_stmt|;
+comment|/* Flip =+ to += */
+name|buf_ptr
+operator|++
+expr_stmt|;
+operator|*
+name|tok
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|code
 operator|=
 name|binary_op
@@ -2017,7 +2215,7 @@ operator|==
 literal|'='
 condition|)
 block|{
-comment|/* handle ||,&&, etc, and also things as in int *****i */
+comment|/* 	     * handle ||,&&, etc, and also things as in int *****i 	     */
 operator|*
 name|tok
 operator|++
@@ -2105,7 +2303,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Add the given keyword to the keyword table, using val as the keyword type    */
+comment|/*  * Add the given keyword to the keyword table, using val as the keyword type  */
 end_comment
 
 begin_macro
@@ -2186,7 +2384,7 @@ literal|0
 index|]
 condition|)
 return|return;
-comment|/* For now, table overflows are silently 				   ignored */
+comment|/* For now, table overflows are silently 				 * ignored */
 name|p
 operator|->
 name|rwd

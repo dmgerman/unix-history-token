@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley and the University  * of Illinois, Urbana.  The name of either  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.6 (Berkeley) %G%"
+literal|"@(#)parse.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,30 +28,18 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * FILE NAME:  *	parse.c  *  * PURPOSE:  *	Contains the routines which keep track of the parse stack.  *  * GLOBALS:  *	ps.p_stack =	The parse stack, set by both routines  *	ps.il =		Stack of indentation levels, set by parse  *	ps.cstk =		Stack of case statement indentation levels, set by parse  *	ps.tos =		Pointer to top of stack, set by both routines.  *  * FUNCTIONS:  *	parse  *	reduce  */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/*-  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois   *  * All rights reserved   *  *  * NAME: parse   *  * FUNCTION: Parse is given one input which is a "maxi token" just scanned  * from input.  Maxi tokens are signifigant constructs such as else, {,  * do, if (...), etc.  Parse works with reduce to maintain a parse stack  * of these constructs.  Parse is responsible for the "shift" portion of  * the parse algorithm, and reduce handles the "reduce" portion.   *  * HISTORY: initial coding 	November 1976	D A Willcox of CAC   *  */
-end_comment
-
-begin_escape
-end_escape
-
 begin_include
 include|#
 directive|include
 file|"./indent_globs.h"
+include|;
 end_include
 
 begin_include
 include|#
 directive|include
 file|"./indent_codes.h"
+include|;
 end_include
 
 begin_macro
@@ -120,7 +108,7 @@ index|]
 operator|=
 name|stmt
 expr_stmt|;
-comment|/* apply the if(..) stmt ::= stmt 				 * reduction */
+comment|/* apply the if(..) stmt ::= stmt 					 * reduction */
 name|reduce
 argument_list|()
 expr_stmt|;
@@ -131,7 +119,7 @@ condition|(
 name|tk
 condition|)
 block|{
-comment|/* go on and figure out what to do with 				 * the input */
+comment|/* go on and figure out what to do with the 				 * input */
 case|case
 name|decl
 case|:
@@ -157,12 +145,12 @@ operator|!=
 name|decl
 condition|)
 block|{
-comment|/* only put one declaration onto 					 * stack */
+comment|/* only put one declaration 						 * onto stack */
 name|break_comma
 operator|=
 name|true
 expr_stmt|;
-comment|/* while in declaration, newline 					 * should be forced after comma */
+comment|/* while in declaration, newline should be 				 * forced after comma */
 name|ps
 operator|.
 name|p_stack
@@ -195,7 +183,7 @@ operator|.
 name|ljust_decl
 condition|)
 block|{
-comment|/* only do if we want left 					 * justified declarations */
+comment|/* only do if we want left justified 				 * declarations */
 name|ps
 operator|.
 name|ind_level
@@ -235,7 +223,7 @@ name|ps
 operator|.
 name|ind_level
 expr_stmt|;
-comment|/* indentation is number 						 * of declaration levels 						 * deep we are */
+comment|/* indentation is number of 					 * declaration levels deep we are */
 name|ps
 operator|.
 name|i_l_follow
@@ -324,7 +312,7 @@ name|ps
 operator|.
 name|i_l_follow
 expr_stmt|;
-comment|/* subsequent statements should be 				 * indented 1 */
+comment|/* subsequent statements should be indented 1 */
 name|ps
 operator|.
 name|search_brace
@@ -381,7 +369,7 @@ name|ps
 operator|.
 name|i_l_follow
 expr_stmt|;
-comment|/* it is a random, isolated stmt group or 				 * a declaration */
+comment|/* it is a random, isolated stmt group or a 				 * declaration */
 else|else
 block|{
 if|if
@@ -391,13 +379,13 @@ operator|==
 name|e_code
 condition|)
 block|{
-comment|/* only do this if there is nothing on the line */
+comment|/* 		 * only do this if there is nothing on the line 		 */
 operator|--
 name|ps
 operator|.
 name|ind_level
 expr_stmt|;
-comment|/* it is a group as part of a while, for, etc. */
+comment|/* 		 * it is a group as part of a while, for, etc. 		 */
 if|if
 condition|(
 name|ps
@@ -414,13 +402,15 @@ operator|&&
 name|ps
 operator|.
 name|case_indent
+operator|>=
+literal|1
 condition|)
 operator|--
 name|ps
 operator|.
 name|ind_level
 expr_stmt|;
-comment|/* 		     * for a switch, brace should be two levels out from 		     * the code  		     */
+comment|/* 		 * for a switch, brace should be two levels out from the code 		 */
 block|}
 block|}
 name|ps
@@ -621,7 +611,7 @@ operator|.
 name|tos
 index|]
 expr_stmt|;
-comment|/* indentation for else should be same as for if */
+comment|/* indentation for else should 						 * be same as for if */
 name|ps
 operator|.
 name|i_l_follow
@@ -632,7 +622,7 @@ name|ind_level
 operator|+
 literal|1
 expr_stmt|;
-comment|/* everything following should be in 1 level */
+comment|/* everything following should 						 * be in 1 level */
 name|ps
 operator|.
 name|p_stack
@@ -650,6 +640,10 @@ operator|.
 name|search_brace
 operator|=
 name|btype_2
+operator||
+name|ps
+operator|.
+name|else_if
 expr_stmt|;
 block|}
 break|break;
@@ -768,14 +762,15 @@ comment|/* cases should be one 							 * level down from 							 * switch */
 name|ps
 operator|.
 name|i_l_follow
-operator|+=
+operator|+
+operator|=
 name|ps
 operator|.
 name|case_indent
 operator|+
 literal|1
 expr_stmt|;
-comment|/* statements should be 						 * two levels in */
+comment|/* statements should be two 						 * levels in */
 name|ps
 operator|.
 name|search_brace
@@ -791,7 +786,7 @@ name|break_comma
 operator|=
 name|false
 expr_stmt|;
-comment|/* turn off flag to break after commas in 				 * a declaration */
+comment|/* turn off flag to break after commas in a 				 * declaration */
 name|ps
 operator|.
 name|p_stack
@@ -882,19 +877,16 @@ return|return;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*   * Copyright (C) 1976 by the Board of Trustees of the University of Illinois   *  * All rights reserved   *  *  * NAME: reduce   *  * FUNCTION: Implements the reduce part of the parsing algorithm   *  * ALGORITHM: The following reductions are done.  Reductions are repeated  * until no more are possible.   *  * Old TOS		New TOS<stmt><stmt><stmtl><stmtl><stmt><stmtl> do  *<stmt>	"dostmt" if<stmt>	"ifstmt" switch<stmt><stmt>  * decl<stmt><stmt> "ifelse"<stmt><stmt> for<stmt><stmt>  * while<stmt><stmt> "dostmt" while<stmt>   *  * On each reduction, ps.i_l_follow (the indentation for the following line) is  * set to the indentation level associated with the old TOS.   *  * PARAMETERS: None   *  * RETURNS: Nothing   *  * GLOBALS: ps.cstk ps.i_l_follow = ps.il ps.p_stack = ps.tos =   *  * CALLS: None   *  * CALLED BY: parse
-comment|*  * HISTORY: initial coding 	November 1976	D A Willcox of CAC   *  */
+comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *   * All rights reserved  *   *   * NAME: reduce  *   * FUNCTION: Implements the reduce part of the parsing algorithm  *   * ALGORITHM: The following reductions are done.  Reductions are repeated until  * no more are possible.  *   * Old TOS		New TOS<stmt><stmt><stmtl><stmtl><stmt><stmtl> do  *<stmt>	"dostmt" if<stmt>	"ifstmt" switch<stmt><stmt> decl  *<stmt><stmt> "ifelse"<stmt><stmt> for<stmt><stmt> while  *<stmt><stmt> "dostmt" while<stmt>  *   * On each reduction, ps.i_l_follow (the indentation for the following line) is  * set to the indentation level associated with the old TOS.  *   * PARAMETERS: None  *   * RETURNS: Nothing  *   * GLOBALS: ps.cstk ps.i_l_follow = ps.il ps.p_stack = ps.tos =  *   * CALLS: None  *   * CALLED BY: parse
+comment|*   * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *   */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/*----------------------------------------------*\  * |   REDUCTION PHASE \*----------------------------------------------*/
+comment|/*----------------------------------------------*\ |   REDUCTION PHASE				    | \*----------------------------------------------*/
 end_comment
 
 begin_macro
@@ -914,7 +906,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* keep looping until there is nothing 				 * left to reduce */
+comment|/* keep looping until there is nothing left to 				 * reduce */
 switch|switch
 condition|(
 name|ps
@@ -1064,7 +1056,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 			 * for the time being, we will assume that there 			 * is no else on this if, and set the indentation 			 * level accordingly. If an else is scanned, it 			 * will be fixed up later  			 */
+comment|/* 		 * for the time being, we will assume that there is no else on 		 * this if, and set the indentation level accordingly. If an 		 * else is scanned, it will be fixed up later 		 */
 break|break;
 case|case
 name|swstmt
@@ -1129,7 +1121,7 @@ default|default:
 comment|/*<anything else><stmt> */
 return|return;
 block|}
-comment|/* end of section for<stmt> on top of 				 * stack */
+comment|/* end of section for<stmt> on top of stack */
 break|break;
 case|case
 name|whilestmt

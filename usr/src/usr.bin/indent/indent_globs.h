@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley and the University  * of Illinois, Urbana.  The name of either  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)indent_globs.h	5.6 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/* FILE NAME: 	indent_globs.h  PURPOSE: 	This include file contains the declarations for all global variables 	used in indent.  GLOBALS: 	The names of all of the variables will not be repeated here.  The  	declarations start on the next page.  FUNCTIONS: 	None */
+comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)indent_globs.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,7 +20,7 @@ begin_define
 define|#
 directive|define
 name|bufsize
-value|600
+value|200
 end_define
 
 begin_comment
@@ -61,7 +57,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* number of levels a label is placed to left of code  		   */
+comment|/* number of levels a label is placed to left 				 * of code */
 end_comment
 
 begin_define
@@ -83,7 +79,7 @@ value|0177770
 end_define
 
 begin_comment
-comment|/* mask used when figuring length of lines with tabs */
+comment|/* mask used when figuring length of lines 				 * with tabs */
 end_comment
 
 begin_define
@@ -122,12 +118,49 @@ begin_comment
 comment|/* the output file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|check_size
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|if (e_
+comment|/**/
+value|name>= l_
+comment|/**/
+value|name) { \ 	    register nsize = l_
+comment|/**/
+value|name-s_
+comment|/**/
+value|name+400; \ 	    name
+comment|/**/
+value|buf = (char *) realloc(name
+comment|/**/
+value|buf, nsize); \ 	    e_
+comment|/**/
+value|name = name
+comment|/**/
+value|buf + (e_
+comment|/**/
+value|name-s_
+comment|/**/
+value|name) + 1; \ 	    l_
+comment|/**/
+value|name = name
+comment|/**/
+value|buf + nsize - 5; \ 	    s_
+comment|/**/
+value|name = name
+comment|/**/
+value|buf + 1; \ 	}
+end_define
+
 begin_decl_stmt
 name|char
+modifier|*
 name|labbuf
-index|[
-name|bufsize
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -159,10 +192,19 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
+name|l_lab
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit of label buffer */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
 name|codebuf
-index|[
-name|bufsize
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -194,10 +236,19 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
+name|l_code
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit of code section */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
 name|combuf
-index|[
-name|bufsize
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +280,17 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
+name|l_com
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit of comment buffer */
+end_comment
+
+begin_decl_stmt
+name|char
 name|in_buffer
 index|[
 name|inp_bufs
@@ -248,7 +310,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ptr to next character to be taken from in_buffer */
+comment|/* ptr to next character to be taken from 				 * in_buffer */
 end_comment
 
 begin_decl_stmt
@@ -272,7 +334,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* input text is saved here when looking for the brace 		      after an if, while, etc */
+comment|/* input text is saved here when looking for 				 * the brace after an if, while, etc */
 end_comment
 
 begin_decl_stmt
@@ -294,7 +356,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* saved value of buf_ptr when taking input from 		      save_com */
+comment|/* saved value of buf_ptr when taking input 				 * from save_com */
 end_comment
 
 begin_decl_stmt
@@ -323,6 +385,12 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|pointer_as_binop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|blanklines_after_declarations
 decl_stmt|;
 end_decl_stmt
@@ -336,6 +404,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|blanklines_after_procs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|blanklines_around_conditional_compilation
 decl_stmt|;
 end_decl_stmt
 
@@ -370,7 +444,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* when true and not in parens, break after a comma */
+comment|/* when true and not in parens, break after a 				 * comma */
 end_comment
 
 begin_decl_stmt
@@ -380,7 +454,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* when true, brace should be on same line as if, 		      while, etc */
+comment|/* when true, brace should be on same line as 				 * if, while, etc */
 end_comment
 
 begin_decl_stmt
@@ -390,7 +464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* indentation level to be used for a "case n:" */
+comment|/* indentation level to be used for a "case 				 * n:" */
 end_comment
 
 begin_decl_stmt
@@ -435,22 +509,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|pointer_as_binop
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* when true, "->" is treated as a binary 				   operator (giving, e.g., "p -> f") */
-end_comment
-
-begin_decl_stmt
-name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* when true, non-essential error messages are printed  		   */
+comment|/* when true, non-essential error messages are 				 * printed */
 end_comment
 
 begin_decl_stmt
@@ -470,7 +534,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true iff comment continuation lines should 				   have stars at the beginning of each line. 				   */
+comment|/* true iff comment continuation lines should 				 * have stars at the beginning of each line. */
 end_comment
 
 begin_decl_stmt
@@ -496,7 +560,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if true, the names of procedures being 				   defined get placed in column 1 (ie. a 				   newline is placed between the type of the 				   procedure and its name) */
+comment|/* if true, the names of procedures 					 * being defined get placed in column 					 * 1 (ie. a newline is placed between 					 * the type of the procedure and its 					 * name) */
 end_comment
 
 begin_decl_stmt
@@ -506,7 +570,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If true, procedure calls look like: 				   foo(bar) rather than foo (bar) */
+comment|/* If true, procedure calls look like: 				 * foo(bar) rather than foo (bar) */
 end_comment
 
 begin_decl_stmt
@@ -516,7 +580,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If comments which start in column 1 are to 				   be magically reformatted (just like comments that 				   begin in later columns) */
+comment|/* If comments which start in column 1 					 * are to be magically reformatted 					 * (just like comments that begin in 					 * later columns) */
 end_comment
 
 begin_decl_stmt
@@ -536,7 +600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set iff following blanklines should be 				   suppressed */
+comment|/* set iff following blanklines should be 				 * suppressed */
 end_comment
 
 begin_decl_stmt
@@ -546,7 +610,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set to the indentation between the edge of 				   code and continuation lines */
+comment|/* set to the indentation between the edge of 				 * code and continuation lines */
 end_comment
 
 begin_decl_stmt
@@ -556,7 +620,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if true, continued code within parens will 				   be lined up to the open paren */
+comment|/* if true, continued code within parens will 				 * be lined up to the open paren */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Bill_Shannon
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true iff a blank should always be inserted 				 * after sizeof */
+end_comment
+
+begin_decl_stmt
+name|int
+name|blanklines_after_declarations_at_proctop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This is vaguely 							 * similar to 							 * blanklines_after_decla 							 * rations except that 							 * it only applies to 							 * the first set of 							 * declarations in a 							 * procedure (just after 							 * the first '{') and it 							 * causes a blank line 							 * to be generated even 							 * if there are no 							 * declarations */
 end_comment
 
 begin_decl_stmt
@@ -565,6 +649,83 @@ name|block_comment_max_col
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|extra_expression_indent
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if continuation lines from the 					 * expression part of "if(e)", 					 * "while(e)", "for(e;e;e)" should be 					 * indented an extra tab stop so that 					 * they don't conflict with the code 					 * that follows */
+end_comment
+
+begin_comment
+comment|/* -troff font state information */
+end_comment
+
+begin_struct
+struct|struct
+name|fstate
+block|{
+name|char
+name|font
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|size
+decl_stmt|;
+name|int
+name|allcaps
+range|:
+literal|1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|char
+modifier|*
+name|chfont
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|struct
+name|fstate
+name|keywordf
+decl_stmt|,
+comment|/* keyword font */
+name|stringf
+decl_stmt|,
+comment|/* string font */
+name|boxcomf
+decl_stmt|,
+comment|/* Box comment font */
+name|blkcomf
+decl_stmt|,
+comment|/* Block comment font */
+name|scomf
+decl_stmt|,
+comment|/* Same line comment font */
+name|bodyf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* major body font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STACKSIZE
+value|150
+end_define
+
 begin_struct
 struct|struct
 name|parser_state
@@ -572,31 +733,36 @@ block|{
 name|int
 name|last_token
 decl_stmt|;
+name|struct
+name|fstate
+name|cfont
+decl_stmt|;
+comment|/* Current font */
 name|int
 name|p_stack
 index|[
-literal|50
+name|STACKSIZE
 index|]
 decl_stmt|;
 comment|/* this is the parsers stack */
 name|int
 name|il
 index|[
-literal|50
+name|STACKSIZE
 index|]
 decl_stmt|;
 comment|/* this stack stores indentation levels */
 name|float
 name|cstk
 index|[
-literal|50
+name|STACKSIZE
 index|]
 decl_stmt|;
-comment|/* used to store case stmt indentation 				 * levels */
+comment|/* used to store case stmt indentation levels */
 name|int
 name|box_com
 decl_stmt|;
-comment|/* set to true when we are in a "boxed" 				 * comment. In that case, the first 				 * non-blank char should be lined up with 				 * the / in /* */
+comment|/* set to true when we are in a "boxed" 				 * comment. In that case, the first non-blank 				 * char should be lined up with the / in /* */
 name|int
 name|comment_delta
 decl_stmt|,
@@ -609,27 +775,31 @@ comment|/* indicates which close parens close off 				 * casts */
 name|int
 name|sizeof_mask
 decl_stmt|;
-comment|/* indicates which close parens close off 				   sizeof''s */
+comment|/* indicates which close parens close off 				 * sizeof''s */
 name|int
 name|block_init
 decl_stmt|;
 comment|/* true iff inside a block initialization */
 name|int
+name|block_init_level
+decl_stmt|;
+comment|/* The level of brace nesting in an 					 * initialization */
+name|int
 name|last_nl
 decl_stmt|;
-comment|/* this is true if the last thing scanned 				 * was a newline */
+comment|/* this is true if the last thing scanned was 				 * a newline */
 name|int
 name|in_or_st
 decl_stmt|;
-comment|/* Will be true iff there has been a 				 * declarator (e.g. int or char) and no 				 * left paren since the last semicolon. 				 * When true, a '{' is starting a 				 * structure definition or an 				 * initialization list */
+comment|/* Will be true iff there has been a 				 * declarator (e.g. int or char) and no left 				 * paren since the last semicolon. When true, 				 * a '{' is starting a structure definition or 				 * an initialization list */
 name|int
 name|bl_line
 decl_stmt|;
-comment|/* set to 1 by dump_line if the line is 				 * blank */
+comment|/* set to 1 by dump_line if the line is blank */
 name|int
 name|col_1
 decl_stmt|;
-comment|/* set to true if the last token started 				 * in column 1 */
+comment|/* set to true if the last token started in 				 * column 1 */
 name|int
 name|com_col
 decl_stmt|;
@@ -637,15 +807,15 @@ comment|/* this is the column in which the current 				 * coment should start */
 name|int
 name|com_ind
 decl_stmt|;
-comment|/* the column in which comments to the 				 * right of code should start */
+comment|/* the column in which comments to the right 				 * of code should start */
 name|int
 name|com_lines
 decl_stmt|;
-comment|/* the number of lines with comments, set 				 * by dump_line */
+comment|/* the number of lines with comments, set by 				 * dump_line */
 name|int
 name|dec_nest
 decl_stmt|;
-comment|/* current nesting level for structure or 				 * init */
+comment|/* current nesting level for structure or init */
 name|int
 name|decl_com_ind
 decl_stmt|;
@@ -653,15 +823,15 @@ comment|/* the column in which comments after 				 * declarations should be put 
 name|int
 name|decl_on_line
 decl_stmt|;
-comment|/* set to true if this line of code has 				 * part of a declaration on it */
+comment|/* set to true if this line of code has part 				 * of a declaration on it */
 name|int
 name|i_l_follow
 decl_stmt|;
-comment|/* the level to which ind_level should be 				 * set after the current line is printed */
+comment|/* the level to which ind_level should be set 				 * after the current line is printed */
 name|int
 name|in_decl
 decl_stmt|;
-comment|/* set to true when we are in a 				 * declaration stmt.  The processing of 				 * braces is then slightly different */
+comment|/* set to true when we are in a declaration 				 * stmt.  The processing of braces is then 				 * slightly different */
 name|int
 name|in_stmt
 decl_stmt|;
@@ -677,11 +847,11 @@ comment|/* the size of one indentation level */
 name|int
 name|ind_stmt
 decl_stmt|;
-comment|/* set to 1 if next line should have an 				 * extra indentation level because we are 				 * in the middle of a stmt */
+comment|/* set to 1 if next line should have an extra 				 * indentation level because we are in the 				 * middle of a stmt */
 name|int
 name|last_u_d
 decl_stmt|;
-comment|/* set to true after scanning a token 				 * which forces a following operator to be 				 * unary */
+comment|/* set to true after scanning a token which 				 * forces a following operator to be unary */
 name|int
 name|leave_comma
 decl_stmt|;
@@ -693,7 +863,7 @@ comment|/* true if declarations should be left 				 * justified */
 name|int
 name|out_coms
 decl_stmt|;
-comment|/* the number of comments processed, set 				 * by pr_comment */
+comment|/* the number of comments processed, set by 				 * pr_comment */
 name|int
 name|out_lines
 decl_stmt|;
@@ -701,7 +871,7 @@ comment|/* the number of lines written, set by 				 * dump_line */
 name|int
 name|p_l_follow
 decl_stmt|;
-comment|/* used to remember how to indent 				 * following statement */
+comment|/* used to remember how to indent following 				 * statement */
 name|int
 name|paren_level
 decl_stmt|;
@@ -716,31 +886,31 @@ comment|/* column positions of each paren */
 name|int
 name|pcase
 decl_stmt|;
-comment|/* set to 1 if the current line label is a 				 * case.  It is printed differently from  				 * a regular label */
+comment|/* set to 1 if the current line label is a 				 * case.  It is printed differently from a 				 * regular label */
 name|int
 name|search_brace
 decl_stmt|;
-comment|/* set to true by parse when it is 				 * necessary to buffer up all info up to 				 * the start of a stmt after an if, while, 				 * etc */
+comment|/* set to true by parse when it is necessary 				 * to buffer up all info up to the start of a 				 * stmt after an if, while, etc */
 name|int
 name|unindent_displace
 decl_stmt|;
-comment|/* comments not to the right of 					 * code will be placed this many 					 * indentation levels to the left 					 * of code */
+comment|/* comments not to the right of code 					 * will be placed this many 					 * indentation levels to the left of 					 * code */
 name|int
 name|use_ff
 decl_stmt|;
-comment|/* set to one if the current line should 				 * be terminated with a form feed */
+comment|/* set to one if the current line should be 				 * terminated with a form feed */
 name|int
 name|want_blank
 decl_stmt|;
-comment|/* set to true when the following token 				 * should be prefixed by a blank. (Said 				 * prefixing is ignored in some cases.) */
+comment|/* set to true when the following token should 				 * be prefixed by a blank. (Said prefixing is 				 * ignored in some cases.) */
 name|int
 name|else_if
 decl_stmt|;
-comment|/* True iff else if pairs should be 				 * handled specially */
+comment|/* True iff else if pairs should be handled 				 * specially */
 name|int
 name|decl_indent
 decl_stmt|;
-comment|/* column to indent declared identifiers 				 * to */
+comment|/* column to indent declared identifiers to */
 name|int
 name|its_a_keyword
 decl_stmt|;
@@ -753,7 +923,7 @@ decl_stmt|;
 name|float
 name|case_indent
 decl_stmt|;
-comment|/* The distance to indent case labels from 				 * the switch statement */
+comment|/* The distance to indent case labels from the 				 * switch statement */
 name|int
 name|in_parameter_declaration
 decl_stmt|;

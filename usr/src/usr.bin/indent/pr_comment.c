@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley and the University  * of Illinois, Urbana.  The name of either  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_comment.c	5.6 (Berkeley) %G%"
+literal|"@(#)pr_comment.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,20 +29,21 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * NAME:  *	pr_comment  *  * FUNCTION:  *	This routine takes care of scanning and printing comments.  *  * ALGORITHM:  *	1) Decide where the comment should be aligned, and if lines should  *	   be broken.  *	2) If lines should not be broken and filled, just copy up to end of  *	   comment.  *	3) If lines should be filled, then scan thru input_buffer copying  *	   characters to com_buf.  Remember where the last blank, tab, or  *	   newline was.  When line is filled, print up to last blank and   *	   continue copying.  *  * HISTORY:  *	November 1976	D A Willcox of CAC	Initial coding  *	12/6/76		D A Willcox of CAC	Modification to handle   *						UNIX-style comments  *  */
+comment|/*  * NAME:  *	pr_comment  *  * FUNCTION:  *	This routine takes care of scanning and printing comments.  *  * ALGORITHM:  *	1) Decide where the comment should be aligned, and if lines should  *	   be broken.  *	2) If lines should not be broken and filled, just copy up to end of  *	   comment.  *	3) If lines should be filled, then scan thru input_buffer copying  *	   characters to com_buf.  Remember where the last blank, tab, or  *	   newline was.  When line is filled, print up to last blank and  *	   continue copying.  *  * HISTORY:  *	November 1976	D A Willcox of CAC	Initial coding  *	12/6/76		D A Willcox of CAC	Modification to handle  *						UNIX-style comments  *  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  * this routine processes comments.  It makes an attempt to keep comments  * from going over the max line length.  If a line is too long, it moves  * everything from the last blank to the next comment line.  Blanks and  * tabs from the beginning of the input line are removed   */
+comment|/*  * this routine processes comments.  It makes an attempt to keep comments from  * going over the max line length.  If a line is too long, it moves everything  * from the last blank to the next comment line.  Blanks and tabs from the  * beginning of the input line are removed  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"indent_globs.h"
+include|;
 end_include
 
 begin_macro
@@ -80,7 +81,7 @@ comment|/* used for moving string */
 name|int
 name|unix_comment
 decl_stmt|;
-comment|/* tri-state variable used to decide if it 				 * is a unix-style comment. 0 means only 				 * blanks since /*, 1 means regular style 				 * comment, 2 means unix style comment */
+comment|/* tri-state variable used to decide if it is 				 * a unix-style comment. 0 means only blanks 				 * since /*, 1 means regular style comment, 2 				 * means unix style comment */
 name|int
 name|break_delim
 init|=
@@ -93,7 +94,7 @@ name|ps
 operator|.
 name|just_saw_decl
 decl_stmt|;
-comment|/*      * int         ps.last_nl = 0;	/* true iff the last significant      * thing weve seen is a newline       */
+comment|/*      * int         ps.last_nl = 0;	/* true iff the last significant thing      * weve seen is a newline      */
 name|int
 name|one_liner
 init|=
@@ -123,7 +124,7 @@ name|col_1_com
 operator|=
 name|false
 expr_stmt|;
-comment|/* at first, assume that we are 					 * not in a boxed comment or some 					 * other comment that should not 					 * be touched */
+comment|/* at first, assume that we are not in 					 * a boxed comment or some other 					 * comment that should not be touched */
 operator|++
 name|ps
 operator|.
@@ -134,7 +135,7 @@ name|unix_comment
 operator|=
 literal|1
 expr_stmt|;
-comment|/* set flag to let us figure out if there 				 * is a unix-style comment ** DISABLED: 				 * use 0 to reenable this hack! */
+comment|/* set flag to let us figure out if there is a 				 * unix-style comment ** DISABLED: use 0 to 				 * reenable this hack! */
 comment|/* Figure where to align and how to treat the comment */
 if|if
 condition|(
@@ -146,7 +147,7 @@ operator|!
 name|format_col1_comments
 condition|)
 block|{
-comment|/* if comment starts in 						 * column 1 it should not 						 * be touched */
+comment|/* if comment starts in column 						 * 1 it should not be touched */
 name|col_1_com
 operator|=
 name|ps
@@ -210,7 +211,7 @@ operator|)
 condition|)
 block|{
 comment|/* klg: check only if this line is blank */
-comment|/* 	     * If this (*and previous lines are*) blank, dont put comment 	     * way out at left  	     */
+comment|/* 	     * If this (*and previous lines are*) blank, dont put comment way 	     * out at left 	     */
 name|ps
 operator|.
 name|com_col
@@ -396,12 +397,6 @@ argument_list|,
 name|in_buffer
 argument_list|)
 expr_stmt|;
-name|ps
-operator|.
-name|comment_delta
-operator|=
-literal|0
-expr_stmt|;
 name|buf_ptr
 index|[
 operator|-
@@ -416,12 +411,6 @@ block|{
 name|ps
 operator|.
 name|n_comment_delta
-operator|=
-literal|0
-expr_stmt|;
-name|ps
-operator|.
-name|comment_delta
 operator|=
 literal|0
 expr_stmt|;
@@ -483,6 +472,21 @@ name|e_com
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|troff
+condition|)
+block|{
+name|now_col
+operator|=
+literal|1
+expr_stmt|;
+name|adj_max_col
+operator|=
+literal|80
+expr_stmt|;
+block|}
+else|else
 name|now_col
 operator|=
 name|count_spaces
@@ -494,7 +498,7 @@ argument_list|,
 name|s_com
 argument_list|)
 expr_stmt|;
-comment|/* figure what column we 						 * would be in if we 						 * printed the comment now */
+comment|/* figure what column we 							 * would be in if we 							 * printed the comment 							 * now */
 comment|/* Start to copy the comment */
 while|while
 condition|(
@@ -520,6 +524,11 @@ name|last_nl
 operator|=
 literal|0
 expr_stmt|;
+name|check_size
+argument_list|(
+name|com
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -539,7 +548,7 @@ operator|.
 name|box_com
 condition|)
 block|{
-comment|/* in a text comment, break the 					 * line here */
+comment|/* in a text comment, break the line here */
 name|ps
 operator|.
 name|use_ff
@@ -646,7 +655,7 @@ operator|.
 name|last_nl
 condition|)
 block|{
-comment|/* if this is a boxed 						 * comment, we dont ignore 						 * the newline */
+comment|/* if this is a boxed comment, 						 * we dont ignore the newline */
 if|if
 condition|(
 name|s_com
@@ -771,6 +780,11 @@ block|}
 name|dump_line
 argument_list|()
 expr_stmt|;
+name|check_size
+argument_list|(
+name|com
+argument_list|)
+expr_stmt|;
 operator|*
 name|e_com
 operator|++
@@ -809,7 +823,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-comment|/* we not are in 						 * unix_style comment */
+comment|/* we not are in unix_style 						 * comment */
 if|if
 condition|(
 name|unix_comment
@@ -821,7 +835,7 @@ operator|==
 name|e_code
 condition|)
 block|{
-comment|/* 			 * if it is a UNIX-style comment, ignore the 			 * requirement that previous line be blank for 			 * unindention  			 */
+comment|/* 			 * if it is a UNIX-style comment, ignore the 			 * requirement that previous line be blank for 			 * unindention 			 */
 name|ps
 operator|.
 name|com_col
@@ -861,7 +875,7 @@ name|unix_comment
 operator|=
 literal|2
 expr_stmt|;
-comment|/* permanently remember that we 					 * are in this type of comment */
+comment|/* permanently remember that we are in 					 * this type of comment */
 name|dump_line
 argument_list|()
 expr_stmt|;
@@ -880,7 +894,7 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* 		     * fix so that the star at the start of the line will 		     * line up  		     */
+comment|/* 		     * fix so that the star at the start of the line will line 		     * up 		     */
 do|do
 comment|/* flush leading white space */
 if|if
@@ -934,13 +948,18 @@ name|e_com
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 		 * if there was a space at the end of the last line, 		 * remember where it was  		 */
+comment|/* 		 * if there was a space at the end of the last line, remember 		 * where it was 		 */
 else|else
 block|{
 comment|/* otherwise, insert one */
 name|last_bl
 operator|=
 name|e_com
+expr_stmt|;
+name|check_size
+argument_list|(
+name|com
+argument_list|)
 expr_stmt|;
 operator|*
 name|e_com
@@ -972,7 +991,7 @@ literal|1
 decl_stmt|;
 do|do
 block|{
-comment|/* flush any blanks and/or tabs at start 				 * of next line */
+comment|/* flush any blanks and/or tabs at start of 				 * next line */
 if|if
 condition|(
 operator|++
@@ -1048,7 +1067,7 @@ comment|/* end of case for newline */
 case|case
 literal|'*'
 case|:
-comment|/* must check for possibility of being at 				 * end of comment */
+comment|/* must check for possibility of being at end 				 * of comment */
 if|if
 condition|(
 operator|++
@@ -1234,6 +1253,11 @@ operator|.
 name|com_col
 expr_stmt|;
 block|}
+name|check_size
+argument_list|(
+name|com
+argument_list|)
+expr_stmt|;
 operator|*
 name|e_com
 operator|++
@@ -1295,7 +1319,7 @@ name|unix_comment
 operator|=
 literal|1
 expr_stmt|;
-comment|/* we are not in unix-style 					 * comment */
+comment|/* we are not in unix-style comment */
 operator|*
 name|e_com
 operator|=
@@ -1396,7 +1420,7 @@ operator|>
 literal|' '
 condition|)
 block|{
-comment|/* the comment is too long, it must be broken up */
+comment|/* 		 * the comment is too long, it must be broken up 		 */
 if|if
 condition|(
 name|break_delim
@@ -1596,7 +1620,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* move unprinted part 							 * of comment down in 							 * buffer */
+comment|/* move unprinted part of 						 * comment down in buffer */
 if|if
 condition|(
 operator|*
