@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.16 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1851,12 +1851,6 @@ operator|->
 name|d_ino
 operator|>
 name|maxino
-operator|||
-name|dirp
-operator|->
-name|d_ino
-operator|<=
-literal|0
 condition|)
 block|{
 name|fileerror
