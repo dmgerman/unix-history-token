@@ -42,7 +42,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_scan.c,v 1.44 2000/06/10 21:59:21 tom Exp $"
+literal|"$Id: comp_scan.c,v 1.47 2000/09/24 01:15:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -190,6 +190,29 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|NCURSES_EXT_FUNCS
+end_if
+
+begin_decl_stmt
+name|bool
+name|_nc_disable_period
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used by tic -a option */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -469,8 +492,8 @@ condition|(
 name|ch
 operator|==
 literal|'.'
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NCURSES_EXT_FUNCS
 operator|&&
 operator|!
@@ -533,8 +556,8 @@ name|isalnum
 argument_list|(
 name|ch
 argument_list|)
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NCURSES_EXT_FUNCS
 operator|&&
 operator|!
@@ -2440,6 +2463,11 @@ condition|(
 name|bufstart
 operator|==
 name|NULL
+operator|||
+operator|*
+name|bufstart
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -2493,14 +2521,8 @@ operator|==
 literal|'\r'
 condition|)
 block|{
-name|bufptr
-index|[
 name|len
-operator|-
-literal|2
-index|]
-operator|=
-literal|'\n'
+operator|--
 expr_stmt|;
 name|bufptr
 index|[
@@ -2509,10 +2531,40 @@ operator|-
 literal|1
 index|]
 operator|=
+literal|'\n'
+expr_stmt|;
+name|bufptr
+index|[
+name|len
+index|]
+operator|=
 literal|'\0'
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If we don't have a trailing newline, it's because the line is simply 	 * too long.  Give up.  (FIXME:  We could instead reallocate the line 	 * buffer and allow arbitrary-length lines). 	 */
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+operator|||
+operator|(
+name|bufptr
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+operator|)
+condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
 block|}
 name|first_column
 operator|=
