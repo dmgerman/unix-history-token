@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	6.4	84/05/25	*/
+comment|/*	ip_output.c	6.5	84/06/22	*/
 end_comment
 
 begin_include
@@ -174,7 +174,7 @@ name|route
 name|iproute
 decl_stmt|;
 name|struct
-name|sockaddr
+name|sockaddr_in
 modifier|*
 name|dst
 decl_stmt|;
@@ -277,6 +277,11 @@ expr_stmt|;
 block|}
 name|dst
 operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 operator|&
 name|ro
 operator|->
@@ -291,25 +296,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ro
+name|dst
 operator|->
-name|ro_dst
-operator|.
-name|sa_family
+name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ro
-operator|->
-name|ro_dst
-operator|)
+name|dst
 operator|->
 name|sin_addr
 operator|=
@@ -444,6 +437,11 @@ operator|)
 condition|)
 name|dst
 operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 operator|&
 name|ro
 operator|->
@@ -497,14 +495,7 @@ if|if
 condition|(
 name|in_lnaof
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 name|dst
-operator|)
 operator|->
 name|sin_addr
 argument_list|)
@@ -643,6 +634,11 @@ name|ifp
 argument_list|,
 name|m
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|dst
 argument_list|)
 expr_stmt|;
@@ -1012,6 +1008,11 @@ name|ifp
 argument_list|,
 name|mh
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|dst
 argument_list|)
 condition|)
