@@ -2274,12 +2274,23 @@ name|FLOAT_TYPE_SIZE
 value|32
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LONG_TYPE_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|LONG_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
