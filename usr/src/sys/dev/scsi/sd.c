@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.6 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.26 93/04/20 02:52:59 leres Exp $  */
+comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.7 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.27 93/04/29 01:22:19 torek Exp $  */
 end_comment
 
 begin_comment
@@ -2072,7 +2072,6 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|!
 name|suser
 argument_list|(
 name|p
@@ -4325,7 +4324,6 @@ case|:
 comment|/* take this device into or out of "format" mode */
 if|if
 condition|(
-operator|!
 name|suser
 argument_list|(
 name|p
