@@ -110,75 +110,6 @@ name|diskpsize
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|disk_cdevsw
-init|=
-block|{
-comment|/* open */
-name|diskopen
-block|,
-comment|/* close */
-name|diskclose
-block|,
-comment|/* read */
-name|physread
-block|,
-comment|/* write */
-name|physwrite
-block|,
-comment|/* ioctl */
-name|diskioctl
-block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|diskstrategy
-block|,
-comment|/* name */
-literal|"disk"
-block|,
-comment|/* parms */
-name|noparms
-block|,
-comment|/* maj */
-operator|-
-literal|1
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|diskpsize
-block|,
-comment|/* flags */
-name|D_DISK
-block|,
-comment|/* maxio */
-literal|0
-block|,
-comment|/* bmaj */
-operator|-
-literal|1
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|dev_t
 name|disk_create
@@ -208,31 +139,6 @@ name|cdevsw
 modifier|*
 name|cds
 decl_stmt|;
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|cdevsw
-operator|->
-name|d_maj
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cds
-operator|=
-name|devsw
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cds
-condition|)
-block|{
-comment|/* Build the "real" cdevsw */
 name|MALLOC
 argument_list|(
 name|cds
@@ -252,57 +158,110 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|dp
+argument_list|,
+sizeof|sizeof
+argument_list|(
 operator|*
-name|cds
-operator|=
-name|disk_cdevsw
+name|dp
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|cds
-operator|->
-name|d_name
+name|dev
 operator|=
-name|cdevsw
-operator|->
-name|d_name
-expr_stmt|;
-name|cds
-operator|->
-name|d_maj
-operator|=
+name|makedev
+argument_list|(
 name|cdevsw
 operator|->
 name|d_maj
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
-name|cds
+if|if
+condition|(
+operator|!
+name|devsw
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+name|dp
 operator|->
-name|d_bmaj
+name|d_open
 operator|=
 name|cdevsw
 operator|->
-name|d_bmaj
+name|d_open
 expr_stmt|;
-name|cds
+name|cdevsw
 operator|->
-name|d_flags
+name|d_open
+operator|=
+name|diskopen
+expr_stmt|;
+name|dp
+operator|->
+name|d_close
 operator|=
 name|cdevsw
 operator|->
-name|d_flags
-operator|&
-operator|~
-name|D_TRACKCLOSE
+name|d_close
 expr_stmt|;
-name|cds
+name|cdevsw
 operator|->
-name|d_dump
+name|d_close
+operator|=
+name|diskclose
+expr_stmt|;
+name|dp
+operator|->
+name|d_ioctl
 operator|=
 name|cdevsw
 operator|->
-name|d_dump
+name|d_ioctl
+expr_stmt|;
+name|cdevsw
+operator|->
+name|d_ioctl
+operator|=
+name|diskioctl
+expr_stmt|;
+name|dp
+operator|->
+name|d_strategy
+operator|=
+name|cdevsw
+operator|->
+name|d_strategy
+expr_stmt|;
+name|cdevsw
+operator|->
+name|d_strategy
+operator|=
+name|diskstrategy
+expr_stmt|;
+name|dp
+operator|->
+name|d_psize
+operator|=
+name|cdevsw
+operator|->
+name|d_psize
+expr_stmt|;
+name|cdevsw
+operator|->
+name|d_psize
+operator|=
+name|diskpsize
 expr_stmt|;
 name|cdevsw_add
 argument_list|(
-name|cds
+name|cdevsw
 argument_list|)
 expr_stmt|;
 block|}
@@ -310,7 +269,7 @@ name|printf
 argument_list|(
 literal|"Creating DISK %s%d\n"
 argument_list|,
-name|cds
+name|cdevsw
 operator|->
 name|d_name
 argument_list|,
@@ -321,7 +280,7 @@ name|dev
 operator|=
 name|make_dev
 argument_list|(
-name|cds
+name|cdevsw
 argument_list|,
 name|dkmakeminor
 argument_list|(
@@ -340,29 +299,12 @@ literal|0
 argument_list|,
 literal|"r%s%d"
 argument_list|,
-name|cds
+name|cdevsw
 operator|->
 name|d_name
 argument_list|,
 name|unit
 argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|dp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|dp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dp
-operator|->
-name|d_devsw
-operator|=
-name|cdevsw
 expr_stmt|;
 name|dev
 operator|->
@@ -704,8 +646,6 @@ name|error
 operator|=
 name|dp
 operator|->
-name|d_devsw
-operator|->
 name|d_open
 argument_list|(
 name|dev
@@ -760,8 +700,6 @@ name|d_slice
 argument_list|)
 condition|)
 name|dp
-operator|->
-name|d_devsw
 operator|->
 name|d_close
 argument_list|(
@@ -843,8 +781,6 @@ condition|)
 name|error
 operator|=
 name|dp
-operator|->
-name|d_devsw
 operator|->
 name|d_close
 argument_list|(
@@ -999,8 +935,6 @@ return|return;
 block|}
 name|dp
 operator|->
-name|d_devsw
-operator|->
 name|d_strategy
 argument_list|(
 name|bp
@@ -1074,8 +1008,6 @@ condition|)
 name|error
 operator|=
 name|dp
-operator|->
-name|d_devsw
 operator|->
 name|d_ioctl
 argument_list|(
