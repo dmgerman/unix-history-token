@@ -3842,6 +3842,11 @@ argument_list|,
 name|gw
 argument_list|)
 expr_stmt|;
+operator|*
+name|rp
+operator|=
+name|r
+expr_stmt|;
 block|}
 end_function
 
