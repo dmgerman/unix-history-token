@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	5.6 (Berkeley) %G%"
+literal|"@(#)bt_search.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,11 @@ specifier|static
 name|EPG
 name|e
 decl_stmt|;
+name|BT_CLR
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pg
