@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.2.1.1 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4722,7 +4722,18 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 'w' available -- was "no wildcard MX matching" */
+case|case
+literal|'w'
+case|:
+comment|/* if we are best MX, try host directly */
+name|TryNullMXList
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* 'W' available -- was wizard password */
 case|case
 literal|'x'
