@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.26 1995/03/10 19:41:50 davidg Exp $  */
+comment|/*  *	$Id: ld.c,v 1.27.4.1 1995/06/28 05:54:50 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -9887,6 +9887,9 @@ decl_stmt|;
 name|int
 name|filemode
 decl_stmt|;
+name|mode_t
+name|u_mask
+decl_stmt|;
 if|if
 condition|(
 name|lstat
@@ -9918,6 +9921,21 @@ name|output_filename
 argument_list|)
 expr_stmt|;
 block|}
+name|u_mask
+operator|=
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+name|u_mask
+argument_list|)
+expr_stmt|;
 name|outstream
 operator|=
 name|fopen
@@ -10052,7 +10070,12 @@ name|output_filename
 argument_list|,
 name|filemode
 operator||
+operator|(
 literal|0111
+operator|&
+operator|~
+name|u_mask
+operator|)
 argument_list|)
 operator|==
 operator|-
