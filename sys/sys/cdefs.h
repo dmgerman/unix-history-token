@@ -778,6 +778,12 @@ end_if
 begin_if
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|||
 name|__STDC_VERSION__
 operator|<
 literal|199901
@@ -1485,6 +1491,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|_POSIX_C_SOURCE
+argument_list|)
+operator|&&
 name|_POSIX_C_SOURCE
 operator|==
 literal|1
@@ -1519,6 +1530,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|_POSIX_C_SOURCE
+argument_list|)
+operator|&&
 name|_POSIX_C_SOURCE
 operator|==
 literal|2
