@@ -109,6 +109,8 @@ end_include
 
 begin_decl_stmt
 name|int
+name|Fflag
+decl_stmt|,
 name|fflag
 decl_stmt|,
 name|rflag
@@ -227,7 +229,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:fn:r"
+literal|"Fb:c:fn:r"
 argument_list|)
 operator|)
 operator|!=
@@ -239,6 +241,17 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'F'
+case|:
+comment|/* -F is superset of (and implies) -f */
+name|Fflag
+operator|=
+name|fflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'b'
 case|:
