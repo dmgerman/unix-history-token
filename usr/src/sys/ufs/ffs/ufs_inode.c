@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.34	83/03/15	*/
+comment|/*	ufs_inode.c	4.35	83/05/21	*/
 end_comment
 
 begin_include
@@ -1624,12 +1624,6 @@ name|struct
 name|inode
 name|tip
 decl_stmt|;
-name|int
-name|level
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|long
 name|blocksreleased
 init|=
@@ -1641,8 +1635,9 @@ name|long
 name|indirtrunc
 parameter_list|()
 function_decl|;
-endif|#
-directive|endif
+name|int
+name|level
+decl_stmt|;
 if|if
 condition|(
 name|oip
@@ -1720,19 +1715,15 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|nblocks
 operator|=
+name|btodb
+argument_list|(
 name|fs
 operator|->
 name|fs_bsize
-operator|/
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Update size of file and block pointers 	 * on disk before we start freeing blocks. 	 * If we crash before free'ing blocks below, 	 * the blocks will be returned to the free list. 	 * lastiblock values are also normalized to -1 	 * for calls to indirtrunc below. 	 * (? fsck doesn't check validity of pointers in indirect blocks) 	 */
 name|tip
 operator|=
@@ -1867,13 +1858,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|blocksreleased
 operator|+=
-endif|#
-directive|endif
 name|indirtrunc
 argument_list|(
 name|ip
@@ -1921,15 +1907,10 @@ operator|->
 name|fs_bsize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|blocksreleased
 operator|+=
 name|nblocks
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 if|if
@@ -2014,17 +1995,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|blocksreleased
 operator|+=
+name|btodb
+argument_list|(
 name|size
-operator|/
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -2127,21 +2104,15 @@ operator|-
 name|newspace
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|blocksreleased
 operator|+=
-operator|(
+name|btodb
+argument_list|(
 name|oldspace
 operator|-
 name|newspace
-operator|)
-operator|/
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 name|done
@@ -2216,6 +2187,33 @@ literal|"itrunc2"
 argument_list|)
 expr_stmt|;
 comment|/* END PARANOIA */
+name|oip
+operator|->
+name|i_blocks
+operator|-=
+name|blocksreleased
+expr_stmt|;
+if|if
+condition|(
+name|oip
+operator|->
+name|i_blocks
+operator|<
+literal|0
+condition|)
+comment|/* sanity */
+name|oip
+operator|->
+name|i_blocks
+operator|=
+literal|0
+expr_stmt|;
+name|oip
+operator|->
+name|i_flag
+operator||=
+name|ICHG
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -2224,7 +2222,7 @@ name|void
 operator|)
 name|chkdq
 argument_list|(
-name|ip
+name|oip
 argument_list|,
 operator|-
 name|blocksreleased
@@ -2241,16 +2239,8 @@ begin_comment
 comment|/*  * Release blocks associated with the inode ip and  * stored in the indirect block bn.  Blocks are free'd  * in LIFO order up to (but not including) lastbn.  If  * level is greater than SINGLE, the block is an indirect  * block and recursive calls to indirtrunc must be used to  * cleanse other indirect blocks.  *  * NB: triple indirect blocks are untested.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QUOTA
-end_ifdef
-
 begin_function
 name|long
-endif|#
-directive|endif
 name|indirtrunc
 parameter_list|(
 name|ip
@@ -2311,9 +2301,6 @@ decl_stmt|;
 name|long
 name|factor
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|int
 name|blocksreleased
 init|=
@@ -2321,8 +2308,6 @@ literal|0
 decl_stmt|,
 name|nblocks
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Calculate index in current block of last 	 * block to be kept.  -1 indicates the entire 	 * block so we need not calculate the index. 	 */
 name|factor
 operator|=
@@ -2362,19 +2347,15 @@ name|last
 operator|/=
 name|factor
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|nblocks
 operator|=
+name|btodb
+argument_list|(
 name|fs
 operator|->
 name|fs_bsize
-operator|/
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Get buffer of block pointers, zero those  	 * entries corresponding to blocks to be free'd, 	 * and update on disk copy first. 	 */
 name|copy
 operator|=
@@ -2430,19 +2411,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-return|return;
-endif|#
-directive|endif
 block|}
 name|bap
 operator|=
@@ -2568,13 +2541,8 @@ name|level
 operator|>
 name|SINGLE
 condition|)
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|blocksreleased
 operator|+=
-endif|#
-directive|endif
 name|indirtrunc
 argument_list|(
 name|ip
@@ -2606,15 +2574,10 @@ operator|->
 name|fs_bsize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|blocksreleased
 operator|+=
 name|nblocks
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Recursively free last partial block. 	 */
 if|if
@@ -2647,13 +2610,8 @@ name|nb
 operator|!=
 literal|0
 condition|)
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|blocksreleased
 operator|+=
-endif|#
-directive|endif
 name|indirtrunc
 argument_list|(
 name|ip
@@ -2673,16 +2631,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 return|return
 operator|(
 name|blocksreleased
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
