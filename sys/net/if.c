@@ -2067,11 +2067,6 @@ name|socksize
 expr_stmt|;
 name|ifa
 operator|=
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|ifasize
@@ -2083,11 +2078,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifa
-condition|)
-block|{
 name|IFA_LOCK_INIT
 argument_list|(
 name|ifa
@@ -2252,7 +2242,6 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-block|}
 name|ifp
 operator|->
 name|if_broadcastaddr
