@@ -482,6 +482,13 @@ name|KUE_CONFIG_NO
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|KUE_IFACE_IDX
+value|0
+end_define
+
 begin_comment
 comment|/*  * The interrupt endpoint is currently unused  * by the KLSI part.  */
 end_comment
