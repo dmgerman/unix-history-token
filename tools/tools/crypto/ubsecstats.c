@@ -75,7 +75,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"kern.ubsec_stats"
+literal|"hw.ubsec.stats"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -124,6 +124,10 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"nodesc %u badalg %u nomem %u queuefull %u\n"
+argument_list|,
+name|stats
+operator|.
+name|hst_nodesc
 argument_list|,
 name|stats
 operator|.
