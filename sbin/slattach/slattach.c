@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.25 1997/02/22 14:33:19 peter Exp $"
+literal|"$Id: slattach.c,v 1.26 1997/03/29 03:33:07 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -1401,14 +1407,41 @@ name|uucp_lock
 condition|)
 block|{
 comment|/* unlock not needed here, always re-lock with new pid */
+name|int
+name|res
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|res
+operator|=
 name|uu_lock
 argument_list|(
 name|dvname
 argument_list|)
+operator|)
+operator|!=
+name|UU_LOCK_OK
 condition|)
 block|{
+if|if
+condition|(
+name|res
+operator|!=
+name|UU_LOCK_INUSE
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"uu_lock: %s"
+argument_list|,
+name|uu_lockerr
+argument_list|(
+name|res
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -2362,14 +2395,41 @@ condition|(
 name|uucp_lock
 condition|)
 block|{
+name|int
+name|res
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|res
+operator|=
 name|uu_lock
 argument_list|(
 name|dvname
 argument_list|)
+operator|)
+operator|!=
+name|UU_LOCK_OK
 condition|)
 block|{
+if|if
+condition|(
+name|res
+operator|!=
+name|UU_LOCK_INUSE
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"uu_lock: %s"
+argument_list|,
+name|uu_lockerr
+argument_list|(
+name|res
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR

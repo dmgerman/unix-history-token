@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.30 1997/03/10 06:21:02 ache Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.31 1997/03/10 06:54:58 ache Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -156,17 +162,6 @@ name|uucplock
 index|[
 literal|10
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|uu_lock
-argument_list|()
-decl_stmt|,
-name|uu_unlock
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1590,6 +1585,9 @@ decl_stmt|,
 modifier|*
 name|port
 decl_stmt|;
+name|int
+name|res
+decl_stmt|;
 name|mbits
 operator|=
 literal|0
@@ -1719,14 +1717,24 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|res
+operator|=
 name|uu_lock
 argument_list|(
 name|uucplock
 argument_list|)
-operator|<
-literal|0
+operator|)
+operator|!=
+name|UU_LOCK_OK
 condition|)
 block|{
+if|if
+condition|(
+name|res
+operator|==
+name|UU_LOCK_INUSE
+condition|)
 name|LogPrintf
 argument_list|(
 name|LOG_PHASE_BIT
@@ -1734,6 +1742,21 @@ argument_list|,
 literal|"Modem %s is in use\n"
 argument_list|,
 name|VarDevice
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Modem %s is in use: uu_lock: %s\n"
+argument_list|,
+name|VarDevice
+argument_list|,
+name|uu_lockerr
+argument_list|(
+name|res
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
