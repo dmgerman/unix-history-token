@@ -957,8 +957,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|short
+name|uint16_t
 name|ed_EZ98_intr_val
 index|[]
 init|=
