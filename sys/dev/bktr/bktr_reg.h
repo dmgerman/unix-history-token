@@ -162,6 +162,27 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|BROOKTREE_ALLOC_PAGES
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BKTR_ALLOC_PAGES
+value|BROOKTREE_ALLOC_PAGES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|BROOKTREE_SYSTEM_DEFAULT
 argument_list|)
 end_if
@@ -293,33 +314,129 @@ begin_comment
 comment|/*  * Definitions for the Brooktree 848/878 video capture to pci interface.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|BROOKTREE_848_PCI_ID
-value|0x0350109E
+name|PCI_VENDOR_SHIFT
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|BROOKTREE_849_PCI_ID
-value|0x0351109E
+name|PCI_VENDOR_MASK
+value|0xffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|BROOKTREE_878_PCI_ID
-value|0x036E109E
+name|PCI_VENDOR
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|(((id)>> PCI_VENDOR_SHIFT)& PCI_VENDOR_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BROOKTREE_879_PCI_ID
-value|0x036F109E
+name|PCI_PRODUCT_SHIFT
+value|16
 end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_MASK
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|(((id)>> PCI_PRODUCT_SHIFT)& PCI_PRODUCT_MASK)
+end_define
+
+begin_comment
+comment|/* PCI vendor ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_BROOKTREE
+value|0x109e
+end_define
+
+begin_comment
+comment|/* Brooktree */
+end_comment
+
+begin_comment
+comment|/* Brooktree products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_BROOKTREE_BT848
+value|0x0350
+end_define
+
+begin_comment
+comment|/* Bt848 Video Capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_BROOKTREE_BT849
+value|0x0351
+end_define
+
+begin_comment
+comment|/* Bt849 Video Capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_BROOKTREE_BT878
+value|0x036e
+end_define
+
+begin_comment
+comment|/* Bt878 Video Capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_BROOKTREE_BT879
+value|0x036f
+end_define
+
+begin_comment
+comment|/* Bt879 Video Capture */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2183,36 +2300,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * NetBSD>= 1.3H uses vaddr_t instead of vm_offset_t  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|&&
-name|__NetBSD_Version__
-operator|>=
-literal|103080000
-end_if
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|vm_offset_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * BrookTree 848  info structure, one per bt848 card installed.  */
 end_comment
 
@@ -2409,6 +2496,30 @@ modifier|*
 name|res_ih
 decl_stmt|;
 comment|/* 4.x newbus interrupt handler cookie */
+name|dev_t
+name|bktrdev
+decl_stmt|;
+comment|/* 4.x device entry for /dev/bktrN */
+name|dev_t
+name|tunerdev
+decl_stmt|;
+comment|/* 4.x device entry for /dev/tunerN */
+name|dev_t
+name|vbidev
+decl_stmt|;
+comment|/* 4.x device entry for /dev/vbiN */
+name|dev_t
+name|bktrdev_alias
+decl_stmt|;
+comment|/* alias /dev/bktr to /dev/bktr0 */
+name|dev_t
+name|tunerdev_alias
+decl_stmt|;
+comment|/* alias /dev/tuner to /dev/tuner0 */
+name|dev_t
+name|vbidev_alias
+decl_stmt|;
+comment|/* alias /dev/vbi to /dev/vbi0 */
 endif|#
 directive|endif
 if|#
@@ -2455,15 +2566,36 @@ decl_stmt|;
 comment|/* device name and unit number */
 endif|#
 directive|endif
-comment|/* the following definitions are common over all platforms */
+comment|/* The following definitions are for the contiguous memory */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|vaddr_t
+name|bigbuf
+decl_stmt|;
+comment|/* buffer that holds the captured image */
+name|vaddr_t
+name|vbidata
+decl_stmt|;
+comment|/* RISC program puts VBI data from the current frame here */
+name|vaddr_t
+name|vbibuffer
+decl_stmt|;
+comment|/* Circular buffer holding VBI data for the user */
+name|vaddr_t
+name|dma_prog
+decl_stmt|;
+comment|/* RISC prog for single and/or even field capture*/
+name|vaddr_t
+name|odd_dma_prog
+decl_stmt|;
+comment|/* RISC program for Odd field capture */
+else|#
+directive|else
 name|vm_offset_t
 name|bigbuf
 decl_stmt|;
 comment|/* buffer that holds the captured image */
-name|int
-name|alloc_pages
-decl_stmt|;
-comment|/* number of pages in bigbuf */
 name|vm_offset_t
 name|vbidata
 decl_stmt|;
@@ -2472,6 +2604,21 @@ name|vm_offset_t
 name|vbibuffer
 decl_stmt|;
 comment|/* Circular buffer holding VBI data for the user */
+name|vm_offset_t
+name|dma_prog
+decl_stmt|;
+comment|/* RISC prog for single and/or even field capture*/
+name|vm_offset_t
+name|odd_dma_prog
+decl_stmt|;
+comment|/* RISC program for Odd field capture */
+endif|#
+directive|endif
+comment|/* the following definitions are common over all platforms */
+name|int
+name|alloc_pages
+decl_stmt|;
+comment|/* number of pages in bigbuf */
 name|int
 name|vbiinsert
 decl_stmt|;
@@ -2523,12 +2670,6 @@ define|#
 directive|define
 name|METEOR_SIG_FRAME_MODE
 value|0x00000000
-name|vm_offset_t
-name|dma_prog
-decl_stmt|;
-name|vm_offset_t
-name|odd_dma_prog
-decl_stmt|;
 name|char
 name|dma_prog_loaded
 decl_stmt|;
