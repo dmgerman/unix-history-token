@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.17 1997/04/01 14:15:30 bde Exp $"
+literal|"$Id: mountd.c,v 1.18 1997/04/09 20:17:15 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1318,6 +1318,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|force_v2
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|resvport_only
 init|=
 literal|1
@@ -1569,7 +1577,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dnr"
+literal|"2dnr"
 argument_list|)
 operator|)
 operator|!=
@@ -1581,6 +1589,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'2'
+case|:
+name|force_v2
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
@@ -1975,19 +1991,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|svc_register
-argument_list|(
-name|udptransp
-argument_list|,
-name|RPCPROG_MNT
-argument_list|,
-literal|1
-argument_list|,
-name|mntsrv
-argument_list|,
-name|IPPROTO_UDP
-argument_list|)
-operator|||
+name|force_v2
+condition|)
+if|if
+condition|(
 operator|!
 name|svc_register
 argument_list|(
@@ -2009,12 +2016,42 @@ name|tcptransp
 argument_list|,
 name|RPCPROG_MNT
 argument_list|,
-literal|1
+literal|3
 argument_list|,
 name|mntsrv
 argument_list|,
 name|IPPROTO_TCP
 argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Can't register mount"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|svc_register
+argument_list|(
+name|udptransp
+argument_list|,
+name|RPCPROG_MNT
+argument_list|,
+literal|1
+argument_list|,
+name|mntsrv
+argument_list|,
+name|IPPROTO_UDP
+argument_list|)
 operator|||
 operator|!
 name|svc_register
@@ -2023,7 +2060,7 @@ name|tcptransp
 argument_list|,
 name|RPCPROG_MNT
 argument_list|,
-literal|3
+literal|1
 argument_list|,
 name|mntsrv
 argument_list|,
