@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.36 1997/03/09 20:03:39 ache Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.37 1997/03/10 06:21:01 ache Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -157,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|"alias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sig.h"
 end_include
 
 begin_define
@@ -914,20 +920,14 @@ name|void
 name|TerminalCont
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGCONT
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -959,10 +959,7 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGCONT
 argument_list|,
@@ -972,7 +969,7 @@ expr_stmt|;
 name|TtyOldMode
 argument_list|()
 expr_stmt|;
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -1517,21 +1514,21 @@ argument_list|,
 name|Hangup
 argument_list|)
 expr_stmt|;
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGTERM
 argument_list|,
 name|CloseSession
 argument_list|)
 expr_stmt|;
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|CloseSession
 argument_list|)
 expr_stmt|;
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -1565,7 +1562,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SIGALRM
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -1584,7 +1581,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SIGTSTP
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -1596,7 +1593,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SIGTTIN
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -1608,7 +1605,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SIGTTOU
-name|signal
+name|pending_signal
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -3305,6 +3302,11 @@ expr_stmt|;
 name|TimerService
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|handle_signals
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* If there are aren't many packets queued, look for some more. */
@@ -3480,8 +3482,10 @@ operator|==
 name|EINTR
 condition|)
 block|{
+name|handle_signals
+argument_list|()
+expr_stmt|;
 continue|continue;
-comment|/* Got a signal - should have been dealt with */
 block|}
 name|perror
 argument_list|(
