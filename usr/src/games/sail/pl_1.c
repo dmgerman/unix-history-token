@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	2.7 84/02/23"
+literal|"@(#)pl_1.c	2.8 84/12/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,16 +588,6 @@ operator|)
 name|signal
 argument_list|(
 name|SIGINT
-argument_list|,
-name|choke
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGQUIT
 argument_list|,
 name|choke
 argument_list|)
@@ -1758,8 +1748,6 @@ operator|&
 name|status
 argument_list|,
 name|WNOHANG
-operator||
-name|WUNTRACED
 argument_list|,
 operator|(
 expr|struct
@@ -1793,7 +1781,7 @@ block|}
 do|while
 condition|(
 name|pid
-operator|!=
+operator|>
 literal|0
 condition|)
 do|;
