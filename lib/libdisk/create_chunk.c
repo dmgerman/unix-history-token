@@ -164,11 +164,6 @@ name|int
 name|Fixup_FreeBSD_Names
 parameter_list|(
 name|struct
-name|disk
-modifier|*
-name|d
-parameter_list|,
-name|struct
 name|chunk
 modifier|*
 name|c
@@ -182,7 +177,7 @@ decl_stmt|,
 modifier|*
 name|c3
 decl_stmt|;
-name|int
+name|uint
 name|j
 decl_stmt|;
 if|if
@@ -633,11 +628,6 @@ name|int
 name|Fixup_Extended_Names
 parameter_list|(
 name|struct
-name|disk
-modifier|*
-name|d
-parameter_list|,
-name|struct
 name|chunk
 modifier|*
 name|c
@@ -714,7 +704,9 @@ name|name
 argument_list|,
 literal|"%ss%d"
 argument_list|,
-name|d
+name|c
+operator|->
+name|disk
 operator|->
 name|chunks
 operator|->
@@ -736,8 +728,6 @@ if|if
 condition|(
 name|Fixup_FreeBSD_Names
 argument_list|(
-name|d
-argument_list|,
 name|c1
 argument_list|)
 operator|!=
@@ -1029,14 +1019,13 @@ name|freebsd
 condition|)
 name|Fixup_FreeBSD_Names
 argument_list|(
-name|d
-argument_list|,
 name|c2
 argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PC98
+elseif|else
 if|if
 condition|(
 name|c2
@@ -1047,8 +1036,6 @@ name|extended
 condition|)
 name|Fixup_Extended_Names
 argument_list|(
-name|d
-argument_list|,
 name|c2
 argument_list|)
 expr_stmt|;
@@ -1260,7 +1247,7 @@ name|chunk
 modifier|*
 name|c1
 decl_stmt|;
-name|u_long
+name|long
 name|offset
 decl_stmt|;
 if|if
