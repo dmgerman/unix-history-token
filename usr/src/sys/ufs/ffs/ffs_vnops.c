@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.71 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.72 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -625,14 +625,14 @@ name|off_t
 name|diff
 decl_stmt|;
 name|int
+name|rasize
+decl_stmt|,
 name|error
 init|=
 literal|0
 decl_stmt|;
 name|long
 name|size
-decl_stmt|,
-name|rasize
 decl_stmt|,
 name|n
 decl_stmt|,
