@@ -1510,7 +1510,7 @@ block|{
 name|int
 name|vdesc_offset
 decl_stmt|;
-comment|/* offset in vector--first for speed */
+comment|/* offset in vector,first for speed */
 name|char
 modifier|*
 name|vdesc_name
@@ -1711,7 +1711,7 @@ name|IS_LOCKING_VFS
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_tag == VT_UFS		\ 				 || (vp)->v_tag == VT_MFS	\ 				 || (vp)->v_tag == VT_NFS	\ 				 || (vp)->v_tag == VT_LFS	\ 				 || (vp)->v_tag == VT_ISOFS	\ 				 || (vp)->v_tag == VT_MSDOSFS	\ 				 || (vp)->v_tag == VT_DEVFS)
+value|((vp)->v_tag == VT_UFS			\ 				 || (vp)->v_tag == VT_MFS		\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS		\ 				 || (vp)->v_tag == VT_DEVFS)
 end_define
 
 begin_define
@@ -2319,6 +2319,37 @@ name|uid
 operator|,
 name|gid_t
 name|gid
+operator|,
+name|mode_t
+name|acc_mode
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
+operator|,
+name|int
+operator|*
+name|privused
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vaccess_acl_posix1e
+name|__P
+argument_list|(
+operator|(
+expr|enum
+name|vtype
+name|type
+operator|,
+expr|struct
+name|acl
+operator|*
+name|acl
 operator|,
 name|mode_t
 name|acc_mode
