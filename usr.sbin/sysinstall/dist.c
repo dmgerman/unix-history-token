@@ -1543,6 +1543,8 @@ operator||=
 name|DIST_COMPAT22
 expr_stmt|;
 comment|/* For certain old X applications */
+endif|#
+directive|endif
 if|#
 directive|if
 name|__FreeBSD__
@@ -1552,8 +1554,6 @@ name|Dists
 operator||=
 name|DIST_COMPAT3X
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
