@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.7 1994/08/29 06:23:19 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.8 1994/09/06 17:53:24 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -354,14 +354,30 @@ operator|*
 operator|)
 name|handle
 expr_stmt|;
-name|pager
+name|object
 operator|=
 operator|(
-name|vm_pager_t
+name|vm_object_t
 operator|)
 name|vp
 operator|->
 name|v_vmdata
+expr_stmt|;
+name|pager
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|object
+operator|!=
+name|NULL
+condition|)
+name|pager
+operator|=
+name|object
+operator|->
+name|pager
 expr_stmt|;
 if|if
 condition|(
@@ -587,14 +603,15 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|pager
+name|object
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* 		 * vm_object_lookup() will remove the object from the cache if 		 * found and also gain a reference to the object. 		 */
-name|object
-operator|=
+operator|(
+name|void
+operator|)
 name|vm_object_lookup
 argument_list|(
 name|pager
@@ -664,15 +681,12 @@ operator|->
 name|v_flag
 operator|&=
 operator|~
+operator|(
 name|VTEXT
+operator||
+name|VVMIO
+operator|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* can hang if done at reboot on NFS FS */
-block|(void) VOP_FSYNC(vp, p->p_ucred, p);
-endif|#
-directive|endif
 name|vrele
 argument_list|(
 name|vp
@@ -1039,6 +1053,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	printf("vnode_pager_haspage: (%d)0x%x: err: %d, bn: %d\n", 		offset, offset, err, bn); */
 if|if
 condition|(
 name|err
@@ -1120,15 +1135,35 @@ name|NULL
 condition|)
 return|return;
 comment|/* 	 * Hasn't changed size 	 */
-name|pager
+name|object
 operator|=
 operator|(
-name|vm_pager_t
+name|vm_object_t
 operator|)
 name|vp
 operator|->
 name|v_vmdata
 expr_stmt|;
+if|if
+condition|(
+name|object
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|pager
+operator|=
+name|object
+operator|->
+name|pager
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
 name|vnp
 operator|=
 operator|(
@@ -1483,14 +1518,31 @@ name|vm_pager_t
 name|pager
 decl_stmt|;
 comment|/* 	 * Not a mapped vnode 	 */
-name|pager
+name|object
 operator|=
 operator|(
-name|vm_pager_t
+name|vm_object_t
 operator|)
 name|vp
 operator|->
 name|v_vmdata
+expr_stmt|;
+if|if
+condition|(
+name|object
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+name|pager
+operator|=
+name|object
+operator|->
+name|pager
 expr_stmt|;
 if|if
 condition|(
@@ -3091,8 +3143,26 @@ argument_list|)
 return|;
 block|}
 comment|/*  * here on direct device I/O  */
+ifdef|#
+directive|ifdef
+name|NOTYET
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VVMIO
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 comment|/* 	 * This pathetic hack gets data from the buffer cache, if it's there. 	 * I believe that this is not really necessary, and the ends can be 	 * gotten by defaulting to the normal vfs read behavior, but this 	 * might be more efficient, because the will NOT invoke read-aheads 	 * and one of the purposes of this code is to bypass the buffer cache 	 * and keep from flushing it by reading in a program. 	 */
-comment|/* 	 * calculate logical block and offset 	 */
+comment|/* 		 * calculate logical block and offset 		 */
 name|block
 operator|=
 name|foff
@@ -3110,7 +3180,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 	 * if we have a buffer in core, then try to use it 	 */
+comment|/* 		 * if we have a buffer in core, then try to use it 		 */
 while|while
 condition|(
 name|bp
@@ -3126,7 +3196,7 @@ block|{
 name|int
 name|amount
 decl_stmt|;
-comment|/* 		 * wait until the buffer is avail or gone 		 */
+comment|/* 			 * wait until the buffer is avail or gone 			 */
 if|if
 condition|(
 name|bp
@@ -3182,7 +3252,7 @@ name|vnp_size
 operator|-
 name|foff
 expr_stmt|;
-comment|/* 		 * make sure that this page is in the buffer 		 */
+comment|/* 			 * make sure that this page is in the buffer 			 */
 if|if
 condition|(
 operator|(
@@ -3215,14 +3285,14 @@ argument_list|)
 expr_stmt|;
 name|kva
 operator|=
-name|kmem_alloc_pageable
+name|kmem_alloc_wait
 argument_list|(
 name|pager_map
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 			 * map the requested page 			 */
+comment|/* 				 * map the requested page 				 */
 name|pmap_qenter
 argument_list|(
 name|kva
@@ -3236,7 +3306,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 			 * copy the data from the buffer 			 */
+comment|/* 				 * copy the data from the buffer 				 */
 name|bcopy
 argument_list|(
 name|bp
@@ -3277,7 +3347,7 @@ name|amount
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * unmap the page and free the kva 			 */
+comment|/* 				 * unmap the page and free the kva 				 */
 name|pmap_qremove
 argument_list|(
 name|kva
@@ -3294,7 +3364,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 			 * release the buffer back to the block subsystem 			 */
+comment|/* 				 * release the buffer back to the block subsystem 				 */
 name|bp
 operator|->
 name|b_flags
@@ -3310,7 +3380,7 @@ operator|)
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * we did not have to do any work to get the requested 			 * page, the read behind/ahead does not justify a read 			 */
+comment|/* 				 * we did not have to do any work to get the requested 				 * page, the read behind/ahead does not justify a read 				 */
 for|for
 control|(
 name|i
@@ -3360,12 +3430,12 @@ index|[
 name|reqpage
 index|]
 expr_stmt|;
-comment|/* 			 * sorry for the goto 			 */
+comment|/* 				 * sorry for the goto 				 */
 goto|goto
 name|finishup
 goto|;
 block|}
-comment|/* 		 * buffer is nowhere to be found, read from the disk 		 */
+comment|/* 			 * buffer is nowhere to be found, read from the disk 			 */
 break|break;
 block|}
 name|splx
@@ -3373,6 +3443,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTYET
+block|}
+endif|#
+directive|endif
 name|reqaddr
 operator|=
 name|vnode_pager_addr
@@ -3416,6 +3492,20 @@ if|if
 condition|(
 name|failflag
 operator|||
+ifdef|#
+directive|ifdef
+name|NOTYET
+operator|(
+operator|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VVMIO
+operator|)
+operator|==
+literal|0
+operator|&&
 name|incore
 argument_list|(
 name|vp
@@ -3434,7 +3524,33 @@ operator|)
 operator|/
 name|bsize
 argument_list|)
+operator|)
 operator|||
+else|#
+directive|else
+operator|(
+name|incore
+argument_list|(
+name|vp
+argument_list|,
+operator|(
+name|foff
+operator|+
+operator|(
+name|i
+operator|-
+name|reqpage
+operator|)
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|/
+name|bsize
+argument_list|)
+operator|)
+operator|||
+endif|#
+directive|endif
 operator|(
 name|vnode_pager_addr
 argument_list|(
@@ -3514,6 +3630,20 @@ if|if
 condition|(
 name|failflag
 operator|||
+ifdef|#
+directive|ifdef
+name|NOTYET
+operator|(
+operator|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VVMIO
+operator|)
+operator|==
+literal|0
+operator|&&
 name|incore
 argument_list|(
 name|vp
@@ -3532,7 +3662,33 @@ operator|)
 operator|/
 name|bsize
 argument_list|)
+operator|)
 operator|||
+else|#
+directive|else
+operator|(
+name|incore
+argument_list|(
+name|vp
+argument_list|,
+operator|(
+name|foff
+operator|+
+operator|(
+name|i
+operator|-
+name|reqpage
+operator|)
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|/
+name|bsize
+argument_list|)
+operator|)
+operator|||
+endif|#
+directive|endif
 operator|(
 name|vnode_pager_addr
 argument_list|(
@@ -5541,6 +5697,24 @@ block|printf("vnode: writing foff: %d, devoff: %d, size: %d\n", 		foff, reqaddr,
 endif|#
 directive|endif
 comment|/* 	 * next invalidate the incore vfs_bio data 	 */
+ifdef|#
+directive|ifdef
+name|NOTYET
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VVMIO
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -5675,6 +5849,12 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NOTYET
+block|}
+endif|#
+directive|endif
 name|VHOLD
 argument_list|(
 name|vp

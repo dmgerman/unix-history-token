@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.12 1994/09/25 19:33:51 phk Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.13 1994/10/04 03:10:47 davidg Exp $  */
 end_comment
 
 begin_include
@@ -190,6 +190,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|caddr_t
+name|baddr
+decl_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -246,6 +249,20 @@ name|bufqueues
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|baddr
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|kmem_alloc_pageable
+argument_list|(
+name|buffer_map
+argument_list|,
+name|MAXBSIZE
+operator|*
+name|nbuf
 argument_list|)
 expr_stmt|;
 comment|/* finally, initialize each buffer header and stick on empty q */
@@ -329,15 +346,11 @@ name|bp
 operator|->
 name|b_data
 operator|=
-operator|(
-name|caddr_t
-operator|)
-name|kmem_alloc_pageable
-argument_list|(
-name|buffer_map
-argument_list|,
+name|baddr
+operator|+
+name|i
+operator|*
 name|MAXBSIZE
-argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -2100,6 +2113,9 @@ condition|(
 name|bp
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 operator|(
@@ -2134,6 +2150,8 @@ literal|"incore: buf fault"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* hit */
 if|if
 condition|(
@@ -2356,46 +2374,6 @@ condition|)
 goto|goto
 name|loop
 goto|;
-name|allocbuf
-argument_list|(
-name|bp
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-comment|/* 		 * have to check again, because of a possible 		 * race condition. 		 */
-if|if
-condition|(
-name|incore
-argument_list|(
-name|vp
-argument_list|,
-name|blkno
-argument_list|)
-condition|)
-block|{
-name|allocbuf
-argument_list|(
-name|bp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_INVAL
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
 name|bp
 operator|->
 name|b_blkno
@@ -2436,6 +2414,13 @@ argument_list|,
 name|bp
 argument_list|,
 name|b_hash
+argument_list|)
+expr_stmt|;
+name|allocbuf
+argument_list|(
+name|bp
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -3057,6 +3042,12 @@ block|}
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -3078,22 +3069,11 @@ name|LDFREE_WANT
 value|2
 end_define
 
-begin_decl_stmt
-name|int
-name|loadfreeing
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|freebp
-index|[
-name|MAXFREEBP
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|int loadfreeing; struct buf *freebp[MAXFREEBP];
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * these routines are not in the correct place (yet)  * also they work *ONLY* for kernel_pmap!!!  */
