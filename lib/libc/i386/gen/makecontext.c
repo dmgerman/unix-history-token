@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -45,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ucontext.h>
 end_include
 
 begin_include
@@ -118,7 +118,7 @@ name|ucp
 operator|->
 name|uc_mcontext
 operator|.
-name|mc_flags
+name|mc_len
 operator|=
 literal|0
 expr_stmt|;
@@ -217,7 +217,7 @@ name|ucp
 operator|->
 name|uc_mcontext
 operator|.
-name|mc_flags
+name|mc_len
 operator|=
 literal|0
 expr_stmt|;
@@ -243,7 +243,7 @@ name|ucp
 operator|->
 name|uc_mcontext
 operator|.
-name|mc_flags
+name|mc_len
 operator|=
 literal|0
 expr_stmt|;
@@ -252,17 +252,16 @@ comment|/* Make sure the context is valid. */
 elseif|else
 if|if
 condition|(
-operator|(
 name|ucp
 operator|->
 name|uc_mcontext
 operator|.
-name|mc_flags
-operator|&
-name|__UC_MC_VALID
-operator|)
-operator|!=
-literal|0
+name|mc_len
+operator|==
+sizeof|sizeof
+argument_list|(
+name|mcontext_t
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Arrange the stack as follows: 		 * 		 *	_ctx_start()	- context start wrapper 		 *	start()		- user start routine 		 * 	arg1 		 *	... 		 *	argn 		 *	ucp		- this context, %ebp points here 		 * 		 * When the context is started, control will return to 		 * the context start wrapper which will pop the user 		 * start routine from the top of the stack.  After that, 		 * the top of the stack will be setup with all arguments 		 * necessary for calling the start routine.  When the 		 * start routine returns, the context wrapper then sets 		 * the stack pointer to %ebp which was setup to point to 		 * the base of the stack (and where ucp is stored).  It 		 * will then call _ctx_done() to swap in the next context 		 * (uc_link != 0) or exit the program (uc_link == 0). 		 */
