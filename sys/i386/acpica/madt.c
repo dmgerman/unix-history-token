@@ -1702,6 +1702,13 @@ condition|(
 name|madt
 operator|->
 name|PCATCompat
+operator|&&
+operator|!
+operator|(
+name|acpi_quirks
+operator|&
+name|ACPI_Q_MADT_IRQ0
+operator|)
 condition|)
 name|ioapic_enable_mixed_mode
 argument_list|()
@@ -2668,11 +2675,41 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+name|acpi_quirks
+operator|&
+name|ACPI_Q_MADT_IRQ0
+operator|&&
+name|intr
+operator|->
+name|Source
+operator|==
+literal|0
+operator|&&
+name|intr
+operator|->
+name|Interrupt
+operator|==
+literal|2
+condition|)
+block|{
+if|if
+condition|(
 name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: intr override: source %u, irq %u\n"
+literal|"MADT: Skipping timer override\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"MADT: Interrupt override: source %u, irq %u\n"
 argument_list|,
 name|intr
 operator|->
