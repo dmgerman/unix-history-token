@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	8.1 (Berkeley) %G%"
+literal|"@(#)fstat.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,6 +249,12 @@ begin_include
 include|#
 directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -590,6 +596,12 @@ decl_stmt|,
 modifier|*
 name|nlistf
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
@@ -875,7 +887,7 @@ condition|(
 operator|(
 name|kd
 operator|=
-name|kvm_open
+name|kvm_openfiles
 argument_list|(
 name|nlistf
 argument_list|,
@@ -885,7 +897,7 @@ name|NULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
-name|NULL
+name|buf
 argument_list|)
 operator|)
 operator|==
@@ -898,10 +910,7 @@ name|stderr
 argument_list|,
 literal|"fstat: %s\n"
 argument_list|,
-name|kvm_geterr
-argument_list|(
-name|kd
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 name|exit
