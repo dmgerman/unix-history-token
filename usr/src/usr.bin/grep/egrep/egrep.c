@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.5 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -984,7 +984,7 @@ name|grepflag
 condition|)
 name|oops
 argument_list|(
-literal|"usage: grep [-bcihlnsvwy] [-e] pattern [file ...]"
+literal|"usage: grep [-bchilnsvwy] [-e] pattern [file ...]"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -994,14 +994,14 @@ name|fgrepflag
 condition|)
 name|oops
 argument_list|(
-literal|"usage: fgrep [-bcilnv] {-f patfile | [-e] strings} [file ...]"
+literal|"usage: fgrep [-bchilnv] {-f patfile | [-e] strings} [file ...]"
 argument_list|)
 expr_stmt|;
 else|else
 comment|/* encourage SVID options, though we provide 				 * others */
 name|oops
 argument_list|(
-literal|"usage: egrep [-bcilnv] {-f patfile | [-e] pattern} [file ...]"
+literal|"usage: egrep [-bchilnv] {-f patfile | [-e] pattern} [file ...]"
 argument_list|)
 expr_stmt|;
 block|}
