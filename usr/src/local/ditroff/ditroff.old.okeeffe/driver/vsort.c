@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.10	84/04/11  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
+comment|/* vsort.c	1.11	84/05/24  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
 end_comment
 
 begin_include
