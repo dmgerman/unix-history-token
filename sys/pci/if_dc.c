@@ -12185,6 +12185,28 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* Don't start the ticker if this is a homePNA link. */
+if|if
+condition|(
+name|IFM_SUBTYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media
+operator|.
+name|ifm_media
+argument_list|)
+operator|==
+name|IFM_homePNA
+condition|)
+name|sc
+operator|->
+name|dc_link
+operator|=
+literal|1
+expr_stmt|;
+else|else
+block|{
 if|if
 condition|(
 name|sc
@@ -12222,6 +12244,7 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|__alpha__
