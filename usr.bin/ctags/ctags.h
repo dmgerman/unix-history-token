@@ -76,18 +76,9 @@ parameter_list|)
 value|((c = getc(inf)) op (int)exp)
 end_define
 
-begin_define
-define|#
-directive|define
-name|_egrd
-parameter_list|(
-name|idx
-parameter_list|,
-name|array
-parameter_list|)
-define|\
-value|(((int)idx< 0)? NO : array [ (int) idx ])
-end_define
+begin_comment
+comment|/*  * Assumes that the last element is always 'NO',  * as the EOF return from stdio get overlaid to  * that entry.  */
+end_comment
 
 begin_define
 define|#
@@ -96,7 +87,7 @@ name|iswhite
 parameter_list|(
 name|arg
 parameter_list|)
-value|_egrd(arg, _wht)
+value|_wht[arg& 0xff]
 end_define
 
 begin_comment
@@ -110,7 +101,7 @@ name|begtoken
 parameter_list|(
 name|arg
 parameter_list|)
-value|_egrd(arg, _btk)
+value|_btk[arg& 0xff]
 end_define
 
 begin_comment
@@ -124,7 +115,7 @@ name|intoken
 parameter_list|(
 name|arg
 parameter_list|)
-value|_egrd(arg, _itk)
+value|_itk[arg& 0xff]
 end_define
 
 begin_comment
@@ -138,7 +129,7 @@ name|endtoken
 parameter_list|(
 name|arg
 parameter_list|)
-value|_egrd(arg, _etk)
+value|_etk[arg& 0xff]
 end_define
 
 begin_comment
@@ -152,7 +143,7 @@ name|isgood
 parameter_list|(
 name|arg
 parameter_list|)
-value|_egrd(arg, _gd)
+value|_gd[arg& 0xff]
 end_define
 
 begin_comment
