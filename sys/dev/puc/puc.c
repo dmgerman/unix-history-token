@@ -175,6 +175,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|devclass_t
+name|puc_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -2412,12 +2418,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-name|devclass_t
-name|puc_devclass
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 
