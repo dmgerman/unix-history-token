@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tftpd.c,v 1.10 1997/12/03 07:19:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,6 +424,8 @@ argument_list|(
 literal|"tftpd"
 argument_list|,
 name|LOG_PID
+operator||
+name|LOG_NDELAY
 argument_list|,
 name|LOG_FTP
 argument_list|)
