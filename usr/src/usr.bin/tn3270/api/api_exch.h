@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file describes the structures passed back and forth  * between the API client and API server on a Unix-based  * tn3270 implementation.  */
+comment|/*  * This file describes the structures passed back and forth  * between the API client and API server on a Unix-based  * tn3270 implementation.  *  * A command is:<command code><sequence number><parameter>*  *  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EXCH_CONNECT
+name|EXCH_ASSOCIATE
 value|23
 end_define
 
@@ -47,7 +47,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXCH_CONNECTED
+name|EXCH_ASSOCIATED
 value|78
 end_define
 
@@ -159,7 +159,7 @@ value|67
 end_define
 
 begin_comment
-comment|/*  * each structure that comes over looks like:  *  *	char			type of following  *	short (2 bytes)		length of following (network byte order)  *	following  */
+comment|/*  * each parameter that comes over looks like:  *  *	char			type of following  *	short (2 bytes)		length of following (network byte order)  *	following  */
 end_comment
 
 begin_struct

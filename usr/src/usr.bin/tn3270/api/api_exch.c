@@ -13,6 +13,17 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|int
+name|sock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Socket number */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 name|ibuffer
 index|[
@@ -305,7 +316,43 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|int
+name|api_exch_inbyte
+parameter_list|()
+block|{
+if|if
+condition|(
+name|IBUFAVAILABLE
+argument_list|()
+operator|<
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|infill
+argument_list|(
+literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+return|return
+name|IBUFGETCHAR
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|api_exch_incommand
 parameter_list|(
@@ -378,7 +425,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|api_exch_outcommand
 parameter_list|(
@@ -423,7 +469,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|api_exch_outtype
 parameter_list|(
@@ -545,7 +590,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|api_exch_intype
 parameter_list|(
@@ -703,6 +747,32 @@ operator|+=
 name|i
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|api_exch_init
+parameter_list|(
+name|sock_number
+parameter_list|)
+name|int
+name|sock_number
+decl_stmt|;
+block|{
+name|sock
+operator|=
+name|sock_number
+expr_stmt|;
+name|IBUFRESET
+argument_list|()
+expr_stmt|;
+name|OBUFRESET
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
