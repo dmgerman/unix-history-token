@@ -1031,7 +1031,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*       * There isn't an interrupt, so we have to look at _PRS to get one.      * Get the set of allowed interrupts from the _PRS resource indexed by SourceIndex.      */
+comment|/*       * There isn't an interrupt, so we have to look at _PRS to get one.      * Get the set of allowed interrupts from the _PRS resource indexed      * by SourceIndex.      */
 if|if
 condition|(
 name|prsbuf
@@ -1045,7 +1045,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"device has no routed interrupt and no _PRS on PCI interrupt link device\n"
+literal|"no routed irq and no _PRS on irq link device\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1053,6 +1053,10 @@ name|out
 goto|;
 block|}
 comment|/*      * Search through the _PRS resources, looking for an IRQ or extended      * IRQ resource.  Skip dependent function resources for now.  In the      * future, we might use these for priority but this is good enough for      * now until BIOS vendors actually mean something by using them.      */
+name|prsres
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1061,6 +1065,9 @@ name|prt
 operator|->
 name|SourceIndex
 init|;
+name|prsres
+operator|==
+name|NULL
 condition|;
 name|i
 operator|++
@@ -1104,13 +1111,58 @@ block|{
 case|case
 name|ACPI_RSTYPE_IRQ
 case|:
+name|NumberOfInterrupts
+operator|=
+name|prsres
+operator|->
+name|Data
+operator|.
+name|Irq
+operator|.
+name|NumberOfInterrupts
+expr_stmt|;
+name|Interrupts
+operator|=
+name|prsres
+operator|->
+name|Data
+operator|.
+name|Irq
+operator|.
+name|Interrupts
+expr_stmt|;
+break|break;
 case|case
 name|ACPI_RSTYPE_EXT_IRQ
 case|:
+name|NumberOfInterrupts
+operator|=
+name|prsres
+operator|->
+name|Data
+operator|.
+name|ExtendedIrq
+operator|.
+name|NumberOfInterrupts
+expr_stmt|;
+name|Interrupts
+operator|=
+name|prsres
+operator|->
+name|Data
+operator|.
+name|ExtendedIrq
+operator|.
+name|Interrupts
+expr_stmt|;
 break|break;
 case|case
 name|ACPI_RSTYPE_START_DPF
 case|:
+name|prsres
+operator|=
+name|NULL
+expr_stmt|;
 continue|continue;
 default|default:
 name|device_printf
@@ -1128,60 +1180,6 @@ goto|goto
 name|out
 goto|;
 block|}
-block|}
-comment|/* set variables based on resource type */
-if|if
-condition|(
-name|prsres
-operator|->
-name|Id
-operator|==
-name|ACPI_RSTYPE_IRQ
-condition|)
-block|{
-name|NumberOfInterrupts
-operator|=
-name|prsres
-operator|->
-name|Data
-operator|.
-name|Irq
-operator|.
-name|NumberOfInterrupts
-expr_stmt|;
-name|Interrupts
-operator|=
-name|prsres
-operator|->
-name|Data
-operator|.
-name|Irq
-operator|.
-name|Interrupts
-expr_stmt|;
-block|}
-else|else
-block|{
-name|NumberOfInterrupts
-operator|=
-name|prsres
-operator|->
-name|Data
-operator|.
-name|ExtendedIrq
-operator|.
-name|NumberOfInterrupts
-expr_stmt|;
-name|Interrupts
-operator|=
-name|prsres
-operator|->
-name|Data
-operator|.
-name|ExtendedIrq
-operator|.
-name|Interrupts
-expr_stmt|;
 block|}
 comment|/* there has to be at least one interrupt available */
 if|if
@@ -1202,7 +1200,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Pick an interrupt to use.  Note that a more scientific approach than just      * taking the first one available would be desirable.      *      * The PCI BIOS $PIR table offers "preferred PCI interrupts", but ACPI doesn't      * seem to offer a similar mechanism, so picking a "good" interrupt here is a      * difficult task.      *      * Build a resource buffer and pass it to AcpiSetCurrentResources to route the      * new interrupt.      */
+comment|/*      * Pick an interrupt to use.  Note that a more scientific approach than      * just taking the first one available would be desirable.      *      * The PCI BIOS $PIR table offers "preferred PCI interrupts", but ACPI      * doesn't seem to offer a similar mechanism, so picking a "good"      * interrupt here is a difficult task.      *      * Build a resource buffer and pass it to AcpiSetCurrentResources to      * route the new interrupt.      */
 name|device_printf
 argument_list|(
 name|pcib
