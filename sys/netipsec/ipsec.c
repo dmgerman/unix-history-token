@@ -1648,6 +1648,9 @@ operator|&
 name|INP_IPV6PROTO
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 operator|*
 name|error
 operator|=
@@ -1664,6 +1667,16 @@ name|inp
 operator|->
 name|in6p_sp
 expr_stmt|;
+else|#
+directive|else
+operator|*
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* should not happen */
+endif|#
+directive|endif
 block|}
 else|else
 block|{
