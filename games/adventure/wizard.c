@@ -129,8 +129,6 @@ literal|77
 operator|)
 expr_stmt|;
 comment|/* day since 1977  (mod leap)   */
-comment|/* bug: this will overflow in the year 2066 AD                  */
-comment|/* it will be attributed to Wm the C's millenial celebration    */
 operator|*
 name|t
 operator|=
