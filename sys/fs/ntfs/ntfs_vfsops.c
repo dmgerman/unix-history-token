@@ -1952,7 +1952,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ntfsmount
 modifier|*
@@ -1962,8 +1961,6 @@ name|int
 name|error
 decl_stmt|,
 name|ronly
-init|=
-literal|0
 decl_stmt|,
 name|flags
 decl_stmt|,
