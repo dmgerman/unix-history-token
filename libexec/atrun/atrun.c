@@ -437,7 +437,7 @@ name|gid_t
 name|gid
 parameter_list|)
 block|{
-comment|/* Run a file by by spawning off a process which redirects I/O,  * spawns a subshell, then waits for it to complete and sends  * mail to the user.  */
+comment|/* Run a file by spawning off a process which redirects I/O,  * spawns a subshell, then waits for it to complete and sends  * mail to the user.  */
 name|pid_t
 name|pid
 decl_stmt|;
