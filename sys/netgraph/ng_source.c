@@ -2567,13 +2567,13 @@ name|node
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NG_SOURCE_INTR_TICKS
 argument_list|,
 name|ng_source_intr
 argument_list|,
 name|sc
 argument_list|,
-name|NG_SOURCE_INTR_TICKS
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
