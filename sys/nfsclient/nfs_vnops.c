@@ -15656,6 +15656,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nfs_sigintr
@@ -15668,11 +15673,6 @@ name|td
 argument_list|)
 condition|)
 block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EINTR
@@ -15699,6 +15699,11 @@ operator|*
 name|hz
 expr_stmt|;
 block|}
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
