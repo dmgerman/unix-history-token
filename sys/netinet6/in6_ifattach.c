@@ -1284,7 +1284,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"%s: failed to get interface identifier"
+literal|"%s: failed to get interface identifier\n"
 argument_list|,
 name|if_name
 argument_list|(
@@ -3598,7 +3598,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: failed to add link-local address"
+literal|"%s: failed to add link-local address\n"
 argument_list|,
 name|if_name
 argument_list|(
