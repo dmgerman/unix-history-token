@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.13.2.1 1995/06/05 02:24:37 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.14 1995/06/11 19:29:38 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -87,6 +87,27 @@ define|#
 directive|define
 name|BBSIZE
 value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBSIZE
+value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEF_RPM
+value|3600
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEF_INTERLEAVE
+value|1
 end_define
 
 begin_define
@@ -392,6 +413,25 @@ operator|->
 name|d_bbsize
 operator|=
 name|BBSIZE
+expr_stmt|;
+comment|/* 	 * Add in defaults for superblock size, interleave, and rpms 	 */
+name|dl
+operator|->
+name|d_sbsize
+operator|=
+name|SBSIZE
+expr_stmt|;
+name|dl
+operator|->
+name|d_interleave
+operator|=
+name|DEF_INTERLEAVE
+expr_stmt|;
+name|dl
+operator|->
+name|d_rpm
+operator|=
+name|DEF_RPM
 expr_stmt|;
 name|strcpy
 argument_list|(
