@@ -1447,9 +1447,13 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|rem
+name|elem
+decl_stmt|,
+name|firstreq
 decl_stmt|,
 name|niov
+decl_stmt|,
+name|rem
 decl_stmt|,
 name|totlen
 decl_stmt|;
@@ -1489,6 +1493,12 @@ name|stdout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Counting: 	 *	4 == "\5" + remote_queue + " " + person 	 *	2 * users == " " + user[i] for each user 	 *	requests == asprintf results for each request 	 *	1 == "\n" 	 * Although laborious, doing it this way makes it possible for 	 * us to process requests of indeterminate length without 	 * applying an arbitrary limit.  Arbitrary Limits Are Bad (tm). 	 */
+if|if
+condition|(
+name|users
+operator|>
+literal|0
+condition|)
 name|niov
 operator|=
 literal|4
@@ -1496,6 +1506,15 @@ operator|+
 literal|2
 operator|*
 name|users
+operator|+
+name|requests
+operator|+
+literal|1
+expr_stmt|;
+else|else
+name|niov
+operator|=
+literal|4
 operator|+
 name|requests
 operator|+
@@ -1522,7 +1541,7 @@ name|fatal
 argument_list|(
 name|pp
 argument_list|,
-literal|"out of memory"
+literal|"out of memory in rmremote()"
 argument_list|)
 expr_stmt|;
 name|iov
@@ -1567,6 +1586,10 @@ literal|"-all"
 else|:
 name|person
 expr_stmt|;
+name|elem
+operator|=
+literal|4
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1583,11 +1606,7 @@ control|)
 block|{
 name|iov
 index|[
-literal|4
-operator|+
-literal|2
-operator|*
-name|i
+name|elem
 index|]
 operator|.
 name|iov_base
@@ -1596,11 +1615,7 @@ literal|" "
 expr_stmt|;
 name|iov
 index|[
-literal|4
-operator|+
-literal|2
-operator|*
-name|i
+name|elem
 operator|+
 literal|1
 index|]
@@ -1612,7 +1627,15 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|elem
+operator|+=
+literal|2
+expr_stmt|;
 block|}
+name|firstreq
+operator|=
+name|elem
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1632,13 +1655,7 @@ argument_list|(
 operator|&
 name|iov
 index|[
-literal|4
-operator|+
-literal|2
-operator|*
-name|users
-operator|+
-name|i
+name|elem
 index|]
 operator|.
 name|iov_base
@@ -1655,13 +1672,7 @@ if|if
 condition|(
 name|iov
 index|[
-literal|4
-operator|+
-literal|2
-operator|*
-name|users
-operator|+
-name|i
+name|elem
 index|]
 operator|.
 name|iov_base
@@ -1672,19 +1683,17 @@ name|fatal
 argument_list|(
 name|pp
 argument_list|,
-literal|"out of memory"
+literal|"out of memory in rmremote()"
 argument_list|)
+expr_stmt|;
+name|elem
+operator|++
 expr_stmt|;
 block|}
 name|iov
 index|[
-literal|4
-operator|+
-literal|2
-operator|*
-name|users
-operator|+
-name|requests
+name|elem
+operator|++
 index|]
 operator|.
 name|iov_base
@@ -1878,11 +1887,7 @@ name|free
 argument_list|(
 name|iov
 index|[
-literal|4
-operator|+
-literal|2
-operator|*
-name|users
+name|firstreq
 operator|+
 name|i
 index|]
