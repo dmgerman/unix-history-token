@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -952,6 +952,11 @@ literal|0
 block|if (cnp->cn_namelen == 4&& bcmp(pname, "root", 4) == 0) { 		*vpp = rootdir; 		VREF(rootdir); 		VOP_LOCK(rootdir); 		return (0); 	}
 endif|#
 directive|endif
+operator|*
+name|vpp
+operator|=
+name|NULLVP
+expr_stmt|;
 for|for
 control|(
 name|error
