@@ -1702,6 +1702,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|vm_paddr_t
+operator|)
 name|i
 operator|<<
 name|PDRSHIFT
