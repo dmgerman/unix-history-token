@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.8 (Berkeley) %G%"
+literal|"@(#)spec.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|ENTRY
+name|NODE
 modifier|*
 name|root
 decl_stmt|;
@@ -101,21 +101,24 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|ENTRY
+name|NODE
 modifier|*
 name|centry
 decl_stmt|,
 modifier|*
 name|last
 decl_stmt|;
-name|INFO
-name|info
-decl_stmt|,
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|NODE
 name|ginfo
+decl_stmt|,
+modifier|*
+name|emalloc
+argument_list|()
 decl_stmt|;
 name|char
 name|buf
@@ -123,30 +126,20 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
-name|ENTRY
-modifier|*
-name|emalloc
-parameter_list|()
-function_decl|;
+name|bzero
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
 name|ginfo
-operator|.
-name|flags
-operator|=
-name|info
-operator|.
-name|flags
-operator|=
-literal|0
-expr_stmt|;
+argument_list|,
+sizeof|sizeof
+argument_list|(
 name|ginfo
-operator|.
-name|type
-operator|=
-name|info
-operator|.
-name|type
-operator|=
-name|F_NONE
+argument_list|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -367,8 +360,6 @@ if|if
 condition|(
 name|last
 operator|->
-name|info
-operator|.
 name|type
 operator|!=
 name|F_DIR
@@ -410,7 +401,7 @@ name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|ENTRY
+name|NODE
 argument_list|)
 operator|+
 name|strlen
@@ -418,6 +409,11 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|centry
+operator|=
+name|ginfo
 expr_stmt|;
 operator|(
 name|void
@@ -450,18 +446,9 @@ name|flags
 operator||=
 name|F_MAGIC
 expr_stmt|;
-name|centry
-operator|->
-name|info
-operator|=
-name|ginfo
-expr_stmt|;
 name|set
 argument_list|(
-operator|&
 name|centry
-operator|->
-name|info
 argument_list|)
 expr_stmt|;
 if|if
@@ -488,8 +475,6 @@ if|if
 condition|(
 name|last
 operator|->
-name|info
-operator|.
 name|type
 operator|==
 name|F_DIR
@@ -552,9 +537,10 @@ begin_expr_stmt
 specifier|static
 name|set
 argument_list|(
-argument|ip
+name|ip
 argument_list|)
-name|INFO
+specifier|register
+name|NODE
 operator|*
 name|ip
 expr_stmt|;
@@ -562,9 +548,11 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|type
 decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|kw
@@ -944,7 +932,7 @@ argument_list|(
 name|ip
 argument_list|)
 specifier|register
-name|INFO
+name|NODE
 operator|*
 name|ip
 expr_stmt|;
@@ -1438,7 +1426,7 @@ literal|1
 argument_list|)
 block|; }
 specifier|static
-name|ENTRY
+name|NODE
 operator|*
 name|emalloc
 argument_list|(
@@ -1484,7 +1472,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|ENTRY
+name|NODE
 operator|*
 operator|)
 name|p

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,8 +18,59 @@ end_include
 begin_typedef
 typedef|typedef
 struct|struct
-name|_info
+name|_node
 block|{
+name|struct
+name|_node
+modifier|*
+name|parent
+decl_stmt|,
+modifier|*
+name|child
+decl_stmt|;
+comment|/* up, down */
+name|struct
+name|_node
+modifier|*
+name|prev
+decl_stmt|,
+modifier|*
+name|next
+decl_stmt|;
+comment|/* left, right */
+name|off_t
+name|st_size
+decl_stmt|;
+comment|/* size */
+name|u_long
+name|cksum
+decl_stmt|;
+comment|/* check sum */
+name|char
+modifier|*
+name|slink
+decl_stmt|;
+comment|/* symbolic link reference */
+name|uid_t
+name|st_uid
+decl_stmt|;
+comment|/* owner */
+name|gid_t
+name|st_gid
+decl_stmt|;
+comment|/* group */
+define|#
+directive|define
+name|MBITS
+value|(S_ISUID|S_ISGID|S_ISTXT|S_IRWXU|S_IRWXG|S_IRWXO)
+name|mode_t
+name|st_mode
+decl_stmt|;
+comment|/* mode */
+name|nlink_t
+name|st_nlink
+decl_stmt|;
+comment|/* link count */
 define|#
 directive|define
 name|F_BLOCK
@@ -50,11 +101,6 @@ directive|define
 name|F_SOCK
 value|0x020
 comment|/* socket */
-define|#
-directive|define
-name|F_NONE
-value|0x040
-comment|/* unknown */
 name|u_short
 name|type
 decl_stmt|;
@@ -66,132 +112,63 @@ value|0x001
 comment|/* check sum */
 define|#
 directive|define
-name|F_GROUP
+name|F_DONE
 value|0x002
+comment|/* directory done */
+define|#
+directive|define
+name|F_GROUP
+value|0x004
 comment|/* group */
 define|#
 directive|define
 name|F_IGN
-value|0x004
+value|0x008
 comment|/* ignore */
 define|#
 directive|define
+name|F_MAGIC
+value|0x010
+comment|/* name has magic chars */
+define|#
+directive|define
 name|F_MODE
-value|0x008
+value|0x020
 comment|/* mode */
 define|#
 directive|define
 name|F_NLINK
-value|0x010
+value|0x040
 comment|/* number of links */
 define|#
 directive|define
 name|F_OWNER
-value|0x020
+value|0x080
 comment|/* owner */
 define|#
 directive|define
 name|F_SIZE
-value|0x040
+value|0x100
 comment|/* size */
 define|#
 directive|define
 name|F_SLINK
-value|0x080
+value|0x200
 comment|/* link count */
 define|#
 directive|define
 name|F_TYPE
-value|0x100
+value|0x400
 comment|/* file type */
+define|#
+directive|define
+name|F_VISIT
+value|0x800
+comment|/* file visited */
 name|u_short
 name|flags
 decl_stmt|;
 comment|/* items set */
-name|off_t
-name|st_size
-decl_stmt|;
-comment|/* size */
-name|u_long
-name|cksum
-decl_stmt|;
-comment|/* check sum */
-name|uid_t
-name|st_uid
-decl_stmt|;
-comment|/* owner */
-name|gid_t
-name|st_gid
-decl_stmt|;
-comment|/* group */
-define|#
-directive|define
-name|MBITS
-value|(S_ISUID|S_ISGID|S_ISTXT|S_IRWXU|S_IRWXG|S_IRWXO)
-name|mode_t
-name|st_mode
-decl_stmt|;
-comment|/* mode */
-name|nlink_t
-name|st_nlink
-decl_stmt|;
-comment|/* link count */
-name|char
-modifier|*
-name|slink
-decl_stmt|;
-comment|/* symbolic link reference */
-block|}
-name|INFO
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_entry
-block|{
-name|struct
-name|_entry
-modifier|*
-name|child
-decl_stmt|,
-modifier|*
-name|parent
-decl_stmt|;
-comment|/* up, down */
-name|struct
-name|_entry
-modifier|*
-name|next
-decl_stmt|,
-modifier|*
-name|prev
-decl_stmt|;
-comment|/* left, right */
-name|INFO
-name|info
-decl_stmt|;
-comment|/* node info structure */
-define|#
-directive|define
-name|F_DONE
-value|0x01
-comment|/* directory done */
-define|#
-directive|define
-name|F_MAGIC
-value|0x02
-comment|/* name has magic chars */
-define|#
-directive|define
-name|F_VISIT
-value|0x04
-comment|/* visited this node */
-name|u_char
-name|flags
-decl_stmt|;
-comment|/* flags */
 name|char
 name|name
 index|[
@@ -200,7 +177,7 @@ index|]
 decl_stmt|;
 comment|/* file name (must be last) */
 block|}
-name|ENTRY
+name|NODE
 typedef|;
 end_typedef
 

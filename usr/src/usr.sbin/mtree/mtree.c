@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mtree.c	5.6 (Berkeley) %G%"
+literal|"@(#)mtree.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,7 @@ file|"mtree.h"
 end_include
 
 begin_decl_stmt
-name|ENTRY
+name|NODE
 modifier|*
 name|root
 decl_stmt|;

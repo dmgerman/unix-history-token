@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.3 (Berkeley) %G%"
+literal|"@(#)verify.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +78,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|ENTRY
+name|NODE
 modifier|*
 name|root
 decl_stmt|;
@@ -142,7 +142,7 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|ENTRY
+name|NODE
 modifier|*
 name|ep
 decl_stmt|,
@@ -422,8 +422,6 @@ if|if
 condition|(
 name|ep
 operator|->
-name|info
-operator|.
 name|flags
 operator|&
 name|F_IGN
@@ -449,10 +447,7 @@ name|ep
 operator|->
 name|name
 argument_list|,
-operator|&
 name|ep
-operator|->
-name|info
 argument_list|,
 name|p
 argument_list|)
@@ -465,8 +460,6 @@ name|child
 operator|&&
 name|ep
 operator|->
-name|info
-operator|.
 name|type
 operator|==
 name|F_DIR
@@ -581,7 +574,7 @@ argument_list|,
 name|tail
 argument_list|)
 specifier|register
-name|ENTRY
+name|NODE
 operator|*
 name|p
 expr_stmt|;
@@ -628,8 +621,6 @@ if|if
 condition|(
 name|p
 operator|->
-name|info
-operator|.
 name|type
 operator|!=
 name|F_DIR
@@ -682,8 +673,6 @@ if|if
 condition|(
 name|p
 operator|->
-name|info
-operator|.
 name|type
 operator|!=
 name|F_DIR
@@ -722,8 +711,6 @@ condition|(
 operator|(
 name|p
 operator|->
-name|info
-operator|.
 name|flags
 operator|&
 name|MINBITS
@@ -844,14 +831,10 @@ name|path
 argument_list|,
 name|p
 operator|->
-name|info
-operator|.
 name|st_uid
 argument_list|,
 name|p
 operator|->
-name|info
-operator|.
 name|st_gid
 argument_list|)
 condition|)
@@ -881,8 +864,6 @@ name|path
 argument_list|,
 name|p
 operator|->
-name|info
-operator|.
 name|st_mode
 argument_list|)
 condition|)

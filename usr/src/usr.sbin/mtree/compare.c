@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compare.c	5.4 (Berkeley) %G%"
+literal|"@(#)compare.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|INFO
+name|NODE
 modifier|*
 name|s
 decl_stmt|;

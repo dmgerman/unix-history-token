@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.8 (Berkeley) %G%"
+literal|"@(#)create.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -780,7 +780,7 @@ begin_define
 define|#
 directive|define
 name|MAXMODE
-value|0777 + 1
+value|MBITS + 1
 end_define
 
 begin_expr_stmt
@@ -1003,7 +1003,7 @@ name|fts_statb
 operator|.
 name|st_mode
 operator|&
-literal|0777
+name|MBITS
 expr_stmt|;
 if|if
 condition|(
