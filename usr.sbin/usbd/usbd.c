@@ -74,12 +74,6 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -91,6 +85,10 @@ directive|include
 file|<dev/usb/usb.h>
 end_include
 
+begin_comment
+comment|/* the name of the device spitting out usb attach/detach events as well as  * the prefix for the individual busses (used as a semi kernel thread).  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -98,11 +96,26 @@ name|USBDEV
 value|"/dev/usb"
 end_define
 
+begin_comment
+comment|/* Maximum number of USB busses expected to be in a system  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAXUSBDEV
 value|4
+end_define
+
+begin_comment
+comment|/*  * Sometimes a device does not respond in time for interrupt  * driven explore to find it.  Therefore we run an exploration  * at regular intervals to catch those.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMEOUT
+value|30
 end_define
 
 begin_decl_stmt
@@ -138,6 +151,42 @@ argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -d         for debugging\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -e         only do 1 explore\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -f dev     for example /dev/usb0, "
+literal|"and can be specified multiple times."
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -t timeout timeout between explores\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -v         verbose output\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -145,28 +194,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|NDEVS
-value|20
-end_define
-
-begin_comment
-comment|/* maximum number of usb controllers */
-end_comment
-
-begin_comment
-comment|/*  * Sometimes a device does not respond in time for interrupt  * driven explore to find it.  Therefore we run an exploration  * at regular intervals to catch those.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT
-value|300
-end_define
 
 begin_function
 name|int
@@ -182,74 +209,87 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|r
+name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
+comment|/* getopt option */
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+comment|/* from getopt */
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+comment|/* from getopt */
 name|char
 modifier|*
 name|devs
 index|[
-name|NDEVS
+name|MAXUSBDEV
 index|]
 decl_stmt|;
+comment|/* device names */
 name|int
 name|ndevs
 init|=
 literal|0
 decl_stmt|;
+comment|/* number of devices found */
 name|int
-name|fds
-index|[
-name|NDEVS
-index|]
-decl_stmt|;
-name|fd_set
-name|fdset
-decl_stmt|;
-name|int
-name|ch
-decl_stmt|,
 name|verbose
 init|=
 literal|0
 decl_stmt|;
+comment|/* print message on what it is doing */
 name|int
 name|debug
 init|=
 literal|0
 decl_stmt|;
+comment|/* print debugging output */
 name|int
 name|explore
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|itimo
-init|=
-name|TIMEOUT
-decl_stmt|;
+comment|/* don't do only explore */
 name|int
 name|maxfd
 decl_stmt|;
+comment|/* maximum fd in use */
 name|char
 name|buf
 index|[
 literal|50
 index|]
 decl_stmt|;
+comment|/* for creation of the filename */
+name|int
+name|fds
+index|[
+name|MAXUSBDEV
+index|]
+decl_stmt|;
+comment|/* open filedescriptors */
+name|fd_set
+name|fdset
+decl_stmt|;
+name|int
+name|itimo
+init|=
+name|TIMEOUT
+decl_stmt|;
+comment|/* timeout for select */
 name|struct
 name|timeval
 name|timo
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 while|while
 condition|(
@@ -296,7 +336,7 @@ if|if
 condition|(
 name|ndevs
 operator|<
-name|NDEVS
+name|MAXUSBDEV
 condition|)
 name|devs
 index|[
@@ -342,6 +382,7 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+comment|/* open all the files /dev/usb\d+ or specified with -f */
 name|maxfd
 operator|=
 literal|0
@@ -526,23 +567,20 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|verbose
-condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s: no USB controllers found\n"
+name|stderr
 argument_list|,
-name|__progname
+literal|"No USB host controllers found\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Do the explore once and exit */
 if|if
 condition|(
 name|explore
@@ -562,7 +600,7 @@ name|i
 operator|++
 control|)
 block|{
-name|r
+name|error
 operator|=
 name|ioctl
 argument_list|(
@@ -576,7 +614,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
+name|error
 operator|<
 literal|0
 condition|)
@@ -594,6 +632,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* move to the background */
 if|if
 condition|(
 operator|!
@@ -606,6 +645,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* start select on all the open file descriptors */
 for|for
 control|(
 init|;
@@ -654,7 +694,7 @@ name|tv_sec
 operator|=
 name|itimo
 expr_stmt|;
-name|r
+name|error
 operator|=
 name|select
 argument_list|(
@@ -679,7 +719,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
+name|error
 operator|<
 literal|0
 condition|)
@@ -703,7 +743,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|r
+name|error
 operator|==
 literal|0
 operator|||
@@ -729,11 +769,13 @@ literal|"%s: doing %sdiscovery on %s\n"
 argument_list|,
 name|__progname
 argument_list|,
-name|r
+operator|(
+name|error
 condition|?
 literal|""
 else|:
 literal|"timeout "
+operator|)
 argument_list|,
 name|devs
 index|[
