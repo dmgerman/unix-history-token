@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.8 1995/05/08 06:06:29 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.9 1995/05/10 18:59:51 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
 end_comment
 
 begin_include
@@ -491,6 +491,15 @@ return|return
 literal|1
 return|;
 block|}
+name|setenv
+argument_list|(
+literal|"PATH"
+argument_list|,
+literal|"/stand"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|setenv
 argument_list|(
 literal|"PS1"
