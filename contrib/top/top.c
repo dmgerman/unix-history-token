@@ -9,7 +9,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  *  * $FreeBSD$  */
+comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989 - 1994, William LeFebvre, Northwestern University  *  Copyright (c) 1994, 1995, William LeFebvre, Argonne National Laboratory  *  Copyright (c) 1996, William LeFebvre, Group sys Consulting  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -151,17 +151,6 @@ name|s
 parameter_list|)
 value|(1<< ((s) - 1))
 end_define
-
-begin_comment
-comment|/* for system errors */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* for getopt: */
@@ -842,7 +831,7 @@ name|f
 parameter_list|,
 name|x
 parameter_list|)
-value|(*(x) = f)
+value|(*(x) = 1<<f)
 endif|#
 directive|endif
 name|fd_set
@@ -953,6 +942,20 @@ comment|/* set the buffer for stdout */
 ifdef|#
 directive|ifdef
 name|DEBUG
+specifier|extern
+name|FILE
+modifier|*
+name|debug
+decl_stmt|;
+name|debug
+operator|=
+name|fopen
+argument_list|(
+literal|"debug.run"
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
 name|setbuffer
 argument_list|(
 name|stdout
@@ -1126,7 +1129,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"SIbinqus:d:U:o:t"
+literal|"SIbinquvs:d:U:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1138,6 +1141,28 @@ condition|(
 name|i
 condition|)
 block|{
+case|case
+literal|'v'
+case|:
+comment|/* show version number */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: version %s\n"
+argument_list|,
+name|myname
+argument_list|,
+name|version_string
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'u'
 case|:
@@ -1292,13 +1317,24 @@ argument_list|)
 operator|)
 operator|<
 literal|0
+operator|||
+operator|(
+name|delay
+operator|==
+literal|0
+operator|&&
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: warning: seconds delay should be non-negative -- using default\n"
+literal|"%s: warning: seconds delay should be positive -- using default\n"
 argument_list|,
 name|myname
 argument_list|)
@@ -2145,7 +2181,7 @@ name|active_procs
 operator|=
 name|system_info
 operator|.
-name|p_active
+name|P_ACTIVE
 expr_stmt|;
 if|if
 condition|(
@@ -2217,11 +2253,35 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* now, flush the output buffer */
+if|if
+condition|(
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|new_message
+argument_list|(
+name|MT_standout
+argument_list|,
+literal|" Write error on stdout"
+argument_list|)
 expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+name|quit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 comment|/* only do the rest if we have more displays to show */
 if|if
 condition|(
@@ -2336,7 +2396,7 @@ argument_list|)
 expr_stmt|;
 name|FD_SET
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|readfds
@@ -2569,11 +2629,27 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|quit
+block|{
+comment|/* read error: either 0 or -1 */
+name|new_message
 argument_list|(
-literal|0
+name|MT_standout
+argument_list|,
+literal|" Read error on stdin"
 argument_list|)
 expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+name|quit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 if|if
 condition|(
 operator|(
@@ -2943,10 +3019,27 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|delay
 operator|=
 name|i
+operator|)
+operator|==
+literal|0
+operator|&&
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|delay
+operator|=
+literal|1
 expr_stmt|;
+block|}
 block|}
 name|clear_message
 argument_list|()
@@ -3457,6 +3550,25 @@ block|}
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_expr_stmt
+name|fclose
+argument_list|(
+name|debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|quit
