@@ -78,6 +78,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|ai_unmapped
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|addrinfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|alarmtimer
 name|__P
 argument_list|(
