@@ -243,13 +243,18 @@ operator|=
 name|p2
 expr_stmt|;
 comment|/* this is a non-swapped system process */
+name|PROC_LOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 name|p2
 operator|->
 name|p_flag
 operator||=
-name|P_INMEM
-operator||
 name|P_SYSTEM
+operator||
+name|P_KTHREAD
 expr_stmt|;
 name|p2
 operator|->
@@ -258,6 +263,11 @@ operator|->
 name|ps_flag
 operator||=
 name|PS_NOCLDWAIT
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
+argument_list|)
 expr_stmt|;
 name|PHOLD
 argument_list|(
@@ -306,6 +316,20 @@ name|arg
 argument_list|)
 expr_stmt|;
 comment|/* Delay putting it on the run queue until now. */
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|p2
+operator|->
+name|p_sflag
+operator||=
+name|PS_INMEM
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -316,14 +340,6 @@ name|RFSTOPPED
 operator|)
 condition|)
 block|{
-name|mtx_enter
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
 name|p2
 operator|->
 name|p_stat
@@ -335,6 +351,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_exit
 argument_list|(
 operator|&
@@ -343,7 +360,6 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
