@@ -107,6 +107,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pte.h>
 end_include
 
@@ -128,6 +134,13 @@ define|#
 directive|define
 name|LMAX
 value|sizeof(utmp.ut_line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HMAX
+value|sizeof(utmp.ut_host)
 end_define
 
 begin_define
@@ -516,6 +529,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|ttywidth
+init|=
+literal|80
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* width of tty */
+end_comment
+
+begin_decl_stmt
+name|int
 name|header
 init|=
 literal|1
@@ -536,6 +561,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* true if -l flag: long style output */
+end_comment
+
+begin_decl_stmt
+name|int
+name|prfrom
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if not -f flag: print host from */
 end_comment
 
 begin_decl_stmt
@@ -714,6 +751,10 @@ name|curpid
 decl_stmt|,
 name|empty
 decl_stmt|;
+name|struct
+name|winsize
+name|win
+decl_stmt|;
 name|login
 operator|=
 operator|(
@@ -836,6 +877,15 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|prfrom
+operator|=
+operator|!
+name|prfrom
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 name|header
@@ -917,7 +967,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s [ -hlsuw ] [ user ]\n"
+literal|"Usage: %s [ -hlsfuw ] [ user ]\n"
 argument_list|,
 name|cp
 argument_list|)
@@ -944,6 +994,33 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|1
+argument_list|,
+name|TIOCGWINSZ
+argument_list|,
+operator|&
+name|win
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|win
+operator|.
+name|ws_col
+operator|>
+literal|70
+condition|)
+name|ttywidth
+operator|=
+name|win
+operator|.
+name|ws_col
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1380,10 +1457,32 @@ comment|/* Headers for rest of output */
 if|if
 condition|(
 name|lflag
+operator|&&
+name|prfrom
+condition|)
+name|printf
+argument_list|(
+literal|"User     tty from           login@  idle   JCPU   PCPU  what\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lflag
 condition|)
 name|printf
 argument_list|(
 literal|"User     tty       login@  idle   JCPU   PCPU  what\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|prfrom
+condition|)
+name|printf
+argument_list|(
+literal|"User    tty from            idle  what\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1853,6 +1952,13 @@ specifier|register
 name|int
 name|tm
 decl_stmt|;
+name|int
+name|width
+init|=
+name|ttywidth
+operator|-
+literal|1
+decl_stmt|;
 comment|/* print login name of the user */
 name|printf
 argument_list|(
@@ -1867,11 +1973,21 @@ operator|.
 name|ut_name
 argument_list|)
 expr_stmt|;
+name|width
+operator|-=
+name|NMAX
+operator|+
+literal|1
+expr_stmt|;
 comment|/* print tty user is on */
 if|if
 condition|(
 name|lflag
+operator|&&
+operator|!
+name|prfrom
 condition|)
+block|{
 comment|/* long form: all (up to) LMAX chars */
 name|printf
 argument_list|(
@@ -1886,6 +2002,11 @@ operator|.
 name|ut_line
 argument_list|)
 expr_stmt|;
+name|width
+operator|-=
+name|LMAX
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* short form: 2 chars, skipping 'tty' if there */
@@ -1941,11 +2062,35 @@ operator|.
 name|ut_line
 argument_list|)
 expr_stmt|;
+name|width
+operator|-=
+literal|2
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|prfrom
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" %-14.14s"
+argument_list|,
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+expr_stmt|;
+name|width
+operator|-=
+literal|15
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|lflag
 condition|)
+block|{
 comment|/* print when the user logged in */
 name|prtat
 argument_list|(
@@ -1955,6 +2100,11 @@ operator|.
 name|ut_time
 argument_list|)
 expr_stmt|;
+name|width
+operator|-=
+literal|8
+expr_stmt|;
+block|}
 comment|/* print idle time */
 if|if
 condition|(
@@ -1991,6 +2141,10 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+name|width
+operator|-=
+literal|7
+expr_stmt|;
 if|if
 condition|(
 name|lflag
@@ -2004,6 +2158,10 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+name|width
+operator|-=
+literal|7
+expr_stmt|;
 comment|/* print cpu time for interesting process */
 name|prttime
 argument_list|(
@@ -2012,11 +2170,19 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+name|width
+operator|-=
+literal|7
+expr_stmt|;
 block|}
 comment|/* what user is doing, either command tail or args */
 name|printf
 argument_list|(
-literal|" %-.32s\n"
+literal|" %-.*s\n"
+argument_list|,
+name|width
+operator|-
+literal|1
 argument_list|,
 name|doing
 argument_list|)
