@@ -4890,6 +4890,22 @@ operator|(
 literal|"Intel 82380FB mobile PCI to PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x24188086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AA (ICH) Hub to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x24288086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AB (ICH0) Hub to PCI bridge"
+operator|)
+return|;
 comment|/* VLSI -- vendor 0x1004 */
 case|case
 literal|0x01021004
@@ -5467,6 +5483,22 @@ operator|(
 literal|"Intel 82371AB PCI to ISA bridge"
 operator|)
 return|;
+case|case
+literal|0x24108086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AA (ICH) PCI to LPC bridge"
+operator|)
+return|;
+case|case
+literal|0x24208086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AB (ICH0) PCI to LPC bridge"
+operator|)
+return|;
 comment|/* VLSI -- vendor 0x1004 */
 case|case
 literal|0x00061004
@@ -5946,6 +5978,22 @@ case|:
 return|return
 operator|(
 literal|"Intel 82371AB/EB (PIIX4) USB controller"
+operator|)
+return|;
+case|case
+literal|0x24128086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AA (ICH) USB controller"
+operator|)
+return|;
+case|case
+literal|0x24228086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AB (ICH0) USB controller"
 operator|)
 return|;
 comment|/* VIA Technologies -- vendor 0x1106 (0x1107 on the Apollo Master) */
@@ -6498,6 +6546,46 @@ case|:
 return|return
 operator|(
 literal|"Intel 82453KX/GX (Orion) PCI memory controller"
+operator|)
+return|;
+case|case
+literal|0x71208086
+case|:
+return|return
+operator|(
+literal|"Intel 82810 (i810 GMCH) Host To Hub bridge"
+operator|)
+return|;
+case|case
+literal|0x71228086
+case|:
+return|return
+operator|(
+literal|"Intel 82810-DC100 (i810-DC100 GMCH) Host To Hub bridge"
+operator|)
+return|;
+case|case
+literal|0x71248086
+case|:
+return|return
+operator|(
+literal|"Intel 82810E (i810E GMCH) Host To Hub bridge"
+operator|)
+return|;
+case|case
+literal|0x24158086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AA (ICH) AC'97 Audio Controller"
+operator|)
+return|;
+case|case
+literal|0x24258086
+case|:
+return|return
+operator|(
+literal|"Intel 82801AB (ICH0) AC'97 Audio Controller"
 operator|)
 return|;
 comment|/* Sony -- vendor 0x104d */
@@ -8513,20 +8601,46 @@ name|vendor
 operator|=
 literal|"Intel"
 expr_stmt|;
-if|if
+switch|switch
 condition|(
-operator|(
 name|id
 operator|>>
 literal|16
-operator|)
-operator|==
-literal|0x7800
 condition|)
+block|{
+case|case
+literal|0x7121
+case|:
+name|chip
+operator|=
+literal|"82810 (i810 GMCH)"
+expr_stmt|;
+break|break;
+case|case
+literal|0x7123
+case|:
+name|chip
+operator|=
+literal|"82810-DC100 (i810-DC100 GMCH)"
+expr_stmt|;
+break|break;
+case|case
+literal|0x7125
+case|:
+name|chip
+operator|=
+literal|"82810E (i810E GMCH)"
+expr_stmt|;
+break|break;
+case|case
+literal|0x7800
+case|:
 name|chip
 operator|=
 literal|"i740 AGP"
 expr_stmt|;
+break|break;
+block|}
 break|break;
 case|case
 literal|0x10ea

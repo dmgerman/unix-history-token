@@ -1078,6 +1078,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x71208086
+case|:
+name|s
+operator|=
+literal|"Intel 82810 (i810 GMCH) Host To Hub bridge"
+expr_stmt|;
+break|break;
+case|case
+literal|0x71228086
+case|:
+name|s
+operator|=
+literal|"Intel 82810-DC100 (i810-DC100 GMCH) Host To Hub bridge"
+expr_stmt|;
+break|break;
+case|case
+literal|0x71248086
+case|:
+name|s
+operator|=
+literal|"Intel 82810E (i810E GMCH) Host To Hub bridge"
+expr_stmt|;
+break|break;
+case|case
 literal|0x71808086
 case|:
 name|s
