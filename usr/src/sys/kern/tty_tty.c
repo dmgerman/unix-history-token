@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.2	%G%	*/
+comment|/*	tty_tty.c	4.3	81/03/09	*/
 end_comment
 
 begin_comment
-comment|/*  *	indirect driver for controlling tty.  */
+comment|/*  * Indirect driver for controlling tty.  */
 end_comment
 
 begin_include

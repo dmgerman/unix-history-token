@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.24	81/03/09	*/
+comment|/*	machdep.c	4.25	81/03/09	*/
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VAX/UNIX (Berkeley Version 4.24) 81/03/09 00:32:40 \n"
+literal|"VAX/UNIX (Berkeley Version 4.25) 81/03/09 01:47:29 \n"
 decl_stmt|;
 end_decl_stmt
 

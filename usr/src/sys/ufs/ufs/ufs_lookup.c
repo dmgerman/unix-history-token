@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.4	%G%	*/
+comment|/*	ufs_lookup.c	4.5	81/03/09	*/
 end_comment
 
 begin_include
@@ -430,6 +430,50 @@ name|bp
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|==
+name|u
+operator|.
+name|u_rdir
+operator|&&
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_name
+index|[
+literal|1
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_name
+index|[
+literal|2
+index|]
+operator|==
+literal|0
+condition|)
+goto|goto
+name|cloop
+goto|;
 name|eloop
 label|:
 comment|/* 	 * If at the end of the directory, 	 * the search failed. Report what 	 * is appropriate as per flag. 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.15	%G%	*/
+comment|/*	kern_clock.c	4.16	81/03/09	*/
 end_comment
 
 begin_include
@@ -117,15 +117,8 @@ directive|include
 file|"dz.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|SCHMAG
-value|9/10
-end_define
-
 begin_comment
-comment|/*  * Hardclock is called straight from  * the real time clock interrupt.  * We limit the work we do at real clock interrupt time to:  *	reloading clock  *	decrementing time to callouts  *	recording cpu time usage  *	modifying priority of current process  *	arrange for soft clock interrupt  *	kernel pc profiling  *  * At softclock interrupt time we:  *	implement callouts  *	maintain date  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  *  * On the vax softclock interrupts are implemented by  * software interrupts.  Note that we may have multiple softclock  * interrupts compressed into one (due to excessive interrupt load),  * but that hardclock interrupts should never be lost.  */
+comment|/*  * Hardclock is called straight from  * the real time clock interrupt.  * We limit the work we do at real clock interrupt time to:  *	reloading clock  *	decrementing time to callouts  *	recording cpu time usage  *	modifying priority of current process  *	arrange for soft clock interrupt  *	kernel pc profiling  *  * At software (softclock) interrupt time we:  *	implement callouts  *	maintain date  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  *  * On the vax softclock interrupts are implemented by  * software interrupts.  Note that we may have multiple softclock  * interrupts compressed into one (due to excessive interrupt load),  * but that hardclock interrupts should never be lost.  */
 end_comment
 
 begin_comment
@@ -354,6 +347,7 @@ literal|5
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Update iostat information. 	 */
 if|if
 condition|(
 name|USERMODE
@@ -447,6 +441,7 @@ name|s
 index|]
 operator|++
 expr_stmt|;
+comment|/* 	 * Adjust priority of current process. 	 */
 if|if
 condition|(
 operator|!
@@ -515,12 +510,14 @@ name|p_usrpri
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Time moves on. 	 */
 operator|++
 name|lbolt
 expr_stmt|;
 if|#
 directive|if
 name|VAX780
+comment|/* 	 * On 780's, impelement a fast UBA watcher, 	 * to make sure uba's don't get stuck. 	 */
 if|if
 condition|(
 name|cpu
@@ -542,6 +539,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Schedule a software interrupt for the rest 	 * of clock activities. 	 */
 name|setsoftclock
 argument_list|()
 expr_stmt|;
@@ -549,7 +547,18 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Constant for decay filter for cpu usage.  */
+comment|/*  * SCHMAG is the constant in the digital decay cpu  * usage priority assignment.  Each second we multiply  * the previous cpu usage estimate by SCHMAG.  At 9/10  * it tends to decay away all knowledge of previous activity  * in about 10 seconds.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHMAG
+value|9/10
+end_define
+
+begin_comment
+comment|/*  * Constant for decay filter for cpu usage field  * in process table (used by ps au).  */
 end_comment
 
 begin_decl_stmt
@@ -565,7 +574,7 @@ comment|/* exp(-1/20) */
 end_comment
 
 begin_comment
-comment|/*  * Software clock interrupt.  * This routine is blocked by spl1(),  * which doesn't block device interrupts!  */
+comment|/*  * Software clock interrupt.  * This routine runs at lower priority than device interrupts.  */
 end_comment
 
 begin_comment
@@ -804,7 +813,7 @@ operator|>=
 name|hz
 condition|)
 block|{
-comment|/* 		 * This doesn't mean much since we run at 		 * software interrupt time... if hardclock() 		 * calls softclock() directly, it prevents 		 * this code from running when the priority 		 * was raised when the clock interrupt occurred. 		 */
+comment|/* 		 * This doesn't mean much on VAX since we run at 		 * software interrupt time... if hardclock() 		 * calls softclock() directly, it prevents 		 * this code from running when the priority 		 * was raised when the clock interrupt occurred. 		 */
 if|if
 condition|(
 name|BASEPRI
@@ -1297,7 +1306,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * timeout is called to arrange that  * fun(arg) is called in tim/hz seconds.  * An entry is sorted into the callout  * structure. The time in each structure  * entry is the number of hz's more  * than the previous entry.  * In this way, decrementing the  * first entry has the effect of  * updating all entries.  *  * The panic is there because there is nothing  * intelligent to be done if an entry won't fit.  */
+comment|/*  * Timeout is called to arrange that  * fun(arg) is called in tim/hz seconds.  * An entry is sorted into the callout  * structure.  The time in each structure  * entry is the number of hz's more  * than the previous entry.  * In this way, decrementing the  * first entry has the effect of  * updating all entries.  *  * The panic is there because there is nothing  * intelligent to be done if an entry won't fit.  */
 end_comment
 
 begin_macro
