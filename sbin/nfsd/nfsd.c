@@ -923,6 +923,14 @@ argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
+if|if
+condition|(
+name|argc
+condition|)
+name|udpflag
+operator|=
+literal|1
+expr_stmt|;
 name|argv
 operator|+=
 name|optind
