@@ -4801,7 +4801,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 			 * When running in secure mode, do not allow opens 			 * for writing of /dev/mem, /dev/kmem, or character 			 * devices whose corresponding block devices are 			 * currently mounted. 			 */
+comment|/* 			 * When running in secure mode, do not allow opens 			 * for writing of character 			 * devices whose corresponding block devices are 			 * currently mounted. 			 */
 if|if
 condition|(
 name|securelevel
@@ -4850,18 +4850,6 @@ condition|)
 return|return
 operator|(
 name|error
-operator|)
-return|;
-if|if
-condition|(
-name|iskmemdev
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EPERM
 operator|)
 return|;
 block|}

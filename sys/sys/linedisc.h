@@ -1198,19 +1198,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|iskmemdev
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|iszerodev
 name|__P
 argument_list|(
