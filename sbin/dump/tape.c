@@ -313,7 +313,7 @@ begin_struct
 struct|struct
 name|req
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|dblk
 decl_stmt|;
 name|int
@@ -722,7 +722,7 @@ operator|.
 name|dblk
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 literal|0
 expr_stmt|;
@@ -789,7 +789,7 @@ begin_function
 name|void
 name|dumpblock
 parameter_list|(
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|int

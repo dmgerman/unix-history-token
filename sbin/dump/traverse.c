@@ -165,7 +165,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|int
@@ -193,7 +193,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 parameter_list|,
 name|int
@@ -214,7 +214,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|long
@@ -974,7 +974,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|int
@@ -1000,7 +1000,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|idblk
 index|[
 name|MAXNINDIR
@@ -1193,7 +1193,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|long
@@ -1847,7 +1847,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 parameter_list|,
 name|int
@@ -1863,7 +1863,7 @@ name|i
 decl_stmt|,
 name|cnt
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|idblk
 index|[
 name|MAXNINDIR
@@ -2039,7 +2039,7 @@ begin_function
 name|void
 name|blksout
 parameter_list|(
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|blkp
 parameter_list|,
@@ -2050,7 +2050,7 @@ name|ino_t
 name|ino
 parameter_list|)
 block|{
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|bp
 decl_stmt|;
@@ -2483,7 +2483,7 @@ name|inum
 parameter_list|)
 block|{
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|minino
 decl_stmt|,
 name|maxino
@@ -2608,7 +2608,7 @@ begin_function
 name|void
 name|bread
 parameter_list|(
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|char

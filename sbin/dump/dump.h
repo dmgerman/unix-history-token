@@ -14,7 +14,7 @@ begin_define
 define|#
 directive|define
 name|MAXNINDIR
-value|(MAXBSIZE / sizeof(daddr_t))
+value|(MAXBSIZE / sizeof(ufs_daddr_t))
 end_define
 
 begin_comment
@@ -614,7 +614,7 @@ begin_function_decl
 name|void
 name|blksout
 parameter_list|(
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|blkp
 parameter_list|,
@@ -631,7 +631,7 @@ begin_function_decl
 name|void
 name|bread
 parameter_list|(
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|char
@@ -712,7 +712,7 @@ begin_function_decl
 name|void
 name|dumpblock
 parameter_list|(
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 parameter_list|,
 name|int
