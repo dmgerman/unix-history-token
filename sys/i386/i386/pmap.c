@@ -2806,12 +2806,11 @@ comment|/* !I386_CPU */
 end_comment
 
 begin_comment
-comment|/*  * Are we current address space or kernel?  */
+comment|/*  * Are we current address space or kernel?  N.B. We return FALSE when  * a pmap's page table is in use because a kernel thread is borrowing  * it.  The borrowed page table can change spontaneously, making any  * dependence on its continued use subject to a race condition.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|pmap_is_current
 parameter_list|(
@@ -2825,6 +2824,18 @@ name|pmap
 operator|==
 name|kernel_pmap
 operator|||
+operator|(
+name|pmap
+operator|==
+name|vmspace_pmap
+argument_list|(
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_vmspace
+argument_list|)
+operator|&&
 operator|(
 name|pmap
 operator|->
@@ -2843,6 +2854,7 @@ literal|0
 index|]
 operator|&
 name|PG_FRAME
+operator|)
 operator|)
 operator|)
 return|;
@@ -3532,12 +3544,28 @@ name|pm_stats
 operator|.
 name|resident_count
 expr_stmt|;
+comment|/* 		 * We never unwire a kernel page table page, making a 		 * check for the kernel_pmap unnecessary. 		 */
 if|if
 condition|(
-name|pmap_is_current
-argument_list|(
+operator|(
 name|pmap
-argument_list|)
+operator|->
+name|pm_pdir
+index|[
+name|PTDPTDI
+index|]
+operator|&
+name|PG_FRAME
+operator|)
+operator|==
+operator|(
+name|PTDpde
+index|[
+literal|0
+index|]
+operator|&
+name|PG_FRAME
+operator|)
 condition|)
 block|{
 comment|/* 			 * Do an invltlb to make the invalidated mapping 			 * take effect immediately. 			 */
