@@ -1185,6 +1185,13 @@ name|private
 operator|=
 name|NULL
 expr_stmt|;
+name|FREE
+argument_list|(
+name|priv
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
 name|ng_unref
 argument_list|(
 name|node
