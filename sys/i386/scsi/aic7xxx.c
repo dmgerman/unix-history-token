@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.84 1996/11/07 06:39:44 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.85 1996/11/11 05:24:44 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -3452,49 +3452,31 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|ahc
-operator|->
-name|type
-operator|&
-name|AHC_AIC78X0
-operator|)
-operator|==
-literal|0
-condition|)
 name|pause_sequencer
 argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-comment|/* We've emptied the Queue */
+comment|/* 			 * We've emptied the Queue, so reset our 			 * QOUTQCNT variable to the current QOUTCNT 			 * setting while the sequencer is paused. 			 * QOUTCNT will most likely be 0, be we have no 			 * guarantee that the sequencer did not post 			 * more work just after our last check. 			 */
 name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
 name|QOUTQCNT
 argument_list|,
-literal|0
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|QOUTCNT
+argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ahc
-operator|->
-name|type
-operator|&
-name|AHC_AIC78X0
-operator|)
-operator|==
-literal|0
-condition|)
 name|unpause_sequencer
 argument_list|(
 name|ahc
 argument_list|,
+comment|/*unpause_always*/
 name|FALSE
 argument_list|)
 expr_stmt|;
@@ -5146,6 +5128,95 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 break|break;
 case|case
+name|SCSI_QUEUE_FULL
+case|:
+if|if
+condition|(
+name|scb
+operator|->
+name|hscb
+operator|->
+name|control
+operator|&
+name|TAG_ENB
+condition|)
+block|{
+comment|/* 				 * The upper level SCSI code in 3.0 				 * handles this properly... 				 */
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+decl_stmt|;
+name|sc_link
+operator|=
+name|xs
+operator|->
+name|sc_link
+expr_stmt|;
+if|if
+condition|(
+name|sc_link
+operator|->
+name|active
+operator|>
+literal|2
+operator|&&
+name|sc_link
+operator|->
+name|opennings
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* truncate the opennings */
+name|sc_link
+operator|->
+name|opennings
+operator|=
+literal|0
+expr_stmt|;
+name|sc_print_addr
+argument_list|(
+name|sc_link
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Tagged openings reduced to "
+literal|"%d\n"
+argument_list|,
+name|sc_link
+operator|->
+name|active
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 				 * XXX requeue this unconditionally. 				 */
+name|STAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|ahc
+operator|->
+name|waiting_scbs
+argument_list|,
+name|scb
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* Else treat as if it is a BUSY condition */
+name|scb
+operator|->
+name|hscb
+operator|->
+name|status
+operator|=
+name|SCSI_BUSY
+expr_stmt|;
+comment|/* Fall Through... */
+case|case
 name|SCSI_BUSY
 case|:
 name|xs
@@ -5164,29 +5235,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Target Busy\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SCSI_QUEUE_FULL
-case|:
-comment|/* 			 * The upper level SCSI code will someday 			 * handle this properly. 			 */
-name|printf
-argument_list|(
-literal|"Queue Full\n"
-argument_list|)
-expr_stmt|;
-comment|/* 			 * XXX requeue this unconditionally. 			 */
-name|STAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|ahc
-operator|->
-name|waiting_scbs
-argument_list|,
-name|scb
-argument_list|,
-name|links
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5791,6 +5839,14 @@ case|case
 name|MSGIN_PHASEMIS
 case|:
 break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+block|case SCB_TRACE_POINT: 	{
+comment|/* 		 * Print out the bus phase 		 */
+block|char	 *phase; 		u_int8_t scbindex = ahc_inb(ahc, SCB_TAG); 		u_int8_t lastphase = ahc_inb(ahc, LASTPHASE);  		scb = ahc->scb_data->scbarray[scbindex]; 		sc_print_addr(scb->xs->sc_link);  		switch (lastphase) { 		case P_DATAOUT: 			phase = "Data-Out"; 			break; 		case P_DATAIN: 			phase = "Data-In"; 			break; 		case P_COMMAND: 			phase = "Command"; 			break; 		case P_MESGOUT: 			phase = "Message-Out"; 			break; 		case P_STATUS: 			phase = "Status"; 			break; 		case P_MESGIN: 			phase = "Message-In"; 			break; 		default: 			phase = "busfree"; 			break; 		} 		printf("- %s\n", phase); 		break; 	}
 endif|#
 directive|endif
 default|default:
@@ -7377,13 +7433,44 @@ name|AHC_PAGESCBS
 operator|)
 condition|)
 block|{
+name|u_int8_t
+name|max_scbid
+init|=
+literal|255
+decl_stmt|;
+comment|/* Determine the number of valid bits in the FIFOs */
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|QINFIFO
+argument_list|,
+name|max_scbid
+argument_list|)
+expr_stmt|;
+name|max_scbid
+operator|=
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|QINFIFO
+argument_list|)
+expr_stmt|;
 name|ahc
 operator|->
 name|scb_data
 operator|->
 name|maxscbs
 operator|=
+name|MIN
+argument_list|(
 name|AHC_SCB_MAX
+argument_list|,
+name|max_scbid
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -9032,6 +9119,13 @@ operator||=
 name|TAG_ENB
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* Set the trace flag if this is the target we want to trace */
+block|if (ahc->unit == 2&& xs->sc_link->target == 3) 		hscb->control |= TRACE_SCB;
+endif|#
+directive|endif
 name|hscb
 operator|->
 name|tcl
@@ -10746,8 +10840,6 @@ expr_stmt|;
 switch|switch
 condition|(
 name|bus_state
-operator|&
-name|PHASE_MASK
 condition|)
 block|{
 case|case
