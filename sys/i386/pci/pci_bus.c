@@ -1652,7 +1652,8 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|10000
 return|;
 block|}
 return|return
