@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -588,12 +588,12 @@ operator|==
 name|LFS_UNUSED_LBN
 condition|)
 continue|continue;
-comment|/* 		 * If modify time later than segment create time, see if the 		 * block has been replaced. 		 */
+comment|/* 		 * If change time later than segment create time, see if the 		 * block has been replaced. 		 */
 if|if
 condition|(
 name|ip
 operator|->
-name|i_mtime
+name|i_ctime
 operator|.
 name|ts_sec
 operator|>
@@ -1357,27 +1357,26 @@ operator|&=
 operator|~
 name|SEGUSE_DIRTY
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"segclean: segment %d has %d bytes %d sums %d ninos\n"
+argument_list|,
+name|uap
+operator|->
+name|segment
+argument_list|,
 name|sup
 operator|->
 name|su_nbytes
-operator|-=
+argument_list|,
 name|sup
 operator|->
 name|su_nsums
-operator|*
-name|LFS_SUMMARY_SIZE
-expr_stmt|;
+argument_list|,
 name|sup
 operator|->
 name|su_ninos
-operator|=
-literal|0
-expr_stmt|;
-name|sup
-operator|->
-name|su_nsums
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1999,6 +1998,13 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Inode was just read from user space or disk, make sure it's locked */
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|ILOCKED
+expr_stmt|;
 comment|/* 	 * Initialize the vnode from the inode, check for aliases.  In all 	 * cases re-init ip, the underlying vnode/inode may have changed. 	 */
 if|if
 condition|(
