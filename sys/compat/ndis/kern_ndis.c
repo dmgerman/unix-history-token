@@ -5368,6 +5368,8 @@ operator|==
 name|NULL
 operator|||
 name|intrdisfunc
+operator|==
+name|NULL
 condition|)
 return|return;
 name|intrdisfunc
