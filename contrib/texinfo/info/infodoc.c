@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infodoc.c -- Functions which build documentation nodes.    $Id: infodoc.c,v 1.4 1997/07/25 21:08:40 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* infodoc.c -- Functions which build documentation nodes.    $Id: infodoc.c,v 1.23 1999/09/25 16:10:04 karl Exp $     Copyright (C) 1993, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -10,12 +10,15 @@ file|"info.h"
 end_include
 
 begin_comment
-comment|/* Normally we do not define HELP_NODE_GETS_REGENERATED because the    contents of the help node currently can never change once an info    session has been started.   You should consider defining this in    the case that you place information about dynamic variables in the    help text.  When that happens, the contents of the help node will    change dependent on the value of those variables, and the user will    expect to see those changes. */
+comment|/* HELP_NODE_GETS_REGENERATED is always defined now that keys may get    rebound, or other changes in the help text may occur.  */
 end_comment
 
-begin_comment
-comment|/* #define HELP_NODE_GETS_REGENERATED 1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|HELP_NODE_GETS_REGENERATED
+value|1
+end_define
 
 begin_comment
 comment|/* **************************************************************** */
@@ -101,74 +104,469 @@ init|=
 block|{
 name|N_
 argument_list|(
-literal|"Basic Commands in Info Windows"
+literal|"Basic Commands in Info Windows\n"
 argument_list|)
 block|,
-literal|"******************************"
+name|N_
+argument_list|(
+literal|"******************************\n"
+argument_list|)
 block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Quit this help.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Quit Info altogether.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Invoke the Info tutorial.\n"
+argument_list|)
+block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"Moving within a node:\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"---------------------\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Scroll forward a page.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Scroll backward a page.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Go to the beginning of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Go to the end of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Scroll forward 1 line.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Scroll backward 1 line.\n"
+argument_list|)
+block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"Selecting other nodes:\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"----------------------\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Move to the `next' node of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Move to the `previous' node of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Move `up' from this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Pick menu item specified by name.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"              Picking a menu item causes another node to be selected.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Follow a cross reference.  Reads name of reference.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Move to the last node seen in this window.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Skip to next hypertext link within this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Follow the hypertext link under cursor.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Move to the `directory' node.  Equivalent to `g (DIR)'.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Move to the Top node.  Equivalent to `g Top'.\n"
+argument_list|)
+block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"Other commands:\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"---------------\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Pick first ... ninth item in node's menu.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Pick last item in node's menu.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Search for a specified string in the index entries of this Info\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"              file, and select the node referenced by the first entry found.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Move to node specified by name.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"              You may include a filename as well, as in (FILENAME)NODENAME.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Search forward through this Info file for a specified string,\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"              and select the node in which the next occurrence is found.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"  %-10s  Search backward in this Info file for a specified string,\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"              and select the node in which the next occurrence is found.\n"
+argument_list|)
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|info_help_keys_text
+index|[]
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
 literal|""
 block|,
-literal|"  h          Invoke the Info tutorial."
+literal|""
+block|}
 block|,
-literal|"  CTRL-x 0   Quit this help."
-block|,
-literal|"  q          Quit Info altogether."
-block|,
+block|{
 literal|""
 block|,
-literal|"Selecting other nodes:"
+literal|""
+block|}
 block|,
-literal|"----------------------"
-block|,
-literal|"  n   Move to the \"next\" node of this node."
-block|,
-literal|"  p   Move to the \"previous\" node of this node."
-block|,
-literal|"  u   Move \"up\" from this node."
-block|,
-literal|"  m   Pick menu item specified by name."
-block|,
-literal|"      Picking a menu item causes another node to be selected."
-block|,
-literal|"  f   Follow a cross reference.  Reads name of reference."
-block|,
-literal|"  l   Move to the last node seen in this window."
-block|,
-literal|"  d   Move to the `directory' node.  Equivalent to `g(DIR)'."
-block|,
+block|{
 literal|""
 block|,
-literal|"Moving within a node:"
+literal|""
+block|}
 block|,
-literal|"---------------------"
+block|{
+literal|"CTRL-x 0"
 block|,
-literal|"  SPC Scroll forward a page."
+literal|"CTRL-x 0"
+block|}
 block|,
-literal|"  DEL Scroll backward a page."
+block|{
+literal|"q"
 block|,
-literal|"  b   Go to the beginning of this node."
+literal|"q"
+block|}
 block|,
-literal|"  e   Go to the end of this node."
+block|{
+literal|"h"
 block|,
+literal|"ESC h"
+block|}
+block|,
+block|{
 literal|""
 block|,
-literal|"Other commands:"
+literal|""
+block|}
 block|,
-literal|"--------------------"
+block|{
+literal|""
 block|,
-literal|"  1   Pick first item in node's menu."
+literal|""
+block|}
 block|,
-literal|"  2-9 Pick second ... ninth item in node's menu."
+block|{
+literal|""
 block|,
-literal|"  0   Pick last item in node's menu."
+literal|""
+block|}
 block|,
-literal|"  g   Move to node specified by name."
+block|{
+literal|"SPC"
 block|,
-literal|"      You may include a filename as well, as in (FILENAME)NODENAME."
+literal|"SPC"
+block|}
 block|,
-literal|"  s   Search through this Info file for a specified string,"
+block|{
+literal|"DEL"
 block|,
-literal|"      and select the node in which the next occurrence is found."
+literal|"b"
+block|}
+block|,
+block|{
+literal|"b"
+block|,
+literal|"ESC b"
+block|}
+block|,
+block|{
+literal|"e"
+block|,
+literal|"ESC e"
+block|}
+block|,
+block|{
+literal|"ESC 1 SPC"
+block|,
+literal|"RET"
+block|}
+block|,
+block|{
+literal|"ESC 1 DEL"
+block|,
+literal|"y"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"n"
+block|,
+literal|"CTRL-x n"
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+literal|"CTRL-x p"
+block|}
+block|,
+block|{
+literal|"u"
+block|,
+literal|"CTRL-x u"
+block|}
+block|,
+block|{
+literal|"m"
+block|,
+literal|"ESC m"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"f"
+block|,
+literal|"ESC f"
+block|}
+block|,
+block|{
+literal|"l"
+block|,
+literal|"l"
+block|}
+block|,
+block|{
+literal|"TAB"
+block|,
+literal|"TAB"
+block|}
+block|,
+block|{
+literal|"RET"
+block|,
+literal|"CTRL-x RET"
+block|}
+block|,
+block|{
+literal|"d"
+block|,
+literal|"ESC d"
+block|}
+block|,
+block|{
+literal|"t"
+block|,
+literal|"ESC t"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"1-9"
+block|,
+literal|"ESC 1-9"
+block|}
+block|,
+block|{
+literal|"0"
+block|,
+literal|"ESC 0"
+block|}
+block|,
+block|{
+literal|"i"
+block|,
+literal|"CTRL-x i"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"g"
+block|,
+literal|"CTRL-x g"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"s"
+block|,
+literal|"/"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"ESC - s"
+block|,
+literal|"?"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
 block|,
 name|NULL
 block|}
@@ -553,40 +951,37 @@ block|}
 end_function
 
 begin_comment
-comment|/* How to create internal_info_help_node. */
+comment|/* How to create internal_info_help_node.  HELP_IS_ONLY_WINDOW_P says    whether we're going to end up in a second (or more) window of our    own, or whether there's only one window and we're going to usurp it.    This determines how to quit the help window.  Maybe we should just    make q do the right thing in both cases.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|create_internal_info_help_node
-parameter_list|()
+parameter_list|(
+name|help_is_only_window_p
+parameter_list|)
+name|int
+name|help_is_only_window_p
+decl_stmt|;
 block|{
 specifier|register
 name|int
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|contents
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
 name|NODE
 modifier|*
 name|node
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+name|char
+modifier|*
+name|contents
+init|=
+name|NULL
+decl_stmt|;
+ifndef|#
+directive|ifndef
 name|HELP_NODE_GETS_REGENERATED
-argument_list|)
 if|if
 condition|(
 name|internal_info_help_node_contents
@@ -626,16 +1021,69 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf_to_message_buffer
+block|{
+comment|/* Don't translate blank lines, gettext outputs the po file              header in that case.  We want a blank line.  */
+name|char
+modifier|*
+name|msg
+init|=
+operator|*
+operator|(
+name|info_internal_help_text
+index|[
+name|i
+index|]
+operator|)
+condition|?
+name|_
 argument_list|(
-literal|"%s\n"
-argument_list|,
 name|info_internal_help_text
 index|[
 name|i
 index|]
 argument_list|)
+else|:
+name|info_internal_help_text
+index|[
+name|i
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|key
+init|=
+name|info_help_keys_text
+index|[
+name|i
+index|]
+index|[
+name|vi_keys_p
+index|]
+decl_stmt|;
+comment|/* If we have only one window (because the window size was too              small to split it), CTRL-x 0 doesn't work to `quit' help.  */
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|key
+argument_list|,
+literal|"CTRL-x 0"
+argument_list|)
+operator|&&
+name|help_is_only_window_p
+condition|)
+name|key
+operator|=
+literal|"l"
 expr_stmt|;
+name|printf_to_message_buffer
+argument_list|(
+name|msg
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
+block|}
 name|printf_to_message_buffer
 argument_list|(
 literal|"---------------------\n\n"
@@ -643,12 +1091,15 @@ argument_list|)
 expr_stmt|;
 name|printf_to_message_buffer
 argument_list|(
+name|_
+argument_list|(
 literal|"The current search path is:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf_to_message_buffer
 argument_list|(
-literal|"  \"%s\"\n"
+literal|"  %s\n"
 argument_list|,
 name|infopath
 argument_list|)
@@ -660,7 +1111,10 @@ argument_list|)
 expr_stmt|;
 name|printf_to_message_buffer
 argument_list|(
+name|_
+argument_list|(
 literal|"Commands available in Info windows:\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dump_map_to_message_buffer
@@ -677,7 +1131,10 @@ argument_list|)
 expr_stmt|;
 name|printf_to_message_buffer
 argument_list|(
+name|_
+argument_list|(
 literal|"Commands available in the echo area:\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dump_map_to_message_buffer
@@ -782,12 +1239,34 @@ name|func_name
 argument_list|,
 name|replace_in_documentation
 argument_list|(
+name|strlen
+argument_list|(
 name|function_doc_array
 index|[
 name|i
 index|]
 operator|.
 name|doc
+argument_list|)
+operator|==
+literal|0
+condition|?
+name|function_doc_array
+index|[
+name|i
+index|]
+operator|.
+name|doc
+else|:
+name|_
+argument_list|(
+name|function_doc_array
+index|[
+name|i
+index|]
+operator|.
+name|doc
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -911,6 +1390,17 @@ begin_comment
 comment|/* Return a window which is the window showing help in this Info. */
 end_comment
 
+begin_comment
+comment|/* If the eligible window's height is>= this, split it to make the help    window.  Otherwise display the help window in the current window.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HELP_SPLIT_SIZE
+value|24
+end_define
+
 begin_function
 specifier|static
 name|WINDOW
@@ -918,31 +1408,24 @@ modifier|*
 name|info_find_or_create_help_window
 parameter_list|()
 block|{
-name|WINDOW
-modifier|*
-name|help_window
-decl_stmt|,
-modifier|*
-name|eligible
-decl_stmt|,
-modifier|*
-name|window
+name|int
+name|help_is_only_window_p
 decl_stmt|;
-name|eligible
-operator|=
-operator|(
 name|WINDOW
-operator|*
-operator|)
+modifier|*
+name|eligible
+init|=
 name|NULL
-expr_stmt|;
+decl_stmt|;
+name|WINDOW
+modifier|*
 name|help_window
-operator|=
-name|get_internal_info_window
+init|=
+name|get_window_of_node
 argument_list|(
-name|info_help_nodename
+name|internal_info_help_node
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* If we couldn't find the help window, then make it. */
 if|if
 condition|(
@@ -950,6 +1433,10 @@ operator|!
 name|help_window
 condition|)
 block|{
+name|WINDOW
+modifier|*
+name|window
+decl_stmt|;
 name|int
 name|max
 init|=
@@ -997,34 +1484,45 @@ operator|!
 name|eligible
 condition|)
 return|return
-operator|(
-operator|(
-name|WINDOW
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|HELP_NODE_GETS_REGENERATED
-argument_list|)
 else|else
+comment|/* help window is static, just return it.  */
 return|return
-operator|(
 name|help_window
-operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !HELP_NODE_GETS_REGENERATED */
-comment|/* Make sure that we have a node containing the help text. */
+comment|/* not HELP_NODE_GETS_REGENERATED */
+comment|/* Make sure that we have a node containing the help text.  The      argument is false if help will be the only window (so l must be used      to quit help), true if help will be one of several visible windows      (so CTRL-x 0 must be used to quit help).  */
+name|help_is_only_window_p
+operator|=
+operator|(
+name|help_window
+operator|&&
+operator|!
+name|windows
+operator|->
+name|next
+operator|||
+operator|!
+name|help_window
+operator|&&
+name|eligible
+operator|->
+name|height
+operator|<
+name|HELP_SPLIT_SIZE
+operator|)
+expr_stmt|;
 name|create_internal_info_help_node
-argument_list|()
+argument_list|(
+name|help_is_only_window_p
+argument_list|)
 expr_stmt|;
 comment|/* Either use the existing window to display the help node, or create      a new window if there was no existing help window. */
 if|if
@@ -1039,8 +1537,8 @@ condition|(
 name|eligible
 operator|->
 name|height
-operator|>
-literal|30
+operator|>=
+name|HELP_SPLIT_SIZE
 condition|)
 block|{
 name|active_window
@@ -1113,9 +1611,7 @@ name|node
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|help_window
-operator|)
 return|;
 block|}
 end_function
@@ -1166,7 +1662,7 @@ else|else
 block|{
 name|info_error
 argument_list|(
-name|CANT_MAKE_HELP
+name|msg_cant_make_help
 argument_list|)
 expr_stmt|;
 block|}
@@ -1336,7 +1832,7 @@ expr_stmt|;
 else|else
 name|info_error
 argument_list|(
-name|CANT_FILE_NODE
+name|msg_cant_file_node
 argument_list|,
 literal|"Info"
 argument_list|,
@@ -1460,8 +1956,10 @@ name|func
 condition|)
 break|break;
 return|return
-operator|(
 name|replace_in_documentation
+argument_list|(
+operator|(
+name|strlen
 argument_list|(
 name|function_doc_array
 index|[
@@ -1470,7 +1968,27 @@ index|]
 operator|.
 name|doc
 argument_list|)
+operator|==
+literal|0
 operator|)
+condition|?
+name|function_doc_array
+index|[
+name|i
+index|]
+operator|.
+name|doc
+else|:
+name|_
+argument_list|(
+name|function_doc_array
+index|[
+name|i
+index|]
+operator|.
+name|doc
+argument_list|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -1716,7 +2234,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 name|map
 operator|=
@@ -1724,10 +2242,11 @@ name|window
 operator|->
 name|keymap
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|message_in_echo_area
 argument_list|(
@@ -1753,15 +2272,6 @@ name|Meta_p
 argument_list|(
 name|keystroke
 argument_list|)
-operator|&&
-operator|(
-operator|!
-name|ISO_Latin_p
-operator|||
-name|key
-operator|<
-literal|160
-operator|)
 condition|)
 block|{
 if|if
@@ -2455,7 +2965,7 @@ argument_list|(
 name|fun_name
 argument_list|)
 expr_stmt|;
-comment|/* If the internal documentation string fails, there is a               serious problem with the associated command's documentation.              We croak so that it can be fixed immediately. */
+comment|/* If the internal documentation string fails, there is a              serious problem with the associated command's documentation.              We croak so that it can be fixed immediately. */
 if|if
 condition|(
 operator|!
@@ -2830,13 +3340,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
 end_function
@@ -2855,7 +3359,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_where_is
 argument_list|,
+argument|_(
 literal|"Show what to type to execute a given command"
+argument|)
 argument_list|)
 end_macro
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* filesys.h -- External declarations of functions and vars in filesys.c.    $Id: filesys.h,v 1.3 1997/07/15 18:39:08 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* filesys.h -- external declarations for filesys.c.    $Id: filesys.h,v 1.5 1998/07/21 22:25:44 karl Exp $     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -83,6 +83,17 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Given a chunk of text and its length, convert all CRLF pairs at the    EOLs into a single Newline character.  Return the length of produced    text.  */
+end_comment
+
+begin_function_decl
+name|long
+name|convert_eols
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Read the contents of PATHNAME, returning a buffer with the contents of    that file in it, and returning the size of that buffer in FILESIZE.    FINFO is a stat struct which has already been filled in by the caller.    If the file cannot be read, return a NULL pointer. */
 end_comment
 
@@ -158,6 +169,18 @@ specifier|extern
 name|char
 modifier|*
 name|extract_colon_unit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if FILENAME is `dir', with a possible compression suffix.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|is_dir_name
 parameter_list|()
 function_decl|;
 end_function_decl

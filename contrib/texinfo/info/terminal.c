@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* terminal.c -- How to handle the physical terminal for Info.    $Id: terminal.c,v 1.9 1998/02/22 00:05:15 karl Exp $     Copyright (C) 1988, 89, 90, 91, 92, 93, 96, 97, 98    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* terminal.c -- How to handle the physical terminal for Info.    $Id: terminal.c,v 1.19 1999/09/20 12:28:54 karl Exp $     Copyright (C) 1988, 89, 90, 91, 92, 93, 96, 97, 98, 99    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -32,6 +32,16 @@ include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_comment
+comment|/* TIOCGWINSZ on LynxOS, at least */
+end_comment
 
 begin_comment
 comment|/* The Unix termcap interface code. */
@@ -401,7 +411,7 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/* A buffer which holds onto the current terminal description, and a pointer    used to float within it. */
+comment|/* A buffer which holds onto the current terminal description, and a pointer    used to float within it.  And the name of the terminal.  */
 end_comment
 
 begin_decl_stmt
@@ -410,10 +420,6 @@ name|char
 modifier|*
 name|term_buffer
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 end_decl_stmt
@@ -424,11 +430,15 @@ name|char
 modifier|*
 name|term_string_buffer
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|term_name
 decl_stmt|;
 end_decl_stmt
 
@@ -686,12 +696,21 @@ argument_list|(
 name|term_begin_use
 argument_list|)
 expr_stmt|;
-comment|/* Without this fflush and sleep, running info in a shelltool or      cmdtool (TERM=sun-cmd) with scrollbars loses -- the scrollbars are      not restored properly.      From: strube@physik3.gwdg.de (Hans Werner Strube).  */
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|term_name
+argument_list|,
+literal|"sun-cmd"
+argument_list|)
+condition|)
+comment|/* Without this fflush and sleep, running info in a shelltool or        cmdtool (TERM=sun-cmd) with scrollbars loses -- the scrollbars are        not restored properly.        From: strube@physik3.gwdg.de (Hans Werner Strube).  */
 name|sleep
 argument_list|(
 literal|1
@@ -772,6 +791,16 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|term_name
+argument_list|,
+literal|"sun-cmd"
+argument_list|)
+condition|)
+comment|/* See comments at other sleep.  */
 name|sleep
 argument_list|(
 literal|1
@@ -1895,9 +1924,6 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
-name|term
-decl_stmt|,
-modifier|*
 name|buffer
 decl_stmt|;
 name|terminal_is_dumb_p
@@ -1919,7 +1945,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|term
+name|term_name
 operator|=
 name|terminal_name
 condition|?
@@ -1933,14 +1959,19 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|term_name
+condition|)
+name|term_name
+operator|=
+literal|"dumb"
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|term_string_buffer
 condition|)
 name|term_string_buffer
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 literal|2048
@@ -1953,10 +1984,6 @@ name|term_buffer
 condition|)
 name|term_buffer
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 literal|2048
@@ -1972,30 +1999,18 @@ name|term_cr
 operator|=
 name|term_clreol
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|term
-condition|)
-name|term
-operator|=
-literal|"dumb"
-expr_stmt|;
+comment|/* HP-UX 11.x returns 0 for OK --jeff.hull@state.co.us.  */
 if|if
 condition|(
 name|tgetent
 argument_list|(
 name|term_buffer
 argument_list|,
-name|term
+name|term_name
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -2023,10 +2038,6 @@ name|audible_bell
 operator|=
 name|visible_bell
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|term_ku
@@ -2037,20 +2048,12 @@ name|term_kl
 operator|=
 name|term_kr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|term_kP
 operator|=
 name|term_kN
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 return|return;
@@ -2074,6 +2077,49 @@ name|BC
 else|:
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_TERMIOS_H
+argument_list|)
+block|{
+name|struct
+name|termios
+name|ti
+decl_stmt|;
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|,
+operator|&
+name|ti
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|ospeed
+operator|=
+name|cfgetospeed
+argument_list|(
+operator|&
+name|ti
+argument_list|)
+expr_stmt|;
+else|else
+name|ospeed
+operator|=
+name|B9600
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|#
 directive|if
 name|defined
@@ -2124,6 +2170,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !TIOCGETP */
+endif|#
+directive|endif
 name|term_cr
 operator|=
 name|tgetstr
@@ -2164,7 +2212,7 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* Find out about this terminals scrolling capability. */
+comment|/* Find out about this terminal's scrolling capability. */
 name|term_AL
 operator|=
 name|tgetstr
@@ -2505,74 +2553,8 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **************************************************************** */
+comment|/* How to read characters from the terminal.  */
 end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*               How to Read Characters From the Terminal           */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TIOCGETC
-argument_list|)
-end_if
-
-begin_comment
-comment|/* A buffer containing the terminal interrupt characters upon entry    to Info. */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|tchars
-name|original_tchars
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TIOCGLTC
-argument_list|)
-end_if
-
-begin_comment
-comment|/* A buffer containing the local terminal mode characters upon entry    to Info. */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|ltchars
-name|original_ltchars
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -2652,6 +2634,85 @@ name|sgttyb
 name|ttybuff
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TIOCGETC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|M_XENIX
+argument_list|)
+end_if
+
+begin_comment
+comment|/* SCO 3.2v5.0.2 defines but does not support TIOCGETC.  Gak.  Maybe    better fix would be to use Posix termios in preference.  --gildea,    1jul99.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TIOCGETC
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TIOCGETC
+argument_list|)
+end_if
+
+begin_comment
+comment|/* A buffer containing the terminal interrupt characters upon entry    to Info. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tchars
+name|original_tchars
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TIOCGLTC
+argument_list|)
+end_if
+
+begin_comment
+comment|/* A buffer containing the local terminal mode characters upon entry    to Info. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ltchars
+name|original_ltchars
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3405,6 +3466,23 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MSDOS__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"pcterm.c"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

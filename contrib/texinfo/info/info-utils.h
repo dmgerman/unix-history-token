@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info-utils.h -- Exported functions and variables from info-util.c.    $Id: info-utils.h,v 1.3 1997/07/15 18:42:20 karl Exp $        This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info-utils.h -- Exported functions and variables from info-utils.c.    $Id: info-utils.h,v 1.5 1998/08/10 18:07:28 karl Exp $        Copyright (C) 1993, 96, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -14,51 +14,6 @@ define|#
 directive|define
 name|INFO_UTILS_H
 end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_STRCHR
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|strchr
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|strrchr
-end_undef
-
-begin_define
-define|#
-directive|define
-name|strchr
-value|index
-end_define
-
-begin_define
-define|#
-directive|define
-name|strrchr
-value|rindex
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_STRCHR */
-end_comment
 
 begin_include
 include|#
@@ -327,7 +282,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return the node addressed by LABEL in NODE (usually one of "Prev:",    "Next:", "Up:", "File:", or "Node:".  After a call to this function,    the global INFO_PARSED_NODENAME and INFO_PARSED_FILENAME contain    the information. */
+comment|/* Return a window displaying the node NODE. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|WINDOW
+modifier|*
+name|get_window_of_node
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the node addressed by LABEL in NODE (usually one of "Prev:",    "Next:", "Up:", "File:", or "Node:".  After a call to this function,    the globals `info_parsed_nodename' and `info_parsed_filename' contain    the information. */
 end_comment
 
 begin_function_decl
@@ -339,14 +307,6 @@ comment|/* label, node */
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|info_label_was_found
-define|\
-value|(info_parsed_nodename != NULL || info_parsed_filename != NULL)
-end_define
 
 begin_define
 define|#
@@ -386,7 +346,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|do { \     info_parse_label (INFO_PREV_LABEL, n); \     if (!info_label_was_found) \       info_parse_label (INFO_ALTPREV_LABEL, n); \   } while (0)
+value|do { \     info_parse_label (INFO_PREV_LABEL, n); \     if (!info_parsed_nodename&& !info_parsed_filename) \       info_parse_label (INFO_ALTPREV_LABEL, n); \   } while (0)
 end_define
 
 begin_endif

@@ -1,21 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* session.h -- Functions found in session.c. */
+comment|/* session.h -- Functions found in session.c.    $Id: session.h,v 1.9 1999/06/25 21:57:40 karl Exp $     Copyright (C) 1993, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SESSION_H
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -281,6 +273,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|program_name_from_file_name
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Do the physical deletion of WINDOW, and forget this window and    associated nodes. */
 end_comment
@@ -458,6 +459,28 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|info_up_line
+argument_list|()
+decl_stmt|,
+name|info_down_line
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|info_scroll_half_screen_down
+argument_list|()
+decl_stmt|,
+name|info_scroll_half_screen_up
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Manipulating multiple windows. */
 end_comment
@@ -574,6 +597,25 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|info_menu_sequence
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|NODE
+modifier|*
+name|info_follow_menus
+parameter_list|(
+comment|/* initial_node, menus, errstr, errarg */
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Selecting cross references. */
 end_comment
@@ -658,6 +700,28 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|info_search_case_sensitively
+argument_list|()
+decl_stmt|,
+name|info_search_backward
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|info_search_next
+argument_list|()
+decl_stmt|,
+name|info_search_previous
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Dumping and printing nodes. */
 end_comment
@@ -694,7 +758,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SESSION_H */
+comment|/* not SESSION_H */
 end_comment
 
 end_unit

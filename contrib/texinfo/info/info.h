@@ -1,17 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.7 1998/02/27 21:36:04 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.14 1999/09/25 16:10:04 karl Exp $     Copyright (C) 1993, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INFO_H
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -429,6 +425,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Non-zero means default keybindings are loosely modeled on vi(1).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vi_keys_p
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Print FORMAT with ARG1 and ARG2.  If the window system was initialized,    then the message is printed in the echo area.  Otherwise, a message is    output to stderr. */
 end_comment
 
@@ -454,134 +461,136 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* How to get the version string for this version of Info.  Returns    something similar to "2.11". */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|version_string
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Error message defines. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CANT_FIND_NODE
-value|_("Cannot find the node \"%s\".")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_cant_find_node
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CANT_FILE_NODE
-value|_("Cannot find the node \"(%s)%s\".")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_cant_file_node
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CANT_FIND_WIND
-value|_("Cannot find a window!")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_cant_find_window
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CANT_FIND_POINT
-value|_("Point doesn't appear within this window's node!")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_cant_find_point
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CANT_KILL_LAST
-value|_("Cannot delete the last window.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_cant_kill_last
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NO_MENU_NODE
-value|_("No menu in this node.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_no_menu_node
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NO_FOOT_NODE
-value|_("No footnotes in this node.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_no_foot_node
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NO_XREF_NODE
-value|_("No cross references in this node.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_no_xref_node
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NO_POINTER
-value|_("No \"%s\" pointer for this node.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_no_pointer
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|UNKNOWN_COMMAND
-value|_("Unknown Info command `%c'.  `?' for help.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_unknown_command
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|TERM_TOO_DUMB
-value|_("Terminal type \"%s\" is not smart enough to run Info.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_term_too_dumb
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|AT_NODE_BOTTOM
-value|_("You are already at the last page of this node.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_at_node_bottom
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|AT_NODE_TOP
-value|_("You are already at the first page of this node.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_at_node_top
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|ONE_WINDOW
-value|_("Only one window.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_one_window
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|WIN_TOO_SMALL
-value|_("Resulting window would be too small.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_win_too_small
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CANT_MAKE_HELP
-define|\
-value|_("There isn't enough room to make a help window.  Please delete a window.")
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|msg_cant_make_help
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nodes.c -- How to get an Info file and node. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* nodes.c -- how to get an Info file and node.    $Id: nodes.c,v 1.14 1999/08/15 10:18:09 karl Exp $     Copyright (C) 1993, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -59,26 +55,6 @@ end_endif
 
 begin_comment
 comment|/* HANDLE_MAN_PAGES */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                   Functions Static to this File                  */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
 end_comment
 
 begin_decl_stmt
@@ -170,7 +146,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Magic number that RMS used to decide how much a tags table pointer could    be off by.  I feel that it should be much smaller, like on the order of    4. */
+comment|/* Magic number that RMS used to decide how much a tags table pointer could    be off by.  I feel that it should be much smaller, like 4.  */
 end_comment
 
 begin_define
@@ -202,23 +178,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                       Global Variables                           */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
+comment|/* Global variables.  */
 end_comment
 
 begin_comment
@@ -230,10 +190,6 @@ name|char
 modifier|*
 name|info_recent_file_error
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 end_decl_stmt
@@ -248,11 +204,6 @@ modifier|*
 modifier|*
 name|info_loaded_files
 init|=
-operator|(
-name|FILE_BUFFER
-operator|*
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 end_decl_stmt
@@ -273,27 +224,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **************************************************************** */
+comment|/* Public functions for node manipulation.  */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*               Public Functions for Node Manipulation             */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/* Used to build "dir" menu from "localdir" files found in INFOPATH. */
+comment|/* Used to build `dir' menu from `localdir' files found in INFOPATH. */
 end_comment
 
 begin_function_decl
@@ -305,7 +240,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return a pointer to a NODE structure for the Info node (FILENAME)NODENAME.    FILENAME can be passed as NULL, in which case the filename of "dir" is used.    NODENAME can be passed as NULL, in which case the nodename of "Top" is used.    If the node cannot be found, return a NULL pointer. */
+comment|/* Return a pointer to a NODE structure for the Info node (FILENAME)NODENAME.    If FILENAME is NULL, `dir' is used.    IF NODENAME is NULL, `Top' is used.    If the node cannot be found, return NULL. */
 end_comment
 
 begin_function
@@ -328,28 +263,18 @@ end_function
 
 begin_block
 block|{
-name|FILE_BUFFER
-modifier|*
-name|file_buffer
-decl_stmt|;
 name|NODE
 modifier|*
 name|node
 decl_stmt|;
-name|file_buffer
-operator|=
-operator|(
 name|FILE_BUFFER
-operator|*
-operator|)
+modifier|*
+name|file_buffer
+init|=
 name|NULL
-expr_stmt|;
+decl_stmt|;
 name|info_recent_file_error
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|info_parse_node
@@ -361,10 +286,6 @@ argument_list|)
 expr_stmt|;
 name|nodename
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 if|if
@@ -396,21 +317,17 @@ expr_stmt|;
 comment|/* If the file to be looked up is "dir", build the contents from all of      the "dir"s and "localdir"s found in INFOPATH. */
 if|if
 condition|(
-name|strcasecmp
+name|is_dir_name
 argument_list|(
 name|filename
-argument_list|,
-literal|"dir"
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|maybe_build_dir_node
 argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-comment|/* Find the correct info file. */
+comment|/* Find the correct info file, or give up.  */
 name|file_buffer
 operator|=
 name|info_find_file
@@ -438,15 +355,10 @@ name|filesys_error_number
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
+comment|/* Look for the node.  */
 name|node
 operator|=
 name|info_get_node_of_file_buffer
@@ -456,7 +368,7 @@ argument_list|,
 name|file_buffer
 argument_list|)
 expr_stmt|;
-comment|/* If the node looked for was "Top", try again looking for the node under      a slightly different name. */
+comment|/* If the node not found was "Top", try again with different case.  */
 if|if
 condition|(
 operator|!
@@ -517,9 +429,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|node
-operator|)
 return|;
 block|}
 end_block
@@ -550,10 +460,6 @@ name|NODE
 modifier|*
 name|node
 init|=
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 comment|/* If we are unable to find the file, we have to give up.  There isn't      anything else we can do. */
@@ -563,13 +469,7 @@ operator|!
 name|file_buffer
 condition|)
 return|return
-operator|(
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 comment|/* If the file buffer was gc'ed, reload the contents now. */
 if|if
@@ -633,10 +533,6 @@ name|node
 operator|->
 name|parent
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|node
@@ -667,6 +563,12 @@ expr_stmt|;
 name|node
 operator|->
 name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|node
+operator|->
+name|display_pos
 operator|=
 literal|0
 expr_stmt|;
@@ -722,9 +624,7 @@ expr_stmt|;
 block|}
 comment|/* Return the results of our node search. */
 return|return
-operator|(
 name|node
-operator|)
 return|;
 block|}
 end_function
@@ -746,14 +646,12 @@ name|filename
 decl_stmt|;
 block|{
 return|return
-operator|(
 name|info_find_file_internal
 argument_list|(
 name|filename
 argument_list|,
 name|INFO_GET_TAGS
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -775,14 +673,12 @@ name|filename
 decl_stmt|;
 block|{
 return|return
-operator|(
 name|info_load_file_internal
 argument_list|(
 name|filename
 argument_list|,
 name|INFO_GET_TAGS
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -791,23 +687,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                  Private Functions Implementation                */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
+comment|/* Private functions implementation.  */
 end_comment
 
 begin_comment
@@ -832,11 +712,9 @@ name|int
 name|get_tags
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|FILE_BUFFER
 modifier|*
 name|file_buffer
@@ -868,7 +746,7 @@ control|)
 if|if
 condition|(
 operator|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|filename
 argument_list|,
@@ -881,7 +759,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|filename
 argument_list|,
@@ -894,14 +772,13 @@ literal|0
 operator|)
 operator|||
 operator|(
-operator|(
-operator|*
+operator|!
+name|IS_ABSOLUTE
+argument_list|(
 name|filename
-operator|!=
-literal|'/'
-operator|)
+argument_list|)
 operator|&&
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|filename
 argument_list|,
@@ -927,22 +804,16 @@ decl_stmt|;
 comment|/* This file is loaded.  If the filename that we want is                specifically "dir", then simply return the file buffer. */
 if|if
 condition|(
-name|strcasecmp
+name|is_dir_name
 argument_list|(
 name|filename_non_directory
 argument_list|(
 name|filename
 argument_list|)
-argument_list|,
-literal|"dir"
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
-operator|(
 name|file_buffer
-operator|)
 return|;
 if|#
 directive|if
@@ -960,9 +831,7 @@ operator|&
 name|N_IsManPage
 condition|)
 return|return
-operator|(
 name|file_buffer
-operator|)
 return|;
 endif|#
 directive|endif
@@ -989,13 +858,7 @@ operator|=
 name|errno
 expr_stmt|;
 return|return
-operator|(
-operator|(
-name|FILE_BUFFER
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
 name|old_info
@@ -1041,6 +904,31 @@ block|{
 comment|/* The info file exists, and has not changed since the last                    time it was loaded.  If the caller requested a nodes list                    for this file, and there isn't one here, build the nodes                    for this file_buffer.  In any case, return the file_buffer                    object. */
 if|if
 condition|(
+operator|!
+name|file_buffer
+operator|->
+name|contents
+condition|)
+block|{
+comment|/* The file's contents have been gc'ed.  Reload it.  */
+name|info_reload_file_buffer_contents
+argument_list|(
+name|file_buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|file_buffer
+operator|->
+name|contents
+condition|)
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|get_tags
 operator|&&
 operator|!
@@ -1054,9 +942,7 @@ name|file_buffer
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|file_buffer
-operator|)
 return|;
 block|}
 block|}
@@ -1109,9 +995,7 @@ name|file_buffer
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|file_buffer
-operator|)
 return|;
 block|}
 end_function
@@ -1154,15 +1038,13 @@ name|finfo
 decl_stmt|;
 name|int
 name|retcode
+decl_stmt|,
+name|compressed
 decl_stmt|;
 name|FILE_BUFFER
 modifier|*
 name|file_buffer
 init|=
-operator|(
-name|FILE_BUFFER
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 comment|/* Get the full pathname of this file, as known by the info system.      That is to say, search along INFOPATH and expand tildes, etc. */
@@ -1185,6 +1067,7 @@ name|finfo
 argument_list|)
 expr_stmt|;
 comment|/* If the file referenced by the name returned from info_find_fullpath ()      doesn't exist, then try again with the last part of the filename      appearing in lowercase. */
+comment|/* This is probably not needed at all on those systems which define      FILENAME_CMP to be strcasecmp.  But let's do it anyway, lest some      network redirector supports case sensitivity.  */
 if|if
 condition|(
 name|retcode
@@ -1209,28 +1092,10 @@ argument_list|)
 expr_stmt|;
 name|basename
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|strrchr
+name|filename_non_directory
 argument_list|(
 name|lowered_name
-argument_list|,
-literal|'/'
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|basename
-condition|)
-name|basename
-operator|++
-expr_stmt|;
-else|else
-name|basename
-operator|=
-name|lowered_name
 expr_stmt|;
 while|while
 condition|(
@@ -1295,13 +1160,7 @@ operator|=
 name|errno
 expr_stmt|;
 return|return
-operator|(
-operator|(
-name|FILE_BUFFER
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
 comment|/* Otherwise, try to load the file. */
@@ -1316,6 +1175,9 @@ name|filesize
 argument_list|,
 operator|&
 name|finfo
+argument_list|,
+operator|&
+name|compressed
 argument_list|)
 expr_stmt|;
 if|if
@@ -1324,13 +1186,7 @@ operator|!
 name|contents
 condition|)
 return|return
-operator|(
-operator|(
-name|FILE_BUFFER
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 comment|/* The file was found, and can be read.  Allocate FILE_BUFFER and fill      in the various members. */
 name|file_buffer
@@ -1376,15 +1232,7 @@ name|contents
 expr_stmt|;
 if|if
 condition|(
-name|file_buffer
-operator|->
-name|filesize
-operator|!=
-name|file_buffer
-operator|->
-name|finfo
-operator|.
-name|st_size
+name|compressed
 condition|)
 name|file_buffer
 operator|->
@@ -1403,12 +1251,13 @@ name|file_buffer
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|file_buffer
-operator|)
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Grovel FILE_BUFFER->contents finding tags and nodes, and filling in the    various slots.  This can also be used to rebuild a tag or node table. */
@@ -1891,6 +1740,11 @@ name|TAG
 modifier|*
 name|entry
 decl_stmt|;
+name|int
+name|anchor
+init|=
+literal|0
+decl_stmt|;
 comment|/* Skip past the characters just found. */
 name|binding
 operator|.
@@ -1934,6 +1788,36 @@ argument_list|,
 name|nodeline
 argument_list|)
 expr_stmt|;
+comment|/* No Node:.  Maybe it's a Ref:.  */
+if|if
+condition|(
+name|start
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|start
+operator|=
+name|string_in_line
+argument_list|(
+name|INFO_REF_LABEL
+argument_list|,
+name|nodeline
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|start
+operator|!=
+operator|-
+literal|1
+condition|)
+name|anchor
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* If not there, this is not the start of a node. */
 if|if
 condition|(
@@ -1967,13 +1851,9 @@ argument_list|,
 name|DONT_SKIP_NEWLINES
 argument_list|)
 expr_stmt|;
-comment|/* Okay, we have isolated the node name, and we know where the          node starts.  Remember this information in a NODE structure. */
+comment|/* Okay, we have isolated the node name, and we know where the          node starts.  Remember this information. */
 name|entry
 operator|=
-operator|(
-name|TAG
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -1986,10 +1866,6 @@ name|entry
 operator|->
 name|nodename
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 literal|1
@@ -2025,7 +1901,7 @@ operator|-
 name|start
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 name|entry
 operator|->
@@ -2033,6 +1909,17 @@ name|nodestart
 operator|=
 name|nodestart
 expr_stmt|;
+if|if
+condition|(
+name|anchor
+condition|)
+name|entry
+operator|->
+name|nodelen
+operator|=
+literal|0
+expr_stmt|;
+else|else
 block|{
 name|SEARCH_BINDING
 name|node_body
@@ -2133,7 +2020,6 @@ modifier|*
 name|binding
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2141,7 +2027,7 @@ name|char
 modifier|*
 name|body
 decl_stmt|;
-comment|/* From the Info-RFC file:      [A node] ends with either a ^_, a ^L, or the end of file. */
+comment|/* [A node] ends with either a ^_, a ^L, or end of file.  */
 for|for
 control|(
 name|i
@@ -2185,16 +2071,11 @@ condition|)
 break|break;
 block|}
 return|return
-operator|(
-operator|(
-name|long
-operator|)
 name|i
 operator|-
 name|binding
 operator|->
 name|start
-operator|)
 return|;
 block|}
 end_function
@@ -2222,11 +2103,7 @@ name|buffer_binding
 decl_stmt|;
 block|{
 name|int
-name|offset
-decl_stmt|,
-name|tags_index
-init|=
-literal|0
+name|name_offset
 decl_stmt|;
 name|SEARCH_BINDING
 modifier|*
@@ -2234,6 +2111,11 @@ name|search
 decl_stmt|;
 name|long
 name|position
+decl_stmt|;
+name|int
+name|tags_index
+init|=
+literal|0
 decl_stmt|;
 name|search
 operator|=
@@ -2321,6 +2203,14 @@ name|char
 modifier|*
 name|nodedef
 decl_stmt|;
+name|unsigned
+name|p
+decl_stmt|;
+name|int
+name|anchor
+init|=
+literal|0
+decl_stmt|;
 comment|/* Prepare to skip this line. */
 name|search
 operator|->
@@ -2348,7 +2238,7 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* Find the label preceding the node name. */
-name|offset
+name|name_offset
 operator|=
 name|string_in_line
 argument_list|(
@@ -2363,21 +2253,67 @@ operator|->
 name|start
 argument_list|)
 expr_stmt|;
-comment|/* If not there, not a defining line, so we must be out of the          tags table. */
+comment|/* If no node label, maybe it's an anchor.  */
 if|if
 condition|(
-name|offset
+name|name_offset
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|name_offset
+operator|=
+name|string_in_line
+argument_list|(
+name|INFO_REF_LABEL
+argument_list|,
+name|search
+operator|->
+name|buffer
+operator|+
+name|search
+operator|->
+name|start
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name_offset
+operator|!=
+operator|-
+literal|1
+condition|)
+name|anchor
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* If not there, not a defining line, so we must be out of the          tags table.  */
+if|if
+condition|(
+name|name_offset
 operator|==
 operator|-
 literal|1
 condition|)
 break|break;
-comment|/* Point to the beginning of the node definition. */
+name|entry
+operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|TAG
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Find the beginning of the node definition. */
 name|search
 operator|->
 name|start
 operator|+=
-name|offset
+name|name_offset
 expr_stmt|;
 name|nodedef
 operator|=
@@ -2396,30 +2332,26 @@ argument_list|(
 name|nodedef
 argument_list|)
 expr_stmt|;
-comment|/* Move past the node's name. */
+comment|/* Move past the node's name in this tag to the TAGSEP character. */
 for|for
 control|(
-name|offset
+name|p
 operator|=
 literal|0
 init|;
-operator|(
 name|nodedef
 index|[
-name|offset
+name|p
 index|]
-operator|)
 operator|&&
-operator|(
 name|nodedef
 index|[
-name|offset
+name|p
 index|]
 operator|!=
 name|INFO_TAGSEP
-operator|)
 condition|;
-name|offset
+name|p
 operator|++
 control|)
 empty_stmt|;
@@ -2427,39 +2359,21 @@ if|if
 condition|(
 name|nodedef
 index|[
-name|offset
+name|p
 index|]
 operator|!=
 name|INFO_TAGSEP
 condition|)
 continue|continue;
 name|entry
-operator|=
-operator|(
-name|TAG
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|TAG
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|entry
 operator|->
 name|nodename
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-literal|1
+name|p
 operator|+
-name|offset
+literal|1
 argument_list|)
 expr_stmt|;
 name|strncpy
@@ -2470,40 +2384,41 @@ name|nodename
 argument_list|,
 name|nodedef
 argument_list|,
-name|offset
+name|p
 argument_list|)
 expr_stmt|;
 name|entry
 operator|->
 name|nodename
 index|[
-name|offset
+name|p
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
-name|offset
+name|p
 operator|++
 expr_stmt|;
 name|entry
 operator|->
 name|nodestart
 operator|=
-operator|(
-name|long
-operator|)
 name|atol
 argument_list|(
 name|nodedef
 operator|+
-name|offset
+name|p
 argument_list|)
 expr_stmt|;
-comment|/* We don't know the length of this node yet. */
+comment|/* If a node, we don't know the length yet, but if it's an          anchor, the length is 0. */
 name|entry
 operator|->
 name|nodelen
 operator|=
+name|anchor
+condition|?
+literal|0
+else|:
 operator|-
 literal|1
 expr_stmt|;
@@ -2547,7 +2462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* A structure used only in get_tags_of_indirect_tags_table () to hold onto    an intermediate value. */
+comment|/* A structure used only in `get_tags_of_indirect_tags_table' to hold onto    an intermediate value. */
 end_comment
 
 begin_typedef
@@ -2596,7 +2511,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2605,11 +2519,6 @@ modifier|*
 modifier|*
 name|subfiles
 init|=
-operator|(
-name|SUBFILE
-operator|*
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 name|int
@@ -2749,7 +2658,7 @@ operator|-
 literal|1
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 name|subfile
 operator|->
@@ -2808,7 +2717,6 @@ return|return;
 block|}
 else|else
 block|{
-specifier|register
 name|int
 name|tags_index
 decl_stmt|;
@@ -2871,44 +2779,69 @@ block|{
 name|char
 modifier|*
 name|containing_dir
-decl_stmt|,
-modifier|*
-name|temp
-decl_stmt|;
-name|int
-name|len_containing_dir
-decl_stmt|;
-name|containing_dir
-operator|=
+init|=
 name|xstrdup
 argument_list|(
 name|file_buffer
 operator|->
 name|fullpath
 argument_list|)
-expr_stmt|;
-name|temp
-operator|=
-operator|(
+decl_stmt|;
 name|char
-operator|*
-operator|)
-name|strrchr
+modifier|*
+name|temp
+init|=
+name|filename_non_directory
 argument_list|(
 name|containing_dir
-argument_list|,
-literal|'/'
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|int
+name|len_containing_dir
+decl_stmt|;
 if|if
 condition|(
 name|temp
+operator|>
+name|containing_dir
 condition|)
+block|{
+if|if
+condition|(
+name|HAVE_DRIVE
+argument_list|(
+name|file_buffer
+operator|->
+name|fullpath
+argument_list|)
+operator|&&
+name|temp
+operator|==
+name|containing_dir
+operator|+
+literal|2
+condition|)
+block|{
+comment|/* Avoid converting "d:foo" into "d:/foo" below.  */
 operator|*
 name|temp
 operator|=
-literal|'\0'
+literal|'.'
 expr_stmt|;
+name|temp
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+name|temp
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|len_containing_dir
 operator|=
 name|strlen
@@ -3030,10 +2963,6 @@ index|[
 name|i
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|free
@@ -3146,11 +3075,6 @@ name|file_buffer
 operator|->
 name|subfiles
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|free_file_buffer_tags
@@ -3192,13 +3116,6 @@ operator|->
 name|nodestart
 operator|+=
 name|header_length
-expr_stmt|;
-name|entry
-operator|->
-name|nodelen
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 block|}
 comment|/* We have successfully built the tags table.  Remember that it          was indirect. */
@@ -3253,7 +3170,221 @@ block|}
 end_block
 
 begin_comment
-comment|/* Return the node from FILE_BUFFER which matches NODENAME by searching    the tags table in FILE_BUFFER.  If the node could not be found, return    a NULL pointer. */
+comment|/* Return the node that contains TAG in FILE_BUFFER, else    (pathologically) NULL.  Called from info_node_of_file_buffer_tags.  */
+end_comment
+
+begin_function
+specifier|static
+name|NODE
+modifier|*
+name|find_node_of_anchor
+parameter_list|(
+name|file_buffer
+parameter_list|,
+name|tag
+parameter_list|)
+name|FILE_BUFFER
+modifier|*
+name|file_buffer
+decl_stmt|;
+name|TAG
+modifier|*
+name|tag
+decl_stmt|;
+block|{
+name|int
+name|anchor_pos
+decl_stmt|,
+name|node_pos
+decl_stmt|;
+name|TAG
+modifier|*
+name|node_tag
+decl_stmt|;
+name|NODE
+modifier|*
+name|node
+decl_stmt|;
+comment|/* Look through the tag list for the anchor.  */
+for|for
+control|(
+name|anchor_pos
+operator|=
+literal|0
+init|;
+name|file_buffer
+operator|->
+name|tags
+index|[
+name|anchor_pos
+index|]
+condition|;
+name|anchor_pos
+operator|++
+control|)
+block|{
+name|TAG
+modifier|*
+name|t
+init|=
+name|file_buffer
+operator|->
+name|tags
+index|[
+name|anchor_pos
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|nodestart
+operator|==
+name|tag
+operator|->
+name|nodestart
+condition|)
+break|break;
+block|}
+comment|/* Should not happen, because we should always find the anchor.  */
+if|if
+condition|(
+operator|!
+name|file_buffer
+operator|->
+name|tags
+index|[
+name|anchor_pos
+index|]
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* We've found the anchor.  Look backwards in the tag table for the      preceding node (we're assuming the tags are given in order),      skipping over any preceding anchors.  */
+for|for
+control|(
+name|node_pos
+operator|=
+name|anchor_pos
+operator|-
+literal|1
+init|;
+name|node_pos
+operator|>=
+literal|0
+operator|&&
+name|file_buffer
+operator|->
+name|tags
+index|[
+name|node_pos
+index|]
+operator|->
+name|nodelen
+operator|==
+literal|0
+condition|;
+name|node_pos
+operator|--
+control|)
+empty_stmt|;
+comment|/* An info file with an anchor before any nodes is pathological, but      it's possible, so don't crash.  */
+if|if
+condition|(
+name|node_pos
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* We have the tag for the node that contained the anchor tag.  */
+name|node_tag
+operator|=
+name|file_buffer
+operator|->
+name|tags
+index|[
+name|node_pos
+index|]
+expr_stmt|;
+comment|/* Look up the node name in the tag table to get the actual node.      This is a recursive call, but it can't recurse again, because we      call it with a real node.  */
+name|node
+operator|=
+name|info_node_of_file_buffer_tags
+argument_list|(
+name|file_buffer
+argument_list|,
+name|node_tag
+operator|->
+name|nodename
+argument_list|)
+expr_stmt|;
+comment|/* Start displaying the node at the anchor position.  */
+if|if
+condition|(
+name|node
+condition|)
+block|{
+comment|/* The nodestart for real nodes is three characters before the `F'          in the `File:' line (a newline, the CTRL-_, and another          newline).  The nodestart for anchors is the actual position.          But we offset by only 2, rather than 3, because if an anchor is          at the beginning of a paragraph, it's nicer for it to end up on          the beginning of the first line of the paragraph rather than          the blank line before it.  (makeinfo has no way of knowing that          a paragraph is going to start, so we can't fix it there.)  */
+name|node
+operator|->
+name|display_pos
+operator|=
+name|file_buffer
+operator|->
+name|tags
+index|[
+name|anchor_pos
+index|]
+operator|->
+name|nodestart
+operator|-
+operator|(
+name|node_tag
+operator|->
+name|nodestart
+operator|+
+literal|2
+operator|)
+expr_stmt|;
+comment|/* Otherwise an anchor at the end of a node ends up displaying at          the end of the last line of the node (way over on the right of          the screen), which looks wrong.  */
+if|if
+condition|(
+name|node
+operator|->
+name|display_pos
+operator|>=
+name|node
+operator|->
+name|nodelen
+condition|)
+name|node
+operator|->
+name|display_pos
+operator|=
+name|node
+operator|->
+name|nodelen
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Don't search in the node for the xref text, it's not there.  */
+name|node
+operator|->
+name|flags
+operator||=
+name|N_FromAnchor
+expr_stmt|;
+block|}
+return|return
+name|node
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Return the node from FILE_BUFFER which matches NODENAME by searching    the tags table in FILE_BUFFER, or NULL.  */
 end_comment
 
 begin_function
@@ -3275,13 +3406,12 @@ modifier|*
 name|nodename
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|TAG
 modifier|*
 name|tag
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 for|for
 control|(
@@ -3338,13 +3468,7 @@ operator|!
 name|subfile
 condition|)
 return|return
-operator|(
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 if|if
 condition|(
@@ -3367,13 +3491,7 @@ operator|->
 name|contents
 condition|)
 return|return
-operator|(
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
 comment|/* If we were able to find this file and load it, then return            the node within it. */
@@ -3381,13 +3499,7 @@ block|{
 name|NODE
 modifier|*
 name|node
-decl_stmt|;
-name|node
-operator|=
-operator|(
-name|NODE
-operator|*
-operator|)
+init|=
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -3395,16 +3507,20 @@ argument_list|(
 name|NODE
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|node
 operator|->
 name|filename
 operator|=
-operator|(
 name|subfile
 operator|->
 name|fullpath
-operator|)
+expr_stmt|;
+name|node
+operator|->
+name|parent
+operator|=
+name|NULL
 expr_stmt|;
 name|node
 operator|->
@@ -3428,19 +3544,15 @@ name|nodestart
 expr_stmt|;
 name|node
 operator|->
-name|flags
+name|display_pos
 operator|=
 literal|0
 expr_stmt|;
 name|node
 operator|->
-name|parent
+name|flags
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3567,7 +3679,7 @@ name|tag
 operator|->
 name|nodestart
 expr_stmt|;
-comment|/* NODE_SEP gets the address of the separator which defines                  this node, or (char *)NULL if the node wasn't found.                  NODE->contents is side-effected to point to right after                  the separator. */
+comment|/* NODE_SEP gets the address of the separator which defines                  this node, or NULL if the node wasn't found.                  NODE->contents is side-effected to point to right after                  the separator. */
 name|node_sep
 operator|=
 name|adjust_nodestart
@@ -3583,10 +3695,6 @@ if|if
 condition|(
 name|node_sep
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -3596,13 +3704,7 @@ name|node
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
 comment|/* Readjust tag->nodestart. */
@@ -3667,6 +3769,40 @@ operator|&
 name|node_body
 argument_list|)
 expr_stmt|;
+name|node
+operator|->
+name|nodelen
+operator|=
+name|tag
+operator|->
+name|nodelen
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tag
+operator|->
+name|nodelen
+operator|==
+literal|0
+condition|)
+comment|/* anchor, return containing node */
+block|{
+name|free
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|find_node_of_anchor
+argument_list|(
+name|file_buffer
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3682,7 +3818,6 @@ operator|->
 name|contents
 argument_list|)
 expr_stmt|;
-block|}
 name|node
 operator|->
 name|nodelen
@@ -3691,22 +3826,15 @@ name|tag
 operator|->
 name|nodelen
 expr_stmt|;
+block|}
 return|return
-operator|(
 name|node
-operator|)
 return|;
 block|}
 block|}
 comment|/* There was a tag table for this file, and the node wasn't found.      Return NULL, since this file doesn't contain the desired node. */
 return|return
-operator|(
-operator|(
-name|NODE
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 block|}
 end_function
@@ -3715,23 +3843,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*              Managing file_buffers, nodes, and tags.             */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
+comment|/* Managing file_buffers, nodes, and tags.  */
 end_comment
 
 begin_comment
@@ -3747,13 +3859,7 @@ block|{
 name|FILE_BUFFER
 modifier|*
 name|file_buffer
-decl_stmt|;
-name|file_buffer
-operator|=
-operator|(
-name|FILE_BUFFER
-operator|*
-operator|)
+init|=
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -3761,7 +3867,7 @@ argument_list|(
 name|FILE_BUFFER
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|file_buffer
 operator|->
 name|filename
@@ -3770,42 +3876,24 @@ name|file_buffer
 operator|->
 name|fullpath
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|file_buffer
 operator|->
 name|contents
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|file_buffer
 operator|->
 name|tags
 operator|=
-operator|(
-name|TAG
-operator|*
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|file_buffer
 operator|->
 name|subfiles
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|file_buffer
@@ -3821,9 +3909,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
 name|file_buffer
-operator|)
 return|;
 block|}
 end_function
@@ -3899,7 +3985,6 @@ modifier|*
 name|filename
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3919,22 +4004,19 @@ name|i
 operator|=
 literal|0
 init|;
-operator|(
 name|file_buffer
 operator|=
 name|info_loaded_files
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++
 control|)
 if|if
 condition|(
-operator|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|filename
 argument_list|,
@@ -3944,10 +4026,8 @@ name|filename
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|||
-operator|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|filename
 argument_list|,
@@ -3957,7 +4037,6 @@ name|fullpath
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|free
@@ -3987,15 +4066,23 @@ operator|->
 name|contents
 argument_list|)
 expr_stmt|;
-comment|/* Note that free_file_buffer_tags () also kills the subfiles            list, since the subfiles list is only of use in conjunction            with tags. */
+comment|/* free_file_buffer_tags () also kills the subfiles list, since            the subfiles list is only of use in conjunction with tags. */
 name|free_file_buffer_tags
 argument_list|(
 name|file_buffer
 argument_list|)
 expr_stmt|;
+comment|/* Move rest of list down.  */
 while|while
 condition|(
-operator|(
+name|info_loaded_files
+index|[
+name|i
+operator|+
+literal|1
+index|]
+condition|)
+block|{
 name|info_loaded_files
 index|[
 name|i
@@ -4003,12 +4090,22 @@ index|]
 operator|=
 name|info_loaded_files
 index|[
+name|i
+operator|+
+literal|1
+index|]
+expr_stmt|;
+name|i
 operator|++
+expr_stmt|;
+block|}
+name|info_loaded_files
+index|[
 name|i
 index|]
-operator|)
-condition|)
-empty_stmt|;
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -4030,7 +4127,6 @@ modifier|*
 name|file_buffer
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4041,7 +4137,6 @@ operator|->
 name|tags
 condition|)
 block|{
-specifier|register
 name|TAG
 modifier|*
 name|tag
@@ -4082,11 +4177,6 @@ name|file_buffer
 operator|->
 name|tags
 operator|=
-operator|(
-name|TAG
-operator|*
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|file_buffer
@@ -4140,11 +4230,6 @@ name|file_buffer
 operator|->
 name|subfiles
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 block|}
@@ -4199,6 +4284,9 @@ modifier|*
 name|fb
 decl_stmt|;
 block|{
+name|int
+name|is_compressed
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -4248,24 +4336,14 @@ name|fb
 operator|->
 name|finfo
 operator|)
+argument_list|,
+operator|&
+name|is_compressed
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fb
-operator|->
-name|filesize
-operator|!=
-call|(
-name|long
-call|)
-argument_list|(
-name|fb
-operator|->
-name|finfo
-operator|.
-name|st_size
-argument_list|)
+name|is_compressed
 condition|)
 name|fb
 operator|->
@@ -4491,13 +4569,11 @@ operator|=
 name|nodestart
 expr_stmt|;
 return|return
-operator|(
 name|node_body
 operator|.
 name|buffer
 operator|+
 name|position
-operator|)
 return|;
 block|}
 block|}
@@ -4555,13 +4631,7 @@ operator|-
 literal|1
 condition|)
 return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
 comment|/* Otherwise, the node was found, but the tags table could need updating      (if we used a tag to get here, that is).  Set the flag in NODE->flags. */
 name|node
@@ -4600,13 +4670,11 @@ operator||=
 name|N_UpdateTags
 expr_stmt|;
 return|return
-operator|(
 name|node_body
 operator|.
 name|buffer
 operator|+
 name|position
-operator|)
 return|;
 block|}
 end_function

@@ -111,11 +111,27 @@ literal|"Scroll forward in this window"
 block|}
 block|,
 block|{
+name|info_scroll_forward_set_window
+block|,
+literal|"scroll-forward-set-window"
+block|,
+literal|"Scroll forward in this window and set default window size"
+block|}
+block|,
+block|{
 name|info_scroll_backward
 block|,
 literal|"scroll-backward"
 block|,
 literal|"Scroll backward in this window"
+block|}
+block|,
+block|{
+name|info_scroll_backward_set_window
+block|,
+literal|"scroll-backward-set-window"
+block|,
+literal|"Scroll backward in this window and set default window size"
 block|}
 block|,
 block|{
@@ -132,6 +148,38 @@ block|,
 literal|"end-of-node"
 block|,
 literal|"Move to the end of this node"
+block|}
+block|,
+block|{
+name|info_down_line
+block|,
+literal|"down-line"
+block|,
+literal|"Scroll down by lines"
+block|}
+block|,
+block|{
+name|info_up_line
+block|,
+literal|"up-line"
+block|,
+literal|"Scroll up by lines"
+block|}
+block|,
+block|{
+name|info_scroll_half_screen_down
+block|,
+literal|"scroll-half-screen-down"
+block|,
+literal|"Scroll down by half screen size"
+block|}
+block|,
+block|{
+name|info_scroll_half_screen_up
+block|,
+literal|"scroll-half-screen-up"
+block|,
+literal|"Scroll up by half screen size"
 block|}
 block|,
 block|{
@@ -183,6 +231,14 @@ literal|"Scroll the other window"
 block|}
 block|,
 block|{
+name|info_scroll_other_window_backward
+block|,
+literal|"scroll-other-window-backward"
+block|,
+literal|"Scroll the other window backward"
+block|}
+block|,
+block|{
 name|info_grow_window
 block|,
 literal|"grow-window"
@@ -211,7 +267,7 @@ name|info_next_node
 block|,
 literal|"next-node"
 block|,
-literal|"Select the `Next' node"
+literal|"Select the Next node"
 block|}
 block|,
 block|{
@@ -219,7 +275,7 @@ name|info_prev_node
 block|,
 literal|"prev-node"
 block|,
-literal|"Select the `Prev' node"
+literal|"Select the Prev node"
 block|}
 block|,
 block|{
@@ -227,7 +283,7 @@ name|info_up_node
 block|,
 literal|"up-node"
 block|,
-literal|"Select the `Up' node"
+literal|"Select the Up node"
 block|}
 block|,
 block|{
@@ -303,6 +359,22 @@ literal|"Read a node name and select it"
 block|}
 block|,
 block|{
+name|info_menu_sequence
+block|,
+literal|"menu-sequence"
+block|,
+literal|"Read a list of menus starting from dir and follow them"
+block|}
+block|,
+block|{
+name|info_goto_invocation_node
+block|,
+literal|"goto-invocation-node"
+block|,
+literal|"Find the node describing program invocation"
+block|}
+block|,
+block|{
 name|info_man
 block|,
 literal|"man"
@@ -359,11 +431,43 @@ literal|"Pipe the contents of this node through INFO_PRINT_COMMAND"
 block|}
 block|,
 block|{
+name|info_search_case_sensitively
+block|,
+literal|"search-case-sensitively"
+block|,
+literal|"Read a string and search for it case-sensitively"
+block|}
+block|,
+block|{
 name|info_search
 block|,
 literal|"search"
 block|,
 literal|"Read a string and search for it"
+block|}
+block|,
+block|{
+name|info_search_backward
+block|,
+literal|"search-backward"
+block|,
+literal|"Read a string and search backward for it"
+block|}
+block|,
+block|{
+name|info_search_next
+block|,
+literal|"search-next"
+block|,
+literal|"Repeat last search in the same direction"
+block|}
+block|,
+block|{
+name|info_search_previous
+block|,
+literal|"search-previous"
+block|,
+literal|"Repeat last search in the reverse direction"
 block|}
 block|,
 block|{
@@ -419,7 +523,7 @@ name|info_move_to_window_line
 block|,
 literal|"move-to-window-line"
 block|,
-literal|"Move to the cursor to a specific line of the window"
+literal|"Move the cursor to a specific line of the window"
 block|}
 block|,
 block|{
