@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.5 (Berkeley) %G%"
+literal|"@(#)init.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2978,13 +2978,15 @@ condition|(
 operator|(
 name|session_db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|NULL
 argument_list|,
 name|O_RDWR
 argument_list|,
 literal|0
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
@@ -3087,7 +3089,7 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 condition|)
 name|emergency
