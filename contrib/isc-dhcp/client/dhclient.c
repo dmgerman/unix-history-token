@@ -19,7 +19,7 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.44.2.37 1999/04/24 16:55:19 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.44.2.39 1999/06/22 13:36:46 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"dhcpd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"version.h"
 end_include
 
 begin_decl_stmt
@@ -256,7 +262,7 @@ name|char
 name|message
 index|[]
 init|=
-literal|"Internet Software Consortium DHCP Client V2.0b1pl27"
+literal|"Internet Software Consortium DHCP Client"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,7 +353,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|strchr
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -761,7 +767,11 @@ condition|)
 block|{
 name|note
 argument_list|(
+literal|"%s %s"
+argument_list|,
 name|message
+argument_list|,
+name|DHCP_VERSION
 argument_list|)
 expr_stmt|;
 name|note
@@ -1212,14 +1222,14 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"Usage: %s [-c] [-p<port>] [-lf lease-file]"
+literal|"Usage: %s [-D] [-d] [-p<port>] [-lf lease-file]"
 argument_list|,
 name|appname
 argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"       [-pf pidfile] [-1] [interface]"
+literal|"       [-pf pidfile] [-q] [-1] [interface]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5289,7 +5299,7 @@ condition|)
 block|{
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|note
