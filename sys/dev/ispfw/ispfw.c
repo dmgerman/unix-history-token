@@ -104,6 +104,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_PRODUCT_QLOGIC_ISP10160
+value|0x1016
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_PRODUCT_QLOGIC_ISP12160
 value|0x1216
 end_define
@@ -475,6 +482,9 @@ operator|=
 name|isp_1080_risc_code
 expr_stmt|;
 break|break;
+case|case
+name|PCI_PRODUCT_QLOGIC_ISP10160
+case|:
 case|case
 name|PCI_PRODUCT_QLOGIC_ISP12160
 case|:
