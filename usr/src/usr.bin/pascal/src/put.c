@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.26 %G%"
+literal|"@(#)put.c 1.24 8/19/83"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -55,11 +66,10 @@ directive|include
 file|"align.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-endif|PC
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|short
@@ -69,6 +79,11 @@ init|=
 name|obuf
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * If DEBUG is defined, include the table  * of the printing opcode names.  */
@@ -99,6 +114,10 @@ end_ifdef
 
 begin_comment
 comment|/*  * Put is responsible for the interpreter equivalent of code  * generation.  Since the interpreter is specifically designed  * for Pascal, little work is required here.  */
+end_comment
+
+begin_comment
+comment|/*VARARGS*/
 end_comment
 
 begin_macro
@@ -142,8 +161,6 @@ decl_stmt|,
 name|op
 decl_stmt|,
 name|oldlc
-decl_stmt|,
-name|w
 decl_stmt|;
 name|char
 modifier|*
@@ -156,8 +173,12 @@ decl_stmt|;
 comment|/* 	 * It would be nice to do some more 	 * optimizations here.  The work 	 * done to collapse offsets in lval 	 * should be done here, the IFEQ etc 	 * relational operators could be used 	 * etc. 	 */
 name|oldlc
 operator|=
+operator|(
+name|int
+operator|)
 name|lc
 expr_stmt|;
+comment|/* its either this or change put to return a char * */
 if|if
 condition|(
 operator|!
@@ -622,11 +643,17 @@ name|short
 modifier|*
 name|sp
 init|=
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
 operator|&
 name|p
 index|[
 literal|1
 index|]
+operator|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1781,10 +1808,17 @@ name|nl
 modifier|*
 name|next
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ
 specifier|register
 name|int
 name|oldlc
-decl_stmt|,
+decl_stmt|;
+endif|#
+directive|endif
+specifier|register
+name|int
 name|len
 decl_stmt|;
 specifier|register
@@ -1850,8 +1884,15 @@ directive|ifdef
 name|OBJ
 name|oldlc
 operator|=
+operator|(
+name|int
+operator|)
 name|lc
 expr_stmt|;
+comment|/* same problem as put */
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -1868,6 +1909,9 @@ index|[
 name|NL_ELABEL
 index|]
 operator|=
+operator|(
+name|int
+operator|)
 name|lc
 expr_stmt|;
 endif|#
@@ -1895,11 +1939,21 @@ index|[
 name|NL_ELABEL
 index|]
 operator|=
+operator|(
+name|int
+operator|)
 name|getlab
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putlab
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ap
 operator|->
 name|value
@@ -1939,6 +1993,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -1983,6 +2040,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -2040,6 +2100,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -2175,6 +2238,9 @@ argument_list|)
 expr_stmt|;
 name|word
 argument_list|(
+operator|(
+name|int
+operator|)
 name|w
 argument_list|)
 expr_stmt|;
@@ -2187,6 +2253,9 @@ do|;
 comment|/* jump over the mess */
 name|patch
 argument_list|(
+operator|(
+name|PTR_DCL
+operator|)
 name|oldlc
 argument_list|)
 expr_stmt|;
@@ -2298,26 +2367,25 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|getnext
-argument_list|(
-argument|next
-argument_list|,
-argument|new
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|next
+parameter_list|,
+name|new
+parameter_list|)
 name|struct
 name|nl
 modifier|*
 name|next
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|new
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2344,7 +2412,7 @@ if|if
 condition|(
 name|next
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 return|return
 operator|(
@@ -2426,11 +2494,7 @@ operator|!
 name|CGENNING
 condition|)
 comment|/* 		 * code disabled - do nothing 		 */
-return|return
-operator|(
-name|lc
-operator|)
-return|;
+return|return;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2527,11 +2591,7 @@ operator|!
 name|CGENNING
 condition|)
 comment|/* 		 * code disabled - do nothing 		 */
-return|return
-operator|(
-name|lc
-operator|)
-return|;
+return|return;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2620,6 +2680,9 @@ directive|endif
 endif|DEC11
 name|word
 argument_list|(
+operator|(
+name|int
+operator|)
 name|w
 argument_list|)
 expr_stmt|;
@@ -2680,6 +2743,9 @@ expr_stmt|;
 block|}
 name|word
 argument_list|(
+operator|(
+name|int
+operator|)
 name|w
 argument_list|)
 expr_stmt|;
@@ -2834,6 +2900,12 @@ directive|endif
 endif|OBJ
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
 begin_macro
 name|lenstr
 argument_list|(
@@ -2900,6 +2972,11 @@ return|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_escape
 end_escape
 
@@ -2913,6 +2990,12 @@ argument_list|(
 argument|loc
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|PTR_DCL
+name|loc
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2943,8 +3026,15 @@ endif|OBJ
 ifdef|#
 directive|ifdef
 name|PC
+operator|(
+name|void
+operator|)
 name|putlab
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|loc
 argument_list|)
 expr_stmt|;
@@ -2966,6 +3056,12 @@ argument_list|(
 argument|loc
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|PTR_DCL
+name|loc
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3026,6 +3122,11 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
+specifier|extern
+name|long
+name|lseek
+parameter_list|()
+function_decl|;
 name|short
 name|val
 decl_stmt|;
@@ -3145,6 +3246,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|ofil
@@ -3163,12 +3267,21 @@ name|write
 argument_list|(
 name|ofil
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 operator|&
 name|val
+operator|)
 argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|ofil
@@ -3304,6 +3417,10 @@ name|write
 argument_list|(
 name|ofil
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|obuf
 argument_list|,
 name|i
@@ -3338,12 +3455,11 @@ begin_comment
 comment|/*  * Getlab - returns the location counter.  * included here for the eventual code generator.  *	for PC, thank you!  */
 end_comment
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|getlab
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
@@ -3365,6 +3481,10 @@ name|lastlabel
 decl_stmt|;
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|++
 name|lastlabel
 operator|)
@@ -3373,26 +3493,23 @@ endif|#
 directive|endif
 endif|PC
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Putlab - lay down a label.  *	for PC, just print the label name with a colon after it.  */
 end_comment
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|putlab
-argument_list|(
-argument|l
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
+parameter_list|(
+name|l
+parameter_list|)
+name|char
+modifier|*
 name|l
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -3403,8 +3520,14 @@ name|PREFIXFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|LABELPREFIX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|l
 argument_list|)
 expr_stmt|;
@@ -3424,7 +3547,7 @@ name|l
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
