@@ -69,7 +69,7 @@ value|ACPI_BUS
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"RESOURCE"
 argument_list|)
@@ -116,32 +116,35 @@ name|void
 modifier|*
 name|context
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Special-case some devices that abuse _PRS/_CRS to mean      * something other than "I consume this resource".      *      * XXX do we really need this?  It's only relevant once      *     we start always-allocating these resources, and even      *     then, the only special-cased device is likely to be      *     the PCI interrupt link.      */
 comment|/*      * Fetch the device's current resources.      */
+name|buf
+operator|.
+name|Length
+operator|=
+name|ACPI_ALLOCATE_BUFFER
+expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 operator|(
 name|status
 operator|=
-name|acpi_GetIntoBuffer
+name|AcpiGetCurrentResources
 argument_list|(
 name|handle
-argument_list|,
-name|AcpiGetCurrentResources
 argument_list|,
 operator|&
 name|buf
 argument_list|)
 operator|)
-operator|!=
-name|AE_OK
-operator|)
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1030,7 +1033,7 @@ name|Address32
 operator|.
 name|ProducerConsumer
 operator|!=
-name|CONSUMER
+name|ACPI_CONSUMER
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1049,7 +1052,7 @@ name|Address32
 operator|.
 name|ResourceType
 operator|==
-name|IO_RANGE
+name|ACPI_IO_RANGE
 operator|)
 condition|?
 literal|"IO"
@@ -1071,7 +1074,7 @@ name|Address32
 operator|.
 name|ResourceType
 operator|!=
-name|MEMORY_RANGE
+name|ACPI_MEMORY_RANGE
 operator|)
 operator|||
 operator|(
@@ -1083,7 +1086,7 @@ name|Address32
 operator|.
 name|ResourceType
 operator|!=
-name|IO_RANGE
+name|ACPI_IO_RANGE
 operator|)
 condition|)
 block|{
@@ -1109,7 +1112,7 @@ name|Address32
 operator|.
 name|MinAddressFixed
 operator|==
-name|ADDRESS_FIXED
+name|ACPI_ADDRESS_FIXED
 operator|)
 operator|&&
 operator|(
@@ -1121,7 +1124,7 @@ name|Address32
 operator|.
 name|MaxAddressFixed
 operator|==
-name|ADDRESS_FIXED
+name|ACPI_ADDRESS_FIXED
 operator|)
 condition|)
 block|{
@@ -1135,7 +1138,7 @@ name|Address32
 operator|.
 name|ResourceType
 operator|==
-name|MEMORY_RANGE
+name|ACPI_MEMORY_RANGE
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1255,7 +1258,7 @@ name|Address32
 operator|.
 name|ResourceType
 operator|==
-name|MEMORY_RANGE
+name|ACPI_MEMORY_RANGE
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1438,7 +1441,7 @@ name|Address16
 operator|.
 name|ProducerConsumer
 operator|!=
-name|CONSUMER
+name|ACPI_CONSUMER
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1457,7 +1460,7 @@ name|Address16
 operator|.
 name|ResourceType
 operator|==
-name|IO_RANGE
+name|ACPI_IO_RANGE
 operator|)
 condition|?
 literal|"IO"
@@ -1479,7 +1482,7 @@ name|Address16
 operator|.
 name|ResourceType
 operator|!=
-name|MEMORY_RANGE
+name|ACPI_MEMORY_RANGE
 operator|)
 operator|||
 operator|(
@@ -1491,7 +1494,7 @@ name|Address16
 operator|.
 name|ResourceType
 operator|!=
-name|IO_RANGE
+name|ACPI_IO_RANGE
 operator|)
 condition|)
 block|{
@@ -1517,7 +1520,7 @@ name|Address16
 operator|.
 name|MinAddressFixed
 operator|==
-name|ADDRESS_FIXED
+name|ACPI_ADDRESS_FIXED
 operator|)
 operator|&&
 operator|(
@@ -1529,7 +1532,7 @@ name|Address16
 operator|.
 name|MaxAddressFixed
 operator|==
-name|ADDRESS_FIXED
+name|ACPI_ADDRESS_FIXED
 operator|)
 condition|)
 block|{
@@ -1543,7 +1546,7 @@ name|Address16
 operator|.
 name|ResourceType
 operator|==
-name|MEMORY_RANGE
+name|ACPI_MEMORY_RANGE
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1663,7 +1666,7 @@ name|Address16
 operator|.
 name|ResourceType
 operator|==
-name|MEMORY_RANGE
+name|ACPI_MEMORY_RANGE
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
