@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.12	%G%	*/
+comment|/*	dz.c	4.13	%G%	*/
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ value|{ register int j = i; while (--j> 0); }
 end_define
 
 begin_comment
-comment|/*  *  DZ-11 Driver  */
+comment|/*  *  DZ-11 Driver  *  * This driver mimics dh.c; see it for explanation of common code.  */
 end_comment
 
 begin_include
@@ -115,6 +115,10 @@ directive|include
 file|"../h/mx.h"
 end_include
 
+begin_comment
+comment|/*  * Driver information for auto-configuration stuff.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|dzcntrlr
@@ -180,6 +184,14 @@ name|NDZ
 value|(NDZ11*8)
 end_define
 
+begin_comment
+comment|/*  * Registers and bits  */
+end_comment
+
+begin_comment
+comment|/* Bits in dzlpr */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -215,10 +227,39 @@ name|OPAR
 value|0200
 end_define
 
+begin_comment
+comment|/* Bits in dzrbuf */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|CLR
+name|DZ_PE
+value|010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DZ_FE
+value|020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DZ_DO
+value|040000
+end_define
+
+begin_comment
+comment|/* Bits in dzcsr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DZ_CLR
 value|020
 end_define
 
@@ -229,7 +270,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MSE
+name|DZ_MSE
 value|040
 end_define
 
@@ -240,7 +281,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RIE
+name|DZ_RIE
 value|0100
 end_define
 
@@ -251,7 +292,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SAE
+name|DZ_SAE
 value|010000
 end_define
 
@@ -262,7 +303,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIE
+name|DZ_TIE
 value|040000
 end_define
 
@@ -274,89 +315,39 @@ begin_define
 define|#
 directive|define
 name|DZ_IEN
-value|(MSE+RIE+TIE+SAE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PERROR
-value|010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRERROR
-value|020000
-end_define
-
-begin_define
-define|#
-directive|define
-name|OVERRUN
-value|040000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSPEED
-value|7
+value|(DZ_MSE+DZ_RIE+DZ_TIE+DZ_SAE)
 end_define
 
 begin_comment
-comment|/* std speed = 300 baud */
+comment|/* Flags for modem-control */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|dzlpr
-value|dzrbuf
-end_define
-
-begin_define
-define|#
-directive|define
-name|dzmsr
-value|dzbrk
-end_define
-
-begin_define
-define|#
-directive|define
-name|ON
+name|DZ_ON
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|OFF
+name|DZ_OFF
 value|0
 end_define
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|dzstart
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|dzxint
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|dzdma
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -398,24 +389,71 @@ block|{
 name|short
 name|dzcsr
 decl_stmt|;
+comment|/* control-status register */
 name|short
 name|dzrbuf
 decl_stmt|;
+comment|/* receiver buffer */
+define|#
+directive|define
+name|dzlpr
+value|dzrbuf
+comment|/* line parameter reg is write of dzrbuf */
 name|char
 name|dztcr
 decl_stmt|;
+comment|/* transmit control register */
 name|char
 name|dzdtr
 decl_stmt|;
+comment|/* data terminal ready */
 name|char
 name|dztbuf
 decl_stmt|;
+comment|/* transmit buffer */
 name|char
 name|dzbrk
 decl_stmt|;
+comment|/* break control */
+define|#
+directive|define
+name|dzmsr
+value|dzbrk
+comment|/* modem status register */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Software copy of dzbrk since it isn't readable  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|dz_brk
+index|[
+name|NDZ11
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * The dz doesn't interrupt on carrier transitions, so  * we have to use a timer to watch it.  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|dz_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timer started? */
+end_comment
+
+begin_comment
+comment|/*  * Pdma structures for fast output code  */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -424,12 +462,6 @@ name|dzpdma
 index|[
 name|NDZ
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|dz_timer
 decl_stmt|;
 end_decl_stmt
 
@@ -471,15 +503,6 @@ literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|dz_brk
-index|[
-name|NDZ11
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -531,9 +554,9 @@ name|dzaddr
 operator|->
 name|dzcsr
 operator|=
-name|TIE
+name|DZ_TIE
 operator||
-name|MSE
+name|DZ_MSE
 expr_stmt|;
 name|dzaddr
 operator|->
@@ -551,7 +574,7 @@ name|dzaddr
 operator|->
 name|dzcsr
 operator|=
-name|CLR
+name|DZ_CLR
 expr_stmt|;
 comment|/* reset everything */
 if|if
@@ -573,6 +596,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Called by auto-configure to initialize good dz's;  * set up pdma structures.  */
+end_comment
 
 begin_expr_stmt
 name|dzslave
@@ -636,9 +663,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|cnt
-decl_stmt|;
-name|caddr_t
-name|cp
 decl_stmt|;
 for|for
 control|(
@@ -791,7 +815,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-literal|60
+name|HZ
 argument_list|)
 expr_stmt|;
 block|}
@@ -878,7 +902,7 @@ name|tp
 operator|->
 name|t_ispeed
 operator|=
-name|SSPEED
+name|B300
 expr_stmt|;
 name|tp
 operator|->
@@ -890,7 +914,7 @@ name|EVENP
 operator||
 name|ECHO
 expr_stmt|;
-comment|/*tp->t_state |= HUPCLS;*/
+comment|/* tp->t_state |= HUPCLS; */
 name|dzparam
 argument_list|(
 name|unit
@@ -928,7 +952,7 @@ name|dzmodem
 argument_list|(
 name|unit
 argument_list|,
-name|ON
+name|DZ_ON
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1122,7 +1146,7 @@ name|dzmodem
 argument_list|(
 name|unit
 argument_list|,
-name|OFF
+name|DZ_OFF
 argument_list|)
 expr_stmt|;
 name|ttyclose
@@ -1388,9 +1412,8 @@ if|if
 condition|(
 name|c
 operator|&
-name|FRERROR
+name|DZ_FE
 condition|)
-comment|/* framing error = break */
 if|if
 condition|(
 name|tp
@@ -1403,7 +1426,6 @@ name|c
 operator|=
 literal|0
 expr_stmt|;
-comment|/* null for getty */
 else|else
 name|c
 operator|=
@@ -1415,7 +1437,7 @@ if|if
 condition|(
 name|c
 operator|&
-name|OVERRUN
+name|DZ_DO
 condition|)
 name|printf
 argument_list|(
@@ -1426,9 +1448,8 @@ if|if
 condition|(
 name|c
 operator|&
-name|PERROR
+name|DZ_PE
 condition|)
-comment|/* parity error */
 if|if
 condition|(
 operator|(
@@ -1715,7 +1736,7 @@ name|dzmodem
 argument_list|(
 name|unit
 argument_list|,
-name|ON
+name|DZ_ON
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1726,7 +1747,7 @@ name|dzmodem
 argument_list|(
 name|unit
 argument_list|,
-name|OFF
+name|DZ_OFF
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1818,7 +1839,7 @@ name|dzmodem
 argument_list|(
 name|unit
 argument_list|,
-name|OFF
+name|DZ_OFF
 argument_list|)
 expr_stmt|;
 comment|/* hang up line */
@@ -1896,13 +1917,12 @@ name|tp
 operator|->
 name|t_ispeed
 operator|==
-literal|3
+name|B110
 condition|)
 name|lpr
 operator||=
 name|TWOSB
 expr_stmt|;
-comment|/* 110 baud: 2 stop bits */
 name|dzaddr
 operator|->
 name|dzlpr
@@ -1941,6 +1961,7 @@ operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
+comment|/* block pdma interrupts */
 name|dp
 operator|=
 operator|(
@@ -2280,7 +2301,7 @@ argument_list|,
 operator|(
 name|cc
 operator|&
-literal|0177
+literal|0x7f
 operator|)
 operator|+
 literal|6
@@ -2340,6 +2361,7 @@ operator|&
 literal|07
 operator|)
 expr_stmt|;
+comment|/* force intr */
 name|out
 label|:
 name|splx
@@ -2493,7 +2515,7 @@ if|if
 condition|(
 name|flag
 operator|==
-name|OFF
+name|DZ_OFF
 condition|)
 name|dzaddr
 operator|->
@@ -2880,7 +2902,7 @@ name|dzmodem
 argument_list|(
 name|unit
 argument_list|,
-name|ON
+name|DZ_ON
 argument_list|)
 expr_stmt|;
 name|tp

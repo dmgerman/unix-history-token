@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.9	%G%	*/
+comment|/*	uba.c	4.10	%G%	*/
 end_comment
 
 begin_include
@@ -1472,6 +1472,8 @@ name|uba
 operator|->
 name|uba_fmer
 argument_list|,
+literal|4
+operator|*
 name|uba
 operator|->
 name|uba_fubar

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.5	81/02/16	*/
+comment|/*	autoconf.c	4.6	81/02/17	*/
 end_comment
 
 begin_comment
@@ -1767,7 +1767,6 @@ operator|&=
 operator|~
 literal|0xc00
 expr_stmt|;
-asm|asm("halt");
 block|}
 end_block
 
