@@ -3344,11 +3344,6 @@ argument_list|(
 name|dialog
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
