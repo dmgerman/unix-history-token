@@ -482,12 +482,6 @@ name|td
 parameter_list|)
 block|{
 name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|struct
@@ -596,11 +590,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -622,12 +611,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -669,11 +652,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -723,11 +701,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -761,7 +734,7 @@ directive|define
 name|COMMON_START
 parameter_list|()
 define|\
-value|TCPDEBUG0;						\ 	do {							\ 		if (inirw == INI_READ)				\ 			INP_INFO_RLOCK(&tcbinfo);		\ 		else if (inirw == INI_WRITE)			\ 			INP_INFO_WLOCK(&tcbinfo);		\ 		inp = sotoinpcb(so);				\ 		if (inp == 0) {					\ 			if (inirw == INI_READ)			\ 				INP_INFO_RUNLOCK(&tcbinfo);	\ 			else if (inirw == INI_WRITE)		\ 				INP_INFO_WUNLOCK(&tcbinfo);	\ 			splx(s);				\ 			return EINVAL;				\ 		}						\ 		INP_LOCK(inp);					\ 		if (inirw == INI_READ)				\ 			INP_INFO_RUNLOCK(&tcbinfo);		\ 		tp = intotcpcb(inp);				\ 		TCPDEBUG1();					\ } while(0)
+value|TCPDEBUG0;						\ 	do {							\ 		if (inirw == INI_READ)				\ 			INP_INFO_RLOCK(&tcbinfo);		\ 		else if (inirw == INI_WRITE)			\ 			INP_INFO_WLOCK(&tcbinfo);		\ 		inp = sotoinpcb(so);				\ 		if (inp == 0) {					\ 			if (inirw == INI_READ)			\ 				INP_INFO_RUNLOCK(&tcbinfo);	\ 			else if (inirw == INI_WRITE)		\ 				INP_INFO_WUNLOCK(&tcbinfo);	\ 			return EINVAL;				\ 		}						\ 		INP_LOCK(inp);					\ 		if (inirw == INI_READ)				\ 			INP_INFO_RUNLOCK(&tcbinfo);		\ 		tp = intotcpcb(inp);				\ 		TCPDEBUG1();					\ } while(0)
 end_define
 
 begin_define
@@ -772,7 +745,7 @@ parameter_list|(
 name|req
 parameter_list|)
 define|\
-value|out:	TCPDEBUG2(req);						\ 	do {							\ 		if (tp)						\ 			INP_UNLOCK(inp);			\ 		if (inirw == INI_WRITE)				\ 			INP_INFO_WUNLOCK(&tcbinfo);		\ 		splx(s);					\ 		return error;					\ 		goto out;					\ } while(0)
+value|out:	TCPDEBUG2(req);						\ 	do {							\ 		if (tp)						\ 			INP_UNLOCK(inp);			\ 		if (inirw == INI_WRITE)				\ 			INP_INFO_WUNLOCK(&tcbinfo);		\ 		return error;					\ 		goto out;					\ } while(0)
 end_define
 
 begin_comment
@@ -800,12 +773,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -942,12 +909,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -1186,12 +1147,6 @@ name|td
 parameter_list|)
 block|{
 name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -1283,12 +1238,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -1420,12 +1369,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -1596,12 +1539,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -1854,12 +1791,6 @@ name|so
 parameter_list|)
 block|{
 name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -1920,9 +1851,6 @@ name|nam
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -1969,11 +1897,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -1997,11 +1920,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2060,11 +1978,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -2111,9 +2024,6 @@ modifier|*
 name|nam
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -2170,11 +2080,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -2199,11 +2104,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2289,11 +2189,6 @@ condition|)
 name|INP_UNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2436,12 +2331,6 @@ name|so
 parameter_list|)
 block|{
 name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -2514,12 +2403,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -2595,12 +2478,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -3093,12 +2970,6 @@ name|so
 parameter_list|)
 block|{
 name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -3162,12 +3033,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -4397,8 +4262,6 @@ decl_stmt|,
 name|opt
 decl_stmt|,
 name|optval
-decl_stmt|,
-name|s
 decl_stmt|;
 name|struct
 name|inpcb
@@ -4414,12 +4277,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -4444,11 +4301,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -4514,11 +4366,6 @@ argument_list|(
 name|so
 argument_list|,
 name|sopt
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -4903,11 +4750,6 @@ block|}
 name|INP_UNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
