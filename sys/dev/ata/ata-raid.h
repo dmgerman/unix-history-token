@@ -507,7 +507,7 @@ name|PR_MAGIC0
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_int64_t)x.device->channel->unit<< 48) | \ 			((u_int64_t)(x.device->unit != 0)<< 56)
+value|(x.device ? ((u_int64_t)x.device->channel->unit<<48) | \ 			((u_int64_t)(x.device->unit != 0)<< 56) : 0)
 name|u_int16_t
 name|magic_1
 decl_stmt|;
