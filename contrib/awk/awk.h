@@ -4,7 +4,7 @@ comment|/*  * awk.h -- Definitions for gawk.   */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2001 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -102,6 +102,161 @@ include|#
 directive|include
 file|<setjmp.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_LIBINTL_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ENABLE_NLS
+argument_list|)
+operator|&&
+name|ENABLE_NLS
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libintl.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! (HAVE_LOCALE_H&& defined(ENABLE_NLS)&& ENABLE_LS> 0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|gettext
+parameter_list|(
+name|msgid
+parameter_list|)
+value|(msgid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|gettext_noop
+parameter_list|(
+name|msgid
+parameter_list|)
+value|msgid
+end_define
+
+begin_define
+define|#
+directive|define
+name|dgettext
+parameter_list|(
+name|domain
+parameter_list|,
+name|msgid
+parameter_list|)
+value|(msgid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dcgettext
+parameter_list|(
+name|domain
+parameter_list|,
+name|msgid
+parameter_list|,
+name|cat
+parameter_list|)
+value|(msgid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bindtextdomain
+parameter_list|(
+name|domain
+parameter_list|,
+name|directory
+parameter_list|)
+value|(directory)
+end_define
+
+begin_define
+define|#
+directive|define
+name|textdomain
+parameter_list|(
+name|package
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCALEDIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOCALEDIR
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCALEDIR */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! (HAVE_LOCALE_H&& defined(ENABLE_NLS)&& ENABLE_LS> 0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|msgid
+parameter_list|)
+value|gettext(msgid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_
+parameter_list|(
+name|msgid
+parameter_list|)
+value|msgid
+end_define
 
 begin_ifdef
 ifdef|#
@@ -269,7 +424,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|ISASCII
+name|IN_CTYPE_DOMAIN
 parameter_list|(
 name|c
 parameter_list|)
@@ -284,11 +439,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|ISASCII
+name|IN_CTYPE_DOMAIN
 parameter_list|(
 name|c
 parameter_list|)
-value|isascii(c)
+value|isascii((unsigned char) c)
 end_define
 
 begin_endif
@@ -309,7 +464,7 @@ name|ISBLANK
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII(c)&& isblank(c))
+value|(IN_CTYPE_DOMAIN(c)&& isblank((unsigned char) c))
 end_define
 
 begin_else
@@ -345,7 +500,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII(c)&& isgraph(c))
+value|(IN_CTYPE_DOMAIN(c)&& isgraph((unsigned char) c))
 end_define
 
 begin_else
@@ -360,7 +515,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII(c)&& isprint(c)&& !isspace(c))
+value|(IN_CTYPE_DOMAIN(c)&& isprint((unsigned char) c)&& !isspace((unsigned char) c))
 end_define
 
 begin_endif
@@ -375,7 +530,7 @@ name|ISPRINT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isprint (c))
+value|(IN_CTYPE_DOMAIN (c)&& isprint ((unsigned char) c))
 end_define
 
 begin_define
@@ -385,7 +540,7 @@ name|ISDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isdigit (c))
+value|(IN_CTYPE_DOMAIN (c)&& isdigit ((unsigned char) c))
 end_define
 
 begin_define
@@ -395,7 +550,7 @@ name|ISALNUM
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isalnum (c))
+value|(IN_CTYPE_DOMAIN (c)&& isalnum ((unsigned char) c))
 end_define
 
 begin_define
@@ -405,7 +560,7 @@ name|ISALPHA
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isalpha (c))
+value|(IN_CTYPE_DOMAIN (c)&& isalpha ((unsigned char) c))
 end_define
 
 begin_define
@@ -415,7 +570,7 @@ name|ISCNTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& iscntrl (c))
+value|(IN_CTYPE_DOMAIN (c)&& iscntrl ((unsigned char) c))
 end_define
 
 begin_define
@@ -425,7 +580,7 @@ name|ISLOWER
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& islower (c))
+value|(IN_CTYPE_DOMAIN (c)&& islower ((unsigned char) c))
 end_define
 
 begin_define
@@ -435,7 +590,7 @@ name|ISPUNCT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& ispunct (c))
+value|(IN_CTYPE_DOMAIN (c)&& ispunct (unsigned char) (c))
 end_define
 
 begin_define
@@ -445,7 +600,7 @@ name|ISSPACE
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isspace (c))
+value|(IN_CTYPE_DOMAIN (c)&& isspace ((unsigned char) c))
 end_define
 
 begin_define
@@ -455,7 +610,7 @@ name|ISUPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isupper (c))
+value|(IN_CTYPE_DOMAIN (c)&& isupper ((unsigned char) c))
 end_define
 
 begin_define
@@ -465,7 +620,27 @@ name|ISXDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isxdigit (c))
+value|(IN_CTYPE_DOMAIN (c)&& isxdigit ((unsigned char) c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOUPPER
+parameter_list|(
+name|c
+parameter_list|)
+value|toupper((unsigned char) c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOLOWER
+parameter_list|(
+name|c
+parameter_list|)
+value|tolower((unsigned char) c)
 end_define
 
 begin_ifdef
@@ -538,29 +713,11 @@ begin_comment
 comment|/* not __STDC__ */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|VMS
-argument_list|)
-operator|||
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|VAXC
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__DECC
-argument_list|)
-operator|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -580,13 +737,13 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VMS w/ VAXC or DECC */
+comment|/* VMS */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<types.h>
+file|<stddef.h>
 end_include
 
 begin_include
@@ -605,34 +762,13 @@ begin_comment
 comment|/* avoid<fcntl.h> in io.c */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DECC
-end_ifdef
-
-begin_comment
-comment|/* DEC C implies DECC$SHR, which doesn't have the %g problem of VAXCRTL */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|GFMT_WORKAROUND
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* VMS w/ VAXC or DECC */
+comment|/* VMS */
 end_comment
 
 begin_ifdef
@@ -832,6 +968,79 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OS2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TANDEM
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|variable
+value|variabl
+end_define
+
+begin_define
+define|#
+directive|define
+name|open
+parameter_list|(
+name|name
+parameter_list|,
+name|how
+parameter_list|,
+name|mode
+parameter_list|)
+value|open(name, how)
+end_define
+
+begin_comment
+comment|/* !!! ANSI C !!! */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|HAVE_UNISTD_H
 end_if
 
@@ -889,36 +1098,18 @@ begin_comment
 comment|/* not HAVE_DOPRNT */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 name|you
 name|lose
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* not HAVE_DOPRNT */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* HAVE_VPRINTF */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|HAVE_SETLOCALE
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|setlocale
@@ -927,20 +1118,29 @@ name|locale
 parameter_list|,
 name|val
 parameter_list|)
-end_define
-
-begin_comment
 comment|/* nothing */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* HAVE_SETLOCALE */
-end_comment
+comment|/* use this as lintwarn("...")    this is a hack but it gives us the right semantics */
+define|#
+directive|define
+name|lintwarn
+value|(*(set_loc(__FILE__, __LINE__),lintfunc))
+specifier|extern
+name|void
+name|set_prof_file
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|filename
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -972,7 +1172,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"atari/redirect.h"
+file|"unsupported/atari/redirect.h"
 end_include
 
 begin_endif
@@ -1111,6 +1311,36 @@ end_endif
 begin_comment
 comment|/* GNU_REGEX */
 end_comment
+
+begin_comment
+comment|/* Stuff for losing systems. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STRTOD_NOT_C89
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|double
+name|gawk_strtod
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|strtod
+value|gawk_strtod
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ------------------ Constants, Structures, Typedefs  ------------------ */
@@ -1429,6 +1659,9 @@ comment|/* subnode is where to redirect */
 name|Node_redirect_input
 block|,
 comment|/* subnode is where to redirect */
+name|Node_redirect_twoway
+block|,
+comment|/* subnode is where to redirect */
 comment|/* Variables */
 name|Node_var
 block|,
@@ -1445,7 +1678,7 @@ block|,
 comment|/* 	 * pattern: conditional ',' conditional ;  lnode of Node_line_range 	 * is the two conditionals (Node_cond_pair), other word (rnode place) 	 * is a flag indicating whether or not this range has been entered. 	 */
 name|Node_line_range
 block|,
-comment|/* 	 * boolean test of membership in array lnode is string-valued 	 * expression rnode is array name  	 */
+comment|/* 	 * boolean test of membership in array 	 * lnode is string-valued, expression rnode is array name  	 */
 name|Node_in_array
 block|,
 name|Node_func
@@ -1469,28 +1702,34 @@ comment|/* an array element */
 name|Node_array_ref
 block|,
 comment|/* array passed by ref as parameter */
-name|Node_NF
+name|Node_BINMODE
 block|,
 comment|/* variables recognized in the grammar */
-name|Node_NR
+name|Node_CONVFMT
+block|,
+name|Node_FIELDWIDTHS
 block|,
 name|Node_FNR
 block|,
 name|Node_FS
 block|,
-name|Node_RS
-block|,
-name|Node_FIELDWIDTHS
-block|,
 name|Node_IGNORECASE
+block|,
+name|Node_LINT
+block|,
+name|Node_NF
+block|,
+name|Node_NR
+block|,
+name|Node_OFMT
 block|,
 name|Node_OFS
 block|,
 name|Node_ORS
 block|,
-name|Node_OFMT
+name|Node_RS
 block|,
-name|Node_CONVFMT
+name|Node_TEXTDOMAIN
 block|,
 name|Node_final
 comment|/* sentry value, not legal */
@@ -1576,6 +1815,11 @@ name|extra
 decl_stmt|;
 name|long
 name|xl
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|param_list
 decl_stmt|;
 block|}
 name|x
@@ -1768,11 +2012,28 @@ directive|define
 name|FIELD
 value|2048
 comment|/* this is a field */
+define|#
+directive|define
+name|INTLSTR
+value|4096
+comment|/* use localized version */
+define|#
+directive|define
+name|UNINITIALIZED
+value|8192
+comment|/* value used before set */
 name|char
 modifier|*
 name|vname
 decl_stmt|;
-comment|/* variable's name */
+ifndef|#
+directive|ifndef
+name|NO_PROFILING
+name|long
+name|exec_count
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|NODE
 typedef|;
@@ -1830,6 +2091,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|parmlist
+value|sub.nodep.x.param_list
+end_define
+
+begin_define
+define|#
+directive|define
 name|subnode
 value|lnode
 end_define
@@ -1839,6 +2107,13 @@ define|#
 directive|define
 name|proc
 value|sub.nodep.r.pptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|callresult
+value|sub.nodep.x.extra
 end_define
 
 begin_define
@@ -1963,6 +2238,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|printf_count
+value|sub.nodep.x.xl
+end_define
+
+begin_define
+define|#
+directive|define
 name|condpair
 value|lnode
 end_define
@@ -1999,33 +2281,6 @@ block|}
 name|FOR_LOOP_HEADER
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* for "for(iggy in foo) {" */
-end_comment
-
-begin_struct
-struct|struct
-name|search
-block|{
-name|NODE
-modifier|*
-name|sym
-decl_stmt|;
-name|size_t
-name|idx
-decl_stmt|;
-name|NODE
-modifier|*
-name|bucket
-decl_stmt|;
-name|NODE
-modifier|*
-name|retval
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* for faster input, bypass stdio */
@@ -2083,19 +2338,8 @@ name|IOP_NO_FREE
 value|4
 define|#
 directive|define
-name|IOP_MMAPPED
-value|8
-define|#
-directive|define
 name|IOP_NOFREE_OBJ
-value|16
-name|int
-function_decl|(
-modifier|*
-name|getrec
-function_decl|)
-parameter_list|()
-function_decl|;
+value|8
 block|}
 name|IOBUF
 typedef|;
@@ -2157,6 +2401,18 @@ define|#
 directive|define
 name|RED_EOF
 value|128
+define|#
+directive|define
+name|RED_TWOWAY
+value|256
+define|#
+directive|define
+name|RED_SOCKET
+value|512
+define|#
+directive|define
+name|RED_TCP
+value|1024
 name|char
 modifier|*
 name|value
@@ -2190,6 +2446,10 @@ name|redirect
 modifier|*
 name|next
 decl_stmt|;
+name|char
+modifier|*
+name|mode
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2216,6 +2476,25 @@ enum|;
 name|char
 modifier|*
 name|val
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* for debugging purposes */
+end_comment
+
+begin_struct
+struct|struct
+name|flagtab
+block|{
+name|int
+name|val
+decl_stmt|;
+name|char
+modifier|*
+name|name
 decl_stmt|;
 block|}
 struct|;
@@ -2351,6 +2630,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|BINMODE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|IGNORECASE
 decl_stmt|;
 end_decl_stmt
@@ -2424,7 +2710,18 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|TEXTDOMAIN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|NODE
+modifier|*
+name|BINMODE_node
+decl_stmt|,
 modifier|*
 name|CONVFMT_node
 decl_stmt|,
@@ -2487,6 +2784,23 @@ name|RT_node
 decl_stmt|,
 modifier|*
 name|SUBSEP_node
+decl_stmt|,
+modifier|*
+name|PROCINFO_node
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|LINT_node
+decl_stmt|,
+modifier|*
+name|ERRNO_node
+decl_stmt|,
+modifier|*
+name|TEXTDOMAIN_node
 decl_stmt|;
 end_decl_stmt
 
@@ -2617,6 +2931,34 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|do_intl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_non_decimal_data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_dump_vars
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_tidy_mem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|in_begin_rule
 decl_stmt|;
 end_decl_stmt
@@ -2708,7 +3050,7 @@ name|getnode
 parameter_list|(
 name|n
 parameter_list|)
-value|emalloc(n, NODE *, sizeof(NODE), "getnode")
+value|emalloc((n), NODE *, sizeof(NODE), "getnode"), (n)->flags = UNINITIALIZED, (n)-exec_count = 0;
 end_define
 
 begin_define
@@ -2740,6 +3082,12 @@ parameter_list|)
 value|if (nextfree) n = nextfree, nextfree = nextfree->nextp;\ 			else n = more_nodes()
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PROFILING
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -2747,8 +3095,36 @@ name|freenode
 parameter_list|(
 name|n
 parameter_list|)
-value|((n)->flags&= ~SCALAR, (n)->nextp = nextfree, nextfree = (n))
+value|((n)->flags = UNINITIALIZED,\ 		(n)->exec_count = 0, (n)->nextp = nextfree, nextfree = (n))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not PROFILING */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|freenode
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)->flags = UNINITIALIZED,\ 		(n)->nextp = nextfree, nextfree = (n))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not PROFILING */
+end_comment
 
 begin_endif
 endif|#
@@ -2762,7 +3138,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|MEMDEBUG
 end_ifdef
 
 begin_undef
@@ -2779,8 +3155,10 @@ parameter_list|(
 name|p
 parameter_list|,
 name|a
+parameter_list|,
+name|r
 parameter_list|)
-value|r_get_lhs((p), (a))
+value|r_get_lhs((p), (a), (r))
 end_define
 
 begin_define
@@ -2808,8 +3186,10 @@ parameter_list|(
 name|p
 parameter_list|,
 name|a
+parameter_list|,
+name|r
 parameter_list|)
-value|((p)->type == Node_var ? (&(p)->var_value) : \ 			r_get_lhs((p), (a)))
+value|((p)->type == Node_var&& \ 			 ((p)->flags& UNINITIALIZED) == 0&& (r) ? \ 			  (&(p)->var_value): \ 			 r_get_lhs((p), (a), (r)))
 end_define
 
 begin_if
@@ -2830,7 +3210,9 @@ parameter_list|,
 name|iscond
 parameter_list|)
 define|\
-value|({NODE * _t = (t);                 \ 			   if (_t == NULL)                 \ 			       _t = Nnull_string;          \ 			   else {                          \ 			       switch(_t->type) {          \ 			       case Node_val:              \ 				   break;                  \ 			       case Node_var:              \ 				   _t = _t->var_value;     \ 				   break;                  \ 			       default:                    \ 				   _t = r_tree_eval(_t, iscond);\ 				   break;                  \ 			       }                           \ 			   }                               \ 			   _t;})
+value|({NODE * _t = (t);                 \ 			   if (_t == NULL)                 \ 			       _t = Nnull_string;          \ 			   else {                          \ 			       switch(_t->type) {          \ 			       case Node_val:              \ 				   if (_t->flags&INTLSTR)  \ 					_t = r_force_string(_t); \ 				   break;                  \ 			       case Node_var:              \ 				   if ((_t->flags& UNINITIALIZED) == 0) { \ 				       _t = _t->var_value;     		   \ 				       break;                  		   \ 				   }					   \
+comment|/*FALLTHROUGH*/
+value|\ 			       default:                    \ 				   _t = r_tree_eval(_t, iscond);\ 				   break;                  \ 			       }                           \ 			   }                               \ 			   _t;})
 end_define
 
 begin_else
@@ -2847,7 +3229,7 @@ name|t
 parameter_list|,
 name|iscond
 parameter_list|)
-value|(_t = (t), _t == NULL ? Nnull_string : \ 			(_t->type == Node_param_list ? \ 			  r_tree_eval(_t, iscond) : \ 			(_t->type == Node_val ? _t : \ 			(_t->type == Node_var ? _t->var_value : \ 			  r_tree_eval(_t, iscond)))))
+value|(_t = (t), _t == NULL ? Nnull_string : \ 			(_t->type == Node_param_list ? \ 			  r_tree_eval(_t, iscond) : \ 			((_t->type == Node_val&& (_t->flags&INTLSTR)) ? \ 				r_force_string(_t) : \ 			(_t->type == Node_val ? _t : \ 			(_t->type == Node_var&& \ 			 (_t->flags& UNINITIALIZED) == 0 ? _t->var_value : \ 			 r_tree_eval(_t, iscond))))))
 end_define
 
 begin_endif
@@ -2865,7 +3247,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not DEBUG */
+comment|/* not MEMDEBUG */
 end_comment
 
 begin_define
@@ -2939,7 +3321,7 @@ define|#
 directive|define
 name|cant_happen
 parameter_list|()
-value|r_fatal("internal error line %d, file: %s", \ 				__LINE__, __FILE__);
+value|r_fatal("internal error line %d, file: %s", \ 				__LINE__, __FILE__)
 end_define
 
 begin_ifdef
@@ -3033,7 +3415,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|GAWKDEBUG
 end_ifdef
 
 begin_define
@@ -3056,7 +3438,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not DEBUG */
+comment|/* not GAWKDEBUG */
 end_comment
 
 begin_ifdef
@@ -3103,7 +3485,7 @@ name|force_string
 parameter_list|(
 name|s
 parameter_list|)
-value|({NODE *_ts = (s);\ 			  ((_ts->flags& STR)&& \ 			   (_ts->stfmt == -1 || _ts->stfmt == CONVFMTidx)) ?\ 			  _ts : r_force_string(_ts);})
+value|({NODE *_ts = (s);\ 			  ((_ts->flags& INTLSTR) ? \ 				r_force_string(_ts) : \ 			  ((_ts->flags& STR)&& \ 			   (_ts->stfmt == -1 || _ts->stfmt == CONVFMTidx)) ?\ 			  _ts : r_force_string(_ts));})
 end_define
 
 begin_else
@@ -3169,7 +3551,7 @@ name|force_string
 parameter_list|(
 name|s
 parameter_list|)
-value|(_t = (s),((_t->flags& STR)&& \ 				   (_t->stfmt == -1 || \ 				    _t->stfmt == CONVFMTidx))? \ 			 _t : r_force_string(_t))
+value|(_t = (s),(_t->flags& INTLSTR) ? \ 					r_force_string(_t) :\ 				((_t->flags& STR)&& \ 				 (_t->stfmt == -1 || \ 				 _t->stfmt == CONVFMTidx))? \ 			 _t : r_force_string(_t))
 end_define
 
 begin_endif
@@ -3187,7 +3569,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not DEBUG */
+comment|/* not GAWKDEBUG */
 end_comment
 
 begin_define
@@ -3321,6 +3703,9 @@ operator|,
 name|NODE
 operator|*
 name|subs
+operator|,
+name|int
+name|reference
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3366,42 +3751,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|assoc_scan
-name|P
-argument_list|(
-operator|(
-name|NODE
-operator|*
-name|symbol
-operator|,
-expr|struct
-name|search
-operator|*
-name|lookat
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|assoc_next
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|search
-operator|*
-name|lookat
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|NODE
 modifier|*
 name|assoc_dump
@@ -3432,8 +3781,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|do_asort
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* awktab.c */
+comment|/* awkgram.c */
 end_comment
 
 begin_decl_stmt
@@ -3547,6 +3912,68 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|dump_funcs
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dump_vars
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|fname
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|release_all_vars
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|getfname
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|()
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|NODE
 modifier|*
 name|stopme
@@ -3560,6 +3987,14 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|shadow_funcs
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* builtin.c */
@@ -3664,6 +4099,22 @@ specifier|extern
 name|NODE
 modifier|*
 name|do_log
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|do_mktime
 name|P
 argument_list|(
 operator|(
@@ -3996,11 +4447,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BITOPS
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|format_tree
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|NODE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -4114,29 +4582,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BITOPS */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BITOPS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NONDECDATA
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|AWKNUM
@@ -4155,14 +4600,37 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|do_dcgettext
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* defined(BITOPS) || defined(NONDECDATA) */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|do_bindtextdomain
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* eval.c */
@@ -4238,6 +4706,9 @@ operator|,
 name|Func_ptr
 operator|*
 name|assign
+operator|,
+name|int
+name|reference
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4257,6 +4728,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|set_OFS
 name|P
@@ -4269,6 +4741,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|set_ORS
 name|P
@@ -4281,6 +4754,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|set_OFMT
 name|P
@@ -4293,8 +4767,61 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|set_CONVFMT
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_BINMODE
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_LINT
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_TEXTDOMAIN
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|update_ERRNO
 name|P
 argument_list|(
 operator|(
@@ -4317,6 +4844,171 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|genflags2str
+name|P
+argument_list|(
+operator|(
+name|int
+name|flagval
+operator|,
+expr|struct
+name|flagtab
+operator|*
+name|tab
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|nodetype2str
+name|P
+argument_list|(
+operator|(
+name|NODETYPE
+name|type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|assign_val
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+operator|*
+name|lhs_p
+operator|,
+name|NODE
+operator|*
+name|rhs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PROFILING
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dump_fcall_stack
+name|P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+name|fp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ext.c */
+end_comment
+
+begin_decl_stmt
+name|NODE
+modifier|*
+name|do_ext
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DYNAMIC
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|make_builtin
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|NODE
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|(
+name|NODE
+operator|*
+argument_list|)
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|NODE
+modifier|*
+name|get_argument
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|set_value
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* field.c */
@@ -4539,6 +5231,93 @@ name|name
 operator|,
 name|int
 name|flag
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|os_close_on_exec
+name|P
+argument_list|(
+operator|(
+name|int
+name|fd
+operator|,
+specifier|const
+name|char
+operator|*
+name|name
+operator|,
+specifier|const
+name|char
+operator|*
+name|what
+operator|,
+specifier|const
+name|char
+operator|*
+name|dir
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|os_isdir
+name|P
+argument_list|(
+operator|(
+name|int
+name|fd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|os_is_setuid
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|os_setbinmode
+name|P
+argument_list|(
+operator|(
+name|int
+name|fd
+operator|,
+name|int
+name|mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|os_restore_mode
+name|P
+argument_list|(
+operator|(
+name|int
+name|fd
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4823,6 +5602,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|load_procinfo
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|arg_assign
@@ -4972,6 +5764,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern void (*lintfunc
+end_extern
+
+begin_expr_stmt
+unit|)
+name|P
+argument_list|(
+operator|(
+name|va_list
+name|va_alist
+operator|,
+operator|...
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_else
 else|#
 directive|else
@@ -5064,6 +5874,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|lintfunc
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+name|mesg
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -5109,6 +5936,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|lintfunc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -5118,6 +5956,132 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* profile.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_profiling
+name|P
+argument_list|(
+operator|(
+name|int
+operator|*
+name|flag
+operator|,
+specifier|const
+name|char
+operator|*
+name|def_file
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_profiling_signals
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_prof_file
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|filename
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dump_prog
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|begin
+operator|,
+name|NODE
+operator|*
+name|prog
+operator|,
+name|NODE
+operator|*
+name|end
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pp_func
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
+operator|,
+name|size_t
+name|namelen
+operator|,
+name|NODE
+operator|*
+name|f
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pp_string_fp
+name|P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+name|fp
+operator|,
+name|char
+operator|*
+name|str
+operator|,
+name|size_t
+name|namelen
+operator|,
+name|int
+name|delim
+operator|,
+name|int
+name|breaklines
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* node.c */
@@ -5182,6 +6146,22 @@ specifier|extern
 name|NODE
 modifier|*
 name|dupnode
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|n
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|copynode
 name|P
 argument_list|(
 operator|(
@@ -5270,7 +6250,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|MEMDEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -5481,9 +6461,62 @@ begin_comment
 comment|/* temporary */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|reisstring
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|text
+operator|,
+name|size_t
+name|len
+operator|,
+name|Regexp
+operator|*
+name|re
+operator|,
+name|char
+operator|*
+name|buf
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* strncasecmp.c */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BROKEN_STRNCASECMP
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|strcasecmp
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|s1
+operator|,
+specifier|const
+name|char
+operator|*
+name|s2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -5510,6 +6543,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -5529,7 +6567,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* atari/tmpnam.c */
+comment|/* unsupported/atari/tmpnam.c */
 end_comment
 
 begin_decl_stmt
@@ -5632,77 +6670,6 @@ directive|define
 name|STATIC
 value|static
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|C_ALLOCA
-end_ifdef
-
-begin_comment
-comment|/* The __hpux check is to avoid conflicts with bison's definition of    alloca() in awktab.c.*/
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-name|__STDC__
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__hpux
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|alloca
-name|P
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|alloca
-name|P
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
