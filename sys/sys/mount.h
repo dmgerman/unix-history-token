@@ -153,70 +153,16 @@ begin_comment
 comment|/* length of fs type name, including null */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|MNAMELEN
-value|80
+value|(88 - 2 * sizeof(long))
 end_define
 
 begin_comment
-comment|/* length of buffer for returned name */
+comment|/* size of on/from name bufs */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MNAMELEN
-value|72
-end_define
-
-begin_comment
-comment|/* length of buffer for returned name */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
