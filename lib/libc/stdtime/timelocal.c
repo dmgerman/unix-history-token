@@ -225,8 +225,8 @@ block|,
 comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, using locale's date format," anything goes. 	** Using just numbers (as here) makes Quakers happier; 	** it's also compatible with SVR4. 	*/
 literal|"%m/%d/%y"
 block|,
-comment|/* 	** c_fmt (ctime-compatible) 	** Note that 	**	"%a %b %d %H:%M:%S %Y" 	** is used by Solaris 2.3. 	*/
-literal|"%a %Ef %X %Y"
+comment|/* 	** c_fmt (ctime-compatible) 	** Not used, just compatibility placeholder. 	*/
+name|NULL
 block|,
 comment|/* am */
 literal|"AM"

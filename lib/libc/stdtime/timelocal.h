@@ -58,6 +58,7 @@ name|char
 modifier|*
 name|c_fmt
 decl_stmt|;
+comment|/* not used, just compatibility placeholder */
 specifier|const
 name|char
 modifier|*
