@@ -138,6 +138,16 @@ condition|(
 name|fp
 operator|->
 name|_lock
+operator|==
+name|NULL
+condition|)
+block|{ 	}
+elseif|else
+if|if
+condition|(
+name|fp
+operator|->
+name|_lock
 operator|->
 name|fl_owner
 operator|==
@@ -236,6 +246,16 @@ condition|(
 name|fp
 operator|->
 name|_lock
+operator|==
+name|NULL
+condition|)
+block|{ 	}
+elseif|else
+if|if
+condition|(
+name|fp
+operator|->
+name|_lock
 operator|->
 name|fl_owner
 operator|==
@@ -311,7 +331,17 @@ init|=
 name|_pthread_self
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|_lock
+operator|==
+name|NULL
+condition|)
+block|{ 	}
 comment|/* 	 * Check if this file is owned by the current thread: 	 */
+elseif|else
 if|if
 condition|(
 name|fp

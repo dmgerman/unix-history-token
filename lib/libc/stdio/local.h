@@ -604,7 +604,7 @@ name|fp
 parameter_list|,
 name|o
 parameter_list|)
-value|do {				\ 	if ((fp)->_extra->orientation == 0)		\ 		(fp)->_extra->orientation = (o);	\ } while (0)
+value|do {				\ 	if ((fp)->_extra != NULL&& (fp)->_extra->orientation == 0)		\ 		(fp)->_extra->orientation = (o);	\ } while (0)
 end_define
 
 end_unit
