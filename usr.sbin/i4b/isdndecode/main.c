@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	main.c - isdndecode main program file  *	-------------------------------------  *  *	$Id: main.c,v 1.12 1999/12/13 21:25:25 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:51:07 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	main.c - isdndecode main program file  *	-------------------------------------  *  *	$Id: main.c,v 1.13 2000/02/21 15:17:17 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Mon Feb 21 16:19:30 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -156,6 +156,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|xflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|enable_trace
+init|=
+name|TRACE_D_RX
+operator||
+name|TRACE_D_TX
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 name|outfilename
@@ -243,6 +261,179 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*---------------------------------------------------------------------------*  *	usage intructions  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"isdndecode - isdn4bsd package ISDN decoder for passive cards (%d.%d.%d)\n"
+argument_list|,
+name|VERSION
+argument_list|,
+name|REL
+argument_list|,
+name|STEP
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: isdntrace -a -b -d -f<file> -h -i -l -n<val> -o -p<file> -r -u<unit>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"                 -x -B -P -R<unit> -T<unit>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -a        analyzer mode ................................... (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -b        switch B channel trace on ....................... (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -d        switch D channel trace off ....................... (default on)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -f<file> write output to file filename ........... (default %s0)\n"
+argument_list|,
+name|DECODE_FILE_NAME
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -h        don't print header for each message ............. (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -i        print I.430 (layer 1) INFO signals .............. (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -l        don't decode low layer Q.921 messages ........... (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -o        don't write output to a file .................... (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -p<file> specify filename for -B and -P ........ (default %s0)\n"
+argument_list|,
+name|BIN_FILE_NAME
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -u<unit> specify controller unit number ............... (default unit 0)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -x        print packets with unknown protocoldiscriminator  (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -B        write binary trace data to file filename ........ (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -P        playback from binary trace data file ............ (default off)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -R<unit> analyze Rx controller unit number (for -a) ... (default unit %d)\n"
+argument_list|,
+name|RxUDEF
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -T<unit> analyze Tx controller unit number (for -a) ... (default unit %d)\n"
+argument_list|,
+name|TxUDEF
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	main  *---------------------------------------------------------------------------*/
 end_comment
 
@@ -293,13 +484,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|b
-decl_stmt|;
-name|int
-name|enable_trace
-init|=
-name|TRACE_D_RX
-operator||
-name|TRACE_D_TX
 decl_stmt|;
 name|char
 modifier|*
@@ -352,7 +536,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abdf:hiln:op:u:BPR:T:"
+literal|"abdf:hiln:op:u:xBPR:T:"
 argument_list|)
 operator|)
 operator|!=
@@ -482,6 +666,14 @@ name|MAX_CONTROLLERS
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|xflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1854,6 +2046,12 @@ case|case
 name|TRC_CH_I
 case|:
 comment|/* Layer 1 INFO's */
+if|if
+condition|(
+name|enable_trace
+operator|&
+name|TRACE_I
+condition|)
 name|layer1
 argument_list|(
 name|l1buf
@@ -1881,6 +2079,19 @@ argument_list|,
 name|print_q921
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|print_q921
+operator|==
+literal|0
+condition|)
+name|l2buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|n
 operator|-=
 name|cnt
@@ -1893,6 +2104,39 @@ if|if
 condition|(
 name|n
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|buf
+operator|!=
+literal|0x08
+operator|)
+operator|&&
+operator|(
+name|xflag
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|l2buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|l3buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
+block|}
 name|layer3
 argument_list|(
 name|l3buf
@@ -1904,6 +2148,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/* B-channel data */
@@ -3132,172 +3377,6 @@ name|lbuffer
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	usage intructions  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"isdndecode - isdn4bsd package ISDN decoder for passive cards (%d.%d.%d)\n"
-argument_list|,
-name|VERSION
-argument_list|,
-name|REL
-argument_list|,
-name|STEP
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: isdntrace -a -b -d -f<file> -h -i -l -n<val> -o -p<file> -r -u<unit>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"                 -B -P -R<unit> -T<unit>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -a        analyzer mode ................................... (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -b        switch B channel trace on ....................... (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -d        switch D channel trace off ....................... (default on)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -f<file> write output to file filename ............ (default %s0)\n"
-argument_list|,
-name|DECODE_FILE_NAME
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -h        don't print header for each message ............. (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -i        print I.430 (layer 1) INFO signals .............. (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -l        don't decode low layer Q.921 messages ........... (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -o        don't write output to a file .................... (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -p<file> specify filename for -B and -P ........ (default %s0)\n"
-argument_list|,
-name|BIN_FILE_NAME
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -u<unit> specify controller unit number ............... (default unit 0)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -B        write binary trace data to file filename ........ (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -P        playback from binary trace data file ............ (default off)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -R<unit> analyze Rx controller unit number (for -a) ... (default unit %d)\n"
-argument_list|,
-name|RxUDEF
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -T<unit> analyze Tx controller unit number (for -a) ... (default unit %d)\n"
-argument_list|,
-name|TxUDEF
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

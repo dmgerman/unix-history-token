@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main program entry  *	-------------------------------  *  *	$Id: main.c,v 1.49 1999/12/13 21:25:25 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:47:35 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main program entry  *	-------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Tue Jun  5 17:06:20 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -308,7 +308,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"                  process = 0x%04x, kernio = 0x%04x  ctrlstat = 0x%04x\n"
+literal|"                  process = 0x%04x, kernio = 0x%04x, ctrlstat = 0x%04x\n"
 argument_list|,
 name|DL_PROC
 argument_list|,
@@ -321,9 +321,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"                  rc-file = 0x%04x\n"
+literal|"                  rc-file = 0x%04x, budget = 0x%04x, valid    = 0x%04x\n"
 argument_list|,
 name|DL_RCCF
+argument_list|,
+name|DL_BDGT
+argument_list|,
+name|DL_VALID
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -500,7 +504,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bmc:d:fFlL:Pr:s:t:u:"
+literal|"mc:d:fFlL:Pr:s:t:u:"
 argument_list|)
 operator|)
 operator|!=
@@ -513,14 +517,6 @@ condition|(
 name|i
 condition|)
 block|{
-case|case
-literal|'b'
-case|:
-name|do_bell
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 ifdef|#
 directive|ifdef
 name|I4B_EXTERNAL_MONITOR
@@ -1313,6 +1309,12 @@ argument_list|(
 name|aliasfile
 argument_list|)
 expr_stmt|;
+comment|/* init holidays */
+name|init_holidays
+argument_list|(
+name|holidayfile
+argument_list|)
+expr_stmt|;
 comment|/* init remote monitoring */
 ifdef|#
 directive|ifdef
@@ -1427,6 +1429,14 @@ block|}
 block|}
 endif|#
 directive|endif
+name|starttime
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* get starttime */
 name|srandom
 argument_list|(
 literal|580403
@@ -2076,6 +2086,32 @@ init|=
 name|getch
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|ch
+operator|==
+name|ERR
+condition|)
+block|{
+name|log
+argument_list|(
+name|LL_ERR
+argument_list|,
+literal|"kbdrdhdl: ERROR, read error on controlling tty, errno = %d!"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|error_exit
+argument_list|(
+literal|1
+argument_list|,
+literal|"kbdrdhdl: ERROR, read error on controlling tty, errno = %d!"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|ch

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  *	$Id: isdnd.h,v 1.72 1999/12/13 21:25:24 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:46:50 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  * $FreeBSD$  *  *      last edit-date: [Wed May  2 09:34:44 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -392,6 +392,28 @@ begin_comment
 comment|/* messages related to isdnd.rc at boot	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DL_BDGT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* messages related to budgets		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DL_VALID
+value|0x0800
+end_define
+
+begin_comment
+comment|/* messages related to valid keyword	*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -627,7 +649,7 @@ begin_define
 define|#
 directive|define
 name|WMITEMS
-value|4
+value|6
 end_define
 
 begin_comment
@@ -669,8 +691,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|WQUIT
+name|WSHOW
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WBUDGET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WQUIT
+value|5
 end_define
 
 begin_define
@@ -1242,6 +1278,155 @@ define|#
 directive|define
 name|DIR_OUTONLY
 value|2
+name|int
+name|budget_callbackperiod
+decl_stmt|;
+comment|/* length of a budget period (s)*/
+name|int
+name|budget_callbackncalls
+decl_stmt|;
+comment|/* call budget for a period	*/
+name|char
+modifier|*
+name|budget_callbacks_file
+decl_stmt|;
+comment|/* filename to store callback stats */
+name|char
+name|budget_callbacksfile_rotate
+decl_stmt|;
+name|int
+name|budget_calloutperiod
+decl_stmt|;
+comment|/* length of a budget period (s)*/
+name|int
+name|budget_calloutncalls
+decl_stmt|;
+comment|/* call budget for a period	*/
+name|char
+modifier|*
+name|budget_callouts_file
+decl_stmt|;
+comment|/* filename to store callout stats */
+name|char
+name|budget_calloutsfile_rotate
+decl_stmt|;
+name|int
+name|ppp_expect_auth
+decl_stmt|;
+name|int
+name|ppp_send_auth
+decl_stmt|;
+define|#
+directive|define
+name|AUTH_UNDEF
+value|0
+define|#
+directive|define
+name|AUTH_NONE
+value|1
+define|#
+directive|define
+name|AUTH_PAP
+value|2
+define|#
+directive|define
+name|AUTH_CHAP
+value|3
+name|int
+name|ppp_auth_flags
+decl_stmt|;
+define|#
+directive|define
+name|AUTH_RECHALLENGE
+value|0x01
+define|#
+directive|define
+name|AUTH_REQUIRED
+value|0x02
+define|#
+directive|define
+name|AUTHNAMELEN
+value|32
+comment|/* AUTHNAMELEN must match in<machine/i4b_isppp.h> */
+define|#
+directive|define
+name|AUTHKEYLEN
+value|16
+name|char
+name|ppp_expect_name
+index|[
+name|AUTHNAMELEN
+index|]
+decl_stmt|;
+comment|/* PPP PAP/CHAP login name */
+name|char
+name|ppp_send_name
+index|[
+name|AUTHNAMELEN
+index|]
+decl_stmt|;
+name|char
+name|ppp_expect_password
+index|[
+name|AUTHKEYLEN
+index|]
+decl_stmt|;
+name|char
+name|ppp_send_password
+index|[
+name|AUTHKEYLEN
+index|]
+decl_stmt|;
+name|int
+name|day
+decl_stmt|;
+comment|/* days valid */
+define|#
+directive|define
+name|SU
+value|0x01
+define|#
+directive|define
+name|MO
+value|0x02
+define|#
+directive|define
+name|TU
+value|0x04
+define|#
+directive|define
+name|WE
+value|0x08
+define|#
+directive|define
+name|TH
+value|0x10
+define|#
+directive|define
+name|FR
+value|0x20
+define|#
+directive|define
+name|SA
+value|0x40
+define|#
+directive|define
+name|HD
+value|0x80
+comment|/* holiday */
+name|int
+name|fromhr
+decl_stmt|;
+comment|/* time valid */
+name|int
+name|frommin
+decl_stmt|;
+name|int
+name|tohr
+decl_stmt|;
+name|int
+name|tomin
+decl_stmt|;
 comment|/*===========================================================================*/
 comment|/*============ filled in after start, then dynamic ==========================*/
 comment|/*===========================================================================*/
@@ -1369,7 +1554,7 @@ directive|define
 name|N_STATES
 value|(ST_ILL+1)
 comment|/* max number of states               */
-name|int
+name|cause_t
 name|disc_cause
 decl_stmt|;
 comment|/* cause from disconnect */
@@ -1536,13 +1721,65 @@ index|[
 name|DISPLAY_MAX
 index|]
 decl_stmt|;
+name|time_t
+name|budget_callbackperiod_time
+decl_stmt|;
+comment|/* end of current period	*/
+name|int
+name|budget_callbackncalls_cnt
+decl_stmt|;
+comment|/* amount of calls left	*/
+name|int
+name|budget_callback_req
+decl_stmt|;
+comment|/* requests			*/
+name|int
+name|budget_callback_done
+decl_stmt|;
+comment|/* call done			*/
+name|int
+name|budget_callback_rej
+decl_stmt|;
+comment|/* call refused			*/
+name|time_t
+name|budget_calloutperiod_time
+decl_stmt|;
+comment|/* end of current period	*/
+name|int
+name|budget_calloutncalls_cnt
+decl_stmt|;
+comment|/* amount of calls left	*/
+name|int
+name|budget_callout_req
+decl_stmt|;
+comment|/* requests			*/
+name|int
+name|budget_callout_done
+decl_stmt|;
+comment|/* call done			*/
+name|int
+name|budget_callout_rej
+decl_stmt|;
+comment|/* call refused			*/
+name|int
+name|budget_calltype
+decl_stmt|;
+comment|/* type of call			*/
+define|#
+directive|define
+name|BUDGET_TYPE_CBACK
+value|1
+define|#
+directive|define
+name|BUDGET_TYPE_COUT
+value|2
 block|}
 name|cfg_entry_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	this struct describes state of controller with 2 b channels  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	this struct describes state of controller with MAX_BCHAN b channels  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_typedef
@@ -1562,6 +1799,11 @@ name|int
 name|protocol
 decl_stmt|;
 comment|/* ISDN D-channel protocol 	*/
+name|char
+modifier|*
+name|firmware
+decl_stmt|;
+comment|/* loadable fimrware file name 	*/
 name|int
 name|state
 decl_stmt|;
@@ -1576,14 +1818,17 @@ directive|define
 name|CTRL_UP
 value|1
 comment|/* controller may be used	*/
+define|#
+directive|define
+name|MAX_BCHAN
+value|30
 name|int
-name|stateb1
+name|stateb
+index|[
+name|MAX_BCHAN
+index|]
 decl_stmt|;
-comment|/* B-channel 1 			*/
-name|int
-name|stateb2
-decl_stmt|;
-comment|/* B-channel 2			*/
+comment|/* b channel state */
 define|#
 directive|define
 name|CHAN_IDLE
@@ -1595,14 +1840,13 @@ name|CHAN_RUN
 value|1
 comment|/* channel is occupied		*/
 name|int
+name|nbch
+decl_stmt|;
+comment|/* number of b channels */
+name|int
 name|freechans
 decl_stmt|;
 comment|/* number of unused channels	*/
-define|#
-directive|define
-name|MAX_CHANCTRL
-value|2
-comment|/* free channels per controller	*/
 name|int
 name|tei
 decl_stmt|;
@@ -2352,6 +2596,18 @@ comment|/* flag, log time from exchange	*/
 end_comment
 
 begin_decl_stmt
+name|int
+name|extcallattr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag, display extended caller attributes */
+end_comment
+
+begin_decl_stmt
 name|char
 name|tinainitprog
 index|[
@@ -2372,6 +2628,29 @@ init|=
 literal|""
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|starttime
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|holidayfile
+index|[
+name|MAXPATHLEN
+index|]
+init|=
+name|HOLIDAY_FILE_DEF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* holiday filename */
+end_comment
 
 begin_else
 else|#
@@ -2558,6 +2837,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|FILE
+modifier|*
+name|logfp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|logfacility
 decl_stmt|;
@@ -2739,6 +3025,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|extcallattr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|tinainitprog
 index|[
@@ -2750,6 +3042,21 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|rotatesuffix
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|starttime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|holidayfile
 index|[
 name|MAXPATHLEN
 index|]
@@ -3200,6 +3507,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|handle_scrprs
+parameter_list|(
+name|int
+name|cdid
+parameter_list|,
+name|int
+name|scr
+parameter_list|,
+name|int
+name|prs
+parameter_list|,
+name|char
+modifier|*
+name|caller
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|if_up
 parameter_list|(
 name|cfg_entry_t
@@ -3640,7 +3967,7 @@ parameter_list|,
 name|int
 name|response
 parameter_list|,
-name|int
+name|cause_t
 name|cause
 parameter_list|)
 function_decl|;
@@ -3654,7 +3981,7 @@ name|cfg_entry_t
 modifier|*
 name|cep
 parameter_list|,
-name|int
+name|cause_t
 name|cause
 parameter_list|)
 function_decl|;
@@ -4211,6 +4538,60 @@ parameter_list|(
 name|char
 modifier|*
 name|number
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|upd_callstat_file
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+name|rotateflag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* holiday.c */
+end_comment
+
+begin_function_decl
+name|void
+name|init_holidays
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_holidays
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isholiday
+parameter_list|(
+name|int
+name|d
+parameter_list|,
+name|int
+name|m
+parameter_list|,
+name|int
+name|y
 parameter_list|)
 function_decl|;
 end_function_decl

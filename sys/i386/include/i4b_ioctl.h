@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.150 1999/12/13 21:25:28 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:12:16 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sat Jul 21 12:24:56 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|0
+value|1
 end_define
 
 begin_comment
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|90
+value|0
 end_define
 
 begin_comment
@@ -220,13 +220,127 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTRL_NUMTYPES
+name|CTRL_CAPI
 value|5
+end_define
+
+begin_comment
+comment|/* cards seen via the CAPI layer*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_NUMTYPES
+value|6
 end_define
 
 begin_comment
 comment|/* number of controller types	*/
 end_comment
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	CTRL_PASSIVE: driver types  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXL1UNITS
+value|8
+end_define
+
+begin_comment
+comment|/* max number of units	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1DRVR_ISIC
+value|0
+end_define
+
+begin_comment
+comment|/* isic - driver	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1DRVR_IWIC
+value|1
+end_define
+
+begin_comment
+comment|/* iwic - driver	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1DRVR_IFPI
+value|2
+end_define
+
+begin_comment
+comment|/* ifpi - driver	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1DRVR_IHFC
+value|3
+end_define
+
+begin_comment
+comment|/* ihfc - driver	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1DRVR_IFPNP
+value|4
+end_define
+
+begin_comment
+comment|/* ifpnp - driver	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1DRVR_ICCHP
+value|5
+end_define
+
+begin_comment
+comment|/* icchp - driver	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1DRVR_ITJC
+value|6
+end_define
+
+begin_comment
+comment|/* itjc - driver	*/
+end_comment
+
+begin_comment
+comment|/* MAXL1DRVR MUST be updated when more passive drivers are added !!! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXL1DRVR
+value|(L1DRVR_ITJC + 1)
+end_define
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	card types for CTRL_PASSIVE   *---------------------------------------------------------------------------*/
@@ -507,15 +621,92 @@ begin_comment
 comment|/* Asuscom ISDNlink 128 K PnP	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_WINB6692
+value|24
+end_define
+
 begin_comment
-comment|/*  * in case you add support for more cards, please update:  *  *	isdnd:		support.c, name_of_controller()  *	diehl/diehlctl:	main.c, listall()  *  * and adjust CARD_TYPEP_MAX below.  */
+comment|/* Winbond W6692 based		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_16_3C
+value|25
+end_define
+
+begin_comment
+comment|/* Teles S0/16.3c PnP (HFC-S/SP	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_ACERP10
+value|26
+end_define
+
+begin_comment
+comment|/* Acer ISDN P10 (HFC-S)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_TELEINT_NO_1
+value|27
+end_define
+
+begin_comment
+comment|/* TELEINT ISDN SPEED No. 1 (HFC-1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_CCD_HFCS_PCI
+value|28
+end_define
+
+begin_comment
+comment|/* Cologne Chip HFC-S PCI based	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_NETJET_S
+value|29
+end_define
+
+begin_comment
+comment|/* Traverse NetJet-S (Tiger300) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_DIVA_ISA
+value|30
+end_define
+
+begin_comment
+comment|/* Eicon DIVA ISA PnP 2.0 or 2.02 */
+end_comment
+
+begin_comment
+comment|/*  * in case you add support for more cards, please update:  *  *	isdnd:		controller.c, name_of_controller()  *  * and adjust CARD_TYPEP_MAX below.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CARD_TYPEP_MAX
-value|23
+value|30
 end_define
 
 begin_comment
@@ -559,6 +750,38 @@ define|#
 directive|define
 name|CARD_TYPEA_DAIC_QUAD
 value|4
+end_define
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	card types for CTRL_CAPI  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEC_CAPI_UNK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEC_AVM_T1_PCI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEC_AVM_B1_PCI
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEC_AVM_B1_ISA
+value|3
 end_define
 
 begin_comment
@@ -681,6 +904,17 @@ end_define
 
 begin_comment
 comment|/* BSD/OS point to point driver		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BDRV_ING
+value|5
+end_define
+
+begin_comment
+comment|/* NetGraph ing driver			*/
 end_comment
 
 begin_comment
@@ -990,6 +1224,35 @@ directive|define
 name|SCR_NET
 value|4
 comment|/* screening network provided		*/
+name|int
+name|prs_ind
+decl_stmt|;
+comment|/* presentation indicator		*/
+define|#
+directive|define
+name|PRS_NONE
+value|0
+comment|/* no presentation indicator transmitted*/
+define|#
+directive|define
+name|PRS_ALLOWED
+value|1
+comment|/* presentation allowed			*/
+define|#
+directive|define
+name|PRS_RESTRICT
+value|2
+comment|/* presentation restricted		*/
+define|#
+directive|define
+name|PRS_NNINTERW
+value|3
+comment|/* number not available due to interworking */
+define|#
+directive|define
+name|PRS_RESERVED
+value|4
+comment|/* reserved				*/
 name|char
 name|display
 index|[
@@ -1721,6 +1984,10 @@ name|int
 name|tei
 decl_stmt|;
 comment|/* tei controller probably has		*/
+name|int
+name|nbch
+decl_stmt|;
+comment|/* number of b channels provided        */
 block|}
 name|msg_ctrl_info_req_t
 typedef|;

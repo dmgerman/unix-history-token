@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	main.c - i4b set debug options  *	------------------------------  *  *	$Id: main.c,v 1.23 1999/12/13 21:25:25 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:49:40 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	main.c - i4b set debug options  *	------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Mon May 21 10:09:23 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -249,22 +249,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|opt_hscx
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|opt_rhscx
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|opt_lapd
 init|=
 literal|0
@@ -274,6 +258,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|opt_rlapd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|opt_chipstat
 init|=
 literal|0
 decl_stmt|;
@@ -319,7 +311,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: isdndebug -e -g -h -l<layer> -m -q -r -s<value> -u<unit> -z -H -Q\n"
+literal|"usage: isdndebug -c -e -g -l<layer> -m -q -r -s<value> -u<unit> -z -C -Q\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -c            get chipset statistics\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -334,13 +333,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"       -g            get current debugging values\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -h            get HSCX event counters\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -382,7 +374,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       -u unit       unit number for -h, -q, -H and -Q commands\n"
+literal|"       -u unit       unit number for -c, -q, -C and -Q commands\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -396,7 +388,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       -H            reset HSCX event counters to zero\n"
+literal|"       -C            reset chipset statistics\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -458,7 +450,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"eghl:mqrs:u:zHQ"
+literal|"ceghl:mqrs:u:zCHQ"
 argument_list|)
 operator|)
 operator|!=
@@ -472,6 +464,14 @@ name|c
 condition|)
 block|{
 case|case
+literal|'c'
+case|:
+name|opt_chipstat
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
 name|opt_err
@@ -483,14 +483,6 @@ case|case
 literal|'g'
 case|:
 name|opt_get
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'h'
-case|:
-name|opt_hscx
 operator|=
 literal|1
 expr_stmt|;
@@ -603,14 +595,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'H'
-case|:
-name|opt_rhscx
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'Q'
 case|:
 name|opt_rlapd
@@ -654,19 +638,15 @@ name|opt_zero
 operator|==
 literal|0
 operator|&&
-name|opt_hscx
-operator|==
-literal|0
-operator|&&
-name|opt_rhscx
-operator|==
-literal|0
-operator|&&
 name|opt_lapd
 operator|==
 literal|0
 operator|&&
 name|opt_rlapd
+operator|==
+literal|0
+operator|&&
+name|opt_chipstat
 operator|==
 literal|0
 condition|)
@@ -690,13 +670,11 @@ name|opt_err
 operator|+
 name|opt_zero
 operator|+
-name|opt_hscx
-operator|+
-name|opt_rhscx
-operator|+
 name|opt_lapd
 operator|+
 name|opt_rlapd
+operator|+
+name|opt_chipstat
 operator|)
 operator|>
 literal|1
@@ -744,21 +722,26 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|opt_hscx
+name|opt_chipstat
 condition|)
 block|{
-name|hscxstat_t
-name|hst
+name|struct
+name|chipstat
+name|cst
 decl_stmt|;
-name|hst
+name|u_char
+modifier|*
+name|name
+decl_stmt|;
+name|cst
 operator|.
-name|unit
+name|driver_unit
 operator|=
 name|opt_unit
 expr_stmt|;
-name|hst
+name|cst
 operator|.
-name|chan
+name|driver_bchannel
 operator|=
 literal|0
 expr_stmt|;
@@ -771,10 +754,10 @@ name|ioctl
 argument_list|(
 name|isdnfd
 argument_list|,
-name|I4B_CTL_GET_HSCXSTAT
+name|I4B_CTL_GET_CHIPSTAT
 argument_list|,
 operator|&
-name|hst
+name|cst
 argument_list|)
 operator|)
 operator|<
@@ -785,7 +768,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ioctl I4B_CTL_GET_HSCXSTAT failed: %s"
+literal|"ioctl I4B_CTL_GET_CHIPSTAT failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -799,57 +782,103 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+switch|switch
+condition|(
+name|cst
+operator|.
+name|driver_type
+condition|)
+block|{
+case|case
+name|L1DRVR_ISIC
+case|:
+name|name
+operator|=
+literal|"isic"
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nHSCX events:      VFR    RDO    CRC    RAB    XDU    RFO\n"
+literal|"\nisic-driver\nHSCX events:      VFR    RDO    CRC    RAB    XDU    RFO\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"unit %d chan %d: %6d %6d %6d %6d %6d %6d\n"
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|unit
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|chan
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|vfr
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|rdo
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|crc
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|rab
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|xdu
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|rfo
 argument_list|)
 expr_stmt|;
-name|hst
+name|cst
 operator|.
-name|unit
+name|driver_unit
 operator|=
 name|opt_unit
 expr_stmt|;
-name|hst
+name|cst
 operator|.
-name|chan
+name|driver_bchannel
 operator|=
 literal|1
 expr_stmt|;
@@ -862,10 +891,10 @@ name|ioctl
 argument_list|(
 name|isdnfd
 argument_list|,
-name|I4B_CTL_GET_HSCXSTAT
+name|I4B_CTL_GET_CHIPSTAT
 argument_list|,
 operator|&
-name|hst
+name|cst
 argument_list|)
 operator|)
 operator|<
@@ -876,7 +905,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ioctl I4B_CTL_GET_HSCXSTAT failed: %s"
+literal|"ioctl I4B_CTL_GET_CHIPSTAT failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -890,98 +919,123 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"HSCX events:      VFR    RDO    CRC    RAB    XDU    RFO\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"unit %d chan %d: %6d %6d %6d %6d %6d %6d\n"
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|unit
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|chan
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|vfr
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|rdo
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|crc
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|rab
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|xdu
 argument_list|,
-name|hst
+name|cst
+operator|.
+name|stats
+operator|.
+name|hscxstat
 operator|.
 name|rfo
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|opt_rhscx
-condition|)
-block|{
-name|hscxstat_t
-name|hst
-decl_stmt|;
-name|hst
-operator|.
-name|unit
+break|break;
+case|case
+name|L1DRVR_IWIC
+case|:
+name|name
 operator|=
-name|opt_unit
+literal|"iwic"
 expr_stmt|;
-name|hst
-operator|.
-name|chan
+break|break;
+case|case
+name|L1DRVR_IFPI
+case|:
+name|name
 operator|=
-literal|0
+literal|"ifpi"
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ret
+break|break;
+case|case
+name|L1DRVR_IHFC
+case|:
+name|name
 operator|=
-name|ioctl
-argument_list|(
-name|isdnfd
-argument_list|,
-name|I4B_CTL_CLR_HSCXSTAT
-argument_list|,
-operator|&
-name|hst
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
+literal|"ihfc"
+expr_stmt|;
+break|break;
+case|case
+name|L1DRVR_IFPNP
+case|:
+name|name
+operator|=
+literal|"ifpnp"
+expr_stmt|;
+break|break;
+default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ioctl I4B_CTL_CLR_HSCXSTAT failed: %s"
+literal|"ioctl I4B_CTL_GET_CHIPSTAT, unknown driver %d\n"
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|cst
+operator|.
+name|driver_type
 argument_list|)
 expr_stmt|;
 name|exit
@@ -989,82 +1043,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-name|printf
-argument_list|(
-literal|"HSCX event counters unit %d chan %d reset to zero!\n"
-argument_list|,
-name|hst
-operator|.
-name|unit
-argument_list|,
-name|hst
-operator|.
-name|chan
-argument_list|)
-expr_stmt|;
-name|hst
-operator|.
-name|unit
-operator|=
-name|opt_unit
-expr_stmt|;
-name|hst
-operator|.
-name|chan
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ret
-operator|=
-name|ioctl
-argument_list|(
-name|isdnfd
-argument_list|,
-name|I4B_CTL_CLR_HSCXSTAT
-argument_list|,
-operator|&
-name|hst
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ioctl I4B_CTL_CLR_HSCXSTAT failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"HSCX event counters unit %d chan %d reset to zero!\n"
-argument_list|,
-name|hst
-operator|.
-name|unit
-argument_list|,
-name|hst
-operator|.
-name|chan
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -2179,82 +2159,97 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| |||| ||||\n"
+literal|"                           | |||| |||| |||| ||||\n"
 argument_list|)
 operator|,
 name|printf
 argument_list|(
-literal|"                               || |||| |||| |||+- general error messages\n"
+literal|"                           | |||| |||| |||| |||+- general error messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| |||| ||+-- PH primitives exchanged\n"
+literal|"                           | |||| |||| |||| ||+-- PH primitives exchanged\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| |||| |+--- B channel actions\n"
+literal|"                           | |||| |||| |||| |+--- B channel actions\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| |||| +---- HSCX error messages\n"
+literal|"                           | |||| |||| |||| +---- HSCX error messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| |||+------ HSCX IRQ messages\n"
+literal|"                           | |||| |||| |||+------ HSCX IRQ messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| ||+------- ISAC error messages\n"
+literal|"                           | |||| |||| ||+------- ISAC error messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| |+-------- ISAC messages\n"
+literal|"                           | |||| |||| |+-------- ISAC messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||| +--------- ISAC setup messages\n"
+literal|"                           | |||| |||| +--------- ISAC setup messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |||+----------- FSM general messages\n"
+literal|"                           | |||| |||+----------- FSM general messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || ||+------------ FSM error messages\n"
+literal|"                           | |||| ||+------------ FSM error messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || |+------------- timer general messages\n"
+literal|"                           | |||| |+------------- timer general messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               || +-------------- timer error messages\n"
+literal|"                           | |||| +-------------- timer error messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               |+---------------- HSCX data xfer errors msgs\n"
+literal|"                           | |||+---------------- HSCX data xfer errors msgs\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                               +----------------- ISAC CICO messages\n"
+literal|"                           | ||+----------------- ISAC CICO messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"         ++++-++++-++++-++++-++------------------ unassigned\n"
+literal|"                           | |+------------------ silent messages (soft-HDLC)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"                           | +------------------- error messages (soft-HDLC)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"                           +--------------------- HFC-S PCI debug messages\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"         ++++-++++-++++-+++---------------------- unassigned\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2459,7 +2454,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"         ++++-++++-++++-++++-++++-++------------- unassigned\n"
+literal|"         ++++-++++-++++-++++-++++-+-------------- unassigned\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2539,22 +2534,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                   ||+----------- tina driver debug messages\n"
+literal|"                                   ||+----------- ing driver debug messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                   |+------------ tina driver messages\n"
+literal|"                                   |+------------ iavc driver debug messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                   +------------- tina driver error messages\n"
+literal|"                                   +------------- capi driver debug messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"         ++++-++++-++++-++++-++++-+-------------- unassigned\n"
+literal|"         ++++-++++-++++-++++-++++---------------- unassigned\n"
 argument_list|)
 expr_stmt|;
 block|}

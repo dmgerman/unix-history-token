@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	layer3.c - decode and print layer 3 (Q.931) information  *	-------------------------------------------------------  *  *	$Id: layer3.c,v 1.7 1999/12/13 21:25:25 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:50:48 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	layer3.c - decode and print layer 3 (Q.931) information  *	-------------------------------------------------------  *  *	$Id: layer3.c,v 1.9 2000/02/21 15:17:17 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Mon Feb 21 15:54:58 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -554,6 +554,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|f_uu
+parameter_list|(
+name|char
+modifier|*
+name|pbuf
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|ie
@@ -1006,7 +1026,7 @@ literal|0x7e
 block|,
 literal|"user-user"
 block|,
-name|f_null
+name|f_uu
 block|}
 block|,
 block|{
@@ -1241,6 +1261,52 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|pd
+operator|!=
+literal|0x08
+condition|)
+block|{
+for|for
+control|(
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+name|sprintline
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+name|pbuf
+operator|+
+name|strlen
+argument_list|(
+name|pbuf
+argument_list|)
+operator|)
+argument_list|,
+name|off
+operator|+
+name|i
+argument_list|,
+name|buf
+index|[
+name|i
+index|]
+argument_list|,
+literal|0xff
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* call reference */
 name|len
 operator|=
