@@ -160,7 +160,7 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
-name|IODATA
+name|IODATA3
 argument_list|,
 name|CBIDE2
 argument_list|,
