@@ -33,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.143
+literal|3.144
 operator|%
 name|G
 operator|%
@@ -2377,6 +2377,10 @@ block|,
 literal|'='
 block|,
 name|MATCHCLASS
+block|,
+literal|'~'
+block|,
+name|MATCHNCLASS
 block|,
 comment|/* these are RHS metasymbols */
 literal|'#'

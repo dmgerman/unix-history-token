@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.103		%G%"
+literal|"@(#)sendmail.h	3.104		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1166,6 +1166,17 @@ end_define
 
 begin_comment
 comment|/* match one token in a class */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCHNCLASS
+value|'\034'
+end_define
+
+begin_comment
+comment|/* match anything not in class */
 end_comment
 
 begin_define

@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.67
+literal|3.68
 operator|%
 name|G
 operator|%
@@ -1400,6 +1400,10 @@ operator|||
 name|c
 operator|==
 name|MATCHREPL
+operator|||
+name|c
+operator|==
+name|MATCHNCLASS
 condition|)
 return|return
 operator|(
@@ -1479,7 +1483,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS) then the address in avp matched is **	saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over a MATCHONE or a MATCHCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. ** **	Returns: **		none. ** **	Side Effects: **		pvp is modified. */
+comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS, MATCHNCLASS) then the address in avp **	matched is saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over MATCHONE, MATCHCLASS, or MATCHNCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. ** **	Returns: **		none. ** **	Side Effects: **		pvp is modified. */
 end_comment
 
 begin_struct
@@ -1804,7 +1808,10 @@ decl_stmt|;
 case|case
 name|MATCHCLASS
 case|:
-comment|/* match any token in a class */
+case|case
+name|MATCHNCLASS
+case|:
+comment|/* match any token in (not in) a class */
 name|class
 operator|=
 name|rp
@@ -1869,6 +1876,26 @@ operator|)
 operator|)
 operator|==
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|rp
+operator|==
+name|MATCHCLASS
+condition|)
+goto|goto
+name|backup
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|rp
+operator|==
+name|MATCHNCLASS
 condition|)
 goto|goto
 name|backup
@@ -2010,6 +2037,11 @@ operator|*
 name|rp
 operator|==
 name|MATCHCLASS
+operator|||
+operator|*
+name|rp
+operator|==
+name|MATCHNCLASS
 condition|)
 block|{
 comment|/* back out binding */
