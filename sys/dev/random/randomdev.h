@@ -63,6 +63,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_ENTROPY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* These are used to queue harvested packets of entropy. The entropy  * buffer size is pretty arbitrary.  */
 end_comment
@@ -71,7 +79,7 @@ begin_struct
 struct|struct
 name|harvest
 block|{
-name|u_int64_t
+name|uintmax_t
 name|somecounter
 decl_stmt|;
 comment|/* fast counter for clock jitter */
@@ -95,6 +103,13 @@ name|esource
 name|source
 decl_stmt|;
 comment|/* stats about the entropy */
+name|STAILQ_ENTRY
+argument_list|(
+argument|harvest
+argument_list|)
+name|next
+expr_stmt|;
+comment|/* next item on the list */
 block|}
 struct|;
 end_struct
