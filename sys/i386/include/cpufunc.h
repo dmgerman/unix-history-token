@@ -380,7 +380,7 @@ name|inb
 parameter_list|(
 name|port
 parameter_list|)
-value|__extension__ ({					\ 	u_char	_data;							\ 	if (__builtin_constant_p(port)&& ((port)& 0xffff)< 0x100	\&& (port)< 0x10000)					\ 		_data = inbc(port);					\ 	else								\ 		_data = inbv(port);					\ 	_data; })
+value|__extension__ ({					\ 	u_char	_data;							\ 	if (__builtin_constant_p(port)&& ((port)& 0xffff)< 0x100	\&& (0x10000 + (port))< 0x20000)				\ 		_data = inbc(port);					\ 	else								\ 		_data = inbv(port);					\ 	_data; })
 end_define
 
 begin_define
@@ -392,7 +392,7 @@ name|port
 parameter_list|,
 name|data
 parameter_list|)
-value|(						\ 	__builtin_constant_p(port)&& ((port)& 0xffff)< 0x100		\&& (port)< 0x10000						\ 	? outbc(port, data) : outbv(port, data))
+value|(						\ 	__builtin_constant_p(port)&& ((port)& 0xffff)< 0x100		\&& (0x10000 + (port))< 0x20000					\ 	? outbc(port, data) : outbv(port, data))
 end_define
 
 begin_function
