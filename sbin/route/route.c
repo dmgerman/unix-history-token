@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.5 1996/02/06 20:36:10 wollman Exp $"
+literal|"$Id: route.c,v 1.6 1996/02/13 17:30:34 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4435,8 +4435,7 @@ name|s
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1
+name|INADDR_NONE
 operator|)
 operator|&&
 operator|(
@@ -4503,8 +4502,7 @@ name|s
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1
+name|INADDR_NONE
 operator|||
 operator|(
 operator|(
