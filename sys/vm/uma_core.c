@@ -5817,6 +5817,14 @@ expr_stmt|;
 comment|/* Try to keep the buckets totally full */
 while|while
 condition|(
+name|bucket
+operator|->
+name|ub_ptr
+operator|<
+name|zone
+operator|->
+name|uz_count
+operator|&&
 operator|(
 name|slab
 operator|=
@@ -5829,14 +5837,6 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-operator|&&
-name|bucket
-operator|->
-name|ub_ptr
-operator|<
-name|zone
-operator|->
-name|uz_count
 condition|)
 block|{
 while|while
