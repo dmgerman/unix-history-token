@@ -471,6 +471,10 @@ name|OPTION_VERSION
 value|30
 end_define
 
+begin_comment
+comment|/*  * If you add anything, be very careful  * to keep this list properly sorted.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -3370,6 +3374,42 @@ name|option
 operator|->
 name|val
 expr_stmt|;
+comment|/* If the first match was exact, we're done. */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+name|option
+operator|->
+name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|option
+operator|->
+name|name
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+while|while
+condition|(
+name|option
+operator|->
+name|name
+operator|!=
+name|NULL
+condition|)
+name|option
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Check if there's another match. */
 name|option
 operator|++
@@ -3410,6 +3450,7 @@ block|{
 name|option
 operator|++
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
