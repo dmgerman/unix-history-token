@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"des_locl.h"
 end_include
 
@@ -261,11 +267,9 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|ks
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -726,11 +730,9 @@ argument_list|,
 name|key2
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|ks
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

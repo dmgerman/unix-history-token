@@ -1214,6 +1214,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|ts
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|p
 operator|=
 operator|(

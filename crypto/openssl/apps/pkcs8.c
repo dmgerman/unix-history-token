@@ -1176,6 +1176,8 @@ name|p8pass
 operator|=
 name|pass
 expr_stmt|;
+if|if
+condition|(
 name|EVP_read_pw_string
 argument_list|(
 name|pass
@@ -1186,7 +1188,12 @@ literal|"Enter Encryption Password:"
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|app_RAND_load_file
 argument_list|(

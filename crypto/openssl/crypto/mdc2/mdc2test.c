@@ -25,6 +25,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -500,7 +506,7 @@ argument_list|(
 literal|"pad2 - ok\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 name|ret
 argument_list|)

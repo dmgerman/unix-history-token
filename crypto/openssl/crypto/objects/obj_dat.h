@@ -15,28 +15,28 @@ begin_define
 define|#
 directive|define
 name|NUM_NID
-value|404
+value|406
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|402
+value|404
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|402
+value|404
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_OBJ
-value|376
+value|378
 end_define
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ name|unsigned
 name|char
 name|lvalues
 index|[
-literal|2951
+literal|2971
 index|]
 init|=
 block|{
@@ -6325,6 +6325,48 @@ block|,
 literal|0x38
 block|,
 comment|/* [2947] OBJ_no_rev_avail */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x82
+block|,
+literal|0x37
+block|,
+literal|0x14
+block|,
+literal|0x02
+block|,
+literal|0x02
+block|,
+comment|/* [2950] OBJ_ms_smartcard_login */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x82
+block|,
+literal|0x37
+block|,
+literal|0x14
+block|,
+literal|0x02
+block|,
+literal|0x03
+block|,
+comment|/* [2960] OBJ_ms_upn */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -14193,6 +14235,46 @@ operator|)
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"msSmartcardLogin"
+block|,
+literal|"Microsoft Smartcardlogin"
+block|,
+name|NID_ms_smartcard_login
+block|,
+literal|10
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2950
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"msUPN"
+block|,
+literal|"Microsoft Universal Principal Name"
+block|,
+name|NID_ms_upn
+block|,
+literal|10
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2960
+index|]
+operator|)
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -17262,6 +17344,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|404
+index|]
+operator|)
+block|,
+comment|/* "msSmartcardLogin" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|405
+index|]
+operator|)
+block|,
+comment|/* "msUPN" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|173
 index|]
 operator|)
@@ -18086,11 +18186,29 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|404
+index|]
+operator|)
+block|,
+comment|/* "Microsoft Smartcardlogin" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|136
 index|]
 operator|)
 block|,
 comment|/* "Microsoft Trust List Signing" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|405
+index|]
+operator|)
+block|,
+comment|/* "Microsoft Universal Principal Name" */
 operator|&
 operator|(
 name|nid_objs
@@ -24243,6 +24361,24 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_ms_efs                       1 3 6 1 4 1 311 10 3 4 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|404
+index|]
+operator|)
+block|,
+comment|/* OBJ_ms_smartcard_login           1 3 6 1 4 1 311 20 2 2 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|405
+index|]
+operator|)
+block|,
+comment|/* OBJ_ms_upn                       1 3 6 1 4 1 311 20 2 3 */
 operator|&
 operator|(
 name|nid_objs

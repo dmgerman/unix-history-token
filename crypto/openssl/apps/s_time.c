@@ -318,6 +318,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VXWORKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<tickLib.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|SIGALRM
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The following if from times(3) man page.  It may need to be changed */
 end_comment
@@ -1975,7 +1998,7 @@ argument_list|,
 literal|"No CIPHER specified\n"
 argument_list|)
 expr_stmt|;
-comment|/*		EXIT(1); */
+comment|/*		OPENSSL_EXIT(1); */
 block|}
 if|if
 condition|(
@@ -2755,7 +2778,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

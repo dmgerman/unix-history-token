@@ -25,6 +25,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -536,7 +542,7 @@ argument_list|(
 literal|"test 3 ok\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

@@ -311,9 +311,17 @@ define|#
 directive|define
 name|BN_BITS4
 value|16
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
 comment|/* VC++ doesn't like the LL suffix */
 define|#
 directive|define
@@ -1956,7 +1964,7 @@ parameter_list|,
 specifier|const
 name|BIGNUM
 modifier|*
-name|modulus
+name|mod
 parameter_list|,
 name|BN_CTX
 modifier|*

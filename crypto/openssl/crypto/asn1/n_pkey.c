@@ -861,11 +861,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 literal|256
 argument_list|)
@@ -1598,11 +1596,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 literal|256
 argument_list|)

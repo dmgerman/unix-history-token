@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../e_os.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/crypto.h>
 end_include
 
@@ -1067,7 +1073,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|exit
+name|EXIT
 argument_list|(
 operator|!
 name|ret
@@ -1078,6 +1084,29 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|cb_exit
+parameter_list|(
+name|int
+name|ec
+parameter_list|)
+block|{
+name|EXIT
+argument_list|(
+name|ec
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* To keep some compilers quiet */
 block|}
 end_function
 
@@ -1211,7 +1240,7 @@ argument_list|,
 literal|"error in dsatest\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|cb_exit
 argument_list|(
 literal|1
 argument_list|)

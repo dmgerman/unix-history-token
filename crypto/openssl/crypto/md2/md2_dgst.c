@@ -37,6 +37,12 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -1197,11 +1203,9 @@ name|MD2_INT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|state
-argument_list|,
-literal|0
 argument_list|,
 literal|48
 operator|*

@@ -501,7 +501,7 @@ name|X509_set_version
 argument_list|(
 name|x
 argument_list|,
-literal|3
+literal|2
 argument_list|)
 expr_stmt|;
 name|ASN1_INTEGER_set

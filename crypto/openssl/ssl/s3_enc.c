@@ -546,11 +546,9 @@ operator|+=
 name|MD5_DIGEST_LENGTH
 expr_stmt|;
 block|}
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|smd
-argument_list|,
-literal|0
 argument_list|,
 name|SHA_DIGEST_LENGTH
 argument_list|)
@@ -1483,7 +1481,7 @@ name|SSL3_CC_WRITE
 operator|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|&
 operator|(
@@ -1493,15 +1491,13 @@ literal|0
 index|]
 operator|)
 argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 name|exp_key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|&
 operator|(
@@ -1510,8 +1506,6 @@ index|[
 literal|0
 index|]
 operator|)
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1856,7 +1850,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|s
 operator|->
@@ -1865,8 +1859,6 @@ operator|->
 name|tmp
 operator|.
 name|key_block
-argument_list|,
-literal|0
 argument_list|,
 name|s
 operator|->
@@ -2188,6 +2180,7 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* otherwise, rec->length>= bs */
 block|}
 name|EVP_Cipher
 argument_list|(
@@ -2229,7 +2222,7 @@ index|]
 operator|+
 literal|1
 expr_stmt|;
-comment|/* SSL 3.0 bounds the number of padding bytes by the block size; 			 * padding bytes (except that last) are arbitrary */
+comment|/* SSL 3.0 bounds the number of padding bytes by the block size; 			 * padding bytes (except the last one) are arbitrary */
 if|if
 condition|(
 name|i
@@ -2243,6 +2236,7 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* now i<= bs<= rec->length */
 name|rec
 operator|->
 name|length

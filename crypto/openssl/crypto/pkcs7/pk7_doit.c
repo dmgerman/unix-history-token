@@ -955,11 +955,9 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|keylen
 argument_list|)
@@ -1993,11 +1991,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|tmp
-argument_list|,
-literal|0
 argument_list|,
 name|jj
 argument_list|)

@@ -889,16 +889,16 @@ name|bufnum
 operator|=
 literal|0
 expr_stmt|;
+name|again
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-name|again
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -974,8 +974,15 @@ condition|(
 name|i
 operator|==
 literal|0
+operator|&&
+operator|!
+name|again
 condition|)
 break|break;
+name|again
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|i
@@ -1016,6 +1023,8 @@ block|}
 comment|/* we removed some trailing stuff so there is a new 		 * line on the end. */
 if|if
 condition|(
+name|ii
+operator|&&
 name|i
 operator|==
 name|ii

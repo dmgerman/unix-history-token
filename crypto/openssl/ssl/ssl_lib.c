@@ -5989,6 +5989,22 @@ comment|/* ok */
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Free internal session cache. However: the remove_cb() may reference 	 * the ex_data of SSL_CTX, thus the ex_data store can only be removed 	 * after the sessions were flushed. 	 * As the ex_data handling routines might also touch the session cache, 	 * the most secure solution seems to be: empty (flush) the cache, then 	 * free ex_data, then finally free the cache. 	 * (See ticket [openssl.org #212].) 	 */
+if|if
+condition|(
+name|a
+operator|->
+name|sessions
+operator|!=
+name|NULL
+condition|)
+name|SSL_CTX_flush_sessions
+argument_list|(
+name|a
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|CRYPTO_free_ex_data
 argument_list|(
 name|ssl_ctx_meth
@@ -6013,14 +6029,6 @@ name|sessions
 operator|!=
 name|NULL
 condition|)
-block|{
-name|SSL_CTX_flush_sessions
-argument_list|(
-name|a
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|lh_free
 argument_list|(
 name|a
@@ -6028,7 +6036,6 @@ operator|->
 name|sessions
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|a
@@ -7252,7 +7259,7 @@ operator|(
 operator|(
 name|i
 operator|&
-name|SSL_SESS_CACHE_NO_INTERNAL_LOOKUP
+name|SSL_SESS_CACHE_NO_INTERNAL_STORE
 operator|)
 operator|||
 name|SSL_CTX_add_session

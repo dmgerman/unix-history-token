@@ -2557,10 +2557,6 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-operator|*
-name|out
-operator|||
-operator|!
 name|in
 condition|)
 return|return
@@ -2648,10 +2644,6 @@ condition|)
 return|return
 name|ret
 return|;
-if|if
-condition|(
-name|out
-condition|)
 operator|*
 name|out
 operator|=

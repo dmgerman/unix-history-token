@@ -2192,6 +2192,9 @@ condition|)
 block|{
 name|long
 name|errline
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|BIO_printf
 argument_list|(
@@ -4369,7 +4372,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ex
 argument_list|)

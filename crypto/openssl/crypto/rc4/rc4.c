@@ -433,11 +433,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -481,11 +479,9 @@ argument_list|,
 name|md
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|keystr
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(

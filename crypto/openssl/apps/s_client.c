@@ -3558,11 +3558,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|cbuf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZZ
 argument_list|)
@@ -3580,11 +3578,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|sbuf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZZ
 argument_list|)
@@ -3612,7 +3608,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)
