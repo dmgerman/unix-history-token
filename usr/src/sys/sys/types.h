@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	6.2	84/06/09	*/
+comment|/*	types.h	6.3	85/03/07	*/
 end_comment
 
 begin_ifndef
@@ -221,6 +221,20 @@ begin_typedef
 typedef|typedef
 name|int
 name|off_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_short
+name|uid_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_short
+name|gid_t
 typedef|;
 end_typedef
 
