@@ -1,6 +1,55 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vi: set tabstop=4 : */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Barry Brachman.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1993 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)mkindex.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -15,7 +64,31 @@ directive|include
 file|"bog.h"
 end_include
 
+begin_decl_stmt
+name|char
+modifier|*
+name|nextword
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -27,8 +100,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|int
@@ -50,13 +123,6 @@ name|MAXWORDLEN
 operator|+
 literal|1
 index|]
-decl_stmt|,
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|nextword
-argument_list|()
 decl_stmt|;
 name|prev
 operator|=
@@ -83,10 +149,6 @@ operator|&
 name|rlen
 argument_list|)
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -246,10 +308,6 @@ name|EOF
 condition|)
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -271,10 +329,6 @@ name|EOF
 condition|)
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
