@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)va820.c	4.2 (Berkeley) %G%"
+literal|"@(#)va820.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,9 +262,6 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|va
 operator|=
 name|open
@@ -273,7 +270,20 @@ name|acu
 argument_list|,
 literal|2
 argument_list|)
-operator|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|next_fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|va
 operator|<
 literal|0
 condition|)
@@ -302,16 +312,6 @@ goto|goto
 name|ret
 goto|;
 block|}
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|next_fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 comment|/* 	 * Set speed and modes on dialer and clear any 	 * previous requests 	 */
 name|DEBUG
 argument_list|(
