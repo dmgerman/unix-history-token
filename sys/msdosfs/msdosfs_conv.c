@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.5 1995/05/30 08:07:36 rgrimes Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.6 1995/10/29 15:31:46 phk Exp $ */
 end_comment
 
 begin_comment
@@ -68,6 +68,7 @@ comment|/*  * Total number of days that have passed for each month in a regular 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|regyear
 index|[]
@@ -105,6 +106,7 @@ comment|/*  * Total number of days that have passed for each month in a leap yea
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|leapyear
 index|[]

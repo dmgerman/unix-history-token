@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfsmount.h,v 1.2 1994/09/27 20:42:59 phk Exp $ */
+comment|/*	$Id: msdosfsmount.h,v 1.3 1995/05/30 08:07:47 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -381,6 +381,7 @@ comment|/*  * Prototypes for MSDOSFS virtual filesystem operations  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_mount
 name|__P
@@ -408,6 +409,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_start
 name|__P
@@ -428,6 +430,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_unmount
 name|__P
@@ -448,6 +451,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_root
 name|__P
@@ -467,6 +471,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_quotactl
 name|__P
@@ -491,6 +496,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_statfs
 name|__P
@@ -513,6 +519,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_sync
 name|__P
@@ -537,6 +544,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_fhtovp
 name|__P
@@ -572,6 +580,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfs_vptofh
 name|__P
@@ -601,6 +610,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mountmsdosfs
 name|__P

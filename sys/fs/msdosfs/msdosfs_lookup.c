@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.3 1995/05/09 16:30:44 bde Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.4 1995/05/30 08:07:41 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -1952,6 +1952,7 @@ comment|/*  * Read in a directory entry and mark it as being deleted.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|markdeleted
 parameter_list|(

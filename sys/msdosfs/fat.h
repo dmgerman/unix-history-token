@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: fat.h,v 1.2 1994/09/27 20:42:41 phk Exp $ */
+comment|/*	$Id: fat.h,v 1.3 1995/05/30 08:07:34 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -394,32 +394,6 @@ name|dep
 operator|,
 name|u_int
 name|frcn
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fc_lookup
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|,
-name|u_long
-name|findcn
-operator|,
-name|u_long
-operator|*
-name|frcnp
-operator|,
-name|u_long
-operator|*
-name|fsrcnp
 operator|)
 argument_list|)
 decl_stmt|;

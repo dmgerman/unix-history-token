@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.7 1995/05/30 08:07:40 rgrimes Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.8 1995/10/29 15:31:49 phk Exp $ */
 end_comment
 
 begin_comment
@@ -108,6 +108,33 @@ include|#
 directive|include
 file|<msdosfs/fat.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|fc_lookup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|,
+name|u_long
+name|findcn
+operator|,
+name|u_long
+operator|*
+name|frcnp
+operator|,
+name|u_long
+operator|*
+name|fsrcnp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Fat cache stats.  */
@@ -805,6 +832,7 @@ comment|/*  * Find the closest entry in the fat cache to the cluster we are look
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fc_lookup
 parameter_list|(
@@ -1988,6 +2016,7 @@ comment|/*  * Check the length of a free cluster chain starting at start.  *  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|chainlength
 parameter_list|(
@@ -2163,6 +2192,7 @@ comment|/*  * Allocate contigous free clusters.  *  * pmp	      - mount point.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|chainalloc
 parameter_list|(

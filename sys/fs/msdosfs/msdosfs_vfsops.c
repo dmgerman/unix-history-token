@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.6 1994/12/12 12:35:47 bde Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.7 1995/05/30 08:07:43 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -126,6 +126,7 @@ file|<msdosfs/fat.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msdosfsdoforce
 init|=
@@ -142,6 +143,7 @@ comment|/*  * mp - path - addr in user space of mount point (ie /usr or whatever
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_mount
 parameter_list|(
@@ -838,6 +840,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mountmsdosfs
 parameter_list|(
@@ -1928,6 +1931,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_start
 parameter_list|(
@@ -1962,6 +1966,7 @@ comment|/*  * Unmount the filesystem described by mp.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_unmount
 parameter_list|(
@@ -2168,6 +2173,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_root
 parameter_list|(
@@ -2269,6 +2275,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_quotactl
 parameter_list|(
@@ -2319,6 +2326,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_statfs
 parameter_list|(
@@ -2496,6 +2504,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_sync
 parameter_list|(
@@ -2731,6 +2740,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_fhtovp
 parameter_list|(
@@ -2904,6 +2914,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_vptofh
 parameter_list|(
@@ -2978,6 +2989,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_vget
 parameter_list|(
