@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.11 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,6 +389,13 @@ operator|==
 literal|1
 condition|)
 block|{
+name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
+expr_stmt|;
 name|clearinode
 argument_list|(
 name|dp
@@ -473,6 +480,13 @@ operator|==
 literal|1
 condition|)
 block|{
+name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
+expr_stmt|;
 name|dp
 operator|->
 name|di_size
@@ -880,6 +894,13 @@ literal|0
 condition|)
 continue|continue;
 name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
+expr_stmt|;
+name|dp
 operator|->
 name|di_blocks
 operator|=
@@ -924,6 +945,13 @@ name|inumber
 index|]
 operator|=
 name|USTATE
+expr_stmt|;
+name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
 expr_stmt|;
 name|clearinode
 argument_list|(
