@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: cpuconf.c,v 1.1 1998/06/10 10:52:18 dfr Exp $ */
+comment|/* $Id: cpuconf.c,v 1.2 1998/08/10 07:53:58 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -407,6 +407,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEC_ST6600
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|st6600_init
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|st6600_init
+value|platform_not_configured
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|cpuinit
@@ -638,6 +674,14 @@ literal|"ST_DEC_ALPHAVME_320"
 argument_list|)
 block|,
 comment|/* 33: ST_DEC_ALPHAVME_320 */
+name|cpu_init
+argument_list|(
+name|st6600_init
+argument_list|,
+literal|"ST_DEC_ST6600"
+argument_list|)
+block|,
+comment|/* 34: ST_DEC_6600 */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -213,6 +213,11 @@ directive|define
 name|ST_DEC_ALPHAVME_320
 value|33
 comment|/* "Yukon" (VME?) */
+define|#
+directive|define
+name|ST_DEC_6600
+value|34
+comment|/* "Monet/Goldrush" */
 name|u_int64_t
 name|rpb_type
 decl_stmt|;
