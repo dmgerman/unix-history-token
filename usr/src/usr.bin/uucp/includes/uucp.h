@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.6	85/04/10	*/
+comment|/*	uucp.h	5.7	85/06/23	*/
 end_comment
 
 begin_include
@@ -20,7 +20,27 @@ name|GETHOSTNAME
 end_define
 
 begin_comment
-comment|/*#define CCWHOAMI	*/
+comment|/**/
+end_comment
+
+begin_comment
+comment|/* #define UNAME	/**/
+end_comment
+
+begin_comment
+comment|/* #define WHOAMI	/**/
+end_comment
+
+begin_comment
+comment|/* #define CCWHOAMI	/**/
+end_comment
+
+begin_comment
+comment|/* #define UUNAME	/**/
+end_comment
+
+begin_comment
+comment|/* #define GETMYHNAME	/**/
 end_comment
 
 begin_comment
@@ -31,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|MYNAME
-value|"erewhon"
+value|"erehwon"
 end_define
 
 begin_comment
@@ -45,15 +65,15 @@ file|<sysexits.h>
 end_include
 
 begin_comment
-comment|/*#define EX_NOINPUT	66*/
+comment|/*#define EX_NOINPUT	66	/**/
 end_comment
 
 begin_comment
-comment|/*#define EX_NOHOST	68*/
+comment|/*#define EX_NOHOST	68	/**/
 end_comment
 
 begin_comment
-comment|/*#define EX_CANTCREAT	73*/
+comment|/*#define EX_CANTCREAT	73	/**/
 end_comment
 
 begin_comment
@@ -115,7 +135,7 @@ name|VENTEL
 end_define
 
 begin_comment
-comment|/* ventel dialer */
+comment|/* Ventel Dialer */
 end_comment
 
 begin_define
@@ -199,7 +219,7 @@ name|BSDTCP
 end_define
 
 begin_comment
-comment|/* 4.2bsd TCP/IP */
+comment|/* 4.2bsd or 2.9bsd TCP/IP */
 end_comment
 
 begin_define
@@ -282,7 +302,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FTIME
+name|INTERVALTIMER
 end_define
 
 begin_endif
@@ -296,15 +316,15 @@ comment|/*  * If your site is using "ndir.h" to retrofit the Berkeley  * directo
 end_comment
 
 begin_comment
-comment|/*#define	NDIR	*/
+comment|/*#define	NDIR	/**/
 end_comment
 
 begin_comment
-comment|/*  * If yours is a BTL system III, IV, or so-on site, define USG.  */
+comment|/*  * If yours is a BTL system III, IV, V or so-on site, define USG.  */
 end_comment
 
 begin_comment
-comment|/*#define	USG	*/
+comment|/*#define	USG	/**/
 end_comment
 
 begin_comment
@@ -318,6 +338,18 @@ name|BSD4_2
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
+comment|/*  * If you are running 2.9bsd, define BSD2_9  */
+end_comment
+
+begin_comment
+comment|/*#define BSD2_9 	/**/
+end_comment
+
+begin_comment
 comment|/*  * If you are using /etc/inetd with 4.2bsd, define BSDINETD  */
 end_comment
 
@@ -328,6 +360,10 @@ name|BSDINETD
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/*#define VMSDTR	/* Turn on modem control on vms(works DTR) for 			   develcon and gandalf ports to gain access */
 end_comment
 
@@ -336,19 +372,16 @@ comment|/*  *	If you want to use the same modem for dialing in and out define  *
 end_comment
 
 begin_comment
-comment|/* #define DIALINOUT	"/usr/lib/uucp/acucntrl" */
+comment|/* #define DIALINOUT	"/usr/lib/uucp/acucntrl" /**/
 end_comment
 
 begin_comment
-comment|/* define the last characters for ACU */
+comment|/*  *	If you want all ACU lines to be DIALINOUT, define ALLACUINOUT  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACULAST
-value|"-<"
-end_define
+begin_comment
+comment|/* #define ALLACUINOUT	/**/
+end_comment
 
 begin_comment
 comment|/* define the value of WFMASK - for umask call - used for all uucp work files */
@@ -366,11 +399,11 @@ comment|/* define UUSTAT if you need "uustat" command */
 end_comment
 
 begin_comment
-comment|/* #define UUSTAT	*/
+comment|/* #define UUSTAT	/**/
 end_comment
 
 begin_comment
-comment|/*	define UUSUB if you need "uusub" command */
+comment|/* define UUSUB if you need "uusub" command */
 end_comment
 
 begin_comment
@@ -418,11 +451,15 @@ name|NOSTRANGERS
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/*  * Traditionally LCK (lock) files have been kept in /usr/spool/uucp.  * If you want that define LOCKDIR to be ".".  * If you want the locks kept in a subdirectory, define LOCKDIR as "LCK.".  * Good news about LCK. subdirectory: the directory can be mode 777 so  * unprivileged programs can share the uucp locking system,  * and the subdirectory keeps down clutter in the main directory.  * The BAD news: you have to change 'tip' and another programs that  * know where the LCK files are kept, and you have to change your /etc/rc  * if your rc cleans out the lock files (as it should).  */
 end_comment
 
 begin_comment
-comment|/*#define	LOCKDIR	"LCK" */
+comment|/*#define	LOCKDIR	"LCK."	/**/
 end_comment
 
 begin_define
@@ -431,6 +468,10 @@ directive|define
 name|LOCKDIR
 value|"."
 end_define
+
+begin_comment
+comment|/**/
+end_comment
 
 begin_comment
 comment|/*   * If you want uucp and uux to copy the data files by default,  * don't define DONTCOPY (This is the way older 4bsd uucps worked)  * If you want uucp and uux to use the original files instead of  * copies, define DONTCOPY (This is the way System III and V work)  */
@@ -443,11 +484,15 @@ name|DONTCOPY
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/*  * Very few (that I know of) systems use the sequence checking feature.  * If you are not going to use it (hint: you are not),  * do not define GNXSEQ.  This saves precious room on PDP11s.  */
 end_comment
 
 begin_comment
-comment|/*#define	GNXSEQ/* comment this out to save space */
+comment|/*#define	GNXSEQ	/* comment this out to save space */
 end_comment
 
 begin_comment
@@ -455,7 +500,7 @@ comment|/*  * If you want the logfile stored in a file for each site instead  * 
 end_comment
 
 begin_comment
-comment|/*#define LOGBYSITE	"/usr/spool/uucp/LOG"	*/
+comment|/*#define LOGBYSITE	"/usr/spool/uucp/LOG" /**/
 end_comment
 
 begin_define
@@ -793,6 +838,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAXBASENAME
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSNSIZE
+value|(MAXBASENAME-1-1-1-4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EOTMSG
 value|"\04\n\04\n"
 end_define
@@ -1068,13 +1127,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SS_FAIL
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|SS_NODEVICE
 value|1
 end_define
@@ -1091,6 +1143,13 @@ define|#
 directive|define
 name|SS_INPROGRESS
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SS_FAIL
+value|4
 end_define
 
 begin_define
@@ -1122,7 +1181,7 @@ begin_define
 define|#
 directive|define
 name|MAXRECALLS
-value|20
+value|25
 end_define
 
 begin_comment
@@ -1203,7 +1262,7 @@ begin_define
 define|#
 directive|define
 name|X_LOCKTIME
-value|3600
+value|3600L
 end_define
 
 begin_define
@@ -1261,6 +1320,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|rindex
+value|strrchr
+end_define
+
+begin_define
+define|#
+directive|define
+name|index
+value|strchr
+end_define
 
 begin_endif
 endif|#
@@ -1357,7 +1430,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|long
+name|time_t
 name|Retrytime
 decl_stmt|;
 end_decl_stmt
@@ -1488,6 +1561,18 @@ decl_stmt|,
 modifier|*
 name|cfgets
 argument_list|()
+decl_stmt|,
+modifier|*
+name|getwd
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strpbrk
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strncpy
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1508,6 +1593,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|time_t
+name|time
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -1521,6 +1614,92 @@ name|DEVNULL
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_comment
+comment|/* This horrible gross kludge is the only way I know to  * convince lint that signal(SIGINT,SIG_IGN) is legal. It hates SIG_IGN.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIG_IGN
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SIG_IGN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SIG_IGN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_IGN
+value|main
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|main
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|DEBUG
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 end_unit
 
