@@ -232,9 +232,9 @@ name|dont_match_prob
 decl_stmt|;
 comment|/* 0x7fffffff means 1.0, always fail */
 name|u_int
-name|param1
+name|dyn_type
 decl_stmt|;
-comment|/* unused at the moment */
+comment|/* type for dynamic rule */
 block|}
 struct|;
 end_struct
@@ -333,6 +333,89 @@ name|ip_fw
 modifier|*
 name|rule
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Flow mask/flow id for each queue.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ipfw_flow_id
+block|{
+name|u_int32_t
+name|dst_ip
+decl_stmt|,
+name|src_ip
+decl_stmt|;
+name|u_int16_t
+name|dst_port
+decl_stmt|,
+name|src_port
+decl_stmt|;
+name|u_int8_t
+name|proto
+decl_stmt|;
+name|u_int8_t
+name|flags
+decl_stmt|;
+comment|/* protocol-specific flags */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * dynamic ipfw rule  */
+end_comment
+
+begin_struct
+struct|struct
+name|ipfw_dyn_rule
+block|{
+name|struct
+name|ipfw_dyn_rule
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|ipfw_flow_id
+name|id
+decl_stmt|;
+name|struct
+name|ipfw_flow_id
+name|mask
+decl_stmt|;
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+decl_stmt|;
+comment|/* pointer to parent rule	*/
+name|u_int32_t
+name|type
+decl_stmt|;
+comment|/* rule type			*/
+name|u_int32_t
+name|expire
+decl_stmt|;
+comment|/* expire time			*/
+name|u_int64_t
+name|pcnt
+decl_stmt|,
+name|bcnt
+decl_stmt|;
+comment|/* match counters		*/
+name|u_int32_t
+name|bucket
+decl_stmt|;
+comment|/* which bucket in hash table	*/
+name|u_int32_t
+name|state
+decl_stmt|;
+comment|/* state of this rule (typ. a   */
+comment|/* combination of TCP flags)	*/
 block|}
 struct|;
 end_struct
@@ -652,8 +735,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_F_KEEP_S
+name|IP_FW_BRIDGED
 value|0x04000000
+end_define
+
+begin_comment
+comment|/* only match bridged packets		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_KEEP_S
+value|0x08000000
 end_define
 
 begin_comment
@@ -663,8 +757,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_CHECK_S
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* check state	 			*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x03FFFFFF
+value|0x1FFFFFFF
 end_define
 
 begin_comment
@@ -894,6 +999,28 @@ specifier|extern
 name|ip_fw_ctl_t
 modifier|*
 name|ip_fw_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fw_one_pass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fw_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ipfw_flow_id
+name|last_pkt
 decl_stmt|;
 end_decl_stmt
 

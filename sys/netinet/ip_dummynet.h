@@ -218,31 +218,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flow mask/flow id for each queue.  */
-end_comment
-
-begin_struct
-struct|struct
-name|dn_flow_id
-block|{
-name|u_int32_t
-name|dst_ip
-decl_stmt|,
-name|src_ip
-decl_stmt|;
-name|u_int16_t
-name|dst_port
-decl_stmt|,
-name|src_port
-decl_stmt|;
-name|u_int8_t
-name|proto
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * We use per flow queues. Hashing is used to select the right slot,  * then we scan the list to match the flow-id.  * The pipe is shared as it is only a delay line and thus one is enough.  */
 end_comment
 
@@ -256,7 +231,7 @@ modifier|*
 name|next
 decl_stmt|;
 name|struct
-name|dn_flow_id
+name|ipfw_flow_id
 name|id
 decl_stmt|;
 name|struct
@@ -345,7 +320,7 @@ name|dn_queue
 name|p
 decl_stmt|;
 name|struct
-name|dn_flow_id
+name|ipfw_flow_id
 name|flow_mask
 decl_stmt|;
 name|int
@@ -395,14 +370,6 @@ specifier|extern
 name|ip_dn_ctl_t
 modifier|*
 name|ip_dn_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|dn_flow_id
-name|dn_last_pkt
 decl_stmt|;
 end_decl_stmt
 

@@ -184,17 +184,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * the addresses/ports of last pkt matched by the firewall are  * in this structure. This is so that we can easily find them without  * navigating through the mbuf.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|dn_flow_id
-name|dn_last_pkt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * we keep a private variable for the simulation time, but probably  * it would be better to use the already existing one "softticks"  * (in sys/kern/kern_timer.c)  */
 end_comment
 
@@ -236,6 +225,19 @@ decl_stmt|,
 name|search_steps
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pipe_expire
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expire queue if empty */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -370,7 +372,7 @@ name|OID_AUTO
 argument_list|,
 name|hash_size
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|dn_hash_size
@@ -491,6 +493,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|expire
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pipe_expire
+argument_list|,
+literal|0
+argument_list|,
+literal|"Expire queue if empty"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -602,7 +625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Heap management functions.  *  * In the heap, first node is element 0. Children of i are 2i+1 and 2i+2.  * Some macros help finding parent/children so we can optimize them.  #  * heap_init() is called to expand the heap when needed.  * Increment size in blocks of 256 entries (which make one 4KB page)  * XXX failure to allocate a new element is a pretty bad failure  * as we basically stall a whole queue forever!!  * Returns 1 on error, 0 on success  */
+comment|/*  * Heap management functions.  *  * In the heap, first node is element 0. Children of i are 2i+1 and 2i+2.  * Some macros help finding parent/children so we can optimize them.  *  * heap_init() is called to expand the heap when needed.  * Increment size in blocks of 256 entries (which make one 4KB page)  * XXX failure to allocate a new element is a pretty bad failure  * as we basically stall a whole queue forever!!  * Returns 1 on error, 0 on success  */
 end_comment
 
 begin_define
@@ -1948,7 +1971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a pipe and a pkt in dn_last_pkt, find a matching queue  * after appropriate masking. The queue is moved to front  * so that further searches take less time.  * XXX if the queue is longer than some threshold should consider  * purging old unused entries. They will get in the way every time  * we have a new flow.  */
+comment|/*  * Given a pipe and a pkt in last_pkt, find a matching queue  * after appropriate masking. The queue is moved to front  * so that further searches take less time.  * XXX if the queue is longer than some threshold should consider  * purging old unused entries. They will get in the way every time  * we have a new flow.  */
 end_comment
 
 begin_function
@@ -2001,7 +2024,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* first, do the masking */
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_ip
 operator|&=
@@ -2011,7 +2034,7 @@ name|flow_mask
 operator|.
 name|dst_ip
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_ip
 operator|&=
@@ -2021,7 +2044,7 @@ name|flow_mask
 operator|.
 name|src_ip
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_port
 operator|&=
@@ -2031,7 +2054,7 @@ name|flow_mask
 operator|.
 name|dst_port
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_port
 operator|&=
@@ -2041,7 +2064,7 @@ name|flow_mask
 operator|.
 name|src_port
 expr_stmt|;
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|proto
 operator|&=
@@ -2056,7 +2079,7 @@ name|i
 operator|=
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_ip
 operator|)
@@ -2066,7 +2089,7 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_ip
 operator|>>
@@ -2078,7 +2101,7 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_ip
 operator|<<
@@ -2090,7 +2113,7 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_ip
 operator|>>
@@ -2101,7 +2124,7 @@ literal|0xffff
 operator|)
 operator|^
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|dst_port
 operator|<<
@@ -2109,13 +2132,13 @@ literal|1
 operator|)
 operator|^
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|src_port
 operator|)
 operator|^
 operator|(
-name|dn_last_pkt
+name|last_pkt
 operator|.
 name|proto
 operator|)
@@ -2149,15 +2172,6 @@ index|]
 init|;
 name|q
 condition|;
-name|prev
-operator|=
-name|q
-operator|,
-name|q
-operator|=
-name|q
-operator|->
-name|next
 control|)
 block|{
 name|search_steps
@@ -2168,7 +2182,7 @@ condition|(
 name|bcmp
 argument_list|(
 operator|&
-name|dn_last_pkt
+name|last_pkt
 argument_list|,
 operator|&
 operator|(
@@ -2189,6 +2203,82 @@ literal|0
 condition|)
 break|break ;
 comment|/* found */
+elseif|else
+if|if
+condition|(
+name|pipe_expire
+operator|&&
+name|q
+operator|->
+name|r
+operator|.
+name|head
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* entry is idle, expire it */
+name|struct
+name|dn_flow_queue
+modifier|*
+name|old_q
+init|=
+name|q
+decl_stmt|;
+if|if
+condition|(
+name|prev
+operator|!=
+name|NULL
+condition|)
+name|prev
+operator|->
+name|next
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|pipe
+operator|->
+name|rq
+index|[
+name|i
+index|]
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+name|pipe
+operator|->
+name|rq_elements
+operator|--
+expr_stmt|;
+name|free
+argument_list|(
+name|old_q
+argument_list|,
+name|M_IPFW
+argument_list|)
+expr_stmt|;
+continue|continue ;
+block|}
+name|prev
+operator|=
+name|q
+expr_stmt|;
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2285,7 +2375,7 @@ name|q
 operator|->
 name|id
 operator|=
-name|dn_last_pkt
+name|last_pkt
 expr_stmt|;
 name|q
 operator|->
@@ -2328,7 +2418,7 @@ name|DEB
 argument_list|(
 argument|printf(
 literal|"++ new queue (%d) for 0x%08x/0x%04x -> 0x%08x/0x%04x\n"
-argument|, 		pipe->rq_elements, 		dn_last_pkt.src_ip, dn_last_pkt.src_port, 		dn_last_pkt.dst_ip, dn_last_pkt.dst_port);
+argument|, 		pipe->rq_elements, 		last_pkt.src_ip, last_pkt.src_port, 		last_pkt.dst_ip, last_pkt.dst_port);
 argument_list|)
 block|}
 return|return
@@ -2419,7 +2509,7 @@ name|DEB
 argument_list|(
 argument|printf(
 literal|"-- last_pkt dst 0x%08x/0x%04x src 0x%08x/0x%04x\n"
-argument|, 	dn_last_pkt.dst_ip, dn_last_pkt.dst_port, 	dn_last_pkt.src_ip, dn_last_pkt.src_port);
+argument|, 	last_pkt.dst_ip, last_pkt.dst_port, 	last_pkt.src_ip, last_pkt.src_port);
 argument_list|)
 name|pipe_nr
 operator|&=
