@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -543,6 +543,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+name|vmapbuf
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|VOP_STRATEGY
 argument_list|(
 name|bp
@@ -573,6 +586,19 @@ literal|0
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+name|vunmapbuf
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|->
 name|b_un
@@ -781,6 +807,19 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+name|vunmapbuf
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -1451,6 +1490,17 @@ name|uio_iovcnt
 operator|--
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+name|DCIU
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|allocbuf
