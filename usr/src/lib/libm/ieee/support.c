@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.6 (ucb.elefunt) %G%"
+literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.7 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1277,12 +1277,28 @@ operator|-=
 name|p
 expr_stmt|;
 block|}
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+if|if
+condition|(
+name|x
+condition|)
+endif|#
+directive|endif
 operator|*
 name|px
-operator|=
-operator|*
-name|px
-operator|^
+operator|^=
 name|sign
 expr_stmt|;
 return|return
