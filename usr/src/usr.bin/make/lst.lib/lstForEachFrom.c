@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lstForEachFrom.c	5.3 (Berkeley) %G%"
+literal|"@(#)lstForEachFrom.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,9 @@ name|tln
 operator|->
 name|nextPtr
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tln
 operator|->
 name|useCount
@@ -161,6 +164,9 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tln
 operator|->
 name|useCount
