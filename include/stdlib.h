@@ -1344,17 +1344,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-error|Please add alloca support on all FreeBSD architectures for this compiler.
-end_error
-
 begin_endif
 endif|#
 directive|endif
