@@ -23150,7 +23150,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|goal_period
+name|nvrm_period
 operator|=
 name|per
 expr_stmt|;
