@@ -11,11 +11,8 @@ begin_define
 define|#
 directive|define
 name|STATIC
+value|static
 end_define
-
-begin_comment
-comment|/* nothing while we're testing XXX */
-end_comment
 
 begin_define
 define|#
@@ -33,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<dev/vinum/vinumhdr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/vinum/request.h>
 end_include
 
 begin_decl_stmt
@@ -272,13 +275,13 @@ name|vinum_conf
 operator|.
 name|flags
 operator|&
-name|VF_KERNELOP
+name|VF_DISKCONFIG
 operator|)
 operator|)
 condition|)
 block|{
-comment|/* and not in kernel: return msg */
-comment|/* 	 * XXX We can't just format to ioctl_reply, since it 	 * may contain our input parameters  	 */
+comment|/* and not reading from disk: return msg */
+comment|/* 	 * We can't just format to ioctl_reply, since it 	 * may contain our input parameters  	 */
 name|text
 operator|=
 name|Malloc
@@ -293,9 +296,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"vinum: can't allocate error message buffer"
+name|LOG_ERR
+argument_list|,
+literal|"vinum: can't allocate error message buffer\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -403,8 +408,44 @@ name|flags
 operator|&
 name|VF_READING_CONFIG
 condition|)
+block|{
 comment|/* go through to the bitter end, */
+if|if
+condition|(
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_DISKCONFIG
+operator|)
+comment|/* we're reading from disk, */
+operator|&&
+operator|(
+operator|(
+name|daemon_options
+operator|&
+name|daemon_noupdate
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"Disabling configuration updates\n"
+argument_list|)
+expr_stmt|;
+name|daemon_options
+operator||=
+name|daemon_noupdate
+expr_stmt|;
+block|}
 return|return;
+block|}
 comment|/*      * We have a problem here: we want to unlock the      * configuration, which implies tidying up, but      * if we find an error while tidying up, we could      * recurse for ever.  Use this kludge to only try      * once       */
 name|was_finishing
 operator|=
@@ -881,12 +922,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check that this operation is being done in the kernel.  * longjmp out if not.  op is the name of the operation.   */
+comment|/*  * Check that this operation is being done from the config  * saved on disk.  * longjmp out if not.  op is the name of the operation.   */
 end_comment
 
 begin_function
 name|void
-name|checkkernel
+name|checkdiskconfig
 parameter_list|(
 name|char
 modifier|*
@@ -900,7 +941,7 @@ name|vinum_conf
 operator|.
 name|flags
 operator|&
-name|VF_KERNELOP
+name|VF_DISKCONFIG
 operator|)
 operator|==
 literal|0
@@ -909,7 +950,7 @@ name|throw_rude_remark
 argument_list|(
 name|EPERM
 argument_list|,
-literal|"Can't perform '%s' from user space"
+literal|"Can't perform '%s' from config file"
 argument_list|,
 name|op
 argument_list|)
@@ -937,7 +978,7 @@ name|volume
 modifier|*
 name|vol
 decl_stmt|;
-comment|/*      * XXX It's not an error for the plex to already      * belong to the volume, but we need to check a      * number of things to make sure it's done right.      * Some day.       */
+comment|/*      * It's not an error for the plex to already      * belong to the volume, but we need to check a      * number of things to make sure it's done right.      * Some day.       */
 if|if
 condition|(
 name|my_plex
@@ -1086,7 +1127,7 @@ name|sd
 modifier|*
 name|sd
 decl_stmt|;
-comment|/*      * XXX It's not an error for the sd to already      * belong to the plex, but we need to check a      * number of things to make sure it's done right.      * Some day.       */
+comment|/*      * It's not an error for the sd to already      * belong to the plex, but we need to check a      * number of things to make sure it's done right.      * Some day.       */
 name|i
 operator|=
 name|my_sd
@@ -1228,7 +1269,7 @@ argument_list|(
 name|ENOSPC
 argument_list|,
 comment|/* crap out */
-literal|"Can't add %s to %s: plex full\n"
+literal|"Can't add %s to %s: plex full"
 argument_list|,
 name|sd
 operator|->
@@ -1272,6 +1313,41 @@ name|INITIAL_SUBDISKS_IN_PLEX
 argument_list|)
 expr_stmt|;
 comment|/* Adjust size of plex and volume. */
+if|if
+condition|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+condition|)
+block|{
+name|plex
+operator|->
+name|length
+operator|=
+operator|(
+name|plex
+operator|->
+name|subdisks
+operator|-
+literal|1
+operator|)
+operator|*
+name|sd
+operator|->
+name|sectors
+expr_stmt|;
+comment|/* size is one disk short */
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_empty
+expr_stmt|;
+comment|/* and it needs to be initialized */
+block|}
+else|else
 name|plex
 operator|->
 name|length
@@ -1466,6 +1542,10 @@ name|int
 name|fe
 decl_stmt|;
 comment|/* index in free list */
+name|int
+name|sfe
+decl_stmt|;
+comment|/* and index of subdisk when assigning max */
 name|sd
 operator|=
 operator|&
@@ -1502,6 +1582,16 @@ expr_stmt|;
 comment|/* that crashes the subdisk */
 if|if
 condition|(
+operator|(
+name|drive
+operator|->
+name|sectors_available
+operator|==
+literal|0
+operator|)
+comment|/* no space left */
+operator|||
+operator|(
 name|sd
 operator|->
 name|sectors
@@ -1509,9 +1599,10 @@ operator|>
 name|drive
 operator|->
 name|sectors_available
+operator|)
 condition|)
 block|{
-comment|/* too big, */
+comment|/* or too big, */
 name|sd
 operator|->
 name|driveoffset
@@ -1520,6 +1611,13 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* don't be confusing */
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_down
+expr_stmt|;
+comment|/* make it down */
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1537,6 +1635,8 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+return|return;
+comment|/* in case we come back here */
 block|}
 name|drive
 operator|->
@@ -1544,7 +1644,154 @@ name|subdisks_used
 operator|++
 expr_stmt|;
 comment|/* one more subdisk */
+if|if
+condition|(
+name|sd
+operator|->
+name|driveoffset
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* find your own */
+name|sfe
+operator|=
+literal|0
+expr_stmt|;
+comment|/* to keep the compiler happy */
+for|for
+control|(
+name|fe
+operator|=
+literal|0
+init|;
+name|fe
+operator|<
+name|drive
+operator|->
+name|freelist_entries
+condition|;
+name|fe
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|drive
+operator|->
+name|freelist
+index|[
+name|fe
+index|]
+operator|.
+name|sectors
+operator|>=
+name|sd
+operator|->
+name|sectors
+condition|)
+block|{
+comment|/* more space here */
+name|sd
+operator|->
+name|sectors
+operator|=
+name|drive
+operator|->
+name|freelist
+index|[
+name|fe
+index|]
+operator|.
+name|sectors
+expr_stmt|;
+comment|/* take it */
+name|sd
+operator|->
+name|driveoffset
+operator|=
+name|drive
+operator|->
+name|freelist
+index|[
+name|fe
+index|]
+operator|.
+name|offset
+expr_stmt|;
+name|sfe
+operator|=
+name|fe
+expr_stmt|;
+comment|/* and note the index for later */
+block|}
+block|}
+if|if
+condition|(
+name|sfe
+operator|<
+operator|(
+name|drive
+operator|->
+name|freelist_entries
+operator|-
+literal|1
+operator|)
+condition|)
+comment|/* not the last one, */
+name|bcopy
+argument_list|(
+operator|&
+name|drive
+operator|->
+name|freelist
+index|[
+name|sfe
+operator|+
+literal|1
+index|]
+argument_list|,
+operator|&
+name|drive
+operator|->
+name|freelist
+index|[
+name|sfe
+index|]
+argument_list|,
+operator|(
+name|drive
+operator|->
+name|freelist_entries
+operator|-
+name|sfe
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|drive_freelist
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|drive
+operator|->
+name|freelist_entries
+operator|--
+expr_stmt|;
+comment|/* one less entry */
+name|drive
+operator|->
+name|sectors_available
+operator|-=
+name|sd
+operator|->
+name|sectors
+expr_stmt|;
+comment|/* and note how much less space we have */
+block|}
 comment|/* no offset specified, find one */
+elseif|else
 if|if
 condition|(
 name|sd
@@ -1834,7 +2081,7 @@ name|throw_rude_remark
 argument_list|(
 name|ENOSPC
 argument_list|,
-literal|"No space for subdisk %s on drive %s at offset %qd\n"
+literal|"No space for subdisk %s on drive %s at offset %qd"
 argument_list|,
 name|sd
 operator|->
@@ -2230,6 +2477,16 @@ operator|=
 name|driveno
 expr_stmt|;
 comment|/* put number in structure */
+name|strcpy
+argument_list|(
+literal|"unknown"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|)
+expr_stmt|;
+comment|/* and make the name ``unknown'' */
 return|return
 name|driveno
 return|;
@@ -2400,7 +2657,7 @@ name|drive
 operator|->
 name|state
 operator|=
-name|drive_uninit
+name|drive_referenced
 expr_stmt|;
 comment|/* in use, nothing worthwhile there */
 name|drive
@@ -2556,7 +2813,7 @@ name|drive
 operator|->
 name|state
 operator|=
-name|drive_uninit
+name|drive_referenced
 expr_stmt|;
 comment|/* in use, nothing worthwhile there */
 name|drive
@@ -2923,22 +3180,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free an allocated sd entry  * This performs memory management only.  remove()  * is responsible for checking relationships.  */
+comment|/* Return space to a drive */
 end_comment
 
 begin_function
 name|void
-name|free_sd
+name|return_drive_space
 parameter_list|(
 name|int
-name|sdno
+name|driveno
+parameter_list|,
+name|int64_t
+name|offset
+parameter_list|,
+name|int
+name|length
 parameter_list|)
 block|{
-name|struct
-name|sd
-modifier|*
-name|sd
-decl_stmt|;
 name|struct
 name|drive
 modifier|*
@@ -2956,54 +3214,28 @@ name|u_int64_t
 name|dend
 decl_stmt|;
 comment|/* end of our freelist entry */
-name|sd
-operator|=
-operator|&
-name|SD
-index|[
-name|sdno
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|sd
-operator|->
-name|driveno
-operator|>=
-literal|0
-operator|)
-comment|/* we have a drive, */
-operator|&&
-operator|(
-name|sd
-operator|->
-name|sectors
-operator|>
-literal|0
-operator|)
-condition|)
-block|{
-comment|/* and some space on it */
 name|drive
 operator|=
 operator|&
 name|DRIVE
 index|[
-name|sd
-operator|->
 name|driveno
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|==
+name|drive_up
+condition|)
+block|{
 name|sdend
 operator|=
-name|sd
-operator|->
-name|driveoffset
+name|offset
 operator|+
-name|sd
-operator|->
-name|sectors
+name|length
 expr_stmt|;
 comment|/* end of our subdisk */
 comment|/* Look for where to return the sd address space */
@@ -3031,9 +3263,7 @@ index|]
 operator|.
 name|offset
 operator|<
-name|sd
-operator|->
-name|driveoffset
+name|offset
 operator|)
 condition|;
 name|fe
@@ -3070,9 +3300,7 @@ index|]
 operator|.
 name|offset
 operator|>
-name|sd
-operator|->
-name|driveoffset
+name|offset
 operator|)
 operator|)
 condition|)
@@ -3102,17 +3330,15 @@ operator|.
 name|sectors
 expr_stmt|;
 comment|/* end of the entry */
-comment|/* 	 * At this point, we are pointing to the correct 	 * place in the free list.  A number of possibilities 	 * exist: 	 * 	 * 1.  The block to be freed immediately follows 	 *     the block to which we are pointing.  Just 	 *     enlarge it. 	 * 2.  The block to be freed starts at the end of 	 *     the current block and ends at the beginning 	 *     of the following block.  Merge the three 	 *     areas into a single block. 	 * 3.  The block to be freed starts after the end 	 *     of the block and ends before the start of 	 *     the following block.  Create a new free block. 	 * 4.  The block to be freed starts after the end 	 *     of the block, but ends at the start of the 	 *     following block.  Enlarge the following block 	 *     downwards. 	 * 	 */
+comment|/* 	 * At this point, we are pointing to the correct 	 * place in the free list.  A number of possibilities 	 * exist: 	 * 	 * 1.  The block to be freed starts at the end of the 	 *     block to which we are pointing.  This has two 	 *     subcases: 	 * 	 * a.  The block to be freed ends at the beginning 	 *     of the following block.  Merge the three 	 *     areas into a single block. 	 * 	 * b.  The block is shorter than the space between 	 *     the current block and the next one.  Enlarge 	 *     the current block. 	 * 	 * 2.  The block to be freed starts after the end 	 *     of the block.  Again, we have two cases: 	 * 	 * a.  It ends before the start of the following block. 	 *     Create a new free block. 	 * 	 * b.  It ends at the start of the following block. 	 *     Enlarge the following block downwards. 	 * 	 * When there is only one free space block, and the 	 * space to be returned is before it, the pointer is 	 * to a non-existent zeroth block. XXX check this 	 */
 if|if
 condition|(
-name|sd
-operator|->
-name|driveoffset
+name|offset
 operator|==
 name|dend
 condition|)
 block|{
-comment|/* it starts after the end of this block */
+comment|/* Case 1: it starts at the end of this block */
 if|if
 condition|(
 operator|(
@@ -3163,7 +3389,7 @@ index|]
 operator|.
 name|sectors
 expr_stmt|;
-comment|/* 2: merge all three blocks */
+comment|/* 1a: merge all three blocks */
 if|if
 condition|(
 name|fe
@@ -3223,7 +3449,7 @@ expr_stmt|;
 comment|/* one less entry in the free list */
 block|}
 else|else
-comment|/* 1: just enlarge this block */
+comment|/* 1b: just enlarge this block */
 name|drive
 operator|->
 name|freelist
@@ -3233,18 +3459,15 @@ index|]
 operator|.
 name|sectors
 operator|+=
-name|sd
-operator|->
-name|sectors
+name|length
 expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Case 2 */
 if|if
 condition|(
-name|sd
-operator|->
-name|driveoffset
+name|offset
 operator|>
 name|dend
 condition|)
@@ -3288,9 +3511,7 @@ index|]
 operator|.
 name|offset
 operator|=
-name|sd
-operator|->
-name|driveoffset
+name|offset
 expr_stmt|;
 comment|/* it starts where the sd was */
 name|drive
@@ -3302,9 +3523,7 @@ index|]
 operator|.
 name|sectors
 operator|+=
-name|sd
-operator|->
-name|sectors
+name|length
 expr_stmt|;
 comment|/* and it's this much bigger */
 block|}
@@ -3371,9 +3590,7 @@ index|]
 operator|.
 name|offset
 operator|=
-name|sd
-operator|->
-name|driveoffset
+name|offset
 expr_stmt|;
 comment|/* this entry represents the sd */
 name|drive
@@ -3385,19 +3602,82 @@ index|]
 operator|.
 name|sectors
 operator|=
-name|sd
-operator|->
-name|sectors
+name|length
 expr_stmt|;
 block|}
 block|}
 name|drive
 operator|->
-name|opencount
-operator|--
+name|sectors_available
+operator|+=
+name|length
 expr_stmt|;
-comment|/* one less subdisk attached */
+comment|/* the sectors are now available */
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Free an allocated sd entry  * This performs memory management only.  remove()  * is responsible for checking relationships.  */
+end_comment
+
+begin_function
+name|void
+name|free_sd
+parameter_list|(
+name|int
+name|sdno
+parameter_list|)
+block|{
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|sdno
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sd
+operator|->
+name|driveno
+operator|>=
+literal|0
+operator|)
+comment|/* we have a drive, */
+operator|&&
+operator|(
+name|sd
+operator|->
+name|sectors
+operator|>
+literal|0
+operator|)
+condition|)
+comment|/* and some space on it */
+name|return_drive_space
+argument_list|(
+name|sd
+operator|->
+name|driveno
+argument_list|,
+comment|/* return the space */
+name|sd
+operator|->
+name|driveoffset
+argument_list|,
+name|sd
+operator|->
+name|sectors
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|sd
@@ -4187,7 +4467,7 @@ name|throw_rude_remark
 argument_list|(
 name|EINVAL
 argument_list|,
-literal|"Drive has no name"
+literal|"Drive has no name\n"
 argument_list|)
 expr_stmt|;
 name|driveno
@@ -4245,7 +4525,7 @@ name|drive
 operator|->
 name|state
 operator|!=
-name|drive_uninit
+name|drive_referenced
 condition|)
 block|{
 comment|/* we already know this drive */
@@ -4296,8 +4576,8 @@ name|devicename
 index|[
 literal|0
 index|]
-operator|!=
-literal|'\0'
+operator|==
+literal|'/'
 condition|)
 block|{
 comment|/* we know this drive... */
@@ -4502,7 +4782,7 @@ break|break;
 case|case
 name|kw_state
 case|:
-name|checkkernel
+name|checkdiskconfig
 argument_list|(
 name|token
 index|[
@@ -4511,7 +4791,7 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* must be a kernel user */
+comment|/* must be reading from disk */
 name|drive
 operator|->
 name|state
@@ -4559,8 +4839,8 @@ name|devicename
 index|[
 literal|0
 index|]
-operator|==
-literal|'\0'
+operator|!=
+literal|'/'
 condition|)
 block|{
 name|drive
@@ -4653,6 +4933,14 @@ name|sdno
 index|]
 expr_stmt|;
 comment|/* and get a pointer */
+name|sd
+operator|->
+name|sectors
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* to distinguish from 0 */
 for|for
 control|(
 name|parameter
@@ -4708,6 +4996,27 @@ if|if
 condition|(
 operator|(
 name|size
+operator|==
+operator|-
+literal|1
+operator|)
+comment|/* unallocated */
+operator|&&
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_DISKCONFIG
+operator|)
+condition|)
+comment|/* reading from disk */
+break|break;
+comment|/* invalid sd; just ignore it */
+if|if
+condition|(
+operator|(
+name|size
 operator|%
 name|DEV_BSIZE
 operator|)
@@ -4751,6 +5060,27 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|size
+operator|==
+operator|-
+literal|1
+operator|)
+comment|/* unallocated */
+operator|&&
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_DISKCONFIG
+operator|)
+condition|)
+comment|/* reading from disk */
+break|break;
+comment|/* invalid sd; just ignore it */
 if|if
 condition|(
 operator|(
@@ -4864,13 +5194,35 @@ break|break;
 case|case
 name|kw_len
 case|:
+if|if
+condition|(
+name|get_keyword
+argument_list|(
+name|token
+index|[
+operator|++
+name|parameter
+index|]
+argument_list|,
+operator|&
+name|keyword_set
+argument_list|)
+operator|==
+name|kw_max
+condition|)
+comment|/* select maximum size from drive */
+name|size
+operator|=
+literal|0
+expr_stmt|;
+comment|/* this is how we say it :-) */
+else|else
 name|size
 operator|=
 name|sizespec
 argument_list|(
 name|token
 index|[
-operator|++
 name|parameter
 index|]
 argument_list|)
@@ -4952,7 +5304,7 @@ comment|/* 	     * Set the state.  We can't do this directly, 	     * because gi
 case|case
 name|kw_state
 case|:
-name|checkkernel
+name|checkdiskconfig
 argument_list|(
 name|token
 index|[
@@ -4961,7 +5313,7 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* must be a kernel user */
+comment|/* must be reading from disk */
 name|state
 operator|=
 name|SdState
@@ -5166,7 +5518,7 @@ condition|(
 name|sd
 operator|->
 name|sectors
-operator|==
+operator|<
 literal|0
 condition|)
 name|throw_rude_remark
@@ -5482,6 +5834,61 @@ name|DEV_BSIZE
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|kw_raid5
+case|:
+block|{
+name|int
+name|stripesize
+init|=
+name|sizespec
+argument_list|(
+name|token
+index|[
+operator|++
+name|parameter
+index|]
+argument_list|)
+decl_stmt|;
+name|plex
+operator|->
+name|organization
+operator|=
+name|plex_raid5
+expr_stmt|;
+if|if
+condition|(
+name|stripesize
+operator|%
+name|DEV_BSIZE
+operator|!=
+literal|0
+condition|)
+comment|/* not a multiple of block size, */
+name|throw_rude_remark
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"plex %s: stripe size %d not a multiple of sector size"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|,
+name|stripesize
+argument_list|)
+expr_stmt|;
+else|else
+name|plex
+operator|->
+name|stripesize
+operator|=
+name|stripesize
+operator|/
+name|DEV_BSIZE
+expr_stmt|;
+break|break;
+block|}
 default|default:
 name|throw_rude_remark
 argument_list|(
@@ -5500,6 +5907,14 @@ operator|->
 name|organization
 operator|==
 name|plex_striped
+operator|)
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
 operator|)
 operator|)
 operator|&&
@@ -5592,7 +6007,7 @@ block|}
 case|case
 name|kw_state
 case|:
-name|checkkernel
+name|checkdiskconfig
 argument_list|(
 name|token
 index|[
@@ -5601,7 +6016,7 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* only for kernel use */
+comment|/* must be a kernel user */
 name|plex
 operator|->
 name|state
@@ -6163,7 +6578,7 @@ break|break;
 case|case
 name|kw_state
 case|:
-name|checkkernel
+name|checkdiskconfig
 argument_list|(
 name|token
 index|[
@@ -6172,7 +6587,7 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* must be a kernel user */
+comment|/* must be on disk */
 name|vol
 operator|->
 name|state
@@ -6321,7 +6736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a config entry.  CARE!  This destroys the original contents of the  * config entry, which we don't really need after this.  More specifically, it  * places \0 characters at the end of each token.  *  * Return 0 if all is well, otherwise EINVAL   */
+comment|/*  * Parse a config entry.  CARE!  This destroys the original contents of the  * config entry, which we don't really need after this.  More specifically, it  * places \0 characters at the end of each token.  *  * Return 0 if all is well, otherwise EINVAL for invalid keyword,  * or ENOENT if 'read' command doesn't find any drives.  */
 end_comment
 
 begin_function
@@ -6404,6 +6819,8 @@ case|case
 name|kw_read
 case|:
 comment|/* read config from a specified drive */
+name|status
+operator|=
 name|vinum_scandisk
 argument_list|(
 operator|&
@@ -6516,6 +6933,22 @@ argument_list|,
 name|keyset
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|ENOENT
+condition|)
+comment|/* from scandisk, but it can't tell us */
+name|strcpy
+argument_list|(
+name|ioctl_reply
+operator|->
+name|msg
+argument_list|,
+literal|"no drives found"
 argument_list|)
 expr_stmt|;
 name|ioctl_reply
@@ -6964,6 +7397,26 @@ if|if
 condition|(
 name|sd
 operator|->
+name|flags
+operator|&
+name|VF_OPEN
+condition|)
+block|{
+comment|/* we're open */
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+comment|/* no getting around that */
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|sd
+operator|->
 name|plexno
 operator|>=
 literal|0
@@ -7124,8 +7577,10 @@ name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* need to reinitialize */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: removing %s\n"
 argument_list|,
 name|sd
@@ -7150,8 +7605,10 @@ comment|/* can't do that */
 block|}
 else|else
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: removing %s\n"
 argument_list|,
 name|sd
@@ -7242,7 +7699,9 @@ if|if
 condition|(
 name|plex
 operator|->
-name|pid
+name|flags
+operator|&
+name|VF_OPEN
 condition|)
 block|{
 comment|/* we're open */
@@ -7495,8 +7954,10 @@ comment|/* can't do that */
 return|return;
 block|}
 block|}
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: removing %s\n"
 argument_list|,
 name|plex
@@ -7586,7 +8047,9 @@ if|if
 condition|(
 name|vol
 operator|->
-name|opencount
+name|flags
+operator|&
+name|VF_OPEN
 condition|)
 comment|/* we're open */
 name|ioctl_reply
@@ -7669,8 +8132,10 @@ name|plexmsg
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: removing %s\n"
 argument_list|,
 name|vol
@@ -7695,8 +8160,10 @@ comment|/* can't do that */
 block|}
 else|else
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: removing %s\n"
 argument_list|,
 name|vol
@@ -7721,13 +8188,13 @@ name|int
 name|sdno
 parameter_list|,
 name|int
-name|kernelstate
+name|diskconfig
 parameter_list|)
 block|{
 if|if
 condition|(
 operator|!
-name|kernelstate
+name|diskconfig
 condition|)
 name|set_sd_state
 argument_list|(
@@ -7749,7 +8216,7 @@ name|int
 name|plexno
 parameter_list|,
 name|int
-name|kernelstate
+name|diskconfig
 parameter_list|)
 block|{
 name|int
@@ -7781,11 +8248,14 @@ init|=
 name|plex_up
 decl_stmt|;
 comment|/* state we want the plex in */
+name|int
+name|remainder
+decl_stmt|;
+comment|/* size of fractional stripe at end */
 comment|/* XXX Insert checks here for sparse plexes and volumes */
 comment|/*      * Check that our subdisks make sense.  For      * striped and RAID5 plexes, we need at least      * two subdisks, and they must all be the same      * size       */
 if|if
 condition|(
-operator|(
 operator|(
 name|plex
 operator|->
@@ -7793,23 +8263,33 @@ name|organization
 operator|==
 name|plex_striped
 operator|)
-operator|)
-operator|&&
+operator|||
 operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|plex
 operator|->
 name|subdisks
 operator|<
 literal|2
-operator|)
 condition|)
 block|{
 name|error
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: plex %s does not have at least 2 subdisks\n"
 argument_list|,
 name|plex
@@ -7820,7 +8300,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|kernelstate
+name|diskconfig
 condition|)
 name|set_plex_state
 argument_list|(
@@ -7833,6 +8313,142 @@ operator||
 name|setstate_configuring
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Now see if the plex size is a multiple of 	 * the stripe size.  If not, trim off the end 	 * of each subdisk and return it to the drive. 	 */
+name|remainder
+operator|=
+call|(
+name|int
+call|)
+argument_list|(
+name|plex
+operator|->
+name|length
+operator|%
+operator|(
+name|u_int64_t
+operator|)
+name|plex
+operator|->
+name|stripesize
+argument_list|)
+expr_stmt|;
+comment|/* are we exact? */
+if|if
+condition|(
+name|remainder
+condition|)
+block|{
+comment|/* no */
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"vinum: removing %d blocks of partial stripe at the end of %s\n"
+argument_list|,
+name|remainder
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|plex
+operator|->
+name|length
+operator|-=
+name|remainder
+expr_stmt|;
+comment|/* shorten the plex */
+name|remainder
+operator|/=
+name|plex
+operator|->
+name|subdisks
+expr_stmt|;
+comment|/* spread the remainder amongst the sds */
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|plex
+operator|->
+name|subdisks
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+index|]
+expr_stmt|;
+comment|/* point to the subdisk */
+name|return_drive_space
+argument_list|(
+name|sd
+operator|->
+name|driveno
+argument_list|,
+comment|/* return the space */
+name|sd
+operator|->
+name|driveoffset
+operator|+
+name|sd
+operator|->
+name|sectors
+operator|-
+name|remainder
+argument_list|,
+name|remainder
+argument_list|)
+expr_stmt|;
+name|sd
+operator|->
+name|sectors
+operator|-=
+name|remainder
+expr_stmt|;
+comment|/* and shorten it */
+block|}
+if|if
+condition|(
+name|plex
+operator|->
+name|volno
+operator|>=
+literal|0
+condition|)
+comment|/* we're associated with a volume, */
+name|update_volume_config
+argument_list|(
+name|plex
+operator|->
+name|volno
+argument_list|,
+name|diskconfig
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|size
 operator|=
@@ -7863,6 +8479,14 @@ operator|->
 name|organization
 operator|==
 name|plex_striped
+operator|)
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
 operator|)
 operator|)
 operator|&&
@@ -7905,8 +8529,10 @@ name|error
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: %s must have equal sized subdisks\n"
 argument_list|,
 name|plex
@@ -7954,12 +8580,74 @@ if|if
 condition|(
 name|plex
 operator|->
+name|organization
+operator|==
+name|plex_raid5
+condition|)
+block|{
+if|if
+condition|(
+name|plex
+operator|->
+name|subdisks
+operator|<
+literal|3
+condition|)
+block|{
+comment|/* nonsense */
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vinum: %s must have at least 3 subdisks\n"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|set_plex_state
+argument_list|(
+name|plexno
+argument_list|,
+name|plex_faulty
+argument_list|,
+name|setstate_force
+operator||
+name|setstate_configuring
+argument_list|)
+expr_stmt|;
+block|}
+name|size
+operator|=
+name|size
+operator|/
+name|plex
+operator|->
+name|subdisks
+operator|*
+operator|(
+name|plex
+operator|->
+name|subdisks
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+comment|/* less space for RAID-5 */
+block|}
+if|if
+condition|(
+name|plex
+operator|->
 name|length
 operator|!=
 name|size
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"Correcting length of %s: was %qd, is %qd\n"
 argument_list|,
 name|plex
@@ -8000,7 +8688,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|kernelstate
+name|diskconfig
 operator|||
 name|error
 operator|)
@@ -8027,7 +8715,7 @@ name|int
 name|volno
 parameter_list|,
 name|int
-name|kernelstate
+name|diskconfig
 parameter_list|)
 block|{
 name|struct
@@ -8057,7 +8745,7 @@ name|state
 operator|!=
 name|volume_unallocated
 condition|)
-comment|/* Recalculate the size of the volume */
+comment|/* 	 * Recalculate the size of the volume, 	 * which might change if the original 	 * plexes were not a multiple of the 	 * stripe size. 	 */
 block|{
 name|vol
 operator|->
@@ -8119,26 +8807,11 @@ expr_stmt|;
 comment|/* note it in the plex */
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|kernelstate
-condition|)
-comment|/* try to bring it up */
-name|set_volume_state
-argument_list|(
-name|volno
-argument_list|,
-name|volume_up
-argument_list|,
-name|setstate_configuring
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Update the global configuration.  * kernelstate is != 0 if we're reading in a config  * from disk.  In this case, we don't try to  * bring the devices up, though we will bring  * them down if there's some error which got  * missed when writing to disk.  */
+comment|/*  * Update the global configuration.  * diskconfig is != 0 if we're reading in a config  * from disk.  In this case, we don't try to  * bring the devices up, though we will bring  * them down if there's some error which got  * missed when writing to disk.  */
 end_comment
 
 begin_function
@@ -8146,7 +8819,7 @@ name|void
 name|updateconfig
 parameter_list|(
 name|int
-name|kernelstate
+name|diskconfig
 parameter_list|)
 block|{
 name|int
@@ -8174,7 +8847,7 @@ name|update_plex_config
 argument_list|(
 name|plexno
 argument_list|,
-name|kernelstate
+name|diskconfig
 argument_list|)
 expr_stmt|;
 for|for
@@ -8204,13 +8877,9 @@ operator|~
 name|VF_CONFIG_SETUPSTATE
 expr_stmt|;
 comment|/* no more setupstate */
-name|set_volume_state
+name|update_volume_state
 argument_list|(
 name|volno
-argument_list|,
-name|volume_up
-argument_list|,
-name|setstate_configuring
 argument_list|)
 expr_stmt|;
 block|}
