@@ -4,7 +4,11 @@ comment|/*  * Device driver for National Semiconductor DS8390 based ethernet  * 
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.25  93/09/08  23:04:25  davidg  * fixed problem where 3c503 boards lock up if the cable is   * disconnected at boot time. Added printing of irq number if  * the kernel config and board don't match  *   * Revision 1.24  93/09/07  12:08:36  davidg  * ED_FLAGS_NO_DOUBLE_BUFFERING was being checked against wrong variable  *   * Revision 1.23  93/09/07  10:32:53  davidg  * split wd and 3Com probe code into seperate routines  *   * Revision 1.22  93/09/06  20:28:22  davidg  * change references to LAAR to use shadow/prototype rather than the  * real thing because 8013EBT asic regs are write-only.  *   * Revision 1.21  93/08/25  20:38:02  davidg  * added recognition for WD8013WC (10BaseT) card type  *   * Revision 1.20  93/08/14  20:07:35  davidg  * one more stab at getting the 8013EBT working  *   * Revision 1.19  93/08/02  02:57:53  davidg  * Fixed problem where some rev 8013EBT boards want the DCR_LS flag  * set in order to work in 16bit mode. Also improves performance on  * all types of boards.  *  *...(part of log nuked for brevity)  *   * Revision 1.12  93/07/07  06:27:44  davidg  * moved call to bpfattach to after this drivers attach printf -  * improves readability of startup messages.  *   *...(part of log nuked for brevity)  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
+comment|/*  * $Id: if_ed.c,v 1.29 93/09/12 04:43:31 davidg Exp Locker: davidg $  */
+end_comment
+
+begin_comment
+comment|/*  * Modification history  *  * Revision 1.29  93/09/12  04:43:31  davidg  * cleaned-up probe routine to make it easier to add future board types  *   * Revision 1.28  93/09/11  19:17:56  davidg  * rewrote interrupt code; leaner and meaner.  *   * Revision 1.27  93/09/10  19:15:09  davidg  * changed probe/attach so that the type code is printed if the board  * type isn't unknown  *   * Revision 1.26  93/09/09  02:12:08  davidg  * cleaned up header comments a little  *   * Revision 1.25  93/09/08  23:04:25  davidg  * fixed problem where 3c503 boards lock up if the cable is   * disconnected at boot time. Added printing of irq number if  * the kernel config and board don't match  *   * Revision 1.24  93/09/07  12:08:36  davidg  * ED_FLAGS_NO_DOUBLE_BUFFERING was being checked against wrong variable  *   * Revision 1.23  93/09/07  10:32:53  davidg  * split wd and 3Com probe code into seperate routines  *   * Revision 1.22  93/09/06  20:28:22  davidg  * change references to LAAR to use shadow/prototype rather than the  * real thing because 8013EBT asic regs are write-only.  *   * Revision 1.21  93/08/25  20:38:02  davidg  * added recognition for WD8013WC (10BaseT) card type  *   * Revision 1.20  93/08/14  20:07:35  davidg  * one more stab at getting the 8013EBT working  *   * Revision 1.19  93/08/02  02:57:53  davidg  * Fixed problem where some rev 8013EBT boards want the DCR_LS flag  * set in order to work in 16bit mode. Also improves performance on  * all types of boards.  *  *...(part of log nuked for brevity)  *   * Revision 1.12  93/07/07  06:27:44  davidg  * moved call to bpfattach to after this drivers attach printf -  * improves readability of startup messages.  *   *...(part of log nuked for brevity)  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
 end_comment
 
 begin_include
@@ -20,6 +24,10 @@ name|NED
 operator|>
 literal|0
 end_if
+
+begin_comment
+comment|/* bpfilter included here in case it is needed in future net includes */
+end_comment
 
 begin_include
 include|#
@@ -261,10 +269,6 @@ name|type
 decl_stmt|;
 comment|/* interface type code */
 name|u_short
-name|vector
-decl_stmt|;
-comment|/* interrupt vector */
-name|u_short
 name|asic_addr
 decl_stmt|;
 comment|/* ASIC I/O bus address */
@@ -272,6 +276,14 @@ name|u_short
 name|nic_addr
 decl_stmt|;
 comment|/* NIC (DS8390) I/O bus address */
+comment|/*  * The following 'proto' variable is part of a work-around for 8013EBT asics  *	being write-only. It's sort of a prototype/shadow of the real thing.  */
+name|u_char
+name|wd_laar_proto
+decl_stmt|;
+name|u_char
+name|isa16bit
+decl_stmt|;
+comment|/* width of access to card mem 0=8 or 1=16 */
 name|caddr_t
 name|smem_start
 decl_stmt|;
@@ -293,13 +305,13 @@ name|bpf
 decl_stmt|;
 comment|/* BPF "magic cookie" */
 name|u_char
-name|memwidth
-decl_stmt|;
-comment|/* width of access to card mem 8 or 16 */
-name|u_char
 name|xmit_busy
 decl_stmt|;
 comment|/* transmitter is busy */
+name|u_char
+name|data_buffered
+decl_stmt|;
+comment|/* data has been buffered in interface memory */
 name|u_char
 name|txb_cnt
 decl_stmt|;
@@ -312,10 +324,6 @@ name|u_short
 name|txb_next_len
 decl_stmt|;
 comment|/* next xmit buffer length */
-name|u_char
-name|data_buffered
-decl_stmt|;
-comment|/* data has been buffered in interface memory */
 name|u_char
 name|tx_page_start
 decl_stmt|;
@@ -332,10 +340,6 @@ name|u_char
 name|next_packet
 decl_stmt|;
 comment|/* pointer to next unread RX packet */
-comment|/*  * The following 'proto' variable is part of a work-around for 8013EBT asics  *	being write-only. It's sort of a prototype/shadow of the real thing.  */
-name|u_char
-name|wd_laar_proto
-decl_stmt|;
 block|}
 name|ed_softc
 index|[
@@ -520,100 +524,36 @@ name|id_unit
 index|]
 decl_stmt|;
 name|int
-name|i
+name|nports
 decl_stmt|;
-name|u_char
-name|sum
-decl_stmt|;
-comment|/* 	 * Setup initial i/o address for ASIC and NIC 	 */
-name|sc
-operator|->
-name|asic_addr
-operator|=
-name|isa_dev
-operator|->
-name|id_iobase
-expr_stmt|;
-name|sc
-operator|->
-name|vector
-operator|=
-name|isa_dev
-operator|->
-name|id_irq
-expr_stmt|;
-name|sc
-operator|->
-name|smem_start
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|isa_dev
-operator|->
-name|id_maddr
-expr_stmt|;
-comment|/* 	 * Attempt to do a checksum over the station address PROM. 	 * This is mapped differently on the WD80x3 and 3C503, so if 	 *	it fails, it might be a 3C503. There is a problem with 	 *	this, though: some clone WD boards don't pass the 	 *	checksum test. Danpex boards for one. We need to do 	 *	additional checking for this case. 	 */
-for|for
-control|(
-name|sum
-operator|=
-literal|0
-operator|,
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|8
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|sum
-operator|+=
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_PROM
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
-name|sum
-operator|==
-name|ED_WD_ROM_CHECKSUM_TOTAL
-condition|)
-block|{
-return|return
-operator|(
+name|nports
+operator|=
 name|ed_probe_WD80x3
 argument_list|(
 name|isa_dev
 argument_list|)
-operator|)
-return|;
-block|}
-else|else
-block|{
-comment|/* 		 * XXX - Should do additional checking to make sure its a 3Com 		 *	and not a broken WD clone 		 */
+condition|)
 return|return
 operator|(
+name|nports
+operator|)
+return|;
+if|if
+condition|(
+name|nports
+operator|=
 name|ed_probe_3Com
 argument_list|(
 name|isa_dev
 argument_list|)
+condition|)
+return|return
+operator|(
+name|nports
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -655,12 +595,70 @@ decl_stmt|;
 name|u_char
 name|iptr
 decl_stmt|,
-name|memwidth
+name|isa16bit
 decl_stmt|,
 name|sum
-decl_stmt|,
-name|tmp
 decl_stmt|;
+name|sc
+operator|->
+name|asic_addr
+operator|=
+name|isa_dev
+operator|->
+name|id_iobase
+expr_stmt|;
+name|sc
+operator|->
+name|nic_addr
+operator|=
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_NIC_OFFSET
+expr_stmt|;
+comment|/* 	 * Attempt to do a checksum over the station address PROM. 	 *	If it fails, it's probably not a SMC/WD board. There 	 *	is a problem with this, though: some clone WD boards 	 *	don't pass the checksum test. Danpex boards for one. 	 *	XXX - We need to do additional checking for this case. 	 */
+for|for
+control|(
+name|sum
+operator|=
+literal|0
+operator|,
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|8
+condition|;
+operator|++
+name|i
+control|)
+name|sum
+operator|+=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_PROM
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sum
+operator|!=
+name|ED_WD_ROM_CHECKSUM_TOTAL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc
 operator|->
 name|vendor
@@ -679,16 +677,6 @@ name|asic_addr
 operator|+
 name|ED_WD_CARD_ID
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|nic_addr
-operator|=
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_NIC_OFFSET
 expr_stmt|;
 comment|/* reset card to force it into a known state. */
 name|outb
@@ -755,9 +743,9 @@ name|memsize
 operator|=
 literal|8192
 expr_stmt|;
-name|memwidth
+name|isa16bit
 operator|=
-literal|8
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -773,9 +761,9 @@ name|memsize
 operator|=
 literal|8192
 expr_stmt|;
-name|memwidth
+name|isa16bit
 operator|=
-literal|8
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -791,9 +779,9 @@ name|memsize
 operator|=
 literal|16384
 expr_stmt|;
-name|memwidth
+name|isa16bit
 operator|=
-literal|16
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -814,9 +802,9 @@ operator|&
 name|ED_WD_ICR_16BIT
 condition|)
 block|{
-name|memwidth
+name|isa16bit
 operator|=
-literal|16
+literal|1
 expr_stmt|;
 name|memsize
 operator|=
@@ -831,19 +819,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sc
-operator|->
-name|type_str
+name|isa16bit
 operator|=
-literal|"WD8003EP"
+literal|0
 expr_stmt|;
 name|memsize
 operator|=
 literal|8192
 expr_stmt|;
-name|memwidth
+name|sc
+operator|->
+name|type_str
 operator|=
-literal|8
+literal|"WD8003EP"
 expr_stmt|;
 block|}
 break|break;
@@ -860,9 +848,9 @@ name|memsize
 operator|=
 literal|16384
 expr_stmt|;
-name|memwidth
+name|isa16bit
 operator|=
-literal|16
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -878,9 +866,9 @@ name|memsize
 operator|=
 literal|16384
 expr_stmt|;
-name|memwidth
+name|isa16bit
 operator|=
-literal|16
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -896,9 +884,9 @@ name|memsize
 operator|=
 literal|16384
 expr_stmt|;
-name|memwidth
+name|isa16bit
 operator|=
-literal|16
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -906,26 +894,22 @@ name|sc
 operator|->
 name|type_str
 operator|=
-literal|"unknown"
+literal|""
 expr_stmt|;
 name|memsize
 operator|=
 literal|8192
 expr_stmt|;
-name|memwidth
+name|isa16bit
 operator|=
-literal|8
+literal|0
 expr_stmt|;
 break|break;
 block|}
 comment|/* 	 * Make some adjustments to initial values depending on what is 	 *	found in the ICR. 	 */
 if|if
 condition|(
-operator|(
-name|memwidth
-operator|==
-literal|16
-operator|)
+name|isa16bit
 operator|&&
 operator|(
 name|sc
@@ -953,9 +937,9 @@ literal|0
 operator|)
 condition|)
 block|{
-name|memwidth
+name|isa16bit
 operator|=
-literal|8
+literal|0
 expr_stmt|;
 name|memsize
 operator|=
@@ -974,13 +958,13 @@ directive|if
 name|ED_DEBUG
 name|printf
 argument_list|(
-literal|"type=%s memwidth=%d memsize=%d id_msize=%d\n"
+literal|"type=%s isa16bit=%d memsize=%d id_msize=%d\n"
 argument_list|,
 name|sc
 operator|->
 name|type_str
 argument_list|,
-name|memwidth
+name|isa16bit
 argument_list|,
 name|memsize
 argument_list|,
@@ -1042,9 +1026,9 @@ name|id_flags
 operator|&
 name|ED_FLAGS_FORCE_16BIT_MODE
 condition|)
-name|memwidth
+name|isa16bit
 operator|=
-literal|16
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1054,9 +1038,9 @@ name|id_flags
 operator|&
 name|ED_FLAGS_FORCE_8BIT_MODE
 condition|)
-name|memwidth
+name|isa16bit
 operator|=
-literal|8
+literal|0
 expr_stmt|;
 comment|/* 	 * Check 83C584 interrupt configuration register if this board has one 	 *	XXX - we could also check the IO address register. But why 	 *		bother...if we get past this, it *has* to be correct. 	 */
 if|if
@@ -1176,9 +1160,20 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
-name|memwidth
+name|isa16bit
 operator|=
-name|memwidth
+name|isa16bit
+expr_stmt|;
+name|sc
+operator|->
+name|smem_start
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|isa_dev
+operator|->
+name|id_maddr
 expr_stmt|;
 comment|/* 	 * allocate one xmit buffer if< 16k, two buffers otherwise 	 */
 if|if
@@ -1371,9 +1366,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|memwidth
-operator|==
-literal|8
+name|isa16bit
 condition|)
 block|{
 name|outb
@@ -1389,6 +1382,10 @@ name|sc
 operator|->
 name|wd_laar_proto
 operator|=
+name|ED_WD_LAAR_L16EN
+operator||
+name|ED_WD_LAAR_M16EN
+operator||
 operator|(
 operator|(
 name|kvtop
@@ -1422,10 +1419,6 @@ name|sc
 operator|->
 name|wd_laar_proto
 operator|=
-name|ED_WD_LAAR_L16EN
-operator||
-name|ED_WD_LAAR_M16EN
-operator||
 operator|(
 operator|(
 name|kvtop
@@ -1496,9 +1489,7 @@ expr_stmt|;
 comment|/* 			 * Disable 16 bit access to shared memory 			 */
 if|if
 condition|(
-name|memwidth
-operator|==
-literal|16
+name|isa16bit
 condition|)
 name|outb
 argument_list|(
@@ -1527,9 +1518,7 @@ block|}
 comment|/* 	 * Disable 16bit access to shared memory - we leave it disabled so 	 *	that 1) machines reboot properly when the board is set 	 *	16 bit mode and there are conflicting 8bit devices/ROMS 	 *	in the same 128k address space as this boards shared 	 *	memory. and 2) so that other 8 bit devices with shared 	 *	memory can be used in this 128k region, too. 	 */
 if|if
 condition|(
-name|memwidth
-operator|==
-literal|16
+name|isa16bit
 condition|)
 name|outb
 argument_list|(
@@ -1604,16 +1593,10 @@ name|u_int
 name|memsize
 decl_stmt|;
 name|u_char
-name|memwidth
+name|isa16bit
 decl_stmt|,
 name|sum
 decl_stmt|;
-name|sc
-operator|->
-name|vendor
-operator|=
-name|ED_VENDOR_3COM
-expr_stmt|;
 name|sc
 operator|->
 name|asic_addr
@@ -1633,16 +1616,6 @@ operator|->
 name|id_iobase
 operator|+
 name|ED_3COM_NIC_OFFSET
-expr_stmt|;
-name|sc
-operator|->
-name|type_str
-operator|=
-literal|"3c503"
-expr_stmt|;
-name|memsize
-operator|=
-literal|8192
 expr_stmt|;
 comment|/* 	 * Verify that the kernel configured I/O address matches the board 	 *	configured address 	 */
 switch|switch
@@ -1900,7 +1873,23 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Reset NIC and ASIC. Enable on-board transceiver through reset sequence 	 *	because it'll lock up if the cable isn't connected if we don't. 	 */
+name|sc
+operator|->
+name|vendor
+operator|=
+name|ED_VENDOR_3COM
+expr_stmt|;
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"3c503"
+expr_stmt|;
+name|memsize
+operator|=
+literal|8192
+expr_stmt|;
+comment|/* 	 * Reset NIC and ASIC. Enable on-board transceiver throughout reset 	 *	sequence because it'll lock up if the cable isn't connected 	 *	if we don't. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -2053,14 +2042,14 @@ argument_list|)
 operator|&
 name|ED_DCR_WTS
 condition|)
-name|memwidth
+name|isa16bit
 operator|=
-literal|16
+literal|1
 expr_stmt|;
 else|else
-name|memwidth
+name|isa16bit
 operator|=
-literal|8
+literal|0
 expr_stmt|;
 comment|/* 	 * select page 0 registers 	 */
 name|outb
@@ -2108,6 +2097,17 @@ name|ED_3COM_PAGE_OFFSET
 expr_stmt|;
 name|sc
 operator|->
+name|smem_start
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|isa_dev
+operator|->
+name|id_maddr
+expr_stmt|;
+name|sc
+operator|->
 name|smem_size
 operator|=
 name|memsize
@@ -2138,9 +2138,9 @@ operator|)
 expr_stmt|;
 name|sc
 operator|->
-name|memwidth
+name|isa16bit
 operator|=
-name|memwidth
+name|isa16bit
 expr_stmt|;
 comment|/* 	 * Initialize GA page start/stop registers. Probably only needed 	 *	if doing DMA, but what the hell. 	 */
 name|outb
@@ -2643,7 +2643,7 @@ block|}
 comment|/* 	 * Print additional info when attached 	 */
 name|printf
 argument_list|(
-literal|"ed%d: address %s, type %s (%dbit) %s\n"
+literal|"ed%d: address %s, "
 argument_list|,
 name|isa_dev
 operator|->
@@ -2657,14 +2657,58 @@ name|arpcom
 operator|.
 name|ac_enaddr
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|type_str
+operator|&&
+operator|(
+operator|*
+name|sc
+operator|->
+name|type_str
+operator|!=
+literal|0
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"type %s "
 argument_list|,
 name|sc
 operator|->
 name|type_str
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"type unknown (0x%x) "
 argument_list|,
 name|sc
 operator|->
-name|memwidth
+name|type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|sc
+operator|->
+name|isa16bit
+condition|?
+literal|"(16 bit)"
+else|:
+literal|"(8 bit)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 operator|(
 operator|(
@@ -2993,9 +3037,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|memwidth
-operator|==
-literal|16
+name|isa16bit
 condition|)
 block|{
 comment|/* 		 * Set FIFO threshold to 8, No auto-init Remote DMA, 		 *	byte order=80x86, word-wide DMA xfers, 		 */
@@ -3644,22 +3686,20 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Copy the mbuf chain into the transmit buffer 	 */
-comment|/* 	 * Enable 16bit access to shared memory on WD/SMC boards 	 *	Don't update wd_laar_proto because we want to restore the 	 *	previous state (because an arp reply in the input code 	 *	may cause a call-back to ed_start) 	 */
+comment|/* 	 * Enable 16bit access to shared memory on WD/SMC boards 	 *	Don't update wd_laar_proto because we want to restore the 	 *	previous state (because an arp reply in the input code 	 *	may cause a call-back to ed_start) 	 * XXX - the call-back to 'start' is a bug, IMHO. 	 */
 if|if
 condition|(
 name|sc
 operator|->
-name|memwidth
-operator|==
-literal|16
-condition|)
-if|if
-condition|(
+name|isa16bit
+operator|&&
+operator|(
 name|sc
 operator|->
 name|vendor
 operator|==
 name|ED_VENDOR_WD_SMC
+operator|)
 condition|)
 block|{
 name|outb
@@ -3751,19 +3791,16 @@ if|if
 condition|(
 name|sc
 operator|->
-name|memwidth
-operator|==
-literal|16
-condition|)
-if|if
-condition|(
+name|isa16bit
+operator|&&
+operator|(
 name|sc
 operator|->
 name|vendor
 operator|==
 name|ED_VENDOR_WD_SMC
+operator|)
 condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -3777,7 +3814,6 @@ operator|->
 name|wd_laar_proto
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|txb_next_len
@@ -3817,7 +3853,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is BPF support in the configuration, tap off here. 	 *   The following has support for converting trailer packets 	 *   back to normal. 	 */
+comment|/* 	 * If there is BPF support in the configuration, tap off here. 	 *   The following has support for converting trailer packets 	 *   back to normal. 	 * XXX - support for trailer packets in BPF should be moved into 	 *	the bpf code proper to avoid code duplication in all of 	 *	the drivers. 	 */
 if|#
 directive|if
 name|NBPFILTER
@@ -4097,7 +4133,6 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-comment|/* only called from one place, so may as well integrate */
 name|ed_rint
 parameter_list|(
 name|unit
@@ -4398,7 +4433,7 @@ name|ED_P0_ISR
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * reset all the bits that we are 'acknowleging' 		 *	by writing a '1' to each bit position that was set 		 * (writing a '1' *clears* the bit) 		 */
+comment|/* 		 * reset all the bits that we are 'acknowledging' 		 *	by writing a '1' to each bit position that was set 		 * (writing a '1' *clears* the bit) 		 */
 name|outb
 argument_list|(
 name|sc
@@ -4410,28 +4445,20 @@ argument_list|,
 name|isr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Transmit error. If a TX completed with an error, we end up 		 *	throwing the packet away. Really the only error that is 		 *	possible is excessive collisions, and in this case it is 		 *	best to allow the automatic mechanisms of TCP to backoff 		 *	the flow. Of course, with UDP we're screwed, but this is 		 *	expected when a network is heavily loaded. 		 */
+comment|/* 		 * Handle transmitter interrupts. Handle these first 		 *	because the receiver will reset the board under 		 *	some conditions. 		 */
 if|if
 condition|(
 name|isr
 operator|&
+operator|(
+name|ED_ISR_PTX
+operator||
 name|ED_ISR_TXE
+operator|)
 condition|)
 block|{
 name|u_char
-name|tsr
-init|=
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_TSR
-argument_list|)
-decl_stmt|;
-name|u_char
-name|ncr
+name|collisions
 init|=
 name|inb
 argument_list|(
@@ -4442,46 +4469,44 @@ operator|+
 name|ED_P0_NCR
 argument_list|)
 decl_stmt|;
-comment|/* 			 * Excessive collisions (16) 			 */
+comment|/* 			 * Check for transmit error. If a TX completed with an 			 * error, we end up throwing the packet away. Really 			 * the only error that is possible is excessive 			 * collisions, and in this case it is best to allow the 			 * automatic mechanisms of TCP to backoff the flow. Of 			 * course, with UDP we're screwed, but this is expected 			 * when a network is heavily loaded. 			 */
+if|if
+condition|(
+name|isr
+operator|&
+name|ED_ISR_TXE
+condition|)
+block|{
+comment|/* 				 * Excessive collisions (16) 				 */
 if|if
 condition|(
 operator|(
-name|tsr
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_TSR
+argument_list|)
 operator|&
 name|ED_TSR_ABT
 operator|)
 operator|&&
 operator|(
-name|ncr
+name|collisions
 operator|==
 literal|0
 operator|)
 condition|)
 block|{
-comment|/* 				 *    When collisions total 16, the P0_NCR will 				 * indicate 0, and the TSR_ABT is set. 				 */
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_collisions
-operator|+=
+comment|/* 					 *    When collisions total 16, the 					 * P0_NCR will indicate 0, and the 					 * TSR_ABT is set. 					 */
+name|collisions
+operator|=
 literal|16
 expr_stmt|;
 block|}
-else|else
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_collisions
-operator|+=
-name|ncr
-expr_stmt|;
-comment|/* 			 * update output errors counter 			 */
+comment|/* 				 * update output errors counter 				 */
 operator|++
 name|sc
 operator|->
@@ -4491,6 +4516,20 @@ name|ac_if
 operator|.
 name|if_oerrors
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * Update total number of successfully 				 * 	transmitted packets. 				 */
+operator|++
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_opackets
+expr_stmt|;
+block|}
 comment|/* 			 * reset tx busy and output active flags 			 */
 name|sc
 operator|->
@@ -4520,8 +4559,85 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 			 * Add in total number of collisions on last 			 *	transmission. 			 */
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_collisions
+operator|+=
+name|collisions
+expr_stmt|;
+comment|/* 			 * If data is ready to transmit, start it transmitting, 			 *	otherwise defer until after handling receiver 			 */
+if|if
+condition|(
+name|sc
+operator|->
+name|data_buffered
+condition|)
+name|ed_xmit
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* 		 * Receiver Error. One or more of: CRC error, frame alignment error 		 *	FIFO overrun, or missed packet. 		 */
+comment|/* 		 * Handle receiver interrupts 		 */
+if|if
+condition|(
+name|isr
+operator|&
+operator|(
+name|ED_ISR_PRX
+operator||
+name|ED_ISR_RXE
+operator||
+name|ED_ISR_OVW
+operator|)
+condition|)
+block|{
+comment|/* 		     * Overwrite warning. In order to make sure that a lockup 		     *	of the local DMA hasn't occurred, we reset and 		     *	re-init the NIC. The NSC manual suggests only a 		     *	partial reset/re-init is necessary - but some 		     *	chips seem to want more. The DMA lockup has been 		     *	seen only with early rev chips - Methinks this 		     *	bug was fixed in later revs. -DG 		     */
+if|if
+condition|(
+name|isr
+operator|&
+name|ED_ISR_OVW
+condition|)
+block|{
+operator|++
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_ierrors
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"ed%d: warning - receiver ring buffer overrun\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+comment|/* 				 * Stop/reset/re-init NIC 				 */
+name|ed_reset
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			     * Receiver Error. One or more of: CRC error, frame 			     *	alignment error FIFO overrun, or missed packet. 			     */
 if|if
 condition|(
 name|isr
@@ -4560,133 +4676,21 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 		 * Overwrite warning. In order to make sure that a lockup 		 *	of the local DMA hasn't occurred, we reset and 		 *	re-init the NIC. The NSC manual suggests only a 		 *	partial reset/re-init is necessary - but some 		 *	chips seem to want more. The DMA lockup has been 		 *	seen only with early rev chips - Methinks this 		 *	bug was fixed in later revs. -DG 		 */
+comment|/* 				 * Go get the packet(s) 				 * XXX - Doing this on an error is dubious 				 *    because there shouldn't be any data to 				 *    get (we've configured the interface to 				 *    not accept packets with errors). 				 */
+comment|/* 				 * Enable 16bit access to shared memory first 				 *	on WD/SMC boards. 				 */
 if|if
 condition|(
-name|isr
-operator|&
-name|ED_ISR_OVW
-condition|)
-block|{
-operator|++
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_ierrors
-expr_stmt|;
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"ed%d: warning - receiver ring buffer overrun\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Stop/reset/re-init NIC 			 */
-name|ed_reset
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 		 * Transmission completed normally. 		 */
-if|if
-condition|(
-name|isr
-operator|&
-name|ED_ISR_PTX
-condition|)
-block|{
-comment|/* 			 * reset tx busy and output active flags 			 */
-name|sc
-operator|->
-name|xmit_busy
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_flags
-operator|&=
-operator|~
-name|IFF_OACTIVE
-expr_stmt|;
-comment|/* 			 * clear watchdog timer 			 */
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 			 * Update total number of successfully transmitted 			 *	packets. 			 */
-operator|++
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_opackets
-expr_stmt|;
-comment|/* 			 * Add in total number of collisions on last 			 *	transmission. 			 */
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_collisions
-operator|+=
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_TBCR0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 		 * Receive Completion. Go and get the packet.  		 *	XXX - Doing this on an error is dubious because there 		 *	   shouldn't be any data to get (we've configured the 		 *	   interface to not accept packets with errors). 		 */
-if|if
-condition|(
-name|isr
-operator|&
+name|isa16bit
+operator|&&
 operator|(
-name|ED_ISR_PRX
-operator||
-name|ED_ISR_RXE
-operator|)
-condition|)
-block|{
-comment|/* 			 * Enable access to shared memory on WD/SMC boards 			 */
-if|if
-condition|(
-name|sc
-operator|->
-name|memwidth
-operator|==
-literal|16
-condition|)
-if|if
-condition|(
 name|sc
 operator|->
 name|vendor
 operator|==
 name|ED_VENDOR_WD_SMC
+operator|)
 condition|)
 block|{
 name|outb
@@ -4712,22 +4716,20 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Disable access to shared memory 			 */
+comment|/* disable 16bit access */
 if|if
 condition|(
 name|sc
 operator|->
-name|memwidth
-operator|==
-literal|16
-condition|)
-if|if
-condition|(
+name|isa16bit
+operator|&&
+operator|(
 name|sc
 operator|->
 name|vendor
 operator|==
 name|ED_VENDOR_WD_SMC
+operator|)
 condition|)
 block|{
 name|outb
@@ -4750,7 +4752,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * If it looks like the transmitter can take more data, 		 *	attempt to start output on the interface. If data is 		 *	already buffered and ready to go, send it first. 		 */
+block|}
+comment|/* 		 * If it looks like the transmitter can take more data, 		 * 	attempt to start output on the interface. 		 *	This is done after handling the receiver to 		 *	give the receiver priority. 		 */
 if|if
 condition|(
 operator|(
@@ -4767,23 +4770,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|data_buffered
-condition|)
-name|ed_xmit
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-argument_list|)
-expr_stmt|;
 name|ed_start
 argument_list|(
 operator|&
@@ -4794,7 +4780,6 @@ operator|.
 name|ac_if
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * return NIC CR to standard state: page 0, remote DMA complete, 		 * 	start (toggling the TXP bit off, even if was just set 		 *	in the transmit routine, is *okay* - it is 'edge' 		 *	triggered from low to high) 		 */
 name|outb
 argument_list|(
