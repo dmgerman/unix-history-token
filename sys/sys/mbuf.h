@@ -1271,7 +1271,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Network buffer allocation API  *  * The rest of it is defined in kern/subr_mbuf.c  */
+comment|/*  * Network buffer allocation API  *  * The rest of it is defined in kern/kern_mbuf.c  */
 end_comment
 
 begin_decl_stmt
