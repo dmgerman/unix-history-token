@@ -1891,23 +1891,17 @@ begin_comment
 comment|/* Define if you have the rtprio function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_RTPRIO
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_RTPRIO 1 */
+end_comment
 
 begin_comment
 comment|/* Define if you have the sched_setscheduler function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SCHED_SETSCHEDULER
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SCHED_SETSCHEDULER 1 */
+end_comment
 
 begin_comment
 comment|/* Define if you have the setlinebuf function.  */
