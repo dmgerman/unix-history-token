@@ -119,16 +119,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|force
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* force check even the fs is clean */
-end_comment
-
-begin_decl_stmt
-name|int
 name|preen
 decl_stmt|;
 end_decl_stmt
@@ -145,6 +135,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* device is opened read only (supersedes above) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|skipclean
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* skip clean file systems if preening */
 end_comment
 
 begin_decl_stmt
@@ -204,9 +204,9 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-name|force
+name|skipclean
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -235,9 +235,9 @@ block|{
 case|case
 literal|'f'
 case|:
-name|force
+name|skipclean
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 case|case

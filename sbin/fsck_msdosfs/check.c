@@ -267,6 +267,10 @@ return|;
 block|}
 if|if
 condition|(
+name|skipclean
+operator|&&
+name|preen
+operator|&&
 name|checkdirty
 argument_list|(
 name|dosfs
@@ -274,15 +278,8 @@ argument_list|,
 operator|&
 name|boot
 argument_list|)
-operator|&&
-operator|!
-name|force
 condition|)
 block|{
-if|if
-condition|(
-name|preen
-condition|)
 name|printf
 argument_list|(
 literal|"%s: "
