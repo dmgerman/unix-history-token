@@ -69,7 +69,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|_fetch_info
 parameter_list|(
 name|char
@@ -91,6 +91,9 @@ name|host
 parameter_list|,
 name|int
 name|port
+parameter_list|,
+name|int
+name|af
 parameter_list|,
 name|int
 name|verbose
