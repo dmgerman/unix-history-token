@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.22 1998/12/22 20:21:12 eivind Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.23 1999/05/06 20:16:22 ken Exp $"
 end_empty
 
 begin_define
@@ -5427,7 +5427,7 @@ operator|->
 name|parent_dmat
 argument_list|,
 comment|/*alignment*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0
@@ -6152,7 +6152,7 @@ operator|->
 name|parent_dmat
 argument_list|,
 comment|/*alignment*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0
@@ -6211,7 +6211,7 @@ operator|->
 name|parent_dmat
 argument_list|,
 comment|/*alignment*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0

@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  PCI Bus Attachment for DPT SCSI HBAs  */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.12 1999/04/24 20:13:58 peter Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.13 1999/05/09 17:06:44 peter Exp $"
 end_empty
 
 begin_include
@@ -497,7 +497,7 @@ comment|/*parent*/
 name|NULL
 argument_list|,
 comment|/*alignemnt*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0

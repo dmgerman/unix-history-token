@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.27 1999/07/05 22:04:08 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.28 1999/07/06 01:24:20 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -2121,7 +2121,7 @@ name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,

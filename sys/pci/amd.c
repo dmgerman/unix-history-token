@@ -8712,6 +8712,14 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
+name|pccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQ_CMP
+expr_stmt|;
 if|if
 condition|(
 name|pSRB
@@ -9271,6 +9279,12 @@ expr_stmt|;
 name|pSRB
 operator|->
 name|TargetStatus
+operator|=
+literal|0
+expr_stmt|;
+name|pcsio
+operator|->
+name|resid
 operator|=
 literal|0
 expr_stmt|;
@@ -10808,7 +10822,7 @@ comment|/*parent_dmat*/
 name|NULL
 argument_list|,
 comment|/*alignment*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0
