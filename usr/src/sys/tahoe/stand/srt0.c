@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	1.4	86/12/19	*/
+comment|/*	srt0.c	1.5	87/02/17	*/
 end_comment
 
 begin_include
@@ -104,7 +104,7 @@ decl_stmt|,
 name|r1
 comment|/* destination address */
 name|movl
-name|aedata
+name|tdlen
 decl_stmt|,
 name|r2
 comment|/* length to copy */
@@ -135,15 +135,15 @@ name|r2
 name|bgeq
 name|mvloop
 comment|/*  * zero bss  */
-name|movab
-name|_edata
+name|movl
+name|aedata
 decl_stmt|,
 name|r1
 comment|/* destination address */
 name|subl3
-name|aend
+name|$_edata
 decl_stmt|,
-name|aedata
+name|$_end
 decl_stmt|,
 name|r2
 comment|/* length to zero */
@@ -162,11 +162,11 @@ name|r2
 name|bgeq
 name|zloop
 name|mtpr
-name|$0
+name|$1
 decl_stmt|,
 name|$PACC
 name|mtpr
-name|$0
+name|$1
 decl_stmt|,
 name|$PADC
 name|jmp
@@ -221,39 +221,21 @@ name|begin
 ifdef|#
 directive|ifdef
 name|REL
-name|aend
+name|aedata
 case|:
 end_case
 
 begin_expr_stmt
 operator|.
 name|long
-name|_end
-operator|-
-name|BOOTRELOC
-name|aedata
+name|_edata
+name|tdlen
 operator|:
 operator|.
 name|long
 name|_edata
 operator|-
 name|BOOTRELOC
-else|#
-directive|else
-name|aend
-operator|:
-operator|.
-name|long
-name|_end
-operator|-
-name|RELOC
-name|aedata
-operator|:
-operator|.
-name|long
-name|_edata
-operator|-
-name|RELOC
 endif|#
 directive|endif
 name|ofp
