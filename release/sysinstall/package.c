@@ -643,6 +643,25 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Prevent pkg_add from wanting to interact in bad ways */
+name|setenv
+argument_list|(
+literal|"PACKAGE_BUILDING"
+argument_list|,
+literal|"t"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"BATCH"
+argument_list|,
+literal|"t"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|isDebug
