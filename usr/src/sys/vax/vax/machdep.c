@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -559,10 +559,10 @@ argument_list|)
 expr_stmt|;
 name|valloc
 argument_list|(
-name|nch
+name|namecache
 argument_list|,
 expr|struct
-name|nch
+name|namecache
 argument_list|,
 name|nchsize
 argument_list|)

@@ -180,7 +180,7 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|nch_chain
 index|[
@@ -211,7 +211,7 @@ end_define
 
 begin_decl_stmt
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|nchhead
 decl_stmt|,
@@ -273,7 +273,7 @@ decl_stmt|;
 comment|/* the directory we are searching */
 specifier|register
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|ncp
 decl_stmt|;
@@ -950,7 +950,7 @@ name|ncp
 operator|!=
 operator|(
 expr|struct
-name|nch
+name|namecache
 operator|*
 operator|)
 name|nhp
@@ -1019,7 +1019,7 @@ name|ncp
 operator|==
 operator|(
 expr|struct
-name|nch
+name|namecache
 operator|*
 operator|)
 name|nhp
@@ -1049,26 +1049,22 @@ name|nc_ip
 operator|->
 name|i_id
 condition|)
-block|{
 name|nchstats
 operator|.
 name|ncs_falsehits
 operator|++
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
 operator|!
 name|makeentry
 condition|)
-block|{
 name|nchstats
 operator|.
 name|ncs_badhits
 operator|++
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* 				 * move this slot to end of LRU 				 * chain, if not already there 				 */
@@ -1164,13 +1160,11 @@ name|pdp
 operator|==
 name|dp
 condition|)
-block|{
 name|dp
 operator|->
 name|i_count
 operator|++
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4991,7 +4985,7 @@ name|nchp
 decl_stmt|;
 specifier|register
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|ncp
 decl_stmt|;
@@ -5008,12 +5002,12 @@ for|for
 control|(
 name|ncp
 operator|=
-name|nch
+name|namecache
 init|;
 name|ncp
 operator|<
 operator|&
-name|nch
+name|namecache
 index|[
 name|nchsize
 index|]
@@ -5121,7 +5115,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|ncp
 decl_stmt|,
@@ -5296,7 +5290,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|ncp
 decl_stmt|;
@@ -5304,12 +5298,12 @@ for|for
 control|(
 name|ncp
 operator|=
-name|nch
+name|namecache
 init|;
 name|ncp
 operator|<
 operator|&
-name|nch
+name|namecache
 index|[
 name|nchsize
 index|]
