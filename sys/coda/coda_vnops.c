@@ -296,6 +296,21 @@ begin_comment
 comment|/* Definition of the vfs operation vector */
 end_comment
 
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|coda_vnodeop_p
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Some NetBSD details:  *   *   coda_start is called at the end of the mount syscall.  *   coda_init is called at boot time.  */
 end_comment

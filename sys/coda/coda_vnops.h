@@ -411,20 +411,6 @@ end_decl_stmt
 
 begin_function_decl
 name|int
-function_decl|(
-modifier|*
-modifier|*
-name|coda_vnodeop_p
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|coda_rdwr
 parameter_list|(
 name|struct
