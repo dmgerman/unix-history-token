@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.13 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,9 +226,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nSENDALL: mode %c, e_from "
+literal|"\n===== SENDALL: mode %c, id %s, e_from "
 argument_list|,
 name|mode
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 name|printaddr
