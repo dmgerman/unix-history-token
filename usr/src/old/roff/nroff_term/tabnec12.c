@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tabnec12.c	4.1	83/08/05	*/
+comment|/*	tabnec12.c	4.2	85/02/14	*/
 end_comment
 
 begin_define
@@ -185,7 +185,7 @@ comment|/*ploton*/
 literal|"\033]A\033]P"
 block|,
 comment|/*plotoff*/
-literal|"\033]L\033]W"
+literal|"\033]J\033]W"
 block|,
 comment|/*up*/
 literal|"\0339"
