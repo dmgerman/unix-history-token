@@ -148,127 +148,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|isascii
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISALPHA
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isalpha(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISUPPER
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isupper(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISLOWER
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& islower(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISDIGIT
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isdigit(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISXDIGIT
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isxdigit(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISSPACE
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isspace(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISPUNCT
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& ispunct(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISALNUM
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isalnum(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISPRINT
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isprint(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISGRAPH
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& isgraph(C))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISCNTRL
-parameter_list|(
-name|C
-parameter_list|)
-value|(isascii(C)&& iscntrl(C))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -379,11 +258,6 @@ parameter_list|)
 value|iscntrl(C)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -393,7 +267,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"regex.h"
+file|"gnuregex.h"
 end_include
 
 begin_if
