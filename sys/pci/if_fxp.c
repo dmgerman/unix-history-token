@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.8.2.9 1996/09/22 11:50:19 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.8.2.10 1996/09/29 10:21:38 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -932,14 +932,14 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Issue a software reset. 	 */
+comment|/* 	 * Reset to a stable state. 	 */
 name|sc
 operator|->
 name|csr
 operator|->
 name|port
 operator|=
-literal|0
+name|FXP_PORT_SELECTIVE_RESET
 expr_stmt|;
 name|DELAY
 argument_list|(
@@ -1840,10 +1840,6 @@ condition|(
 name|m
 operator|!=
 name|NULL
-operator|&&
-name|segment
-operator|==
-name|FXP_NTXSEG
 condition|)
 block|{
 name|struct
@@ -2143,11 +2139,6 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
-name|int
-name|found
-init|=
-literal|0
-decl_stmt|;
 name|u_int8_t
 name|statack
 decl_stmt|;
@@ -2164,10 +2155,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|found
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 		 * First ACK all the interrupts in this pass. 		 */
 name|csr
 operator|->
@@ -2552,7 +2539,7 @@ block|}
 block|}
 block|}
 return|return
-name|found
+literal|0
 return|;
 block|}
 end_function
@@ -2643,10 +2630,6 @@ operator|+
 name|sp
 operator|->
 name|rx_overrun_errors
-operator|+
-name|sp
-operator|->
-name|rx_shortframes
 expr_stmt|;
 comment|/* 	 * If any transmit underruns occured, bump up the transmit 	 * threshold by another 512 bytes (64 * 8). 	 */
 if|if
@@ -2759,13 +2742,6 @@ name|rx_overrun_errors
 operator|=
 literal|0
 expr_stmt|;
-name|sp
-operator|->
-name|rx_shortframes
-operator|=
-literal|0
-expr_stmt|;
-empty_stmt|;
 block|}
 comment|/* 	 * Schedule another timeout one second from now. 	 */
 name|timeout
@@ -2832,7 +2808,7 @@ name|csr
 operator|->
 name|port
 operator|=
-literal|0
+name|FXP_PORT_SELECTIVE_RESET
 expr_stmt|;
 name|DELAY
 argument_list|(
@@ -3235,14 +3211,14 @@ name|rx_fifo_limit
 operator|=
 literal|8
 expr_stmt|;
-comment|/* rx fifo threshold */
+comment|/* rx fifo threshold (32 bytes) */
 name|cbp
 operator|->
 name|tx_fifo_limit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* tx fifo threshold */
+comment|/* tx fifo threshold (0 bytes) */
 name|cbp
 operator|->
 name|adaptive_ifs
@@ -3254,23 +3230,23 @@ name|cbp
 operator|->
 name|rx_dma_bytecount
 operator|=
-literal|16
+literal|0
 expr_stmt|;
 comment|/* (no) rx DMA max */
 name|cbp
 operator|->
 name|tx_dma_bytecount
 operator|=
-literal|16
+literal|0
 expr_stmt|;
 comment|/* (no) tx DMA max */
 name|cbp
 operator|->
 name|dma_bce
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* (enable) dma max counters */
+comment|/* (disable) dma max counters */
 name|cbp
 operator|->
 name|late_scb
@@ -3291,7 +3267,7 @@ name|ci_int
 operator|=
 literal|0
 expr_stmt|;
-comment|/* (do) interrupt on CU not active */
+comment|/* interrupt on CU not active */
 name|cbp
 operator|->
 name|save_bf
@@ -3381,7 +3357,7 @@ name|cbp
 operator|->
 name|crscdt
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 comment|/* (CRS only) */
 name|cbp
