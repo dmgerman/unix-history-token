@@ -220,7 +220,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPasx"
+literal|"HLPaksx"
 argument_list|)
 operator|)
 operator|!=
@@ -279,6 +279,15 @@ case|:
 name|aflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|putenv
+argument_list|(
+literal|"BLOCKSIZE=1024"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -844,7 +853,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-H | -L | -P] [-a | -s] [-x] [file ...]\n"
+literal|"usage: du [-H | -L | -P] [-a | -s] [-k] [-x] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
