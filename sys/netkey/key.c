@@ -526,14 +526,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|key_prefered_oldsa
+name|key_preferred_oldsa
 init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* prefered old sa rather than new sa.*/
+comment|/* preferred old sa rather than new sa.*/
 end_comment
 
 begin_decl_stmt
@@ -666,22 +666,37 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int
-name|saorder_state_valid
+name|saorder_state_valid_prefer_old
 index|[]
 init|=
 block|{
 name|SADB_SASTATE_DYING
 block|,
 name|SADB_SASTATE_MATURE
-block|,
-comment|/* 	 * This order is important because we must select a oldest SA 	 * for outbound processing.  For inbound, This is not important. 	 */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|u_int
+name|saorder_state_valid_prefer_new
+index|[]
+init|=
+block|{
+name|SADB_SASTATE_MATURE
+block|,
+name|SADB_SASTATE_DYING
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|u_int
 name|saorder_state_alive
 index|[]
@@ -699,6 +714,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int
 name|saorder_state_any
 index|[]
@@ -1296,7 +1312,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,\
 operator|&
-name|key_prefered_oldsa
+name|key_preferred_oldsa
 argument_list|,
 literal|0
 argument_list|,
@@ -3718,6 +3734,14 @@ name|stateidx
 decl_stmt|,
 name|state
 decl_stmt|;
+specifier|const
+name|u_int
+modifier|*
+name|saorder_state_valid
+decl_stmt|;
+name|int
+name|arraysize
+decl_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|sah
@@ -3759,7 +3783,38 @@ name|NULL
 return|;
 name|found
 label|:
-comment|/* search valid state */
+comment|/* 	 * search a valid state list for outbound packet. 	 * This search order is important. 	 */
+if|if
+condition|(
+name|key_preferred_oldsa
+condition|)
+block|{
+name|saorder_state_valid
+operator|=
+name|saorder_state_valid_prefer_old
+expr_stmt|;
+name|arraysize
+operator|=
+name|_ARRAYLEN
+argument_list|(
+name|saorder_state_valid_prefer_old
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|saorder_state_valid
+operator|=
+name|saorder_state_valid_prefer_new
+expr_stmt|;
+name|arraysize
+operator|=
+name|_ARRAYLEN
+argument_list|(
+name|saorder_state_valid_prefer_new
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|stateidx
@@ -3768,10 +3823,7 @@ literal|0
 init|;
 name|stateidx
 operator|<
-name|_ARRAYLEN
-argument_list|(
-name|saorder_state_valid
-argument_list|)
+name|arraysize
 condition|;
 name|stateidx
 operator|++
@@ -3936,7 +3988,7 @@ expr_stmt|;
 comment|/* What the best method is to compare ? */
 if|if
 condition|(
-name|key_prefered_oldsa
+name|key_preferred_oldsa
 condition|)
 block|{
 if|if
@@ -4388,6 +4440,14 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+specifier|const
+name|u_int
+modifier|*
+name|saorder_state_valid
+decl_stmt|;
+name|int
+name|arraysize
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -4404,6 +4464,38 @@ argument_list|(
 literal|"key_allocsa: NULL pointer is passed.\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * when both systems employ similar strategy to use a SA. 	 * the search order is important even in the inbound case. 	 */
+if|if
+condition|(
+name|key_preferred_oldsa
+condition|)
+block|{
+name|saorder_state_valid
+operator|=
+name|saorder_state_valid_prefer_old
+expr_stmt|;
+name|arraysize
+operator|=
+name|_ARRAYLEN
+argument_list|(
+name|saorder_state_valid_prefer_old
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|saorder_state_valid
+operator|=
+name|saorder_state_valid_prefer_new
+expr_stmt|;
+name|arraysize
+operator|=
+name|_ARRAYLEN
+argument_list|(
+name|saorder_state_valid_prefer_new
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * searching SAD. 	 * XXX: to be checked internal IP header somewhere.  Also when 	 * IPsec tunnel packet is received.  But ESP tunnel mode is 	 * encrypted so we can't check internal IP header. 	 */
 name|s
 operator|=
@@ -4420,7 +4512,7 @@ argument_list|,
 argument|chain
 argument_list|)
 block|{
-comment|/* search valid state */
+comment|/* 		 * search a valid state list for inbound packet. 	 	 * the search order is not important. 		 */
 for|for
 control|(
 name|stateidx
@@ -4429,10 +4521,7 @@ literal|0
 init|;
 name|stateidx
 operator|<
-name|_ARRAYLEN
-argument_list|(
-name|saorder_state_valid
-argument_list|)
+name|arraysize
 condition|;
 name|stateidx
 operator|++
@@ -18886,7 +18975,7 @@ operator|->
 name|sadb_lifetime_addtime
 condition|)
 block|{
-comment|/* 				 * check SA to be used whether or not. 				 * when SA hasn't been used, delete it. 				 */
+comment|/* 				 * check the SA if it has been used. 				 * when it hasn't been used, delete it. 				 * i don't think such SA will be used. 				 */
 if|if
 condition|(
 name|sav
