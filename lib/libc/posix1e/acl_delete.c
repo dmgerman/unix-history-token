@@ -35,7 +35,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|acl_syscall_delete_fd
+name|__acl_delete_fd
 argument_list|(
 name|filedes
 argument_list|,
@@ -58,7 +58,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|acl_syscall_delete_file
+name|__acl_delete_file
 argument_list|(
 name|path_p
 argument_list|,
@@ -84,7 +84,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|acl_syscall_delete_file
+name|__acl_delete_file
 argument_list|(
 name|path_p
 argument_list|,
@@ -108,7 +108,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|acl_syscall_delete_fd
+name|__acl_delete_fd
 argument_list|(
 name|filedes
 argument_list|,

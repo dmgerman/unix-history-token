@@ -56,7 +56,7 @@ name|aclp
 operator|=
 name|acl_init
 argument_list|(
-name|MAX_ACL_ENTRIES
+name|ACL_MAX_ENTRIES
 argument_list|)
 expr_stmt|;
 if|if
@@ -73,7 +73,7 @@ return|;
 block|}
 name|error
 operator|=
-name|acl_syscall_get_file
+name|__acl_get_file
 argument_list|(
 name|path_p
 argument_list|,
@@ -129,7 +129,7 @@ name|aclp
 operator|=
 name|acl_init
 argument_list|(
-name|MAX_ACL_ENTRIES
+name|ACL_MAX_ENTRIES
 argument_list|)
 expr_stmt|;
 if|if
@@ -146,7 +146,7 @@ return|;
 block|}
 name|error
 operator|=
-name|acl_syscall_get_fd
+name|__acl_get_fd
 argument_list|(
 name|fd
 argument_list|,

@@ -138,7 +138,7 @@ block|}
 block|}
 return|return
 operator|(
-name|acl_syscall_aclcheck_file
+name|__acl_aclcheck_file
 argument_list|(
 name|pathp
 argument_list|,
@@ -202,7 +202,7 @@ block|}
 block|}
 return|return
 operator|(
-name|acl_syscall_aclcheck_fd
+name|__acl_aclcheck_fd
 argument_list|(
 name|fd
 argument_list|,

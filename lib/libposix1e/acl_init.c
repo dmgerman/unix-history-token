@@ -54,7 +54,7 @@ if|if
 condition|(
 name|count
 operator|>
-name|MAX_ACL_ENTRIES
+name|ACL_MAX_ENTRIES
 condition|)
 block|{
 name|errno

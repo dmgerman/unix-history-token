@@ -88,7 +88,7 @@ block|}
 block|}
 return|return
 operator|(
-name|acl_syscall_set_file
+name|__acl_set_file
 argument_list|(
 name|path_p
 argument_list|,
@@ -152,7 +152,7 @@ block|}
 block|}
 return|return
 operator|(
-name|acl_syscall_set_fd
+name|__acl_set_fd
 argument_list|(
 name|fd
 argument_list|,
