@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.4 %G%"
+literal|"@(#)routed.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,25 +870,28 @@ block|{
 comment|/* 			 * If the host is indicated to be 			 * "silent" (i.e. it's one we got 			 * from the initialization file), 			 * don't time out it's entry. 			 */
 if|if
 condition|(
+operator|(
 name|rt
 operator|->
 name|rt_flags
 operator|&
 name|RTF_SILENT
+operator|)
+operator|==
+literal|0
 condition|)
-continue|continue;
+name|rt
+operator|->
+name|rt_timer
+operator|+=
+name|TIMER_RATE
+expr_stmt|;
 name|log
 argument_list|(
 literal|""
 argument_list|,
 name|rt
 argument_list|)
-expr_stmt|;
-name|rt
-operator|->
-name|rt_timer
-operator|+=
-name|TIMER_RATE
 expr_stmt|;
 comment|/* 			 * If the entry should be deleted 			 * attempt to do so and reclaim space. 			 */
 if|if
