@@ -6524,7 +6524,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%ld bytes %s in %.2f seconds (%.2f Meg/s)\n"
+literal|"%ld bytes %s in %.2f seconds (%.2f Mbytes/s)\n"
 argument_list|,
 name|bytes
 argument_list|,
