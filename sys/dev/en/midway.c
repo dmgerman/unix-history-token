@@ -9303,7 +9303,7 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|M_COPY_PKTHDR
+name|M_MOVE_PKTHDR
 argument_list|(
 name|new
 argument_list|,

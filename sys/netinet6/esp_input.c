@@ -3869,7 +3869,7 @@ if|if
 condition|(
 name|n
 condition|)
-name|M_COPY_PKTHDR
+name|M_MOVE_PKTHDR
 argument_list|(
 name|n
 argument_list|,
@@ -4052,13 +4052,6 @@ name|m
 argument_list|,
 name|maxlen
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_PKTHDR
 expr_stmt|;
 block|}
 name|m

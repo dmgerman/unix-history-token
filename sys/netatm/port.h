@@ -236,7 +236,7 @@ name|new
 parameter_list|,
 name|head
 parameter_list|)
-value|{			\ 	if ((head)&& KB_ISPKT(new)&& KB_ISPKT(head)) {\ 		M_COPY_PKTHDR((new), (head));		\ 		(head)->m_flags&= ~M_PKTHDR;		\ 	}						\ 	(new)->m_next = (head);				\ }
+value|{			\ 	if ((head)&& KB_ISPKT(new)&& KB_ISPKT(head)) {\ 		M_MOVE_PKTHDR((new), (head));		\ 	}						\ 	(new)->m_next = (head);				\ }
 end_define
 
 begin_define

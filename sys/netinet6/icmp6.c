@@ -2294,7 +2294,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|M_COPY_PKTHDR
+name|M_MOVE_PKTHDR
 argument_list|(
 name|n
 argument_list|,
@@ -2409,13 +2409,6 @@ operator|->
 name|m_next
 operator|=
 name|n0
-expr_stmt|;
-name|n0
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_PKTHDR
 expr_stmt|;
 block|}
 else|else
@@ -2880,6 +2873,30 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|m_dup_pkthdr
+argument_list|(
+name|n
+argument_list|,
+name|m
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+condition|)
+block|{
+comment|/* 				 * Previous code did a blind M_COPY_PKTHDR 				 * and said "just for rcvif".  If true, then 				 * we could tolerate the dup failing (due to 				 * the deep copy of the tag chain).  For now 				 * be conservative and just fail. 				 */
+name|m_free
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|n
 operator|==
 name|NULL
@@ -3011,14 +3028,6 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 expr_stmt|;
-name|M_COPY_PKTHDR
-argument_list|(
-name|n
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* just for rcvif */
 name|n
 operator|->
 name|m_pkthdr
@@ -6065,7 +6074,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|M_COPY_PKTHDR
+name|M_MOVE_PKTHDR
 argument_list|(
 name|n
 argument_list|,

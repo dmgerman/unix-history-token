@@ -10491,7 +10491,7 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-name|M_COPY_PKTHDR
+name|M_MOVE_PKTHDR
 argument_list|(
 name|mh
 argument_list|,

@@ -646,7 +646,7 @@ begin_define
 define|#
 directive|define
 name|M_COPYFLAGS
-value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3 | \ 			    M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|M_FRAG|M_RDONLY)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTO1|M_PROTO1|M_PROTO2|\ 			    M_PROTO3|M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|\ 			    M_FRAG|M_FIRSTFRAG|M_LASTFRAG)
 end_define
 
 begin_comment
@@ -1156,16 +1156,20 @@ begin_comment
 comment|/*  * mbuf, cluster, and external object allocation macros  * (for compatibility purposes).  */
 end_comment
 
+begin_comment
+comment|/* NB: M_COPY_PKTHDR is deprecated, use M_MOVE_PKTHDR or m_dup_pktdr */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|M_COPY_PKTHDR
+name|M_MOVE_PKTHDR
 parameter_list|(
 name|to
 parameter_list|,
 name|from
 parameter_list|)
-value|m_copy_pkthdr((to), (from))
+value|m_move_pkthdr((to), (from))
 end_define
 
 begin_define
@@ -1728,6 +1732,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|m_dup_pkthdr
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|m_fixhdr
 parameter_list|(
@@ -1859,6 +1880,21 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|m_move_pkthdr
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2299,6 +2335,8 @@ parameter_list|(
 name|struct
 name|m_tag
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2314,6 +2352,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
