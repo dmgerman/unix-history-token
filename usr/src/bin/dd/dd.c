@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.10 (Berkeley) %G%"
+literal|"@(#)dd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,6 +540,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+define|#
+directive|define
+name|OFLAGS
+define|\
+value|(O_CREAT | (ddflags& (C_SEEK | C_NOTRUNC) ? 0 : O_TRUNC))
 name|out
 operator|.
 name|fd
@@ -552,7 +557,7 @@ name|name
 argument_list|,
 name|O_RDWR
 operator||
-name|O_CREAT
+name|OFLAGS
 argument_list|,
 name|DEFFILEMODE
 argument_list|)
@@ -579,7 +584,7 @@ name|name
 argument_list|,
 name|O_WRONLY
 operator||
-name|O_CREAT
+name|OFLAGS
 argument_list|,
 name|DEFFILEMODE
 argument_list|)
@@ -851,38 +856,28 @@ condition|)
 name|pos_out
 argument_list|()
 expr_stmt|;
-comment|/* Truncate the output file. */
+comment|/* 	 * Truncate the output file; ignore errors because it fails on some 	 * kinds of output files, tapes, for example. 	 */
 if|if
 condition|(
 name|ddflags
 operator|&
+operator|(
+name|C_OF
+operator||
+name|C_SEEK
+operator||
 name|C_NOTRUNC
+operator|)
+operator|==
+operator|(
+name|C_OF
+operator||
+name|C_SEEK
+operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|out
-operator|.
-name|flags
-operator|&
-name|ISTAPE
-condition|)
-name|err
-argument_list|(
-literal|"notrunc is not supported for tape devices"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|S_ISREG
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-operator|&&
+operator|(
+name|void
+operator|)
 name|ftruncate
 argument_list|(
 name|out
@@ -899,20 +894,6 @@ operator|*
 name|out
 operator|.
 name|dbsz
-argument_list|)
-condition|)
-name|err
-argument_list|(
-literal|"%s: truncate: %s"
-argument_list|,
-name|out
-operator|.
-name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If converting case at the same time as another conversion, build a 	 * table that does both at once.  If just converting case, use the 	 * built-in tables. 	 */
