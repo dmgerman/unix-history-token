@@ -944,10 +944,22 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|MEXT_REM_REF
-argument_list|(
+name|u_int
+name|cnt
+decl_stmt|;
+comment|/* 	 * This is tricky.  We need to make sure to decrement the 	 * refcount in a safe way but to also clean up if we're the 	 * last reference.  This method seems to do it without race. 	 */
+do|do
+block|{
+name|cnt
+operator|=
+operator|*
+operator|(
 name|m
-argument_list|)
+operator|->
+name|m_ext
+operator|.
+name|ref_cnt
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -959,12 +971,22 @@ name|m_ext
 operator|.
 name|ref_cnt
 argument_list|,
-literal|0
+name|cnt
 argument_list|,
+name|cnt
+operator|-
 literal|1
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|cnt
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 				 * Do the free, should be safe. 				 */
 if|if
 condition|(
 name|m
@@ -983,7 +1005,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 elseif|else
 if|if
@@ -1065,7 +1087,6 @@ name|M_MBUF
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|uma_zfree
 argument_list|(
 name|zone_mbuf
@@ -1073,6 +1094,16 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Decrement (and potentially free) done, safely. */
+break|break;
+block|}
+block|}
+do|while
+condition|(
+literal|1
+condition|)
+do|;
 block|}
 end_function
 
