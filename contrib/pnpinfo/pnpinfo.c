@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pnpinfo.c,v 1.4 1999/05/04 16:59:42 luoqi Exp $  */
+comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pnpinfo.c,v 1.5 1999/05/22 17:35:43 dfr Exp $  */
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/pnp.h>
+file|<isa/pnpreg.h>
 end_include
 
 begin_ifdef
@@ -419,7 +419,7 @@ name|i
 decl_stmt|;
 name|pnp_write
 argument_list|(
-name|CONFIG_CONTROL
+name|PNP_CONFIG_CONTROL
 argument_list|,
 literal|0x2
 argument_list|)
@@ -719,7 +719,7 @@ name|outb
 argument_list|(
 name|_PNP_ADDRESS
 argument_list|,
-name|STATUS
+name|PNP_STATUS
 argument_list|)
 expr_stmt|;
 for|for
@@ -780,7 +780,7 @@ name|outb
 argument_list|(
 name|_PNP_ADDRESS
 argument_list|,
-name|RESOURCE_DATA
+name|PNP_RESOURCE_DATA
 argument_list|)
 expr_stmt|;
 name|buffer
@@ -1215,7 +1215,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PNP_VERSION
+name|PNP_TAG_VERSION
 case|:
 name|printf
 argument_list|(
@@ -1245,7 +1245,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|LOG_DEVICE_ID
+name|PNP_TAG_LOGICAL_DEVICE
 case|:
 name|printf
 argument_list|(
@@ -1396,7 +1396,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|COMP_DEVICE_ID
+name|PNP_TAG_COMPAT_DEVICE
 case|:
 name|printf
 argument_list|(
@@ -1478,7 +1478,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IRQ_FORMAT
+name|PNP_TAG_IRQ_FORMAT
 case|:
 name|printf
 argument_list|(
@@ -1627,7 +1627,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|DMA_FORMAT
+name|PNP_TAG_DMA_FORMAT
 case|:
 name|printf
 argument_list|(
@@ -1682,7 +1682,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|START_DEPEND_FUNC
+name|PNP_TAG_START_DEPENDANT
 case|:
 name|printf
 argument_list|(
@@ -1735,7 +1735,7 @@ block|}
 block|}
 break|break;
 case|case
-name|END_DEPEND_FUNC
+name|PNP_TAG_END_DEPENDANT
 case|:
 name|printf
 argument_list|(
@@ -1744,7 +1744,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IO_PORT_DESC
+name|PNP_TAG_IO_RANGE
 case|:
 name|printf
 argument_list|(
@@ -1809,7 +1809,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|FIXED_IO_PORT_DESC
+name|PNP_TAG_IO_FIXED
 case|:
 name|printf
 argument_list|(
@@ -1845,7 +1845,7 @@ ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
 case|case
-name|SM_RES_RESERVED
+name|PNP_TAG_RESERVED
 case|:
 name|printf
 argument_list|(
@@ -1856,7 +1856,7 @@ break|break;
 endif|#
 directive|endif
 case|case
-name|SM_VENDOR_DEFINED
+name|PNP_TAG_VENDOR
 case|:
 name|printf
 argument_list|(
@@ -1865,7 +1865,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|END_TAG
+name|PNP_TAG_END
 case|:
 name|printf
 argument_list|(
@@ -1920,7 +1920,7 @@ name|item
 condition|)
 block|{
 case|case
-name|MEMORY_RANGE_DESC
+name|PNP_TAG_MEMORY_RANGE
 case|:
 name|report_memory_info
 argument_list|(
@@ -2034,7 +2034,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ID_STRING_ANSI
+name|PNP_TAG_ID_ANSI
 case|:
 name|printf
 argument_list|(
@@ -2081,7 +2081,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ID_STRING_UNICODE
+name|PNP_TAG_ID_UNICODE
 case|:
 name|printf
 argument_list|(
@@ -2090,7 +2090,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|LG_VENDOR_DEFINED
+name|PNP_TAG_LARGE_VENDOR
 case|:
 name|printf
 argument_list|(
@@ -2099,7 +2099,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|_32BIT_MEM_RANGE_DESC
+name|PNP_TAG_MEMORY32_RANGE
 case|:
 name|printf
 argument_list|(
@@ -2108,7 +2108,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|_32BIT_FIXED_LOC_DESC
+name|PNP_TAG_MEMORY32_FIXED
 case|:
 name|printf
 argument_list|(
@@ -2116,8 +2116,11 @@ literal|"32bit Fixed Location Desc Unimplemented\n"
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 case|case
-name|LG_RES_RESERVED
+name|PNP_TAG_LARGE_RESERVED
 case|:
 name|printf
 argument_list|(
@@ -2125,6 +2128,8 @@ literal|"Large Reserved Tag Detected\n"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -2265,7 +2270,7 @@ argument_list|)
 expr_stmt|;
 name|pnp_write
 argument_list|(
-name|SET_CSN
+name|PNP_SET_CSN
 argument_list|,
 name|csn
 argument_list|)
@@ -2275,7 +2280,7 @@ name|outb
 argument_list|(
 name|_PNP_ADDRESS
 argument_list|,
-name|STATUS
+name|PNP_STATUS
 argument_list|)
 expr_stmt|;
 comment|/* Allows up to 1kb of Resource Info,  Should be plenty */
@@ -2458,7 +2463,7 @@ literal|"-- card select # 0x%04x\n"
 argument_list|,
 name|pnp_read
 argument_list|(
-name|SET_CSN
+name|PNP_SET_CSN
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2578,7 +2583,7 @@ name|j
 decl_stmt|;
 name|pnp_write
 argument_list|(
-name|SET_LDN
+name|PNP_SET_LDN
 argument_list|,
 name|i
 argument_list|)
@@ -2589,7 +2594,7 @@ literal|"\nLogical device #%d\n"
 argument_list|,
 name|pnp_read
 argument_list|(
-name|SET_LDN
+name|PNP_SET_LDN
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2613,15 +2618,22 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" 0x%04x"
+literal|" 0x%02x%02x"
 argument_list|,
-name|pnp_readw
+name|pnp_read
 argument_list|(
-name|IO_CONFIG_BASE
-operator|+
-name|j
-operator|*
-literal|2
+name|PNP_IO_BASE_HIGH
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+argument_list|,
+name|pnp_read
+argument_list|(
+name|PNP_IO_BASE_LOW
+argument_list|(
+name|i
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2631,14 +2643,18 @@ literal|"\nIRQ %d %d\n"
 argument_list|,
 name|pnp_read
 argument_list|(
-name|IRQ_CONFIG
+name|PNP_IRQ_LEVEL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 argument_list|,
 name|pnp_read
 argument_list|(
-name|IRQ_CONFIG
-operator|+
-literal|2
+name|PNP_IRQ_LEVEL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2648,14 +2664,18 @@ literal|"DMA %d %d\n"
 argument_list|,
 name|pnp_read
 argument_list|(
-name|DRQ_CONFIG
+name|PNP_DMA_CHANNEL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 argument_list|,
 name|pnp_read
 argument_list|(
-name|DRQ_CONFIG
-operator|+
+name|PNP_DMA_CHANNEL
+argument_list|(
 literal|1
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2665,12 +2685,12 @@ literal|"IO range check 0x%02x activate 0x%02x\n"
 argument_list|,
 name|pnp_read
 argument_list|(
-name|IO_RANGE_CHECK
+name|PNP_IO_RANGE_CHECK
 argument_list|)
 argument_list|,
 name|pnp_read
 argument_list|(
-name|ACTIVATE
+name|PNP_ACTIVATE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2702,7 +2722,7 @@ expr_stmt|;
 comment|/* Reset CSN for All Cards */
 name|pnp_write
 argument_list|(
-name|CONFIG_CONTROL
+name|PNP_CONFIG_CONTROL
 argument_list|,
 literal|0x04
 argument_list|)
@@ -2716,7 +2736,7 @@ init|;
 operator|(
 name|csn
 operator|<
-name|MAX_PNP_CARDS
+name|PNP_MAX_CARDS
 operator|)
 condition|;
 name|csn
@@ -2730,14 +2750,14 @@ literal|0
 expr_stmt|;
 name|pnp_write
 argument_list|(
-name|WAKE
+name|PNP_WAKE
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|pnp_write
 argument_list|(
-name|SET_RD_DATA
+name|PNP_SET_RD_DATA
 argument_list|,
 name|rd_port
 argument_list|)
@@ -2746,7 +2766,7 @@ name|outb
 argument_list|(
 name|_PNP_ADDRESS
 argument_list|,
-name|SERIAL_ISOLATION
+name|PNP_SERIAL_ISOLATION
 argument_list|)
 expr_stmt|;
 name|DELAY
