@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.8 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2806,6 +2806,8 @@ operator|=
 name|t
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|des_setkey
 argument_list|(
 operator|(
@@ -2816,8 +2818,13 @@ name|keyblock
 operator|.
 name|b
 argument_list|)
-expr_stmt|;
+condition|)
 comment|/* also initializes "a64toi" */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|encp
 operator|=
 operator|&
@@ -2997,6 +3004,8 @@ name|encp
 operator|+=
 name|salt_size
 expr_stmt|;
+if|if
+condition|(
 name|des_cipher
 argument_list|(
 operator|(
@@ -3017,7 +3026,12 @@ name|salt
 argument_list|,
 name|num_iter
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* 	 * encrypt the remainder of the password 8 characters at a time. 	 */
 while|while
 condition|(
@@ -3090,6 +3104,8 @@ condition|)
 break|break;
 comment|/* pad out with previous key */
 block|}
+if|if
+condition|(
 name|des_setkey
 argument_list|(
 operator|(
@@ -3100,7 +3116,14 @@ name|keyblock
 operator|.
 name|b
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
 name|des_cipher
 argument_list|(
 operator|(
@@ -3121,7 +3144,12 @@ literal|0L
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|rsltblock
 operator|.
 name|b32
@@ -3455,18 +3483,20 @@ begin_comment
 comment|/*  * Set up the key schedule from the key.  */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
 name|des_setkey
-parameter_list|(
+argument_list|(
 name|key
-parameter_list|)
+argument_list|)
 specifier|register
 specifier|const
 name|char
-modifier|*
+operator|*
 name|key
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|DCL_BLOCK
@@ -3653,40 +3683,59 @@ name|key
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Encrypt (or decrypt if num_iter< 0) the 8 chars at "in" with abs(num_iter)  * iterations of DES, using the the given 24-bit salt and the pre-computed key  * schedule, and store the resulting 8 chars at "out" (in == out is permitted).  *  * NOTE: the performance of this routine is critically dependent on your  * compiler and machine architecture.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
 name|des_cipher
-parameter_list|(
-name|in
-parameter_list|,
-name|out
-parameter_list|,
-name|salt
-parameter_list|,
-name|num_iter
-parameter_list|)
+argument_list|(
+argument|in
+argument_list|,
+argument|out
+argument_list|,
+argument|salt
+argument_list|,
+argument|num_iter
+argument_list|)
+end_macro
+
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|in
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|out
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|long
 name|salt
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|num_iter
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 comment|/* variables that we want in registers, most important first */
 if|#
@@ -4447,8 +4496,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Initialize various tables.  This need only be done once.  It could even be  * done at compile time, if the compiler were capable of that sort of thing.  */
@@ -5598,18 +5652,20 @@ begin_comment
 comment|/*  * "setkey" routine (for backwards compatibility)  */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
 name|setkey
-parameter_list|(
+argument_list|(
 name|key
-parameter_list|)
+argument_list|)
 specifier|register
 specifier|const
 name|char
-modifier|*
+operator|*
 name|key
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -5679,6 +5735,8 @@ operator|=
 name|k
 expr_stmt|;
 block|}
+return|return
+operator|(
 name|des_setkey
 argument_list|(
 operator|(
@@ -5689,30 +5747,36 @@ name|keyblock
 operator|.
 name|b
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * "encrypt" routine (for backwards compatibility)  */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
 name|encrypt
-parameter_list|(
+argument_list|(
 name|block
-parameter_list|,
+argument_list|,
 name|flag
-parameter_list|)
+argument_list|)
 specifier|register
 name|char
-modifier|*
+operator|*
 name|block
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -5782,6 +5846,8 @@ operator|=
 name|k
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|des_cipher
 argument_list|(
 operator|(
@@ -5809,7 +5875,12 @@ else|:
 literal|1
 operator|)
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -5861,8 +5932,13 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
