@@ -2197,7 +2197,7 @@ name|bsdtar
 argument_list|,
 literal|"-O"
 argument_list|,
-literal|"x"
+literal|"xt"
 argument_list|)
 expr_stmt|;
 if|if
