@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.2 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,6 +293,12 @@ directive|ifdef
 name|RWHO
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<protocols/rwhod.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -306,47 +312,6 @@ directive|define
 name|RWHOLEADER
 value|"/usr/spool/rwho/whod."
 end_define
-
-begin_struct
-struct|struct
-name|whod
-block|{
-name|char
-name|wd_vers
-decl_stmt|;
-name|char
-name|wd_type
-decl_stmt|;
-name|char
-name|wd_fill
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|int
-name|wd_sendtime
-decl_stmt|;
-name|int
-name|wd_recvtime
-decl_stmt|;
-name|char
-name|wd_hostname
-index|[
-literal|32
-index|]
-decl_stmt|;
-name|int
-name|wd_loadav
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|int
-name|wd_boottime
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -624,7 +589,9 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|33
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
