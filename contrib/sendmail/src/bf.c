@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: bf.c,v 8.54 2002/04/20 18:03:42 gshapiro Exp $"
+literal|"@(#)$Id: bf.c,v 8.54.2.2 2002/06/21 19:58:40 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2087,6 +2087,9 @@ operator|->
 name|bf_ondisk
 condition|)
 block|{
+name|int
+name|save_errno
+decl_stmt|;
 name|MODE_T
 name|omask
 decl_stmt|;
@@ -2180,7 +2183,7 @@ name|O_RDWR
 operator||
 name|O_CREAT
 operator||
-name|O_TRUNC
+name|O_EXCL
 argument_list|,
 name|bfp
 operator|->
@@ -2190,6 +2193,10 @@ name|bfp
 operator|->
 name|bf_flags
 argument_list|)
+expr_stmt|;
+name|save_errno
+operator|=
+name|errno
 expr_stmt|;
 operator|(
 name|void
@@ -2208,6 +2215,10 @@ literal|0
 condition|)
 block|{
 comment|/* errno is set implicitly by open() */
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 operator|-
 literal|1

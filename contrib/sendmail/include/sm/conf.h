@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.88 2002/05/01 16:09:41 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.2 2002/06/21 22:31:35 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -9130,6 +9130,31 @@ end_endif
 
 begin_comment
 comment|/* ! TZ_TYPE */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__GLIBC__
+operator|>=
+literal|2
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (__GLIBC__>= 2) */
 end_comment
 
 begin_ifndef

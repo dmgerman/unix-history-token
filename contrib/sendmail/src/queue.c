@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.862 2002/05/09 23:51:53 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.863.2.2 2002/06/25 21:34:31 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1250,7 +1250,7 @@ value|FILE_SYS(i).fs_dev
 end_define
 
 begin_comment
-comment|/* **  Current qf file field assignments: ** **	A	AUTH= parameter **	B	body type **	C	controlling user **	D	data file name **	d	data file directory name (added in 8.12) **	E	error recipient **	F	flag bits **	G	queue delay algorithm (_FFR_QUEUEDELAY) **	H	header **	I	data file's inode number **	K	time of last delivery attempt **	L	Solaris Content-Length: header (obsolete) **	M	message (obsolete) **	N	number of delivery attempts **	P	message priority **	q	quarantine reason (_FFR_QUARANTINE) **	Q	original recipient (ORCPT=) **	r	final recipient (Final-Recipient: DSN field) **	R	recipient **	S	sender **	T	init time **	V	queue file version **	X	free (was: character set if _FFR_SAVE_CHARSET) **	Y	current delay (_FFR_QUEUEDELAY) **	Z	original envelope id from ESMTP **	!	deliver by (added in 8.12) **	$	define macro **	.	terminate file */
+comment|/* **  Current qf file field assignments: ** **	A	AUTH= parameter **	B	body type **	C	controlling user **	D	data file name **	d	data file directory name (added in 8.12) **	E	error recipient **	F	flag bits **	G	queue delay algorithm (_FFR_QUEUEDELAY) **	H	header **	I	data file's inode number **	K	time of last delivery attempt **	L	Solaris Content-Length: header (obsolete) **	M	message **	N	number of delivery attempts **	P	message priority **	q	quarantine reason (_FFR_QUARANTINE) **	Q	original recipient (ORCPT=) **	r	final recipient (Final-Recipient: DSN field) **	R	recipient **	S	sender **	T	init time **	V	queue file version **	X	free (was: character set if _FFR_SAVE_CHARSET) **	Y	current delay (_FFR_QUEUEDELAY) **	Z	original envelope id from ESMTP **	!	deliver by (added in 8.12) **	$	define macro **	.	terminate file */
 end_comment
 
 begin_comment
@@ -15687,7 +15687,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-comment|/* original recipient */
+comment|/* final recipient */
 name|frcpt
 operator|=
 name|sm_rpool_strdup_x

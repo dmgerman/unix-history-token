@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.918 2002/05/23 20:01:56 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.919.2.1 2002/06/21 20:25:22 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -18217,6 +18217,22 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|strreplnonprt
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

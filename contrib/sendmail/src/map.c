@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.645 2002/05/24 21:07:36 gshapiro Exp $"
+literal|"@(#)$Id: map.c,v 8.645.2.1 2002/06/21 20:25:23 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4891,6 +4891,16 @@ endif|#
 directive|endif
 comment|/* NETINET6 */
 block|}
+operator|(
+name|void
+operator|)
+name|strreplnonprt
+argument_list|(
+name|value
+argument_list|,
+literal|'X'
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|map_p

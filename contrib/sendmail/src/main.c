@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.882 2002/05/10 16:20:55 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.887 2002/06/17 22:25:52 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -4434,6 +4434,23 @@ argument_list|,
 literal|'m'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|QueueIntvl
+operator|<
+literal|0
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Invalid -q value"
+argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
+expr_stmt|;
+block|}
 comment|/* check for bad conversion */
 if|if
 condition|(
@@ -4902,6 +4919,22 @@ name|SubmitMode
 argument_list|)
 condition|)
 block|{
+comment|/* If set daemon_flags on command line, don't reset it */
+if|if
+condition|(
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{daemon_flags}"
+argument_list|)
+argument_list|,
+operator|&
+name|BlankEnvelope
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|macdefine
 argument_list|(
 operator|&
@@ -4936,6 +4969,22 @@ name|SubmitMode
 operator|=
 name|SUBMIT_MSA
 expr_stmt|;
+comment|/* If set daemon_flags on command line, don't reset it */
+if|if
+condition|(
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{daemon_flags}"
+argument_list|)
+argument_list|,
+operator|&
+name|BlankEnvelope
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|macdefine
 argument_list|(
 operator|&
@@ -9057,7 +9106,7 @@ operator|==
 name|MD_DAEMON
 operator|||
 name|QueueIntvl
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
@@ -9189,7 +9238,7 @@ block|}
 if|if
 condition|(
 name|QueueIntvl
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
@@ -9339,7 +9388,7 @@ expr_stmt|;
 if|if
 condition|(
 name|QueueIntvl
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
