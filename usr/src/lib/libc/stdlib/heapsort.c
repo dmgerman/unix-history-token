@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)heapsort.c	5.6 (Berkeley) %G%"
+literal|"@(#)heapsort.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ name|count
 parameter_list|,
 name|tmp
 parameter_list|)
-value|{ \ 	for (par_i = initval; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = (char *)bot + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = (char *)bot + par_i * size; \ 		if (compar(child, par)<= 0) \ 			break; \ 		SWAP(par, child, count, size, tmp); \ 	} \ }
+value|{ \ 	for (par_i = initval; (child_i = par_i * 2)<= nmemb; \ 	    par_i = child_i) { \ 		child = (char *)bot + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = (char *)bot + par_i * size; \ 		if (compar(child, par)<= 0) \ 			break; \ 		SWAP(par, child, count, size, tmp); \ 	} \ }
 end_define
 
 begin_comment
@@ -163,7 +163,7 @@ parameter_list|,
 name|count
 parameter_list|,
 name|tmp1
-parameter_list|,
+parameter_list|, \
 name|tmp2
 parameter_list|)
 value|{ \ 	for (par_i = 1; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = (char *)bot + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = (char *)bot + par_i * size; \ 		COPY(par, child, count, size, tmp1, tmp2); \ 	} \ 	for (;;) { \ 		child_i = par_i; \ 		par_i = child_i / 2; \ 		child = (char *)bot + child_i * size; \ 		par = (char *)bot + par_i * size; \ 		if (child_i == 1 || compar(k, par)< 0) { \ 			COPY(child, k, count, size, tmp1, tmp2); \ 			break; \ 		} \ 		COPY(child, par, count, size, tmp1, tmp2); \ 	} \ }
