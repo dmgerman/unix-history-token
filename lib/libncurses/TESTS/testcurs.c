@@ -1565,9 +1565,7 @@ decl_stmt|;
 name|chtype
 name|ch
 decl_stmt|;
-name|traceon
-argument_list|()
-expr_stmt|;
+comment|/* traceon(); */
 name|nl
 argument_list|()
 expr_stmt|;
@@ -1938,9 +1936,7 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
-name|traceoff
-argument_list|()
-expr_stmt|;
+comment|/* traceoff(); */
 name|wmove
 argument_list|(
 name|win

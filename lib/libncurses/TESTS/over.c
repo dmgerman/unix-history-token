@@ -32,9 +32,7 @@ comment|/****************************************************************      *
 name|initscr
 argument_list|()
 expr_stmt|;
-name|traceon
-argument_list|()
-expr_stmt|;
+comment|/* traceon(); */
 name|noecho
 argument_list|()
 expr_stmt|;
