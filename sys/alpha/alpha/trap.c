@@ -2319,6 +2319,12 @@ index|]
 operator|=
 name|a2
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|trapsignal
 argument_list|(
 name|p
@@ -2326,6 +2332,12 @@ argument_list|,
 name|i
 argument_list|,
 name|ucode
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|out
