@@ -69,7 +69,6 @@ name|void
 name|tinit
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -154,7 +153,7 @@ if|if
 condition|(
 name|myname
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 block|{
 if|if
@@ -187,7 +186,7 @@ name|username
 argument_list|()
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 block|{
 name|myname
@@ -226,7 +225,7 @@ literal|"HOME"
 argument_list|)
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 operator|||
 operator|*
 name|cp

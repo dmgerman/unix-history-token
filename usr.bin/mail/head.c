@@ -114,13 +114,13 @@ name|hl
 operator|.
 name|l_from
 operator|==
-name|NOSTR
+name|NULL
 operator|||
 name|hl
 operator|.
 name|l_date
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 block|{
 name|fail
@@ -173,26 +173,27 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|fail
-argument_list|(
+parameter_list|(
 name|linebuf
-argument_list|,
+parameter_list|,
 name|reason
-argument_list|)
+parameter_list|)
+specifier|const
 name|char
+modifier|*
 name|linebuf
-index|[]
 decl_stmt|,
+decl|*
 name|reason
-index|[]
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
-comment|/* 	if (value("debug") == NOSTR) 		return; 	fprintf(stderr, "\"%s\"\nnot a header because %s\n", linebuf, reason); 	*/
+comment|/* 	if (value("debug") == NULL) 		return; 	fprintf(stderr, "\"%s\"\nnot a header because %s\n", linebuf, reason); 	*/
 block|}
 end_block
 
@@ -220,7 +221,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|headline
 modifier|*
@@ -230,12 +230,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
@@ -249,19 +247,19 @@ name|hl
 operator|->
 name|l_from
 operator|=
-name|NOSTR
+name|NULL
 expr_stmt|;
 name|hl
 operator|->
 name|l_tty
 operator|=
-name|NOSTR
+name|NULL
 expr_stmt|;
 name|hl
 operator|->
 name|l_date
 operator|=
-name|NOSTR
+name|NULL
 expr_stmt|;
 name|cp
 operator|=
@@ -294,6 +292,8 @@ if|if
 condition|(
 operator|*
 name|word
+operator|!=
+literal|'\0'
 condition|)
 name|hl
 operator|->
@@ -311,7 +311,7 @@ if|if
 condition|(
 name|cp
 operator|!=
-name|NOSTR
+name|NULL
 operator|&&
 name|cp
 index|[
@@ -361,7 +361,7 @@ if|if
 condition|(
 name|cp
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 name|hl
 operator|->
@@ -391,7 +391,6 @@ name|src
 parameter_list|,
 name|space
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|src
@@ -402,12 +401,10 @@ modifier|*
 name|space
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|top
 decl_stmt|;
@@ -420,6 +417,7 @@ name|space
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|cp
 operator|++
@@ -427,6 +425,9 @@ operator|=
 operator|*
 name|src
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 empty_stmt|;
 operator|*
@@ -480,6 +481,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|cmatch
 argument_list|(
 name|date
@@ -493,6 +495,7 @@ name|date
 argument_list|,
 name|tmztype
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -509,7 +512,6 @@ name|cp
 parameter_list|,
 name|tp
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -525,9 +527,13 @@ while|while
 condition|(
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 operator|&&
 operator|*
 name|tp
+operator|!=
+literal|'\0'
 condition|)
 switch|switch
 condition|(
@@ -550,7 +556,9 @@ operator|++
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 case|case
@@ -567,7 +575,9 @@ operator|++
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 case|case
@@ -582,7 +592,9 @@ operator|!=
 literal|' '
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 case|case
@@ -599,7 +611,9 @@ operator|++
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 case|case
@@ -620,7 +634,9 @@ name|cp
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|cp
 operator|++
@@ -638,7 +654,9 @@ operator|!=
 literal|':'
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 case|case
@@ -653,7 +671,9 @@ operator|!=
 literal|'\n'
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 block|}
@@ -661,12 +681,18 @@ if|if
 condition|(
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 operator|||
 operator|*
 name|tp
+operator|!=
+literal|'\0'
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 return|return
 operator|(
@@ -677,7 +703,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Collect a liberal (space, tab delimited) word into the word buffer  * passed.  Also, return a pointer to the next word following that,  * or NOSTR if none follow.  */
+comment|/*  * Collect a liberal (space, tab delimited) word into the word buffer  * passed.  Also, return a pointer to the next word following that,  * or NULL if none follow.  */
 end_comment
 
 begin_function
@@ -689,7 +715,6 @@ name|wp
 parameter_list|,
 name|wbuf
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|wp
@@ -701,24 +726,24 @@ end_function
 
 begin_block
 block|{
-specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|wp
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 block|{
 operator|*
 name|wbuf
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|NOSTR
+name|NULL
 operator|)
 return|;
 block|}
@@ -731,6 +756,8 @@ operator|*
 name|wp
 operator|++
 operator|)
+operator|!=
+literal|'\0'
 operator|&&
 name|c
 operator|!=
@@ -763,6 +790,8 @@ operator|*
 name|wp
 operator|++
 operator|)
+operator|!=
+literal|'\0'
 operator|&&
 name|c
 operator|!=
@@ -819,11 +848,11 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+literal|'\0'
 condition|)
 return|return
 operator|(
-name|NOSTR
+name|NULL
 operator|)
 return|;
 return|return

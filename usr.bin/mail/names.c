@@ -85,7 +85,6 @@ name|int
 name|ntype
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -101,21 +100,23 @@ operator|)
 name|salloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|np
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|np
 operator|->
 name|n_flink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|np
 operator|->
 name|n_blink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|np
 operator|->
@@ -158,7 +159,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -172,11 +172,11 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 while|while
@@ -185,7 +185,7 @@ name|np
 operator|->
 name|n_flink
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|np
 operator|=
@@ -202,7 +202,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract a list of names from a line,  * and make a list of names from it.  * Return the list or NIL if none found.  */
+comment|/*  * Extract a list of names from a line,  * and make a list of names from it.  * Return the list or NULL if none found.  */
 end_comment
 
 begin_function
@@ -223,12 +223,13 @@ name|int
 name|ntype
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|nbuf
 decl_stmt|;
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -240,15 +241,11 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-name|char
-modifier|*
-name|nbuf
-decl_stmt|;
 if|if
 condition|(
 name|line
 operator|==
-name|NOSTR
+name|NULL
 operator|||
 operator|*
 name|line
@@ -256,17 +253,15 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-name|NIL
+operator|(
+name|NULL
+operator|)
 return|;
 if|if
 condition|(
 operator|(
 name|nbuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|strlen
@@ -289,11 +284,11 @@ argument_list|)
 expr_stmt|;
 name|top
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|np
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|cp
 operator|=
@@ -312,7 +307,7 @@ name|nbuf
 argument_list|)
 operator|)
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 block|{
 name|t
@@ -328,7 +323,7 @@ if|if
 condition|(
 name|top
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|top
 operator|=
@@ -352,13 +347,18 @@ operator|=
 name|t
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 name|nbuf
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|top
+operator|)
 return|;
 block|}
 end_function
@@ -376,7 +376,6 @@ name|np
 parameter_list|,
 name|ntype
 parameter_list|)
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -386,11 +385,11 @@ name|int
 name|ntype
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|s
+decl_stmt|,
+name|comma
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -398,15 +397,10 @@ decl_stmt|,
 modifier|*
 name|top
 decl_stmt|;
-specifier|register
 name|struct
 name|name
 modifier|*
 name|p
-decl_stmt|;
-specifier|register
-name|int
-name|comma
 decl_stmt|;
 name|comma
 operator|=
@@ -418,11 +412,11 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NOSTR
+name|NULL
 operator|)
 return|;
 name|ntype
@@ -455,7 +449,7 @@ name|np
 init|;
 name|p
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|p
 operator|=
@@ -506,7 +500,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|NOSTR
+name|NULL
 operator|)
 return|;
 name|s
@@ -532,7 +526,7 @@ name|np
 init|;
 name|p
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|p
 operator|=
@@ -584,7 +578,7 @@ name|p
 operator|->
 name|n_flink
 operator|!=
-name|NIL
+name|NULL
 condition|)
 operator|*
 name|cp
@@ -652,7 +646,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -678,7 +671,9 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-name|NOSTR
+operator|(
+name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -688,7 +683,6 @@ operator|==
 literal|'('
 condition|)
 block|{
-specifier|register
 name|int
 name|nesting
 init|=
@@ -796,8 +790,9 @@ name|wbuf
 init|;
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 operator|&&
-operator|!
 name|strchr
 argument_list|(
 literal|" \t,("
@@ -805,6 +800,8 @@ argument_list|,
 operator|*
 name|cp
 argument_list|)
+operator|==
+name|NULL
 condition|;
 operator|*
 name|cp2
@@ -821,7 +818,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 end_block
@@ -857,11 +856,11 @@ modifier|*
 name|hp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
+decl_stmt|,
+name|ispipe
 decl_stmt|;
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -872,9 +871,6 @@ name|top
 decl_stmt|;
 name|time_t
 name|now
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -882,10 +878,6 @@ name|date
 decl_stmt|,
 modifier|*
 name|fname
-decl_stmt|,
-modifier|*
-name|ctime
-argument_list|()
 decl_stmt|;
 name|FILE
 modifier|*
@@ -893,9 +885,6 @@ name|fout
 decl_stmt|,
 modifier|*
 name|fin
-decl_stmt|;
-name|int
-name|ispipe
 decl_stmt|;
 name|top
 operator|=
@@ -926,7 +915,7 @@ while|while
 condition|(
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -1007,6 +996,9 @@ index|[
 name|PATHSIZE
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|tempname
@@ -1179,14 +1171,11 @@ argument_list|(
 name|fo
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|putc
+name|fprintf
 argument_list|(
-literal|'\n'
-argument_list|,
 name|fout
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1215,6 +1204,9 @@ expr_stmt|;
 name|senderr
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Fclose
 argument_list|(
 name|fout
@@ -1244,13 +1236,13 @@ name|pid
 decl_stmt|;
 name|char
 modifier|*
-name|shell
+name|sh
 decl_stmt|;
 comment|/* 			 * XXX 			 * We can't really reuse the same image file, 			 * because multiple piped recipients will 			 * share the same lseek location and trample 			 * on one another. 			 */
 if|if
 condition|(
 operator|(
-name|shell
+name|sh
 operator|=
 name|value
 argument_list|(
@@ -1258,9 +1250,9 @@ literal|"SHELL"
 argument_list|)
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
-name|shell
+name|sh
 operator|=
 name|_PATH_CSHELL
 expr_stmt|;
@@ -1268,7 +1260,7 @@ name|pid
 operator|=
 name|start_command
 argument_list|(
-name|shell
+name|sh
 argument_list|,
 name|sigmask
 argument_list|(
@@ -1294,7 +1286,7 @@ literal|"-c"
 argument_list|,
 name|fname
 argument_list|,
-name|NOSTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1461,11 +1453,17 @@ expr_stmt|;
 name|senderr
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Fclose
 argument_list|(
 name|fout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Fclose
 argument_list|(
 name|fin
@@ -1552,7 +1550,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1565,7 +1562,9 @@ operator|==
 literal|'+'
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -1575,6 +1574,8 @@ name|name
 init|;
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 condition|;
 name|cp
 operator|++
@@ -1598,7 +1599,9 @@ operator|==
 literal|'@'
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -1608,11 +1611,15 @@ operator|==
 literal|'/'
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1635,7 +1642,6 @@ modifier|*
 name|names
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -1652,13 +1658,12 @@ name|grouphead
 modifier|*
 name|gh
 decl_stmt|;
-specifier|register
 name|int
 name|metoo
 decl_stmt|;
 name|new
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|np
 operator|=
@@ -1672,14 +1677,14 @@ argument_list|(
 literal|"metoo"
 argument_list|)
 operator|!=
-name|NOSTR
+name|NULL
 operator|)
 expr_stmt|;
 while|while
 condition|(
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -1734,7 +1739,7 @@ if|if
 condition|(
 name|gh
 operator|!=
-name|NOGRP
+name|NULL
 condition|)
 name|new
 operator|=
@@ -1864,7 +1869,7 @@ name|g_list
 init|;
 name|gp
 operator|!=
-name|NOGE
+name|NULL
 condition|;
 name|gp
 operator|=
@@ -1916,7 +1921,7 @@ name|cp
 argument_list|)
 operator|)
 operator|!=
-name|NOGRP
+name|NULL
 condition|)
 block|{
 name|nlist
@@ -1958,7 +1963,7 @@ name|gp
 operator|->
 name|ge_link
 operator|==
-name|NOGE
+name|NULL
 condition|)
 goto|goto
 name|skip
@@ -2032,7 +2037,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -2042,7 +2046,7 @@ if|if
 condition|(
 name|n1
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2053,7 +2057,7 @@ if|if
 condition|(
 name|n2
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2105,7 +2109,6 @@ modifier|*
 name|np
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -2115,7 +2118,6 @@ modifier|*
 modifier|*
 name|top
 decl_stmt|;
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -2169,7 +2171,7 @@ argument_list|(
 literal|"metoo"
 argument_list|)
 operator|!=
-name|NOSTR
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2185,7 +2187,7 @@ argument_list|(
 literal|"verbose"
 argument_list|)
 operator|!=
-name|NOSTR
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2210,8 +2212,10 @@ name|extra
 operator|)
 operator|*
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|top
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ap
@@ -2255,7 +2259,7 @@ control|(
 init|;
 name|n
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|n
 operator|=
@@ -2286,7 +2290,7 @@ expr_stmt|;
 operator|*
 name|ap
 operator|=
-name|NOSTR
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -2314,7 +2318,6 @@ modifier|*
 name|names
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -2335,11 +2338,11 @@ if|if
 condition|(
 name|names
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 name|new
@@ -2360,25 +2363,25 @@ if|if
 condition|(
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|np
 operator|->
 name|n_blink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|new
 operator|->
 name|n_flink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 while|while
 condition|(
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|t
@@ -2407,7 +2410,7 @@ name|t
 operator|->
 name|n_flink
 operator|==
-name|NIL
+name|NULL
 condition|)
 break|break;
 name|t
@@ -2460,7 +2463,7 @@ name|t
 operator|->
 name|n_flink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}
@@ -2498,7 +2501,7 @@ name|t
 operator|->
 name|n_blink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|new
 operator|=
@@ -2555,7 +2558,7 @@ while|while
 condition|(
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|t
@@ -2568,7 +2571,7 @@ name|t
 operator|->
 name|n_flink
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|strcasecmp
 argument_list|(
@@ -2599,7 +2602,7 @@ name|np
 operator|||
 name|t
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 name|np
@@ -2625,7 +2628,7 @@ name|t
 operator|->
 name|n_flink
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|t
 operator|->
@@ -2686,13 +2689,13 @@ name|node
 operator|->
 name|n_blink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 if|if
 condition|(
 name|list
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|list
 operator|->
@@ -2718,14 +2721,12 @@ name|count
 parameter_list|(
 name|np
 parameter_list|)
-specifier|register
 name|struct
 name|name
 modifier|*
 name|np
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2737,7 +2738,7 @@ literal|0
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -2761,7 +2762,9 @@ name|c
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|c
+operator|)
 return|;
 block|}
 end_function
@@ -2780,7 +2783,6 @@ name|np
 parameter_list|,
 name|name
 parameter_list|)
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -2791,7 +2793,6 @@ name|name
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|name
 modifier|*
@@ -2805,7 +2806,7 @@ name|np
 init|;
 name|p
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|p
 operator|=
@@ -2833,7 +2834,7 @@ name|p
 operator|->
 name|n_blink
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -2842,7 +2843,7 @@ name|p
 operator|->
 name|n_flink
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|p
 operator|->
@@ -2850,7 +2851,7 @@ name|n_flink
 operator|->
 name|n_blink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|np
 operator|=
@@ -2866,7 +2867,7 @@ name|p
 operator|->
 name|n_flink
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -2875,7 +2876,7 @@ name|p
 operator|->
 name|n_blink
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|p
 operator|->
@@ -2883,7 +2884,7 @@ name|n_blink
 operator|->
 name|n_flink
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}
@@ -2909,7 +2910,9 @@ name|n_blink
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|np
+operator|)
 return|;
 block|}
 end_function
@@ -2919,7 +2922,7 @@ comment|/*  * Pretty print a name list  * Uncomment it if you need it.  */
 end_comment
 
 begin_comment
-comment|/* void prettyprint(name) 	struct name *name; { 	register struct name *np;  	np = name; 	while (np != NIL) { 		fprintf(stderr, "%s(%d) ", np->n_name, np->n_type); 		np = np->n_flink; 	} 	fprintf(stderr, "\n"); } */
+comment|/* void prettyprint(name) 	struct name *name; { 	struct name *np;  	np = name; 	while (np != NULL) { 		fprintf(stderr, "%s(%d) ", np->n_name, np->n_type); 		np = np->n_flink; 	} 	fprintf(stderr, "\n"); } */
 end_comment
 
 end_unit

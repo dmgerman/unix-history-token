@@ -64,7 +64,7 @@ comment|/* Getname / getuserid for those with hashed passwd data base). */
 end_comment
 
 begin_comment
-comment|/*  * Search the passwd file for a uid. Return name on success,  * NOSTR on failure  */
+comment|/*  * Search the passwd file for a uid. Return name on success, NULL on failure.  */
 end_comment
 
 begin_function
@@ -97,12 +97,16 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|NOSTR
+operator|(
+name|NULL
+operator|)
 return|;
 return|return
+operator|(
 name|pw
 operator|->
 name|pw_name
+operator|)
 return|;
 block|}
 end_function
@@ -141,13 +145,17 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|pw
 operator|->
 name|pw_uid
+operator|)
 return|;
 block|}
 end_function

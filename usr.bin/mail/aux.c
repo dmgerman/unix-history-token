@@ -57,6 +57,24 @@ begin_comment
 comment|/*  * Mail -- a mail program  *  * Auxiliary functions.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|save2str
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Return a pointer to a dynamic copy of the argument.  */
 end_comment
@@ -98,7 +116,7 @@ name|size
 argument_list|)
 operator|)
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 name|bcopy
 argument_list|(
@@ -110,7 +128,9 @@ name|size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_function
@@ -180,7 +200,7 @@ name|oldsize
 argument_list|)
 operator|)
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 block|{
 if|if
@@ -220,7 +240,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_block
@@ -235,7 +257,6 @@ name|touch
 parameter_list|(
 name|mp
 parameter_list|)
-specifier|register
 name|struct
 name|message
 modifier|*
@@ -336,7 +357,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -352,22 +372,24 @@ operator|*
 name|ap
 operator|++
 operator|!=
-name|NOSTR
+name|NULL
 condition|;
 control|)
 empty_stmt|;
 return|return
+operator|(
 name|ap
 operator|-
 name|argv
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Return the desired header line from the passed message  * pointer (or NOSTR if the desired header field is not available).  */
+comment|/*  * Return the desired header line from the passed message  * pointer (or NULL if the desired header field is not available).  */
 end_comment
 
 begin_function
@@ -379,9 +401,10 @@ name|field
 parameter_list|,
 name|mp
 parameter_list|)
+specifier|const
 name|char
+modifier|*
 name|field
-index|[]
 decl_stmt|;
 name|struct
 name|message
@@ -389,7 +412,6 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|ibuf
@@ -400,11 +422,9 @@ index|[
 name|LINESIZE
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|lc
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|hfield
@@ -416,7 +436,7 @@ decl_stmt|,
 modifier|*
 name|oldhfield
 init|=
-name|NOSTR
+name|NULL
 decl_stmt|;
 name|ibuf
 operator|=
@@ -440,7 +460,9 @@ operator|<
 literal|0
 condition|)
 return|return
-name|NOSTR
+operator|(
+name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -456,7 +478,9 @@ operator|<
 literal|0
 condition|)
 return|return
-name|NOSTR
+operator|(
+name|NULL
+operator|)
 return|;
 while|while
 condition|(
@@ -486,7 +510,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|oldhfield
+operator|)
 return|;
 if|if
 condition|(
@@ -516,7 +542,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|oldhfield
+operator|)
 return|;
 block|}
 end_function
@@ -537,7 +565,6 @@ name|rem
 parameter_list|,
 name|colon
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|f
@@ -546,7 +573,6 @@ name|char
 name|linebuf
 index|[]
 decl_stmt|;
-specifier|register
 name|int
 name|rem
 decl_stmt|;
@@ -562,7 +588,6 @@ index|[
 name|LINESIZE
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -570,7 +595,6 @@ decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -588,8 +612,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -609,8 +635,10 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -807,7 +835,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|rem
+operator|)
 return|;
 block|}
 comment|/* NOTREACHED */
@@ -818,36 +848,31 @@ begin_comment
 comment|/*  * Check whether the passed line is a header line of  * the desired breed.  Return the field body, or 0.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
 name|ishfield
-argument_list|(
+parameter_list|(
 name|linebuf
-argument_list|,
+parameter_list|,
 name|colon
-argument_list|,
+parameter_list|,
 name|field
-argument_list|)
+parameter_list|)
 name|char
 name|linebuf
 index|[]
-decl_stmt|,
-name|field
-index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|colon
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+specifier|const
+name|char
+modifier|*
+name|field
+decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -877,7 +902,9 @@ operator|=
 literal|':'
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 operator|*
@@ -905,10 +932,12 @@ operator|++
 control|)
 empty_stmt|;
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Copy a string and lowercase the result.  * dsize: space left in buffer (including space for NULL)  */
@@ -924,23 +953,18 @@ name|src
 parameter_list|,
 name|dsize
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|dest
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|src
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|size_t
 name|dsize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|strlcpy
 argument_list|(
@@ -967,7 +991,7 @@ name|dest
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The following code deals with input stacking to do source  * commands.  All but the current file pointer are saved on  * the stack.  */
@@ -1063,7 +1087,7 @@ name|arglist
 argument_list|)
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1113,6 +1137,9 @@ argument_list|(
 literal|"Too much \"sourcing\" going on.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Fclose
 argument_list|(
 name|fi
@@ -1208,6 +1235,9 @@ literal|1
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|Fclose
 argument_list|(
 name|input
@@ -1298,10 +1328,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|stat
@@ -1384,7 +1410,6 @@ name|mp
 parameter_list|,
 name|reptype
 parameter_list|)
-specifier|register
 name|struct
 name|message
 modifier|*
@@ -1394,7 +1419,6 @@ name|int
 name|reptype
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1493,17 +1517,16 @@ name|skip_comment
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
+name|int
 name|nesting
-operator|=
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -1555,7 +1578,9 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 end_function
@@ -1576,26 +1601,22 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|c
-decl_stmt|;
-specifier|register
 name|char
+modifier|*
+name|nbuf
+decl_stmt|,
+modifier|*
+name|bufend
+decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
-name|char
-modifier|*
-name|bufend
-decl_stmt|,
-modifier|*
-name|nbuf
-decl_stmt|;
 name|int
+name|c
+decl_stmt|,
 name|gotlt
 decl_stmt|,
 name|lastsp
@@ -1604,11 +1625,11 @@ if|if
 condition|(
 name|name
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 return|return
 operator|(
-name|NOSTR
+name|NULL
 operator|)
 return|;
 if|if
@@ -1620,7 +1641,7 @@ argument_list|,
 literal|'('
 argument_list|)
 operator|==
-name|NOSTR
+name|NULL
 operator|&&
 name|strchr
 argument_list|(
@@ -1629,7 +1650,7 @@ argument_list|,
 literal|'<'
 argument_list|)
 operator|==
-name|NOSTR
+name|NULL
 operator|&&
 name|strchr
 argument_list|(
@@ -1638,7 +1659,7 @@ argument_list|,
 literal|' '
 argument_list|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1651,10 +1672,6 @@ condition|(
 operator|(
 name|nbuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|strlen
@@ -1697,11 +1714,15 @@ name|cp2
 operator|=
 name|bufend
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 block|{
@@ -1731,10 +1752,14 @@ case|:
 comment|/* 			 * Start of a "quoted-string". 			 * Copy it in its entirety. 			 */
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|cp
@@ -1762,10 +1787,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 operator|*
@@ -1888,6 +1917,8 @@ operator|=
 operator|*
 name|cp
 operator|)
+operator|!=
+literal|'\0'
 operator|&&
 name|c
 operator|!=
@@ -1919,10 +1950,14 @@ literal|'"'
 condition|)
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|cp
@@ -1943,6 +1978,8 @@ literal|'\\'
 operator|&&
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 condition|)
 name|cp
 operator|++
@@ -2021,17 +2058,13 @@ block|}
 operator|*
 name|cp2
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
 operator|(
 name|nbuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|nbuf
@@ -2075,7 +2108,6 @@ name|mp
 parameter_list|,
 name|reptype
 parameter_list|)
-specifier|register
 name|struct
 name|message
 modifier|*
@@ -2097,7 +2129,6 @@ index|[
 name|LINESIZE
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2105,7 +2136,6 @@ decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|ibuf
@@ -2128,10 +2158,12 @@ name|mp
 argument_list|)
 operator|)
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 if|if
 condition|(
@@ -2150,10 +2182,12 @@ name|mp
 argument_list|)
 operator|)
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 name|ibuf
 operator|=
@@ -2200,6 +2234,8 @@ name|linebuf
 init|;
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 operator|&&
 operator|*
 name|cp
@@ -2242,6 +2278,8 @@ index|]
 init|;
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 operator|&&
 operator|*
 name|cp
@@ -2511,12 +2549,10 @@ name|int
 name|c
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2532,6 +2568,8 @@ name|str
 init|;
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 condition|;
 name|cp
 operator|++
@@ -2566,6 +2604,7 @@ name|field
 parameter_list|,
 name|ignore
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|field
@@ -2591,7 +2630,9 @@ operator|==
 name|ignoreall
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* 	 * Lower-case the string, so that "Status" and "status" 	 * will hash to the same place. 	 */
 name|istrncpy
@@ -2652,7 +2693,6 @@ name|realfield
 parameter_list|,
 name|table
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|realfield
@@ -2663,7 +2703,6 @@ modifier|*
 name|table
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ignore
 modifier|*
@@ -2685,7 +2724,7 @@ index|]
 init|;
 name|igp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|igp
 operator|=

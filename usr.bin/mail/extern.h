@@ -200,6 +200,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -214,9 +215,11 @@ name|Fopen
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -234,6 +237,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -340,8 +344,9 @@ name|hfield
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
-index|[]
+operator|*
 operator|,
 expr|struct
 name|message
@@ -380,8 +385,9 @@ name|char
 index|[]
 operator|,
 name|char
-index|[]
+operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -447,8 +453,9 @@ name|readtty
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
-index|[]
+operator|*
 operator|,
 name|char
 index|[]
@@ -598,8 +605,9 @@ name|value
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
-index|[]
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -612,8 +620,9 @@ name|vcopy
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
-index|[]
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -803,11 +812,13 @@ name|assign
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
-index|[]
+operator|*
 operator|,
+specifier|const
 name|char
-index|[]
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1221,11 +1232,13 @@ name|fail
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
-index|[]
+operator|*
 operator|,
+specifier|const
 name|char
-index|[]
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1316,6 +1329,7 @@ name|fmt
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1538,6 +1552,7 @@ name|hash
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1654,6 +1669,7 @@ expr|struct
 name|ignoretab
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1671,6 +1687,7 @@ expr|struct
 name|ignoretab
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1748,6 +1765,7 @@ name|isign
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1765,9 +1783,11 @@ name|isprefix
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1784,6 +1804,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1794,6 +1815,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__const
 name|struct
 name|cmd
 modifier|*
@@ -1829,8 +1851,9 @@ name|lookup
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
-index|[]
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2438,6 +2461,7 @@ index|[]
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,

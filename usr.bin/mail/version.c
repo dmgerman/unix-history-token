@@ -46,6 +46,7 @@ comment|/*  * Just keep track of the date/sid of this version of Mail.  * Load t
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|version
