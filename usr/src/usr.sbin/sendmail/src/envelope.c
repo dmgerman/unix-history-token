@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.34 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -758,7 +758,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"warning: cannot send message for %s"
+literal|"Warning: cannot send message for %s"
 argument_list|,
 name|pintvl
 argument_list|(
