@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -448,11 +454,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|srand
-argument_list|(
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
