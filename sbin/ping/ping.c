@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ping.c,v 1.8.2.14 1997/09/14 19:40:04 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1663,10 +1663,10 @@ argument_list|)
 expr_stmt|;
 name|hnamebuf
 index|[
-operator|(
 sizeof|sizeof
+argument_list|(
 name|hnamebuf
-operator|)
+argument_list|)
 operator|-
 literal|1
 index|]
