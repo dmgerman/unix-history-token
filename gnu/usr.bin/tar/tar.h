@@ -944,21 +944,16 @@ begin_comment
 comment|/* -B */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+name|TAR_EXTERN
+name|int
+name|f_dironly
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|TAR_EXTERN char f_dironly;
-comment|/* -D */
+comment|/* -n ... PH */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|TAR_EXTERN

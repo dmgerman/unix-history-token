@@ -1185,6 +1185,16 @@ literal|1
 block|}
 block|,
 block|{
+literal|"norecurse"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'n'
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -1617,7 +1627,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-01234567Ab:BcC:df:F:g:GhikK:lL:mMN:oOpPrRsStT:uvV:wWxX:zZ"
+literal|"-01234567Ab:BcC:df:F:g:GhikK:lL:mMnN:oOpPrRsStT:uvV:wWxX:zZ"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2228,6 +2238,21 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* don't recurse into subdirectories */
+if|if
+condition|(
+name|f_oldarch
+condition|)
+goto|goto
+name|badopt
+goto|;
+name|f_dironly
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'N'
 case|:
 comment|/* Only write files newer than X */
@@ -2280,7 +2305,8 @@ comment|/* Generate old archive */
 if|if
 condition|(
 name|f_gnudump
-comment|/* || f_dironly */
+operator|||
+name|f_dironly
 condition|)
 goto|goto
 name|badopt
@@ -2675,7 +2701,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -m, --modification-time	don't extract file modified time\n\ -M, --multi-volume	create/list/extract multi-volume archive\n\ -N, --after-date DATE,\n\     --newer DATE	only store files newer than DATE\n\ -o, --old-archive,\n\     --portability	write a V7 format archive, rather than ANSI format\n\ -O, --to-stdout		extract files to standard output\n\ -p, --same-permissions,\n\     --preserve-permissions extract all protection information\n\ -P, --absolute-paths	don't strip leading `/'s from file names\n\ --preserve		like -p -s\n\ "
+literal|"\ -m, --modification-time	don't extract file modified time\n\ -M, --multi-volume	create/list/extract multi-volume archive\n\ -n, --norecurse		don't recurse into subdircectories\n\ -N, --after-date DATE,\n\     --newer DATE	only store files newer than DATE\n\ -o, --old-archive,\n\     --portability	write a V7 format archive, rather than ANSI format\n\ -O, --to-stdout		extract files to standard output\n\ -p, --same-permissions,\n\     --preserve-permissions extract all protection information\n\ -P, --absolute-paths	don't strip leading `/'s from file names\n\ --preserve		like -p -s\n\ "
 argument_list|,
 name|stdout
 argument_list|)
