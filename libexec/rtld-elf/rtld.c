@@ -949,6 +949,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|libmap_override
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Maps to use in addition to libmap.conf */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|bool
 name|trust
 decl_stmt|;
@@ -1636,6 +1648,14 @@ argument_list|)
 operator|!=
 name|NULL
 expr_stmt|;
+name|libmap_override
+operator|=
+name|getenv
+argument_list|(
+name|LD_
+literal|"LIBMAP"
+argument_list|)
+expr_stmt|;
 name|ld_library_path
 operator|=
 name|getenv
@@ -2048,7 +2068,9 @@ operator|(
 name|bool
 operator|)
 name|lm_init
-argument_list|()
+argument_list|(
+name|libmap_override
+argument_list|)
 expr_stmt|;
 name|dbg
 argument_list|(
