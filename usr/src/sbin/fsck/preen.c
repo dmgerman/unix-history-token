@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)preen.c	5.1 (Berkeley) %G%"
+literal|"@(#)preen.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,7 +163,11 @@ name|int
 name|nrun
 decl_stmt|,
 name|ndisks
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|hotroot
 decl_stmt|;
 end_decl_stmt
