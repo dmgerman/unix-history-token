@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.14 (Berkeley) %G%"
+literal|"@(#)process.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2454,6 +2454,25 @@ name|defpreg
 operator|=
 name|preg
 expr_stmt|;
+comment|/* Set anchors, discounting trailing newline (if any). */
+if|if
+condition|(
+name|slen
+operator|>
+literal|0
+operator|&&
+name|string
+index|[
+name|slen
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|slen
+operator|--
+expr_stmt|;
 name|match
 index|[
 literal|0
@@ -2471,10 +2490,7 @@ operator|.
 name|rm_eo
 operator|=
 name|slen
-operator|-
-literal|1
 expr_stmt|;
-comment|/* Length minus trailing newline. */
 name|eval
 operator|=
 name|regexec
