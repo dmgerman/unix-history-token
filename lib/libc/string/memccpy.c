@@ -101,6 +101,13 @@ name|fp
 init|=
 name|f
 decl_stmt|;
+specifier|register
+name|unsigned
+name|char
+name|uc
+init|=
+name|c
+decl_stmt|;
 do|do
 block|{
 if|if
@@ -115,11 +122,11 @@ name|fp
 operator|++
 operator|)
 operator|==
-name|c
+name|uc
 condition|)
 return|return
 operator|(
-name|t
+name|tp
 operator|)
 return|;
 block|}
