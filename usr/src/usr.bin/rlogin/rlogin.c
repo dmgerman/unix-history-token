@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.24 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +173,12 @@ ifdef|#
 directive|ifdef
 name|KERBEROS
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<kerberosIV/des.h>
+end_include
 
 begin_include
 include|#

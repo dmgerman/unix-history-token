@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<kerberosIV/des.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kerberosIV/krb.h>
 end_include
 
