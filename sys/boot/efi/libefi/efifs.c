@@ -926,6 +926,13 @@ name|st_mode
 operator||=
 name|S_IFDIR
 expr_stmt|;
+else|else
+name|sb
+operator|->
+name|st_mode
+operator||=
+name|S_IFREG
+expr_stmt|;
 name|sb
 operator|->
 name|st_size
