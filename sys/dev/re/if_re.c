@@ -8605,7 +8605,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable C+ RX and TX mode, as well as VLAN stripping and 	 * RX checksum offload. Only enable dual-address cycle if 	 * we're on a 64-bit bus. We must configure the C+ register 	 * before all others. 	 */
+comment|/* 	 * Enable C+ RX and TX mode, as well as VLAN stripping and 	 * RX checksum offload. We must configure the C+ register 	 * before all others. 	 */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -8617,21 +8617,6 @@ operator||
 name|RL_CPLUSCMD_TXENB
 operator||
 name|RL_CPLUSCMD_PCI_MRW
-operator||
-operator|(
-name|CSR_READ_1
-argument_list|(
-name|sc
-argument_list|,
-name|RL_CFG2
-argument_list|)
-operator|&
-name|RL_BUSWIDTH_64BITS
-condition|?
-name|RL_CPLUSCMD_PCI_DAC
-else|:
-literal|0
-operator|)
 operator||
 name|RL_CPLUSCMD_VLANSTRIP
 operator||
