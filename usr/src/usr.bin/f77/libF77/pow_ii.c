@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pow_ii.c	5.2	%G%  *  *  Corrections by Robert P. Corbett, 1983 March 2  *  Revised to restore portability, 1983 March 4  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pow_ii.c	5.3	%G%  *  *  Corrections by Robert P. Corbett, 1983 March 2  *  Revised to restore portability, 1983 March 4  */
 end_comment
 
 begin_function
@@ -31,11 +31,6 @@ decl_stmt|,
 name|x
 decl_stmt|,
 name|n
-decl_stmt|;
-name|int
-name|zero
-init|=
-literal|0
 decl_stmt|;
 name|pow
 operator|=
@@ -68,11 +63,27 @@ name|x
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
 return|return
 operator|(
 literal|0L
 operator|)
 return|;
+else|else
+return|return
+operator|(
+literal|1
+operator|/
+name|x
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|x
