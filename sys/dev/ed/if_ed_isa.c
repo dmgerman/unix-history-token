@@ -223,17 +223,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ed_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Check isapnp ids */
 name|error
 operator|=
