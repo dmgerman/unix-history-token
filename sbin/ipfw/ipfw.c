@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.31 1996/08/13 00:41:05 pst Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.32 1996/08/13 19:43:24 pst Exp $  *  */
 end_comment
 
 begin_include
@@ -159,6 +159,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Show time stamps        */
+end_comment
+
+begin_decl_stmt
+name|int
+name|do_force
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't ask for confirmation */
 end_comment
 
 begin_function
@@ -4667,6 +4679,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the force flag for non-interactive processes */
+name|do_force
+operator|=
+operator|!
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -4678,7 +4699,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"atN"
+literal|"aftN"
 argument_list|)
 operator|)
 operator|!=
@@ -4693,6 +4714,14 @@ case|case
 literal|'a'
 case|:
 name|do_acct
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|do_force
 operator|=
 literal|1
 expr_stmt|;
@@ -4814,6 +4843,105 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|int
+name|do_flush
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|do_force
+condition|)
+name|do_flush
+operator|=
+literal|1
+expr_stmt|;
+else|else
+block|{
+name|int
+name|c
+decl_stmt|;
+comment|/* Ask the user */
+name|printf
+argument_list|(
+literal|"Are you sure? [yn] "
+argument_list|)
+expr_stmt|;
+do|do
+block|{
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|toupper
+argument_list|(
+name|getc
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|c
+operator|!=
+literal|'\n'
+operator|&&
+name|getc
+argument_list|(
+name|stdin
+argument_list|)
+operator|!=
+literal|'\n'
+condition|)
+if|if
+condition|(
+name|feof
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+do|while
+condition|(
+name|c
+operator|!=
+literal|'Y'
+operator|&&
+name|c
+operator|!=
+literal|'N'
+condition|)
+do|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'Y'
+condition|)
+name|do_flush
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|do_flush
+condition|)
+block|{
 if|if
 condition|(
 name|setsockopt
@@ -4852,6 +4980,7 @@ argument_list|(
 literal|"Flushed all rules.\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
