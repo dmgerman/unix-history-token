@@ -8385,7 +8385,7 @@ name|ATA_C_SETFEATURES
 argument_list|,
 literal|0
 argument_list|,
-name|ATA_UDMA4
+name|ATA_UDMA2
 argument_list|,
 name|ATA_C_F_SETXFER
 argument_list|,
