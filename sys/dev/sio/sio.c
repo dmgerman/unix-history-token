@@ -325,6 +325,21 @@ parameter_list|)
 value|((flags)& 0x04)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|COM_ISMULTIPORT
+parameter_list|(
+name|flags
+parameter_list|)
+value|(0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -436,6 +451,16 @@ parameter_list|(
 name|flags
 parameter_list|)
 value|((flags)& COM_C_IIR_TXRDYBUG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_NOSCR
+parameter_list|(
+name|flags
+parameter_list|)
+value|((flags)& 0x100000)
 end_define
 
 begin_define
@@ -4174,9 +4199,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COM_MULTIPORT
 if|if
 condition|(
 operator|!
@@ -4190,19 +4212,13 @@ name|COM_IIR_TXRDYBUG
 argument_list|(
 name|flags
 argument_list|)
-condition|)
-else|#
-directive|else
-if|if
-condition|(
+operator|&&
 operator|!
-name|COM_IIR_TXRDYBUG
+name|COM_NOSCR
 argument_list|(
 name|flags
 argument_list|)
 condition|)
-endif|#
-directive|endif
 block|{
 name|u_char
 name|scr
