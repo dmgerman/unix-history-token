@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.1 (Berkeley) %G%"
+literal|"@(#)finger.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,6 +746,10 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|person1
+condition|)
 name|print
 argument_list|()
 expr_stmt|;
@@ -1090,11 +1094,7 @@ argument_list|(
 literal|"No one logged on\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 name|p
 operator|->
@@ -1237,6 +1237,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|person1
+operator|==
+literal|0
+condition|)
+return|return;
 name|p
 operator|->
 name|link
