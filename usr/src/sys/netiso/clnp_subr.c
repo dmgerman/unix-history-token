@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_subr.c	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_subr.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2403,7 +2403,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"sending on route %x with no mtu, line %s of file %s\n"
+literal|"sending on route 0x%x with no mtu, line %d of file %s\n"
 argument_list|,
 name|rt
 argument_list|,
@@ -2417,7 +2417,7 @@ directive|ifdef
 name|ARGO_DEBUG
 name|printf
 argument_list|(
-literal|"route dst is"
+literal|"route dst is "
 argument_list|)
 expr_stmt|;
 name|dump_isoaddr
