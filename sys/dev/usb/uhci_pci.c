@@ -468,7 +468,10 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
-name|res
+name|io_res
+decl_stmt|,
+modifier|*
+name|irq_res
 decl_stmt|;
 name|int
 name|intr
@@ -483,7 +486,7 @@ name|rid
 operator|=
 name|PCI_UHCI_BASE_REG
 expr_stmt|;
-name|res
+name|io_res
 operator|=
 name|bus_alloc_resource
 argument_list|(
@@ -507,7 +510,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|res
+name|io_res
 condition|)
 block|{
 name|device_printf
@@ -527,7 +530,7 @@ name|iot
 operator|=
 name|rman_get_bustag
 argument_list|(
-name|res
+name|io_res
 argument_list|)
 expr_stmt|;
 name|sc
@@ -536,7 +539,7 @@ name|ioh
 operator|=
 name|rman_get_bushandle
 argument_list|(
-name|res
+name|io_res
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
@@ -559,7 +562,7 @@ name|rid
 operator|=
 literal|0
 expr_stmt|;
-name|res
+name|irq_res
 operator|=
 name|bus_alloc_resource
 argument_list|(
@@ -584,7 +587,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|irq_res
 operator|==
 name|NULL
 condition|)
@@ -878,7 +881,7 @@ name|parent
 argument_list|,
 name|self
 argument_list|,
-name|res
+name|irq_res
 argument_list|,
 name|INTR_TYPE_BIO
 argument_list|,
@@ -1038,7 +1041,7 @@ name|parent
 argument_list|,
 name|self
 argument_list|,
-name|res
+name|irq_res
 argument_list|,
 name|ih
 argument_list|)
@@ -1072,24 +1075,28 @@ argument_list|)
 expr_stmt|;
 name|bad2
 label|:
-name|bus_delete_resource
+name|bus_release_resource
 argument_list|(
 name|self
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 literal|0
+argument_list|,
+name|irq_res
 argument_list|)
 expr_stmt|;
 name|bad1
 label|:
-name|bus_delete_resource
+name|bus_release_resource
 argument_list|(
 name|self
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
 name|PCI_UHCI_BASE_REG
+argument_list|,
+name|io_res
 argument_list|)
 expr_stmt|;
 return|return
