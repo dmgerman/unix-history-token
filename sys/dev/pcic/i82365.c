@@ -7,12 +7,6 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCICDEBUG
-end_define
-
 begin_comment
 comment|/*  * Copyright (c) 1997 Marc Horowitz.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Marc Horowitz.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -198,6 +198,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|DETACH_FORCE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIC_VENDOR_UNKNOWN
 value|0
 end_define
@@ -269,6 +276,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|XXX
+end_if
+
 begin_decl_stmt
 name|int
 name|pcic_submatch
@@ -308,6 +321,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -715,14 +733,25 @@ begin_function
 name|void
 name|pcic_attach
 parameter_list|(
-name|sc
+name|device_t
+name|dev
 parameter_list|)
+block|{
 name|struct
 name|pcic_softc
 modifier|*
 name|sc
+init|=
+operator|(
+expr|struct
+name|pcic_softc
+operator|*
+operator|)
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
-block|{
 name|int
 name|vendor
 decl_stmt|,
@@ -1213,7 +1242,7 @@ operator|&
 name|PCIC_FLAG_SOCKETP
 condition|)
 block|{
-name|SIMPLEQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|sc
@@ -1298,15 +1327,11 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: controller 0 (%s) has "
-argument_list|,
-name|sc
-operator|->
 name|dev
-operator|.
-name|dv_xname
+argument_list|,
+literal|"controller 0 (%s) has "
 argument_list|,
 name|pcic_vendor_to_string
 argument_list|(
@@ -1463,15 +1488,11 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: controller 1 (%s) has "
-argument_list|,
-name|sc
-operator|->
 name|dev
-operator|.
-name|dv_xname
+argument_list|,
+literal|"controller 1 (%s) has "
 argument_list|,
 name|pcic_vendor_to_string
 argument_list|(
@@ -1734,6 +1755,9 @@ name|sc
 operator|->
 name|iosize
 expr_stmt|;
+if|#
+directive|if
+name|XXX
 name|h
 operator|->
 name|pccard
@@ -1755,6 +1779,8 @@ argument_list|,
 name|pcic_submatch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* if there's actually a pccard device attached, initialize the slot */
 if|if
 condition|(
@@ -1841,7 +1867,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|kthread_create1
+name|kthread_create
 argument_list|(
 name|pcic_event_thread
 argument_list|,
@@ -1854,29 +1880,28 @@ name|event_thread
 argument_list|,
 literal|"%s,%s"
 argument_list|,
+name|device_get_name
+argument_list|(
 name|h
 operator|->
 name|sc
 operator|->
 name|dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|cs
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unable to create event thread for sock 0x%02x\n"
-argument_list|,
 name|h
 operator|->
 name|sc
 operator|->
 name|dev
-operator|.
-name|dv_xname
+argument_list|,
+literal|"cannot create event thread for sock 0x%02x\n"
 argument_list|,
 name|h
 operator|->
@@ -1890,17 +1915,15 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: create event thread for sock 0x%02x\n"
-argument_list|,
 name|h
 operator|->
 name|sc
 operator|->
 name|dev
-operator|.
-name|dv_xname
+argument_list|,
+literal|"create event thread for sock 0x%02x\n"
 argument_list|,
 name|h
 operator|->
@@ -1955,7 +1978,7 @@ condition|(
 operator|(
 name|pe
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|h
@@ -2024,7 +2047,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD_UNTIL
 argument_list|(
 operator|&
 name|h
@@ -2074,7 +2097,7 @@ condition|(
 operator|(
 name|pe1
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|h
@@ -2100,7 +2123,7 @@ condition|(
 operator|(
 name|pe2
 operator|=
-name|SIMPLEQ_NEXT
+name|STAILQ_NEXT
 argument_list|(
 name|pe1
 argument_list|,
@@ -2120,7 +2143,7 @@ operator|==
 name|PCIC_EVENT_INSERTION
 condition|)
 block|{
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD_UNTIL
 argument_list|(
 operator|&
 name|h
@@ -2139,7 +2162,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD_UNTIL
 argument_list|(
 operator|&
 name|h
@@ -2212,7 +2235,7 @@ condition|(
 operator|(
 name|pe1
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|h
@@ -2238,7 +2261,7 @@ condition|(
 operator|(
 name|pe2
 operator|=
-name|SIMPLEQ_NEXT
+name|STAILQ_NEXT
 argument_list|(
 name|pe1
 argument_list|,
@@ -2258,7 +2281,7 @@ operator|==
 name|PCIC_EVENT_REMOVAL
 condition|)
 block|{
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD_UNTIL
 argument_list|(
 operator|&
 name|h
@@ -2277,7 +2300,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD_UNTIL
 argument_list|(
 operator|&
 name|h
@@ -2401,10 +2424,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kthread_create
-argument_list|(
 name|pcic_create_event_thread
-argument_list|,
+argument_list|(
 name|h
 argument_list|)
 expr_stmt|;
@@ -2559,6 +2580,12 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|XXX
+end_if
 
 begin_function
 name|int
@@ -2842,6 +2869,17 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|XXX
+end_if
+
 begin_function
 name|int
 name|pcic_print
@@ -2950,6 +2988,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -3426,7 +3469,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-name|SIMPLEQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|h
@@ -3491,6 +3534,9 @@ name|PCIC_FLAG_CARDP
 operator|)
 condition|)
 block|{
+if|#
+directive|if
+name|XXX
 comment|/* call the MI attach function */
 name|psc
 operator|->
@@ -3501,6 +3547,8 @@ argument_list|(
 name|psc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|h
 operator|->
 name|flags
@@ -3569,6 +3617,9 @@ operator|~
 name|PCIC_FLAG_CARDP
 expr_stmt|;
 comment|/* call the MI detach function */
+if|#
+directive|if
+name|XXX
 name|psc
 operator|->
 name|sc_if
@@ -3580,6 +3631,8 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -3620,6 +3673,9 @@ operator|->
 name|pccard
 decl_stmt|;
 comment|/* call the MI deactivate function */
+if|#
+directive|if
+name|XXX
 name|psc
 operator|->
 name|sc_if
@@ -3629,6 +3685,8 @@ argument_list|(
 name|psc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* power down the socket */
 name|pcic_write
 argument_list|(
@@ -3788,6 +3846,9 @@ name|i
 operator|)
 condition|)
 block|{
+if|#
+directive|if
+name|XXX
 if|if
 condition|(
 name|bus_space_subregion
@@ -3821,6 +3882,8 @@ operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 name|mhandle
 operator|=
 name|mask
@@ -4955,6 +5018,9 @@ name|ioaddr
 operator|=
 name|start
 expr_stmt|;
+if|#
+directive|if
+name|XXX
 if|if
 condition|(
 name|bus_space_map
@@ -4976,6 +5042,8 @@ operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -5000,6 +5068,9 @@ name|flags
 operator||=
 name|PCCARD_IO_ALLOCATED
 expr_stmt|;
+if|#
+directive|if
+name|XXX
 if|if
 condition|(
 name|bus_space_alloc
@@ -5044,6 +5115,8 @@ operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -5138,6 +5211,9 @@ name|pcihp
 operator|->
 name|size
 decl_stmt|;
+if|#
+directive|if
+name|XXX
 if|if
 condition|(
 name|pcihp
@@ -5165,6 +5241,8 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -6208,6 +6286,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* set the card type */
+if|#
+directive|if
+name|XXX
 name|cardtype
 operator|=
 name|psc
@@ -6219,6 +6300,8 @@ argument_list|(
 name|psc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|reg
 operator|=
 name|pcic_read

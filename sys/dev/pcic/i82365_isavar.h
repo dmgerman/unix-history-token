@@ -19,7 +19,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Establish/disestablish interrupts for PCMCIA functions.  */
+comment|/*   * Establish/disestablish interrupts for PCCARD functions.  */
 end_comment
 
 begin_decl_stmt
@@ -29,10 +29,10 @@ name|pcic_isa_chip_intr_establish
 name|__P
 argument_list|(
 operator|(
-name|pcmcia_chipset_handle_t
+name|pccard_chipset_handle_t
 operator|,
 expr|struct
-name|pcmcia_function
+name|pccard_function
 operator|*
 operator|,
 name|int
@@ -59,7 +59,7 @@ name|pcic_isa_chip_intr_disestablish
 name|__P
 argument_list|(
 operator|(
-name|pcmcia_chipset_handle_t
+name|pccard_chipset_handle_t
 operator|,
 name|void
 operator|*
@@ -72,27 +72,22 @@ begin_comment
 comment|/*  * Figure out how wide the ISA bus is...  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|pcic_isa_bus_width_probe
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|,
+parameter_list|(
+name|device_t
+parameter_list|,
 name|bus_space_tag_t
-operator|,
+parameter_list|,
 name|bus_space_handle_t
-operator|,
+parameter_list|,
 name|bus_addr_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
