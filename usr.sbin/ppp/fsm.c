@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.29 1998/06/15 19:06:42 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.30 1998/06/16 19:40:36 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -637,19 +637,11 @@ name|state
 operator|==
 name|ST_STOPPED
 condition|)
-block|{
-comment|/* Force ourselves back to initial */
-name|fsm_Down
+name|fsm2initial
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|fsm_Close
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -5302,6 +5294,58 @@ operator|->
 name|link
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|fsm2initial
+parameter_list|(
+name|struct
+name|fsm
+modifier|*
+name|fp
+parameter_list|)
+block|{
+if|if
+condition|(
+name|fp
+operator|->
+name|state
+operator|==
+name|ST_STOPPED
+condition|)
+name|fsm_Close
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|state
+operator|>
+name|ST_INITIAL
+condition|)
+name|fsm_Down
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|state
+operator|>
+name|ST_INITIAL
+condition|)
+name|fsm_Close
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
