@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.7.2.1 1995/06/08 04:34:11 davidg Exp $"
+literal|"$Id: mountd.c,v 1.8 1995/06/11 19:30:46 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,7 +1232,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|root_only
+name|resvport_only
 init|=
 literal|1
 decl_stmt|;
@@ -1485,7 +1485,7 @@ break|break;
 case|case
 literal|'n'
 case|:
-name|root_only
+name|resvport_only
 operator|=
 literal|0
 expr_stmt|;
@@ -1895,6 +1895,9 @@ decl_stmt|;
 name|u_long
 name|saddr
 decl_stmt|;
+name|u_short
+name|sport
+decl_stmt|;
 name|char
 name|rpcpath
 index|[
@@ -1970,6 +1973,17 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
+name|sport
+operator|=
+name|ntohs
+argument_list|(
+name|transp
+operator|->
+name|xp_raddr
+operator|.
+name|sin_port
+argument_list|)
+expr_stmt|;
 name|hp
 operator|=
 operator|(
@@ -2017,18 +2031,11 @@ name|RPCMNT_MOUNT
 case|:
 if|if
 condition|(
-operator|(
-name|uid
-operator|!=
-literal|0
+name|sport
+operator|>=
+name|IPPORT_RESERVED
 operator|&&
-name|root_only
-operator|)
-operator|||
-name|uid
-operator|==
-operator|-
-literal|2
+name|resvport_only
 condition|)
 block|{
 name|svcerr_weakauth
@@ -2469,18 +2476,11 @@ name|RPCMNT_UMOUNT
 case|:
 if|if
 condition|(
-operator|(
-name|uid
-operator|!=
-literal|0
+name|sport
+operator|>=
+name|IPPORT_RESERVED
 operator|&&
-name|root_only
-operator|)
-operator|||
-name|uid
-operator|==
-operator|-
-literal|2
+name|resvport_only
 condition|)
 block|{
 name|svcerr_weakauth
@@ -2583,18 +2583,11 @@ name|RPCMNT_UMNTALL
 case|:
 if|if
 condition|(
-operator|(
-name|uid
-operator|!=
-literal|0
+name|sport
+operator|>=
+name|IPPORT_RESERVED
 operator|&&
-name|root_only
-operator|)
-operator|||
-name|uid
-operator|==
-operator|-
-literal|2
+name|resvport_only
 condition|)
 block|{
 name|svcerr_weakauth
