@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.31 1998/02/01 22:45:23 bde Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.32 1998/02/20 16:35:27 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,20 +15,6 @@ directive|define
 name|_MACHINE_CLOCK_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|TSC_COMULTIPLIER_SHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSC_MULTIPLIER_SHIFT
-value|32
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -36,7 +22,7 @@ name|KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * i386 to clock driver interface.  * XXX almost all of it is misplaced.  i586 stuff is done in isa/clock.c  * and isa stuff is done in i386/microtime.s and i386/support.s.  */
+comment|/*  * i386 to clock driver interface.  * XXX large parts of the driver and its interface are misplaced.  */
 end_comment
 
 begin_decl_stmt
