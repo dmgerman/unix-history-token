@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David Hitz of Auspex Systems Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cp.c,v 1.9 1996/02/19 05:56:33 pst Exp $  */
+comment|/*  * Copyright (c) 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David Hitz of Auspex Systems Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cp.c,v 1.10 1996/03/08 06:58:06 wosch Exp $  */
 end_comment
 
 begin_ifndef
@@ -12,6 +12,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|copyright
 index|[]
 init|=
@@ -37,6 +38,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|sccsid
 index|[]
 init|=
@@ -54,7 +56,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Cp copies source files to target files.  *  * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-realative.  *  * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
+comment|/*  * Cp copies source files to target files.  *  * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-relative.  *  * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
 end_comment
 
 begin_include
@@ -310,7 +312,8 @@ literal|"HLPRfipr"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -840,6 +843,8 @@ name|curr
 decl_stmt|;
 name|int
 name|base
+init|=
+literal|0
 decl_stmt|,
 name|dne
 decl_stmt|,
@@ -1238,6 +1243,45 @@ name|curr
 argument_list|,
 name|FTS_SKIP
 argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|curr
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+operator|&&
+name|S_ISDIR
+argument_list|(
+name|to_stat
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"cannot overwrite directory %s with non-directory %s"
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|,
+name|curr
+operator|->
+name|fts_path
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
