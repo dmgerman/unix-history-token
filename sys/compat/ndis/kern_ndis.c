@@ -230,6 +230,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/ndis/usbd_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/if_ndis/if_ndisvar.h>
 end_include
 
@@ -624,6 +630,9 @@ expr_stmt|;
 name|ntoskrnl_libinit
 argument_list|()
 expr_stmt|;
+name|usbd_libinit
+argument_list|()
+expr_stmt|;
 name|patch
 operator|=
 name|kernndis_functbl
@@ -734,6 +743,9 @@ expr_stmt|;
 name|ntoskrnl_libfini
 argument_list|()
 expr_stmt|;
+name|usbd_libfini
+argument_list|()
+expr_stmt|;
 name|windrv_libfini
 argument_list|()
 expr_stmt|;
@@ -784,6 +796,9 @@ name|ndis_libfini
 argument_list|()
 expr_stmt|;
 name|ntoskrnl_libfini
+argument_list|()
+expr_stmt|;
+name|usbd_libfini
 argument_list|()
 expr_stmt|;
 name|windrv_libfini

@@ -2079,6 +2079,10 @@ name|driver_object
 modifier|*
 name|drv
 decl_stmt|;
+name|driver_object
+modifier|*
+name|pdrv
+decl_stmt|;
 name|device_object
 modifier|*
 name|pdo
@@ -2125,7 +2129,22 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hook interrupt early, since calling the driver's 	 * init routine may trigger an interrupt. 	 */
+comment|/* 	 * Hook interrupt early, since calling the driver's 	 * init routine may trigger an interrupt. Note that 	 * we don't need to do any explicit interrupt setup 	 * for USB. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCMCIABus
+operator|||
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCIBus
+condition|)
+block|{
 name|error
 operator|=
 name|bus_setup_intr
@@ -2165,6 +2184,7 @@ expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -2227,6 +2247,61 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Find the PDO for this device instance. */
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCIBus
+condition|)
+name|pdrv
+operator|=
+name|windrv_lookup
+argument_list|(
+name|NULL
+argument_list|,
+literal|"PCI Bus"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCMCIABus
+condition|)
+name|pdrv
+operator|=
+name|windrv_lookup
+argument_list|(
+name|NULL
+argument_list|,
+literal|"PCCARD Bus"
+argument_list|)
+expr_stmt|;
+else|else
+name|pdrv
+operator|=
+name|windrv_lookup
+argument_list|(
+name|NULL
+argument_list|,
+literal|"USB Bus"
+argument_list|)
+expr_stmt|;
+name|pdo
+operator|=
+name|windrv_find_pdo
+argument_list|(
+name|pdrv
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a new functional device object for this 	 * device. This is what creates the miniport block 	 * for this device instance. 	 */
 name|img
 operator|=
@@ -2240,15 +2315,8 @@ operator|(
 name|vm_offset_t
 operator|)
 name|img
-argument_list|)
-expr_stmt|;
-name|pdo
-operator|=
-name|windrv_find_pdo
-argument_list|(
-name|drv
 argument_list|,
-name|dev
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2299,6 +2367,20 @@ name|nmc_version_minor
 argument_list|)
 expr_stmt|;
 comment|/* Do resource conversion. */
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCMCIABus
+operator|||
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCIBus
+condition|)
 name|ndis_convert_res
 argument_list|(
 name|sc
@@ -4081,14 +4163,49 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Destroy the PDO for this device. */
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCIBus
+condition|)
 name|drv
 operator|=
 name|windrv_lookup
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|drv_data
+name|NULL
+argument_list|,
+literal|"PCI Bus"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_iftype
+operator|==
+name|PCMCIABus
+condition|)
+name|drv
+operator|=
+name|windrv_lookup
+argument_list|(
+name|NULL
+argument_list|,
+literal|"PCCARD Bus"
+argument_list|)
+expr_stmt|;
+else|else
+name|drv
+operator|=
+name|windrv_lookup
+argument_list|(
+name|NULL
+argument_list|,
+literal|"USB Bus"
 argument_list|)
 expr_stmt|;
 if|if
