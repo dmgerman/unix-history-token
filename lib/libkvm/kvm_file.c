@@ -559,7 +559,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"kvm_getprocs"
+literal|"kvm_getfiles"
 argument_list|)
 expr_stmt|;
 return|return
