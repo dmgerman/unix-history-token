@@ -2349,8 +2349,6 @@ name|vrecycle
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;

@@ -2812,8 +2812,6 @@ name|vrecycle
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
-argument_list|,
 name|ap
 operator|->
 name|a_td
