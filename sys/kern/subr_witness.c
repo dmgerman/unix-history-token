@@ -3200,8 +3200,12 @@ expr_stmt|;
 name|MPASS
 argument_list|(
 name|i
-operator|!=
+operator|>=
 literal|0
+operator|&&
+name|i
+operator|<
+name|LOCK_NCHILDREN
 argument_list|)
 expr_stmt|;
 block|}
