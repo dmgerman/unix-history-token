@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.4.4.1 1995/08/30 04:06:59 davidg Exp $"
+literal|"$Id: res_send.c,v 1.4.4.3 1996/06/05 02:48:39 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2292,6 +2292,29 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|+
+literal|1
+operator|>
+name|FD_SETSIZE
+condition|)
+block|{
+name|Perror
+argument_list|(
+name|stderr
+argument_list|,
+literal|"res_send: too many files"
+argument_list|)
+expr_stmt|;
+name|res_close
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next_ns
+goto|;
+block|}
 name|wait
 label|:
 name|FD_ZERO
