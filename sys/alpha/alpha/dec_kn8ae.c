@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/rpb.h>
 end_include
 
@@ -199,9 +205,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SIMOS
 name|zs_cnattach
 argument_list|(
 name|TLSB_GBUS_BASE
@@ -209,8 +212,6 @@ argument_list|,
 name|GBUS_DUART0_OFFSET
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
