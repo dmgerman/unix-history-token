@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.16 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,7 +905,7 @@ goto|;
 case|case
 literal|'p'
 case|:
-comment|/* 			 * the argument shall be a pointer to void.  The value 			 * of the pointer is converted to a sequence of 			 * printable characters, in an implementation-defined 			 * manner. 			 */
+comment|/* 			 * ``The argument shall be a pointer to void.  The 			 * value of the pointer is converted to a sequence 			 * of printable characters, in an implementation- 			 * defined manner.'' 			 *	-- ANSI X3J11 			 */
 name|_ulong
 operator|=
 operator|(
@@ -950,24 +950,64 @@ literal|"(null)"
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|prec
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* 				 * can't use strlen; can only look for the 				 * NUL in the first `prec' characters, and 				 * strlen() will go further. 				 */
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|memchr
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|p
+operator|=
+name|memchr
+argument_list|(
+name|t
+argument_list|,
+literal|0
+argument_list|,
+name|prec
+argument_list|)
+condition|)
+block|{
+name|size
+operator|=
+name|p
+operator|-
+name|t
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|prec
+condition|)
+name|size
+operator|=
+name|prec
+expr_stmt|;
+block|}
+else|else
+name|size
+operator|=
+name|prec
+expr_stmt|;
+block|}
+else|else
 name|size
 operator|=
 name|strlen
 argument_list|(
 name|t
 argument_list|)
-operator|)
-operator|>
-name|prec
-operator|&&
-name|prec
-operator|>=
-literal|0
-condition|)
-name|size
-operator|=
-name|prec
 expr_stmt|;
 name|pforw
 label|:
