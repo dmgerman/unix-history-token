@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.10 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1994,7 +1994,7 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 operator|)
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -3507,7 +3507,7 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 operator|)
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -3871,8 +3871,7 @@ expr|struct
 name|buffer
 operator|*
 operator|)
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -3958,8 +3957,7 @@ expr|struct
 name|buffer
 operator|*
 operator|)
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 block|}
