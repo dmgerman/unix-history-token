@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.37 1999/10/13 18:52:54 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.38 1999/10/20 21:02:39 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2224,6 +2224,26 @@ name|u_int8_t
 name|addr
 decl_stmt|;
 comment|/* device address */
+define|#
+directive|define
+name|MAXDEVNAMELEN
+value|10
+comment|/* number of drivers */
+define|#
+directive|define
+name|MAXDEVNAMES
+value|4
+comment|/* attached drivers */
+name|char
+name|devnames
+index|[
+name|MAXDEVNAMES
+index|]
+index|[
+name|MAXDEVNAMELEN
+index|]
+decl_stmt|;
+comment|/* device names */
 name|char
 name|product
 index|[
