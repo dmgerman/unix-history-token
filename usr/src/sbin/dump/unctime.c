@@ -1,14 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)unctime.c	1.1 (Berkeley) 10/13/80"
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -503,6 +493,16 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)unctime.c	1.3 (Berkeley) 81/04/18"
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
