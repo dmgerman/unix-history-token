@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.36 1998/04/04 11:01:52 jb Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.37 1998/04/29 09:10:58 jb Exp $  *  */
 end_comment
 
 begin_comment
@@ -119,10 +119,10 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|long
+name|spinlock_t
 name|thread_lock
 init|=
-literal|0
+name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ define|#
 directive|define
 name|THREAD_LOCK
 parameter_list|()
-value|if (__isthreaded) _spinlock(&thread_lock);
+value|if (__isthreaded) _SPINLOCK(&thread_lock);
 end_define
 
 begin_define
@@ -139,7 +139,7 @@ define|#
 directive|define
 name|THREAD_UNLOCK
 parameter_list|()
-value|if (__isthreaded) _atomic_unlock(&thread_lock);
+value|if (__isthreaded) _SPINUNLOCK(&thread_lock);
 end_define
 
 begin_endif
