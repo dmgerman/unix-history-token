@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.12 (Berkeley) %G%"
+literal|"@(#)main.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,10 @@ name|increm
 operator|=
 name|NINCREM
 expr_stmt|;
+name|temp
+operator|=
+name|TEMP
+expr_stmt|;
 if|if
 condition|(
 name|TP_BSIZE
@@ -266,20 +270,6 @@ literal|'W'
 argument_list|)
 expr_stmt|;
 comment|/* tell us the current state of what has been done */
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* do nothing else */
-break|break;
-case|case
-literal|'J'
-case|:
-comment|/* update old to new */
-name|o_nconvert
-argument_list|()
-expr_stmt|;
 name|exit
 argument_list|(
 literal|0
