@@ -46,6 +46,7 @@ comment|/* Mask for src and dest IP addr */
 name|u_short
 name|flags
 decl_stmt|;
+comment|/* Flags word */
 name|u_short
 name|n_src_p
 decl_stmt|,
@@ -67,6 +68,12 @@ name|IP_FW_MAX_PORTS
 index|]
 decl_stmt|;
 comment|/* Array of port numbers to match */
+name|u_long
+name|p_cnt
+decl_stmt|,
+name|b_cnt
+decl_stmt|;
+comment|/* Packet and byte counters */
 block|}
 struct|;
 end_struct
@@ -79,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ALL
-value|0
+value|0x00
 end_define
 
 begin_comment
@@ -90,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_TCP
-value|1
+value|0x01
 end_define
 
 begin_comment
@@ -101,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_UDP
-value|2
+value|0x02
 end_define
 
 begin_comment
@@ -112,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ICMP
-value|3
+value|0x03
 end_define
 
 begin_comment
@@ -123,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_KIND
-value|3
+value|0x03
 end_define
 
 begin_comment
@@ -134,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ACCEPT
-value|4
+value|0x04
 end_define
 
 begin_comment
@@ -145,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_SRNG
-value|8
+value|0x08
 end_define
 
 begin_comment
@@ -156,7 +163,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_DRNG
-value|16
+value|0x10
 end_define
 
 begin_comment
@@ -167,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_PRN
-value|32
+value|0x20
 end_define
 
 begin_comment
@@ -177,8 +184,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_BIDIR
+value|0x40
+end_define
+
+begin_comment
+comment|/* For accounting-count two way       */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x3F
+value|0x7F
 end_define
 
 begin_comment
@@ -252,9 +270,49 @@ name|IP_FW_POLICY
 value|(IP_FW_BASE_CTL+7)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IP_ACCT_ADD
+value|(IP_FW_BASE_CTL+10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_ACCT_DEL
+value|(IP_FW_BASE_CTL+11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_ACCT_FLUSH
+value|(IP_FW_BASE_CTL+12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_ACCT_ZERO
+value|(IP_FW_BASE_CTL+13)
+end_define
+
 begin_comment
 comment|/*  * Main firewall chains definitions and global var's definitions.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFIREWALL
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -285,6 +343,44 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPACCT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ip_fw
+modifier|*
+name|ip_acct_chain
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _IP_FW_H */
+end_comment
 
 end_unit
 
