@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)win.c	5.4 (Berkeley) %G%"
+literal|"@(#)win.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,8 +40,14 @@ directive|include
 file|"getpar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
 begin_comment
-comment|/* **  Signal game won ** **	This routine prints out the win message, arranges to print out **	your score, tells you if you have a promotion coming to you, **	cleans up the current input line, and arranges to have you **	asked whether or not you want another game (via the reset() **	call). ** **	Pretty straightforward, although the promotion algorithm is **	pretty off the wall. */
+comment|/* **  Signal game won ** **	This routine prints out the win message, arranges to print out **	your score, tells you if you have a promotion coming to you, **	cleans up the current input line, and arranges to have you **	asked whether or not you want another game (via the longjmp() **	call). ** **	Pretty straightforward, although the promotion algorithm is **	pretty off the wall. */
 end_comment
 
 begin_macro
@@ -53,6 +59,10 @@ begin_block
 block|{
 name|long
 name|s
+decl_stmt|;
+specifier|extern
+name|jmp_buf
+name|env
 decl_stmt|;
 specifier|extern
 name|long
@@ -206,8 +216,12 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|env
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block

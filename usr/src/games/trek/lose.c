@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lose.c	5.5 (Berkeley) %G%"
+literal|"@(#)lose.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"trek.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_comment
@@ -89,6 +95,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|jmp_buf
+name|env
+decl_stmt|;
 name|Game
 operator|.
 name|killed
@@ -143,8 +153,12 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|env
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block

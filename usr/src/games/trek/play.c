@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)play.c	5.5 (Berkeley) %G%"
+literal|"@(#)play.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|"getpar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_comment
@@ -89,7 +95,7 @@ decl_stmt|,
 name|srscan
 argument_list|()
 decl_stmt|,
-name|reset
+name|myreset
 argument_list|()
 decl_stmt|,
 name|torped
@@ -266,7 +272,7 @@ literal|"terminate"
 block|,
 literal|""
 block|,
-name|reset
+name|myreset
 block|,
 literal|0
 block|,
@@ -306,6 +312,27 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|myreset
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|extern
+name|jmp_buf
+name|env
+decl_stmt|;
+name|longjmp
+argument_list|(
+name|env
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_macro
 name|play
