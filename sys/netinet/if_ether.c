@@ -367,7 +367,7 @@ comment|/* last packet until resolved/timeout */
 name|u_short
 name|la_preempt
 decl_stmt|;
-comment|/* #times we QUERIED before entry expiration */
+comment|/* countdown for pre-expiry arps */
 name|u_short
 name|la_asked
 decl_stmt|;
@@ -2375,15 +2375,9 @@ operator|&&
 operator|(
 name|time_second
 operator|+
-operator|(
-name|arp_maxtries
-operator|-
 name|la
 operator|->
 name|la_preempt
-operator|)
-operator|*
-name|arpt_down
 operator|>
 name|rt
 operator|->
@@ -2424,7 +2418,7 @@ expr_stmt|;
 name|la
 operator|->
 name|la_preempt
-operator|++
+operator|--
 expr_stmt|;
 block|}
 name|bcopy
@@ -2578,13 +2572,15 @@ name|arpt_down
 expr_stmt|;
 name|la
 operator|->
-name|la_preempt
-operator|=
-name|la
-operator|->
 name|la_asked
 operator|=
 literal|0
+expr_stmt|;
+name|la
+operator|->
+name|la_preempt
+operator|=
+name|arp_maxtries
 expr_stmt|;
 block|}
 block|}
@@ -3983,13 +3979,15 @@ name|RTF_REJECT
 expr_stmt|;
 name|la
 operator|->
-name|la_preempt
-operator|=
-name|la
-operator|->
 name|la_asked
 operator|=
 literal|0
+expr_stmt|;
+name|la
+operator|->
+name|la_preempt
+operator|=
+name|arp_maxtries
 expr_stmt|;
 if|if
 condition|(
