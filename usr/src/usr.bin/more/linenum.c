@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)linenum.c	5.2 (Berkeley) %G%"
+literal|"@(#)linenum.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,6 +1115,9 @@ operator|->
 name|next
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
