@@ -387,11 +387,12 @@ expr_stmt|;
 comment|/* Lie about disk drives which are character devices 	 * in FreeBSD but block devices under Linux. 	 */
 if|if
 condition|(
+name|S_ISCHR
+argument_list|(
 name|tbuf
 operator|.
 name|stat_mode
-operator|&
-name|S_IFCHR
+argument_list|)
 operator|&&
 operator|(
 name|dev
