@@ -167,6 +167,14 @@ literal|9
 block|,
 comment|/* AC_NAME for informational purposes */
 name|NGM_PPPOE_GET_STATUS
+init|=
+literal|10
+block|,
+comment|/* data in/out */
+name|NGM_PPPOE_SESSIONID
+init|=
+literal|11
+comment|/* Session_ID for informational purposes */
 block|}
 enum|;
 end_enum
