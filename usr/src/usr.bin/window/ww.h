@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ww.h	3.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ww.h	3.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -844,19 +844,6 @@ begin_comment
 comment|/* place for the termcap */
 end_comment
 
-begin_decl_stmt
-name|char
-name|wwkeys
-index|[
-literal|512
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* termcap fields for the function keys */
-end_comment
-
 begin_comment
 comment|/* generally useful variables */
 end_comment
@@ -1324,7 +1311,7 @@ begin_define
 define|#
 directive|define
 name|WWT_TERMCAP
-value|"WW|window-v2|window program version 2:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%+ %+ :\ 	:da:db:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:me=\\Er^?:"
+value|"WW|window-v2|window program version 2:\ 	:am:bs:da:db:ms:pt:cr=^M:nl=^J:bl=^G:ta=^I:\ 	:cm=\\EY%+ %+ :le=^H:nd=\\EC:up=\\EA:do=\\EB:ho=\\EH:\ 	:cd=\\EJ:ce=\\EK:cl=\\EE:me=\\Er^?:"
 end_define
 
 begin_define
@@ -1368,6 +1355,40 @@ directive|define
 name|WWT_USR
 value|"XE=\\Er`:XS=\\Es`:"
 end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_ALDL
+value|"al=\\EL:dl=\\EM:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_IMEI
+value|"im=\\E@:ei=\\EO:mi:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_DC
+value|"dc=\\EN:"
+end_define
+
+begin_decl_stmt
+name|char
+name|wwwintermcap
+index|[
+literal|1024
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* terminal-specific but window-independent 				   part of the window termcap */
+end_comment
 
 begin_comment
 comment|/* our functions */
