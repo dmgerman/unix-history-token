@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.5	(Berkeley)	83/03/23"
+literal|"@(#)dirs.c	3.6	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,6 +428,9 @@ operator|!=
 name|IFDIR
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|df
@@ -457,6 +460,9 @@ name|mf
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|mf
@@ -1438,6 +1444,9 @@ name|DIRBLKSIZ
 operator|-
 name|prev
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 name|dirbuf
@@ -1517,6 +1526,9 @@ name|DIRBLKSIZ
 operator|-
 name|prev
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 name|dirbuf
@@ -1630,96 +1642,11 @@ argument_list|(
 name|ndp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * this quickly calculates if this inode is a directory. 	 * Currently not maintained. 	 * 	itp = inotablookup(odp->d_ino); 	if (itp != NIL) 		ndp->d_fmt = IFDIR; 	 */
 block|}
 end_block
 
 begin_comment
-comment|/*  * Open a directory.  * Modified to allow any random file to be a legal directory.  */
-end_comment
-
-begin_function
-name|DIR
-modifier|*
-name|opendir
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-specifier|register
-name|DIR
-modifier|*
-name|dirp
-decl_stmt|;
-name|dirp
-operator|=
-operator|(
-name|DIR
-operator|*
-operator|)
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-sizeof|sizeof
-argument_list|(
-name|DIR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dirp
-operator|->
-name|dd_fd
-operator|=
-name|open
-argument_list|(
-name|name
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dirp
-operator|->
-name|dd_fd
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|dirp
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-name|dirp
-operator|->
-name|dd_loc
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|dirp
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Seek to an entry in a directory.  * Only values returned by ``telldir'' should be passed to seekdir.  * Modified to have many directories based in one file.  */
+comment|/*  * Seek to an entry in a directory.  * Only values returned by ``telldir'' should be passed to seekdir.  * This routine handles many directories in a single file.  * It takes the base of the directory in the file, plus  * the desired seek offset into it.  */
 end_comment
 
 begin_function
@@ -2065,6 +1992,9 @@ init|;
 condition|;
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|fread
 argument_list|(
 operator|(
@@ -2133,6 +2063,9 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|chown
 argument_list|(
 name|cp
@@ -2146,6 +2079,9 @@ operator|.
 name|gid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|chmod
 argument_list|(
 name|cp
@@ -2177,6 +2113,9 @@ argument_list|(
 literal|"error setting directory modes\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|mf
@@ -2437,11 +2376,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|ofile
@@ -2658,6 +2603,9 @@ name|dip
 operator|->
 name|di_gid
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 operator|(
