@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: klist.c,v 1.52 1999/12/02 17:05:01 joda Exp $"
+literal|"$Id: klist.c,v 1.53 2000/02/06 08:15:40 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -123,7 +123,7 @@ decl_stmt|;
 name|krb5_error_code
 name|ret
 decl_stmt|;
-name|int32_t
+name|krb5_timestamp
 name|sec
 decl_stmt|;
 name|krb5_timeofday
@@ -273,7 +273,7 @@ decl_stmt|;
 name|int
 name|first_flag
 decl_stmt|;
-name|int32_t
+name|krb5_timestamp
 name|sec
 decl_stmt|;
 name|krb5_timeofday

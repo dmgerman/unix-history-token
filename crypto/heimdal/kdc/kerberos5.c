@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos5.c,v 1.108 1999/12/02 17:04:59 joda Exp $"
+literal|"$Id: kerberos5.c,v 1.109 2000/01/18 03:13:00 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

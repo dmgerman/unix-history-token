@@ -12,18 +12,20 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ktutil.c,v 1.25 2000/01/02 05:07:34 assar Exp $"
+literal|"$Id: ktutil.c,v 1.26 2000/02/07 04:29:25 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|help_flag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|version_flag
 decl_stmt|;
