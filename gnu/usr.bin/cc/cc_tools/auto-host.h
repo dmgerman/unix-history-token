@@ -240,12 +240,9 @@ begin_comment
 comment|/* Define if cpp should also search $prefix/include.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PREFIX_INCLUDE_DIR
-value|"NONE/include"
-end_define
+begin_comment
+comment|/* #define PREFIX_INCLUDE_DIR "NONE/include" */
+end_comment
 
 begin_comment
 comment|/* Define if you have the __argz_count function.  */
