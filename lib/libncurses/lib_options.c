@@ -569,7 +569,7 @@ name|NULL
 expr_stmt|;
 include|#
 directive|include
-file|"keys.tries"
+file|"keys.tries.h"
 name|SP
 operator|->
 name|_keytry
