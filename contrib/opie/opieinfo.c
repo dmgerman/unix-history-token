@@ -12,7 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_if
@@ -46,14 +64,9 @@ begin_comment
 comment|/* extern char *optarg; */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|optind
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* extern int errno, optind; */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -222,6 +235,29 @@ operator|=
 name|getusername
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|username
+argument_list|)
+operator|>=
+name|MAXLOGNAME
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Username too long.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
