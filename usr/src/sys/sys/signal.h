@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.h	6.1	83/08/14	*/
+comment|/*	signal.h	6.2	84/08/30	*/
 end_comment
 
 begin_ifndef
@@ -613,6 +613,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Macro for converting signal number to a mask suitable for  * sigblock().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sigmask
+parameter_list|(
+name|m
+parameter_list|)
+value|(1<< ((m)-1))
+end_define
 
 end_unit
 
