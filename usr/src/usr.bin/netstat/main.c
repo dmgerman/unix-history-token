@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.25 (Berkeley) %G%"
+literal|"@(#)main.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +261,7 @@ block|}
 block|,
 define|#
 directive|define
-name|IN_TP
+name|IN_NOTUSED
 value|16
 block|{
 literal|"_tp_inpcb"
@@ -272,7 +272,7 @@ directive|define
 name|ISO_TP
 value|17
 block|{
-literal|"_tp_isopcb"
+literal|"_tp_refinfo"
 block|}
 block|,
 define|#
@@ -558,20 +558,6 @@ block|,
 name|udp_stats
 block|,
 literal|"udp"
-block|}
-block|,
-block|{
-name|IN_TP
-block|,
-name|N_TPSTAT
-block|,
-literal|1
-block|,
-name|protopr
-block|,
-name|tp_stats
-block|,
-literal|"tpip"
 block|}
 block|,
 block|{
