@@ -706,6 +706,12 @@ operator|*
 operator|)
 name|ktr_alq_file
 argument_list|,
+name|req
+operator|->
+name|td
+operator|->
+name|td_ucred
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct

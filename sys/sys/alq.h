@@ -98,6 +98,12 @@ begin_comment
 comment|/*  * alq_open:  Creates a new queue  *  * Arguments:  *	alq	Storage for a pointer to the newly created queue.  *	file	The filename to open for logging.  *	size	The size of each entry in the queue.  *	count	The number of items in the buffer, this should be large enough  *		to store items over the period of a disk write.  * Returns:  *	error from open or 0 on success  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|alq_open
@@ -111,6 +117,11 @@ specifier|const
 name|char
 modifier|*
 name|file
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|,
 name|int
 name|size

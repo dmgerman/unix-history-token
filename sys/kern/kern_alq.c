@@ -1409,6 +1409,11 @@ name|char
 modifier|*
 name|file
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
 name|int
 name|size
 parameter_list|,
@@ -1488,7 +1493,7 @@ name|O_CREAT
 expr_stmt|;
 name|error
 operator|=
-name|vn_open
+name|vn_open_cred
 argument_list|(
 operator|&
 name|nd
@@ -1497,6 +1502,8 @@ operator|&
 name|flags
 argument_list|,
 literal|0
+argument_list|,
+name|cred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1597,9 +1604,7 @@ name|aq_cred
 operator|=
 name|crhold
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|)
 expr_stmt|;
 name|alq
