@@ -212,6 +212,12 @@ name|struct
 name|shmid_ds
 name|u
 decl_stmt|;
+name|struct
+name|label
+modifier|*
+name|label
+decl_stmt|;
+comment|/* MAC label */
 block|}
 struct|;
 end_struct

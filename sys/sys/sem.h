@@ -342,6 +342,12 @@ name|struct
 name|semid_ds
 name|u
 decl_stmt|;
+name|struct
+name|label
+modifier|*
+name|label
+decl_stmt|;
+comment|/* MAC framework label */
 block|}
 struct|;
 end_struct

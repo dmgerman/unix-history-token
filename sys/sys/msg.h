@@ -308,6 +308,12 @@ name|short
 name|msg_spot
 decl_stmt|;
 comment|/* location of start of msg in buffer */
+name|struct
+name|label
+modifier|*
+name|label
+decl_stmt|;
+comment|/* MAC Framework label */
 block|}
 struct|;
 end_struct
@@ -365,6 +371,12 @@ name|msqid_ds
 name|u
 decl_stmt|;
 comment|/* 	 * Kernel-private components of the message queue. 	 */
+name|struct
+name|label
+modifier|*
+name|label
+decl_stmt|;
+comment|/* MAC label */
 block|}
 struct|;
 end_struct
