@@ -365,6 +365,8 @@ name|CY_PLX_ICS
 argument_list|,
 name|inw
 argument_list|(
+name|ioport
+operator|+
 name|CY_PLX_ICS
 argument_list|)
 operator||
