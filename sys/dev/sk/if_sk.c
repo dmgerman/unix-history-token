@@ -7189,16 +7189,13 @@ name|skrs
 operator|==
 literal|0x00
 condition|)
-block|{
 name|sc
 operator|->
 name|sk_ramsize
 operator|=
 literal|0x20000
 expr_stmt|;
-block|}
 else|else
-block|{
 name|sc
 operator|->
 name|sk_ramsize
@@ -7211,7 +7208,6 @@ operator|<<
 literal|12
 operator|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|sk_rboff
@@ -7219,45 +7215,6 @@ operator|=
 name|SK_RBOFF_0
 expr_stmt|;
 block|}
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"type = %s\n"
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|sk_type
-operator|==
-name|SK_GENESIS
-operator|)
-condition|?
-literal|"GENESIS"
-else|:
-literal|"YUKON"
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"SK_EPROM0 = 0x%02x\n"
-argument_list|,
-name|skrs
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"SRAM size = 0x%06x\n"
-argument_list|,
-name|sc
-operator|->
-name|sk_ramsize
-argument_list|)
-expr_stmt|;
 comment|/* Read and save physical media type */
 switch|switch
 condition|(
@@ -7356,6 +7313,11 @@ operator|->
 name|sk_vpd_prodname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 if|if
 condition|(
 name|sc
@@ -7509,13 +7471,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"skc%d: %c%c: %s\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|sk_unit
+literal|"%c%c: %s\n"
 argument_list|,
 operator|*
 name|dp
@@ -7578,7 +7538,45 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* read CHIPVER 0xb1. */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"type = %s\n"
+argument_list|,
+operator|(
+name|sc
+operator|->
+name|sk_type
+operator|==
+name|SK_GENESIS
+operator|)
+condition|?
+literal|"GENESIS"
+else|:
+literal|"YUKON"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"SK_EPROM0 = 0x%02x\n"
+argument_list|,
+name|skrs
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"SRAM size = 0x%06x\n"
+argument_list|,
+name|sc
+operator|->
+name|sk_ramsize
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -7593,7 +7591,6 @@ name|SK_CHIPVER
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* read CONFIG 0x73. */
 name|device_printf
 argument_list|(
 name|dev
@@ -7608,6 +7605,7 @@ name|SK_CONFIG
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sk_devs
