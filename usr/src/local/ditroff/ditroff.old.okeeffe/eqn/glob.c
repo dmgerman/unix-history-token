@@ -112,7 +112,7 @@ name|char
 modifier|*
 name|device
 init|=
-literal|"var"
+literal|"va"
 decl_stmt|;
 end_decl_stmt
 
