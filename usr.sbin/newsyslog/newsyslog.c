@@ -4839,21 +4839,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rm -f %s\n"
+literal|"\trm -f %s\n"
 argument_list|,
 name|file1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rm -f %s\n"
+literal|"\trm -f %s\n"
 argument_list|,
 name|zfile1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rm -f %s\n"
+literal|"\trm -f %s\n"
 argument_list|,
 name|jfile1
 argument_list|)
@@ -5108,7 +5108,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mv %s %s\n"
+literal|"\tmv %s %s\n"
 argument_list|,
 name|zfile1
 argument_list|,
@@ -5117,7 +5117,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"chmod %o %s\n"
+literal|"\tchmod %o %s\n"
 argument_list|,
 name|ent
 operator|->
@@ -5150,7 +5150,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"chown %u:%u %s\n"
+literal|"\tchown %u:%u %s\n"
 argument_list|,
 name|ent
 operator|->
@@ -5277,7 +5277,7 @@ name|noaction
 condition|)
 name|printf
 argument_list|(
-literal|"rm %s\n"
+literal|"\trm %s\n"
 argument_list|,
 name|log
 argument_list|)
@@ -5300,7 +5300,7 @@ name|noaction
 condition|)
 name|printf
 argument_list|(
-literal|"mv %s to %s\n"
+literal|"\tmv %s to %s\n"
 argument_list|,
 name|log
 argument_list|,
@@ -5346,17 +5346,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Now move the new log file into place */
-if|if
-condition|(
-name|noaction
-condition|)
-name|printf
-argument_list|(
-literal|"Start new log...\n"
-argument_list|)
-expr_stmt|;
-else|else
-block|{
 name|strlcpy
 argument_list|(
 name|tfile
@@ -5381,6 +5370,26 @@ name|tfile
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|noaction
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Start new log...\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tmktemp %s\n"
+argument_list|,
+name|tfile
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|mkstemp
 argument_list|(
 name|tfile
@@ -5495,17 +5504,28 @@ if|if
 condition|(
 name|noaction
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"chmod %o %s...\n"
+literal|"\tchmod %o %s\n"
 argument_list|,
 name|ent
 operator|->
 name|permissions
 argument_list|,
+name|tfile
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tmv %s %s\n"
+argument_list|,
+name|tfile
+argument_list|,
 name|log
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 operator|(
@@ -5614,7 +5634,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"kill -%d %d\n"
+literal|"\tkill -%d %d\n"
 argument_list|,
 name|ent
 operator|->
@@ -5695,7 +5715,7 @@ name|notified
 condition|)
 name|warnx
 argument_list|(
-literal|"log %s not compressed because daemon not notified"
+literal|"log %s.0 not compressed because daemon not notified"
 argument_list|,
 name|log
 argument_list|)
@@ -5705,9 +5725,23 @@ if|if
 condition|(
 name|noaction
 condition|)
+if|if
+condition|(
+name|flags
+operator|&
+name|CE_COMPACT
+condition|)
 name|printf
 argument_list|(
-literal|"Compress %s.0\n"
+literal|"\tgzip %s.0\n"
+argument_list|,
+name|log
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\tbzip2 %s.0\n"
 argument_list|,
 name|log
 argument_list|)
@@ -7490,7 +7524,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mkdir %s\n"
+literal|"\tmkdir %s\n"
 argument_list|,
 name|mkdirpath
 argument_list|)
