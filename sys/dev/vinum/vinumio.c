@@ -2483,6 +2483,10 @@ name|snprintf
 argument_list|(
 name|s
 argument_list|,
+name|configend
+operator|-
+name|s
+argument_list|,
 literal|" readpol prefer %s"
 argument_list|,
 name|vinum_conf
