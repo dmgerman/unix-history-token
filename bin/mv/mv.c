@@ -244,11 +244,12 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|baselen
 decl_stmt|,
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|rval
 decl_stmt|;
 name|char
