@@ -3989,6 +3989,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|swapoff
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|syscall
 parameter_list|(
 name|int

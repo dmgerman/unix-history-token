@@ -1133,6 +1133,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SW_CLOSING
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|sw_freed
 value|sw_flags
 end_define

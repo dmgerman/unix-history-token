@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Matthew Dillon.  Terms of use and redistribution in all  * forms are covered by the BSD copyright in the file "/usr/src/COPYRIGHT".  *  * Implements bitmap resource lists.  *  *	Usage:  *		blist = blist_create(blocks)  *		(void)  blist_destroy(blist)  *		blkno = blist_alloc(blist, count)  *		(void)  blist_free(blist, blkno, count)  *		(void)  blist_resize(&blist, count, freeextra)  *		  *  *	Notes:  *		on creation, the entire list is marked reserved.  You should  *		first blist_free() the sections you want to make available  *		for allocation before doing general blist_alloc()/free()  *		ops.  *  *		SWAPBLK_NONE is returned on failure.  This module is typically  *		capable of managing up to (2^31) blocks per blist, though  *		the memory utilization would be insane if you actually did  *		that.  Managing something like 512MB worth of 4K blocks   *		eats around 32 KBytes of memory.   *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998 Matthew Dillon.  Terms of use and redistribution in all  * forms are covered by the BSD copyright in the file "/usr/src/COPYRIGHT".  *  * Implements bitmap resource lists.  *  *	Usage:  *		blist = blist_create(blocks)  *		(void)  blist_destroy(blist)  *		blkno = blist_alloc(blist, count)  *		(void)  blist_free(blist, blkno, count)  *		nblks = blist_fill(blist, blkno, count)  *		(void)  blist_resize(&blist, count, freeextra)  *		  *  *	Notes:  *		on creation, the entire list is marked reserved.  You should  *		first blist_free() the sections you want to make available  *		for allocation before doing general blist_alloc()/free()  *		ops.  *  *		SWAPBLK_NONE is returned on failure.  This module is typically  *		capable of managing up to (2^31) blocks per blist, though  *		the memory utilization would be insane if you actually did  *		that.  Managing something like 512MB worth of 4K blocks   *		eats around 32 KBytes of memory.   *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -218,6 +218,23 @@ name|blist_free
 parameter_list|(
 name|blist_t
 name|blist
+parameter_list|,
+name|daddr_t
+name|blkno
+parameter_list|,
+name|daddr_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|blist_fill
+parameter_list|(
+name|blist_t
+name|bl
 parameter_list|,
 name|daddr_t
 name|blkno

@@ -146,6 +146,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* XXX This is probably misplaced. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SWAPPING
+end_ifndef
+
+begin_function_decl
+name|void
+name|vm_proc_swapin_all
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|swap_pager_isswapped
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NO_SWAPPING */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
