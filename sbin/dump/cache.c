@@ -439,22 +439,17 @@ decl_stmt|;
 name|off_t
 name|mask
 decl_stmt|;
-comment|/* 	 * If the cache is disabled, revert to pread.  If the 	 * cache has not been initialized, initialize the cache. 	 */
-if|if
-condition|(
-name|sblock
-operator|->
-name|fs_bsize
-operator|&&
-name|DataBase
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/* 	 * If the cache is disabled, or we do not yet know the filesystem 	 * block size, then revert to pread.  Otherwise initialize the 	 * cache as necessary and continue. 	 */
 if|if
 condition|(
 name|cachesize
 operator|<=
+literal|0
+operator|||
+name|sblock
+operator|->
+name|fs_bsize
+operator|==
 literal|0
 condition|)
 return|return
@@ -471,10 +466,15 @@ name|offset
 argument_list|)
 operator|)
 return|;
+if|if
+condition|(
+name|DataBase
+operator|==
+name|NULL
+condition|)
 name|cinit
 argument_list|()
 expr_stmt|;
-block|}
 comment|/* 	 * If the request crosses a cache block boundary, or the 	 * request is larger or equal to the cache block size, 	 * revert to pread().  Full-block-reads are typically 	 * one-time calls and caching would be detrimental. 	 */
 name|mask
 operator|=
@@ -579,15 +579,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|fprintf(stderr, "%08llx %d (%08x)\n", offset, nbytes,  			    sblock->fs_size * sblock->fs_fsize);
-endif|#
-directive|endif
 break|break;
-block|}
 name|ppblk
 operator|=
 name|pblk
