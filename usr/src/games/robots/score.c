@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)score.c	5.4 (Berkeley) %G%"
+literal|"@(#)score.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_typedef
@@ -80,7 +86,7 @@ name|char
 modifier|*
 name|Scorefile
 init|=
-name|SCOREFILE
+name|_PATH_SCORE
 decl_stmt|;
 end_decl_stmt
 
