@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.2 (Berkeley) %G%"
+literal|"@(#)order.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2662,16 +2662,11 @@ begin_expr_stmt
 name|genargs
 argument_list|(
 name|p
-argument_list|,
-name|ptemp
 argument_list|)
 specifier|register
 name|NODE
 operator|*
 name|p
-operator|,
-operator|*
-name|ptemp
 expr_stmt|;
 end_expr_stmt
 
@@ -2712,8 +2707,6 @@ operator|->
 name|in
 operator|.
 name|right
-argument_list|,
-name|ptemp
 argument_list|)
 expr_stmt|;
 name|p
@@ -2879,15 +2872,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|ptemp
-operator|->
-name|tn
-operator|.
-name|lval
-operator|=
-literal|0
-expr_stmt|;
-comment|/* all moves to (sp) */
 name|pasg
 operator|=
 name|talloc
@@ -2899,7 +2883,7 @@ name|in
 operator|.
 name|op
 operator|=
-name|STASG
+name|STARG
 expr_stmt|;
 name|pasg
 operator|->
@@ -2929,55 +2913,16 @@ name|pasg
 operator|->
 name|in
 operator|.
-name|right
-operator|=
-name|p
-expr_stmt|;
-name|pasg
-operator|->
-name|in
-operator|.
 name|left
 operator|=
-name|tcopy
-argument_list|(
-name|ptemp
-argument_list|)
-expr_stmt|;
-comment|/* the following line is done only with the knowledge 		that it will be undone by the STASG node, with the 		offset (lval) field retained */
-if|if
-condition|(
 name|p
-operator|->
-name|in
-operator|.
-name|op
-operator|==
-name|OREG
-condition|)
-name|p
-operator|->
-name|in
-operator|.
-name|op
-operator|=
-name|REG
 expr_stmt|;
-comment|/* only for temporaries */
 name|order
 argument_list|(
 name|pasg
 argument_list|,
 name|FORARG
 argument_list|)
-expr_stmt|;
-name|ptemp
-operator|->
-name|tn
-operator|.
-name|lval
-operator|+=
-name|size
 expr_stmt|;
 return|return;
 block|}

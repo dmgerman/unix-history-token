@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.2 (Berkeley) %G%"
+literal|"@(#)table.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,32 +429,6 @@ block|,
 name|TANY
 block|,
 name|SANY
-block|,
-name|TANY
-block|,
-name|NTEMP
-operator|+
-literal|2
-operator|*
-name|NAREG
-block|,
-name|RESC3
-block|,
-literal|"ZS"
-block|,
-name|STASG
-block|,
-name|FORARG
-block|,
-name|SNAME
-operator||
-name|SOREG
-block|,
-name|TANY
-block|,
-name|SCON
-operator||
-name|SAREG
 block|,
 name|TANY
 block|,
