@@ -2224,7 +2224,7 @@ comment|/*      * We're going to do this (where tunN is our tunnel device):     
 comment|/* Create a socket node */
 if|if
 condition|(
-name|NgMkSockNode
+name|ID0NgMkSockNode
 argument_list|(
 name|NULL
 argument_list|,
