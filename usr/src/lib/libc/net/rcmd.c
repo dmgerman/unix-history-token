@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.20 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1321,7 +1321,7 @@ literal|0
 else|:
 name|fopen
 argument_list|(
-literal|"/etc/hosts.equiv"
+name|_PATH_HEQUIV
 argument_list|,
 literal|"r"
 argument_list|)

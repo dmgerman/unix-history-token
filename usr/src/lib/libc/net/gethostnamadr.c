@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.39 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,16 +160,6 @@ specifier|static
 name|struct
 name|in_addr
 name|host_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|HOSTDB
-index|[]
-init|=
-literal|"/etc/hosts"
 decl_stmt|;
 end_decl_stmt
 
@@ -1712,7 +1702,7 @@ name|hostf
 operator|=
 name|fopen
 argument_list|(
-name|HOSTDB
+name|_PATH_HOSTS
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1792,7 +1782,7 @@ name|hostf
 operator|=
 name|fopen
 argument_list|(
-name|HOSTDB
+name|_PATH_HOSTS
 argument_list|,
 literal|"r"
 argument_list|)

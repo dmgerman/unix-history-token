@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getservent.c	5.6 (Berkeley) %G%"
+literal|"@(#)getservent.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,16 +79,6 @@ directive|define
 name|MAXALIASES
 value|35
 end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SERVDB
-index|[]
-init|=
-literal|"/etc/services"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -171,7 +161,7 @@ name|servf
 operator|=
 name|fopen
 argument_list|(
-name|SERVDB
+name|_PATH_SERVICES
 argument_list|,
 literal|"r"
 argument_list|)
@@ -249,7 +239,7 @@ name|servf
 operator|=
 name|fopen
 argument_list|(
-name|SERVDB
+name|_PATH_SERVICES
 argument_list|,
 literal|"r"
 argument_list|)

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getnetent.c	5.5 (Berkeley) %G%"
+literal|"@(#)getnetent.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,16 +73,6 @@ directive|define
 name|MAXALIASES
 value|35
 end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-name|NETDB
-index|[]
-init|=
-literal|"/etc/networks"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -165,7 +155,7 @@ name|netf
 operator|=
 name|fopen
 argument_list|(
-name|NETDB
+name|_PATH_NETWORKS
 argument_list|,
 literal|"r"
 argument_list|)
@@ -243,7 +233,7 @@ name|netf
 operator|=
 name|fopen
 argument_list|(
-name|NETDB
+name|_PATH_NETWORKS
 argument_list|,
 literal|"r"
 argument_list|)
