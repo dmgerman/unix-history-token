@@ -9,14 +9,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telldir.c 4.1 %G%"
+literal|"@(#)telldir.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
