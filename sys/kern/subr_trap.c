@@ -736,7 +736,7 @@ condition|)
 block|{
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGFPE
 argument_list|,

@@ -2245,7 +2245,7 @@ name|a2
 expr_stmt|;
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|i
 argument_list|,

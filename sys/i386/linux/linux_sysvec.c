@@ -3075,7 +3075,7 @@ condition|)
 block|{
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,
@@ -3504,7 +3504,7 @@ condition|)
 block|{
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,

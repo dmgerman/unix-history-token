@@ -1126,7 +1126,7 @@ argument_list|)
 expr_stmt|;
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|sig
 argument_list|,

@@ -6143,38 +6143,41 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a signal caused by a trap to the current process.  * If it will be caught immediately, deliver it with correct code.  * Otherwise, post it normally.  *  * MPSAFE  */
+comment|/*  * Send a signal caused by a trap to the current thread.  * If it will be caught immediately, deliver it with correct code.  * Otherwise, post it normally.  *  * MPSAFE  */
 end_comment
 
 begin_function
 name|void
 name|trapsignal
 parameter_list|(
-name|p
-parameter_list|,
-name|sig
-parameter_list|,
-name|code
-parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
-decl_stmt|;
-specifier|register
+name|td
+parameter_list|,
 name|int
 name|sig
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sigacts
 modifier|*
 name|ps
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p

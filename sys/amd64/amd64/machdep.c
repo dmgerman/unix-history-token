@@ -3710,7 +3710,7 @@ operator|)
 condition|)
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,
@@ -3867,7 +3867,7 @@ condition|)
 block|{
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,
@@ -4286,7 +4286,7 @@ operator|)
 condition|)
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,
@@ -4489,7 +4489,7 @@ argument_list|)
 expr_stmt|;
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,
@@ -4792,7 +4792,7 @@ operator|)
 condition|)
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,
@@ -4995,7 +4995,7 @@ argument_list|)
 expr_stmt|;
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGBUS
 argument_list|,
