@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.4	84/01/03	*/
+comment|/*	ufs_lookup.c	6.5	84/01/04	*/
 end_comment
 
 begin_include
@@ -223,39 +223,16 @@ begin_comment
 comment|/* LRU chain pointers */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|nchstats
-block|{
-comment|/* stats on usefulness */
-name|long
-name|ncs_goodhits
-decl_stmt|;
-comment|/* hits that we can reall use */
-name|long
-name|ncs_badhits
-decl_stmt|;
-comment|/* hits we must drop */
-name|long
-name|ncs_miss
-decl_stmt|;
-comment|/* misses */
-name|long
-name|ncs_long
-decl_stmt|;
-comment|/* long names that ignore cache */
-name|long
-name|ncs_pass2
-decl_stmt|;
-comment|/* names found with passes == 2 */
-name|long
-name|ncs_2passes
-decl_stmt|;
-comment|/* number of times we attempt it */
-block|}
 name|nchstats
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cache effectiveness statistics */
+end_comment
 
 begin_comment
 comment|/*  * Convert a pathname into a pointer to a locked inode,  * with side effects usable in creating and removing files.  * This is a very central and rather complicated routine.  *  * The func argument gives the routine which returns successive  * characters of the name to be translated.   *  * The flag argument is (LOOKUP, CREATE, DELETE) depending on whether  * the name is to be (looked up, created, deleted).  If flag has  * LOCKPARENT or'ed into it and the target of the pathname exists,  * namei returns both the target and its parent directory locked.   * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation.  When creating and  * LOCKPARENT is specified, the target may not be ".".  When deleting  * and LOCKPARENT is specified, the target may be ".", but the caller  * must check to insure it does an irele and iput instead of two iputs.  *  * The follow argument is 1 when symbolic links are to be followed  * when they occur at the end of the name translation process.  *  * Name caching works as follows:  *  *	names found by directory scans are retained in a cache  *	for future reference.  It is managed LRU, so frequently  *	used names will hang around.  Cache is indexed by hash value  *	obtained from (ino,dev,name) where ino& dev refer to the  *	directory containing name.  *  *	For simplicity (and economy of storage), names longer than  *	some (small) maximum length are not cached, they occur  *	infrequently in any case, and are almost never of interest.  *  *	Upon reaching the last segment of a path, if the reference  *	is for DELETE, or NOCACHE is set (rewrite), and the  *	name is located in the cache, it will be dropped.  *  *	We must be sure never to enter the name ".." into the cache  *	because of the extremely kludgey way that rename() alters  *	".." in a situation like  *		mv a/x b/x  *	where x is a directory, and x/.. is the ".." in question.  *  * Overall outline of namei:  *  *	copy in name  *	get starting directory  * dirloop:  *	check accessibility of directory  * dirloop2:  *	copy next component of name to u.u_dent  *	handle degenerate case where name is null string  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else to haveino  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on avail. slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (create and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if .. and on mounted filesys, look in mount table for parent  *	if not at end, if neither creating nor deleting, add name to cache  * haveino:  *	if symbolic link, massage name in buffer and continue at dirloop  *	if more components of name, do next level at dirloop  *	return the answer as locked inode  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode,  *	 but unlocked.  */
