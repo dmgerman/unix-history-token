@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.25 1998/02/22 15:09:46 ache Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.26 1998/02/23 09:59:08 ache Exp $ */
 end_comment
 
 begin_comment
@@ -2331,6 +2331,7 @@ directive|ifdef
 name|PC98
 if|if
 condition|(
+operator|(
 name|bsp
 operator|->
 name|bs50
@@ -2346,7 +2347,9 @@ operator|.
 name|bsBootSectSig1
 operator|!=
 name|BOOTSIG1
+operator|)
 operator|&&
+operator|(
 name|bsp
 operator|->
 name|bs50
@@ -2363,7 +2366,9 @@ operator|.
 name|bsBootSectSig1
 operator|!=
 literal|0
+operator|)
 operator|&&
+operator|(
 name|bsp
 operator|->
 name|bs50
@@ -2380,7 +2385,9 @@ operator|.
 name|bsBootSectSig1
 operator|!=
 literal|0x3d
+operator|)
 operator|&&
+operator|(
 name|bsp
 operator|->
 name|bs50
@@ -2397,6 +2404,7 @@ operator|.
 name|bsBootSectSig1
 operator|!=
 literal|0xfa
+operator|)
 condition|)
 block|{
 else|#
