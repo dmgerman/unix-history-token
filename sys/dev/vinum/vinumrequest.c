@@ -1246,6 +1246,9 @@ name|int
 name|rcount
 decl_stmt|;
 comment|/* request count */
+name|int
+name|s
+decl_stmt|;
 comment|/*      * First find out whether we're reviving, and the      * request contains a conflict.  If so, we hang      * the request off plex->waitlist of the first      * plex we find which is reviving      */
 if|if
 condition|(
@@ -1598,6 +1601,11 @@ expr_stmt|;
 comment|/* one more active request group */
 block|}
 comment|/*      * Now fire off the requests.  In this loop the      * bottom half could be completing requests      * before we finish, so we need splbio() protection.      */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|rqg
@@ -1879,6 +1887,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
