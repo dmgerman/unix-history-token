@@ -53,12 +53,6 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|SSL_METHOD

@@ -2554,10 +2554,12 @@ operator|=
 name|p
 expr_stmt|;
 block|}
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 operator|*
 name|addr
+argument_list|,
+literal|24
 argument_list|,
 literal|"%d.%d.%d.%d:%d"
 argument_list|,

@@ -486,8 +486,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|oline
+argument_list|,
+sizeof|sizeof
 name|oline
 argument_list|,
 literal|"%d.%d.%d.%d"

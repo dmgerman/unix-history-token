@@ -43,12 +43,6 @@ directive|include
 file|<openssl/x509.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
-
 begin_typedef
 typedef|typedef
 struct|struct

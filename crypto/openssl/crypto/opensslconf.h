@@ -14,23 +14,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|OPENSSL_SYSNAME_WIN16
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|OPENSSL_SYSNAME_WIN16
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|OPENSSL_DOING_MAKEDEPEND
 end_ifndef
 
@@ -233,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|MD2_INT
-value|unsigned char
+value|unsigned int
 end_define
 
 begin_endif
@@ -489,11 +472,11 @@ begin_comment
 comment|/* if this is defined data[i] is used instead of *data, this is a %20  * speedup on x86 */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|RC4_INDEX
-end_define
+end_undef
 
 begin_endif
 endif|#
@@ -573,11 +556,11 @@ directive|ifndef
 name|DES_PTR
 end_ifndef
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|DES_PTR
-end_define
+end_undef
 
 begin_endif
 endif|#
@@ -668,11 +651,11 @@ directive|ifndef
 name|DES_UNROLL
 end_ifndef
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|DES_UNROLL
-end_define
+end_undef
 
 begin_endif
 endif|#

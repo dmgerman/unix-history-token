@@ -183,6 +183,22 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|oid_module_finish
+parameter_list|(
+name|CONF_IMODULE
+modifier|*
+name|md
+parameter_list|)
+block|{
+name|OBJ_cleanup
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|ASN1_add_oid_module
 parameter_list|(
@@ -195,7 +211,7 @@ literal|"oid_section"
 argument_list|,
 name|oid_module_init
 argument_list|,
-literal|0
+name|oid_module_finish
 argument_list|)
 expr_stmt|;
 block|}

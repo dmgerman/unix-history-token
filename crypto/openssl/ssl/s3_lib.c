@@ -443,6 +443,9 @@ name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* Cipher 07 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_IDEA
 block|{
 literal|1
 block|,
@@ -475,6 +478,8 @@ block|,
 name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 08 */
 block|{
 literal|1

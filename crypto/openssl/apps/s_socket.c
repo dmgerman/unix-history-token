@@ -1815,7 +1815,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 operator|*
 name|host
@@ -1823,6 +1823,15 @@ argument_list|,
 name|h1
 operator|->
 name|h_name
+argument_list|,
+name|strlen
+argument_list|(
+name|h1
+operator|->
+name|h_name
+argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|h2

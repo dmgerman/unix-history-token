@@ -5085,7 +5085,7 @@ argument_list|(
 name|X509_NAME
 argument_list|)
 operator|*
-name|list
+name|name_list
 argument_list|)
 decl_stmt|;
 name|void
@@ -5100,7 +5100,7 @@ argument_list|(
 name|X509_NAME
 argument_list|)
 operator|*
-name|list
+name|name_list
 argument_list|)
 decl_stmt|;
 name|STACK_OF

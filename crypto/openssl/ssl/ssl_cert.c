@@ -1739,7 +1739,7 @@ argument_list|(
 name|X509_NAME
 argument_list|)
 operator|*
-name|list
+name|name_list
 argument_list|)
 block|{
 if|if
@@ -1760,7 +1760,7 @@ expr_stmt|;
 operator|*
 name|ca_list
 operator|=
-name|list
+name|name_list
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -1870,7 +1870,7 @@ name|SSL_set_client_CA_list
 argument_list|(
 argument|SSL *s
 argument_list|,
-argument|STACK_OF(X509_NAME) *list
+argument|STACK_OF(X509_NAME) *name_list
 argument_list|)
 end_macro
 
@@ -1885,7 +1885,7 @@ operator|->
 name|client_CA
 operator|)
 argument_list|,
-name|list
+name|name_list
 argument_list|)
 expr_stmt|;
 block|}
@@ -1904,7 +1904,7 @@ argument_list|(
 name|X509_NAME
 argument_list|)
 operator|*
-name|list
+name|name_list
 argument_list|)
 block|{
 name|set_client_CA_list
@@ -1916,7 +1916,7 @@ operator|->
 name|client_CA
 operator|)
 argument_list|,
-name|list
+name|name_list
 argument_list|)
 expr_stmt|;
 block|}

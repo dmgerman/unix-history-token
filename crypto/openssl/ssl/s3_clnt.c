@@ -59,12 +59,6 @@ directive|include
 file|<openssl/md5.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|SSL_METHOD
@@ -8579,6 +8573,8 @@ name|RSA_size
 argument_list|(
 name|rsa
 argument_list|)
+operator|*
+literal|8
 operator|>
 name|SSL_C_EXPORT_PKEYLENGTH
 argument_list|(
@@ -8633,6 +8629,8 @@ name|DH_size
 argument_list|(
 name|dh
 argument_list|)
+operator|*
+literal|8
 operator|>
 name|SSL_C_EXPORT_PKEYLENGTH
 argument_list|(
