@@ -1693,6 +1693,9 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|argc
 operator|=
 name|command_Interpret
@@ -1703,7 +1706,23 @@ name|len
 argument_list|,
 name|argv
 argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: %d: Syntax error\n"
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|)
 expr_stmt|;
+else|else
+block|{
 name|allowcmd
 operator|=
 name|argc
@@ -1746,7 +1765,7 @@ name|allowcmd
 operator|)
 condition|)
 block|{
-comment|/*              * Disable any context so that warnings are given to everyone,              * including syslog.              */
+comment|/*                * Disable any context so that warnings are given to everyone,                * including syslog.                */
 name|op
 operator|=
 name|log_PromptContext
@@ -1781,6 +1800,7 @@ name|log_PromptContext
 operator|=
 name|op
 expr_stmt|;
+block|}
 block|}
 block|}
 name|fclose

@@ -899,6 +899,9 @@ name|log_PromptContext
 operator|=
 name|p
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|command_Decode
 argument_list|(
 name|bundle
@@ -914,6 +917,13 @@ operator|->
 name|src
 operator|.
 name|from
+argument_list|)
+condition|)
+name|prompt_Printf
+argument_list|(
+name|p
+argument_list|,
+literal|"Syntax error\n"
 argument_list|)
 expr_stmt|;
 name|log_PromptContext

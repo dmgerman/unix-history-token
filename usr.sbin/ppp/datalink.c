@@ -1353,6 +1353,9 @@ argument_list|,
 name|DATALINK_LOGOUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -1369,6 +1372,13 @@ operator|.
 name|logout
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid logout script\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1720,6 +1730,9 @@ argument_list|,
 name|DATALINK_DIAL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -1750,6 +1763,13 @@ name|dl
 argument_list|)
 else|:
 literal|""
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid dial script\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2080,6 +2100,9 @@ argument_list|,
 name|DATALINK_LOGIN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2096,6 +2119,13 @@ operator|.
 name|login
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid login script\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2146,6 +2176,9 @@ argument_list|,
 name|DATALINK_HANGUP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2162,6 +2195,13 @@ operator|.
 name|hangup
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2294,6 +2334,9 @@ operator|->
 name|physical
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2310,6 +2353,13 @@ operator|.
 name|hangup
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2408,6 +2458,9 @@ operator|->
 name|physical
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2424,6 +2477,13 @@ operator|.
 name|hangup
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3111,6 +3171,9 @@ argument_list|,
 name|DATALINK_HANGUP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -3128,6 +3191,13 @@ name|hangup
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -3139,6 +3209,9 @@ argument_list|,
 name|DATALINK_LOGOUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -3155,6 +3228,13 @@ operator|.
 name|logout
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid logout script\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -6432,7 +6432,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|command_Decode
 parameter_list|(
 name|struct
@@ -6468,6 +6468,9 @@ index|[
 name|MAXARGS
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|argc
 operator|=
 name|command_Interpret
@@ -6478,7 +6481,13 @@ name|nb
 argument_list|,
 name|argv
 argument_list|)
-expr_stmt|;
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|command_Run
 argument_list|(
 name|bundle
@@ -6501,6 +6510,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

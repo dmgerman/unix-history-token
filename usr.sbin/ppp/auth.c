@@ -421,6 +421,8 @@ name|fp
 decl_stmt|;
 name|int
 name|n
+decl_stmt|,
+name|lineno
 decl_stmt|;
 name|char
 modifier|*
@@ -442,6 +444,10 @@ argument_list|(
 name|SECRETFILE
 argument_list|)
 expr_stmt|;
+name|lineno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -462,6 +468,9 @@ name|fp
 argument_list|)
 condition|)
 block|{
+name|lineno
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|buff
@@ -494,6 +503,9 @@ sizeof|sizeof
 name|vector
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|n
 operator|=
 name|MakeArgs
@@ -506,6 +518,20 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: %d: Invalid line\n"
+argument_list|,
+name|SECRETFILE
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 if|if
@@ -615,6 +641,8 @@ name|fp
 decl_stmt|;
 name|int
 name|n
+decl_stmt|,
+name|lineno
 decl_stmt|;
 name|char
 modifier|*
@@ -722,6 +750,10 @@ argument_list|(
 name|SECRETFILE
 argument_list|)
 expr_stmt|;
+name|lineno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -742,6 +774,9 @@ name|fp
 argument_list|)
 condition|)
 block|{
+name|lineno
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|buff
@@ -774,6 +809,9 @@ sizeof|sizeof
 name|vector
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|n
 operator|=
 name|MakeArgs
@@ -786,6 +824,20 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: %d: Invalid line\n"
+argument_list|,
+name|SECRETFILE
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 if|if
@@ -1018,6 +1070,8 @@ name|fp
 decl_stmt|;
 name|int
 name|n
+decl_stmt|,
+name|lineno
 decl_stmt|;
 name|char
 modifier|*
@@ -1039,6 +1093,10 @@ argument_list|(
 name|SECRETFILE
 argument_list|)
 expr_stmt|;
+name|lineno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -1059,6 +1117,9 @@ name|fp
 argument_list|)
 condition|)
 block|{
+name|lineno
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|buff
@@ -1091,6 +1152,9 @@ sizeof|sizeof
 name|vector
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|n
 operator|=
 name|MakeArgs
@@ -1103,6 +1167,20 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: %d: Invalid line\n"
+argument_list|,
+name|SECRETFILE
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 if|if
@@ -1215,6 +1293,8 @@ name|fp
 decl_stmt|;
 name|int
 name|n
+decl_stmt|,
+name|lineno
 decl_stmt|;
 name|char
 modifier|*
@@ -1249,6 +1329,10 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|lineno
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -1262,6 +1346,9 @@ name|fp
 argument_list|)
 condition|)
 block|{
+name|lineno
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|buff
@@ -1308,6 +1395,9 @@ sizeof|sizeof
 name|vector
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|n
 operator|=
 name|MakeArgs
@@ -1320,6 +1410,20 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: %d: Invalid line\n"
+argument_list|,
+name|SECRETFILE
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 if|if

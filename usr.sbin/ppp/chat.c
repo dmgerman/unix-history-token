@@ -3158,7 +3158,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|chat_Setup
 parameter_list|(
 name|struct
@@ -3320,6 +3320,13 @@ operator|->
 name|timeout
 argument_list|)
 expr_stmt|;
+return|return
+name|c
+operator|->
+name|argc
+operator|>=
+literal|0
+return|;
 block|}
 end_function
 
@@ -3853,6 +3860,9 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|argc
 operator|=
 name|MakeArgs
@@ -3866,7 +3876,31 @@ argument_list|(
 name|vector
 argument_list|)
 argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Syntax error in exec command\n"
+argument_list|)
 expr_stmt|;
+operator|*
+name|out
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return;
+block|}
 name|command_Expand
 argument_list|(
 name|argv

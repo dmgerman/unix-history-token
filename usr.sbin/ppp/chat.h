@@ -216,7 +216,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|chat_Setup
 parameter_list|(
 name|struct

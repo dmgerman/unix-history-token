@@ -1117,6 +1117,9 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+return|return
+name|NULL
+return|;
 block|}
 else|else
 block|{
@@ -1261,6 +1264,17 @@ argument_list|,
 name|instring
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|script
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+elseif|else
 if|if
 condition|(
 operator|*
