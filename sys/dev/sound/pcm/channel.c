@@ -1409,7 +1409,7 @@ else|:
 literal|0
 expr_stmt|;
 name|amt
-operator|-=
+operator|=
 name|sndbuf_getready
 argument_list|(
 name|b
