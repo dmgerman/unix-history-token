@@ -392,6 +392,9 @@ decl_stmt|;
 name|UINT32
 name|InValue
 decl_stmt|;
+name|UINT32
+name|Retry
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -783,6 +786,10 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Wait until we enter sleep state */
+name|Retry
+operator|=
+literal|1000
+expr_stmt|;
 do|do
 block|{
 name|Status
@@ -810,6 +817,17 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
+comment|/*          * Some BIOSs don't set WAK_STS at all.  Give up waiting after          * 1000 retries if it still isn't set.          */
+if|if
+condition|(
+name|Retry
+operator|--
+operator|==
+literal|0
+condition|)
+block|{
+break|break;
 block|}
 comment|/* Spin until we wake */
 block|}
