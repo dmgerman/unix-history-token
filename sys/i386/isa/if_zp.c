@@ -984,6 +984,11 @@ argument_list|(
 name|slot
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|50000
+argument_list|)
+expr_stmt|;
 comment|/* map the card's attribute memory and examine its card 		 * information structure tuples for something we recognize. */
 name|pcic_map_memory
 argument_list|(
@@ -5084,7 +5089,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100000
+literal|1000
 argument_list|)
 expr_stmt|;
 return|return
