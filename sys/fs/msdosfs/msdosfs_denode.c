@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.12 1995/05/30 08:07:37 rgrimes Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.13 1995/08/02 12:59:48 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -180,6 +180,60 @@ name|l
 parameter_list|)
 value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_LOWWORD] = (l); \ 	(q) = tmp.qcvt; \ }
 end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|denode
+modifier|*
+name|msdosfs_hashget
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|,
+name|u_long
+name|dirclust
+operator|,
+name|u_long
+name|diroff
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|msdosfs_hashins
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|msdosfs_hashrem
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int

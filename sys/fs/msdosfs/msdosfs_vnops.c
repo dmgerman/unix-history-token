@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.27 1995/11/09 08:17:23 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.28 1995/11/13 18:47:40 bde Exp $ */
 end_comment
 
 begin_comment
@@ -610,6 +610,22 @@ operator|(
 expr|struct
 name|vop_advlock_args
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_pathconf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_pathconf_args
+operator|*
+name|ap
 operator|)
 argument_list|)
 decl_stmt|;
