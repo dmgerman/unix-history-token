@@ -54,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/select.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -79,12 +91,13 @@ begin_comment
 comment|/*  *	This defines the lkm_misc module use by modload  *	to define the module name.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|MOD_MISC
 argument_list|(
-literal|"skel"
+name|skel
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -230,19 +243,6 @@ block|{
 case|case
 name|LKM_E_LOAD
 case|:
-comment|/* 		 * Don't load twice! (lkmexists() is exported by kern_lkm.c) 		 */
-if|if
-condition|(
-name|lkmexists
-argument_list|(
-name|lkmtp
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EEXIST
-operator|)
-return|;
 comment|/*  *	Now register the driver  */
 name|pccard_add_driver
 argument_list|(
@@ -281,12 +281,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "nosys".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
+comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "MOD_DISPATCH" will be called under  * their respective circumstances unless their value is "nosys".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
 end_comment
 
 begin_function
 name|int
-name|lkm_skel
+name|skel
 parameter_list|(
 name|lkmtp
 parameter_list|,
@@ -306,8 +306,10 @@ name|int
 name|ver
 decl_stmt|;
 block|{
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+argument|skel
+argument_list|,
 argument|lkmtp
 argument_list|,
 argument|cmd
@@ -342,17 +344,24 @@ modifier|*
 name|devi
 parameter_list|)
 block|{
+name|int
+name|unit
+init|=
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_unit
+decl_stmt|;
 if|if
 condition|(
+name|opened
+operator|&
 operator|(
 literal|1
 operator|<<
-name|devi
-operator|->
 name|unit
 operator|)
-operator|&
-name|opened
 condition|)
 return|return
 operator|(
@@ -363,30 +372,56 @@ name|opened
 operator||=
 literal|1
 operator|<<
-name|devi
-operator|->
 name|unit
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"skel%d: init\n"
+literal|"%s%d: init\n"
 argument_list|,
 name|devi
 operator|->
+name|drv
+operator|->
+name|name
+argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iomem = 0x%x, iobase = 0x%x\n"
+literal|"%s%d: irq %d iobase 0x%x maddr 0x%x memlen %d\n"
 argument_list|,
 name|devi
 operator|->
-name|memory
+name|drv
+operator|->
+name|name
+argument_list|,
+name|unit
 argument_list|,
 name|devi
 operator|->
-name|ioaddr
+name|isahd
+operator|.
+name|id_irq
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_iobase
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_maddr
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_msize
 argument_list|)
 expr_stmt|;
 return|return
@@ -412,12 +447,25 @@ modifier|*
 name|devi
 parameter_list|)
 block|{
+name|int
+name|unit
+init|=
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_unit
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"skel%d: unload\n"
+literal|"%s%d: unload\n"
 argument_list|,
 name|devi
 operator|->
+name|drv
+operator|->
+name|name
+argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
@@ -427,8 +475,6 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|devi
-operator|->
 name|unit
 operator|)
 expr_stmt|;
