@@ -140,7 +140,6 @@ end_endif
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-comment|/* stdlib.h void	*bsearch __P((const void *, const void *, size_t, size_t, 		      int (*)(const void *, const void *)));  */
 name|int
 name|hcreate
 name|__P
@@ -178,10 +177,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* depricated interfaces (in libcompat) void	*lfind __P((const void *, const void *, size_t *, size_t, 		      int (*)(const void *, const void *))); void	*lsearch __P((const void *, const void *, size_t *, size_t, 		      int (*)(const void *, const void *))); void	 insque __P((void *, void *)); void	 remque __P((void *));  */
-end_comment
 
 begin_decl_stmt
 name|void
