@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	6.2	84/02/15	*/
+comment|/*	dinode.h	6.3	84/06/27	*/
 end_comment
 
 begin_comment
@@ -65,6 +65,10 @@ name|ino_t
 name|i_number
 decl_stmt|;
 comment|/* i number, 1-to-1 with device address */
+name|long
+name|i_id
+decl_stmt|;
+comment|/* unique identifier */
 name|struct
 name|fs
 modifier|*
@@ -493,6 +497,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of slots in the table */
+end_comment
+
+begin_decl_stmt
+name|long
+name|nextinodeid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* unique id generator */
 end_comment
 
 begin_decl_stmt
