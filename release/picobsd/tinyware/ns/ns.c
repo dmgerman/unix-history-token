@@ -4003,8 +4003,9 @@ expr_stmt|;
 break|break;
 case|case
 literal|'n'
+case|:
 comment|/* ignored, just for compatibility with std netstat */
-break|break ;
+break|break;
 case|case
 literal|'r'
 case|:
