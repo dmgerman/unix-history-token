@@ -2679,6 +2679,13 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 name|cvtstat
 argument_list|(
 operator|&
@@ -2688,12 +2695,6 @@ operator|&
 name|oub
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
 name|error
 operator|=
 name|copyout
@@ -2717,6 +2718,7 @@ name|oub
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
