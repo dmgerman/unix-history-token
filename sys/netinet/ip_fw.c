@@ -5985,9 +5985,6 @@ name|BRIDGED
 operator|)
 condition|)
 continue|continue;
-undef|#
-directive|undef
-name|BRIDGED
 if|if
 condition|(
 name|oif
@@ -7718,6 +7715,35 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+comment|/* Must convert to host order for icmp_error() etc. */
+if|if
+condition|(
+name|BRIDGED
+condition|)
+block|{
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_off
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|f
@@ -7982,6 +8008,9 @@ operator|(
 name|IP_FW_PORT_DENY_FLAG
 operator|)
 return|;
+undef|#
+directive|undef
+name|BRIDGED
 block|}
 end_function
 
