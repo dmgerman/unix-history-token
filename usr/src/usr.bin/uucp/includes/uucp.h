@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)uucp.h	5.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)uucp.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1725,28 +1725,13 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lseek
-end_ifndef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|long
+name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
