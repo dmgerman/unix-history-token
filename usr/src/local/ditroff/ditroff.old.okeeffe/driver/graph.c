@@ -482,15 +482,11 @@ expr_stmt|;
 comment|/* Calculate trajectory of the ellipse for 1/4	*/
 comment|/* the circumference (while ys is non-negative)	*/
 comment|/* and mirror to get the other three quadrants.	*/
-name|thick
-operator|=
-name|linethickness
-operator|/
-literal|2
-expr_stmt|;
 if|if
 condition|(
-name|thick
+name|linethickness
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* more than one pixel thick */
@@ -511,7 +507,7 @@ operator|)
 operator|+
 name|basey
 argument_list|,
-name|thick
+name|linethickness
 argument_list|,
 literal|0
 argument_list|)
@@ -533,7 +529,7 @@ literal|0.5
 argument_list|)
 operator|)
 argument_list|,
-name|thick
+name|linethickness
 argument_list|,
 literal|0
 argument_list|)
@@ -590,7 +586,7 @@ name|y
 operator|+
 name|basey
 argument_list|,
-name|thick
+name|linethickness
 argument_list|,
 literal|0
 argument_list|)
@@ -605,7 +601,7 @@ name|basey
 operator|-
 name|y
 argument_list|,
-name|thick
+name|linethickness
 argument_list|,
 literal|0
 argument_list|)
@@ -620,7 +616,7 @@ name|y
 operator|+
 name|basey
 argument_list|,
-name|thick
+name|linethickness
 argument_list|,
 literal|0
 argument_list|)
@@ -635,7 +631,7 @@ name|basey
 operator|-
 name|y
 argument_list|,
-name|thick
+name|linethickness
 argument_list|,
 literal|0
 argument_list|)
@@ -2124,13 +2120,6 @@ name|epsilon
 decl_stmt|,
 name|fullcircle
 decl_stmt|;
-name|int
-name|thick
-init|=
-name|linethickness
-operator|/
-literal|2
-decl_stmt|;
 specifier|register
 name|int
 name|nx
@@ -2282,7 +2271,7 @@ name|nx
 argument_list|,
 name|ny
 argument_list|,
-name|thick
+name|linethickness
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2297,7 +2286,7 @@ comment|/* end HGArc */
 end_comment
 
 begin_comment
-comment|/*----------------------------------------------------------------------------  * Routine:	RoundEnd (x, y, radius, filled_flag)  *  * Results:	Plots a filled (if requested) circle of the specified radius  *		centered about (x, y).  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------  * Routine:	RoundEnd (x, y, diameter, filled_flag)  *  * Results:	Plots a filled (if requested) circle of the specified diameter  *		centered about (x, y).  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_expr_stmt
@@ -2307,7 +2296,7 @@ name|x
 argument_list|,
 name|y
 argument_list|,
-name|radius
+name|diameter
 argument_list|,
 name|filled
 argument_list|)
@@ -2326,7 +2315,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|radius
+name|diameter
 decl_stmt|;
 end_decl_stmt
 
@@ -2350,13 +2339,9 @@ decl_stmt|;
 comment|/* "resolution" of the step around circle */
 specifier|register
 name|int
-name|cx
-decl_stmt|;
-comment|/* center of circle */
-specifier|register
-name|int
 name|cy
 decl_stmt|;
+comment|/* to index up from center of circle */
 specifier|register
 name|int
 name|nx
@@ -2366,11 +2351,16 @@ specifier|register
 name|int
 name|ny
 decl_stmt|;
+specifier|register
+name|int
+name|arc
+decl_stmt|;
+comment|/* counts how far around the circle to go */
 if|if
 condition|(
-name|radius
+name|diameter
 operator|<
-literal|1
+literal|2
 condition|)
 block|{
 comment|/* too small to notice */
@@ -2389,32 +2379,75 @@ literal|0
 expr_stmt|;
 name|ys
 operator|=
-name|radius
+call|(
+name|double
+call|)
+argument_list|(
+name|diameter
+operator|-
+literal|1
+argument_list|)
+operator|/
+literal|2.0
 expr_stmt|;
 name|epsilon
 operator|=
 literal|1.0
 operator|/
-name|radius
+name|ys
 expr_stmt|;
+name|arc
+operator|=
+operator|(
+name|pi
+operator|/
+literal|2.0
+operator|)
+operator|*
+name|ys
+expr_stmt|;
+if|if
+condition|(
+name|arc
+operator|<
+literal|4
+condition|)
+block|{
+comment|/* if too small, make it bigger */
+name|arc
+operator|+=
+name|arc
+expr_stmt|;
+comment|/*   to try and fill in more.   */
+name|epsilon
+operator|/=
+literal|2.0
+expr_stmt|;
+block|}
 comment|/* Calculate the trajectory of the circle for 1/4 the circumference          * and mirror appropriately to get the other three quadrants.          */
 name|nx
 operator|=
-name|x
+literal|0
 expr_stmt|;
 comment|/* must start out the x and y for first */
 name|ny
 operator|=
-name|y
+call|(
+name|int
+call|)
+argument_list|(
+name|ys
 operator|+
-name|radius
+literal|0.5
+argument_list|)
 expr_stmt|;
-comment|/*   painting going on in while loop */
+comment|/*   painting in while loop */
 while|while
 condition|(
-name|ny
+name|arc
+operator|--
 operator|>=
-name|y
+literal|0
 condition|)
 block|{
 if|if
@@ -2423,34 +2456,19 @@ name|filled
 condition|)
 block|{
 comment|/* fill from center */
-name|cx
-operator|=
-name|x
-expr_stmt|;
 name|cy
 operator|=
-name|y
+literal|0
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* fill from perimeter only (no fill) */
-name|cx
-operator|=
-name|nx
-expr_stmt|;
 name|cy
 operator|=
 name|ny
 expr_stmt|;
 block|}
-while|while
-condition|(
-name|cx
-operator|<=
-name|nx
-condition|)
-block|{
 while|while
 condition|(
 name|cy
@@ -2460,17 +2478,21 @@ condition|)
 block|{
 name|point
 argument_list|(
-name|cx
+name|nx
+operator|+
+name|x
 argument_list|,
 name|cy
+operator|+
+name|y
 argument_list|)
 expr_stmt|;
 name|point
 argument_list|(
-name|cx
+name|nx
+operator|+
+name|x
 argument_list|,
-literal|2
-operator|*
 name|y
 operator|-
 name|cy
@@ -2478,25 +2500,21 @@ argument_list|)
 expr_stmt|;
 name|point
 argument_list|(
-literal|2
-operator|*
 name|x
 operator|-
-name|cx
+name|nx
 argument_list|,
 name|cy
+operator|+
+name|y
 argument_list|)
 expr_stmt|;
 name|point
 argument_list|(
-literal|2
-operator|*
 name|x
 operator|-
-name|cx
+name|nx
 argument_list|,
-literal|2
-operator|*
 name|y
 operator|-
 name|cy
@@ -2506,54 +2524,44 @@ name|cy
 operator|++
 expr_stmt|;
 block|}
-comment|/* end for k */
-name|cx
-operator|++
-expr_stmt|;
-block|}
-comment|/* end for j */
-empty_stmt|;
+comment|/* end while cy */
 comment|/* generate circumference */
+name|nx
+operator|=
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
 name|xs
 operator|+=
 name|epsilon
 operator|*
 name|ys
-expr_stmt|;
-name|nx
-operator|=
-name|x
-operator|+
-call|(
-name|int
-call|)
-argument_list|(
-name|xs
+operator|)
 operator|+
 literal|0.5
 argument_list|)
 expr_stmt|;
+name|ny
+operator|=
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
 name|ys
 operator|-=
 name|epsilon
 operator|*
 name|xs
-expr_stmt|;
-name|ny
-operator|=
-name|y
-operator|+
-call|(
-name|int
-call|)
-argument_list|(
-name|ys
+operator|)
 operator|+
 literal|0.5
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end for i */
+comment|/* end while arc */
 empty_stmt|;
 block|}
 end_block
@@ -4489,8 +4497,6 @@ name|int
 name|ye
 decl_stmt|;
 name|double
-name|morelen
-decl_stmt|,
 name|theta
 decl_stmt|,
 name|wx
@@ -4571,18 +4577,11 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|morelen
+name|addln
 operator|=
 name|linethickness
 operator|/
 literal|2
-expr_stmt|;
-name|addln
-operator|=
-operator|(
-name|int
-operator|)
-name|morelen
 expr_stmt|;
 name|RoundEnd
 argument_list|(
@@ -4590,10 +4589,7 @@ name|x0
 argument_list|,
 name|y0
 argument_list|,
-operator|(
-name|int
-operator|)
-name|morelen
+name|linethickness
 argument_list|,
 name|TRUE
 argument_list|)
@@ -4772,10 +4768,7 @@ name|x1
 argument_list|,
 name|y1
 argument_list|,
-operator|(
-name|int
-operator|)
-name|morelen
+name|linethickness
 argument_list|,
 name|TRUE
 argument_list|)
