@@ -113,10 +113,17 @@ argument_list|(
 name|__ELF__
 argument_list|)
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|i386
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+operator|)
 end_if
 
 begin_decl_stmt
