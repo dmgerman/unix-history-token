@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.22 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2343,7 +2343,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   LOC    S    F POIP PRI      SIG  UID SLP TIM  CPU  NI   PGRP    PID   PPID    ADDR   RSS SRSS SIZE    WCHAN    LINK   TEXTP\n"
+literal|"   LOC    S        F POIP PRI      SIG  UID SLP TIM  CPU  NI    PID   PPID    ADDR   RSS SRSS SIZE    WCHAN    LINK   TEXTP\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2401,13 +2401,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %4x"
+literal|" %8x"
 argument_list|,
 name|pp
 operator|->
 name|p_flag
-operator|&
-literal|0xffff
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2482,15 +2480,6 @@ argument_list|,
 name|pp
 operator|->
 name|p_nice
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %6d"
-argument_list|,
-name|pp
-operator|->
-name|p_pgrp
 argument_list|)
 expr_stmt|;
 name|printf
