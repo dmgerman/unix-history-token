@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.3 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,12 +54,22 @@ name|int
 name|setglob
 argument_list|()
 decl_stmt|,
+name|sethash
+argument_list|()
+decl_stmt|,
 name|setmode
 argument_list|()
 decl_stmt|,
 name|setpeer
 argument_list|()
 decl_stmt|,
+name|setport
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|setprompt
 argument_list|()
 decl_stmt|,
@@ -102,6 +112,9 @@ decl_stmt|,
 name|delete
 argument_list|()
 decl_stmt|,
+name|mdelete
+argument_list|()
+decl_stmt|,
 name|user
 argument_list|()
 decl_stmt|;
@@ -119,6 +132,9 @@ name|mget
 argument_list|()
 decl_stmt|,
 name|help
+argument_list|()
+decl_stmt|,
+name|append
 argument_list|()
 decl_stmt|,
 name|put
@@ -165,6 +181,15 @@ argument_list|()
 decl_stmt|,
 name|removedir
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|appendhelp
+index|[]
+init|=
+literal|"append to a file"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,6 +294,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|hashhelp
+index|[]
+init|=
+literal|"toggle printing `#' for each buffer transferred"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|helphelp
 index|[]
 init|=
@@ -291,6 +325,15 @@ name|lshelp
 index|[]
 init|=
 literal|"nlist contents of remote directory"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mdeletehelp
+index|[]
+init|=
+literal|"delete multiple files"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +370,15 @@ name|mputhelp
 index|[]
 init|=
 literal|"send multiple files"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|porthelp
+index|[]
+init|=
+literal|"toggle use of PORT cmd for each data connection"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,7 +549,21 @@ name|shellhelp
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|shell
+block|}
+block|,
+block|{
+literal|"append"
+block|,
+name|appendhelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|append
 block|}
 block|,
 block|{
@@ -507,6 +573,8 @@ name|asciihelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|setascii
 block|}
 block|,
@@ -514,6 +582,8 @@ block|{
 literal|"bell"
 block|,
 name|beephelp
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -527,6 +597,8 @@ name|binaryhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|setbinary
 block|}
 block|,
@@ -534,6 +606,8 @@ block|{
 literal|"bye"
 block|,
 name|quithelp
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -547,6 +621,8 @@ name|cdhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|cd
 block|}
 block|,
@@ -556,6 +632,8 @@ block|,
 name|disconhelp
 block|,
 literal|0
+block|,
+literal|1
 block|,
 name|disconnect
 block|}
@@ -567,6 +645,8 @@ name|deletehelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|delete
 block|}
 block|,
@@ -574,6 +654,8 @@ block|{
 literal|"debug"
 block|,
 name|debughelp
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -587,6 +669,8 @@ name|dirhelp
 block|,
 literal|1
 block|,
+literal|1
+block|,
 name|ls
 block|}
 block|,
@@ -597,6 +681,8 @@ name|formhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|setform
 block|}
 block|,
@@ -604,6 +690,8 @@ block|{
 literal|"get"
 block|,
 name|receivehelp
+block|,
+literal|1
 block|,
 literal|1
 block|,
@@ -617,13 +705,29 @@ name|globhelp
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|setglob
+block|}
+block|,
+block|{
+literal|"hash"
+block|,
+name|hashhelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|sethash
 block|}
 block|,
 block|{
 literal|"help"
 block|,
 name|helphelp
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -637,6 +741,8 @@ name|lcdhelp
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|lcd
 block|}
 block|,
@@ -647,13 +753,29 @@ name|lshelp
 block|,
 literal|1
 block|,
+literal|1
+block|,
 name|ls
+block|}
+block|,
+block|{
+literal|"mdelete"
+block|,
+name|mdeletehelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|mdelete
 block|}
 block|,
 block|{
 literal|"mget"
 block|,
 name|mgethelp
+block|,
+literal|1
 block|,
 literal|1
 block|,
@@ -667,6 +789,8 @@ name|mkdirhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|makedir
 block|}
 block|,
@@ -677,6 +801,8 @@ name|modehelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|setmode
 block|}
 block|,
@@ -684,6 +810,8 @@ block|{
 literal|"mput"
 block|,
 name|mputhelp
+block|,
+literal|1
 block|,
 literal|1
 block|,
@@ -697,6 +825,8 @@ name|connecthelp
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|setpeer
 block|}
 block|,
@@ -707,13 +837,29 @@ name|prompthelp
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|setprompt
+block|}
+block|,
+block|{
+literal|"sendport"
+block|,
+name|porthelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|setport
 block|}
 block|,
 block|{
 literal|"put"
 block|,
 name|sendhelp
+block|,
+literal|1
 block|,
 literal|1
 block|,
@@ -727,6 +873,8 @@ name|pwdhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|pwd
 block|}
 block|,
@@ -734,6 +882,8 @@ block|{
 literal|"quit"
 block|,
 name|quithelp
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -747,6 +897,8 @@ name|quotehelp
 block|,
 literal|1
 block|,
+literal|1
+block|,
 name|quote
 block|}
 block|,
@@ -754,6 +906,8 @@ block|{
 literal|"recv"
 block|,
 name|receivehelp
+block|,
+literal|1
 block|,
 literal|1
 block|,
@@ -767,6 +921,8 @@ name|remotehelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|rmthelp
 block|}
 block|,
@@ -776,6 +932,8 @@ block|,
 name|renamehelp
 block|,
 literal|0
+block|,
+literal|1
 block|,
 name|renamefile
 block|}
@@ -787,6 +945,8 @@ name|rmdirhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|removedir
 block|}
 block|,
@@ -794,6 +954,8 @@ block|{
 literal|"send"
 block|,
 name|sendhelp
+block|,
+literal|1
 block|,
 literal|1
 block|,
@@ -807,6 +969,8 @@ name|statushelp
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|status
 block|}
 block|,
@@ -816,6 +980,8 @@ block|,
 name|structhelp
 block|,
 literal|0
+block|,
+literal|1
 block|,
 name|setstruct
 block|}
@@ -827,6 +993,8 @@ name|tenexhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|settenex
 block|}
 block|,
@@ -834,6 +1002,8 @@ block|{
 literal|"trace"
 block|,
 name|tracehelp
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -847,6 +1017,8 @@ name|typehelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|settype
 block|}
 block|,
@@ -857,6 +1029,8 @@ name|userhelp
 block|,
 literal|0
 block|,
+literal|1
+block|,
 name|user
 block|}
 block|,
@@ -864,6 +1038,8 @@ block|{
 literal|"verbose"
 block|,
 name|verbosehelp
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -877,11 +1053,15 @@ name|helphelp
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|help
 block|}
 block|,
+block|{
 literal|0
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

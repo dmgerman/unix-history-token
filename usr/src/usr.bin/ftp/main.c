@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.5 (Berkeley) %G%"
+literal|"@(#)main.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,10 @@ name|doglob
 operator|=
 literal|1
 expr_stmt|;
+name|interactive
+operator|=
+literal|1
+expr_stmt|;
 name|autologin
 operator|=
 literal|1
@@ -250,7 +254,8 @@ case|case
 literal|'i'
 case|:
 name|interactive
-operator|++
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -823,6 +828,23 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|c
+operator|->
+name|c_conn
+operator|&&
+operator|!
+name|connected
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Not connected.\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 call|(
 modifier|*
 name|c
@@ -1126,6 +1148,24 @@ init|=
 name|argbase
 decl_stmt|;
 comment|/* will return this if token found */
+if|if
+condition|(
+operator|*
+name|sb
+operator|==
+literal|'!'
+condition|)
+block|{
+comment|/* recognize ! as a token for shell */
+name|stringbase
+operator|++
+expr_stmt|;
+return|return
+operator|(
+literal|"!"
+operator|)
+return|;
+block|}
 name|S0
 label|:
 switch|switch

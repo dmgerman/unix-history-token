@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ftp_var.h	4.3	83/03/01	*/
+comment|/*	ftp_var.h	4.4	83/03/23	*/
 end_comment
 
 begin_comment
@@ -19,6 +19,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* trace packets exchanged */
+end_comment
+
+begin_decl_stmt
+name|int
+name|hash
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print # for each buffer transferred */
+end_comment
+
+begin_decl_stmt
+name|int
+name|sendport
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use PORT cmd for each data connection */
 end_comment
 
 begin_decl_stmt
@@ -359,6 +379,10 @@ name|char
 name|c_bell
 decl_stmt|;
 comment|/* give bell when command completes */
+name|char
+name|c_conn
+decl_stmt|;
+comment|/* must be connected to use command */
 name|int
 function_decl|(
 modifier|*
@@ -394,6 +418,15 @@ specifier|extern
 name|char
 modifier|*
 name|rindex
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|remglob
 parameter_list|()
 function_decl|;
 end_function_decl
