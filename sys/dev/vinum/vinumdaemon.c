@@ -350,6 +350,10 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rq
 operator|->
 name|bp

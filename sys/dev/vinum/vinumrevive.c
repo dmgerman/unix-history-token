@@ -898,6 +898,10 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1311,6 +1315,10 @@ name|msg
 argument_list|,
 literal|"Parity incorrect at offset 0x%llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|errorloc
 argument_list|)
 expr_stmt|;

@@ -351,6 +351,10 @@ name|sd
 operator|->
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -414,6 +418,10 @@ name|sd
 operator|->
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -434,6 +442,10 @@ name|sd
 operator|->
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ubp
 operator|->
 name|b_blkno
@@ -470,6 +482,10 @@ name|label
 operator|.
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -2589,6 +2605,10 @@ operator|.
 name|driveoffset
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rqe
 operator|->
 name|b
@@ -2856,6 +2876,10 @@ operator|.
 name|driveoffset
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rqe
 operator|->
 name|b

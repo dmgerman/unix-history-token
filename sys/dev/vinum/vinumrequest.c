@@ -1509,6 +1509,10 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1583,6 +1587,10 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1954,6 +1962,10 @@ operator|.
 name|driveoffset
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rqe
 operator|->
 name|b
@@ -2851,6 +2863,10 @@ name|sd
 operator|->
 name|sectors
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
