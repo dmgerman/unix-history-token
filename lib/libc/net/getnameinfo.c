@@ -621,10 +621,6 @@ condition|(
 name|v4a
 operator|==
 literal|0
-operator|||
-name|v4a
-operator|==
-name|IN_LOOPBACKNET
 condition|)
 name|flags
 operator||=
