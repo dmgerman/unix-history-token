@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|8
+value|9
 end_define
 
 begin_include
@@ -433,13 +433,6 @@ define|#
 directive|define
 name|INLINE
 value|__inline
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_FABRIC
-value|1
 end_define
 
 begin_define
