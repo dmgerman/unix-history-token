@@ -511,6 +511,10 @@ name|have_mdtype
 operator|=
 name|false
 expr_stmt|;
+name|mdtype
+operator|=
+name|MD_SWAP
+expr_stmt|;
 name|mdname
 operator|=
 name|MD_NAME
@@ -1130,6 +1134,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|unit
 operator|==
 operator|(
@@ -1777,6 +1784,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|unit
 operator|==
 operator|(
