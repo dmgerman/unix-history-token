@@ -129,6 +129,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -1579,6 +1580,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1595,7 +1597,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: fsirand [ -b ] [ -f ] [ -p ] special [special ...]\n"
+literal|"usage: fsirand [ -b ] [ -f ] [ -p ] special [special ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
