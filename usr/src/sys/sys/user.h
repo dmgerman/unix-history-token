@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.28	83/06/09	*/
+comment|/*	user.h	4.29	83/06/20	*/
 end_comment
 
 begin_ifdef
@@ -308,18 +308,9 @@ value|0x1
 comment|/* auto-close on exec */
 define|#
 directive|define
-name|UF_SHLOCK
-value|0x2
-comment|/* shared lock present */
-define|#
-directive|define
-name|UF_EXLOCK
-value|0x4
-comment|/* exclusive lock present */
-define|#
-directive|define
 name|UF_MAPPED
-value|0x8
+value|0x2
+comment|/* mapped from device */
 name|struct
 name|inode
 modifier|*
