@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spell.c	4.1 %G%"
+literal|"@(#)spell.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,11 +1066,18 @@ name|j
 operator|==
 name|EOF
 condition|)
+block|{
+name|fclose
+argument_list|(
+name|found
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|cp
