@@ -794,6 +794,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -809,6 +810,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -824,6 +826,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -839,6 +842,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -873,6 +877,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -888,6 +893,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -903,6 +909,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -918,6 +925,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -952,6 +960,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -967,6 +976,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -982,6 +992,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -997,6 +1008,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1031,6 +1043,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1046,6 +1059,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1061,6 +1075,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1076,6 +1091,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1369,6 +1385,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1387,6 +1404,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1405,6 +1423,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1423,6 +1442,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1454,6 +1474,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1472,6 +1493,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1490,6 +1512,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1508,6 +1531,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1539,6 +1563,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1557,6 +1582,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1575,6 +1601,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1593,6 +1620,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1624,6 +1652,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1642,6 +1671,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1660,6 +1690,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1678,6 +1709,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1881,6 +1913,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1899,6 +1932,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1917,6 +1951,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1935,6 +1970,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1966,6 +2002,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -1984,6 +2021,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2002,6 +2040,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2020,6 +2059,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2051,6 +2091,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2069,6 +2110,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2087,6 +2129,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2105,6 +2148,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2136,6 +2180,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2154,6 +2199,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2172,6 +2218,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -2190,6 +2237,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4359,6 +4407,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4377,6 +4426,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4395,6 +4445,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4413,6 +4464,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4444,6 +4496,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4462,6 +4515,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4480,6 +4534,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4498,6 +4553,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4529,6 +4585,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4547,6 +4604,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4565,6 +4623,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4583,6 +4642,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4614,6 +4674,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4632,6 +4693,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4650,6 +4712,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4668,6 +4731,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4871,6 +4935,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4889,6 +4954,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4907,6 +4973,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4925,6 +4992,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4956,6 +5024,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4974,6 +5043,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -4992,6 +5062,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5010,6 +5081,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5041,6 +5113,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5059,6 +5132,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5077,6 +5151,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5095,6 +5170,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5126,6 +5202,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5144,6 +5221,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5162,6 +5240,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)
@@ -5180,6 +5259,7 @@ operator|^
 operator|*
 operator|(
 operator|(
+specifier|const
 name|word32
 operator|*
 operator|)

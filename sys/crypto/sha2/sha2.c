@@ -2402,6 +2402,7 @@ argument_list|(
 name|context
 argument_list|,
 operator|(
+specifier|const
 name|sha2_word32
 operator|*
 operator|)
@@ -4441,6 +4442,7 @@ argument_list|(
 name|context
 argument_list|,
 operator|(
+specifier|const
 name|sha2_word64
 operator|*
 operator|)
