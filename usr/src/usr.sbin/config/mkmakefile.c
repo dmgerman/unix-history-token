@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.14 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3086,7 +3086,17 @@ condition|(
 name|machine
 operator|==
 name|MACHINE_VAX
-operator|||
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|" ${INLINE} locore.o emulate.o"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|machine
 operator|==
 name|MACHINE_TAHOE
@@ -3095,14 +3105,22 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" ${INLINE}"
+literal|" ${INLINE} locore.o"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|" locore.o"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" locore.o ${OBJS} param.o ioconf.o swap%s.o\n"
+literal|" ${OBJS} param.o ioconf.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
