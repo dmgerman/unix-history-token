@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.9 (Berkeley) %G%"
+literal|"@(#)option.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,7 +255,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789/:ceinst:ux:"
+literal|"0123456789/:ceinst:ux:f"
 argument_list|)
 operator|)
 operator|!=
@@ -453,6 +453,11 @@ name|tabstop
 operator|=
 literal|8
 expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* ignore -f, compatability with old more */
 break|break;
 case|case
 literal|'?'
