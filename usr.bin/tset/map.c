@@ -65,7 +65,14 @@ file|"extern.h"
 end_include
 
 begin_decl_stmt
-name|int
+specifier|extern
+name|speed_t
+name|Ospeed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|speed_t
 name|baudrate
 name|__P
 argument_list|(
@@ -148,10 +155,10 @@ name|int
 name|conditional
 decl_stmt|;
 comment|/* Baud rate conditionals bitmask. */
-name|int
+name|speed_t
 name|speed
 decl_stmt|;
-comment|/* Baud rate to compare against. */
+comment|/* Baud	rate to	compare	against. */
 block|}
 name|MAP
 typedef|;
@@ -780,7 +787,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|ospeed
+name|Ospeed
 operator|==
 name|mapp
 operator|->
@@ -794,7 +801,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|ospeed
+name|Ospeed
 operator|>=
 name|mapp
 operator|->
@@ -808,7 +815,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|ospeed
+name|Ospeed
 operator|>
 name|mapp
 operator|->
@@ -822,7 +829,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|ospeed
+name|Ospeed
 operator|<=
 name|mapp
 operator|->
@@ -836,7 +843,7 @@ case|:
 name|match
 operator|=
 operator|(
-name|ospeed
+name|Ospeed
 operator|<
 name|mapp
 operator|->
@@ -875,7 +882,7 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|int
+name|speed_t
 name|speed
 decl_stmt|;
 block|}
@@ -965,13 +972,31 @@ literal|"extb"
 block|,
 name|B38400
 block|,
+ifdef|#
+directive|ifdef
+name|B57600
+literal|"57600"
+block|,
+name|B57600
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B115200
+literal|"115200"
+block|,
+name|B115200
+block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|speed_t
 name|baudrate
 parameter_list|(
 name|rate
