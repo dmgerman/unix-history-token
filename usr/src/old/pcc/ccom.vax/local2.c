@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.18 (Berkeley) %G%"
+literal|"@(#)local2.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5045,14 +5045,6 @@ block|{
 comment|/* in the argument region */
 if|if
 condition|(
-name|p
-operator|->
-name|tn
-operator|.
-name|lval
-operator|<=
-literal|0
-operator|||
 name|p
 operator|->
 name|in
