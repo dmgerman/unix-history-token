@@ -20,7 +20,7 @@ comment|/*  * The next line is a literal inclusion of a file which includes a  *
 end_comment
 
 begin_comment
-comment|/* $srcdir/conf/trap/trap_freebsd3.h */
+comment|/* $srcdir/conf/trap/trap_default.h */
 end_comment
 
 begin_ifdef
@@ -28,28 +28,6 @@ ifdef|#
 directive|ifdef
 name|COMMENT_GET_DIRECTLY_FROM_FILE
 end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|mount_freebsd3
-parameter_list|(
-name|MTYPE_TYPE
-name|type
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|dir
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|voidp
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -64,7 +42,7 @@ name|flags
 parameter_list|,
 name|mnt_data
 parameter_list|)
-value|mount_freebsd3(type, mnt->mnt_dir, flags, mnt_data)
+value|mount(type, mnt->mnt_dir, flags, mnt_data)
 end_define
 
 begin_endif
@@ -79,7 +57,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"conf/trap/trap_freebsd3.h"
+file|"conf/trap/trap_default.h"
 end_include
 
 begin_comment
