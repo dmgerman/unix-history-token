@@ -5560,6 +5560,19 @@ name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 end_if
 
 begin_include
