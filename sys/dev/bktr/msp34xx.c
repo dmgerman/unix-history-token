@@ -69,6 +69,27 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BKTR_USE_FREEBSD_SMBUS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_comment
+comment|/* required by bktr_reg.h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
