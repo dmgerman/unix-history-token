@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.3 %G%"
+literal|"@(#)source.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ file|"source.h"
 end_include
 
 begin_comment
-comment|/*  * Seektab is the data structure used for indexing source  * seek addresses by line number.  *  * The constraints are:  *  *  we want an array so indexing is fast and easy  *  we don't want to waste space for small files  *  we don't want an upper bound on # of lines in a file  *  we don't know how many lines there are  *  * The solution is a "dirty" hash table.  We have NSLOTS pointers to  * arrays of NLINESPERSLOT addresses.  To find the source address of  * a particular line we find the slot, allocate space if necessary,  * and then find its location within the pointed to array.  *  * As a result, there is a limit of NSLOTS*NLINESPERSLOT lines per file  * but this is plenty high and still fairly inexpensive.  *  * This implementation maintains only one source file at any given  * so as to avoid consuming too much memory.  In an environment where  * memory is less constrained and one expects to be changing between  * files often enough, it would be reasonable to have multiple seek tables.  */
+comment|/*  * Seektab is the data structure used for indexing source  * seek addresses by line number.  *  * The constraints are:  *  *  we want an array so indexing is fast and easy  *  we don't want to waste space for small files  *  we don't want an upper bound on # of lines in a file  *  we don't know how many lines there are  *  * The solution is a sparse array. We have NSLOTS pointers to  * arrays of NLINESPERSLOT addresses.  To find the source address of  * a particular line we find the slot, allocate space if necessary,  * and then find its location within the pointed to array.  *  * As a result, there is a limit of NSLOTS*NLINESPERSLOT lines per file  * but this is plenty high and still fairly inexpensive.  *  * This implementation maintains only one source file at any given  * so as to avoid consuming too much memory.  In an environment where  * memory is less constrained and one expects to be changing between  * files often enough, it would be reasonable to have multiple seek tables.  */
 end_comment
 
 begin_typedef
@@ -310,7 +310,7 @@ name|int
 name|c
 decl_stmt|;
 specifier|register
-name|LINENO
+name|SEEKADDR
 name|count
 decl_stmt|;
 specifier|register
