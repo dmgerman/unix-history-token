@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	1.8 83/10/28"
+literal|"@(#)dr_1.c	1.9 83/10/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -1090,6 +1090,63 @@ name|tocap
 operator|=
 name|to
 expr_stmt|;
+if|if
+condition|(
+name|key
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|menfrom
+condition|)
+block|{
+comment|/* if crew surprised */
+if|if
+condition|(
+name|fromcap
+operator|==
+name|from
+condition|)
+name|menfrom
+operator|=
+name|from
+operator|->
+name|specs
+operator|->
+name|crew1
+operator|+
+name|from
+operator|->
+name|specs
+operator|->
+name|crew2
+operator|+
+name|from
+operator|->
+name|specs
+operator|->
+name|crew3
+expr_stmt|;
+else|else
+name|menfrom
+operator|=
+name|from
+operator|->
+name|file
+operator|->
+name|pcrew
+expr_stmt|;
+block|}
+else|else
+block|{
+name|menfrom
+operator|*=
+literal|2
+expr_stmt|;
+comment|/* DBP's fight at an advantage */
+block|}
+block|}
 name|fromstrength
 operator|=
 name|menfrom
@@ -1110,7 +1167,6 @@ name|specs
 operator|->
 name|qual
 expr_stmt|;
-comment|/* 	 * Don't have surprised crews fight at a disadvantage  	 * 	if (key&& !menfrom) { 		if (fromcap == from) 			menfrom = from->specs->crew1 				+ from->specs->crew2 + from->specs->crew3; 		else 			menfrom = from->file->pcrew; 		fromstrength = -1; 		strengthto *= 2; 	} 	*/
 for|for
 control|(
 name|count
@@ -1691,10 +1747,21 @@ name|thwart
 operator|=
 literal|2
 expr_stmt|;
-name|foreachship
-argument_list|(
-argument|sq
-argument_list|)
+for|for
+control|(
+name|sq
+operator|=
+name|sp
+operator|+
+literal|1
+init|;
+name|sq
+operator|<
+name|ls
+condition|;
+name|sq
+operator|++
+control|)
 if|if
 condition|(
 name|sq
