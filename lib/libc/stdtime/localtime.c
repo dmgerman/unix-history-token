@@ -7420,6 +7420,17 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 	** If we have more than this, we will overflow tm_year for tmcomp(). 	** We should really return an error if we cannot represent it. 	*/
+if|if
+condition|(
+name|bits
+operator|>
+literal|56
+condition|)
+name|bits
+operator|=
+literal|56
+expr_stmt|;
 comment|/* 	** If time_t is signed, then 0 is just above the median, 	** assuming two's complement arithmetic. 	** If time_t is unsigned, then (1<< bits) is just above the median. 	*/
 name|t
 operator|=
