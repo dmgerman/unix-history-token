@@ -665,6 +665,19 @@ index|[]
 init|=
 block|{
 block|{
+name|PCI_DEVICE_ID_OMEGA_82C094
+block|,
+literal|"Omega 82C094G"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_DF_POWER
+block|,
+operator|&
+name|pcic_pci_pd67xx_chip
+block|}
+block|,
+block|{
 name|PCI_DEVICE_ID_PCIC_CLPD6729
 block|,
 literal|"Cirrus Logic PD6729/6730 PC-Card Controller"
@@ -3837,7 +3850,7 @@ name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Allocated/deallocate interrupt.  This forces the PCI BIOS or 	 * other MD method to route the interrupts to this card. 	 * This so we get the interrupt number in the probe message. 	 * We only need to route interrupts when we're doing pci 	 * parallel interrupt routing. 	 * 	 * Note: The CLPD6729 is a special case.  See its init function 	 * for an explaination of ISA vs PCI interrupts. 	 */
+comment|/* 	 * Allocated/deallocate interrupt.  This forces the PCI BIOS or 	 * other MD method to route the interrupts to this card. 	 * This so we get the interrupt number in the probe message. 	 * We only need to route interrupts when we're doing pci 	 * parallel interrupt routing. 	 * 	 * Note: The CLPD6729 is a special case.  See its init function 	 * for an explaination of ISA vs PCI interrupts. XXX Might be other 	 * special cases as well. 	 */
 if|if
 condition|(
 name|pcic_intr_path
