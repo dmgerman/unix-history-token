@@ -784,7 +784,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|static void __Tunable_ ## var (void *ignored)	\ {						\ 	(var) = (defval);			\ 	TUNABLE_INT_FETCH((path), (var));	\ }						\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
+value|static void __Tunable_ ## var (void *ignored)	\ {						\ 	(var) = (defval);			\ 	TUNABLE_INT_FETCH((path),&(var));	\ }						\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
 end_define
 
 begin_function_decl
