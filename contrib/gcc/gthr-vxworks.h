@@ -189,7 +189,7 @@ parameter_list|)
 block|{
 comment|/* No thread support available */
 comment|/* Should we really exit the program */
-comment|/* exit(&__objc_thread_exit_status); */
+comment|/* exit (&__objc_thread_exit_status); */
 return|return
 operator|-
 literal|1
@@ -753,7 +753,7 @@ parameter_list|(
 name|key
 parameter_list|)
 define|\
-value|((key == 0)					\       ? ((taskVarAdd (taskIdSelf (),&key) != OK)	\ 	 ? (__terminate (), (void*)0)			\ 	 : (void*)0)					\       : (void*)key)
+value|((key == 0)					\       ? ((taskVarAdd (taskIdSelf (),&key) != OK)	\ 	 ? (__terminate (), (void *) 0)			\ 	 : (void *) 0)					\       : (void *) key)
 end_define
 
 begin_endif

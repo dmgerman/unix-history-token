@@ -1,24 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using a Unix style C library and tools.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using a Unix style C library and tools.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|YES_UNDERSCORES
-end_define
-
-begin_define
-define|#
-directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
@@ -26,6 +22,13 @@ define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
 value|DBX_DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (x86 Cygwin)");
 end_define
 
 begin_define
@@ -44,6 +47,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"i386/i386.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"i386/unix.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"i386/bsd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"i386/gas.h"
 end_include
 
@@ -54,91 +75,23 @@ file|"dbxcoff.h"
 end_include
 
 begin_comment
-comment|/* Augment TARGET_SWITCHES with the cygwin/no-cygwin options.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_WIN32
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Use -lming32 interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_CYGWIN
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Use -lcygwin interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_WINDOWS
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Use windows interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_DLL
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Use dll interface    */
+comment|/* Masks for subtarget switches used by other files.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MASK_NOP_FUN_DLLIMPORT
-value|0x20000
+value|0x08000000
 end_define
 
 begin_comment
 comment|/* Ignore dllimport for functions */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TARGET_WIN32
-value|(target_flags& MASK_WIN32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_CYGWIN
-value|(target_flags& MASK_CYGWIN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_WINDOWS
-value|(target_flags& MASK_WINDOWS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_DLL
-value|(target_flags& MASK_DLL)
-end_define
+begin_comment
+comment|/* Used in winnt.c.  */
+end_comment
 
 begin_define
 define|#
@@ -158,20 +111,27 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "cygwin",		  MASK_CYGWIN,					\   N_("Use the Cygwin interface") },					\ { "no-cygwin",		  MASK_WIN32,					\   N_("Use the Mingw32 interface") },					\ { "windows",		  MASK_WINDOWS, N_("Create GUI application") },	\ { "no-win32",		  -MASK_WIN32, N_("Don't set Windows defines") },\ { "win32",		  0, N_("Set Windows defines") },		\ { "console",		  -MASK_WINDOWS,				\   N_("Create console application") }, 					\ { "dll",		  MASK_DLL, N_("Generate code for a DLL") },	\ { "nop-fun-dllimport",	  MASK_NOP_FUN_DLLIMPORT,			\   N_("Ignore dllimport for functions") }, 				\ { "no-nop-fun-dllimport", -MASK_NOP_FUN_DLLIMPORT, "" }, \ { "threads",		  0, N_("Use Mingw-specific thread support") },
+value|{ "cygwin",		  0, N_("Use the Cygwin interface") },	\ { "no-cygwin",		  0, N_("Use the Mingw32 interface") },	\ { "windows",		  0, N_("Create GUI application") },	\ { "no-win32",		  0, N_("Don't set Windows defines") },	\ { "win32",		  0, N_("Set Windows defines") },	\ { "console",		  0, N_("Create console application") },\ { "dll",		  0, N_("Generate code for a DLL") },	\ { "nop-fun-dllimport",	  MASK_NOP_FUN_DLLIMPORT,		\   N_("Ignore dllimport for functions") }, 			\ { "no-nop-fun-dllimport", -MASK_NOP_FUN_DLLIMPORT, "" },	\ { "threads",		  0, N_("Use Mingw-specific thread support") },
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D_X86_=1 -Asystem=winnt"
+name|MAYBE_UWIN_CPP_BUILTINS
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* Nothing.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do									\     {									\ 	builtin_define ("_X86_=1");					\ 	builtin_assert ("system=winnt");				\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	if (!flag_iso)							\ 	  {								\ 	    builtin_define ("_stdcall=__attribute__((__stdcall__))");	\ 	    builtin_define ("_cdecl=__attribute__((__cdecl__))");	\ 	  }								\ 	MAYBE_UWIN_CPP_BUILTINS ();					\     }									\   while (0)
 end_define
 
 begin_ifdef
@@ -298,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %{posix:-D_POSIX_SOURCE} \   -D__stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   %{!ansi:-D_stdcall=__attribute__((__stdcall__)) \     -D_cdecl=__attribute__((__cdecl__))} \   -D__declspec(x)=__attribute__((x)) \   -D__i386__ -D__i386 \   %{mno-win32:%{mno-cygwin: %emno-cygwin and mno-win32 are not compatible}} \   %{mno-cygwin:-D__MSVCRT__ -D__MINGW32__ %{mthreads:-D_MT} "\     MINGW_INCLUDES "} \   %{!mno-cygwin:-D__CYGWIN32__ -D__CYGWIN__ %{!ansi:-Dunix} -D__unix__ -D__unix "\     CYGWIN_INCLUDES "}\   %{mwin32|mno-cygwin:-DWIN32 -D_WIN32 -D__WIN32 -D__WIN32__ %{!ansi:-DWINNT}}\   %{!mno-win32:" W32API_INC "}\ "
+value|"%{posix:-D_POSIX_SOURCE} \   %{mno-win32:%{mno-cygwin: %emno-cygwin and mno-win32 are not compatible}} \   %{mno-cygwin:-D__MSVCRT__ -D__MINGW32__ %{mthreads:-D_MT} "\     MINGW_INCLUDES "} \   %{!mno-cygwin:-D__CYGWIN32__ -D__CYGWIN__ %{!ansi:-Dunix} -D__unix__ -D__unix "\     CYGWIN_INCLUDES "}\   %{mwin32|mno-cygwin:-DWIN32 -D_WIN32 -D__WIN32 -D__WIN32__ %{!ansi:-DWINNT}}\   %{!mno-win32:" W32API_INC "}\ "
 end_define
 
 begin_undef
@@ -328,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|LIBGCC_SPEC
-value|"%{mno-cygwin: %{mthreads:-lmingwthrd} -lmingw32} -lgcc %{mno-cygwin:-lmoldname -lmsvcrt}"
+value|"%{mno-cygwin: %{mthreads:-lmingwthrd} -lmingw32}	\   -lgcc %{mno-cygwin:-lmoldname -lmingwex -lmsvcrt}"
 end_define
 
 begin_comment
@@ -403,13 +363,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|WCHAR_UNSIGNED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|WCHAR_TYPE_SIZE
 value|16
 end_define
@@ -447,47 +400,6 @@ directive|define
 name|TREE
 value|union tree_node *
 end_define
-
-begin_comment
-comment|/* Used to implement dllexport overriding dllimport semantics.  It's also used    to handle vtables - the first pass won't do anything because    DECL_CONTEXT (DECL) will be 0 so i386_pe_dll{ex,im}port_p will return 0.    It's also used to handle dllimport override semantics.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|REDO_SECTION_INFO_P
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|((DECL_ATTRIBUTES (DECL) != NULL_TREE) \    || (TREE_CODE (DECL) == VAR_DECL&& DECL_VIRTUAL_P (DECL)))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|REDO_SECTION_INFO_P
-parameter_list|(
-name|DECL
-parameter_list|)
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_escape
 end_escape
@@ -574,82 +486,30 @@ unit|\
 comment|/* Define this macro if references to a symbol must be treated    differently depending on something about the variable or    function named by the symbol (such as what section it is in).     On i386 running Windows NT, modify the assembler name with a suffix     consisting of an atsign (@) followed by string of digits that represents    the number of bytes of arguments passed to the function, if it has the     attribute STDCALL.     In addition, we must mark dll symbols specially. Definitions of     dllexport'd objects install some info in the .drectve section.      References to dllimport'd objects are fetched indirectly via    _imp__.  If both are declared, dllexport overrides.  This is also     needed to implement one-only vtables: they go into their own    section and we need to set DECL_SECTION_NAME so we do that here.    Note that we can be called twice on the same decl.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|i386_pe_encode_section_info
-name|PARAMS
-argument_list|(
-operator|(
-name|TREE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENCODE_SECTION_INFO
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
-name|ENCODE_SECTION_INFO
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-value|i386_pe_encode_section_info (DECL)
-end_define
-
-begin_comment
-comment|/* Utility used only in this file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I386_PE_STRIP_ENCODING
-parameter_list|(
-name|SYM_NAME
-parameter_list|)
-define|\
-value|((SYM_NAME) + ((SYM_NAME)[0] == '@' \ 		  ? ((SYM_NAME)[3] == '*' ? 4 : 3) : 0) \ 	      + ((SYM_NAME)[0] == '*' ? 1 : 0))
-end_define
-
-begin_comment
-comment|/* This macro gets just the user-specified name    out of the string in a SYMBOL_REF.  Discard    trailing @[NUM] encoded by ENCODE_SECTION_INFO.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|STRIP_NAME_ENCODING
+name|TARGET_ENCODE_SECTION_INFO
 end_undef
 
 begin_define
 define|#
 directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|SYMBOL_NAME
-parameter_list|)
-define|\
-value|do {									\   const char *_p;							\   const char *_name = I386_PE_STRIP_ENCODING (SYMBOL_NAME);		\   for (_p = _name; *_p&& *_p != '@'; ++_p)				\     ;									\   if (*_p == '@')							\     {									\       int _len = _p - _name;						\       char *_new_name = (char *) alloca (_len + 1);			\       strncpy (_new_name, _name, _len);					\       _new_name[_len] = '\0';						\       (VAR) = _new_name;						\     }									\   else									\     (VAR) = _name;							\ } while (0)
+name|TARGET_ENCODE_SECTION_INFO
+value|i386_pe_encode_section_info
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_STRIP_NAME_ENCODING
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_STRIP_NAME_ENCODING
+value|i386_pe_strip_name_encoding_full
 end_define
 
 begin_escape
@@ -675,7 +535,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|fprintf (STREAM, "%s%s", USER_LABEL_PREFIX, 		\ 	   I386_PE_STRIP_ENCODING (NAME))
+value|fprintf (STREAM, "%s%s", USER_LABEL_PREFIX, 		\ 	   i386_pe_strip_name_encoding (NAME))
 end_define
 
 begin_comment
@@ -746,7 +606,7 @@ value|4000
 end_define
 
 begin_comment
-comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    and returns float values in the 387 and needs stack probes */
+comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    returns float values in the 387 and needs stack probes.    We also align doubles to 64-bits for MSVC default compatibility. */
 end_comment
 
 begin_undef
@@ -760,7 +620,7 @@ define|#
 directive|define
 name|TARGET_SUBTARGET_DEFAULT
 define|\
-value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_STACK_PROBE)
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_STACK_PROBE \     | MASK_ALIGN_DOUBLE)
 end_define
 
 begin_comment
@@ -814,13 +674,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-value|i386_pe_unique_section (DECL, RELOC)
+name|TARGET_ASM_UNIQUE_SECTION
+value|i386_pe_unique_section
 end_define
 
 begin_define
@@ -977,7 +832,7 @@ value|" #"
 end_define
 
 begin_comment
-comment|/* DWARF2 Unwinding doesn't work with exception handling yet.  To make it    work, we need to build a libgcc_s.dll, and dcrt0.o should be changed to    call __register_frame_info/__deregister_frame_info.  */
+comment|/* DWARF2 Unwinding doesn't work with exception handling yet.  To make    it work, we need to build a libgcc_s.dll, and dcrt0.o should be    changed to call __register_frame_info/__deregister_frame_info.  */
 end_comment
 
 begin_define
@@ -1012,6 +867,27 @@ name|LABEL
 parameter_list|)
 define|\
 value|if (MAIN_NAME_P (DECL_NAME (current_function_decl)))			\     {									\       emit_call_insn (gen_rtx (CALL, VOIDmode,				\ 	gen_rtx_MEM (FUNCTION_MODE,					\ 		     gen_rtx_SYMBOL_REF (Pmode, "_monstartup")),	\ 	const0_rtx));							\     }
+end_define
+
+begin_comment
+comment|/* Java Native Interface (JNI) methods on Win32 are invoked using the    stdcall calling convention.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MODIFY_JNI_METHOD_CALL
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MODIFY_JNI_METHOD_CALL
+parameter_list|(
+name|MDECL
+parameter_list|)
+define|\
+value|build_type_attribute_variant ((MDECL),				      \ 			       build_tree_list (get_identifier ("stdcall"),   \ 						NULL))
 end_define
 
 begin_comment
@@ -1166,7 +1042,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* A bitfield declared as `int' forces `int' alignment for the struct.  */
+comment|/* A bit-field declared as `int' forces `int' alignment for the struct.  */
 end_comment
 
 begin_undef

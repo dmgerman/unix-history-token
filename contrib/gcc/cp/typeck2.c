@@ -515,6 +515,14 @@ name|tu
 decl_stmt|;
 if|if
 condition|(
+name|processing_template_decl
+condition|)
+comment|/* If we are processing a template, TYPE may be a template        class where CLASSTYPE_PURE_VIRTUALS always contains        inline friends.  */
+return|return
+literal|0
+return|;
+if|if
+condition|(
 operator|!
 name|CLASS_TYPE_P
 argument_list|(
@@ -739,16 +747,18 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print an error message for invalid use of an incomplete type.    VALUE is the expression that was used (or 0 if that isn't known)    and TYPE is the type that was invalid.  */
+comment|/* Print an error message for invalid use of an incomplete type.    VALUE is the expression that was used (or 0 if that isn't known)    and TYPE is the type that was invalid.  DIAG_TYPE indicates the    type of diagnostic:  0 for an error, 1 for a warning, 2 for a    pedwarn.  */
 end_comment
 
 begin_function
 name|void
-name|incomplete_type_error
+name|cxx_incomplete_type_diagnostic
 parameter_list|(
 name|value
 parameter_list|,
 name|type
+parameter_list|,
+name|diag_type
 parameter_list|)
 name|tree
 name|value
@@ -756,12 +766,89 @@ decl_stmt|;
 name|tree
 name|type
 decl_stmt|;
+name|int
+name|diag_type
+decl_stmt|;
 block|{
 name|int
 name|decl
 init|=
 literal|0
 decl_stmt|;
+name|void
+argument_list|(
+argument|*p_msg
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*p_msg_at
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|diag_type
+operator|==
+literal|1
+condition|)
+block|{
+name|p_msg
+operator|=
+name|warning
+expr_stmt|;
+name|p_msg_at
+operator|=
+name|cp_warning_at
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|diag_type
+operator|==
+literal|2
+condition|)
+block|{
+name|p_msg
+operator|=
+name|pedwarn
+expr_stmt|;
+name|p_msg_at
+operator|=
+name|cp_pedwarn_at
+expr_stmt|;
+block|}
+else|else
+block|{
+name|p_msg
+operator|=
+name|error
+expr_stmt|;
+name|p_msg_at
+operator|=
+name|cp_error_at
+expr_stmt|;
+block|}
 comment|/* Avoid duplicate error message.  */
 if|if
 condition|(
@@ -803,7 +890,10 @@ name|FIELD_DECL
 operator|)
 condition|)
 block|{
-name|cp_error_at
+call|(
+modifier|*
+name|p_msg_at
+call|)
 argument_list|(
 literal|"`%D' has incomplete type"
 argument_list|,
@@ -840,7 +930,10 @@ condition|(
 operator|!
 name|decl
 condition|)
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"invalid use of undefined type `%#T'"
 argument_list|,
@@ -855,7 +948,10 @@ argument_list|(
 name|type
 argument_list|)
 condition|)
-name|cp_error_at
+call|(
+modifier|*
+name|p_msg_at
+call|)
 argument_list|(
 literal|"forward declaration of `%#T'"
 argument_list|,
@@ -863,7 +959,10 @@ name|type
 argument_list|)
 expr_stmt|;
 else|else
-name|cp_error_at
+call|(
+modifier|*
+name|p_msg_at
+call|)
 argument_list|(
 literal|"declaration of `%#T'"
 argument_list|,
@@ -874,7 +973,10 @@ break|break;
 case|case
 name|VOID_TYPE
 case|:
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"invalid use of `%T'"
 argument_list|,
@@ -904,7 +1006,10 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"invalid use of array with unspecified bounds"
 argument_list|)
@@ -915,7 +1020,10 @@ name|OFFSET_TYPE
 case|:
 name|bad_member
 label|:
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"invalid use of member (did you forget the `&' ?)"
 argument_list|)
@@ -924,7 +1032,10 @@ break|break;
 case|case
 name|TEMPLATE_TYPE_PARM
 case|:
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"invalid use of template type parameter"
 argument_list|)
@@ -959,7 +1070,10 @@ argument_list|)
 operator|==
 name|ADDR_EXPR
 condition|)
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"address of overloaded function with no contextual type information"
 argument_list|)
@@ -976,13 +1090,19 @@ argument_list|)
 operator|==
 name|OVERLOAD
 condition|)
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"overloaded function with no contextual type information"
 argument_list|)
 expr_stmt|;
 else|else
-name|error
+call|(
+modifier|*
+name|p_msg
+call|)
 argument_list|(
 literal|"insufficient contextual information to determine type"
 argument_list|)
@@ -993,6 +1113,43 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Backward-compatibility interface to incomplete_type_diagnostic;    required by ../tree.c.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|cxx_incomplete_type_error
+end_undef
+
+begin_function
+name|void
+name|cxx_incomplete_type_error
+parameter_list|(
+name|value
+parameter_list|,
+name|type
+parameter_list|)
+name|tree
+name|value
+decl_stmt|;
+name|tree
+name|type
+decl_stmt|;
+block|{
+name|cxx_incomplete_type_diagnostic
+argument_list|(
+name|value
+argument_list|,
+name|type
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1043,14 +1200,6 @@ condition|)
 return|return
 name|NULL_TREE
 return|;
-if|#
-directive|if
-literal|0
-comment|/* This breaks arrays, and should not have any effect for other decls.  */
-comment|/* Take care of C++ business up here.  */
-block|type = TYPE_MAIN_VARIANT (type);
-endif|#
-directive|endif
 if|if
 condition|(
 name|IS_AGGR_TYPE
@@ -1109,14 +1258,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (TREE_CODE (init) == CONSTRUCTOR) 	{ 	  tree field;
-comment|/* Check that we're really an aggregate as ARM 8.4.1 defines it.  */
-block|if (CLASSTYPE_N_BASECLASSES (type)) 	    cp_error_at ("initializer list construction invalid for derived class object `%D'", decl); 	  if (CLASSTYPE_VTBL_PTR (type)) 	    cp_error_at ("initializer list construction invalid for polymorphic class object `%D'", decl); 	  if (TYPE_NEEDS_CONSTRUCTING (type)) 	    { 	      cp_error_at ("initializer list construction invalid for `%D'", decl); 	      error ("due to the presence of a constructor"); 	    } 	  for (field = TYPE_FIELDS (type); field; field = TREE_CHAIN (field)) 	    if (TREE_PRIVATE (field) || TREE_PROTECTED (field)) 	      { 		cp_error_at ("initializer list construction invalid for `%D'", decl); 		cp_error_at ("due to non-public access of member `%D'", field); 	      } 	  for (field = TYPE_METHODS (type); field; field = TREE_CHAIN (field)) 	    if (TREE_PRIVATE (field) || TREE_PROTECTED (field)) 	      { 		cp_error_at ("initializer list construction invalid for `%D'", decl); 		cp_error_at ("due to non-public access of member `%D'", field); 	      } 	}
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
@@ -1243,44 +1384,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* End of special C++ code.  */
-comment|/* We might have already run this bracketed initializer through      digest_init.  Don't do so again.  */
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|init
-argument_list|)
-operator|==
-name|CONSTRUCTOR
-operator|&&
-name|TREE_HAS_CONSTRUCTOR
-argument_list|(
-name|init
-argument_list|)
-operator|&&
-name|TREE_TYPE
-argument_list|(
-name|init
-argument_list|)
-operator|&&
-name|TYPE_MAIN_VARIANT
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|init
-argument_list|)
-argument_list|)
-operator|==
-name|TYPE_MAIN_VARIANT
-argument_list|(
-name|type
-argument_list|)
-condition|)
-name|value
-operator|=
-name|init
-expr_stmt|;
-else|else
 comment|/* Digest the specified initializer into an expression.  */
 name|value
 operator|=
@@ -1345,26 +1448,11 @@ argument_list|(
 name|value
 argument_list|)
 argument_list|)
-if|#
-directive|if
-literal|0
-comment|/* A STATIC PUBLIC int variable doesn't have to be 		  run time inited when doing pic.  (mrs) */
-comment|/* Since ctors and dtors are the only things that can 		  reference vtables, and they are always written down 		  the vtable definition, we can leave the 		  vtables in initialized data space. 		  However, other initialized data cannot be initialized 		  this way.  Instead a global file-level initializer 		  must do the job.  */
-expr||| (flag_pic&& !DECL_VIRTUAL_P (decl)&& TREE_PUBLIC (decl))
-endif|#
-directive|endif
 operator|)
 condition|)
 return|return
 name|value
 return|;
-if|#
-directive|if
-literal|0
-comment|/* No, that's C.  jason 9/19/94 */
-block|else     {       if (pedantic&& TREE_CODE (value) == CONSTRUCTOR) 	{ 	  if (! TREE_CONSTANT (value) || ! TREE_STATIC (value)) 	    pedwarn ("ISO C++ forbids non-constant aggregate initializer expressions"); 	}     }
-endif|#
-directive|endif
 comment|/* Store the VALUE in DECL_INITIAL.  If we're building a      statement-tree we will actually expand the initialization later      when we output this function.  */
 name|DECL_INITIAL
 argument_list|(
@@ -1375,76 +1463,6 @@ name|value
 expr_stmt|;
 return|return
 name|NULL_TREE
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Same as store_init_value, but used for known-to-be-valid static    initializers.  Used to introduce a static initializer even in data    structures that may require dynamic initialization.  */
-end_comment
-
-begin_function
-name|tree
-name|force_store_init_value
-parameter_list|(
-name|decl
-parameter_list|,
-name|init
-parameter_list|)
-name|tree
-name|decl
-decl_stmt|,
-name|init
-decl_stmt|;
-block|{
-name|tree
-name|type
-init|=
-name|TREE_TYPE
-argument_list|(
-name|decl
-argument_list|)
-decl_stmt|;
-name|int
-name|needs_constructing
-init|=
-name|TYPE_NEEDS_CONSTRUCTING
-argument_list|(
-name|type
-argument_list|)
-decl_stmt|;
-name|TYPE_NEEDS_CONSTRUCTING
-argument_list|(
-name|type
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-name|init
-operator|=
-name|store_init_value
-argument_list|(
-name|decl
-argument_list|,
-name|init
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|init
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-name|TYPE_NEEDS_CONSTRUCTING
-argument_list|(
-name|type
-argument_list|)
-operator|=
-name|needs_constructing
-expr_stmt|;
-return|return
-name|init
 return|;
 block|}
 end_function
@@ -1497,7 +1515,7 @@ name|old_tail_contents
 init|=
 name|NULL_TREE
 decl_stmt|;
-comment|/* Nonzero if INIT is a braced grouping, which comes in as a CONSTRUCTOR      tree node which has no TREE_TYPE.  */
+comment|/* Nonzero if INIT is a braced grouping.  */
 name|int
 name|raw_constructor
 decl_stmt|;
@@ -1556,7 +1574,7 @@ argument_list|)
 operator|==
 name|ERROR_MARK
 condition|)
-comment|/* __PRETTY_FUNCTION__'s initializer is a bogus expression inside        a template function. This gets substituted during instantiation. */
+comment|/* __PRETTY_FUNCTION__'s initializer is a bogus expression inside        a template function. This gets substituted during instantiation.  */
 return|return
 name|init
 return|;
@@ -1605,27 +1623,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|init
-argument_list|)
-operator|==
-name|CONSTRUCTOR
-operator|&&
-name|TREE_TYPE
-argument_list|(
-name|init
-argument_list|)
-operator|==
-name|type
-condition|)
-return|return
-name|init
-return|;
 name|raw_constructor
 operator|=
+operator|(
 name|TREE_CODE
 argument_list|(
 name|init
@@ -1633,12 +1633,11 @@ argument_list|)
 operator|==
 name|CONSTRUCTOR
 operator|&&
-name|TREE_TYPE
+name|TREE_HAS_CONSTRUCTOR
 argument_list|(
 name|init
 argument_list|)
-operator|==
-literal|0
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2690,12 +2689,18 @@ argument_list|)
 condition|)
 name|next1
 operator|=
-name|build_forced_zero_init
+name|build_zero_init
 argument_list|(
 name|TREE_TYPE
 argument_list|(
 name|type
 argument_list|)
+argument_list|,
+comment|/*nelts=*/
+name|NULL_TREE
+argument_list|,
+comment|/*static_storage_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 else|else
@@ -2884,6 +2889,11 @@ name|field
 argument_list|)
 operator|!=
 name|FIELD_DECL
+operator|||
+name|DECL_ARTIFICIAL
+argument_list|(
+name|field
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -3180,12 +3190,18 @@ argument_list|)
 condition|)
 name|next1
 operator|=
-name|build_forced_zero_init
+name|build_zero_init
 argument_list|(
 name|TREE_TYPE
 argument_list|(
 name|field
 argument_list|)
+argument_list|,
+comment|/*nelts=*/
+name|NULL_TREE
+argument_list|,
+comment|/*static_storage_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 else|else
@@ -3275,12 +3291,11 @@ condition|(
 name|field
 operator|&&
 operator|(
+operator|!
 name|DECL_NAME
 argument_list|(
 name|field
 argument_list|)
-operator|==
-literal|0
 operator|||
 name|TREE_CODE
 argument_list|(
@@ -3691,7 +3706,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a structure or union value DATUM, construct and return    the structure or union component which results from narrowing    that value by the type specified in BASETYPE.  For example, given the    hierarchy     class L { int ii; };    class A : L { ... };    class B : L { ... };    class C : A, B { ... };     and the declaration     C x;     then the expression     x.A::ii refers to the ii member of the L part of    the A part of the C object named by X.  In this case,    DATUM would be x, and BASETYPE would be A.     I used to think that this was nonconformant, that the standard specified    that first we look up ii in A, then convert x to an L& and pull out the    ii part.  But in fact, it does say that we convert x to an A&; A here    is known as the "naming class".  (jason 2000-12-19) */
+comment|/* Given a structure or union value DATUM, construct and return    the structure or union component which results from narrowing    that value to the base specified in BASETYPE.  For example, given the    hierarchy     class L { int ii; };    class A : L { ... };    class B : L { ... };    class C : A, B { ... };     and the declaration     C x;     then the expression     x.A::ii refers to the ii member of the L part of    the A part of the C object named by X.  In this case,    DATUM would be x, and BASETYPE would be A.     I used to think that this was nonconformant, that the standard specified    that first we look up ii in A, then convert x to an L& and pull out the    ii part.  But in fact, it does say that we convert x to an A&; A here    is known as the "naming class".  (jason 2000-12-19)     BINFO_P points to a variable initialized either to NULL_TREE or to the    binfo for the specific base subobject we want to convert to.  */
 end_comment
 
 begin_function
@@ -3701,6 +3716,8 @@ parameter_list|(
 name|datum
 parameter_list|,
 name|basetype
+parameter_list|,
+name|binfo_p
 parameter_list|)
 name|tree
 name|datum
@@ -3708,10 +3725,11 @@ decl_stmt|;
 name|tree
 name|basetype
 decl_stmt|;
-block|{
 name|tree
-name|ref
+modifier|*
+name|binfo_p
 decl_stmt|;
+block|{
 name|tree
 name|binfo
 decl_stmt|;
@@ -3724,6 +3742,17 @@ condition|)
 return|return
 name|error_mark_node
 return|;
+if|if
+condition|(
+operator|*
+name|binfo_p
+condition|)
+name|binfo
+operator|=
+operator|*
+name|binfo_p
+expr_stmt|;
+else|else
 name|binfo
 operator|=
 name|lookup_base
@@ -3742,59 +3771,53 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|binfo
+operator|||
 name|binfo
 operator|==
 name|error_mark_node
 condition|)
-return|return
-name|error_mark_node
-return|;
+block|{
+operator|*
+name|binfo_p
+operator|=
+name|NULL_TREE
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|binfo
 condition|)
-return|return
 name|error_not_base_type
 argument_list|(
+name|basetype
+argument_list|,
 name|TREE_TYPE
 argument_list|(
 name|datum
 argument_list|)
-argument_list|,
-name|basetype
-argument_list|)
-return|;
-name|ref
-operator|=
-name|build_unary_op
-argument_list|(
-name|ADDR_EXPR
-argument_list|,
-name|datum
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|ref
+return|return
+name|error_mark_node
+return|;
+block|}
+operator|*
+name|binfo_p
 operator|=
+name|binfo
+expr_stmt|;
+return|return
 name|build_base_path
 argument_list|(
 name|PLUS_EXPR
 argument_list|,
-name|ref
+name|datum
 argument_list|,
 name|binfo
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-return|return
-name|build_indirect_ref
-argument_list|(
-name|ref
-argument_list|,
-literal|"(compiler error in build_scoped_ref)"
 argument_list|)
 return|;
 block|}
@@ -4247,7 +4270,7 @@ argument_list|)
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* There's no such thing as a mutable pointer-to-member, so 	     we don't need to deal with that here like we do in 	     build_component_ref.  */
+comment|/* There's no such thing as a mutable pointer-to-member, so 	     things are not as complex as they are for references to 	     non-static data members.  */
 name|field_type
 operator|=
 name|cp_build_qualified_type
@@ -4667,7 +4690,7 @@ return|;
 block|}
 name|exp
 operator|=
-name|build_method_call
+name|build_special_member_call
 argument_list|(
 name|NULL_TREE
 argument_list|,
@@ -4790,6 +4813,13 @@ decl_stmt|;
 name|int
 name|is_ptr
 decl_stmt|;
+name|int
+name|diag_type
+init|=
+operator|-
+literal|1
+decl_stmt|;
+comment|/* none */
 if|if
 condition|(
 name|spec
@@ -4890,8 +4920,15 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
+block|{
 name|ok
 operator|=
+literal|1
+expr_stmt|;
+comment|/* 15.4/1 says that types in an exception specifier must be complete,          but it seems more reasonable to only require this on definitions          and calls.  So just give a pedwarn at this point; we will give an          error later if we hit one of those two cases.  */
+if|if
+condition|(
+operator|!
 name|COMPLETE_TYPE_P
 argument_list|(
 name|complete_type
@@ -4899,7 +4936,13 @@ argument_list|(
 name|core
 argument_list|)
 argument_list|)
+condition|)
+name|diag_type
+operator|=
+literal|2
 expr_stmt|;
+comment|/* pedwarn */
+block|}
 if|if
 condition|(
 name|ok
@@ -4941,39 +4984,39 @@ condition|(
 operator|!
 name|probe
 condition|)
-block|{
-name|spec
+name|list
 operator|=
-name|build_tree_list
+name|tree_cons
 argument_list|(
 name|NULL_TREE
 argument_list|,
 name|spec
+argument_list|,
+name|list
 argument_list|)
 expr_stmt|;
-name|TREE_CHAIN
-argument_list|(
-name|spec
-argument_list|)
-operator|=
-name|list
-expr_stmt|;
-name|list
-operator|=
-name|spec
-expr_stmt|;
 block|}
-block|}
-elseif|else
+else|else
+name|diag_type
+operator|=
+literal|0
+expr_stmt|;
+comment|/* error */
 if|if
 condition|(
+name|diag_type
+operator|>=
+literal|0
+operator|&&
 name|complain
 condition|)
-name|incomplete_type_error
+name|cxx_incomplete_type_diagnostic
 argument_list|(
 name|NULL_TREE
 argument_list|,
 name|core
+argument_list|,
+name|diag_type
 argument_list|)
 expr_stmt|;
 return|return
@@ -4983,7 +5026,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Combine the two exceptions specifier lists LIST and ADD, and return    their union. */
+comment|/* Combine the two exceptions specifier lists LIST and ADD, and return    their union.  */
 end_comment
 
 begin_function
@@ -5126,6 +5169,102 @@ block|}
 return|return
 name|list
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Subroutine of build_call.  Ensure that each of the types in the    exception specification is complete.  Technically, 15.4/1 says that    they need to be complete when we see a declaration of the function,    but we should be able to get away with only requiring this when the    function is defined or called.  See also add_exception_specifier.  */
+end_comment
+
+begin_function
+name|void
+name|require_complete_eh_spec_types
+parameter_list|(
+name|fntype
+parameter_list|,
+name|decl
+parameter_list|)
+name|tree
+name|fntype
+decl_stmt|,
+name|decl
+decl_stmt|;
+block|{
+name|tree
+name|raises
+decl_stmt|;
+comment|/* Don't complain about calls to op new.  */
+if|if
+condition|(
+name|decl
+operator|&&
+name|DECL_ARTIFICIAL
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+return|return;
+for|for
+control|(
+name|raises
+operator|=
+name|TYPE_RAISES_EXCEPTIONS
+argument_list|(
+name|fntype
+argument_list|)
+init|;
+name|raises
+condition|;
+name|raises
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|raises
+argument_list|)
+control|)
+block|{
+name|tree
+name|type
+init|=
+name|TREE_VALUE
+argument_list|(
+name|raises
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|type
+operator|&&
+operator|!
+name|COMPLETE_TYPE_P
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|decl
+condition|)
+name|error
+argument_list|(
+literal|"call to function `%D' which throws incomplete type `%#T'"
+argument_list|,
+name|decl
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"call to function which throws incomplete type `%#T'"
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 

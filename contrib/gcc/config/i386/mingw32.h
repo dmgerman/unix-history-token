@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using GNU tools and the Windows32 API Library.    Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using GNU tools and the Windows32 API Library.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -43,20 +43,35 @@ value|".exe"
 end_define
 
 begin_comment
-comment|/* Please keep changes to CPP_PREDEFINES in sync with i386/crtdll. The    only difference between the two should be __MSVCRT__ needed to     distinguish MSVC from CRTDLL runtime in mingw headers.  */
+comment|/* See i386/crtdll.h for an altervative definition.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D_WIN32 -D__WIN32 -D__WIN32__ -DWIN32 \   -D__MINGW32__ -D__MSVCRT__ -DWINNT -D_X86_=1 \   -Asystem=winnt"
+name|EXTRA_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do								\     {								\       builtin_define ("__MSVCRT__");				\       builtin_define ("__MINGW32__");			   	\     }								\   while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_OS_CPP_BUILTINS
+end_undef
+
+begin_comment
+comment|/* From cygwin.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do									\     {									\ 	builtin_define ("_WIN32");					\ 	builtin_define_std ("WIN32");					\ 	builtin_define_std ("WINNT");					\ 	builtin_define ("_X86_=1");					\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	if (!flag_iso)							\ 	  {								\ 	    builtin_define ("_stdcall=__attribute__((__stdcall__))");	\ 	    builtin_define ("_cdecl=__attribute__((__cdecl__))");	\ 	  }								\ 	EXTRA_OS_CPP_BUILTINS ();					\ 	builtin_assert ("system=winnt");				\     }									\   while (0)
 end_define
 
 begin_comment
@@ -99,8 +114,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-define|\
-value|"-remap %(cpp_cpu) %{posix:-D_POSIX_SOURCE} %{mthreads:-D_MT} \   -D__stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   %{!ansi:-D_stdcall=__attribute__((__stdcall__)) \     -D_cdecl=__attribute__((__cdecl__))} \   -D__declspec(x)=__attribute__((x))"
+value|"%{posix:-D_POSIX_SOURCE} %{mthreads:-D_MT}"
 end_define
 
 begin_comment
@@ -152,7 +166,7 @@ define|#
 directive|define
 name|LIBGCC_SPEC
 define|\
-value|"%{mthreads:-lmingwthrd} -lmingw32 -lgcc -lmoldname -lmsvcrt"
+value|"%{mthreads:-lmingwthrd} -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt"
 end_define
 
 begin_undef
@@ -186,7 +200,7 @@ value|""
 end_define
 
 begin_comment
-comment|/* Output STRING, a string representing a filename, to FILE.    We canonicalize it to be in MS-DOS format.  */
+comment|/* Output STRING, a string representing a filename, to FILE.    We canonicalize it to be in Unix format (backslashe are replaced    forward slashes.  */
 end_comment
 
 begin_undef
@@ -205,7 +219,24 @@ parameter_list|,
 name|STRING
 parameter_list|)
 define|\
-value|do {						\   char c;					\ 						\   putc ('\"', asm_file);			\ 						\   while ((c = *string++) != 0)			\     {						\       if (c == '\\')				\ 	c = '/';				\ 						\       if (c == '\"')				\ 	putc ('\\', asm_file);			\       putc (c, asm_file);			\     }						\ 						\   putc ('\"', asm_file);			\ } while (0)
+value|do {						         \   char c;					         \ 						         \   putc ('\"', asm_file);			         \ 						         \   while ((c = *string++) != 0)			         \     {						         \       if (c == '\\')				         \ 	c = '/';				         \ 						         \       if (ISPRINT (c))                                   \         {                                                \           if (c == '\"')			         \ 	    putc ('\\', asm_file);		         \           putc (c, asm_file);			         \         }                                                \       else                                               \         fprintf (asm_file, "\\%03o", (unsigned char) c); \     }						         \ 						         \   putc ('\"', asm_file);			         \ } while (0)
+end_define
+
+begin_comment
+comment|/* Define as short unsigned for compatability with MS runtime.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WINT_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WINT_TYPE
+value|"short unsigned int"
 end_define
 
 end_unit

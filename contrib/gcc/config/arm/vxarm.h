@@ -24,17 +24,13 @@ define|\
 value|"%{march=arm710:-DCPU=ARM710A}		\  %{march=arm7tdmi:-DCPU=ARM7TDMI}	\  %{march=arm810:-DCPU=ARM810}		\  %{march=strongarm110:-DCPU=ARMSA110}	\  %{!march=*:				\   %{mcpu=arm710:-DCPU=ARM710A}		\   %{mcpu=arm7tdmi:-DCPU=ARM7TDMI}	\   %{mcpu=arm810:-DCPU=ARM810}		\   %{mcpu=strongarm110:-DCPU=ARMSA110}}	\   %{!mcpu*:%{!march=*:-DCPU=ARM710A}}	\ "
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__vxworks -Acpu=arm -Amachine=arm"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {					\ 	builtin_define ("__vxworks");		\     } while (0)
 end_define
 
 begin_comment

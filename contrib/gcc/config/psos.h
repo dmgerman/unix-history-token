@@ -24,7 +24,7 @@ name|OBJECT_FORMAT_ELF
 end_define
 
 begin_comment
-comment|/* Provide a NULL STARTFILE_SPEC. The startfile cannot be specified    here because it depends on the architecture (e.g. 68K), the    board-support package (e.g. M162) and the run-time configuration    (e.g. application vs. ram-image vs. rom-image). Specify the    startfile in a linker-script created from the generic    architecture-specific linker-scripts. */
+comment|/* Provide a NULL STARTFILE_SPEC. The startfile cannot be specified    here because it depends on the architecture (e.g. 68K), the    board-support package (e.g. M162) and the run-time configuration    (e.g. application vs. ram-image vs. rom-image). Specify the    startfile in a linker-script created from the generic    architecture-specific linker-scripts.  */
 end_comment
 
 begin_undef
@@ -41,7 +41,7 @@ value|""
 end_define
 
 begin_comment
-comment|/* Predefined macros (independent of processor type). */
+comment|/* Predefined macros (independent of processor type).  */
 end_comment
 
 begin_undef
@@ -125,6 +125,7 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 end_unit

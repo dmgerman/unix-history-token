@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Default language-specific hooks.    Copyright 2001 Free Software Foundation, Inc.    Contributed by Alexandre Oliva<aoliva@redhat.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Default language-specific hooks.    Copyright 2001, 2002 Free Software Foundation, Inc.    Contributed by Alexandre Oliva<aoliva@redhat.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -87,6 +87,59 @@ block|{ }
 end_function
 
 begin_comment
+comment|/* Do nothing (tree).  */
+end_comment
+
+begin_function
+name|void
+name|lhd_do_nothing_t
+parameter_list|(
+name|t
+parameter_list|)
+name|tree
+name|t
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|/* Do nothing (int).  */
+end_comment
+
+begin_function
+name|void
+name|lhd_do_nothing_i
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|/* Do nothing (function).  */
+end_comment
+
+begin_function
+name|void
+name|lhd_do_nothing_f
+parameter_list|(
+name|f
+parameter_list|)
+name|struct
+name|function
+modifier|*
+name|f
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
 comment|/* Do nothing (return the tree node passed).  */
 end_comment
 
@@ -102,6 +155,27 @@ decl_stmt|;
 block|{
 return|return
 name|t
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Do nothing (return NULL_TREE).  */
+end_comment
+
+begin_function
+name|tree
+name|lhd_return_null_tree
+parameter_list|(
+name|t
+parameter_list|)
+name|tree
+name|t
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|NULL_TREE
 return|;
 block|}
 end_function
@@ -193,6 +267,28 @@ block|}
 end_function
 
 begin_comment
+comment|/* Called from unsafe_for_reeval.  */
+end_comment
+
+begin_function
+name|int
+name|lhd_unsafe_for_reeval
+parameter_list|(
+name|t
+parameter_list|)
+name|tree
+name|t
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Called from staticp.  */
 end_comment
 
@@ -214,30 +310,151 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called when -dy is given on the command line.  */
+comment|/* Called from check_global_declarations.  */
+end_comment
+
+begin_function
+name|bool
+name|lhd_warn_unused_global_decl
+parameter_list|(
+name|decl
+parameter_list|)
+name|tree
+name|decl
+decl_stmt|;
+block|{
+comment|/* This is what used to exist in check_global_declarations.  Probably      not many of these actually apply to non-C languages.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|&&
+name|DECL_INLINE
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|VAR_DECL
+operator|&&
+name|TREE_READONLY
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|DECL_IN_SYSTEM_HEADER
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Set the DECL_ASSEMBLER_NAME for DECL.  */
 end_comment
 
 begin_function
 name|void
-name|lhd_set_yydebug
+name|lhd_set_decl_assembler_name
 parameter_list|(
-name|value
+name|decl
 parameter_list|)
-name|int
-name|value
+name|tree
+name|decl
 decl_stmt|;
 block|{
+comment|/* The language-independent code should never use the      DECL_ASSEMBLER_NAME for lots of DECLs.  Only FUNCTION_DECLs and      VAR_DECLs for variables with static storage duration need a real      DECL_ASSEMBLER_NAME.  */
 if|if
 condition|(
-name|value
-condition|)
-name|fprintf
+name|TREE_CODE
 argument_list|(
-name|stderr
+name|decl
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|||
+operator|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|VAR_DECL
+operator|&&
+operator|(
+name|TREE_STATIC
+argument_list|(
+name|decl
+argument_list|)
+operator|||
+name|DECL_EXTERNAL
+argument_list|(
+name|decl
+argument_list|)
+operator|||
+name|TREE_PUBLIC
+argument_list|(
+name|decl
+argument_list|)
+operator|)
+operator|)
+condition|)
+comment|/* By default, assume the name to use in assembly code is the        same as that used in the source language.  (That's correct        for C, and GCC used to set DECL_ASSEMBLER_NAME to the same        value as DECL_NAME in build_decl, so this choice provides        backwards compatibility with existing front-ends.  */
+name|SET_DECL_ASSEMBLER_NAME
+argument_list|(
+name|decl
 argument_list|,
-literal|"warning: no yacc/bison-generated output to debug!\n"
+name|DECL_NAME
+argument_list|(
+name|decl
+argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+comment|/* Nobody should ever be asking for the DECL_ASSEMBLER_NAME of        these DECLs -- unless they're in language-dependent code, in        which case set_decl_assembler_name hook should handle things.  */
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* By default we always allow bit-field based optimizations.  */
+end_comment
+
+begin_function
+name|bool
+name|lhd_can_use_bit_fields_p
+parameter_list|()
+block|{
+return|return
+name|true
+return|;
 block|}
 end_function
 
@@ -253,7 +470,14 @@ block|{
 while|while
 condition|(
 operator|!
+call|(
+modifier|*
+name|lang_hooks
+operator|.
+name|decls
+operator|.
 name|global_bindings_p
+call|)
 argument_list|()
 condition|)
 name|poplevel
@@ -264,6 +488,62 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Type promotion for variable arguments.  */
+end_comment
+
+begin_function
+name|tree
+name|lhd_type_promotes_to
+parameter_list|(
+name|type
+parameter_list|)
+name|tree
+name|type
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Invalid use of an incomplete type.  */
+end_comment
+
+begin_function
+name|void
+name|lhd_incomplete_type_error
+parameter_list|(
+name|value
+parameter_list|,
+name|type
+parameter_list|)
+name|tree
+name|value
+name|ATTRIBUTE_UNUSED
+decl_stmt|,
+name|type
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|ERROR_MARK
+condition|)
+return|return;
+name|abort
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -312,7 +592,81 @@ block|}
 end_function
 
 begin_comment
-comment|/* lang_hooks.tree_inlining.walk_subtrees is called by walk_tree()    after handling common cases, but before walking code-specific    sub-trees.  If this hook is overridden for a language, it should    handle language-specific tree codes, as well as language-specific    information associated to common tree codes.  If a tree node is    completely handled within this function, it should set *SUBTREES to    0, so that generic handling isn't attempted.  For language-specific    tree codes, generic handling would abort(), so make sure it is set    properly.  Both SUBTREES and *SUBTREES is guaranteed to be non-zero    when the function is called.  */
+comment|/* This is the default expand_expr function.  */
+end_comment
+
+begin_function
+name|rtx
+name|lhd_expand_expr
+parameter_list|(
+name|t
+parameter_list|,
+name|r
+parameter_list|,
+name|mm
+parameter_list|,
+name|em
+parameter_list|)
+name|tree
+name|t
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|rtx
+name|r
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|enum
+name|machine_mode
+name|mm
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|int
+name|em
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* This is the default decl_printable_name function.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|lhd_decl_printable_name
+parameter_list|(
+name|decl
+parameter_list|,
+name|verbosity
+parameter_list|)
+name|tree
+name|decl
+decl_stmt|;
+name|int
+name|verbosity
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|IDENTIFIER_POINTER
+argument_list|(
+name|DECL_NAME
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* lang_hooks.tree_inlining.walk_subtrees is called by walk_tree()    after handling common cases, but before walking code-specific    sub-trees.  If this hook is overridden for a language, it should    handle language-specific tree codes, as well as language-specific    information associated to common tree codes.  If a tree node is    completely handled within this function, it should set *SUBTREES to    0, so that generic handling isn't attempted.  For language-specific    tree codes, generic handling would abort(), so make sure it is set    properly.  Both SUBTREES and *SUBTREES is guaranteed to be nonzero    when the function is called.  */
 end_comment
 
 begin_function
@@ -640,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* lang_hooks.tree_inlining.start_inlining and end_inlining perform any    language-specific bookkeeping necessary for processing    FN. start_inlining returns non-zero if inlining should proceed, zero if    not.     For instance, the C++ version keeps track of template instantiations to    avoid infinite recursion.  */
+comment|/* lang_hooks.tree_inlining.start_inlining and end_inlining perform any    language-specific bookkeeping necessary for processing    FN. start_inlining returns nonzero if inlining should proceed, zero if    not.     For instance, the C++ version keeps track of template instantiations to    avoid infinite recursion.  */
 end_comment
 
 begin_function
@@ -706,7 +1060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* lang_hooks.tree_dump.dump_tree:  Dump language-specific parts of tree     nodes.  Returns non-zero if it does not want the usual dumping of the     second argument.  */
+comment|/* lang_hooks.tree_dump.dump_tree:  Dump language-specific parts of tree    nodes.  Returns nonzero if it does not want the usual dumping of the    second argument.  */
 end_comment
 
 begin_function
@@ -734,7 +1088,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* lang_hooks.tree_dump.type_qual:  Determine type qualifiers in a     language-specific way.  */
+comment|/* lang_hooks.tree_dump.type_qual:  Determine type qualifiers in a    language-specific way.  */
 end_comment
 
 begin_function
@@ -805,6 +1159,141 @@ name|exp
 argument_list|)
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Return true if decl, which is a function decl, may be called by a    sibcall.  */
+end_comment
+
+begin_function
+name|bool
+name|lhd_decl_ok_for_sibcall
+parameter_list|(
+name|decl
+parameter_list|)
+name|tree
+name|decl
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* lang_hooks.decls.final_write_globals: perform final processing on    global variables. */
+end_comment
+
+begin_function
+name|void
+name|write_global_declarations
+parameter_list|()
+block|{
+comment|/* Really define vars that have had only a tentative definition.      Really output inline functions that must actually be callable      and have not been output so far.  */
+name|tree
+name|globals
+init|=
+call|(
+modifier|*
+name|lang_hooks
+operator|.
+name|decls
+operator|.
+name|getdecls
+call|)
+argument_list|()
+decl_stmt|;
+name|int
+name|len
+init|=
+name|list_length
+argument_list|(
+name|globals
+argument_list|)
+decl_stmt|;
+name|tree
+modifier|*
+name|vec
+init|=
+operator|(
+name|tree
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|tree
+argument_list|)
+operator|*
+name|len
+argument_list|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|tree
+name|decl
+decl_stmt|;
+comment|/* Process the decls in reverse order--earliest first.        Put them into VEC from back to front, then take out from front.  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|decl
+operator|=
+name|globals
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|++
+operator|,
+name|decl
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|decl
+argument_list|)
+control|)
+name|vec
+index|[
+name|len
+operator|-
+name|i
+operator|-
+literal|1
+index|]
+operator|=
+name|decl
+expr_stmt|;
+name|wrapup_global_declarations
+argument_list|(
+name|vec
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|check_global_declarations
+argument_list|(
+name|vec
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+comment|/* Clean up.  */
+name|free
+argument_list|(
+name|vec
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -28,6 +28,7 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -78,16 +79,6 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 value|"crtn.o%s"
-end_define
-
-begin_comment
-comment|/* cpp has to support a #sccs directive for the /usr/include files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCCS_DIRECTIVE
 end_define
 
 begin_comment

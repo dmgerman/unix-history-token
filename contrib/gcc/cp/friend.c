@@ -62,7 +62,7 @@ comment|/* Friend data structures are described in cp-tree.h.  */
 end_comment
 
 begin_comment
-comment|/* Returns non-zero if SUPPLICANT is a friend of TYPE.  */
+comment|/* Returns nonzero if SUPPLICANT is a friend of TYPE.  */
 end_comment
 
 begin_function
@@ -196,6 +196,19 @@ name|TREE_VALUE
 argument_list|(
 name|friends
 argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+comment|/* We haven't completed the instantiation yet.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|supplicant
+argument_list|)
+operator|==
+name|TEMPLATE_DECL
 condition|)
 return|return
 literal|1
@@ -393,7 +406,7 @@ name|context
 operator|=
 name|NULL_TREE
 expr_stmt|;
-comment|/* A namespace is not friend to anybody. */
+comment|/* A namespace is not friend to anybody.  */
 if|if
 condition|(
 name|context
@@ -557,6 +570,16 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|maybe_add_class_template_decl_list
+argument_list|(
+name|type
+argument_list|,
+name|decl
+argument_list|,
+comment|/*friend_p=*/
+literal|1
+argument_list|)
+expr_stmt|;
 name|TREE_VALUE
 argument_list|(
 name|list
@@ -584,6 +607,16 @@ name|list
 argument_list|)
 expr_stmt|;
 block|}
+name|maybe_add_class_template_decl_list
+argument_list|(
+name|type
+argument_list|,
+name|decl
+argument_list|,
+comment|/*friend_p=*/
+literal|1
+argument_list|)
+expr_stmt|;
 name|DECL_FRIENDLIST
 argument_list|(
 name|typedecl
@@ -681,6 +714,17 @@ return|return;
 block|}
 if|if
 condition|(
+name|processing_template_decl
+operator|>
+name|template_class_depth
+argument_list|(
+name|type
+argument_list|)
+condition|)
+comment|/* If the TYPE is a template then it makes sense for it to be        friends with itself; this means that each instantiation is        friends with all other instantiations.  */
+block|{
+if|if
+condition|(
 name|CLASS_TYPE_P
 argument_list|(
 name|friend_type
@@ -697,7 +741,7 @@ name|friend_type
 argument_list|)
 condition|)
 block|{
-comment|/* [temp.friend] 	  	 Friend declarations shall not declare partial 	 specializations.  */
+comment|/* [temp.friend] 	     Friend declarations shall not declare partial 	     specializations.  */
 name|error
 argument_list|(
 literal|"partial specialization `%T' declared `friend'"
@@ -707,20 +751,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|processing_template_decl
-operator|>
-name|template_class_depth
-argument_list|(
-name|type
-argument_list|)
-condition|)
-comment|/* If the TYPE is a template then it makes sense for it to be        friends with itself; this means that each instantiation is        friends with all other instantiations.  */
 name|is_template_friend
 operator|=
 literal|1
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -746,7 +781,7 @@ name|is_template_friend
 operator|=
 literal|0
 expr_stmt|;
-comment|/* [temp.friend]       A friend of a class or class template can be a function or      class template, a specialization of a function template or      class template, or an ordinary (nontemplate) function or      class. */
+comment|/* [temp.friend]       A friend of a class or class template can be a function or      class template, a specialization of a function template or      class template, or an ordinary (nontemplate) function or      class.  */
 if|if
 condition|(
 operator|!
@@ -894,6 +929,16 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|maybe_add_class_template_decl_list
+argument_list|(
+name|type
+argument_list|,
+name|friend_type
+argument_list|,
+comment|/*friend_p=*/
+literal|1
+argument_list|)
+expr_stmt|;
 name|CLASSTYPE_FRIEND_CLASSES
 argument_list|(
 name|type
@@ -1322,7 +1367,7 @@ if|if
 condition|(
 name|current_function_decl
 condition|)
-comment|/* This must be a local class, so pushdecl will be ok, and 	       insert an unqualified friend into the local scope 	       (rather than the containing namespace scope, which the 	       next choice will do). */
+comment|/* This must be a local class, so pushdecl will be ok, and 	       insert an unqualified friend into the local scope 	       (rather than the containing namespace scope, which the 	       next choice will do).  */
 name|decl
 operator|=
 name|pushdecl
@@ -1332,7 +1377,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* We can't use pushdecl, as we might be in a template 	         class specialization, and pushdecl will insert an 	         unqualified friend decl into the template parameter 	         scope, rather than the namespace containing it. */
+comment|/* We can't use pushdecl, as we might be in a template 	         class specialization, and pushdecl will insert an 	         unqualified friend decl into the template parameter 	         scope, rather than the namespace containing it.  */
 name|tree
 name|ns
 init|=

@@ -1,23 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Intel 80386 running Interix    Parts Copyright (C) 1991, 1999, 2000 Free Software Foundation, Inc.     Parts:      by Douglas B. Rupp (drupp@cs.washington.edu).      by Ron Guilmette (rfg@netcom.com).      by Donn Terry (donn@softway.com).      by Mumit Khan (khan@xraylith.wisc.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for Intel 80386 running Interix    Parts Copyright (C) 1991, 1999, 2000, 2002 Free Software Foundation, Inc.     Parts:      by Douglas B. Rupp (drupp@cs.washington.edu).      by Ron Guilmette (rfg@netcom.com).      by Donn Terry (donn@softway.com).      by Mumit Khan (khan@xraylith.wisc.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|YES_UNDERSCORES
-end_define
-
-begin_comment
-comment|/* YES_UNDERSCORES must precede gas.h */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/gas.h>
-end_include
 
 begin_comment
 comment|/* The rest must follow.  */
@@ -27,12 +11,14 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
@@ -46,6 +32,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_undef
@@ -96,13 +83,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WCHAR_UNSIGNED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|WCHAR_TYPE_SIZE
 value|16
 end_define
@@ -141,17 +121,13 @@ begin_comment
 comment|/* cpp handles __STDC__ */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|" \   -D__INTERIX \   -D__OPENNT \   -D_M_IX86=300 -D_X86_=1 \   -D__stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   -D__declspec(x)=__attribute__((x)) \   -Asystem=unix -Asystem=interix"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do									\     {									\ 	builtin_define ("__INTERIX");					\ 	builtin_define ("__OPENNT");					\ 	builtin_define ("_M_IX86=300");					\ 	builtin_define ("_X86_=1");					\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=interix");				\ 	if (preprocessing_asm_p ())					\ 	  builtin_define_std ("LANGUAGE_ASSEMBLY");			\ 	else								\ 	  {								\ 	     builtin_define_std ("LANGUAGE_C");				\ 	     if (c_language == clk_cplusplus)				\ 	       builtin_define_std ("LANGUAGE_C_PLUS_PLUS");		\ 	     if (flag_objc)						\ 	       builtin_define_std ("LANGUAGE_OBJECTIVE_C");		\ 	  } 								\     }									\   while (0)
 end_define
 
 begin_undef
@@ -161,21 +137,15 @@ name|CPP_SPEC
 end_undef
 
 begin_comment
-comment|/* Write out the correct language type definition for the header files.      Unless we have assembler language, write out the symbols for C.    cpp_cpu is an Intel specific variant. See i386.h    mieee is an Alpha specific variant.  Cross polination a bad idea.    */
+comment|/* Write out the correct language type definition for the header files.      Unless we have assembler language, write out the symbols for C.    mieee is an Alpha specific variant.  Cross polination a bad idea.    */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %{!.S:	-D__LANGUAGE_C__ -D__LANGUAGE_C %{!ansi:-DLANGUAGE_C}}  \ %{.S:	-D__LANGUAGE_ASSEMBLY__ -D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY}} \ %{.cc:	-D__LANGUAGE_C_PLUS_PLUS__ -D__LANGUAGE_C_PLUS_PLUS -D__cplusplus} \ %{.cxx:	-D__LANGUAGE_C_PLUS_PLUS__ -D__LANGUAGE_C_PLUS_PLUS -D__cplusplus} \ %{.C:	-D__LANGUAGE_C_PLUS_PLUS__ -D__LANGUAGE_C_PLUS_PLUS -D__cplusplus} \ %{.m:	-D__LANGUAGE_OBJECTIVE_C__ -D__LANGUAGE_OBJECTIVE_C} \ -remap \ %(cpp_cpu) \ %{posix:-D_POSIX_SOURCE} \ -isystem %$INTERIX_ROOT/usr/include"
+value|"-remap %{posix:-D_POSIX_SOURCE} \ -isystem %$INTERIX_ROOT/usr/include"
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
 
 begin_define
 define|#
@@ -321,85 +291,39 @@ directive|undef
 name|LD_FINI_SWITCH
 end_undef
 
-begin_define
-define|#
-directive|define
-name|EH_FRAME_IN_DATA_SECTION
-end_define
-
 begin_comment
-comment|/* Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.  */
+comment|/* The following are needed for us to be able to use winnt.c, but are not    otherwise meaningful to Interix.  (The functions that use these are    never called because we don't do DLLs.) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USE_CONST_SECTION
+name|TARGET_NOP_FUN_DLLIMPORT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONST_SECTION_ASM_OP
-value|"\t.section\t.rdata,\"r\""
-end_define
-
-begin_comment
-comment|/* A default list of other sections which we might be "in" at any given    time.  For targets that use additional sections (e.g. .tdesc) you    should override this definition in the target-specific file which    includes this file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_const
-end_define
-
-begin_comment
-comment|/* A default list of extra section function definitions.  For targets    that use additional sections (e.g. .tdesc) you should override this    definition in the target-specific file which includes this file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|CONST_SECTION_FUNCTION
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|READONLY_DATA_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|READONLY_DATA_SECTION
+name|drectve_section
 parameter_list|()
-value|const_section ()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EH_FRAME_IN_DATA_SECTION
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONST_SECTION_FUNCTION
-define|\
-value|void									\ const_section ()							\ {									\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
+name|READONLY_DATA_SECTION_ASM_OP
+value|"\t.section\t.rdata,\"r\""
 end_define
 
 begin_comment
@@ -543,69 +467,33 @@ value|(TARGET_64BIT ? dbx64_register_map[n] \  : (n) == 0 ? 0 \  : (n) == 1 ? 2 
 end_define
 
 begin_comment
-comment|/* Define this macro if references to a symbol must be treated    differently depending on something about the variable or    function named by the symbol (such as what section it is in).     Apply stddef, handle (as yet unimplemented) pic.     stddef renaming does NOT apply to Alpha.  */
+comment|/* Define this macro if references to a symbol must be treated    differently depending on something about the variable or    function named by the symbol (such as what section it is in).  */
 end_comment
-
-begin_union_decl
-union_decl|union
-name|tree_node
-union_decl|;
-end_union_decl
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|gen_stdcall_suffix
-name|PARAMS
-argument_list|(
-operator|(
-expr|union
-name|tree_node
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_undef
 undef|#
 directive|undef
-name|ENCODE_SECTION_INFO
+name|TARGET_ENCODE_SECTION_INFO
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|do 									\   {									\     if (flag_pic)							\       {									\ 	rtx rtl = (TREE_CODE_CLASS (TREE_CODE (DECL)) != 'd'		\ 		   ? TREE_CST_RTL (DECL) : DECL_RTL (DECL));		\ 	SYMBOL_REF_FLAG (XEXP (rtl, 0))					\ 	  = (TREE_CODE_CLASS (TREE_CODE (DECL)) != 'd'			\ 	     || ! TREE_PUBLIC (DECL));					\       }									\     if (TREE_CODE (DECL) == FUNCTION_DECL) 				\       if (lookup_attribute ("stdcall",					\ 			    TYPE_ATTRIBUTES (TREE_TYPE (DECL))))	\         XEXP (DECL_RTL (DECL), 0) = 					\           gen_rtx (SYMBOL_REF, Pmode, gen_stdcall_suffix (DECL)); 	\   }									\ while (0)
+name|TARGET_ENCODE_SECTION_INFO
+value|i386_pe_encode_section_info
 end_define
 
-begin_comment
-comment|/* This macro gets just the user-specified name    out of the string in a SYMBOL_REF.  Discard    trailing @[NUM] encoded by ENCODE_SECTION_INFO.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
-name|STRIP_NAME_ENCODING
+name|TARGET_STRIP_NAME_ENCODING
 end_undef
 
 begin_define
 define|#
 directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|SYMBOL_NAME
-parameter_list|)
-define|\
-value|do {									\   const char *_p;							\   const char *_name = SYMBOL_NAME;					\   for (_p = _name; *_p&& *_p != '@'; ++_p)				\     ;									\   if (*_p == '@')							\     {									\       int _len = _p - _name;						\       char *_new_name = (char *) alloca (_len + 1);			\       strncpy (_new_name, _name, _len);					\       _new_name[_len] = '\0';						\       (VAR) = _new_name;						\     }									\   else									\     (VAR) = _name;							\ } while (0)
+name|TARGET_STRIP_NAME_ENCODING
+value|i386_pe_strip_name_encoding_full
 end_define
 
 begin_if
@@ -629,16 +517,11 @@ name|MULTIPLE_SYMBOL_SPACES
 end_define
 
 begin_define
-unit|extern void i386_pe_unique_section ();
+unit|extern void i386_pe_unique_section PARAMS ((tree, int));
 define|#
 directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-value|i386_pe_unique_section (DECL, RELOC)
+name|TARGET_ASM_UNIQUE_SECTION
+value|i386_pe_unique_section
 end_define
 
 begin_define

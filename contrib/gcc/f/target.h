@@ -60,47 +60,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* For now, g77 requires the ability to determine the exact bit pattern    of a float on the target machine.  (Hopefully this will be changed    soon).  Make sure we can do this.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|REAL_ARITHMETIC
-argument_list|)
-expr|\
-operator|&&
-operator|(
-operator|(
-name|TARGET_FLOAT_FORMAT
-operator|!=
-name|HOST_FLOAT_FORMAT
-operator|)
-expr|\
-operator|||
-operator|(
-name|FLOAT_WORDS_BIG_ENDIAN
-operator|!=
-name|HOST_FLOAT_WORDS_BIG_ENDIAN
-operator|)
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"g77 requires ability to access exact FP representation of target machine"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Simple definitions and enumerations. */
 end_comment
 
@@ -1698,52 +1657,6 @@ directive|if
 name|FFETARGET_okREAL1
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FFETARGET_32bit_longs
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|long
-name|int
-name|ffetargetReal1
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal1_f
-value|"l"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_cvt_r1_to_rv_
-value|REAL_VALUE_UNTO_TARGET_SINGLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_cvt_rv_to_r1_
-value|REAL_VALUE_TO_TARGET_SINGLE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_typedef
 typedef|typedef
 name|int
@@ -1766,7 +1679,7 @@ parameter_list|(
 name|in
 parameter_list|)
 define|\
-value|({ REAL_VALUE_TYPE _rv; \      _rv = REAL_VALUE_UNTO_TARGET_SINGLE ((long) (in)); \      _rv; })
+value|({ REAL_VALUE_TYPE _rv;						\      long _in = (in);							\      real_from_target (&_rv,&_in, mode_for_size (32, MODE_FLOAT, 0));	\      _rv; })
 end_define
 
 begin_define
@@ -1787,102 +1700,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* REAL_ARITHMETIC */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|float
-name|ffetargetReal1
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal1_f
-value|""
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* REAL_ARITHMETIC */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
 name|FFETARGET_okREAL2
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FFETARGET_32bit_longs
-end_ifdef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|long
-name|int
-name|v
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|ffetargetReal2
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal2_f
-value|"l"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_cvt_r2_to_rv_
-value|REAL_VALUE_UNTO_TARGET_DOUBLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_cvt_rv_to_r2_
-value|REAL_VALUE_TO_TARGET_DOUBLE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_typedef
 typedef|typedef
@@ -1914,7 +1736,7 @@ parameter_list|(
 name|in
 parameter_list|)
 define|\
-value|({ REAL_VALUE_TYPE _rv; \      long _tmp[2]; \      _tmp[0] = (in)[0]; \      _tmp[1] = (in)[1]; \      _rv = REAL_VALUE_UNTO_TARGET_DOUBLE (_tmp); \      _rv; })
+value|({ REAL_VALUE_TYPE _rv; long _tmp[2];					\      _tmp[0] = (in)[0]; _tmp[1] = (in)[1];				\      real_from_target (&_rv, _tmp, mode_for_size (64, MODE_FLOAT, 0));	\      _rv; })
 end_define
 
 begin_define
@@ -1927,37 +1749,8 @@ parameter_list|,
 name|out
 parameter_list|)
 define|\
-value|({ long _tmp[2]; \      REAL_VALUE_TO_TARGET_DOUBLE ((in), _tmp); \      (out)[0] = (int) (_tmp[0]); \      (out)[1] = (int) (_tmp[1]); })
+value|({ long _tmp[2];							\      REAL_VALUE_TO_TARGET_DOUBLE ((in), _tmp);				\      (out)[0] = (int)_tmp[0]; (out)[1] = (int)_tmp[1]; })
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|double
-name|ffetargetReal2
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal2_f
-value|""
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1970,12 +1763,6 @@ directive|if
 name|FFETARGET_okREAL3
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|long
@@ -1985,29 +1772,6 @@ operator|?
 index|]
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-operator|?
-name|ffetargetReal3
-expr_stmt|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal3_f
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 operator|?
@@ -2024,12 +1788,6 @@ directive|if
 name|FFETARGET_okREAL4
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|long
@@ -2039,29 +1797,6 @@ operator|?
 index|]
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-operator|?
-name|ffetargetReal4
-expr_stmt|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal4_f
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 operator|?
@@ -2078,12 +1813,6 @@ directive|if
 name|FFETARGET_okREAL5
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|long
@@ -2093,29 +1822,6 @@ operator|?
 index|]
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-operator|?
-name|ffetargetReal5
-expr_stmt|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal5_f
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 operator|?
@@ -2132,12 +1838,6 @@ directive|if
 name|FFETARGET_okREAL6
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|long
@@ -2147,29 +1847,6 @@ operator|?
 index|]
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-operator|?
-name|ffetargetReal6
-expr_stmt|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal6_f
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 operator|?
@@ -2186,12 +1863,6 @@ directive|if
 name|FFETARGET_okREAL7
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|long
@@ -2201,29 +1872,6 @@ operator|?
 index|]
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-operator|?
-name|ffetargetReal7
-expr_stmt|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal7_f
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 operator|?
@@ -2240,12 +1888,6 @@ directive|if
 name|FFETARGET_okREAL8
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|long
@@ -2255,29 +1897,6 @@ operator|?
 index|]
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-operator|?
-name|ffetargetReal8
-expr_stmt|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ffetargetReal8_f
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 operator|?
@@ -4831,12 +4450,6 @@ define|\
 value|REAL_VALUE_FROM_INT (resr, (long) lf, (long) ((lf< 0) ? -1 : 0),	\ 		       ((kt == 1) ? SFmode : DFmode))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -4866,46 +4479,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, li, rr, ri, resr, resi; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).real.v[0])); \      li = ffetarget_cvt_r2_to_rv_ (&((l).imaginary.v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).real.v[0])); \      ri = ffetarget_cvt_r2_to_rv_ (&((r).imaginary.v[0])); \      REAL_ARITHMETIC (resr, PLUS_EXPR, lr, rr); \      REAL_ARITHMETIC (resi, PLUS_EXPR, li, ri); \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->real.v[0])); \      ffetarget_cvt_rv_to_r2_ (resi,&((res)->imaginary.v[0])); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_add_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|((res)->real = (l).real + (r).real, \    (res)->imaginary = (l).imaginary + (r).imaginary, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_add_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|((res)->real = (l).real + (r).real, \    (res)->imaginary = (l).imaginary + (r).imaginary, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -4963,12 +4536,6 @@ parameter_list|)
 value|(*(res) = (l) + (r), FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -4998,44 +4565,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, rr, resr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      REAL_ARITHMETIC (resr, PLUS_EXPR, lr, rr); \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->v[0])); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_add_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-value|(*(res) = (l) + (r), FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_add_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-value|(*(res) = (l) + (r), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -5476,12 +5005,6 @@ define|\
 value|ffetarget_convert_any_typeless_ ((char *) (res), sizeof(*(res)), l)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -5495,35 +5018,6 @@ define|\
 value|({ REAL_VALUE_TYPE lr, li; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).real.v[0])); \      li = ffetarget_cvt_r2_to_rv_ (&((l).imaginary.v[0])); \      ffetarget_cvt_rv_to_r1_ (lr, (res)->real); \      ffetarget_cvt_rv_to_r1_ (li, (res)->imaginary), \      FFEBAD; })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex1_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l).real, (res)->imaginary = (l).imaginary, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -5536,29 +5030,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE resi, resr; \      ffetargetInteger1 lf = (l); \      FFETARGET_REAL_VALUE_FROM_INT_ (resr, lf, 1); \      resi = dconst0; \      ffetarget_cvt_rv_to_r1_ (resr, (res)->real); \      ffetarget_cvt_rv_to_r1_ (resi, (res)->imaginary); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex1_integer
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l), (res)->imaginary = 0, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -5581,12 +5052,6 @@ name|ffetarget_convert_complex1_integer3
 value|ffetarget_convert_complex1_integer
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -5598,29 +5063,6 @@ name|l
 parameter_list|)
 value|FFEBAD_NOCANDO
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex1_integer4
-value|ffetarget_convert_complex1_integer
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
 
 begin_define
 define|#
@@ -5647,42 +5089,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      ffetarget_cvt_rv_to_r1_ (lr, (res)->real); \      ffetarget_cvt_rv_to_r1_ (dconst0, (res)->imaginary), \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex1_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l), (res)->imaginary = 0, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex1_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l), (res)->imaginary = 0, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -5723,12 +5129,6 @@ define|\
 value|ffetarget_convert_any_typeless_ ((char *) (res), sizeof(*(res)), l)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -5742,35 +5142,6 @@ define|\
 value|({ REAL_VALUE_TYPE lr, li; \      lr = ffetarget_cvt_r1_to_rv_ ((l).real); \      li = ffetarget_cvt_r1_to_rv_ ((l).imaginary); \      ffetarget_cvt_rv_to_r2_ (lr,&((res)->real.v[0])); \      ffetarget_cvt_rv_to_r2_ (li,&((res)->imaginary.v[0])), \      FFEBAD; })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex2_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l).real, (res)->imaginary = (l).imaginary, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -5783,29 +5154,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE resi, resr; \      ffetargetInteger1 lf = (l); \      FFETARGET_REAL_VALUE_FROM_INT_ (resr, lf, 2); \      resi = dconst0; \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->real.v[0])); \      ffetarget_cvt_rv_to_r2_ (resi,&((res)->imaginary.v[0])); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex2_integer
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l), (res)->imaginary = 0, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -5828,12 +5176,6 @@ name|ffetarget_convert_complex2_integer3
 value|ffetarget_convert_complex2_integer
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -5845,29 +5187,6 @@ name|l
 parameter_list|)
 value|FFEBAD_NOCANDO
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex2_integer4
-value|ffetarget_convert_complex2_integer
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
 
 begin_define
 define|#
@@ -5894,42 +5213,6 @@ parameter_list|)
 define|\
 value|((res)->real = (l), \    ffetarget_cvt_rv_to_r2_ (dconst0,&((res)->imaginary.v[0])), \    FFEBAD)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex2_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l), (res)->imaginary = 0, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_complex2_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = (l), (res)->imaginary = 0, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -6302,12 +5585,6 @@ define|\
 value|ffetarget_convert_integer1_character1(res,l)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -6331,42 +5608,6 @@ name|l
 parameter_list|)
 value|FFEBAD_NOCANDO
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer4_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|ffetarget_convert_integer1_complex1(res,l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer4_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|ffetarget_convert_integer1_complex2(res,l)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -6469,12 +5710,6 @@ define|\
 value|ffetarget_convert_integer1_logical1(res,l)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -6498,42 +5733,6 @@ name|l
 parameter_list|)
 value|FFEBAD_NOCANDO
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer4_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|ffetarget_convert_integer1_real1(res,l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer4_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|ffetarget_convert_integer1_real2(res,l)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -7163,12 +6362,6 @@ parameter_list|)
 value|(*(res) = (l), FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7220,64 +6413,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).real.v[0])); \      REAL_VALUE_TO_INT (&ffetarget_long_val_,&ffetarget_long_junk_, lr); \      *(res) = ffetarget_long_val_; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer1_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l), FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer1_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l), FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer1_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l).real, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_integer1_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l).real, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -7331,12 +6466,6 @@ define|\
 value|ffetarget_convert_real1_integer1(res,l)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7348,29 +6477,6 @@ name|l
 parameter_list|)
 value|FFEBAD_NOCANDO
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_real1_integer4
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|ffetarget_convert_real1_integer1(res,l)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -7410,12 +6516,6 @@ define|\
 value|ffetarget_convert_real1_real2 ((res), (l).real)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7429,34 +6529,6 @@ define|\
 value|({ REAL_VALUE_TYPE resr; \      ffetargetInteger1 lf = (l); \      FFETARGET_REAL_VALUE_FROM_INT_ (resr, lf, 1); \      ffetarget_cvt_rv_to_r1_ (resr, *(res)); \      FFEBAD; })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_real1_integer1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7469,28 +6541,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      ffetarget_cvt_rv_to_r1_ (lr, *(res)); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_real1_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -7544,12 +6594,6 @@ define|\
 value|ffetarget_convert_real2_integer1(res,l)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7561,29 +6605,6 @@ name|l
 parameter_list|)
 value|FFEBAD_NOCANDO
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_real2_integer4
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|ffetarget_convert_real2_integer1(res,l)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -7623,12 +6644,6 @@ parameter_list|)
 value|(*(res) = (l).real, FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7649,34 +6664,6 @@ name|ffetarget_convert_real2_integer1
 value|ffetarget_convert_real2_integer
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_real2_integer1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7690,28 +6677,6 @@ define|\
 value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r1_to_rv_ ((l)); \      ffetarget_cvt_rv_to_r2_ (lr,&((res)->v[0])); \      FFEBAD; })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_convert_real2_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = (l), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -7724,7 +6689,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|(((r) == 0) ? (*(res) = 0, FFEBAD_DIV_BY_ZERO)  \    : (*(res) = (l) / (r), FFEBAD))
+value|(((r) == 0) ? (*(res) = 0, FFEBAD_DIV_BY_ZERO)  \    : (((r) == -1) ? (*(res) = -(l), FFEBAD)       \       : (*(res) = (l) / (r), FFEBAD)))
 end_define
 
 begin_define
@@ -7772,12 +6737,6 @@ define|\
 value|ffetarget_divide_integer1(res,l,r)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7808,52 +6767,6 @@ define|\
 value|({ REAL_VALUE_TYPE lr, rr, resr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      REAL_VALUES_EQUAL (rr, dconst0) \        ? ({ ffetarget_cvt_rv_to_r2_ (dconst0,&((res)->v[0])); \ 	    FFEBAD_DIV_BY_ZERO; \ 	  }) \ 	 : ({ REAL_ARITHMETIC (resr, RDIV_EXPR, lr, rr); \ 	      ffetarget_cvt_rv_to_r2_ (resr,&((res)->v[0])); \ 	      FFEBAD; \ 	    }); \ 	 })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_divide_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(((r) == 0) ? (*(res) = 0, FFEBAD_DIV_BY_ZERO)  \    : (*(res) = (l) / (r), FFEBAD))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_divide_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(((r) == 0) ? (*(res) = 0, FFEBAD_DIV_BY_ZERO)  \    : (*(res) = (l) / (r), FFEBAD))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -7883,46 +6796,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, li, rr, ri; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).real.v[0])); \      li = ffetarget_cvt_r2_to_rv_ (&((l).imaginary.v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).real.v[0])); \      ri = ffetarget_cvt_r2_to_rv_ (&((r).imaginary.v[0])); \      *(res) = (REAL_VALUES_EQUAL (lr, rr)&& REAL_VALUES_EQUAL (li, ri)) \        ? TRUE : FALSE; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_eq_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = (((l).real == (r).real)&& ((l).imaginary == (r).imaginary))  \    ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_eq_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = (((l).real == (r).real)&& ((l).imaginary == (r).imaginary))  \    ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -7984,12 +6857,6 @@ define|\
 value|(*(res) = ((l) == (r)) ? TRUE : FALSE, FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8019,46 +6886,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, rr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      *(res) = REAL_VALUES_EQUAL (lr, rr) ? TRUE : FALSE; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_eq_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l) == (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_eq_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l) == (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -8232,12 +7059,6 @@ define|\
 value|(*(res) = ((l)>= (r)) ? TRUE : FALSE, FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8267,46 +7088,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, rr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      *(res) = REAL_VALUES_LESS (lr, rr) ? FALSE : TRUE; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_ge_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)>= (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_ge_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)>= (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -8368,12 +7149,6 @@ define|\
 value|(*(res) = ((l)> (r)) ? TRUE : FALSE, FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8403,46 +7178,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, rr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      *(res) = (REAL_VALUES_LESS (lr, rr) || REAL_VALUES_EQUAL (lr, rr)) \        ? FALSE : TRUE; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_gt_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)> (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_gt_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)> (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -8565,12 +7300,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8592,36 +7321,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      REAL_VALUES_EQUAL (lr, dconst0); \    })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_iszero_real1
-parameter_list|(
-name|l
-parameter_list|)
-value|((l) == 0.)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_iszero_real2
-parameter_list|(
-name|l
-parameter_list|)
-value|((l) == 0.)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -8705,12 +7404,6 @@ define|\
 value|(*(res) = ((l)<= (r)) ? TRUE : FALSE, FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8740,46 +7433,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, rr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      *(res) = (REAL_VALUES_LESS (lr, rr) || REAL_VALUES_EQUAL (lr, rr)) \        ? TRUE : FALSE; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_le_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)<= (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_le_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)<= (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -8841,12 +7494,6 @@ define|\
 value|(*(res) = ((l)< (r)) ? TRUE : FALSE, FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8877,46 +7524,6 @@ define|\
 value|({ REAL_VALUE_TYPE lr, rr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      *(res) = REAL_VALUES_LESS (lr, rr) ? TRUE : FALSE; \      FFEBAD; })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_lt_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)< (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_lt_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l)< (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -8933,12 +7540,6 @@ directive|define
 name|ffetarget_length_characterdefault
 value|ffetarget_length_character1
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
 
 begin_define
 define|#
@@ -8965,40 +7566,6 @@ parameter_list|)
 define|\
 value|ffetarget_cvt_rv_to_r2_ ((lr),&((res)->v[0]))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_make_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|lr
-parameter_list|)
-value|(*(res) = (lr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_make_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|lr
-parameter_list|)
-value|(*(res) = (lr))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -9056,12 +7623,6 @@ parameter_list|)
 value|(*(res) = (l) * (r), FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -9092,50 +7653,6 @@ define|\
 value|({ REAL_VALUE_TYPE lr, rr, resr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      REAL_ARITHMETIC (resr, MULT_EXPR, lr, rr); \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->v[0])); \      FFEBAD; })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_multiply_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-value|(*(res) = (l) * (r), FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_multiply_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-value|(*(res) = (l) * (r), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -9165,46 +7682,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, li, rr, ri; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).real.v[0])); \      li = ffetarget_cvt_r2_to_rv_ (&((l).imaginary.v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).real.v[0])); \      ri = ffetarget_cvt_r2_to_rv_ (&((r).imaginary.v[0])); \      *(res) = (REAL_VALUES_EQUAL (lr, rr)&& REAL_VALUES_EQUAL (li, ri)) \        ? FALSE : TRUE; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_ne_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = (((l).real != (r).real) || ((l).imaginary != (r).imaginary))  \    ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_ne_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = (((l).real != (r).real) || ((l).imaginary != (r).imaginary))  \    ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -9266,12 +7743,6 @@ define|\
 value|(*(res) = ((l) != (r)) ? TRUE : FALSE, FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -9301,46 +7772,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, rr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      *(res) = REAL_VALUES_EQUAL (lr, rr) ? FALSE : TRUE; \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_ne_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l) != (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_ne_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|(*(res) = ((l) != (r)) ? TRUE : FALSE, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -9970,12 +8401,6 @@ parameter_list|)
 value|ffetarget_print_octal(f,v)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -9986,7 +8411,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r1_to_rv_ ((l)); \      REAL_VALUE_TO_DECIMAL (lr, bad_fmt_val??, ffetarget_string_); \      fputs (ffetarget_string_, (f)); \    })
+value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r1_to_rv_ ((l)); \      real_to_decimal (ffetarget_string_,&lr \ 			 sizeof(ffetarget_string_), 0, 1); \      fputs (ffetarget_string_, (f)); \    })
 end_define
 
 begin_define
@@ -9999,50 +8424,8 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      REAL_VALUE_TO_DECIMAL (lr, bad_fmt_val??, ffetarget_string_); \      fputs (ffetarget_string_, (f)); \    })
+value|({ REAL_VALUE_TYPE lr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      real_to_decimal (ffetarget_string_,&lr, \ 			 sizeof(ffetarget_string_), 0, 1); \      fputs (ffetarget_string_, (f)); \    })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_print_real1
-parameter_list|(
-name|f
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|fprintf ((f), "%" ffetargetReal1_f "g", (v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_print_real2
-parameter_list|(
-name|f
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|fprintf ((f), "%" ffetargetReal2_f "g", (v))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
 
 begin_define
 define|#
@@ -10064,42 +8447,6 @@ parameter_list|)
 value|ffetarget_cvt_rv_to_r2_ (dconst1,&((res)->v[0]))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_real1_one
-parameter_list|(
-name|res
-parameter_list|)
-value|(*(res) = (float) 1.)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_real2_one
-parameter_list|(
-name|res
-parameter_list|)
-value|(*(res) = 1.)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -10120,42 +8467,6 @@ parameter_list|)
 value|ffetarget_cvt_rv_to_r2_ (dconst2,&((res)->v[0]))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_real1_two
-parameter_list|(
-name|res
-parameter_list|)
-value|(*(res) = (float) 2.)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_real2_two
-parameter_list|(
-name|res
-parameter_list|)
-value|(*(res) = 2.)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -10175,36 +8486,6 @@ name|res
 parameter_list|)
 value|ffetarget_cvt_rv_to_r2_ (dconst0,&((res)->v[0]))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_real1_zero
-parameter_list|(
-name|res
-parameter_list|)
-value|(*(res) = (float) 0.)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_real2_zero
-parameter_list|(
-name|res
-parameter_list|)
-value|(*(res) = 0.)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -10237,12 +8518,6 @@ parameter_list|)
 value|((ffetarget_num_digits_(t) + 1) / 2)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -10272,46 +8547,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, li, rr, ri, resr, resi; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).real.v[0])); \      li = ffetarget_cvt_r2_to_rv_ (&((l).imaginary.v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).real.v[0])); \      ri = ffetarget_cvt_r2_to_rv_ (&((r).imaginary.v[0])); \      REAL_ARITHMETIC (resr, MINUS_EXPR, lr, rr); \      REAL_ARITHMETIC (resi, MINUS_EXPR, li, ri); \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->real.v[0])); \      ffetarget_cvt_rv_to_r2_ (resi,&((res)->imaginary.v[0])); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_subtract_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|((res)->real = (l).real - (r).real, \    (res)->imaginary = (l).imaginary - (r).imaginary, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_subtract_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|((res)->real = (l).real - (r).real, \    (res)->imaginary = (l).imaginary - (r).imaginary, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -10369,12 +8604,6 @@ parameter_list|)
 value|(*(res) = (l) - (r), FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -10404,44 +8633,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, rr, resr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      rr = ffetarget_cvt_r2_to_rv_ (&((r).v[0])); \      REAL_ARITHMETIC (resr, MINUS_EXPR, lr, rr); \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->v[0])); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_subtract_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-value|(*(res) = (l) - (r), FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_subtract_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|,
-name|r
-parameter_list|)
-value|(*(res) = (l) - (r), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -10495,12 +8686,6 @@ name|ffetarget_text_characterdefault
 value|ffetarget_text_character1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -10526,42 +8711,6 @@ parameter_list|)
 define|\
 value|({ REAL_VALUE_TYPE lr, li, resr, resi; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).real.v[0])); \      li = ffetarget_cvt_r2_to_rv_ (&((l).imaginary.v[0])); \      resr = REAL_VALUE_NEGATE (lr); \      resi = REAL_VALUE_NEGATE (li); \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->real.v[0])); \      ffetarget_cvt_rv_to_r2_ (resi,&((res)->imaginary.v[0])); \      FFEBAD; })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_uminus_complex1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = -(l).real, (res)->imaginary = -(l).imaginary, FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_uminus_complex2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|((res)->real = -(l).real, (res)->imaginary = -(l).imaginary, FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -10611,12 +8760,6 @@ parameter_list|)
 value|(*(res) = -(l), FFEBAD)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -10643,46 +8786,6 @@ define|\
 value|({ REAL_VALUE_TYPE lr, resr; \      lr = ffetarget_cvt_r2_to_rv_ (&((l).v[0])); \      resr = REAL_VALUE_NEGATE (lr); \      ffetarget_cvt_rv_to_r2_ (resr,&((res)->v[0])); \      FFEBAD; })
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_uminus_real1
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = -(l), FFEBAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_uminus_real2
-parameter_list|(
-name|res
-parameter_list|,
-name|l
-parameter_list|)
-value|(*(res) = -(l), FFEBAD)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ARITHMETIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -10702,28 +8805,6 @@ name|lr
 parameter_list|)
 value|ffetarget_cvt_r2_to_rv_ (&((lr).v[0]))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ffetarget_value_real1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffetarget_value_real2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

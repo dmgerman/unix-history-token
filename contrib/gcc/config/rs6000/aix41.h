@@ -46,14 +46,16 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D_IBMR2 -D_POWER -D_AIX -D_AIX32 -D_AIX41 \ -D_LONG_LONG -Asystem=unix -Asystem=aix"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                  \     {                                 \       builtin_define ("_IBMR2");      \       builtin_define ("_POWER");      \       builtin_define ("_AIX");        \       builtin_define ("_AIX32");      \       builtin_define ("_AIX41");      \       builtin_define ("_LONG_LONG");  \       builtin_assert ("system=unix"); \       builtin_assert ("system=aix");  \     }                                 \   while (0)
 end_define
 
 begin_undef
@@ -66,20 +68,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix: -D_POSIX_SOURCE}\    %{ansi: -D_ANSI_C_SOURCE}\    %{mpe: -I/usr/lpp/ppe.poe/include}\    %{pthread: -D_THREAD_SAFE}\    %(cpp_cpu)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_DEFAULT_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_DEFAULT_SPEC
-value|"-D_ARCH_COM"
+value|"%{posix: -D_POSIX_SOURCE}\    %{ansi: -D_ANSI_C_SOURCE}\    %{mpe: -I/usr/lpp/ppe.poe/include}\    %{pthread: -D_THREAD_SAFE}"
 end_define
 
 begin_undef

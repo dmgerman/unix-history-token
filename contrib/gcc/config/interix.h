@@ -154,6 +154,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_undef
@@ -174,12 +175,14 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_undef
@@ -214,13 +217,6 @@ end_undef
 begin_define
 define|#
 directive|define
-name|WCHAR_UNSIGNED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|WCHAR_TYPE
 value|"short unsigned int"
 end_define
@@ -233,7 +229,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Our strategy for finding global constructors is a bit different, although    not a lot. */
+comment|/* Our strategy for finding global constructors is a bit different, although    not a lot.  */
 end_comment
 
 begin_define

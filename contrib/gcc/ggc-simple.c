@@ -57,6 +57,12 @@ directive|include
 file|"timevar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"params.h"
+end_include
+
 begin_comment
 comment|/* Debugging flags.  */
 end_comment
@@ -65,11 +71,11 @@ begin_comment
 comment|/* Zap memory before freeing to catch dangling pointers.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|GGC_POISON
-end_define
+end_undef
 
 begin_comment
 comment|/* Collect statistics on how bushy the search tree is.  */
@@ -79,16 +85,6 @@ begin_undef
 undef|#
 directive|undef
 name|GGC_BALANCE
-end_undef
-
-begin_comment
-comment|/* Perform collection every time ggc_collect is invoked.  Otherwise,    collection is performed only when a significant amount of memory    has been allocated since the last collection.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|GGC_ALWAYS_COLLECT
 end_undef
 
 begin_comment
@@ -117,23 +113,6 @@ begin_define
 define|#
 directive|define
 name|GGC_ALWAYS_VERIFY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_GC_ALWAYS_COLLECT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|GGC_ALWAYS_COLLECT
 end_define
 
 begin_endif
@@ -266,28 +245,6 @@ block|}
 name|G
 struct|;
 end_struct
-
-begin_comment
-comment|/* Skip garbage collection if the current allocation is not at least    this factor times the allocation at the end of the last collection.    In other words, total allocation must expand by (this factor minus    one) before collection is performed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GGC_MIN_EXPAND_FOR_GC
-value|(1.3)
-end_define
-
-begin_comment
-comment|/* Bound `allocated_last_gc' to 4MB, to prevent the memory expansion    test from triggering too often when the heap is small.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GGC_MIN_LAST_ALLOCATED
-value|(4 * 1024 * 1024)
-end_define
 
 begin_comment
 comment|/* Local function prototypes.  */
@@ -1247,24 +1204,50 @@ name|void
 name|ggc_collect
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|GGC_ALWAYS_COLLECT
+comment|/* Avoid frequent unnecessary work by skipping collection if the      total allocations haven't expanded much since the last      collection.  */
+name|size_t
+name|allocated_last_gc
+init|=
+name|MAX
+argument_list|(
+name|G
+operator|.
+name|allocated_last_gc
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|PARAM_VALUE
+argument_list|(
+name|GGC_MIN_HEAPSIZE
+argument_list|)
+operator|*
+literal|1024
+argument_list|)
+decl_stmt|;
+name|size_t
+name|min_expand
+init|=
+name|allocated_last_gc
+operator|*
+name|PARAM_VALUE
+argument_list|(
+name|GGC_MIN_EXPAND
+argument_list|)
+operator|/
+literal|100
+decl_stmt|;
 if|if
 condition|(
 name|G
 operator|.
 name|allocated
 operator|<
-name|GGC_MIN_EXPAND_FOR_GC
-operator|*
-name|G
-operator|.
 name|allocated_last_gc
+operator|+
+name|min_expand
 condition|)
 return|return;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|GGC_BALANCE
@@ -1338,20 +1321,6 @@ name|G
 operator|.
 name|allocated
 expr_stmt|;
-if|if
-condition|(
-name|G
-operator|.
-name|allocated_last_gc
-operator|<
-name|GGC_MIN_LAST_ALLOCATED
-condition|)
-name|G
-operator|.
-name|allocated_last_gc
-operator|=
-name|GGC_MIN_LAST_ALLOCATED
-expr_stmt|;
 name|timevar_pop
 argument_list|(
 name|TV_GC
@@ -1398,14 +1367,7 @@ begin_function
 name|void
 name|init_ggc
 parameter_list|()
-block|{
-name|G
-operator|.
-name|allocated_last_gc
-operator|=
-name|GGC_MIN_LAST_ALLOCATED
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment

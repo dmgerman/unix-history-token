@@ -20,17 +20,13 @@ name|CPP_SUBTARGET_SPEC
 value|"\ %{mvxsim:-DCPU=SIMALPHADUNIX} \ %{!mvxsim: %{!mcpu*|mcpu=21064:-DCPU=21064} %{mcpu=21164:-DCPU=21164}} \ %{posix: -D_POSIX_SOURCE}"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"\ -D__vxworks -D__alpha_vxworks -Asystem=vxworks \ -Asystem=embedded -D_LONGLONG"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {					\ 	builtin_define ("__vxworks");		\ 	builtin_define ("__alpha_vxworks");	\ 	builtin_define ("_LONGLONG");		\ 	builtin_assert ("system=vxworks");	\ 	builtin_assert ("system=embedded");	\     } while (0)
 end_define
 
 begin_comment

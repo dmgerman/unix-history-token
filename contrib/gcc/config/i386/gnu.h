@@ -19,14 +19,20 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
+
+begin_comment
+comment|/* config.gcc includes i386/linux.h.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__ -DMACH -Asystem=mach \   -Dunix -Asystem=unix -Asystem=posix -D__gnu_hurd__ -D__GNU__ -Asystem=gnu"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("MACH");		\ 	builtin_define_std ("unix");		\ 	builtin_define ("__ELF__");		\ 	builtin_define ("__GNU__");		\ 	builtin_define ("__gnu_hurd__");	\ 	builtin_assert ("system=gnu");		\ 	builtin_assert ("system=mach");		\ 	builtin_assert ("system=posix");	\ 	builtin_assert ("system=unix");		\ 	if (flag_pic)				\ 	  {					\ 	    builtin_define ("__PIC__");		\ 	    builtin_define ("__pic__");		\ 	  }					\     }						\   while (0)
 end_define
 
 begin_undef
@@ -39,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) \   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} \   %{posix:-D_POSIX_SOURCE} %{bsd:-D_BSD_SOURCE}"
+value|"%{posix:-D_POSIX_SOURCE} %{bsd:-D_BSD_SOURCE}"
 end_define
 
 begin_undef

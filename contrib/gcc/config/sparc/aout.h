@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for SPARC using a.out.    Copyright (C) 1994, 1996 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for SPARC using a.out.    Copyright (C) 1994, 1996, 2002 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -40,23 +40,18 @@ define|\
 value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)				\   || !strcmp (STR, "target") || !strcmp (STR, "assert"))
 end_define
 
-begin_comment
-comment|/* This is defined differently for v9 in a cover file.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_SELECT_SECTION
+value|sparc_aout_select_section
+end_define
 
 begin_define
 define|#
 directive|define
-name|SELECT_SECTION
-parameter_list|(
-name|T
-parameter_list|,
-name|RELOC
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|{									\   if (TREE_CODE (T) == VAR_DECL)					\     {									\       if (TREE_READONLY (T)&& ! TREE_SIDE_EFFECTS (T)			\&& DECL_INITIAL (T)						\&& (DECL_INITIAL (T) == error_mark_node			\ 	      || TREE_CONSTANT (DECL_INITIAL (T)))			\&& DECL_ALIGN (T)<= MAX_TEXT_ALIGN				\&& ! (flag_pic&& ((RELOC) || SUNOS4_SHARED_LIBRARIES)))	\ 	text_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (T) == CONSTRUCTOR)				\     {									\       if (flag_pic&& ((RELOC) || SUNOS4_SHARED_LIBRARIES))		\ 	data_section ();						\     }									\   else if (TREE_CODE_CLASS (TREE_CODE (T)) == 'c')			\     {									\       if ((TREE_CODE (T) == STRING_CST&& flag_writable_strings)	\ 	  || TYPE_ALIGN (TREE_TYPE (T))> MAX_TEXT_ALIGN		\ 	  || (flag_pic&& ((RELOC) || SUNOS4_SHARED_LIBRARIES)))	\ 	data_section ();						\       else								\ 	text_section ();						\     }									\ }
+name|TARGET_ASM_SELECT_RTX_SECTION
+value|sparc_aout_select_rtx_section
 end_define
 
 begin_comment

@@ -222,6 +222,18 @@ parameter_list|)
 value|(rtx_class[(int) (CODE)])
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|unsigned
+name|char
+name|rtx_next
+index|[
+name|NUM_RTX_CODE
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -295,42 +307,54 @@ begin_comment
 comment|/* Structure used to describe the attributes of a MEM.  These are hashed    so MEMs that the same attributes share a data structure.  This means    they cannot be modified in place.  If any element is nonzero, it means    the value of the corresponding attribute is unknown.  */
 end_comment
 
+begin_comment
+comment|/* ALIGN and SIZE are the alignment and size of the MEM itself,    while EXPR can describe a larger underlying object, which might have a    stricter alignment; OFFSET is the offset of the MEM within that object.  */
+end_comment
+
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
+name|mem_attrs
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|HOST_WIDE_INT
 name|alias
-decl_stmt|;
+block|;
 comment|/* Memory alias set.  */
 name|tree
 name|expr
-decl_stmt|;
+block|;
 comment|/* expr corresponding to MEM.  */
 name|rtx
 name|offset
-decl_stmt|;
+block|;
 comment|/* Offset from start of DECL, as CONST_INT.  */
 name|rtx
 name|size
-decl_stmt|;
+block|;
 comment|/* Size in bytes, as a CONST_INT.  */
 name|unsigned
 name|int
 name|align
-decl_stmt|;
+block|;
 comment|/* Alignment of MEM in bits.  */
 block|}
-name|mem_attrs
-typedef|;
 end_typedef
+
+begin_expr_stmt
+name|mem_attrs
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Common union for an element of an rtx.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_union
 union|union
 name|rtunion_def
 block|{
@@ -385,6 +409,13 @@ modifier|*
 name|rtmem
 decl_stmt|;
 block|}
+union|;
+end_union
+
+begin_typedef
+typedef|typedef
+name|union
+name|rtunion_def
 name|rtunion
 typedef|;
 end_typedef
@@ -393,9 +424,23 @@ begin_comment
 comment|/* RTL expression ("rtx").  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|rtx_def
+name|GTY
+argument_list|(
+operator|(
+name|chain_next
+argument_list|(
+literal|"RTX_NEXT (&%h)"
+argument_list|)
+operator|,
+name|chain_prev
+argument_list|(
+literal|"RTX_PREV (&%h)"
+argument_list|)
+operator|)
+argument_list|)
 block|{
 comment|/* The kind of expression this is.  */
 name|ENUM_BITFIELD
@@ -415,49 +460,49 @@ name|mode
 label|:
 literal|8
 expr_stmt|;
-comment|/* 1 in an INSN if it can alter flow of control      within this function.      MEM_KEEP_ALIAS_SET_P in a MEM.      LINK_COST_ZERO in an INSN_LIST.      SET_IS_RETURN_P in a SET.  */
+comment|/* 1 in a MEM if we should keep the alias set for this mem unchanged      when we access a component.      1 in a CALL_INSN if it is a sibling call.      1 in a SET that is for a return.      In a CODE_LABEL, part of the two-bit alternate entry field.  */
 name|unsigned
 name|int
 name|jump
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 in an INSN if it can call another function.      LINK_COST_FREE in an INSN_LIST.  */
+comment|/* In a CODE_LABEL, part of the two-bit alternate entry field.      1 in a MEM if it cannot trap.  */
 name|unsigned
 name|int
 name|call
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 in a REG if value of this expression will never change during      the current function, even though it is not manifestly constant.      1 in a MEM if contents of memory are constant.  This does not      necessarily mean that the value of this expression is constant.      1 in a SUBREG if it is from a promoted variable that is unsigned.      1 in a SYMBOL_REF if it addresses something in the per-function      constants pool.      1 in a CALL_INSN if it is a const call.      1 in a JUMP_INSN if it is a branch that should be annulled.  Valid from      reorg until end of compilation; cleared before used.  */
+comment|/* 1 in a REG, MEM, or CONCAT if the value is set at most once, anywhere.      1 in a SUBREG if it references an unsigned object whose mode has been      from a promoted to a wider mode.      1 in a SYMBOL_REF if it addresses something in the per-function      constants pool.      1 in a CALL_INSN, NOTE, or EXPR_LIST for a const or pure call.      1 in a JUMP_INSN, CALL_INSN, or INSN of an annulling branch.  */
 name|unsigned
 name|int
 name|unchanging
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 in a MEM expression if contents of memory are volatile.      1 in an INSN, CALL_INSN, JUMP_INSN, CODE_LABEL or BARRIER      if it is deleted.      1 in a REG expression if corresponds to a variable declared by the user.      0 for an internally generated temporary.      In a SYMBOL_REF, this flag is used for machine-specific purposes.      In a LABEL_REF or in a REG_LABEL note, this is LABEL_REF_NONLOCAL_P.  */
+comment|/* 1 in a MEM or ASM_OPERANDS expression if the memory reference is volatile.      1 in an INSN, CALL_INSN, JUMP_INSN, CODE_LABEL, BARRIER, or NOTE      if it has been deleted.      1 in a REG expression if corresponds to a variable declared by the user,      0 for an internally generated temporary.      1 in a SUBREG with a negative value.      1 in a LABEL_REF or in a REG_LABEL note for a non-local label.      In a SYMBOL_REF, this flag is used for machine-specific purposes.  */
 name|unsigned
 name|int
 name|volatil
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 in a MEM referring to a field of an aggregate.      0 if the MEM was a variable or the result of a * operator in C;      1 if it was the result of a . or -> operator (on a struct) in C.      1 in a REG if the register is used only in exit code a loop.      1 in a SUBREG expression if was generated from a variable with a      promoted mode.      1 in a CODE_LABEL if the label is used for nonlocal gotos      and must not be deleted even if its count is zero.      1 in a LABEL_REF if this is a reference to a label outside the      current loop.      1 in an INSN, JUMP_INSN, or CALL_INSN if this insn must be scheduled      together with the preceding insn.  Valid only within sched.      1 in an INSN, JUMP_INSN, or CALL_INSN if insn is in a delay slot and      from the target of a branch.  Valid from reorg until end of compilation;      cleared before used.      1 in an INSN if this insn is dead code.  Valid only during      dead-code elimination phase; cleared before use.  */
+comment|/* 1 in a MEM referring to a field of an aggregate.      0 if the MEM was a variable or the result of a * operator in C;      1 if it was the result of a . or -> operator (on a struct) in C.      1 in a REG if the register is used only in exit code a loop.      1 in a SUBREG expression if was generated from a variable with a      promoted mode.      1 in a CODE_LABEL if the label is used for nonlocal gotos      and must not be deleted even if its count is zero.      1 in a LABEL_REF if this is a reference to a label outside the      current loop.      1 in an INSN, JUMP_INSN or CALL_INSN if this insn must be scheduled      together with the preceding insn.  Valid only within sched.      1 in an INSN, JUMP_INSN, or CALL_INSN if insn is in a delay slot and      from the target of a branch.  Valid from reorg until end of compilation;      cleared before used.      1 in an INSN or related rtx if this insn is dead code.  Valid only during      dead-code elimination phase; cleared before use.  */
 name|unsigned
 name|int
 name|in_struct
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if this rtx is used.  This is used for copying shared structure.      See `unshare_all_rtl'.      In a REG, this is not needed for that purpose, and used instead      in `leaf_renumber_regs_insn'.      In a SYMBOL_REF, means that emit_library_call      has used it as the function.  */
+comment|/* At the end of RTL generation, 1 if this rtx is used.  This is used for      copying shared structure.  See `unshare_all_rtl'.      In a REG, this is not needed for that purpose, and used instead      in `leaf_renumber_regs_insn'.      1 in a SYMBOL_REF, means that emit_library_call      has used it as the function.  */
 name|unsigned
 name|int
 name|used
 range|:
 literal|1
 decl_stmt|;
-comment|/* Nonzero if this rtx came from procedure integration.      In a REG, nonzero means this reg refers to the return value      of the current function.      1 in a SYMBOL_REF if the symbol is weak.  */
+comment|/* Nonzero if this rtx came from procedure integration.      1 in a REG or PARALLEL means this rtx refers to the return value      of the current function.      1 in a SYMBOL_REF if the symbol is weak.  */
 name|unsigned
 name|integrated
 range|:
@@ -471,20 +516,65 @@ literal|1
 decl_stmt|;
 comment|/* The first element of the operands of this rtx.      The number of operands and their types are controlled      by the `code' field, according to rtl.def.  */
 name|rtunion
+name|GTY
+argument_list|(
+operator|(
+name|special
+argument_list|(
+literal|"rtx_def"
+argument_list|)
+operator|,
+name|desc
+argument_list|(
+literal|"GET_CODE (&%0)"
+argument_list|)
+operator|)
+argument_list|)
 name|fld
 index|[
 literal|1
 index|]
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
 directive|define
 name|NULL_RTX
 value|(rtx) 0
+end_define
+
+begin_comment
+comment|/* The "next" and "previous" RTX, relative to this one.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTX_NEXT
+parameter_list|(
+name|X
+parameter_list|)
+value|(rtx_next[GET_CODE (X)] == 0 ? NULL			\ 		     : *(rtx *)(((char *)X) + rtx_next[GET_CODE (X)]))
+end_define
+
+begin_comment
+comment|/* FIXME: the "NEXT_INSN (PREV_INSN (X)) == X" condition shouldn't be needed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTX_PREV
+parameter_list|(
+name|X
+parameter_list|)
+value|((GET_CODE (X) == INSN              \                       || GET_CODE (X) == CALL_INSN      \                       || GET_CODE (X) == JUMP_INSN      \                       || GET_CODE (X) == NOTE           \                       || GET_CODE (X) == BARRIER        \                       || GET_CODE (X) == CODE_LABEL)    \&& PREV_INSN (X) != NULL           \&& NEXT_INSN (PREV_INSN (X)) == X  \                      ? PREV_INSN (X) : NULL)
 end_define
 
 begin_comment
@@ -535,57 +625,44 @@ parameter_list|)
 value|((RTX)->mode = (ENUM_BITFIELD(machine_mode)) (MODE))
 end_define
 
-begin_define
-define|#
-directive|define
-name|RTX_INTEGRATED_P
-parameter_list|(
-name|RTX
-parameter_list|)
-value|((RTX)->integrated)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RTX_UNCHANGING_P
-parameter_list|(
-name|RTX
-parameter_list|)
-value|((RTX)->unchanging)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RTX_FRAME_RELATED_P
-parameter_list|(
-name|RTX
-parameter_list|)
-value|((RTX)->frame_related)
-end_define
-
 begin_comment
 comment|/* RTL vector.  These appear inside RTX's when there is a need    for a variable number of things.  The principle use is inside    PARALLEL expressions.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|rtvec_def
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|int
 name|num_elem
 decl_stmt|;
 comment|/* number of elements */
 name|rtx
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%h.num_elem"
+argument_list|)
+operator|)
+argument_list|)
 name|elem
 index|[
 literal|1
 index|]
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -687,6 +764,46 @@ value|(GET_CODE (X) == BARRIER)
 end_define
 
 begin_comment
+comment|/* Predicate yielding nonzero iff X is cc0.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_cc0
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CC0_P
+parameter_list|(
+name|X
+parameter_list|)
+value|((X) == cc0_rtx)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CC0_P
+parameter_list|(
+name|X
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Predicate yielding nonzero iff X is a data for a jump table.  */
 end_comment
 
@@ -748,7 +865,7 @@ name|N
 parameter_list|,
 name|C1
 parameter_list|)
-value|__extension__				\ (*({ rtx _rtx = (RTX); int _n = (N);					\      enum rtx_code _code = GET_CODE (_rtx);				\      if (_n< 0 || _n>= GET_RTX_LENGTH (_code))			\        rtl_check_failed_bounds (_rtx, _n, __FILE__, __LINE__,		\ 				__FUNCTION__);				\      if (GET_RTX_FORMAT(_code)[_n] != C1)				\        rtl_check_failed_type1 (_rtx, _n, C1, __FILE__, __LINE__,	\ 			       __FUNCTION__);				\&_rtx->fld[_n]; }))
+value|__extension__				\ (*({ rtx const _rtx = (RTX); const int _n = (N);			\      const enum rtx_code _code = GET_CODE (_rtx);			\      if (_n< 0 || _n>= GET_RTX_LENGTH (_code))			\        rtl_check_failed_bounds (_rtx, _n, __FILE__, __LINE__,		\ 				__FUNCTION__);				\      if (GET_RTX_FORMAT(_code)[_n] != C1)				\        rtl_check_failed_type1 (_rtx, _n, C1, __FILE__, __LINE__,	\ 			       __FUNCTION__);				\&_rtx->fld[_n]; }))
 end_define
 
 begin_define
@@ -764,7 +881,7 @@ name|C1
 parameter_list|,
 name|C2
 parameter_list|)
-value|__extension__			\ (*({ rtx _rtx = (RTX); int _n = (N);					\      enum rtx_code _code = GET_CODE (_rtx);				\      if (_n< 0 || _n>= GET_RTX_LENGTH (_code))			\        rtl_check_failed_bounds (_rtx, _n, __FILE__, __LINE__,		\ 				__FUNCTION__);				\      if (GET_RTX_FORMAT(_code)[_n] != C1				\&& GET_RTX_FORMAT(_code)[_n] != C2)				\        rtl_check_failed_type2 (_rtx, _n, C1, C2, __FILE__, __LINE__,	\ 			       __FUNCTION__);				\&_rtx->fld[_n]; }))
+value|__extension__			\ (*({ rtx const _rtx = (RTX); const int _n = (N);			\      const enum rtx_code _code = GET_CODE (_rtx);			\      if (_n< 0 || _n>= GET_RTX_LENGTH (_code))			\        rtl_check_failed_bounds (_rtx, _n, __FILE__, __LINE__,		\ 				__FUNCTION__);				\      if (GET_RTX_FORMAT(_code)[_n] != C1				\&& GET_RTX_FORMAT(_code)[_n] != C2)				\        rtl_check_failed_type2 (_rtx, _n, C1, C2, __FILE__, __LINE__,	\ 			       __FUNCTION__);				\&_rtx->fld[_n]; }))
 end_define
 
 begin_define
@@ -778,7 +895,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__				\ (*({ rtx _rtx = (RTX); int _n = (N);					\      if (GET_CODE (_rtx) != (C))					\        rtl_check_failed_code1 (_rtx, (C), __FILE__, __LINE__,		\ 			       __FUNCTION__);				\&_rtx->fld[_n]; }))
+value|__extension__				\ (*({ rtx const _rtx = (RTX); const int _n = (N);			\      if (GET_CODE (_rtx) != (C))					\        rtl_check_failed_code1 (_rtx, (C), __FILE__, __LINE__,		\ 			       __FUNCTION__);				\&_rtx->fld[_n]; }))
 end_define
 
 begin_define
@@ -794,7 +911,7 @@ name|C1
 parameter_list|,
 name|C2
 parameter_list|)
-value|__extension__			\ (*({ rtx _rtx = (RTX); int _n = (N);					\      enum rtx_code _code = GET_CODE (_rtx);				\      if (_code != (C1)&& _code != (C2))				\        rtl_check_failed_code2 (_rtx, (C1), (C2), __FILE__, __LINE__,	\ 			       __FUNCTION__); \&_rtx->fld[_n]; }))
+value|__extension__			\ (*({ rtx const _rtx = (RTX); const int _n = (N);			\      const enum rtx_code _code = GET_CODE (_rtx);			\      if (_code != (C1)&& _code != (C2))				\        rtl_check_failed_code2 (_rtx, (C1), (C2), __FILE__, __LINE__,	\ 			       __FUNCTION__); \&_rtx->fld[_n]; }))
 end_define
 
 begin_define
@@ -806,7 +923,7 @@ name|RTVEC
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__				\ (*({ rtvec _rtvec = (RTVEC); int _i = (I);				\      if (_i< 0 || _i>= GET_NUM_ELEM (_rtvec))				\        rtvec_check_failed_bounds (_rtvec, _i, __FILE__, __LINE__,	\ 				  __FUNCTION__);			\&_rtvec->elem[_i]; }))
+value|__extension__				\ (*({ rtvec const _rtvec = (RTVEC); const int _i = (I);			\      if (_i< 0 || _i>= GET_NUM_ELEM (_rtvec))				\        rtvec_check_failed_bounds (_rtvec, _i, __FILE__, __LINE__,	\ 				  __FUNCTION__);			\&_rtvec->elem[_i]; }))
 end_define
 
 begin_decl_stmt
@@ -1061,6 +1178,431 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* General accessor macros for accessing the flags of an rtx.  */
+end_comment
+
+begin_comment
+comment|/* Access an individual rtx flag, with no checking of any kind.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTX_FLAG
+parameter_list|(
+name|RTX
+parameter_list|,
+name|FLAG
+parameter_list|)
+value|((RTX)->FLAG)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+name|ENABLE_RTL_FLAG_CHECKING
+operator|&&
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|2007
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK1
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|)
+value|__extension__			\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1)						\      rtl_check_failed_flag  (NAME, _rtx, __FILE__, __LINE__,		\       			     __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK2
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|)
+value|__extension__		\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1&& GET_CODE(_rtx) != C2)			\      rtl_check_failed_flag  (NAME,_rtx, __FILE__, __LINE__,		\       			      __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK3
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|)
+value|__extension__		\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1&& GET_CODE(_rtx) != C2 			\&& GET_CODE(_rtx) != C3)						\      rtl_check_failed_flag  (NAME, _rtx, __FILE__, __LINE__,		\       			     __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK4
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|)
+value|__extension__	\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1&& GET_CODE(_rtx) != C2	 		\&& GET_CODE(_rtx) != C3&& GET_CODE(_rtx) != C4)			\      rtl_check_failed_flag  (NAME, _rtx, __FILE__, __LINE__,		\       			      __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK5
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|)
+value|__extension__	\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1&& GET_CODE(_rtx) != C2	 		\&& GET_CODE(_rtx) != C3&& GET_CODE(_rtx) != C4			\&& GET_CODE(_rtx) != C5)						\      rtl_check_failed_flag  (NAME, _rtx, __FILE__, __LINE__,		\        			     __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK6
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|,
+name|C6
+parameter_list|)
+define|\
+value|__extension__								\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1&& GET_CODE(_rtx) != C2	 		\&& GET_CODE(_rtx) != C3&& GET_CODE(_rtx) != C4			\&& GET_CODE(_rtx) != C5&& GET_CODE(_rtx) != C6)			\      rtl_check_failed_flag  (NAME,_rtx, __FILE__, __LINE__,		\       			     __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK7
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|,
+name|C6
+parameter_list|,
+name|C7
+parameter_list|)
+define|\
+value|__extension__								\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1&& GET_CODE(_rtx) != C2	 		\&& GET_CODE(_rtx) != C3&& GET_CODE(_rtx) != C4			\&& GET_CODE(_rtx) != C5&& GET_CODE(_rtx) != C6			\&& GET_CODE(_rtx) != C7)						\      rtl_check_failed_flag  (NAME, _rtx, __FILE__, __LINE__,		\        			     __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK8
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|,
+name|C6
+parameter_list|,
+name|C7
+parameter_list|,
+name|C8
+parameter_list|)
+define|\
+value|__extension__								\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE(_rtx) != C1&& GET_CODE(_rtx) != C2	 		\&& GET_CODE(_rtx) != C3&& GET_CODE(_rtx) != C4			\&& GET_CODE(_rtx) != C5&& GET_CODE(_rtx) != C6			\&& GET_CODE(_rtx) != C7&& GET_CODE(_rtx) != C8)			\      rtl_check_failed_flag  (NAME, _rtx, __FILE__, __LINE__,		\        			     __FUNCTION__);				\    _rtx; })
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|rtl_check_failed_flag
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|rtx
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not ENABLE_RTL_FLAG_CHECKING */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK1
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK2
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK3
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK4
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK5
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK6
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|,
+name|C6
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK7
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|,
+name|C6
+parameter_list|,
+name|C7
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTL_FLAG_CHECK8
+parameter_list|(
+name|NAME
+parameter_list|,
+name|RTX
+parameter_list|,
+name|C1
+parameter_list|,
+name|C2
+parameter_list|,
+name|C3
+parameter_list|,
+name|C4
+parameter_list|,
+name|C5
+parameter_list|,
+name|C6
+parameter_list|,
+name|C7
+parameter_list|,
+name|C8
+parameter_list|)
+value|(RTX)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CLEAR_RTX_FLAGS
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|do {				\   rtx const _rtx = (RTX);	\   _rtx->call = 0;		\   _rtx->frame_related = 0;	\   _rtx->in_struct = 0;		\   _rtx->integrated = 0;		\   _rtx->jump = 0;		\   _rtx->unchanging = 0;		\   _rtx->used = 0;		\   _rtx->volatil = 0;		\ } while (0)
+end_define
 
 begin_define
 define|#
@@ -1641,6 +2183,26 @@ parameter_list|)
 value|XEXP (INSN, 2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BLOCK_FOR_INSN
+parameter_list|(
+name|INSN
+parameter_list|)
+value|XBBDEF (INSN, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INSN_SCOPE
+parameter_list|(
+name|INSN
+parameter_list|)
+value|XTREE (INSN, 4)
+end_define
+
 begin_comment
 comment|/* The body of an insn.  */
 end_comment
@@ -1652,7 +2214,7 @@ name|PATTERN
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XEXP (INSN, 3)
+value|XEXP (INSN, 5)
 end_define
 
 begin_comment
@@ -1666,7 +2228,7 @@ name|INSN_CODE
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XINT (INSN, 4)
+value|XINT (INSN, 6)
 end_define
 
 begin_comment
@@ -1680,11 +2242,44 @@ name|LOG_LINKS
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XEXP(INSN, 5)
+value|XEXP(INSN, 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_INTEGRATED_P
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|(RTL_FLAG_CHECK8("RTX_INTEGRATED_P", (RTX), INSN, CALL_INSN,		\ 		   JUMP_INSN, INSN_LIST, BARRIER, CODE_LABEL, CONST,	\ 		   NOTE)->integrated)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_UNCHANGING_P
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|(RTL_FLAG_CHECK3("RTX_UNCHANGING_P", (RTX), REG, MEM, CONCAT)->unchanging)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_FRAME_RELATED_P
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|(RTL_FLAG_CHECK5("RTX_FRAME_RELATED_P", (RTX), INSN, CALL_INSN,	\ 		   JUMP_INSN, BARRIER, SET)->frame_related)
 end_define
 
 begin_comment
-comment|/* 1 if insn has been deleted.  */
+comment|/* 1 if RTX is an insn that has been deleted.  */
 end_comment
 
 begin_define
@@ -1692,13 +2287,14 @@ define|#
 directive|define
 name|INSN_DELETED_P
 parameter_list|(
-name|INSN
+name|RTX
 parameter_list|)
-value|((INSN)->volatil)
+define|\
+value|(RTL_FLAG_CHECK6("INSN_DELETED_P", (RTX), INSN, CALL_INSN, JUMP_INSN,	\ 		   CODE_LABEL, BARRIER, NOTE)->volatil)
 end_define
 
 begin_comment
-comment|/* 1 if insn is a call to a const or pure function.  */
+comment|/* 1 if RTX is a call to a const or pure function.  */
 end_comment
 
 begin_define
@@ -1706,13 +2302,14 @@ define|#
 directive|define
 name|CONST_OR_PURE_CALL_P
 parameter_list|(
-name|INSN
+name|RTX
 parameter_list|)
-value|((INSN)->unchanging)
+define|\
+value|(RTL_FLAG_CHECK3("CONST_OR_PURE_CALL_P", (RTX), CALL_INSN, NOTE,	\ 		   EXPR_LIST)->unchanging)
 end_define
 
 begin_comment
-comment|/* 1 if insn (assumed to be a CALL_INSN) is a sibling call.  */
+comment|/* 1 if RTX is a call_insn for a sibling call.  */
 end_comment
 
 begin_define
@@ -1720,13 +2317,14 @@ define|#
 directive|define
 name|SIBLING_CALL_P
 parameter_list|(
-name|INSN
+name|RTX
 parameter_list|)
-value|((INSN)->jump)
+define|\
+value|(RTL_FLAG_CHECK1("SIBLING_CALL_P", (RTX), CALL_INSN)->jump)
 end_define
 
 begin_comment
-comment|/* 1 if insn is a branch that should not unconditionally execute its    delay slots, i.e., it is an annulled branch.  */
+comment|/* 1 if RTX is a jump_insn, call_insn, or insn that is an annulling branch.  */
 end_comment
 
 begin_define
@@ -1734,13 +2332,14 @@ define|#
 directive|define
 name|INSN_ANNULLED_BRANCH_P
 parameter_list|(
-name|INSN
+name|RTX
 parameter_list|)
-value|((INSN)->unchanging)
+define|\
+value|(RTL_FLAG_CHECK3("INSN_ANNULLED_BRANCH_P", (RTX), JUMP_INSN, CALL_INSN, INSN)->unchanging)
 end_define
 
 begin_comment
-comment|/* 1 if insn is a dead code.  Valid only for dead-code elimination phase.  */
+comment|/* 1 if RTX is an insn that is dead code.  Valid only for dead-code    elimination phase.  */
 end_comment
 
 begin_define
@@ -1748,13 +2347,14 @@ define|#
 directive|define
 name|INSN_DEAD_CODE_P
 parameter_list|(
-name|INSN
+name|RTX
 parameter_list|)
-value|((INSN)->in_struct)
+define|\
+value|(RTL_FLAG_CHECK1("INSN_DEAD_CODE_P", (RTX), INSN)->in_struct)
 end_define
 
 begin_comment
-comment|/* 1 if insn is in a delay slot and is from the target of the branch.  If    the branch insn has INSN_ANNULLED_BRANCH_P set, this insn should only be    executed if the branch is taken.  For annulled branches with this bit    clear, the insn should be executed only if the branch is not taken.  */
+comment|/* 1 if RTX is an insn in a delay slot and is from the target of the branch.    If the branch insn has INSN_ANNULLED_BRANCH_P set, this insn should only be    executed if the branch is taken.  For annulled branches with this bit    clear, the insn should be executed only if the branch is not taken.  */
 end_comment
 
 begin_define
@@ -1762,9 +2362,10 @@ define|#
 directive|define
 name|INSN_FROM_TARGET_P
 parameter_list|(
-name|INSN
+name|RTX
 parameter_list|)
-value|((INSN)->in_struct)
+define|\
+value|(RTL_FLAG_CHECK3("INSN_FROM_TARGET_P", (RTX), INSN, JUMP_INSN, CALL_INSN)->in_struct)
 end_define
 
 begin_define
@@ -1798,7 +2399,7 @@ name|REG_NOTES
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XEXP(INSN, 6)
+value|XEXP(INSN, 8)
 end_define
 
 begin_comment
@@ -1856,9 +2457,6 @@ name|REG_DEP_OUTPUT
 block|,
 comment|/* REG_BR_PROB is attached to JUMP_INSNs and CALL_INSNs.      It has an integer value.  For jumps, it is the probability that this is a      taken branch.  For calls, it is the probability that this call won't      return.  */
 name|REG_BR_PROB
-block|,
-comment|/* REG_EXEC_COUNT is attached to the first insn of each basic block, and      the first insn after each CALL_INSN.  It indicates how many times this      block was executed.  */
-name|REG_EXEC_COUNT
 block|,
 comment|/* Attached to a call insn; indicates that the call is malloc-like and      that the pointer returned cannot alias anything else.  */
 name|REG_NOALIAS
@@ -1976,7 +2574,7 @@ name|CALL_INSN_FUNCTION_USAGE
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XEXP(INSN, 7)
+value|XEXP(INSN, 9)
 end_define
 
 begin_comment
@@ -1990,7 +2588,7 @@ name|CODE_LABEL_NUMBER
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XINT (INSN, 5)
+value|XINT (INSN, 6)
 end_define
 
 begin_define
@@ -2001,7 +2599,7 @@ value|NOTE
 end_define
 
 begin_comment
-comment|/* In a NOTE that is a line number, this is a string for the file name that the    line is in.  We use the same field to record block numbers temporarily in    NOTE_INSN_BLOCK_BEG and NOTE_INSN_BLOCK_END notes.  (We avoid lots of casts    between ints and pointers if we use a different macro for the block number.)    The NOTE_INSN_RANGE_{START,END} and NOTE_INSN_LIVE notes record their    information as an rtx in the field.  */
+comment|/* In a NOTE that is a line number, this is a string for the file name that the    line is in.  We use the same field to record block numbers temporarily in    NOTE_INSN_BLOCK_BEG and NOTE_INSN_BLOCK_END notes.  (We avoid lots of casts    between ints and pointers if we use a different macro for the block number.)    */
 end_comment
 
 begin_define
@@ -2011,7 +2609,7 @@ name|NOTE_SOURCE_FILE
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCSTR (INSN, 3, NOTE)
+value|XCSTR (INSN, 4, NOTE)
 end_define
 
 begin_define
@@ -2021,7 +2619,7 @@ name|NOTE_BLOCK
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCTREE (INSN, 3, NOTE)
+value|XCTREE (INSN, 4, NOTE)
 end_define
 
 begin_define
@@ -2031,27 +2629,7 @@ name|NOTE_EH_HANDLER
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCINT (INSN, 3, NOTE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOTE_RANGE_INFO
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCEXP (INSN, 3, NOTE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOTE_LIVE_INFO
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCEXP (INSN, 3, NOTE)
+value|XCINT (INSN, 4, NOTE)
 end_define
 
 begin_define
@@ -2061,7 +2639,7 @@ name|NOTE_BASIC_BLOCK
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCBBDEF (INSN, 3, NOTE)
+value|XCBBDEF (INSN, 4, NOTE)
 end_define
 
 begin_define
@@ -2071,7 +2649,27 @@ name|NOTE_EXPECTED_VALUE
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCEXP (INSN, 3, NOTE)
+value|XCEXP (INSN, 4, NOTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE_PREDICTION
+parameter_list|(
+name|INSN
+parameter_list|)
+value|XCINT (INSN, 4, NOTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE_PRECONDITIONED
+parameter_list|(
+name|INSN
+parameter_list|)
+value|XCINT (INSN, 4, NOTE)
 end_define
 
 begin_comment
@@ -2085,7 +2683,7 @@ name|NOTE_LINE_NUMBER
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCINT (INSN, 4, NOTE)
+value|XCINT (INSN, 5, NOTE)
 end_define
 
 begin_comment
@@ -2101,6 +2699,42 @@ name|INSN
 parameter_list|)
 define|\
 value|(GET_CODE (INSN) == NOTE				\&& NOTE_LINE_NUMBER (INSN) == NOTE_INSN_BASIC_BLOCK)
+end_define
+
+begin_comment
+comment|/* Algorithm and flags for prediction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_PREDICTION_ALG
+parameter_list|(
+name|INSN
+parameter_list|)
+value|(XCINT(INSN, 4, NOTE)>>8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE_PREDICTION_FLAGS
+parameter_list|(
+name|INSN
+parameter_list|)
+value|(XCINT(INSN, 4, NOTE)&0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE_PREDICT
+parameter_list|(
+name|ALG
+parameter_list|,
+name|FLAGS
+parameter_list|)
+value|((ALG<<8)+(FLAGS))
 end_define
 
 begin_comment
@@ -2162,19 +2796,14 @@ block|,
 comment|/* Generated whenever a duplicate line number note is output.  For example,      one is output after the end of an inline function, in order to prevent      the line containing the inline call from being counted twice in gcov.  */
 name|NOTE_INSN_REPEATED_LINE_NUMBER
 block|,
-comment|/* Start/end of a live range region, where pseudos allocated on the stack      can be allocated to temporary registers.  Uses NOTE_RANGE_INFO.  */
-name|NOTE_INSN_RANGE_BEG
-block|,
-name|NOTE_INSN_RANGE_END
-block|,
-comment|/* Record which registers are currently live.  Uses NOTE_LIVE_INFO.  */
-name|NOTE_INSN_LIVE
-block|,
 comment|/* Record the struct for the following basic block.  Uses NOTE_BASIC_BLOCK.  */
 name|NOTE_INSN_BASIC_BLOCK
 block|,
 comment|/* Record the expected value of a register at a location.  Uses      NOTE_EXPECTED_VALUE; stored as (eq (reg) (const_int)).  */
 name|NOTE_INSN_EXPECTED_VALUE
+block|,
+comment|/* Record a prediction.  Uses NOTE_PREDICTION.  */
+name|NOTE_INSN_PREDICTION
 block|,
 name|NOTE_INSN_MAX
 block|}
@@ -2222,7 +2851,7 @@ name|LABEL_NAME
 parameter_list|(
 name|RTX
 parameter_list|)
-value|XCSTR (RTX, 6, CODE_LABEL)
+value|XCSTR (RTX, 7, CODE_LABEL)
 end_define
 
 begin_comment
@@ -2236,21 +2865,130 @@ name|LABEL_NUSES
 parameter_list|(
 name|RTX
 parameter_list|)
-value|XCINT (RTX, 3, CODE_LABEL)
+value|XCINT (RTX, 4, CODE_LABEL)
 end_define
 
 begin_comment
-comment|/* Associate a name with a CODE_LABEL.  */
+comment|/* Labels carry a two-bit field composed of the ->jump and ->call    bits.  This field indicates whether the label is an alternate    entry point, and if so, what kind.  */
+end_comment
+
+begin_enum
+enum|enum
+name|label_kind
+block|{
+name|LABEL_NORMAL
+init|=
+literal|0
+block|,
+comment|/* ordinary label */
+name|LABEL_STATIC_ENTRY
+block|,
+comment|/* alternate entry point, not exported */
+name|LABEL_GLOBAL_ENTRY
+block|,
+comment|/* alternate entry point, exported */
+name|LABEL_WEAK_ENTRY
+comment|/* alternate entry point, exported as weak symbol */
+block|}
+enum|;
+end_enum
+
+begin_if
+if|#
+directive|if
+name|defined
+name|ENABLE_RTL_FLAG_CHECKING
+operator|&&
+operator|(
+name|GCC_VERSION
+operator|>
+literal|2007
+operator|)
+end_if
+
+begin_comment
+comment|/* Retrieve the kind of LABEL.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LABEL_ALTERNATE_NAME
+name|LABEL_KIND
 parameter_list|(
-name|RTX
+name|LABEL
 parameter_list|)
-value|XCSTR (RTX, 7, CODE_LABEL)
+value|__extension__					\ ({ rtx const _label = (LABEL);						\    if (GET_CODE (_label) != CODE_LABEL)					\      rtl_check_failed_flag ("LABEL_KIND", _label, __FILE__, __LINE__,	\ 			    __FUNCTION__);				\    (enum label_kind) ((_label->jump<< 1) | _label->call); })
+end_define
+
+begin_comment
+comment|/* Set the kind of LABEL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_LABEL_KIND
+parameter_list|(
+name|LABEL
+parameter_list|,
+name|KIND
+parameter_list|)
+value|do {				\    rtx _label = (LABEL);						\    unsigned int _kind = (KIND);						\    if (GET_CODE (_label) != CODE_LABEL)					\      rtl_check_failed_flag ("SET_LABEL_KIND", _label, __FILE__, __LINE__, \ 			    __FUNCTION__);				\    _label->jump = ((_kind>> 1)& 1);					\    _label->call = (_kind& 1);						\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Retrieve the kind of LABEL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABEL_KIND
+parameter_list|(
+name|LABEL
+parameter_list|)
+define|\
+value|((enum label_kind) (((LABEL)->jump<< 1) | (LABEL)->call))
+end_define
+
+begin_comment
+comment|/* Set the kind of LABEL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_LABEL_KIND
+parameter_list|(
+name|LABEL
+parameter_list|,
+name|KIND
+parameter_list|)
+value|do {				\    rtx _label = (LABEL);						\    unsigned int _kind = (KIND);						\    _label->jump = ((_kind>> 1)& 1);					\    _label->call = (_kind& 1);						\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* rtl flag checking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABEL_ALT_ENTRY_P
+parameter_list|(
+name|LABEL
+parameter_list|)
+value|(LABEL_KIND (LABEL) != LABEL_NORMAL)
 end_define
 
 begin_comment
@@ -2292,7 +3030,7 @@ name|JUMP_LABEL
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCEXP (INSN, 7, JUMP_INSN)
+value|XCEXP (INSN, 9, JUMP_INSN)
 end_define
 
 begin_comment
@@ -2306,7 +3044,7 @@ name|LABEL_REFS
 parameter_list|(
 name|LABEL
 parameter_list|)
-value|XCEXP (LABEL, 4, CODE_LABEL)
+value|XCEXP (LABEL, 5, CODE_LABEL)
 end_define
 
 begin_escape
@@ -2365,7 +3103,7 @@ value|X0UINT (RTX, 1)
 end_define
 
 begin_comment
-comment|/* For a REG rtx, REG_FUNCTION_VALUE_P is nonzero if the reg    is the current function's return value.  */
+comment|/* 1 if RTX is a reg or parallel that is the current function's return    value.  */
 end_comment
 
 begin_define
@@ -2375,11 +3113,12 @@ name|REG_FUNCTION_VALUE_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->integrated)
+define|\
+value|(RTL_FLAG_CHECK2("REG_FUNCTION_VALUE_P", (RTX), REG, PARALLEL)->integrated)
 end_define
 
 begin_comment
-comment|/* 1 in a REG rtx if it corresponds to a variable declared by the user.  */
+comment|/* 1 if RTX is a reg that corresponds to a variable declared by the user.  */
 end_comment
 
 begin_define
@@ -2389,11 +3128,12 @@ name|REG_USERVAR_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->volatil)
+define|\
+value|(RTL_FLAG_CHECK1("REG_USERVAR_P", (RTX), REG)->volatil)
 end_define
 
 begin_comment
-comment|/* 1 in a REG rtx if the register is a pointer.  */
+comment|/* 1 if RTX is a reg that holds a pointer value.  */
 end_comment
 
 begin_define
@@ -2403,7 +3143,8 @@ name|REG_POINTER
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->frame_related)
+define|\
+value|(RTL_FLAG_CHECK1("REG_POINTER", (RTX), REG)->frame_related)
 end_define
 
 begin_comment
@@ -2449,7 +3190,7 @@ value|XCWINT(RTX, 0, CONST_INT)
 end_define
 
 begin_comment
-comment|/* For a CONST_DOUBLE:    The usual two ints that hold the value.    For a DImode, that is all there are;     and CONST_DOUBLE_LOW is the low-order word and ..._HIGH the high-order.    For a float, the number of ints varies,     and CONST_DOUBLE_LOW is the one that should come first *in memory*.     So use&CONST_DOUBLE_LOW(r) as the address of an array of ints.  */
+comment|/* For a CONST_DOUBLE:    For a DImode, there are two integers CONST_DOUBLE_LOW is the      low-order word and ..._HIGH the high-order.    For a float, there is a REAL_VALUE_TYPE structure, and       CONST_DOUBLE_REAL_VALUE(r) is a pointer to it.  */
 end_comment
 
 begin_define
@@ -2459,7 +3200,7 @@ name|CONST_DOUBLE_LOW
 parameter_list|(
 name|r
 parameter_list|)
-value|XCWINT (r, 1, CONST_DOUBLE)
+value|XCWINT (r, 0, CONST_DOUBLE)
 end_define
 
 begin_define
@@ -2469,21 +3210,17 @@ name|CONST_DOUBLE_HIGH
 parameter_list|(
 name|r
 parameter_list|)
-value|XCWINT (r, 2, CONST_DOUBLE)
+value|XCWINT (r, 1, CONST_DOUBLE)
 end_define
-
-begin_comment
-comment|/* Link for chain of all CONST_DOUBLEs in use in current function.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CONST_DOUBLE_CHAIN
+name|CONST_DOUBLE_REAL_VALUE
 parameter_list|(
 name|r
 parameter_list|)
-value|XCEXP (r, 0, CONST_DOUBLE)
+value|((struct real_value *)&CONST_DOUBLE_LOW(r))
 end_define
 
 begin_comment
@@ -2584,6 +3321,29 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|bool
+name|subreg_offset_representable_p
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+name|unsigned
+name|int
+operator|,
+expr|enum
+name|machine_mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|unsigned
 name|int
 name|subreg_regno
@@ -2597,7 +3357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 if the REG contained in SUBREG_REG is already known to be    sign- or zero-extended from the mode of the SUBREG to the mode of    the reg.  SUBREG_PROMOTED_UNSIGNED_P gives the signedness of the    extension.     When used as a LHS, is means that this extension must be done    when assigning to SUBREG_REG.  */
+comment|/* 1 if RTX is a subreg containing a reg that is already known to be    sign- or zero-extended from the mode of the subreg to the mode of    the reg.  SUBREG_PROMOTED_UNSIGNED_P gives the signedness of the    extension.     When used as a LHS, is means that this extension must be done    when assigning to SUBREG_REG.  */
 end_comment
 
 begin_define
@@ -2607,7 +3367,21 @@ name|SUBREG_PROMOTED_VAR_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->in_struct)
+define|\
+value|(RTL_FLAG_CHECK1("SUBREG_PROMOTED", (RTX), SUBREG)->in_struct)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBREG_PROMOTED_UNSIGNED_SET
+parameter_list|(
+name|RTX
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|do {									\   rtx const _rtx = RTL_FLAG_CHECK1("SUBREG_PROMOTED_UNSIGNED_SET", (RTX), SUBREG); \   if ((VAL)< 0)							\     _rtx->volatil = 1;							\   else {								\     _rtx->volatil = 0;							\     _rtx->unchanging = (VAL);						\   }									\ } while (0)
 end_define
 
 begin_define
@@ -2617,7 +3391,8 @@ name|SUBREG_PROMOTED_UNSIGNED_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->unchanging)
+define|\
+value|((RTL_FLAG_CHECK1("SUBREG_PROMOTED_UNSIGNED_P", (RTX), SUBREG)->volatil) \      ? -1 : (RTX)->unchanging)
 end_define
 
 begin_comment
@@ -2756,7 +3531,7 @@ value|XCINT (RTX, 6, ASM_OPERANDS)
 end_define
 
 begin_comment
-comment|/* For a MEM RTX, 1 if we should keep the alias set for this mem    unchanged when we access a component.  Set to 1, or example, when we    are already in a non-addressable component of an aggregate.  */
+comment|/* 1 if RTX is a mem and we should keep the alias set for this mem    unchanged when we access a component.  Set to 1, or example, when we    are already in a non-addressable component of an aggregate.  */
 end_comment
 
 begin_define
@@ -2766,11 +3541,12 @@ name|MEM_KEEP_ALIAS_SET_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->jump)
+define|\
+value|(RTL_FLAG_CHECK1("MEM_KEEP_ALIAS_SET_P", (RTX), MEM)->jump)
 end_define
 
 begin_comment
-comment|/* For a MEM rtx, 1 if it's a volatile reference.    Also in an ASM_OPERANDS rtx.  */
+comment|/* 1 if RTX is a mem or asm_operand for a volatile reference.  */
 end_comment
 
 begin_define
@@ -2780,11 +3556,12 @@ name|MEM_VOLATILE_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->volatil)
+define|\
+value|(RTL_FLAG_CHECK3("MEM_VOLATILE_P", (RTX), MEM, ASM_OPERANDS,		\ 		   ASM_INPUT)->volatil)
 end_define
 
 begin_comment
-comment|/* For a MEM rtx, 1 if it refers to an aggregate, either to the    aggregate itself of to a field of the aggregate.  If zero, RTX may    or may not be such a reference.  */
+comment|/* 1 if RTX is a mem that refers to an aggregate, either to the    aggregate itself of to a field of the aggregate.  If zero, RTX may    or may not be such a reference.  */
 end_comment
 
 begin_define
@@ -2794,11 +3571,12 @@ name|MEM_IN_STRUCT_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->in_struct)
+define|\
+value|(RTL_FLAG_CHECK1("MEM_IN_STRUCT_P", (RTX), MEM)->in_struct)
 end_define
 
 begin_comment
-comment|/* For a MEM rtx, 1 if it refers to a scalar.  If zero, RTX may or may    not refer to a scalar.  */
+comment|/* 1 if RTX is a mem that refers to a scalar.  If zero, RTX may or may    not refer to a scalar.  */
 end_comment
 
 begin_define
@@ -2808,11 +3586,27 @@ name|MEM_SCALAR_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->frame_related)
+define|\
+value|(RTL_FLAG_CHECK1("MEM_SCALAR_P", (RTX), MEM)->frame_related)
 end_define
 
 begin_comment
-comment|/* If VAL is non-zero, set MEM_IN_STRUCT_P and clear MEM_SCALAR_P in    RTX.  Otherwise, vice versa.  Use this macro only when you are    *sure* that you know that the MEM is in a structure, or is a    scalar.  VAL is evaluated only once.  */
+comment|/* 1 if RTX is a mem that cannot trap.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEM_NOTRAP_P
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|(RTL_FLAG_CHECK1("MEM_NOTRAP_P", (RTX), MEM)->call)
+end_define
+
+begin_comment
+comment|/* If VAL is nonzero, set MEM_IN_STRUCT_P and clear MEM_SCALAR_P in    RTX.  Otherwise, vice versa.  Use this macro only when you are    *sure* that you know that the MEM is in a structure, or is a    scalar.  VAL is evaluated only once.  */
 end_comment
 
 begin_define
@@ -2928,11 +3722,11 @@ parameter_list|,
 name|RHS
 parameter_list|)
 define|\
-value|(MEM_VOLATILE_P (LHS) = MEM_VOLATILE_P (RHS),			\    MEM_IN_STRUCT_P (LHS) = MEM_IN_STRUCT_P (RHS),		\    MEM_SCALAR_P (LHS) = MEM_SCALAR_P (RHS),			\    RTX_UNCHANGING_P (LHS) = RTX_UNCHANGING_P (RHS),		\    MEM_KEEP_ALIAS_SET_P (LHS) = MEM_KEEP_ALIAS_SET_P (RHS),	\    MEM_ATTRS (LHS) = MEM_ATTRS (RHS))
+value|(MEM_VOLATILE_P (LHS) = MEM_VOLATILE_P (RHS),			\    MEM_IN_STRUCT_P (LHS) = MEM_IN_STRUCT_P (RHS),		\    MEM_SCALAR_P (LHS) = MEM_SCALAR_P (RHS),			\    MEM_NOTRAP_P (LHS) = MEM_NOTRAP_P (RHS),			\    RTX_UNCHANGING_P (LHS) = RTX_UNCHANGING_P (RHS),		\    MEM_KEEP_ALIAS_SET_P (LHS) = MEM_KEEP_ALIAS_SET_P (RHS),	\    MEM_ATTRS (LHS) = MEM_ATTRS (RHS))
 end_define
 
 begin_comment
-comment|/* For a LABEL_REF, 1 means that this reference is to a label outside the    loop containing the reference.  */
+comment|/* 1 if RTX is a label_ref to a label outside the loop containing the    reference.  */
 end_comment
 
 begin_define
@@ -2942,15 +3736,16 @@ name|LABEL_OUTSIDE_LOOP_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->in_struct)
+define|\
+value|(RTL_FLAG_CHECK1("LABEL_OUTSIDE_LOOP_P", (RTX), LABEL_REF)->in_struct)
 end_define
 
 begin_comment
-comment|/* For a LABEL_REF, 1 means it is for a nonlocal label.  */
+comment|/* 1 if RTX is a label_ref for a nonlocal label.  */
 end_comment
 
 begin_comment
-comment|/* Likewise in an EXPR_LIST for a REG_LABEL note.  */
+comment|/* Likewise in an expr_list for a reg_label note.  */
 end_comment
 
 begin_define
@@ -2960,11 +3755,12 @@ name|LABEL_REF_NONLOCAL_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->volatil)
+define|\
+value|(RTL_FLAG_CHECK2("LABEL_REF_NONLOCAL_P", (RTX), LABEL_REF,		\ 		   REG_LABEL)->volatil)
 end_define
 
 begin_comment
-comment|/* For a CODE_LABEL, 1 means always consider this label to be needed.  */
+comment|/* 1 if RTX is a code_label that should always be considered to be needed.  */
 end_comment
 
 begin_define
@@ -2974,11 +3770,12 @@ name|LABEL_PRESERVE_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->in_struct)
+define|\
+value|(RTL_FLAG_CHECK2("LABEL_PRESERVE_P", (RTX), CODE_LABEL, NOTE)->in_struct)
 end_define
 
 begin_comment
-comment|/* For a REG, 1 means the register is used only in an exit test of a loop.  */
+comment|/* 1 if RTX is a reg that is used only in an exit test of a loop.  */
 end_comment
 
 begin_define
@@ -2988,11 +3785,12 @@ name|REG_LOOP_TEST_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->in_struct)
+define|\
+value|(RTL_FLAG_CHECK1("REG_LOOP_TEST_P", (RTX), REG)->in_struct)
 end_define
 
 begin_comment
-comment|/* During sched, for an insn, 1 means that the insn must be scheduled together    with the preceding insn.  */
+comment|/* During sched, 1 if RTX is an insn that must be scheduled together    with the preceding insn.  */
 end_comment
 
 begin_define
@@ -3000,33 +3798,10 @@ define|#
 directive|define
 name|SCHED_GROUP_P
 parameter_list|(
-name|INSN
+name|RTX
 parameter_list|)
-value|((INSN)->in_struct)
-end_define
-
-begin_comment
-comment|/* During sched, for the LOG_LINKS of an insn, these cache the adjusted    cost of the dependence link.  The cost of executing an instruction    may vary based on how the results are used.  LINK_COST_ZERO is 1 when    the cost through the link varies and is unchanged (i.e., the link has    zero additional cost).  LINK_COST_FREE is 1 when the cost through the    link is zero (i.e., the link makes the cost free).  In other cases,    the adjustment to the cost is recomputed each time it is needed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINK_COST_ZERO
-parameter_list|(
-name|X
-parameter_list|)
-value|((X)->jump)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINK_COST_FREE
-parameter_list|(
-name|X
-parameter_list|)
-value|((X)->call)
+define|\
+value|(RTL_FLAG_CHECK3("SCHED_GROUP_P", (RTX), INSN, JUMP_INSN, CALL_INSN	\ 		          )->in_struct)
 end_define
 
 begin_comment
@@ -3060,7 +3835,8 @@ name|SET_IS_RETURN_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->jump)
+define|\
+value|(RTL_FLAG_CHECK1("SET_IS_RETURN_P", (RTX), SET)->jump)
 end_define
 
 begin_comment
@@ -3112,7 +3888,7 @@ value|XCEXP (RTX, 1, COND_EXEC)
 end_define
 
 begin_comment
-comment|/* 1 in a SYMBOL_REF if it addresses this function's constants pool.  */
+comment|/* 1 if RTX is a symbol_ref that addresses this function's constants pool.  */
 end_comment
 
 begin_define
@@ -3122,11 +3898,12 @@ name|CONSTANT_POOL_ADDRESS_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->unchanging)
+define|\
+value|(RTL_FLAG_CHECK1("CONSTANT_POOL_ADDRESS_P", (RTX), SYMBOL_REF)->unchanging)
 end_define
 
 begin_comment
-comment|/* 1 in a SYMBOL_REF if it addresses this function's string constant pool.  */
+comment|/* 1 if RTX is a symbol_ref that addresses this function's string constant    pool  */
 end_comment
 
 begin_define
@@ -3136,11 +3913,12 @@ name|STRING_POOL_ADDRESS_P
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->frame_related)
+define|\
+value|(RTL_FLAG_CHECK1("STRING_POOL_ADDRESS_P", (RTX), SYMBOL_REF)->frame_related)
 end_define
 
 begin_comment
-comment|/* Flag in a SYMBOL_REF for machine-specific purposes.  */
+comment|/* Used if RTX is a symbol_ref, for machine-specific purposes.  */
 end_comment
 
 begin_define
@@ -3150,11 +3928,12 @@ name|SYMBOL_REF_FLAG
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->volatil)
+define|\
+value|(RTL_FLAG_CHECK1("SYMBOL_REF_FLAG", (RTX), SYMBOL_REF)->volatil)
 end_define
 
 begin_comment
-comment|/* 1 means a SYMBOL_REF has been the library function in emit_library_call.  */
+comment|/* 1 if RTX is a symbol_ref that has been the library function in    emit_library_call.  */
 end_comment
 
 begin_define
@@ -3164,11 +3943,12 @@ name|SYMBOL_REF_USED
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->used)
+define|\
+value|(RTL_FLAG_CHECK1("SYMBOL_REF_USED", (RTX), SYMBOL_REF)->used)
 end_define
 
 begin_comment
-comment|/* 1 means a SYMBOL_REF is weak.  */
+comment|/* 1 if RTX is a symbol_ref for a weak symbol.  */
 end_comment
 
 begin_define
@@ -3178,15 +3958,12 @@ name|SYMBOL_REF_WEAK
 parameter_list|(
 name|RTX
 parameter_list|)
-value|((RTX)->integrated)
+define|\
+value|(RTL_FLAG_CHECK1("SYMBOL_REF_WEAK", (RTX), SYMBOL_REF)->integrated)
 end_define
 
 begin_comment
 comment|/* Define a macro to look for REG_INC notes,    but save time on machines where they never exist.  */
-end_comment
-
-begin_comment
-comment|/* Don't continue this line--convex cc version 4.1 would lose.  */
 end_comment
 
 begin_if
@@ -3252,10 +4029,6 @@ end_endif
 
 begin_comment
 comment|/* Indicate whether the machine has any sort of auto increment addressing.    If not, we can avoid checking for REG_INC notes.  */
-end_comment
-
-begin_comment
-comment|/* Don't continue this line--convex cc version 4.1 would lose.  */
 end_comment
 
 begin_if
@@ -3612,444 +4385,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Accessors for RANGE_INFO.  */
-end_comment
-
-begin_comment
-comment|/* For RANGE_{START,END} notes return the RANGE_START note.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_NOTE_START
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCEXP (INSN, 0, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes return the RANGE_START note.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_NOTE_END
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCEXP (INSN, 1, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, return the vector containing the registers used    in the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_REGS
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCVEC (INSN, 2, RANGE_INFO)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_REGS_REG
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XCVECEXP (INSN, 2, N, RANGE_INFO)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_NUM_REGS
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCVECLEN (INSN, 2, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, the number of calls within the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_NCALLS
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 3, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, the number of insns within the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_NINSNS
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 4, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, a unique # to identify this range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_UNIQUE
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 5, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, the basic block # the range starts with.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_BB_START
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 6, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, the basic block # the range ends with.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_BB_END
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 7, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, the loop depth the range is in.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_LOOP_DEPTH
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 8, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, the bitmap of live registers at the start    of the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_LIVE_START
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCBITMAP (INSN, 9, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_{START,END} notes, the bitmap of live registers at the end    of the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_LIVE_END
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCBITMAP (INSN, 10, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_START notes, the marker # of the start of the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_MARKER_START
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 11, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* For RANGE_START notes, the marker # of the end of the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_INFO_MARKER_END
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 12, RANGE_INFO)
-end_define
-
-begin_comment
-comment|/* Original pseudo register # for a live range note.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_PSEUDO
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XCINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 0, REG)
-end_define
-
-begin_comment
-comment|/* Pseudo register # original register is copied into or -1.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_COPY
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XCINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 1, REG)
-end_define
-
-begin_comment
-comment|/* How many times a register in a live range note was referenced.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_REFS
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 2)
-end_define
-
-begin_comment
-comment|/* How many times a register in a live range note was set.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_SETS
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 3)
-end_define
-
-begin_comment
-comment|/* How many times a register in a live range note died.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_DEATHS
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 4)
-end_define
-
-begin_comment
-comment|/* Whether the original value is needed to be copied into the range register at    the start of the range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_COPY_FLAGS
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 5)
-end_define
-
-begin_comment
-comment|/* # of insns the register copy is live over.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_LIVE_LENGTH
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 6)
-end_define
-
-begin_comment
-comment|/* # of calls the register copy is live over.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_N_CALLS
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XINT (XCVECEXP (INSN, 2, N, RANGE_INFO), 7)
-end_define
-
-begin_comment
-comment|/* DECL_NODE pointer of the declaration if the register is a user defined    variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_SYMBOL_NODE
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XTREE (XCVECEXP (INSN, 2, N, RANGE_INFO), 8)
-end_define
-
-begin_comment
-comment|/* BLOCK_NODE pointer to the block the variable is declared in if the    register is a user defined variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_REG_BLOCK_NODE
-parameter_list|(
-name|INSN
-parameter_list|,
-name|N
-parameter_list|)
-value|XTREE (XCVECEXP (INSN, 2, N, RANGE_INFO), 9)
-end_define
-
-begin_comment
-comment|/* EXPR_LIST of the distinct ranges a variable is in.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_VAR_LIST
-parameter_list|(
-name|INSN
-parameter_list|)
-value|(XEXP (INSN, 0))
-end_define
-
-begin_comment
-comment|/* Block a variable is declared in.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_VAR_BLOCK
-parameter_list|(
-name|INSN
-parameter_list|)
-value|(XTREE (INSN, 1))
-end_define
-
-begin_comment
-comment|/* # of distinct ranges a variable is in.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_VAR_NUM
-parameter_list|(
-name|INSN
-parameter_list|)
-value|(XINT (INSN, 2))
-end_define
-
-begin_comment
-comment|/* For a NOTE_INSN_LIVE note, the registers which are currently live.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_LIVE_BITMAP
-parameter_list|(
-name|INSN
-parameter_list|)
-value|(XBITMAP (INSN, 0))
-end_define
-
-begin_comment
-comment|/* For a NOTE_INSN_LIVE note, the original basic block number.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGE_LIVE_ORIG_BLOCK
-parameter_list|(
-name|INSN
-parameter_list|)
-value|(XINT (INSN, 1))
-end_define
-
-begin_comment
 comment|/* Determine if the insn is a PHI node.  */
 end_comment
 
@@ -4295,6 +4630,21 @@ name|HOST_WIDE_INT
 operator|,
 expr|enum
 name|machine_mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|emit_copy_of_insn_after
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4790,6 +5140,32 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|rtx
+name|get_first_nonnote_insn
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|get_last_nonnote_insn
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|start_sequence
 name|PARAMS
@@ -4854,19 +5230,6 @@ operator|*
 operator|,
 name|rtx
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|gen_sequence
-name|PARAMS
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5132,6 +5495,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
+name|emit_insn_before_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
 name|emit_jump_insn_before
 name|PARAMS
 argument_list|(
@@ -5147,6 +5527,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
+name|emit_jump_insn_before_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
 name|emit_call_insn_before
 name|PARAMS
 argument_list|(
@@ -5154,6 +5551,23 @@ operator|(
 name|rtx
 operator|,
 name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|emit_call_insn_before_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5220,6 +5634,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
+name|emit_insn_after_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
 name|emit_jump_insn_after
 name|PARAMS
 argument_list|(
@@ -5227,6 +5658,55 @@ operator|(
 name|rtx
 operator|,
 name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|emit_jump_insn_after_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|emit_call_insn_after
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|emit_call_insn_after_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5301,49 +5781,6 @@ name|emit_insn
 name|PARAMS
 argument_list|(
 operator|(
-name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|emit_insns
-name|PARAMS
-argument_list|(
-operator|(
-name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|emit_insns_before
-name|PARAMS
-argument_list|(
-operator|(
-name|rtx
-operator|,
-name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|emit_insns_after
-name|PARAMS
-argument_list|(
-operator|(
-name|rtx
-operator|,
 name|rtx
 operator|)
 argument_list|)
@@ -5630,6 +6067,25 @@ name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In cfglayout.c  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|choose_inner_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6210,6 +6666,8 @@ operator|(
 name|rtx
 operator|,
 name|tree
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6380,6 +6838,19 @@ name|rtx
 operator|,
 name|rtx
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|global_reg_mentioned_p
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7228,6 +7699,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|bool
+name|keep_with_call_p
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* flow.c */
 end_comment
@@ -7249,17 +7733,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|init_EXPR_INSN_LIST_cache
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* lists.c */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -7495,8 +7971,12 @@ name|MAX_SAVED_CONST_INT
 value|64
 end_define
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|const_int_rtx
 index|[
@@ -7537,15 +8017,23 @@ name|constm1_rtx
 value|(const_int_rtx[MAX_SAVED_CONST_INT-1])
 end_define
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|const_true_rtx
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|const_tiny_rtx
 index|[
@@ -7704,8 +8192,12 @@ begin_comment
 comment|/* Pointers to standard pieces of rtx are stored here.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|global_rtl
 index|[
@@ -7764,43 +8256,67 @@ name|arg_pointer_rtx
 value|(global_rtl[GR_ARG_POINTER])
 end_define
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|pic_offset_table_rtx
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|struct_value_rtx
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|struct_value_incoming_rtx
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|static_chain_rtx
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|static_chain_incoming_rtx
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|return_address_pointer_rtx
 decl_stmt|;
@@ -7834,14 +8350,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|rtx
-name|gen_rtx_CONST_DOUBLE
+name|gen_rtx_CONST_INT
 name|PARAMS
 argument_list|(
 operator|(
 expr|enum
 name|machine_mode
-operator|,
-name|HOST_WIDE_INT
 operator|,
 name|HOST_WIDE_INT
 operator|)
@@ -7852,14 +8366,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
-name|gen_rtx_CONST_INT
+name|gen_rtx_CONST_VECTOR
 name|PARAMS
 argument_list|(
 operator|(
 expr|enum
 name|machine_mode
 operator|,
-name|HOST_WIDE_INT
+name|rtvec
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7891,7 +8405,7 @@ operator|(
 expr|enum
 name|machine_mode
 operator|,
-name|int
+name|unsigned
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8125,19 +8639,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|immed_real_const
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Define a default value for STORE_FLAG_VALUE.  */
 end_comment
@@ -8327,14 +8828,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|delete_trivially_dead_insns
 name|PARAMS
 argument_list|(
 operator|(
 name|rtx
-operator|,
-name|int
 operator|,
 name|int
 operator|)
@@ -8511,7 +9010,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|returnjump_p
+name|tablejump_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -8524,7 +9023,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|tablejump_p
+name|returnjump_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -8971,19 +9470,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|clear_emit_caches
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
 name|init_emit
 name|PARAMS
 argument_list|(
@@ -9106,6 +9592,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|unshare_all_rtl_again
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_first_insn
 name|PARAMS
 argument_list|(
 operator|(
@@ -9331,6 +9830,34 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|delete_insn_chain
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|delete_insn_and_edges
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|delete_insn_chain_and_edges
 name|PARAMS
 argument_list|(
 operator|(
@@ -9981,6 +10508,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|delete_dead_jumptables
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -10189,6 +10729,10 @@ directive|ifdef
 name|HARD_CONST
 end_ifdef
 
+begin_comment
+comment|/* Yes, this ifdef is silly, but HARD_REG_SET is not always defined.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -10277,6 +10821,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|init_regs
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_fake_stack_mems
 name|PARAMS
 argument_list|(
 operator|(
@@ -10398,9 +10955,60 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HARD_CONST
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|void
+name|cannot_change_mode_set_regs
+name|PARAMS
+argument_list|(
+operator|(
+name|HARD_REG_SET
+operator|*
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|invalid_mode_change_p
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|,
+expr|enum
+name|reg_class
+operator|,
+expr|enum
+name|machine_mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|delete_null_pointer_checks
 name|PARAMS
 argument_list|(
@@ -11421,8 +12029,12 @@ begin_comment
 comment|/* In toplev.c */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|stack_limit_rtx
 decl_stmt|;
@@ -11500,6 +12112,23 @@ name|PARAMS
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In tracer.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|tracer
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

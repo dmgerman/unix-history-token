@@ -4,25 +4,47 @@ comment|/* Definitions of target machine for GNU compiler, for DEC Alpha.    Cop
 end_comment
 
 begin_comment
-comment|/* For C++ we need to ensure that __LANGUAGE_C_PLUS_PLUS is defined independent    of the source file extension.  */
+comment|/* Target CPU builtins.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPLUSPLUS_CPP_SPEC
-value|"\ -D__LANGUAGE_C_PLUS_PLUS__ -D__LANGUAGE_C_PLUS_PLUS -D__cplusplus \ %(cpp) \ "
+name|TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do							\     {							\ 	builtin_define ("__alpha");			\ 	builtin_define ("__alpha__");			\ 	builtin_assert ("cpu=alpha");			\ 	builtin_assert ("machine=alpha");		\ 	if (TARGET_CIX)					\ 	  {						\ 	    builtin_define ("__alpha_cix__");		\ 	    builtin_assert ("cpu=cix");			\ 	  }						\ 	if (TARGET_FIX)					\ 	  {						\ 	    builtin_define ("__alpha_fix__");		\ 	    builtin_assert ("cpu=fix");			\ 	  }						\ 	if (TARGET_BWX)					\ 	  {						\ 	    builtin_define ("__alpha_bwx__");		\ 	    builtin_assert ("cpu=bwx");			\ 	  }						\ 	if (TARGET_MAX)					\ 	  {						\ 	    builtin_define ("__alpha_max__");		\ 	    builtin_assert ("cpu=max");			\ 	  }						\ 	if (TARGET_CPU_EV6)				\ 	  {						\ 	    builtin_define ("__alpha_ev6__");		\ 	    builtin_assert ("cpu=ev6");			\ 	  }						\ 	else if (TARGET_CPU_EV5)			\ 	  {						\ 	    builtin_define ("__alpha_ev5__");		\ 	    builtin_assert ("cpu=ev5");			\ 	  }						\ 	else
+comment|/* Presumably ev4.  */
+value|\ 	  {						\ 	    builtin_define ("__alpha_ev4__");		\ 	    builtin_assert ("cpu=ev4");			\ 	  }						\ 	if (TARGET_IEEE || TARGET_IEEE_WITH_INEXACT)	\ 	  builtin_define ("_IEEE_FP");			\ 	if (TARGET_IEEE_WITH_INEXACT)			\ 	  builtin_define ("_IEEE_FP_INEXACT");		\ 							\
+comment|/* Macros dependent on the C dialect.  */
+value|\ 	SUBTARGET_LANGUAGE_CPP_BUILTINS();		\ } while (0)
 end_define
 
-begin_comment
-comment|/* Write out the correct language type definition for the header files.      Unless we have assembler language, write out the symbols for C.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUBTARGET_LANGUAGE_CPP_BUILTINS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_LANGUAGE_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do							\     {							\       if (preprocessing_asm_p ())			\ 	builtin_define_std ("LANGUAGE_ASSEMBLY");	\       else if (c_language == clk_c)			\ 	builtin_define_std ("LANGUAGE_C");		\       else if (c_language == clk_cplusplus)		\ 	{						\ 	  builtin_define ("__LANGUAGE_C_PLUS_PLUS");	\ 	  builtin_define ("__LANGUAGE_C_PLUS_PLUS__");	\ 	}						\       if (flag_objc)					\ 	{						\ 	  builtin_define ("__LANGUAGE_OBJECTIVE_C");	\ 	  builtin_define ("__LANGUAGE_OBJECTIVE_C__");	\ 	}						\     }							\   while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %{!undef:\ %{.S:-D__LANGUAGE_ASSEMBLY__ -D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY }}\ %{.m:-D__LANGUAGE_OBJECTIVE_C__ -D__LANGUAGE_OBJECTIVE_C }\ %{!.S:%{!.cc:%{!.cxx:%{!.cpp:%{!.cp:%{!.c++:%{!.C:%{!.m:-D__LANGUAGE_C__ -D__LANGUAGE_C %{!ansi:-DLANGUAGE_C }}}}}}}}}\ %{mieee:-D_IEEE_FP }\ %{mieee-with-inexact:-D_IEEE_FP -D_IEEE_FP_INEXACT }}\ %(cpp_cpu) %(cpp_subtarget)"
+value|"%(cpp_subtarget)"
 end_define
 
 begin_ifndef
@@ -181,6 +203,13 @@ specifier|extern
 name|enum
 name|alpha_fp_trap_mode
 name|alpha_fptm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|alpha_tls_size
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +466,24 @@ value|(target_flags& MASK_SMALL_DATA)
 end_define
 
 begin_comment
+comment|/* This means emit thread pointer loads for kernel not user.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_TLS_KERNEL
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_TLS_KERNEL
+value|(target_flags& MASK_TLS_KERNEL)
+end_define
+
+begin_comment
 comment|/* This means that the processor is an EV5, EV56, or PCA56.    Unlike alpha_cpu this is not affected by -mtune= setting.  */
 end_comment
 
@@ -648,6 +695,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_AS_TLS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_AS_TLS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Macro to define tables used to set the flags.    This is a list in braces of pairs in braces,    each pair being { "NAME", VALUE }    where VALUE is the bits to set or minus the bits to clear.    An empty string NAME is used to identify the default VALUE.  */
 end_comment
@@ -657,7 +722,7 @@ define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{ {"no-soft-float", MASK_FP, N_("Use hardware fp")},			\     {"soft-float", - MASK_FP, N_("Do not use hardware fp")},		\     {"fp-regs", MASK_FPREGS, N_("Use fp registers")},			\     {"no-fp-regs", - (MASK_FP|MASK_FPREGS),				\      N_("Do not use fp registers")},					\     {"alpha-as", -MASK_GAS, N_("Do not assume GAS")},			\     {"gas", MASK_GAS, N_("Assume GAS")},				\     {"ieee-conformant", MASK_IEEE_CONFORMANT,				\      N_("Request IEEE-conformant math library routines (OSF/1)")},	\     {"ieee", MASK_IEEE|MASK_IEEE_CONFORMANT,				\      N_("Emit IEEE-conformant code, without inexact exceptions")},	\     {"ieee-with-inexact", MASK_IEEE_WITH_INEXACT|MASK_IEEE_CONFORMANT,	\      N_("Emit IEEE-conformant code, with inexact exceptions")},		\     {"build-constants", MASK_BUILD_CONSTANTS,				\      N_("Do not emit complex integer constants to read-only memory")},	\     {"float-vax", MASK_FLOAT_VAX, N_("Use VAX fp")},			\     {"float-ieee", -MASK_FLOAT_VAX, N_("Do not use VAX fp")},		\     {"bwx", MASK_BWX, N_("Emit code for the byte/word ISA extension")},	\     {"no-bwx", -MASK_BWX, ""},						\     {"max", MASK_MAX,							\      N_("Emit code for the motion video ISA extension")},		\     {"no-max", -MASK_MAX, ""},						\     {"fix", MASK_FIX,							\      N_("Emit code for the fp move and sqrt ISA extension")}, 		\     {"no-fix", -MASK_FIX, ""},						\     {"cix", MASK_CIX, N_("Emit code for the counting ISA extension")},	\     {"no-cix", -MASK_CIX, ""},						\     {"explicit-relocs", MASK_EXPLICIT_RELOCS,				\      N_("Emit code using explicit relocation directives")},		\     {"no-explicit-relocs", -MASK_EXPLICIT_RELOCS, ""},			\     {"small-data", MASK_SMALL_DATA,					\      N_("Emit 16-bit relocations to the small data areas")},		\     {"large-data", -MASK_SMALL_DATA,					\      N_("Emit 32-bit relocations to the small data areas")},		\     {"", TARGET_DEFAULT | TARGET_CPU_DEFAULT				\ 	 | TARGET_DEFAULT_EXPLICIT_RELOCS, ""} }
+value|{ {"no-soft-float", MASK_FP, N_("Use hardware fp")},			\     {"soft-float", - MASK_FP, N_("Do not use hardware fp")},		\     {"fp-regs", MASK_FPREGS, N_("Use fp registers")},			\     {"no-fp-regs", - (MASK_FP|MASK_FPREGS),				\      N_("Do not use fp registers")},					\     {"alpha-as", -MASK_GAS, N_("Do not assume GAS")},			\     {"gas", MASK_GAS, N_("Assume GAS")},				\     {"ieee-conformant", MASK_IEEE_CONFORMANT,				\      N_("Request IEEE-conformant math library routines (OSF/1)")},	\     {"ieee", MASK_IEEE|MASK_IEEE_CONFORMANT,				\      N_("Emit IEEE-conformant code, without inexact exceptions")},	\     {"ieee-with-inexact", MASK_IEEE_WITH_INEXACT|MASK_IEEE_CONFORMANT,	\      N_("Emit IEEE-conformant code, with inexact exceptions")},		\     {"build-constants", MASK_BUILD_CONSTANTS,				\      N_("Do not emit complex integer constants to read-only memory")},	\     {"float-vax", MASK_FLOAT_VAX, N_("Use VAX fp")},			\     {"float-ieee", -MASK_FLOAT_VAX, N_("Do not use VAX fp")},		\     {"bwx", MASK_BWX, N_("Emit code for the byte/word ISA extension")},	\     {"no-bwx", -MASK_BWX, ""},						\     {"max", MASK_MAX,							\      N_("Emit code for the motion video ISA extension")},		\     {"no-max", -MASK_MAX, ""},						\     {"fix", MASK_FIX,							\      N_("Emit code for the fp move and sqrt ISA extension")}, 		\     {"no-fix", -MASK_FIX, ""},						\     {"cix", MASK_CIX, N_("Emit code for the counting ISA extension")},	\     {"no-cix", -MASK_CIX, ""},						\     {"explicit-relocs", MASK_EXPLICIT_RELOCS,				\      N_("Emit code using explicit relocation directives")},		\     {"no-explicit-relocs", -MASK_EXPLICIT_RELOCS, ""},			\     {"small-data", MASK_SMALL_DATA,					\      N_("Emit 16-bit relocations to the small data areas")},		\     {"large-data", -MASK_SMALL_DATA,					\      N_("Emit 32-bit relocations to the small data areas")},		\     {"tls-kernel", MASK_TLS_KERNEL,					\      N_("Emit rdval instead of rduniq for thread pointer")},		\     {"", TARGET_DEFAULT | TARGET_CPU_DEFAULT				\ 	 | TARGET_DEFAULT_EXPLICIT_RELOCS, ""} }
 end_define
 
 begin_define
@@ -804,287 +869,26 @@ begin_comment
 comment|/* For -mmemory-latency= */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|alpha_tls_size_string
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For -mtls-size= */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{							\   {"cpu=",&alpha_cpu_string,		\    N_("Use features of and schedule given CPU")},	\   {"tune=",&alpha_tune_string,		\    N_("Schedule given CPU")},				\   {"fp-rounding-mode=",&alpha_fprm_string,		\    N_("Control the generated fp rounding mode")},	\   {"fp-trap-mode=",&alpha_fptm_string,		\    N_("Control the IEEE trap mode")},			\   {"trap-precision=",&alpha_tp_string,		\    N_("Control the precision given to fp exceptions")},	\   {"memory-latency=",&alpha_mlat_string,		\    N_("Tune expected memory latency")},			\ }
+value|{							\   {"cpu=",&alpha_cpu_string,		\    N_("Use features of and schedule given CPU")},	\   {"tune=",&alpha_tune_string,		\    N_("Schedule given CPU")},				\   {"fp-rounding-mode=",&alpha_fprm_string,		\    N_("Control the generated fp rounding mode")},	\   {"fp-trap-mode=",&alpha_fptm_string,		\    N_("Control the IEEE trap mode")},			\   {"trap-precision=",&alpha_tp_string,		\    N_("Control the precision given to fp exceptions")},	\   {"memory-latency=",&alpha_mlat_string,		\    N_("Tune expected memory latency")},			\   {"tls-size=",&alpha_tls_size_string,		\    N_("Specify bit size of immediate TLS offsets")},	\ }
 end_define
-
-begin_comment
-comment|/* Attempt to describe CPU characteristics to the preprocessor.  */
-end_comment
-
-begin_comment
-comment|/* Corresponding to amask...  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_AM_BWX_SPEC
-value|"-D__alpha_bwx__ -Acpu=bwx"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_AM_MAX_SPEC
-value|"-D__alpha_max__ -Acpu=max"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_AM_FIX_SPEC
-value|"-D__alpha_fix__ -Acpu=fix"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_AM_CIX_SPEC
-value|"-D__alpha_cix__ -Acpu=cix"
-end_define
-
-begin_comment
-comment|/* Corresponding to implver...  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_IM_EV4_SPEC
-value|"-D__alpha_ev4__ -Acpu=ev4"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_IM_EV5_SPEC
-value|"-D__alpha_ev5__ -Acpu=ev5"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_IM_EV6_SPEC
-value|"-D__alpha_ev6__ -Acpu=ev6"
-end_define
-
-begin_comment
-comment|/* Common combinations.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_EV4_SPEC
-value|"%(cpp_im_ev4)"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_EV5_SPEC
-value|"%(cpp_im_ev5)"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_EV56_SPEC
-value|"%(cpp_im_ev5) %(cpp_am_bwx)"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_PCA56_SPEC
-value|"%(cpp_im_ev5) %(cpp_am_bwx) %(cpp_am_max)"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_EV6_SPEC
-define|\
-value|"%(cpp_im_ev6) %(cpp_am_bwx) %(cpp_am_max) %(cpp_am_fix)"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_EV67_SPEC
-define|\
-value|"%(cpp_im_ev6) %(cpp_am_bwx) %(cpp_am_max) %(cpp_am_fix) %(cpp_am_cix)"
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CPP_CPU_DEFAULT_SPEC
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|&
-name|MASK_CPU_EV6
-end_if
-
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|&
-name|MASK_CIX
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_DEFAULT_SPEC
-value|CPP_CPU_EV67_SPEC
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_DEFAULT_SPEC
-value|CPP_CPU_EV6_SPEC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|&
-name|MASK_CPU_EV5
-end_if
-
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|&
-name|MASK_MAX
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_DEFAULT_SPEC
-value|CPP_CPU_PCA56_SPEC
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|&
-name|MASK_BWX
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_DEFAULT_SPEC
-value|CPP_CPU_EV56_SPEC
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_DEFAULT_SPEC
-value|CPP_CPU_EV5_SPEC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_DEFAULT_SPEC
-value|CPP_CPU_EV4_SPEC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPP_CPU_DEFAULT_SPEC */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CPP_CPU_SPEC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_SPEC
-value|"\ %{!undef:-Acpu=alpha -Amachine=alpha -D__alpha -D__alpha__ \ %{mcpu=ev4|mcpu=21064:%(cpp_cpu_ev4) }\ %{mcpu=ev5|mcpu=21164:%(cpp_cpu_ev5) }\ %{mcpu=ev56|mcpu=21164a:%(cpp_cpu_ev56) }\ %{mcpu=pca56|mcpu=21164pc|mcpu=21164PC:%(cpp_cpu_pca56) }\ %{mcpu=ev6|mcpu=21264:%(cpp_cpu_ev6) }\ %{mcpu=ev67|mcpu=21264a:%(cpp_cpu_ev67) }\ %{!mcpu*:%(cpp_cpu_default) }}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* This macro defines names of additional specifications to put in the    specs that can be used in various specifications like CC1_SPEC.  Its    definition is an initializer with a subgrouping for each command option.     Each subgrouping contains a string constant, that defines the    specification name, and a string constant that used by the GNU CC driver    program.     Do not define this macro if it does not need to do anything.  */
@@ -1112,7 +916,7 @@ define|#
 directive|define
 name|EXTRA_SPECS
 define|\
-value|{ "cpp_am_bwx", CPP_AM_BWX_SPEC },		\   { "cpp_am_max", CPP_AM_MAX_SPEC },		\   { "cpp_am_fix", CPP_AM_FIX_SPEC },		\   { "cpp_am_cix", CPP_AM_CIX_SPEC },		\   { "cpp_im_ev4", CPP_IM_EV4_SPEC },		\   { "cpp_im_ev5", CPP_IM_EV5_SPEC },		\   { "cpp_im_ev6", CPP_IM_EV6_SPEC },		\   { "cpp_cpu_ev4", CPP_CPU_EV4_SPEC },		\   { "cpp_cpu_ev5", CPP_CPU_EV5_SPEC },		\   { "cpp_cpu_ev56", CPP_CPU_EV56_SPEC },	\   { "cpp_cpu_pca56", CPP_CPU_PCA56_SPEC },	\   { "cpp_cpu_ev6", CPP_CPU_EV6_SPEC },		\   { "cpp_cpu_ev67", CPP_CPU_EV67_SPEC },	\   { "cpp_cpu_default", CPP_CPU_DEFAULT_SPEC },	\   { "cpp_cpu", CPP_CPU_SPEC },			\   { "cpp_subtarget", CPP_SUBTARGET_SPEC },	\   SUBTARGET_EXTRA_SPECS
+value|{ "cpp_subtarget", CPP_SUBTARGET_SPEC },	\   SUBTARGET_EXTRA_SPECS
 end_define
 
 begin_comment
@@ -1156,16 +960,6 @@ comment|/* target machine storage layout */
 end_comment
 
 begin_comment
-comment|/* Define to enable software floating point emulation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_ARITHMETIC
-end_define
-
-begin_comment
 comment|/* Define the size of `int'.  The default is the same as the word size.  */
 end_comment
 
@@ -1185,6 +979,18 @@ define|#
 directive|define
 name|LONG_LONG_TYPE_SIZE
 value|64
+end_define
+
+begin_comment
+comment|/* We're IEEE unless someone says to use VAX.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_FLOAT_FORMAT
+define|\
+value|(TARGET_FLOAT_VAX ? VAX_FLOAT_FORMAT : IEEE_FLOAT_FORMAT)
 end_define
 
 begin_comment
@@ -1299,28 +1105,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* number of bits in an addressable storage unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_UNIT
-value|8
-end_define
-
-begin_comment
-comment|/* Width in bits of a "word", which is the contents of a machine register.    Note that this is not necessarily the width of data type `int';    if using 16-bit ints on a 68000, this would still be 32.    But on a machine with 16-bit registers, this would be 16.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_WORD
-value|64
-end_define
-
-begin_comment
 comment|/* Width of a word, in units (bytes).  */
 end_comment
 
@@ -1398,7 +1182,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* A bitfield declared as `int' forces `int' alignment for the struct.  */
+comment|/* A bit-field declared as `int' forces `int' alignment for the struct.  */
 end_comment
 
 begin_define
@@ -1474,7 +1258,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Set this non-zero if move instructions will actually fail to work    when given unaligned data.     Since we get an error message when we do one, call them invalid.  */
+comment|/* Set this nonzero if move instructions will actually fail to work    when given unaligned data.     Since we get an error message when we do one, call them invalid.  */
 end_comment
 
 begin_define
@@ -1485,7 +1269,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Set this non-zero if unaligned move instructions are extremely slow.     On the Alpha, they trap.  */
+comment|/* Set this nonzero if unaligned move instructions are extremely slow.     On the Alpha, they trap.  */
 end_comment
 
 begin_define
@@ -1586,6 +1370,21 @@ name|MODE
 parameter_list|)
 define|\
 value|((REGNO)>= 32&& (REGNO)<= 62 					\    ? GET_MODE_UNIT_SIZE (MODE) == 8 || GET_MODE_UNIT_SIZE (MODE) == 4	\    : 1)
+end_define
+
+begin_comment
+comment|/* Value is 1 if MODE is a supported vector mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VECTOR_MODE_SUPPORTED_P
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(TARGET_MAX \&& ((MODE) == V8QImode || (MODE) == V4HImode || (MODE) == V2SImode))
 end_define
 
 begin_comment
@@ -1730,6 +1529,8 @@ name|reg_class
 block|{
 name|NO_REGS
 block|,
+name|R0_REG
+block|,
 name|R24_REG
 block|,
 name|R25_REG
@@ -1763,7 +1564,7 @@ define|#
 directive|define
 name|REG_CLASS_NAMES
 define|\
-value|{"NO_REGS", "R24_REG", "R25_REG", "R27_REG",	\   "GENERAL_REGS", "FLOAT_REGS", "ALL_REGS" }
+value|{"NO_REGS", "R0_REG", "R24_REG", "R25_REG", "R27_REG",	\   "GENERAL_REGS", "FLOAT_REGS", "ALL_REGS" }
 end_define
 
 begin_comment
@@ -1777,6 +1578,8 @@ name|REG_CLASS_CONTENTS
 define|\
 value|{ {0x00000000, 0x00000000},
 comment|/* NO_REGS */
+value|\   {0x00000001, 0x00000000},
+comment|/* R0_REG */
 value|\   {0x01000000, 0x00000000},
 comment|/* R24_REG */
 value|\   {0x02000000, 0x00000000},
@@ -1802,7 +1605,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|((REGNO) == 24 ? R24_REG			\   : (REGNO) == 25 ? R25_REG			\   : (REGNO) == 27 ? R27_REG			\   : (REGNO)>= 32&& (REGNO)<= 62 ? FLOAT_REGS	\   : GENERAL_REGS)
+value|((REGNO) == 0 ? R0_REG				\   : (REGNO) == 24 ? R24_REG			\   : (REGNO) == 25 ? R25_REG			\   : (REGNO) == 27 ? R27_REG			\   : (REGNO)>= 32&& (REGNO)<= 62 ? FLOAT_REGS	\   : GENERAL_REGS)
 end_define
 
 begin_comment
@@ -1835,7 +1638,7 @@ parameter_list|(
 name|C
 parameter_list|)
 define|\
-value|((C) == 'a' ? R24_REG			\   : (C) == 'b' ? R25_REG		\   : (C) == 'c' ? R27_REG		\   : (C) == 'f' ? FLOAT_REGS		\   : NO_REGS)
+value|((C) == 'a' ? R24_REG			\   : (C) == 'b' ? R25_REG		\   : (C) == 'c' ? R27_REG		\   : (C) == 'f' ? FLOAT_REGS		\   : (C) == 'v' ? R0_REG			\   : NO_REGS)
 end_define
 
 begin_comment
@@ -1869,7 +1672,7 @@ value|alpha_const_double_ok_for_letter_p
 end_define
 
 begin_comment
-comment|/* Optional extra constraints for this machine.     For the Alpha, `Q' means that this is a memory operand but not a    reference to an unaligned location.     `R' is a SYMBOL_REF that has SYMBOL_REF_FLAG set or is the current    function.     'S' is a 6-bit constant (valid for a shift insn).       'T' is a HIGH.     'U' is a symbolic operand.  */
+comment|/* Optional extra constraints for this machine.     For the Alpha, `Q' means that this is a memory operand but not a    reference to an unaligned location.     `R' is a SYMBOL_REF that has SYMBOL_REF_FLAG set or is the current    function.     'S' is a 6-bit constant (valid for a shift insn).       'T' is a HIGH.     'U' is a symbolic operand.     'W' is a vector zero.   */
 end_comment
 
 begin_define
@@ -1976,31 +1779,22 @@ value|((GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD)
 end_define
 
 begin_comment
-comment|/* If defined, gives a class of registers that cannot be used as the    operand of a SUBREG that changes the mode of the object illegally.  */
+comment|/* Return the class of registers that cannot change mode from FROM to TO.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLASS_CANNOT_CHANGE_MODE
-value|FLOAT_REGS
-end_define
-
-begin_comment
-comment|/* Defines illegal mode changes for CLASS_CANNOT_CHANGE_MODE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLASS_CANNOT_CHANGE_MODE_P
+name|CANNOT_CHANGE_MODE_CLASS
 parameter_list|(
 name|FROM
 parameter_list|,
 name|TO
+parameter_list|,
+name|CLASS
 parameter_list|)
 define|\
-value|(GET_MODE_SIZE (FROM) != GET_MODE_SIZE (TO))
+value|(GET_MODE_SIZE (FROM) != GET_MODE_SIZE (TO)			\    ? reg_classes_intersect_p (FLOAT_REGS, CLASS) : 0)
 end_define
 
 begin_comment
@@ -2483,7 +2277,7 @@ value|{ if ((CUM)< 6)							\     {									\       if (! (NO_RTL))							\ 	{		
 end_define
 
 begin_comment
-comment|/* We do not allow indirect calls to be optimized into sibling calls, nor    can we allow a call to a function in a different compilation unit to    be optimized into a sibcall.  Except if the function is known not to    return, in which case our caller doesn't care what the gp is.  */
+comment|/* We do not allow indirect calls to be optimized into sibling calls, nor    can we allow a call to a function in a different compilation unit to    be optimized into a sibcall.  */
 end_comment
 
 begin_define
@@ -2494,7 +2288,7 @@ parameter_list|(
 name|DECL
 parameter_list|)
 define|\
-value|(DECL							\&& ((TREE_ASM_WRITTEN (DECL)&& !flag_pic)		\        || ! TREE_PUBLIC (DECL)))
+value|(DECL							\&& (! TREE_PUBLIC (DECL)				\        || (TREE_ASM_WRITTEN (DECL)&& (*targetm.binds_local_p) (DECL))))
 end_define
 
 begin_comment
@@ -3182,7 +2976,7 @@ value|GET_MODE_BITSIZE (TImode)
 end_define
 
 begin_comment
-comment|/* Nonzero if access to memory by bytes is no faster than for words.    Also non-zero if doing byte operations (specifically shifts) in registers    is undesirable.      On the Alpha, we want to not use the byte operation and instead use    masking operations to access fields; these will save instructions.  */
+comment|/* Nonzero if access to memory by bytes is no faster than for words.    Also nonzero if doing byte operations (specifically shifts) in registers    is undesirable.      On the Alpha, we want to not use the byte operation and instead use    masking operations to access fields; these will save instructions.  */
 end_comment
 
 begin_define
@@ -3435,67 +3229,6 @@ value|"\t.data"
 end_define
 
 begin_comment
-comment|/* Define an extra section for read-only data, a routine to enter it, and    indicate that it is for read-only data.     The first time we enter the readonly data section for a file, we write    eight bytes of zero.  This works around a bug in DEC's assembler in    some versions of OSF/1 V3.x.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|readonly_data
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|void								\ literal_section ()						\ {								\   if (in_section != readonly_data)				\     {								\       static int firsttime = 1;				        \ 								\       fprintf (asm_out_file, "%s\n", READONLY_DATA_SECTION_ASM_OP); \       if (firsttime)						\ 	{							\ 	  firsttime = 0;				        \ 	  assemble_aligned_integer (8, const0_rtx);		\ 	}							\ 								\       in_section = readonly_data;				\     }								\ }								\  #define READONLY_DATA_SECTION	literal_section
-end_define
-
-begin_comment
-comment|/* Define this macro if references to a symbol must be treated differently    depending on something about the variable or function named by the symbol    (such as what section it is in).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-value|alpha_encode_section_info (DECL)
-end_define
-
-begin_comment
-comment|/* If a variable is weakened, made one only or moved into a different    section, it may be necessary to redo the section info to move the    variable out of sdata.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REDO_SECTION_INFO_P
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|((TREE_CODE (DECL) == VAR_DECL)                                      \&& (DECL_ONE_ONLY (DECL) || DECL_WEAK (DECL) || DECL_COMMON (DECL)  \         || DECL_SECTION_NAME (DECL) != 0))
-end_define
-
-begin_define
-define|#
-directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|SYMBOL_NAME
-parameter_list|)
-define|\
-value|do {						\   (VAR) = (SYMBOL_NAME);			\   if ((VAR)[0] == '@')				\     (VAR) += 2;					\   if ((VAR)[0] == '*')				\     (VAR)++;					\ } while (0)
-end_define
-
-begin_comment
 comment|/* How to refer to registers in assembler output.    This sequence is indexed by compiler's hard-register-number (see above).  */
 end_comment
 
@@ -3521,41 +3254,18 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {						\   const char *name_ = NAME;			\   if (*name_ == '@')				\     name_ += 2;					\   if (*name_ == '*')				\     name_++;					\   else						\     fputs (user_label_prefix, STREAM);		\   fputs (name_, STREAM);			\ } while (0)
+value|do {						\   const char *name_ = NAME;			\   if (*name_ == '@' || *name_ == '%')		\     name_ += 2;					\   if (*name_ == '*')				\     name_++;					\   else						\     fputs (user_label_prefix, STREAM);		\   fputs (name_, STREAM);			\ } while (0)
 end_define
 
 begin_comment
-comment|/* This is how to output the definition of a user-level label named NAME,    such as the label on a static function or variable NAME.  */
+comment|/* Globalizing directive for a label.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { assemble_name (FILE, NAME); fputs (":\n", FILE); } while (0)
-end_define
-
-begin_comment
-comment|/* This is how to output a command to make the user-level label named NAME    defined for reference from other files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { fputs ("\t.globl ", FILE); assemble_name (FILE, NAME); fputs ("\n", FILE);} while (0)
+name|GLOBAL_ASM_OP
+value|"\t.globl "
 end_define
 
 begin_comment
@@ -3626,25 +3336,6 @@ name|NUM
 parameter_list|)
 define|\
 value|sprintf ((LABEL), "*$%s%ld", (PREFIX), (long)(NUM))
-end_define
-
-begin_comment
-comment|/* Check a floating-point value for validity for a particular machine mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHECK_FLOAT_VALUE
-parameter_list|(
-name|MODE
-parameter_list|,
-name|D
-parameter_list|,
-name|OVERFLOW
-parameter_list|)
-define|\
-value|((OVERFLOW) = check_float_value (MODE,&D, OVERFLOW))
 end_define
 
 begin_comment
@@ -3867,7 +3558,7 @@ parameter_list|(
 name|CODE
 parameter_list|)
 define|\
-value|((CODE) == '/' || (CODE) == ',' || (CODE) == '-' || (CODE) == '~' \    || (CODE) == '#' || (CODE) == '*')
+value|((CODE) == '/' || (CODE) == ',' || (CODE) == '-' || (CODE) == '~' \    || (CODE) == '#' || (CODE) == '*' || (CODE) == '&')
 end_define
 
 begin_escape
@@ -3899,7 +3590,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_6bit_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_8bit_operand", {SUBREG, REG, CONST_INT}},			\   {"cint8_operand", {CONST_INT}},					\   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			\   {"add_operand", {SUBREG, REG, CONST_INT}},				\   {"sext_add_operand", {SUBREG, REG, CONST_INT}},			\   {"const48_operand", {CONST_INT}},					\   {"and_operand", {SUBREG, REG, CONST_INT}},				\   {"or_operand", {SUBREG, REG, CONST_INT}},				\   {"mode_mask_operand", {CONST_INT}},					\   {"mul8_operand", {CONST_INT}},					\   {"mode_width_operand", {CONST_INT}},					\   {"reg_or_fp0_operand", {SUBREG, REG, CONST_DOUBLE}},			\   {"alpha_comparison_operator", {EQ, LE, LT, LEU, LTU}},		\   {"alpha_zero_comparison_operator", {EQ, NE, LE, LT, LEU, LTU}},	\   {"alpha_swapped_comparison_operator", {EQ, GE, GT, GEU, GTU}},	\   {"signed_comparison_operator", {EQ, NE, LE, LT, GE, GT}},		\   {"alpha_fp_comparison_operator", {EQ, LE, LT, UNORDERED}},		\   {"divmod_operator", {DIV, MOD, UDIV, UMOD}},				\   {"fp0_operand", {CONST_DOUBLE}},					\   {"current_file_function_operand", {SYMBOL_REF}},			\   {"direct_call_operand", {SYMBOL_REF}},				\   {"local_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\   {"small_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"global_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"call_operand", {REG, SYMBOL_REF}},					\   {"input_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     SYMBOL_REF, CONST, LABEL_REF, HIGH}},		\   {"some_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		    SYMBOL_REF, CONST, LABEL_REF, HIGH}},		\   {"some_ni_operand", {SUBREG, REG, MEM}},				\   {"aligned_memory_operand", {MEM}},					\   {"unaligned_memory_operand", {MEM}},					\   {"reg_or_unaligned_mem_operand", {SUBREG, REG, MEM}},			\   {"any_memory_operand", {MEM}},					\   {"hard_fp_register_operand", {SUBREG, REG}},				\   {"hard_int_register_operand", {SUBREG, REG}},				\   {"reg_not_elim_operand", {SUBREG, REG}},				\   {"reg_no_subreg_operand", {REG}},					\   {"addition_operation", {PLUS}},					\   {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\   {"some_small_symbolic_operand", {SET, PARALLEL, PREFETCH, UNSPEC,	\ 				   UNSPEC_VOLATILE}},
+value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE,		\ 			CONST_VECTOR}},					\   {"reg_or_6bit_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_8bit_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_const_int_operand", {SUBREG, REG, CONST_INT}},		\   {"cint8_operand", {CONST_INT}},					\   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			\   {"add_operand", {SUBREG, REG, CONST_INT}},				\   {"sext_add_operand", {SUBREG, REG, CONST_INT}},			\   {"const48_operand", {CONST_INT}},					\   {"and_operand", {SUBREG, REG, CONST_INT}},				\   {"or_operand", {SUBREG, REG, CONST_INT}},				\   {"mode_mask_operand", {CONST_INT}},					\   {"mul8_operand", {CONST_INT}},					\   {"mode_width_operand", {CONST_INT}},					\   {"alpha_comparison_operator", {EQ, LE, LT, LEU, LTU}},		\   {"alpha_zero_comparison_operator", {EQ, NE, LE, LT, LEU, LTU}},	\   {"alpha_swapped_comparison_operator", {EQ, GE, GT, GEU, GTU}},	\   {"signed_comparison_operator", {EQ, NE, LE, LT, GE, GT}},		\   {"alpha_fp_comparison_operator", {EQ, LE, LT, UNORDERED}},		\   {"divmod_operator", {DIV, MOD, UDIV, UMOD}},				\   {"const0_operand", {CONST_INT, CONST_DOUBLE, CONST_VECTOR}},		\   {"current_file_function_operand", {SYMBOL_REF}},			\   {"direct_call_operand", {SYMBOL_REF}},				\   {"local_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\   {"small_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"global_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"dtp16_symbolic_operand", {CONST}},					\   {"dtp32_symbolic_operand", {CONST}},					\   {"gotdtp_symbolic_operand", {CONST}},					\   {"tp16_symbolic_operand", {CONST}},					\   {"tp32_symbolic_operand", {CONST}},					\   {"gottp_symbolic_operand", {CONST}},					\   {"call_operand", {REG, SYMBOL_REF}},					\   {"input_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     CONST_VECTOR, SYMBOL_REF, CONST, LABEL_REF, HIGH}},\   {"some_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		    CONST_VECTOR, SYMBOL_REF, CONST, LABEL_REF, HIGH}},	\   {"some_ni_operand", {SUBREG, REG, MEM}},				\   {"aligned_memory_operand", {MEM}},					\   {"unaligned_memory_operand", {MEM}},					\   {"reg_or_unaligned_mem_operand", {SUBREG, REG, MEM}},			\   {"any_memory_operand", {MEM}},					\   {"hard_fp_register_operand", {SUBREG, REG}},				\   {"hard_int_register_operand", {SUBREG, REG}},				\   {"reg_not_elim_operand", {SUBREG, REG}},				\   {"reg_no_subreg_operand", {REG}},					\   {"addition_operation", {PLUS}},					\   {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\   {"some_small_symbolic_operand", {SET, PARALLEL, PREFETCH, UNSPEC,	\ 				   UNSPEC_VOLATILE}},
 end_define
 
 begin_escape
@@ -3929,14 +3620,12 @@ define|#
 directive|define
 name|EXPAND_BUILTIN_VA_START
 parameter_list|(
-name|stdarg
-parameter_list|,
 name|valist
 parameter_list|,
 name|nextarg
 parameter_list|)
 define|\
-value|alpha_va_start (stdarg, valist, nextarg)
+value|alpha_va_start (valist, nextarg)
 end_define
 
 begin_comment
@@ -3994,6 +3683,7 @@ begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -4004,6 +3694,7 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -4014,6 +3705,7 @@ begin_define
 define|#
 directive|define
 name|MIPS_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -4377,27 +4069,6 @@ define|#
 directive|define
 name|TARGET_MEM_FUNCTIONS
 value|1
-end_define
-
-begin_comment
-comment|/* Output code to add DELTA to the first argument, and then jump to FUNCTION.    Used for C++ multiple inheritance.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_MI_THUNK
-parameter_list|(
-name|FILE
-parameter_list|,
-name|THUNK_FNDECL
-parameter_list|,
-name|DELTA
-parameter_list|,
-name|FUNCTION
-parameter_list|)
-define|\
-value|alpha_output_mi_thunk_osf (FILE, THUNK_FNDECL, DELTA, FUNCTION)
 end_define
 
 end_unit

@@ -292,25 +292,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is for GC.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|mark_hard_reg_initial_vals
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|function
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Called from rest_of_compilation.  */
 end_comment
 

@@ -63,27 +63,6 @@ directive|include
 file|"tm_p.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|rtx
-name|cplus_expand_expr
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|rtx
-operator|,
-expr|enum
-name|machine_mode
-operator|,
-expr|enum
-name|expand_modifier
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Hook used by output_constant to expand language-specific    constants.  */
 end_comment
@@ -211,9 +190,8 @@ comment|/* Hook used by expand_expr to expand language-specific tree codes.  */
 end_comment
 
 begin_function
-specifier|static
 name|rtx
-name|cplus_expand_expr
+name|cxx_expand_expr
 parameter_list|(
 name|exp
 parameter_list|,
@@ -233,10 +211,10 @@ name|enum
 name|machine_mode
 name|tmode
 decl_stmt|;
-name|enum
-name|expand_modifier
+name|int
 name|modifier
 decl_stmt|;
+comment|/* Actually an enum expand_modifier.  */
 block|{
 name|tree
 name|type
@@ -310,7 +288,7 @@ return|;
 case|case
 name|OFFSET_REF
 case|:
-comment|/* Offset refs should not make it through to here. */
+comment|/* Offset refs should not make it through to here.  */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -337,7 +315,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|NULL
+name|const0_rtx
 return|;
 case|case
 name|MUST_NOT_THROW_EXPR
@@ -403,40 +381,6 @@ expr_stmt|;
 comment|/* NOTREACHED */
 return|return
 name|NULL
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|init_cplus_expand
-parameter_list|()
-block|{
-name|lang_expand_expr
-operator|=
-name|cplus_expand_expr
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|int
-name|extract_init
-parameter_list|(
-name|decl
-parameter_list|,
-name|init
-parameter_list|)
-name|tree
-name|decl
-name|ATTRIBUTE_UNUSED
-decl_stmt|,
-name|init
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-block|{
-return|return
-literal|0
 return|;
 block|}
 end_function

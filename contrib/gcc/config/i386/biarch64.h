@@ -7,12 +7,14 @@ begin_define
 define|#
 directive|define
 name|TARGET_64BIT_DEFAULT
+value|MASK_64BIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_BI_ARCH
+value|1
 end_define
 
 end_unit

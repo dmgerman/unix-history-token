@@ -97,7 +97,7 @@ struct_decl|;
 struct_decl|struct
 name|file_name_map_list
 struct_decl|;
-comment|/* The first two groups, apart from '=', can appear in preprocessor    expressions.  This allows a lookup table to be implemented in    _cpp_parse_expr.     The first group, to CPP_LAST_EQ, can be immediately followed by an    '='.  The lexer needs operators ending in '=', like ">>=", to be in    the same order as their counterparts without the '=', like ">>".  */
+comment|/* The first three groups, apart from '=', can appear in preprocessor    expressions (+= and -= are used to indicate unary + and - resp.).    This allows a lookup table to be implemented in _cpp_parse_expr.     The first group, to CPP_LAST_EQ, can be immediately followed by an    '='.  The lexer needs operators ending in '=', like ">>=", to be in    the same order as their counterparts without the '=', like ">>".  */
 comment|/* Positions in the table.  */
 define|#
 directive|define
@@ -111,6 +111,10 @@ define|#
 directive|define
 name|CPP_LAST_PUNCTUATOR
 value|CPP_DOT_STAR
+define|#
+directive|define
+name|CPP_LAST_CPP_OP
+value|CPP_LESS_EQ
 define|#
 directive|define
 name|TTYPE_TABLE
@@ -127,11 +131,13 @@ value|\   OP(CPP_MAX,		">?")			\ \   OP(CPP_COMPL,		"~")			\   OP(CPP_AND_AND,	"
 comment|/* logical */
 value|\   OP(CPP_OR_OR,		"||")			\   OP(CPP_QUERY,		"?")			\   OP(CPP_COLON,		":")			\   OP(CPP_COMMA,		",")
 comment|/* grouping */
-value|\   OP(CPP_OPEN_PAREN,	"(")			\   OP(CPP_CLOSE_PAREN,	")")			\   OP(CPP_EQ_EQ,		"==")
+value|\   OP(CPP_OPEN_PAREN,	"(")			\   OP(CPP_CLOSE_PAREN,	")")			\   TK(CPP_EOF,		SPELL_NONE)		\   OP(CPP_EQ_EQ,		"==")
 comment|/* compare */
-value|\   OP(CPP_NOT_EQ,	"!=")			\   OP(CPP_GREATER_EQ,	">=")			\   OP(CPP_LESS_EQ,	"<=")			\ \   OP(CPP_PLUS_EQ,	"+=")
+value|\   OP(CPP_NOT_EQ,	"!=")			\   OP(CPP_GREATER_EQ,	">=")			\   OP(CPP_LESS_EQ,	"<=")			\ \
+comment|/* These two are unary + / - in preprocessor expressions.  */
+value|\   OP(CPP_PLUS_EQ,	"+=")
 comment|/* math */
-value|\   OP(CPP_MINUS_EQ,	"-=")			\   OP(CPP_MULT_EQ,	"*=")			\   OP(CPP_DIV_EQ,	"/=")			\   OP(CPP_MOD_EQ,	"%=")			\   OP(CPP_AND_EQ,	"&=")
+value|\   OP(CPP_MINUS_EQ,	"-=")			\ \   OP(CPP_MULT_EQ,	"*=")			\   OP(CPP_DIV_EQ,	"/=")			\   OP(CPP_MOD_EQ,	"%=")			\   OP(CPP_AND_EQ,	"&=")
 comment|/* bit ops */
 value|\   OP(CPP_OR_EQ,		"|=")			\   OP(CPP_XOR_EQ,	"^=")			\   OP(CPP_RSHIFT_EQ,	">>=")			\   OP(CPP_LSHIFT_EQ,	"<<=")			\   OP(CPP_MIN_EQ,	"<?=")
 comment|/* extension */
@@ -148,7 +154,7 @@ comment|/* increment */
 value|\   OP(CPP_MINUS_MINUS,	"--")			\   OP(CPP_DEREF,		"->")
 comment|/* accessors */
 value|\   OP(CPP_DOT,		".")			\   OP(CPP_SCOPE,		"::")			\   OP(CPP_DEREF_STAR,	"->*")			\   OP(CPP_DOT_STAR,	".*")			\   OP(CPP_ATSIGN,	"@")
-comment|/* used in Objective C */
+comment|/* used in Objective-C */
 value|\ \   TK(CPP_NAME,		SPELL_IDENT)
 comment|/* word */
 value|\   TK(CPP_NUMBER,	SPELL_NUMBER)
@@ -173,8 +179,6 @@ value|\   TK(CPP_MACRO_ARG,	SPELL_NONE)
 comment|/* Macro argument.  */
 value|\   TK(CPP_PADDING,	SPELL_NONE)
 comment|/* Whitespace for cpp0.  */
-value|\   TK(CPP_EOF,		SPELL_NONE)
-comment|/* End of line or file.  */
 define|#
 directive|define
 name|OP
@@ -225,10 +229,6 @@ block|,
 name|CLK_GNUCXX
 block|,
 name|CLK_CXX98
-block|,
-name|CLK_OBJC
-block|,
-name|CLK_OBJCXX
 block|,
 name|CLK_ASM
 block|}
@@ -346,10 +346,61 @@ name|val
 union|;
 block|}
 struct|;
-comment|/* A standalone character.  We may want to make it unsigned for the    same reason we use unsigned char - to avoid signedness issues.  */
+comment|/* A type wide enough to hold any multibyte source character.    cpplib's character constant interpreter requires an unsigned type.    Also, a typedef for the signed equivalent.  */
+ifndef|#
+directive|ifndef
+name|MAX_WCHAR_TYPE_SIZE
+define|#
+directive|define
+name|MAX_WCHAR_TYPE_SIZE
+value|WCHAR_TYPE_SIZE
+endif|#
+directive|endif
+if|#
+directive|if
+name|CHAR_BIT
+operator|*
+name|SIZEOF_INT
+operator|>=
+name|MAX_WCHAR_TYPE_SIZE
+define|#
+directive|define
+name|CPPCHAR_SIGNED_T
+value|int
+else|#
+directive|else
+if|#
+directive|if
+name|CHAR_BIT
+operator|*
+name|SIZEOF_LONG
+operator|>=
+name|MAX_WCHAR_TYPE_SIZE
+operator|||
+operator|!
+name|HAVE_LONG_LONG
+define|#
+directive|define
+name|CPPCHAR_SIGNED_T
+value|long
+else|#
+directive|else
+define|#
+directive|define
+name|CPPCHAR_SIGNED_T
+value|long long
+endif|#
+directive|endif
+endif|#
+directive|endif
 typedef|typedef
-name|int
+name|unsigned
+name|CPPCHAR_SIGNED_T
 name|cppchar_t
+typedef|;
+typedef|typedef
+name|CPPCHAR_SIGNED_T
+name|cppchar_signed_t
 typedef|;
 comment|/* Values for opts.dump_macros.   dump_only means inhibit output of the preprocessed text              and instead output the definitions of all user-defined              macros in a form suitable for use as input to cpp.    dump_names means pass #define and the macro name through to output.    dump_definitions means pass the whole definition (plus #define) through */
 enum|enum
@@ -369,17 +420,6 @@ comment|/* This structure is nested inside struct cpp_reader, and    carries all
 struct|struct
 name|cpp_options
 block|{
-comment|/* Name of input and output files.  */
-specifier|const
-name|char
-modifier|*
-name|in_fname
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|out_fname
-decl_stmt|;
 comment|/* Characters between tab stops.  */
 name|unsigned
 name|int
@@ -390,12 +430,6 @@ name|struct
 name|cpp_pending
 modifier|*
 name|pending
-decl_stmt|;
-comment|/* File name which deps are being written to.  This is 0 if deps are      being written to stdout.  */
-specifier|const
-name|char
-modifier|*
-name|deps_file
 decl_stmt|;
 comment|/* Search paths for include files.  */
 name|struct
@@ -426,12 +460,6 @@ name|unsigned
 name|int
 name|include_prefix_len
 decl_stmt|;
-comment|/* -fleading_underscore sets this to "_".  */
-specifier|const
-name|char
-modifier|*
-name|user_label_prefix
-decl_stmt|;
 comment|/* The language we're preprocessing.  */
 name|enum
 name|c_lang
@@ -441,11 +469,6 @@ comment|/* Non-0 means -v, so print the full set of include dirs.  */
 name|unsigned
 name|char
 name|verbose
-decl_stmt|;
-comment|/* Nonzero means chars are signed.  */
-name|unsigned
-name|char
-name|signed_char
 decl_stmt|;
 comment|/* Nonzero means use extra default include directories for C++.  */
 name|unsigned
@@ -457,7 +480,7 @@ name|unsigned
 name|char
 name|cplusplus_comments
 decl_stmt|;
-comment|/* Nonzero means handle #import, for objective C.  */
+comment|/* Nonzero means define __OBJC__, treat @ as a special token, and      use the OBJC[PLUS]_INCLUDE_PATH environment variable.  */
 name|unsigned
 name|char
 name|objc
@@ -466,6 +489,11 @@ comment|/* Nonzero means don't copy comments into the output file.  */
 name|unsigned
 name|char
 name|discard_comments
+decl_stmt|;
+comment|/* Nonzero means don't copy comments into the output file during      macro expansion.  */
+name|unsigned
+name|char
+name|discard_comments_in_macro_exp
 decl_stmt|;
 comment|/* Nonzero means process the ISO trigraph sequences.  */
 name|unsigned
@@ -481,31 +509,6 @@ comment|/* Nonzero means to allow hexadecimal floats and LL suffixes.  */
 name|unsigned
 name|char
 name|extended_numbers
-decl_stmt|;
-comment|/* Nonzero means print the names of included files rather than the      preprocessed output.  1 means just the #include "...", 2 means      #include<...> as well.  */
-name|unsigned
-name|char
-name|print_deps
-decl_stmt|;
-comment|/* Nonzero if phony targets are created for each header.  */
-name|unsigned
-name|char
-name|deps_phony_targets
-decl_stmt|;
-comment|/* Nonzero if missing .h files in -M output are assumed to be      generated files and not errors.  */
-name|unsigned
-name|char
-name|print_deps_missing_files
-decl_stmt|;
-comment|/* If true, fopen (deps_file, "a") else fopen (deps_file, "w").  */
-name|unsigned
-name|char
-name|print_deps_append
-decl_stmt|;
-comment|/* If true, no dependency is generated on the main file.  */
-name|unsigned
-name|char
-name|deps_ignore_main_file
 decl_stmt|;
 comment|/* Nonzero means print names of header files (-H).  */
 name|unsigned
@@ -547,10 +550,30 @@ name|unsigned
 name|char
 name|warn_import
 decl_stmt|;
+comment|/* Nonzero means warn about multicharacter charconsts.  */
+name|unsigned
+name|char
+name|warn_multichar
+decl_stmt|;
 comment|/* Nonzero means warn about various incompatibilities with      traditional C.  */
 name|unsigned
 name|char
 name|warn_traditional
+decl_stmt|;
+comment|/* Nonzero means warn about long long numeric constants.  */
+name|unsigned
+name|char
+name|warn_long_long
+decl_stmt|;
+comment|/* Nonzero means warn about text after an #endif (or #else).  */
+name|unsigned
+name|char
+name|warn_endif_labels
+decl_stmt|;
+comment|/* Nonzero means warn about implicit sign changes owing to integer      promotions.  */
+name|unsigned
+name|char
+name|warn_num_sign_change
 decl_stmt|;
 comment|/* Nonzero means turn warnings into errors.  */
 name|unsigned
@@ -587,12 +610,17 @@ name|unsigned
 name|char
 name|warn_undef
 decl_stmt|;
+comment|/* Nonzero means warn of unused macros from the main file.  */
+name|unsigned
+name|char
+name|warn_unused_macros
+decl_stmt|;
 comment|/* Nonzero for the 1999 C Standard, including corrigenda and amendments.  */
 name|unsigned
 name|char
 name|c99
 decl_stmt|;
-comment|/* Nonzero if conforming to some particular standard.  */
+comment|/* Nonzero if we are conforming to a specific C or C++ standard.  */
 name|unsigned
 name|char
 name|std
@@ -637,10 +665,63 @@ name|unsigned
 name|char
 name|operator_names
 decl_stmt|;
-comment|/* True if --help, --version or --target-help appeared in the      options.  Stand-alone CPP should then bail out after option      parsing; drivers might want to continue printing help.  */
+comment|/* True for traditional preprocessing.  */
 name|unsigned
 name|char
-name|help_only
+name|traditional
+decl_stmt|;
+comment|/* Dependency generation.  */
+struct|struct
+block|{
+comment|/* Style of header dependencies to generate.  */
+enum|enum
+block|{
+name|DEPS_NONE
+init|=
+literal|0
+block|,
+name|DEPS_USER
+block|,
+name|DEPS_SYSTEM
+block|}
+name|style
+enum|;
+comment|/* Assume missing files are generated files.  */
+name|bool
+name|missing_files
+decl_stmt|;
+comment|/* Generate phony targets for each dependency apart from the first        one.  */
+name|bool
+name|phony_targets
+decl_stmt|;
+comment|/* If true, no dependency is generated on the main file.  */
+name|bool
+name|ignore_main_file
+decl_stmt|;
+block|}
+name|deps
+struct|;
+comment|/* Target-specific features set by the front end or client.  */
+comment|/* Precision for target CPP arithmetic, target characters, target      ints and target wide characters, respectively.  */
+name|size_t
+name|precision
+decl_stmt|,
+name|char_precision
+decl_stmt|,
+name|int_precision
+decl_stmt|,
+name|wchar_precision
+decl_stmt|;
+comment|/* True means chars (wide chars) are unsigned.  */
+name|bool
+name|unsigned_char
+decl_stmt|,
+name|unsigned_wchar
+decl_stmt|;
+comment|/* Nonzero means __STDC__ should have the value 0 in system headers.  */
+name|unsigned
+name|char
+name|stdc_0_in_system_headers
 decl_stmt|;
 block|}
 struct|;
@@ -778,20 +859,21 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Called when the client has a chance to properly register      built-ins with cpp_define() and cpp_assert().  */
+name|void
+argument_list|(
+argument|*register_builtins
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
-define|#
-directive|define
-name|CPP_FATAL_LIMIT
-value|1000
-comment|/* True if we have seen a "fatal" error.  */
-define|#
-directive|define
-name|CPP_FATAL_ERRORS
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(cpp_errors (PFILE)>= CPP_FATAL_LIMIT)
 comment|/* Name under which this program was invoked.  */
 specifier|extern
 specifier|const
@@ -984,6 +1066,41 @@ name|c_lang
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Call this to change the selected language standard (e.g. because of    command line options).  */
+specifier|extern
+name|void
+name|cpp_set_lang
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+expr|enum
+name|c_lang
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Add a dependency TARGET.  Quote it for "make" if QUOTE.  Can be    called any number of times before cpp_read_main_file().  If no    targets have been added before cpp_read_main_file(), then the    default target is used.  */
+specifier|extern
+name|void
+name|cpp_add_dependency_target
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+name|target
+operator|,
+name|int
+name|quote
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Call these to get pointers to the options and callback structures    for a given reader.  These pointers are good until you call    cpp_finish on that reader.  You can either edit the callbacks    through the pointer returned from cpp_get_callbacks, or set them    with cpp_set_callbacks.  */
 specifier|extern
 name|cpp_options
@@ -1037,7 +1154,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* Now call cpp_handle_option[s] to handle 1[or more] switches.  The    return value is the number of arguments used.  If    cpp_handle_options returns without using all arguments, it couldn't    understand the next switch.  When there are no switches left, you    must call cpp_post_options before calling cpp_read_main_file.  Only    after cpp_post_options are the contents of the cpp_options    structure reliable.  Options processing is not completed until you    call cpp_finish_options.  */
+comment|/* Now call cpp_handle_option[s] to handle 1[or more] switches.  The    return value is the number of arguments used.  If    cpp_handle_options returns without using all arguments, it couldn't    understand the next switch.  Options processing is not completed    until you call cpp_finish_options.  */
 specifier|extern
 name|int
 name|cpp_handle_options
@@ -1069,23 +1186,10 @@ operator|,
 name|char
 operator|*
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|void
-name|cpp_post_options
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/* This function reads the file, but does not start preprocessing.  It    returns the name of the original file; this is the same as the    input file, except for preprocessed input.  This will generate at    least one file change callback, and possibly a line change callback    too.  If there was an error opening the file, it returns NULL.     If you want cpplib to manage its own hashtable, pass in a NULL    pointer.  Otherise you should pass in an initialised hash table    that cpplib will share; this technique is used by the C front    ends.  */
+comment|/* This function reads the file, but does not start preprocessing.  It    returns the name of the original file; this is the same as the    input file, except for preprocessed input.  This will generate at    least one file change callback, and possibly a line change callback    too.  If there was an error opening the file, it returns NULL.     If you want cpplib to manage its own hashtable, pass in a NULL    pointer.  Otherise you should pass in an initialized hash table    that cpplib will share; this technique is used by the C front    ends.  */
 specifier|extern
 specifier|const
 name|char
@@ -1119,9 +1223,25 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* Call this to release the handle at the end of preprocessing.  Any    use of the handle after this function returns is invalid.  Returns    cpp_errors (pfile).  */
+comment|/* Call this to finish preprocessing.  If you requested dependency    generation, pass an open stream to write the information to,    otherwise NULL.  It is your responsibility to close the stream.     Returns cpp_errors (pfile).  */
 specifier|extern
 name|int
+name|cpp_finish
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|FILE
+operator|*
+name|deps_stream
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Call this to release the handle at the end of preprocessing.  Any    use of the handle after this function returns is invalid.  Returns    cpp_errors (pfile).  */
+specifier|extern
+name|void
 name|cpp_destroy
 name|PARAMS
 argument_list|(
@@ -1227,17 +1347,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
-name|cpp_finish
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
 name|int
 name|cpp_avoid_paste
 name|PARAMS
@@ -1303,7 +1412,7 @@ argument_list|)
 decl_stmt|;
 comment|/* Evaluate a CPP_CHAR or CPP_WCHAR token.  */
 specifier|extern
-name|HOST_WIDE_INT
+name|cppchar_t
 name|cpp_interpret_charconst
 name|PARAMS
 argument_list|(
@@ -1315,16 +1424,16 @@ specifier|const
 name|cpp_token
 operator|*
 operator|,
-name|int
-operator|,
-name|int
-operator|,
 name|unsigned
+name|int
+operator|*
+operator|,
 name|int
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Used to register builtins during the register_builtins callback.    The text is the same as the command line argument.  */
 specifier|extern
 name|void
 name|cpp_define
@@ -1426,45 +1535,189 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* A preprocessing number.  Code assumes that any unused high bits of    the double integer are set to zero.  */
+typedef|typedef
+name|unsigned
+name|HOST_WIDE_INT
+name|cpp_num_part
+typedef|;
+typedef|typedef
+name|struct
+name|cpp_num
+name|cpp_num
+typedef|;
+struct|struct
+name|cpp_num
+block|{
+name|cpp_num_part
+name|high
+decl_stmt|;
+name|cpp_num_part
+name|low
+decl_stmt|;
+name|bool
+name|unsignedp
+decl_stmt|;
+comment|/* True if value should be treated as unsigned.  */
+name|bool
+name|overflow
+decl_stmt|;
+comment|/* True if the most recent calculation overflowed.  */
+block|}
+struct|;
+comment|/* cpplib provides two interfaces for interpretation of preprocessing    numbers.     cpp_classify_number categorizes numeric constants according to    their field (integer, floating point, or invalid), radix (decimal,    octal, hexadecimal), and type suffixes.  */
+define|#
+directive|define
+name|CPP_N_CATEGORY
+value|0x000F
+define|#
+directive|define
+name|CPP_N_INVALID
+value|0x0000
+define|#
+directive|define
+name|CPP_N_INTEGER
+value|0x0001
+define|#
+directive|define
+name|CPP_N_FLOATING
+value|0x0002
+define|#
+directive|define
+name|CPP_N_WIDTH
+value|0x00F0
+define|#
+directive|define
+name|CPP_N_SMALL
+value|0x0010
+comment|/* int, float.  */
+define|#
+directive|define
+name|CPP_N_MEDIUM
+value|0x0020
+comment|/* long, double.  */
+define|#
+directive|define
+name|CPP_N_LARGE
+value|0x0040
+comment|/* long long, long double.  */
+define|#
+directive|define
+name|CPP_N_RADIX
+value|0x0F00
+define|#
+directive|define
+name|CPP_N_DECIMAL
+value|0x0100
+define|#
+directive|define
+name|CPP_N_HEX
+value|0x0200
+define|#
+directive|define
+name|CPP_N_OCTAL
+value|0x0400
+define|#
+directive|define
+name|CPP_N_UNSIGNED
+value|0x1000
+comment|/* Properties.  */
+define|#
+directive|define
+name|CPP_N_IMAGINARY
+value|0x2000
+comment|/* Classify a CPP_NUMBER token.  The return value is a combination of    the flags from the above sets.  */
+specifier|extern
+name|unsigned
+name|cpp_classify_number
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|cpp_token
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Evaluate a token classified as category CPP_N_INTEGER.  */
+specifier|extern
+name|cpp_num
+name|cpp_interpret_integer
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|cpp_token
+operator|*
+operator|,
+name|unsigned
+name|int
+name|type
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Sign extend a number, with PRECISION significant bits and all    others assumed clear, to fill out a cpp_num structure.  */
+name|cpp_num
+name|cpp_num_sign_extend
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_num
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Diagnostic levels.  To get a dianostic without associating a    position in the translation unit with it, use cpp_error_with_line    with a line number of zero.  */
+comment|/* Warning, an error with -Werror.  */
+define|#
+directive|define
+name|DL_WARNING
+value|0x00
+comment|/* Same as DL_WARNING, except it is not suppressed in system headers.  */
+define|#
+directive|define
+name|DL_WARNING_SYSHDR
+value|0x01
+comment|/* Warning, an error with -pedantic-errors or -Werror.  */
+define|#
+directive|define
+name|DL_PEDWARN
+value|0x02
+comment|/* An error.  */
+define|#
+directive|define
+name|DL_ERROR
+value|0x03
+comment|/* An internal consistency check failed.  Prints "internal error: ",    otherwise the same as DL_ERROR.  */
+define|#
+directive|define
+name|DL_ICE
+value|0x04
+comment|/* Extracts a diagnostic level from an int.  */
+define|#
+directive|define
+name|DL_EXTRACT
+parameter_list|(
+name|l
+parameter_list|)
+value|(l& 0xf)
+comment|/* Nonzero if a diagnostic level is one of the warnings.  */
+define|#
+directive|define
+name|DL_WARNING_P
+parameter_list|(
+name|l
+parameter_list|)
+value|(DL_EXTRACT (l)>= DL_WARNING \&& DL_EXTRACT (l)<= DL_PEDWARN)
 comment|/* N.B. The error-message-printer prototypes have not been nicely    formatted because exgettext needs to see 'msgid' on the same line    as the name of the function in order to work properly.  Only the    string argument gets a name in an effort to keep the lines from    getting ridiculously oversized.  */
-specifier|extern
-name|void
-name|cpp_ice
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-name|msgid
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_fatal
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-name|msgid
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
+comment|/* Output a diagnostic of some kind.  */
 specifier|extern
 name|void
 name|cpp_error
@@ -1474,6 +1727,8 @@ operator|(
 name|cpp_reader
 operator|*
 operator|,
+name|int
+operator|,
 specifier|const
 name|char
 operator|*
@@ -1482,65 +1737,29 @@ operator|,
 operator|...
 operator|)
 argument_list|)
-name|ATTRIBUTE_PRINTF_2
+name|ATTRIBUTE_PRINTF_3
 decl_stmt|;
+comment|/* Output a diagnostic of severity LEVEL, with "MSG: " preceding the    error string of errno.  No location is printed.  */
 specifier|extern
 name|void
-name|cpp_warning
+name|cpp_errno
 name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
 operator|*
 operator|,
-specifier|const
-name|char
-operator|*
-name|msgid
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_pedwarn
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
+name|int
+name|level
 operator|,
 specifier|const
 name|char
 operator|*
-name|msgid
-operator|,
-operator|...
+name|msg
 operator|)
 argument_list|)
-name|ATTRIBUTE_PRINTF_2
 decl_stmt|;
-specifier|extern
-name|void
-name|cpp_notice
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-name|msgid
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
+comment|/* Same as cpp_error, except additionally specifies a position as a    (translation unit) physical line and physical column.  If the line is    zero, then no location is printed.  */
 specifier|extern
 name|void
 name|cpp_error_with_line
@@ -1552,7 +1771,9 @@ operator|*
 operator|,
 name|int
 operator|,
-name|int
+name|unsigned
+operator|,
+name|unsigned
 operator|,
 specifier|const
 name|char
@@ -1562,83 +1783,7 @@ operator|,
 operator|...
 operator|)
 argument_list|)
-name|ATTRIBUTE_PRINTF_4
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_warning_with_line
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-name|msgid
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_4
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_pedwarn_with_line
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-name|msgid
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_4
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_error_from_errno
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_notice_from_errno
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
+name|ATTRIBUTE_PRINTF_5
 decl_stmt|;
 comment|/* In cpplex.c */
 specifier|extern
@@ -1699,9 +1844,9 @@ name|cpp_ttype
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Returns the value of an escape sequence, truncated to the correct    target precision.  PSTR points to the input pointer, which is just    after the backslash.  LIMIT is how much text we have.  WIDE is true    if the escape sequence is part of a wide character constant or    string literal.  Handles all relevant diagnostics.  */
 specifier|extern
-name|unsigned
-name|int
+name|cppchar_t
 name|cpp_parse_escape
 name|PARAMS
 argument_list|(
@@ -1714,16 +1859,16 @@ name|unsigned
 name|char
 operator|*
 operator|*
+name|pstr
 operator|,
 specifier|const
 name|unsigned
 name|char
 operator|*
-operator|,
-name|unsigned
-name|HOST_WIDE_INT
+name|limit
 operator|,
 name|int
+name|wide
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1857,6 +2002,25 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* In cppmain.c */
+specifier|extern
+name|void
+name|cpp_preprocess_file
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|FILE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,42 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for rtems targeting a ix86 using ELF.    Copyright (C) 1996, 1997, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Joel Sherrill (joel@OARcorp.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for rtems targeting an ix86 using ELF.    Copyright (C) 1996, 1997, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Joel Sherrill (joel@OARcorp.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* Specify predefined symbols in preprocessor.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<i386/i386elf.h>
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__rtems__ -Asystem=rtems \     -D__ELF__ -D__i386__ -D__USE_INIT_FINI__"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%(cpp_cpu) %{msoft-float:-D_SOFT_FLOAT}"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define ("__rtems__");		\ 	builtin_define ("__ELF__");		\ 	builtin_define ("__USE_INIT_FINI__");	\ 	builtin_assert ("system=rtems");	\ 	if (!TARGET_80387)			\ 	  builtin_define ("_SOFT_FLOAT");	\     }						\   while (0)
 end_define
 
 end_unit

@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_BIT
-value|8
+value|__CHAR_BIT__
 end_define
 
 begin_comment
@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|SCHAR_MIN
-value|(-128)
+value|(-SCHAR_MAX - 1)
 end_define
 
 begin_undef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|SCHAR_MAX
-value|127
+value|__SCHAR_MAX__
 end_define
 
 begin_comment
@@ -90,12 +90,37 @@ directive|undef
 name|UCHAR_MAX
 end_undef
 
+begin_if
+if|#
+directive|if
+name|__SCHAR_MAX__
+operator|==
+name|__INT_MAX__
+end_if
+
 begin_define
 define|#
 directive|define
 name|UCHAR_MAX
-value|255
+value|(SCHAR_MAX * 2U + 1U)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UCHAR_MAX
+value|(SCHAR_MAX * 2 + 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Minimum and maximum values a `char' can hold.  */
@@ -113,12 +138,37 @@ directive|undef
 name|CHAR_MIN
 end_undef
 
+begin_if
+if|#
+directive|if
+name|__SCHAR_MAX__
+operator|==
+name|__INT_MAX__
+end_if
+
+begin_define
+define|#
+directive|define
+name|CHAR_MIN
+value|0U
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|CHAR_MIN
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -130,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_MAX
-value|255
+value|UCHAR_MAX
 end_define
 
 begin_else
@@ -148,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_MIN
-value|(-128)
+value|SCHAR_MIN
 end_define
 
 begin_undef
@@ -161,25 +211,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_MAX
-value|127
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__SHRT_MAX__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__SHRT_MAX__
-value|32767
+value|SCHAR_MAX
 end_define
 
 begin_endif
@@ -201,7 +233,7 @@ begin_define
 define|#
 directive|define
 name|SHRT_MIN
-value|(-SHRT_MAX-1)
+value|(-SHRT_MAX - 1)
 end_define
 
 begin_undef
@@ -215,54 +247,6 @@ define|#
 directive|define
 name|SHRT_MAX
 value|__SHRT_MAX__
-end_define
-
-begin_comment
-comment|/* Minimum and maximum values a `signed int' can hold.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__INT_MAX__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__INT_MAX__
-value|2147483647
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_undef
-undef|#
-directive|undef
-name|INT_MIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INT_MIN
-value|(-INT_MAX-1)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|INT_MAX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INT_MAX
-value|__INT_MAX__
 end_define
 
 begin_comment
@@ -308,6 +292,36 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Minimum and maximum values a `signed int' can hold.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INT_MIN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INT_MIN
+value|(-INT_MAX - 1)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|INT_MAX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INT_MAX
+value|__INT_MAX__
+end_define
+
+begin_comment
 comment|/* Maximum value an `unsigned int' can hold.  (Minimum is 0).  */
 end_comment
 
@@ -321,77 +335,12 @@ begin_define
 define|#
 directive|define
 name|UINT_MAX
-value|(INT_MAX * 2U + 1)
+value|(INT_MAX * 2U + 1U)
 end_define
 
 begin_comment
 comment|/* Minimum and maximum values a `signed long int' can hold.    (Same as `int').  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__LONG_MAX__
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__sparc__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__arch64__
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__sparcv9
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__LONG_MAX__
-value|9223372036854775807L
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__LONG_MAX__
-value|2147483647L
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __alpha__ || sparc64 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -403,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|LONG_MIN
-value|(-LONG_MAX-1)
+value|(-LONG_MAX - 1L)
 end_define
 
 begin_undef
@@ -433,26 +382,8 @@ begin_define
 define|#
 directive|define
 name|ULONG_MAX
-value|(LONG_MAX * 2UL + 1)
+value|(LONG_MAX * 2UL + 1UL)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__LONG_LONG_MAX__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__LONG_LONG_MAX__
-value|9223372036854775807LL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -481,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|LLONG_MIN
-value|(-LLONG_MAX-1)
+value|(-LLONG_MAX - 1LL)
 end_define
 
 begin_undef
@@ -511,7 +442,7 @@ begin_define
 define|#
 directive|define
 name|ULLONG_MAX
-value|(LLONG_MAX * 2ULL + 1)
+value|(LLONG_MAX * 2ULL + 1ULL)
 end_define
 
 begin_endif
@@ -553,7 +484,7 @@ begin_define
 define|#
 directive|define
 name|LONG_LONG_MIN
-value|(-LONG_LONG_MAX-1)
+value|(-LONG_LONG_MAX - 1LL)
 end_define
 
 begin_undef
@@ -583,7 +514,7 @@ begin_define
 define|#
 directive|define
 name|ULONG_LONG_MAX
-value|(LONG_LONG_MAX * 2ULL + 1)
+value|(LONG_LONG_MAX * 2ULL + 1ULL)
 end_define
 
 begin_endif

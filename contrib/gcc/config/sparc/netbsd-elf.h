@@ -3,6 +3,15 @@ begin_comment
 comment|/* Definitions of target machine for GNU compiler, for ELF on NetBSD/sparc    and NetBSD/sparc64.    Copyright (C) 2002 Free Software Foundation, Inc.    Contributed by Matthew Green (mrg@eterna.com.au).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do							\     {							\       NETBSD_OS_CPP_BUILTINS_ELF();			\       if (TARGET_ARCH64)				\ 	{						\ 	  NETBSD_OS_CPP_BUILTINS_LP64();		\ 	  builtin_define ("__sparc64__");		\ 	  builtin_define ("__sparc_v9__");		\ 	}						\       else						\ 	builtin_define ("__sparc");			\       builtin_define ("__sparc__");			\     }							\   while (0)
+end_define
+
 begin_comment
 comment|/* Make sure these are undefined.  */
 end_comment
@@ -19,99 +28,32 @@ directive|undef
 name|MD_STARTFILE_PREFIX
 end_undef
 
+begin_comment
+comment|/* Make sure this is undefined.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|CPP_PREDEFINES
 end_undef
 
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-D__sparc__ -D__NetBSD__ -D__ELF__ \ -Asystem=unix -Asystem=NetBSD"
-end_define
-
 begin_comment
-comment|/* CPP defines used for 64 bit code.  */
+comment|/* CPP defines used by all NetBSD targets.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|CPP_SUBTARGET_SPEC64
+name|CPP_SUBTARGET_SPEC
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_SUBTARGET_SPEC64
-define|\
-value|"-D__sparc64__ -D__sparc_v9__ -D_LP64 %{posix:-D_POSIX_SOURCE}"
+name|CPP_SUBTARGET_SPEC
+value|"%(netbsd_cpp_spec)"
 end_define
-
-begin_comment
-comment|/* CPP defines used for 32 bit code.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SUBTARGET_SPEC32
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC32
-value|"-D__sparc %{posix:-D_POSIX_SOURCE}"
-end_define
-
-begin_comment
-comment|/* CPP_ARCH32_SPEC and CPP_ARCH64_SPEC are wrong from sparc/sparc.h; we    always want the non-SPARC_BI_ARCH versions, since the SPARC_BI_ARCH    versions define __SIZE_TYPE__ and __PTRDIFF_TYPE__ incorrectly for    NetBSD.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_ARCH32_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_ARCH32_SPEC
-value|"-D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_ARCH64_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_ARCH64_SPEC
-value|"-D__arch64__ -Acpu=sparc64 -Amachine=sparc64"
-end_define
-
-begin_comment
-comment|/* sparc/sparc.h defines NO_BUILTIN_SIZE_TYPE and NO_BUILTIN_PTRDIFF_TYPE    if SPARC_BI_ARCH is defined.  This is wrong for NetBSD; size_t and    ptrdiff_t do not change for 32-bit vs. 64-bit.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NO_BUILTIN_PTRDIFF_TYPE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|NO_BUILTIN_SIZE_TYPE
-end_undef
 
 begin_comment
 comment|/* SIZE_TYPE and PTRDIFF_TYPE are wrong from sparc/sparc.h.  */
@@ -310,6 +252,17 @@ directive|undef
 name|STDC_0_IN_SYSTEM_HEADERS
 end_undef
 
+begin_comment
+comment|/* Attempt to enable execute permissions on the stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRANSFER_FROM_TRAMPOLINE
+value|NETBSD_ENABLE_EXECUTE_STACK
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -482,23 +435,43 @@ begin_define
 define|#
 directive|define
 name|LINK_ARCH32_SPEC
-define|\
-value|"%-m elf32_sparc \   %{assert*} %{R*} %{V} %{v:%{!V:-V}} \   %{shared:-shared} \   %{!shared: \     -dp \     %{!nostdlib:%{!r*:%{!e*:-e __start}}} \     %{!static: \       -dy %{rdynamic:-export-dynamic} \       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld.elf_so}} \     %{static:-static}}"
+value|"-m elf32_sparc"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINK_ARCH64_SPEC
-define|\
-value|"%-m elf64_sparc \   %{assert*} %{R*} %{V} %{v:%{!V:-V}} \   %{shared:-shared} \   %{!shared: \     -dp \     %{!nostdlib:%{!r*:%{!e*:-e __start}}} \     %{!static: \       -dy %{rdynamic:-export-dynamic} \       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld.elf_so}} \     %{static:-static}}"
+value|"-m elf64_sparc"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINK_ARCH_SPEC
-value|"\ %{m32:%(link_arch32)} \ %{m64:%(link_arch64)} \ %{!m32:%{!m64:%(link_arch_default)}} \ "
+define|\
+value|"%{m32:%(link_arch32)} \   %{m64:%(link_arch64)} \   %{!m32:%{!m64:%(link_arch_default)}}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+define|\
+value|"%(link_arch) \   %{!mno-relax:%{!r:-relax}} \   %(netbsd_link_spec)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETBSD_ENTRY_POINT
+value|"__start"
 end_define
 
 begin_if
@@ -546,7 +519,7 @@ define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
 define|\
-value|{ "link_arch32",		LINK_ARCH32_SPEC }, \   { "link_arch64",		LINK_ARCH64_SPEC }, \   { "link_arch_default",	LINK_ARCH_DEFAULT_SPEC }, \   { "link_arch",		LINK_ARCH_SPEC }, \   { "cpp_subtarget_spec32",	CPP_SUBTARGET_SPEC32 }, \   { "cpp_subtarget_spec64",	CPP_SUBTARGET_SPEC64 },
+value|{ "link_arch32",		LINK_ARCH32_SPEC }, \   { "link_arch64",		LINK_ARCH64_SPEC }, \   { "link_arch_default",	LINK_ARCH_DEFAULT_SPEC }, \   { "link_arch",		LINK_ARCH_SPEC }, \   { "netbsd_cpp_spec",		NETBSD_CPP_SPEC }, \   { "netbsd_link_spec",		NETBSD_LINK_SPEC_ELF }, \   { "netbsd_entry_point",	NETBSD_ENTRY_POINT },
 end_define
 
 begin_comment
@@ -707,61 +680,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_SUBTARGET_SPEC
-end_undef
-
-begin_if
-if|#
-directive|if
-name|DEFAULT_ARCH32_P
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC
-define|\
-value|"%{m64:%(cpp_subtarget_spec64)}%{!m64:%(cpp_subtarget_spec32)}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC
-define|\
-value|"%{!m32:%(cpp_subtarget_spec64)}%{m32:%(cpp_subtarget_spec32)}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Restore this from sparc/sparc.h, netbsd.h changes it.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%(cpp_cpu) %(cpp_arch) %(cpp_endian) %(cpp_subtarget)"
-end_define
-
 begin_comment
 comment|/* Name the port. */
 end_comment
@@ -856,19 +774,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_SUBTARGET_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC
-value|CPP_SUBTARGET_SPEC64
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|TARGET_NAME
 end_undef
 
@@ -929,19 +834,6 @@ define|#
 directive|define
 name|LIBGCC2_LONG_DOUBLE_TYPE_SIZE
 value|64
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SUBTARGET_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC
-value|CPP_SUBTARGET_SPEC32
 end_define
 
 begin_undef

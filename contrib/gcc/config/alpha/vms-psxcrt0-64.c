@@ -29,7 +29,7 @@ name|C
 operator|.
 else|#
 directive|else
-comment|/* This file can only be compiled with DEC C, due the the call to    lib$establish and the pragmas pointer_size.  */
+comment|/* This file can only be compiled with DEC C, due to the call to    lib$establish and the pragmas pointer_size.  */
 pragma|#
 directive|pragma
 name|__pointer_size

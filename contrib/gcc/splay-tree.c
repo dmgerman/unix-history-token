@@ -871,6 +871,10 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
+operator|(
+name|void
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 name|size
@@ -1763,7 +1767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the immediate successor KEY, or NULL if there is no    predecessor.  KEY need not be present in the tree.  */
+comment|/* Return the immediate successor KEY, or NULL if there is no    successor.  KEY need not be present in the tree.  */
 end_comment
 
 begin_function
@@ -1787,7 +1791,7 @@ decl_stmt|;
 name|splay_tree_node
 name|node
 decl_stmt|;
-comment|/* If the tree is empty, there is certainly no predecessor.  */
+comment|/* If the tree is empty, there is certainly no successor.  */
 if|if
 condition|(
 operator|!

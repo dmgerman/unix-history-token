@@ -27,37 +27,13 @@ directive|define
 name|NO_EXTERNAL_INDIRECT_ADDRESS
 end_define
 
-begin_include
-include|#
-directive|include
-file|"alpha/alpha.h"
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-D__ALPHA -Dvms -DVMS -D__vms__ -D__VMS__ -Asystem=vms"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SUBTARGET_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC
-value|"\ %{mfloat-ieee:-D__IEEE_FLOAT} \ %{mfloat-vax:-D__G_FLOAT} \ %{!mfloat-vax:-D__IEEE_FLOAT}"
+value|do {					\ 	builtin_define_std ("vms");		\ 	builtin_define_std ("VMS");		\ 	builtin_define ("__ALPHA");		\ 	builtin_assert ("system=vms");		\ 	if (TARGET_FLOAT_VAX)			\ 	  builtin_define ("__G_FLOAT");		\ 	else					\ 	  builtin_define ("__IEEE_FLOAT");	\     } while (0)
 end_define
 
 begin_comment
@@ -532,7 +508,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|READONLY_SECTION_ASM_OP
+name|READONLY_DATA_SECTION_ASM_OP
 value|"\t.rdata"
 end_define
 
@@ -567,7 +543,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_link, in_rdata, in_literals
+value|in_link, in_literals
 end_define
 
 begin_undef
@@ -581,21 +557,8 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|void								\ readonly_section ()						\ {								\   if (in_section != in_rdata)				\     {								\       fprintf (asm_out_file, "%s\n", READONLY_SECTION_ASM_OP);	\       in_section = in_rdata;				\     }								\ }								\ void								\ link_section ()							\ {								\   if (in_section != in_link)					\     {								\       fprintf (asm_out_file, "%s\n", LINK_SECTION_ASM_OP); 	\       in_section = in_link;					\     }								\ }                                                               \ void								\ literals_section ()						\ {								\   if (in_section != in_literals)				\     {								\       fprintf (asm_out_file, "%s\n", LITERALS_SECTION_ASM_OP); 	\       in_section = in_literals;					\     }								\ }
+value|void								\ link_section ()							\ {								\   if (in_section != in_link)					\     {								\       fprintf (asm_out_file, "%s\n", LINK_SECTION_ASM_OP); 	\       in_section = in_link;					\     }								\ }                                                               \ void								\ literals_section ()						\ {								\   if (in_section != in_literals)				\     {								\       fprintf (asm_out_file, "%s\n", LITERALS_SECTION_ASM_OP); 	\       in_section = in_literals;					\     }								\ }
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|readonly_section
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -662,29 +625,6 @@ name|VALUE
 parameter_list|)
 define|\
 value|fprintf (FILE, "\t.quad $L%d\n", (VALUE))
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|READONLY_DATA_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|READONLY_DATA_SECTION
-value|readonly_section
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_END
-parameter_list|(
-name|FILE
-parameter_list|)
-value|alpha_write_linkage (FILE);
 end_define
 
 begin_undef
@@ -886,12 +826,14 @@ begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|VMS_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
@@ -1046,7 +988,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_MI_THUNK
+name|TARGET_ASM_OUTPUT_MI_THUNK
 end_undef
 
 begin_undef

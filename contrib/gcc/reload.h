@@ -494,7 +494,7 @@ begin_struct
 struct|struct
 name|insn_chain
 block|{
-comment|/* Links to the neighbour instructions.  */
+comment|/* Links to the neighbor instructions.  */
 name|struct
 name|insn_chain
 modifier|*
@@ -693,7 +693,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* IN_RTX is the value loaded by a reload that we now decided to inherit,    or a subpart of it.  If we have any replacements registered for IN_RTX,    chancel the reloads that were supposed to load them.    Return non-zero if we chanceled any reloads.  */
+comment|/* IN_RTX is the value loaded by a reload that we now decided to inherit,    or a subpart of it.  If we have any replacements registered for IN_RTX,    chancel the reloads that were supposed to load them.    Return nonzero if we chanceled any reloads.  */
 end_comment
 
 begin_decl_stmt

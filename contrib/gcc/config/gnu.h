@@ -58,6 +58,12 @@ begin_comment
 comment|/* Implicit library calls should use memcpy, not bcopy, etc.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_MEM_FUNCTIONS
+end_undef
+
 begin_define
 define|#
 directive|define

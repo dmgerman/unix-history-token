@@ -73,19 +73,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|count_error
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|void
 name|strip_off_ending
 name|PARAMS
@@ -412,21 +399,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|report_error_function
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
 name|rest_of_decl_compilation
 name|PARAMS
 argument_list|(
@@ -616,20 +588,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|do_float_handler
+name|void
+name|output_clean_symbol_name
 name|PARAMS
 argument_list|(
 operator|(
-name|void
-argument_list|(
+name|FILE
 operator|*
-argument_list|)
-argument_list|(
-name|PTR
-argument_list|)
 operator|,
-name|PTR
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -802,6 +771,22 @@ name|dump_base_name
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|aux_base_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_flags_explicit
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* The hashtable, so that the C front ends can pass it to cpplib.  */
 end_comment
@@ -816,7 +801,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These functions can be used by targets to set the flags originally    implied by -ffast-math and -fno-fast-math.  */
+comment|/* This function can be used by targets to set the flags originally     implied by -ffast-math and -fno-fast-math.  */
 end_comment
 
 begin_decl_stmt
@@ -826,16 +811,20 @@ name|set_fast_math_flags
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Return true iff flags are set as if -ffast-math.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
-name|void
-name|set_no_fast_math_flags
+name|bool
+name|fast_math_flags_set_p
 name|PARAMS
 argument_list|(
 operator|(

@@ -77,18 +77,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-D__arm__ -D__CONIX__ -D__ELF__"
+value|do {					\ 	builtin_define ("__CONIX__");		\ 	builtin_define ("__ELF__");		\     } while (0)
 end_define
 
 end_unit

@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %{pthread:-D_REENTRANT} %{pthreadT:-D_REENTRANT}"
+value|"%{pthread:-D_REENTRANT} %{pthreadT:-D_REENTRANT}"
 end_define
 
 end_unit

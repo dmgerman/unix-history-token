@@ -35,6 +35,44 @@ begin_comment
 comment|/* Deliberately incomplete.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|pending_option
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|op
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uchar
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|U
+value|(const uchar *)
+end_define
+
+begin_comment
+comment|/* Intended use: U"string" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITS_PER_CPPCHAR_T
+value|(CHAR_BIT * sizeof (cppchar_t))
+end_define
+
 begin_comment
 comment|/* Test if a sign is valid within a preprocessing number.  */
 end_comment
@@ -105,6 +143,148 @@ define|#
 directive|define
 name|CPP_STACK_MAX
 value|200
+end_define
+
+begin_comment
+comment|/* Host alignment handling.  */
+end_comment
+
+begin_struct
+struct|struct
+name|dummy
+block|{
+name|char
+name|c
+decl_stmt|;
+union|union
+block|{
+name|double
+name|d
+decl_stmt|;
+name|int
+modifier|*
+name|p
+decl_stmt|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ALIGNMENT
+value|offsetof (struct dummy, u)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_ALIGN2
+parameter_list|(
+name|size
+parameter_list|,
+name|align
+parameter_list|)
+value|(((size) + ((align) - 1))& ~((align) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_ALIGN
+parameter_list|(
+name|size
+parameter_list|)
+value|CPP_ALIGN2 (size, DEFAULT_ALIGNMENT)
+end_define
+
+begin_comment
+comment|/* Each macro definition is recorded in a cpp_macro structure.    Variadic macros cannot occur with traditional cpp.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cpp_macro
+block|{
+comment|/* Parameters, if any.  */
+name|cpp_hashnode
+modifier|*
+modifier|*
+name|params
+decl_stmt|;
+comment|/* Replacement tokens (ISO) or replacement text (traditional).  See      comment at top of cpptrad.c for how traditional function-like      macros are encoded.  */
+union|union
+block|{
+name|cpp_token
+modifier|*
+name|tokens
+decl_stmt|;
+specifier|const
+name|uchar
+modifier|*
+name|text
+decl_stmt|;
+block|}
+name|exp
+union|;
+comment|/* Definition line number.  */
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+comment|/* Number of tokens in expansion, or bytes for traditional macros.  */
+name|unsigned
+name|int
+name|count
+decl_stmt|;
+comment|/* Number of parameters.  */
+name|unsigned
+name|short
+name|paramc
+decl_stmt|;
+comment|/* If a function-like macro.  */
+name|unsigned
+name|int
+name|fun_like
+range|:
+literal|1
+decl_stmt|;
+comment|/* If a variadic macro.  */
+name|unsigned
+name|int
+name|variadic
+range|:
+literal|1
+decl_stmt|;
+comment|/* If macro defined in system header.  */
+name|unsigned
+name|int
+name|syshdr
+range|:
+literal|1
+decl_stmt|;
+comment|/* Nonzero if it has been expanded or had its existence tested.  */
+name|unsigned
+name|int
+name|used
+range|:
+literal|1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|_cpp_mark_macro_used
+parameter_list|(
+name|NODE
+parameter_list|)
+value|do {					\   if ((NODE)->type == NT_MACRO&& !((NODE)->flags& NODE_BUILTIN))	\     (NODE)->value.macro->used = 1; } while (0)
 end_define
 
 begin_comment
@@ -327,7 +507,7 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
-comment|/* Non-zero if it is a system include directory.  */
+comment|/* Nonzero if it is a system include directory.  */
 name|int
 name|sysp
 decl_stmt|;
@@ -413,6 +593,50 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Accessor macros for struct cpp_context.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIRST
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->u.iso.first)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAST
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->u.iso.last)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CUR
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->u.trad.cur)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RLIMIT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->u.trad.rlimit)
+end_define
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -433,7 +657,11 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
-comment|/* Contexts other than the base context are contiguous tokens.      e.g. macro expansions, expanded argument tokens.  */
+union|union
+block|{
+comment|/* For ISO macro expansion.  Contexts other than the base context        are contiguous tokens.  e.g. macro expansions, expanded        argument tokens.  */
+struct|struct
+block|{
 name|union
 name|utoken
 name|first
@@ -442,6 +670,28 @@ name|union
 name|utoken
 name|last
 decl_stmt|;
+block|}
+name|iso
+struct|;
+comment|/* For traditional macro expansion.  */
+struct|struct
+block|{
+specifier|const
+name|uchar
+modifier|*
+name|cur
+decl_stmt|;
+specifier|const
+name|uchar
+modifier|*
+name|rlimit
+decl_stmt|;
+block|}
+name|trad
+struct|;
+block|}
+name|u
+union|;
 comment|/* If non-NULL, a buffer used for storage related to this context.      When the context is popped, the buffer is released.  */
 name|_cpp_buff
 modifier|*
@@ -469,6 +719,11 @@ name|unsigned
 name|char
 name|in_directive
 decl_stmt|;
+comment|/* Nonzero if in a directive that will handle padding tokens itself.      #include needs this to avoid problems with computed include and      spacing between tokens.  */
+name|unsigned
+name|char
+name|directive_wants_padding
+decl_stmt|;
 comment|/* True if we are skipping a failed conditional group.  */
 name|unsigned
 name|char
@@ -478,6 +733,11 @@ comment|/* Nonzero if in a directive that takes angle-bracketed headers.  */
 name|unsigned
 name|char
 name|angled_headers
+decl_stmt|;
+comment|/* Nonzero if in a #if or #elif directive.  */
+name|unsigned
+name|char
+name|in_expression
 decl_stmt|;
 comment|/* Nonzero to save comments.  Turned off if discard_comments, and in      all directives apart from #define.  */
 name|unsigned
@@ -509,6 +769,11 @@ name|unsigned
 name|char
 name|parsing_args
 decl_stmt|;
+comment|/* Nonzero to skip evaluating part of an expression.  */
+name|unsigned
+name|int
+name|skip_eval
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -538,14 +803,55 @@ decl_stmt|;
 comment|/* C++ keyword false */
 name|cpp_hashnode
 modifier|*
-name|n__STRICT_ANSI__
-decl_stmt|;
-comment|/* STDC_0_IN_SYSTEM_HEADERS */
-name|cpp_hashnode
-modifier|*
 name|n__VA_ARGS__
 decl_stmt|;
 comment|/* C99 vararg macros */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Encapsulates state used to convert a stream of tokens into a text    file.  */
+end_comment
+
+begin_struct
+struct|struct
+name|printer
+block|{
+name|FILE
+modifier|*
+name|outf
+decl_stmt|;
+comment|/* Stream to write to.  */
+specifier|const
+name|struct
+name|line_map
+modifier|*
+name|map
+decl_stmt|;
+comment|/* Logical to physical line mappings.  */
+specifier|const
+name|cpp_token
+modifier|*
+name|prev
+decl_stmt|;
+comment|/* Previous token.  */
+specifier|const
+name|cpp_token
+modifier|*
+name|source
+decl_stmt|;
+comment|/* Source token for spacing.  */
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+comment|/* Line currently being written.  */
+name|unsigned
+name|char
+name|printed
+decl_stmt|;
+comment|/* Nonzero if something output at line.  */
 block|}
 struct|;
 end_struct
@@ -651,6 +957,15 @@ name|struct
 name|search_path
 name|dir
 decl_stmt|;
+comment|/* Used for buffer overlays by cpptrad.c.  */
+specifier|const
+name|uchar
+modifier|*
+name|saved_cur
+decl_stmt|,
+modifier|*
+name|saved_rlimit
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -667,6 +982,11 @@ comment|/* Top of buffer stack.  */
 name|cpp_buffer
 modifier|*
 name|buffer
+decl_stmt|;
+comment|/* Overlaid buffer (can be different after processing #include).  */
+name|cpp_buffer
+modifier|*
+name|overlaid_buffer
 decl_stmt|;
 comment|/* Lexer state.  */
 name|struct
@@ -726,6 +1046,13 @@ name|directive
 modifier|*
 name|directive
 decl_stmt|;
+comment|/* The next -include-d file; NULL if they all are done.  If it      points to NULL, the last one is in progress, and      _cpp_maybe_push_include_file has yet to restore the line map.  */
+name|struct
+name|pending_option
+modifier|*
+modifier|*
+name|next_include_file
+decl_stmt|;
 comment|/* Multiple inlcude optimisation.  */
 specifier|const
 name|cpp_hashnode
@@ -755,7 +1082,7 @@ name|unsigned
 name|int
 name|lookaheads
 decl_stmt|;
-comment|/* Non-zero prevents the lexer from re-using the token runs.  */
+comment|/* Nonzero prevents the lexer from re-using the token runs.  */
 name|unsigned
 name|int
 name|keep_tokens
@@ -764,15 +1091,6 @@ comment|/* Error counter for exit code.  */
 name|unsigned
 name|int
 name|errors
-decl_stmt|;
-comment|/* Line and column where a newline was first seen in a string      constant (multi-line strings).  */
-name|unsigned
-name|int
-name|mls_line
-decl_stmt|;
-name|unsigned
-name|int
-name|mls_col
 decl_stmt|;
 comment|/* Buffer to hold macro definition string.  */
 name|unsigned
@@ -795,11 +1113,20 @@ name|unsigned
 name|int
 name|max_include_len
 decl_stmt|;
-comment|/* Date and time tokens.  Calculated together if either is requested.  */
-name|cpp_token
+comment|/* Macros on or after this line are warned about if unused.  */
+name|unsigned
+name|int
+name|first_unused_line
+decl_stmt|;
+comment|/* Date and time text.  Calculated together if either is requested.  */
+specifier|const
+name|uchar
+modifier|*
 name|date
 decl_stmt|;
-name|cpp_token
+specifier|const
+name|uchar
+modifier|*
 name|time
 decl_stmt|;
 comment|/* EOF token, and a token forcing paste avoidance.  */
@@ -809,7 +1136,7 @@ decl_stmt|;
 name|cpp_token
 name|eof
 decl_stmt|;
-comment|/* Opaque handle to the dependencies of mkdeps.c.  Used by -M etc.  */
+comment|/* Opaque handle to the dependencies of mkdeps.c.  */
 name|struct
 name|deps
 modifier|*
@@ -842,6 +1169,15 @@ name|ht
 modifier|*
 name|hash_table
 decl_stmt|;
+comment|/* Expression parser stack.  */
+name|struct
+name|op
+modifier|*
+name|op_stack
+decl_stmt|,
+modifier|*
+name|op_limit
+decl_stmt|;
 comment|/* User visible options.  */
 name|struct
 name|cpp_options
@@ -852,15 +1188,42 @@ name|struct
 name|spec_nodes
 name|spec_nodes
 decl_stmt|;
-comment|/* Whether to print our version number.  Done this way so      we don't get it twice for -v -version.  */
-name|unsigned
-name|char
-name|print_version
+comment|/* Used when doing preprocessed output.  */
+name|struct
+name|printer
+name|print
 decl_stmt|;
 comment|/* Whether cpplib owns the hashtable.  */
 name|unsigned
 name|char
 name|our_hashtable
+decl_stmt|;
+comment|/* Traditional preprocessing output buffer (a logical line).  */
+struct|struct
+block|{
+name|uchar
+modifier|*
+name|base
+decl_stmt|;
+name|uchar
+modifier|*
+name|limit
+decl_stmt|;
+name|uchar
+modifier|*
+name|cur
+decl_stmt|;
+name|unsigned
+name|int
+name|first_line
+decl_stmt|;
+block|}
+name|out
+struct|;
+comment|/* Used to save the original line number during traditional      preprocessing.  */
+name|unsigned
+name|int
+name|saved_line
 decl_stmt|;
 block|}
 struct|;
@@ -1014,16 +1377,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPP_PRINT_DEPS
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|CPP_OPTION (PFILE, print_deps)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CPP_IN_SYSTEM_HEADER
 parameter_list|(
 name|PFILE
@@ -1055,27 +1408,6 @@ begin_comment
 comment|/* In cpperror.c  */
 end_comment
 
-begin_enum
-enum|enum
-name|error_type
-block|{
-name|WARNING
-init|=
-literal|0
-block|,
-name|WARNING_SYSHDR
-block|,
-name|PEDWARN
-block|,
-name|ERROR
-block|,
-name|FATAL
-block|,
-name|ICE
-block|}
-enum|;
-end_enum
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1086,8 +1418,7 @@ operator|(
 name|cpp_reader
 operator|*
 operator|,
-expr|enum
-name|error_type
+name|int
 operator|,
 name|unsigned
 name|int
@@ -1119,7 +1450,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|_cpp_create_definition
 name|PARAMS
 argument_list|(
@@ -1142,6 +1473,111 @@ name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_cpp_push_text_context
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_hashnode
+operator|*
+operator|,
+specifier|const
+name|uchar
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|_cpp_save_parameter
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_macro
+operator|*
+operator|,
+name|cpp_hashnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|_cpp_arguments_ok
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_macro
+operator|*
+operator|,
+specifier|const
+name|cpp_hashnode
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|uchar
+modifier|*
+name|_cpp_builtin_macro_text
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_hashnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_cpp_warn_if_unused_macro
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_hashnode
+operator|*
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -1336,7 +1772,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|void
 name|_cpp_pop_file_buffer
 name|PARAMS
 argument_list|(
@@ -1358,8 +1794,24 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|_cpp_parse_expr
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|op
+modifier|*
+name|_cpp_expand_op_stack
 name|PARAMS
 argument_list|(
 operator|(
@@ -1462,8 +1914,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|bool
-name|_cpp_push_next_buffer
+name|void
+name|_cpp_maybe_push_include_file
 name|PARAMS
 argument_list|(
 operator|(
@@ -1488,6 +1940,7 @@ operator|(
 name|cpp_reader
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|*
 operator|)
@@ -1613,6 +2066,129 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* In cpptrad.c.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|_cpp_read_logical_line_trad
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_cpp_overlay_buffer
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+name|pfile
+operator|,
+specifier|const
+name|uchar
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_cpp_remove_overlay
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|_cpp_create_trad_definition
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_macro
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|_cpp_expansions_different_trad
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|cpp_macro
+operator|*
+operator|,
+specifier|const
+name|cpp_macro
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uchar
+modifier|*
+name|_cpp_copy_replacement_text
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|cpp_macro
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|_cpp_replacement_text_len
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|cpp_macro
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Utility routines and macros.  */
 end_comment
 
@@ -1623,7 +2199,7 @@ name|DSC
 parameter_list|(
 name|str
 parameter_list|)
-value|(const U_CHAR *)str, sizeof str - 1
+value|(const uchar *)str, sizeof str - 1
 end_define
 
 begin_define
@@ -1686,25 +2262,6 @@ begin_comment
 comment|/* These are inline functions instead of macros so we can get type    checking.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|U_CHAR
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|U
-value|(const U_CHAR *)
-end_define
-
-begin_comment
-comment|/* Intended use: U"string" */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|inline
@@ -1714,11 +2271,11 @@ name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|,
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|)
 argument_list|)
@@ -1734,11 +2291,11 @@ name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|,
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|,
 name|size_t
@@ -1756,7 +2313,7 @@ name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|)
 argument_list|)
@@ -1766,14 +2323,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|inline
-name|U_CHAR
+name|uchar
 modifier|*
 name|uxstrdup
 name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|)
 argument_list|)
@@ -1783,14 +2340,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|inline
-name|U_CHAR
+name|uchar
 modifier|*
 name|ustrchr
 name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|,
 name|int
@@ -1808,7 +2365,7 @@ name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|,
 name|FILE
@@ -1829,7 +2386,7 @@ parameter_list|,
 name|s2
 parameter_list|)
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|s1
 decl_stmt|,
@@ -1874,7 +2431,7 @@ parameter_list|,
 name|n
 parameter_list|)
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|s1
 decl_stmt|,
@@ -1923,7 +2480,7 @@ parameter_list|(
 name|s1
 parameter_list|)
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|s1
 decl_stmt|;
@@ -1945,21 +2502,21 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|U_CHAR
+name|uchar
 modifier|*
 name|uxstrdup
 parameter_list|(
 name|s1
 parameter_list|)
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|s1
 decl_stmt|;
 block|{
 return|return
 operator|(
-name|U_CHAR
+name|uchar
 operator|*
 operator|)
 name|xstrdup
@@ -1978,7 +2535,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|U_CHAR
+name|uchar
 modifier|*
 name|ustrchr
 parameter_list|(
@@ -1987,7 +2544,7 @@ parameter_list|,
 name|c
 parameter_list|)
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|s1
 decl_stmt|;
@@ -1997,7 +2554,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|U_CHAR
+name|uchar
 operator|*
 operator|)
 name|strchr
@@ -2026,7 +2583,7 @@ parameter_list|,
 name|f
 parameter_list|)
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|s
 decl_stmt|;

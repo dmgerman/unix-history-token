@@ -4,7 +4,7 @@ comment|/* Target independent definitions for LynxOS, using Lynx's old as and ld
 end_comment
 
 begin_comment
-comment|/* This is for backwards compatibility with older Lynx tools, which use    a version of a.out format. */
+comment|/* This is for backwards compatibility with older Lynx tools, which use    a version of a.out format.  */
 end_comment
 
 begin_undef
@@ -136,6 +136,7 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_undef
@@ -159,6 +160,7 @@ begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -179,6 +181,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_define
@@ -277,7 +280,7 @@ value|"/usr/local/lib/gcc-"
 end_define
 
 begin_comment
-comment|/* This is needed because /bin/ld does not handle -L options correctly. */
+comment|/* This is needed because /bin/ld does not handle -L options correctly.  */
 end_comment
 
 begin_define

@@ -44,6 +44,12 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|pthread_key_t
@@ -157,7 +163,7 @@ name|_LIBOBJC
 end_ifdef
 
 begin_comment
-comment|/* Objective C.  */
+comment|/* Objective-C.  */
 end_comment
 
 begin_pragma
@@ -223,6 +229,16 @@ name|weak
 name|pthread_self
 end_pragma
 
+begin_comment
+comment|/* These really should be protected by _POSIX_PRIORITY_SCHEDULING, but    we use them inside a _POSIX_THREAD_PRIORITY_SCHEDULING block.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_THREAD_PRIORITY_SCHEDULING
+end_ifdef
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -236,6 +252,15 @@ directive|pragma
 name|weak
 name|sched_get_priority_min
 end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_THREAD_PRIORITY_SCHEDULING */
+end_comment
 
 begin_pragma
 pragma|#
@@ -265,6 +290,12 @@ name|weak
 name|pthread_attr_setdetachstate
 end_pragma
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_THREAD_PRIORITY_SCHEDULING
+end_ifdef
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -283,6 +314,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _POSIX_THREAD_PRIORITY_SCHEDULING */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _LIBOBJC */
+end_comment
 
 begin_function
 specifier|static
@@ -449,7 +493,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* The normal default detach state for threads is            * PTHREAD_CREATE_JOINABLE which causes threads to not die            * when you think they should.  */
+comment|/* The normal default detach state for threads is 	   * PTHREAD_CREATE_JOINABLE which causes threads to not die 	   * when you think they should.  */
 if|if
 condition|(
 name|pthread_attr_init
@@ -634,6 +678,9 @@ literal|1
 return|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|_POSIX_THREAD_PRIORITY_SCHEDULING
 name|pthread_t
 name|thread_id
 init|=
@@ -678,8 +725,9 @@ argument_list|(
 name|policy
 argument_list|)
 operator|)
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|-
@@ -695,8 +743,9 @@ argument_list|(
 name|policy
 argument_list|)
 operator|)
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|-
@@ -729,7 +778,7 @@ name|sched_priority
 operator|=
 name|priority
 expr_stmt|;
-comment|/*          * The solaris 7 and several other man pages incorrectly state that          * this should be a pointer to policy but pthread.h is universally          * at odds with this.          */
+comment|/* 	   * The solaris 7 and several other man pages incorrectly state that 	   * this should be a pointer to policy but pthread.h is universally 	   * at odds with this. 	   */
 if|if
 condition|(
 name|pthread_setschedparam
@@ -748,6 +797,9 @@ return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* _POSIX_THREAD_PRIORITY_SCHEDULING */
 return|return
 operator|-
 literal|1
@@ -769,6 +821,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_POSIX_THREAD_PRIORITY_SCHEDULING
 if|if
 condition|(
 name|__gthread_active_p
@@ -810,6 +865,9 @@ literal|1
 return|;
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* _POSIX_THREAD_PRIORITY_SCHEDULING */
 return|return
 name|OBJC_THREAD_INTERACTIVE_PRIORITY
 return|;

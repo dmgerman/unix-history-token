@@ -16,7 +16,7 @@ name|GCC_TIMEVAR_H
 end_define
 
 begin_comment
-comment|/* Timing variables are used to measure elapsed time in various    portions of the compiler.  Each measures elapsed user, system, and    wall-clock time, as appropriate to and supported by the host    system.     Timing variables are defined using the DEFTIMEVAR macro in    timevar.def.  Each has an enumeral identifier, used when referring    to the timing variable in code, and a character string name.     Timing variables can be used in two ways:       - On the timing stack, using timevar_push and timevar_pop.        Timing variables may be pushed onto the stack; elapsed time is        attributed to the topmost timing variable on the stack.  When        another variable is pushed on, the previous topmost variable is        `paused' until the pushed variable is popped back off.       - As a standalone timer, using timevar_start and timevar_stop.        All time elapsed between the two calls is attributed to the        variable.   */
+comment|/* Timing variables are used to measure elapsed time in various    portions of the compiler.  Each measures elapsed user, system, and    wall-clock time, as appropriate to and supported by the host    system.     Timing variables are defined using the DEFTIMEVAR macro in    timevar.def.  Each has an enumeral identifier, used when referring    to the timing variable in code, and a character string name.     Timing variables can be used in two ways:       - On the timing stack, using timevar_push and timevar_pop.        Timing variables may be pushed onto the stack; elapsed time is        attributed to the topmost timing variable on the stack.  When        another variable is pushed on, the previous topmost variable is        `paused' until the pushed variable is popped back off.       - As a standalone timer, using timevar_start and timevar_stop.        All time elapsed between the two calls is attributed to the        variable. */
 end_comment
 
 begin_comment
@@ -78,6 +78,22 @@ undef|#
 directive|undef
 name|DEFTIMEVAR
 end_undef
+
+begin_comment
+comment|/* Execute the sequence: timevar_pop (TV), return (E);  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POP_TIMEVAR_AND_RETURN
+parameter_list|(
+name|TV
+parameter_list|,
+name|E
+parameter_list|)
+value|return (timevar_pop (TV), (E))
+end_define
 
 begin_decl_stmt
 specifier|extern

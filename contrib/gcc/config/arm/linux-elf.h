@@ -105,7 +105,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{shared: -lc} \    %{!shared: %{pthread:-lpthread} \    %{profile:-lc_p} %{!profile: -lc}}"
+value|"%{pthread:-lpthread} \    %{shared:-lc} \    %{!shared:%{profile:-lc_p}%{!profile:-lc}}"
 end_define
 
 begin_define
@@ -164,28 +164,13 @@ name|LINK_SPEC
 value|"%{h*} %{version:-v} \    %{b} %{Wl,*:%*} \    %{static:-Bstatic} \    %{shared:-shared} \    %{symbolic:-Bsymbolic} \    %{rdynamic:-export-dynamic} \    %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2} \    -X \    %{mbig-endian:-EB}" \    SUBTARGET_EXTRA_LINK_SPEC
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-Dunix -D__gnu_linux__ -Dlinux -D__ELF__ \ -Asystem=unix -Asystem=posix"
-end_define
-
-begin_comment
-comment|/* Allow #sccs in preprocessor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCCS_DIRECTIVE
+value|do {					\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("linux");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_define ("__ELF__");		\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=posix");	\     } while (0)
 end_define
 
 begin_comment

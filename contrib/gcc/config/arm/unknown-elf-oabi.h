@@ -23,19 +23,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-Darm_oabi -Darm -Darm_elf -Acpu=arm -Amachine=arm -D__ELF__"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|ASM_SPEC
 end_undef
 
@@ -43,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"-moabi %{mbig-endian:-EB} %{mcpu=*:-m%*} %{march=*:-m%*} \  %{mapcs-*:-mapcs-%*} %{mthumb-interwork:-mthumb-interwork}"
+value|"-moabi %{mbig-endian:-EB} %{mcpu=*:-mcpu=%*} %{march=*:-march=%*} \  %{mapcs-*:-mapcs-%*} %{mthumb-interwork:-mthumb-interwork}"
 end_define
 
 end_unit

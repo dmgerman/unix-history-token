@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for powerpc machines running Linux.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for PowerPC machines running Linux.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_comment
-comment|/* Don't assume anything about the header files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_IMPLICIT_EXTERN_C
-end_define
 
 begin_undef
 undef|#
@@ -28,15 +18,16 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-DPPC -D__ELF__ -Dpowerpc -Acpu=powerpc -Amachine=powerpc"
+value|do                                      \     {                                     \       builtin_define_std ("PPC");         \       builtin_define ("__ELF__");         \       builtin_define_std ("powerpc");     \       builtin_assert ("cpu=powerpc");     \       builtin_assert ("machine=powerpc"); \     }                                     \   while (0)
 end_define
 
 begin_undef
@@ -227,11 +218,36 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/ucontext.h>
-end_include
+begin_comment
+comment|/* During the 2.5 kernel series the kernel ucontext was changed, but    the new layout is compatible with the old one, so we just define    and use the old one here for simplicity and compatibility.  */
+end_comment
+
+begin_struct
+struct|struct
+name|kernel_old_ucontext
+block|{
+name|unsigned
+name|long
+name|uc_flags
+decl_stmt|;
+name|struct
+name|ucontext
+modifier|*
+name|uc_link
+decl_stmt|;
+name|stack_t
+name|uc_stack
+decl_stmt|;
+name|struct
+name|sigcontext_struct
+name|uc_mcontext
+decl_stmt|;
+name|sigset_t
+name|uc_sigmask
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_enum
 enum|enum
@@ -268,9 +284,7 @@ value|\
 comment|/* li r0, 0x6666; sc  (rt_sigreturn old)  */
 value|\
 comment|/* li r0, 0x00AC; sc  (rt_sigreturn new)  */
-value|\     if (*(unsigned int *) (pc_+4) != 0x44000002)			\       break;								\     if (*(unsigned int *) (pc_+0) == 0x38007777				\ 	|| *(unsigned int *) (pc_+0) == 0x38000077)			\       {									\ 	struct sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  struct sigcontext sigctx;					\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->sigctx;						\       }									\     else if (*(unsigned int *) (pc_+0) == 0x38006666			\ 	     || *(unsigned int *) (pc_+0) == 0x380000AC)		\       {									\ 	struct rt_sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  unsigned long _unused[2];					\ 	  struct siginfo *pinfo;					\ 	  void *puc;							\ 	  struct siginfo info;						\ 	  struct ucontext uc;						\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->uc.uc_mcontext;					\       }									\     else								\       break;								\     									\     new_cfa_ = sc_->regs->gpr[STACK_POINTER_REGNUM];			\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = STACK_POINTER_REGNUM;				\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     									\     for (i_ = 0; i_< 32; i_++)						\       if (i_ != STACK_POINTER_REGNUM)					\ 	{	    							\ 	  (FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	  (FS)->regs.reg[i_].loc.offset 				\ 	    = (long)&(sc_->regs->gpr[i_]) - new_cfa_;			\ 	}								\ 									\     (FS)->regs.reg[LINK_REGISTER_REGNUM].how = REG_SAVED_OFFSET;	\     (FS)->regs.reg[LINK_REGISTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->link) - new_cfa_;				\ 									\
-comment|/* The unwinder expects the IP to point to the following insn,	\        whereas the kernel returns the address of the actual		\        faulting insn. We store NIP+4 in an unused register slot to	\        get the same result for multiple evaluation of the same signal	\        frame.  */
-value|\     sc_->regs->gpr[47] = sc_->regs->nip + 4;  				\     (FS)->regs.reg[CR0_REGNO].how = REG_SAVED_OFFSET;			\     (FS)->regs.reg[CR0_REGNO].loc.offset 				\       = (long)&(sc_->regs->gpr[47]) - new_cfa_;				\     (FS)->retaddr_column = CR0_REGNO;					\     goto SUCCESS;							\   } while (0)
+value|\     if (*(unsigned int *) (pc_+4) != 0x44000002)			\       break;								\     if (*(unsigned int *) (pc_+0) == 0x38007777				\ 	|| *(unsigned int *) (pc_+0) == 0x38000077)			\       {									\ 	struct sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  struct sigcontext sigctx;					\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->sigctx;						\       }									\     else if (*(unsigned int *) (pc_+0) == 0x38006666			\ 	     || *(unsigned int *) (pc_+0) == 0x380000AC)		\       {									\ 	struct rt_sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  unsigned long _unused[2];					\ 	  struct siginfo *pinfo;					\ 	  void *puc;							\ 	  struct siginfo info;						\ 	  struct kernel_old_ucontext uc;				\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->uc.uc_mcontext;					\       }									\     else								\       break;								\     									\     new_cfa_ = sc_->regs->gpr[STACK_POINTER_REGNUM];			\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = STACK_POINTER_REGNUM;				\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     									\     for (i_ = 0; i_< 32; i_++)						\       if (i_ != STACK_POINTER_REGNUM)					\ 	{	    							\ 	  (FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	  (FS)->regs.reg[i_].loc.offset 				\ 	    = (long)&(sc_->regs->gpr[i_]) - new_cfa_;			\ 	}								\ 									\     (FS)->regs.reg[LINK_REGISTER_REGNUM].how = REG_SAVED_OFFSET;	\     (FS)->regs.reg[LINK_REGISTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->link) - new_cfa_;				\ 									\     (FS)->regs.reg[CR0_REGNO].how = REG_SAVED_OFFSET;			\     (FS)->regs.reg[CR0_REGNO].loc.offset 				\       = (long)&(sc_->regs->nip) - new_cfa_;				\     (FS)->retaddr_column = CR0_REGNO;					\     goto SUCCESS;							\   } while (0)
 end_define
 
 end_unit

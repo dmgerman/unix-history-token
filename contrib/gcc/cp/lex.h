@@ -210,8 +210,12 @@ begin_comment
 comment|/* the declaration found for the last IDENTIFIER token read in.    yylex must look this up to detect typedefs, which get token type TYPENAME,    so it is left around in case the identifier is not a typedef but is    used in a context which makes it a reference to a variable.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|lastiddecl
 decl_stmt|;
@@ -239,15 +243,23 @@ begin_comment
 comment|/* Tell the lexer where to look for names.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|got_scope
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|got_object
 decl_stmt|;

@@ -3,8 +3,35 @@ begin_comment
 comment|/* Definitions of target machine for GNU compiler,    for x86-64/ELF NetBSD systems.    Copyright (C) 2002 Free Software Foundation, Inc.    Contributed by Wasabi Systems, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       NETBSD_OS_CPP_BUILTINS_ELF();		\       if (TARGET_64BIT)				\ 	NETBSD_OS_CPP_BUILTINS_LP64();		\     }						\   while (0)
+end_define
+
 begin_comment
-comment|/* Provide a LINK_SPEC appropriate for a NetBSD/x86-64 ELF target.    This is a copy of LINK_SPEC from<netbsd-elf.h> tweaked for    the x86-64 target.  */
+comment|/* Extra specs needed for NetBSD/x86-64 ELF.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "netbsd_cpp_spec", NETBSD_CPP_SPEC },	\   { "netbsd_link_spec", NETBSD_LINK_SPEC_ELF },	\   { "netbsd_entry_point", NETBSD_ENTRY_POINT },
+end_define
+
+begin_comment
+comment|/* Provide a LINK_SPEC appropriate for a NetBSD/x86-64 ELF target.  */
 end_comment
 
 begin_undef
@@ -18,55 +45,18 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!m32:-m elf_x86_64}						\    %{m32:-m elf_i386}							\    %{assert*} %{R*}							\    %{shared:-shared}							\    %{!shared:								\      -dc -dp								\      %{!nostdlib:							\        %{!r*:								\ 	  %{!e*:-e _start}}}						\      %{!static:								\        %{rdynamic:-export-dynamic}					\        %{!dynamic-linker:-dynamic-linker /usr/libexec/ld.elf_so}}	\      %{static:-static}}"
+value|"%{m32:-m elf_i386} \    %{m64:-m elf_x86_64} \    %(netbsd_link_spec)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETBSD_ENTRY_POINT
+value|"_start"
 end_define
 
 begin_comment
-comment|/* Names to predefine in the preprocessor for this target machine.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-define|\
-value|"-D__NetBSD__ -D__ELF__ -Asystem=unix -Asystem=NetBSD"
-end_define
-
-begin_comment
-comment|/* Provide some extra CPP specs needed by NetBSD/x86_64.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_LP64_SPEC
-value|"%{!m32:-D_LP64}"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC
-value|"%(cpp_lp64)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_EXTRA_SPECS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_EXTRA_SPECS
-define|\
-value|{ "cpp_lp64", CPP_LP64_SPEC },					\   { "cpp_subtarget", CPP_SUBTARGET_SPEC },
-end_define
-
-begin_comment
-comment|/* Provide a CPP_SPEC appropriate for NetBSD.  Currently we deal with    our subtarget specs and the GCC option `-posix'.  */
+comment|/* Provide a CPP_SPEC appropriate for NetBSD.  */
 end_comment
 
 begin_undef
@@ -79,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %(cpp_subtarget) %{posix:-D_POSIX_SOURCE}"
+value|"%(netbsd_cpp_spec)"
 end_define
 
 begin_comment
@@ -105,11 +95,16 @@ define|\
 value|{									\   if (TARGET_64BIT&& flag_pic)						\     fprintf (FILE, "\tcall *__mcount@PLT\n");				\   else if (flag_pic)							\     fprintf (FILE, "\tcall *__mcount@PLT\n");				\   else									\     fprintf (FILE, "\tcall __mcount\n");				\ }
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
+begin_comment
+comment|/* Attempt to enable execute permissions on the stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRANSFER_FROM_TRAMPOLINE
+value|NETBSD_ENABLE_EXECUTE_STACK
+end_define
 
 begin_define
 define|#

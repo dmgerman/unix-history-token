@@ -127,6 +127,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|JIS_STATE
 name|JIS_state_table
 index|[
@@ -353,6 +354,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|JIS_ACTION
 name|JIS_action_table
 index|[

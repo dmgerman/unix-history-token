@@ -92,6 +92,10 @@ comment|/* Return the last component of a path name.  Note that we can't use a  
 comment|/* HAVE_DECL_* is a three-state macro: undefined, 0 or 1.  If it is    undefined, we haven't run the autoconf check so provide the    declaration without arguments.  If it is 0, we checked and failed    to find the declaration so provide a fully prototyped one.  If it    is 1, we found it so don't provide any declaration at all.  */
 if|#
 directive|if
+operator|!
+name|HAVE_DECL_BASENAME
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNU_LIBRARY__
@@ -114,6 +118,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__CYGWIN__
 argument_list|)
 operator|||
@@ -122,15 +131,10 @@ argument_list|(
 name|__CYGWIN32__
 argument_list|)
 operator|||
-operator|(
 name|defined
 argument_list|(
 name|HAVE_DECL_BASENAME
 argument_list|)
-operator|&&
-operator|!
-name|HAVE_DECL_BASENAME
-operator|)
 specifier|extern
 name|char
 modifier|*
@@ -146,13 +150,6 @@ argument_list|)
 decl_stmt|;
 else|#
 directive|else
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_DECL_BASENAME
-argument_list|)
 specifier|extern
 name|char
 modifier|*
@@ -316,6 +313,28 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Generate a relocated path to some installation directory.  Allocates    return value using malloc.  */
+specifier|extern
+name|char
+modifier|*
+name|make_relative_prefix
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -577,6 +596,27 @@ operator|)
 argument_list|)
 name|ATTRIBUTE_MALLOC
 decl_stmt|;
+comment|/* Physical memory routines.  Return values are in BYTES.  */
+specifier|extern
+name|double
+name|physmem_total
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|double
+name|physmem_available
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* hex character manipulation routines */
 define|#
 directive|define
@@ -692,6 +732,10 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_ASPRINTF
 comment|/* Like sprintf but provides a pointer to malloc'd storage, which must    be freed by the caller.  */
 specifier|extern
 name|int
@@ -712,6 +756,12 @@ operator|)
 argument_list|)
 name|ATTRIBUTE_PRINTF_2
 decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_VASPRINTF
 comment|/* Like vsprintf but provides a pointer to malloc'd storage, which    must be freed by the caller.  */
 specifier|extern
 name|int
@@ -737,6 +787,8 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|ARRAY_SIZE

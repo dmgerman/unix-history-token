@@ -3,8 +3,35 @@ begin_comment
 comment|/* Definitions of target machine for GNU compiler,    for i386/ELF NetBSD systems.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by matthew green<mrg@eterna.com.au>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       NETBSD_OS_CPP_BUILTINS_ELF();		\     }						\   while (0)
+end_define
+
 begin_comment
-comment|/* Provide a LINK_SPEC appropriate for a NetBSD/i386 ELF target.    This is a copy of LINK_SPEC from<netbsd-elf.h> tweaked for    the i386 target.  */
+comment|/* Extra specs needed for NetBSD/i386 ELF.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "netbsd_cpp_spec", NETBSD_CPP_SPEC },	\   { "netbsd_entry_point", NETBSD_ENTRY_POINT },
+end_define
+
+begin_comment
+comment|/* Provide a LINK_SPEC appropriate for a NetBSD/i386 ELF target.  */
 end_comment
 
 begin_undef
@@ -17,20 +44,31 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-define|\
-value|"%{assert*} %{R*}							\   %{shared:-shared}							\   %{!shared:								\     -dc -dp								\     %{!nostdlib:							\       %{!r*:								\ 	%{!e*:-e __start}}}						\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld.elf_so}}	\     %{static:-static}}"
+value|NETBSD_LINK_SPEC_ELF
 end_define
-
-begin_comment
-comment|/* Names to predefine in the preprocessor for this target machine.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-define|\
-value|"-D__NetBSD__ -D__ELF__ -Asystem=unix -Asystem=NetBSD"
+name|NETBSD_ENTRY_POINT
+value|"__start"
+end_define
+
+begin_comment
+comment|/* Provide a CPP_SPEC appropriate for NetBSD.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|"%(netbsd_cpp_spec)"
 end_define
 
 begin_comment
@@ -242,11 +280,16 @@ name|DEFAULT_PCC_STRUCT_RETURN
 value|1
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
+begin_comment
+comment|/* Attempt to enable execute permissions on the stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRANSFER_FROM_TRAMPOLINE
+value|NETBSD_ENABLE_EXECUTE_STACK
+end_define
 
 begin_define
 define|#

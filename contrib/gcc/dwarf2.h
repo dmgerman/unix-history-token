@@ -1413,9 +1413,14 @@ name|DW_OP_call4
 init|=
 literal|0x99
 block|,
-name|DW_OP_calli
+name|DW_OP_call_ref
 init|=
 literal|0x9a
+block|,
+comment|/* GNU extensions.  */
+name|DW_OP_GNU_push_tls_address
+init|=
+literal|0xe0
 block|}
 enum|;
 end_enum
@@ -1424,7 +1429,7 @@ begin_define
 define|#
 directive|define
 name|DW_OP_lo_user
-value|0x80
+value|0xe0
 end_define
 
 begin_comment

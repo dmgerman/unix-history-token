@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel x86 running BeOS    Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel x86 running BeOS    Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
 
 begin_define
 define|#
@@ -87,20 +81,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|MCOUNT_NAME
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%edx\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%edx\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
+name|MCOUNT_NAME
+value|"mcount"
 end_define
 
 begin_undef
@@ -145,19 +133,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|WCHAR_TYPE_SIZE
 end_undef
 
@@ -168,30 +143,13 @@ name|WCHAR_TYPE_SIZE
 value|16
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__ -D__BEOS__ -D__INTEL__ -D_X86_=1 \ -D__stdcall=__attribute__((__stdcall__)) \ -D__cdecl=__attribute__((__cdecl__)) \ -D__declspec(x)=__attribute__((x)) \ -Asystem=beos"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%(cpp_cpu) %{!no-fPIC:%{!no-fpic:-D__PIC__ -D__pic__}}"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do									\     {									\ 	builtin_define ("__ELF__");					\ 	builtin_define ("__BEOS__");					\ 	builtin_define ("__INTEL__");					\ 	builtin_define ("_X86_");					\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	builtin_assert ("system=beos");					\ 	if (flag_pic)							\ 	  {								\ 	    builtin_define ("__PIC__");					\ 	    builtin_define ("__pic__");					\ 	  }								\     }									\   while (0)
 end_define
 
 begin_comment

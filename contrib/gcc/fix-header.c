@@ -1227,20 +1227,6 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
 begin_decl_stmt
 name|struct
 name|obstack
@@ -2427,18 +2413,14 @@ condition|(
 name|i
 operator|<
 name|argc
-operator|&&
-operator|!
-name|CPP_FATAL_ERRORS
-argument_list|(
-name|scan_in
-argument_list|)
 condition|)
-name|cpp_fatal
+name|cpp_error
 argument_list|(
 name|scan_in
 argument_list|,
-literal|"Invalid option `%s'"
+name|DL_ERROR
+argument_list|,
+literal|"invalid option `%s'"
 argument_list|,
 name|argv
 index|[
@@ -2446,14 +2428,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|cpp_post_options
-argument_list|(
-name|scan_in
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|CPP_FATAL_ERRORS
+name|cpp_errors
 argument_list|(
 name|scan_in
 argument_list|)

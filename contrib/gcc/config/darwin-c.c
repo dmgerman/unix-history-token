@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"c-lex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"c-tree.h"
 end_include
 
@@ -260,6 +254,7 @@ name|pfile
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|arg

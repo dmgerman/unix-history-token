@@ -1,6 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do							\     {							\       NETBSD_OS_CPP_BUILTINS_AOUT();			\       builtin_define_std ("sparc");			\       builtin_assert ("cpu=sparc");			\       builtin_assert ("machine=sparc");			\     }							\   while (0)
+end_define
+
 begin_comment
-comment|/* Names to predefine in the preprocessor for this target machine.  */
+comment|/* Make sure this is undefined.  */
 end_comment
 
 begin_undef
@@ -9,11 +18,35 @@ directive|undef
 name|CPP_PREDEFINES
 end_undef
 
+begin_comment
+comment|/* What extra spec entries do we need?  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Dunix -Dsparc -D__NetBSD__ -Asystem=unix -Asystem=NetBSD -Acpu=sparc -Amachine=sparc"
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "netbsd_cpp_spec",          NETBSD_CPP_SPEC },
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|"%(cpp_cpu) %(netbsd_cpp_spec)"
 end_define
 
 begin_comment
@@ -54,6 +87,7 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -93,6 +127,17 @@ define|#
 directive|define
 name|DWARF2_UNWIND_INFO
 value|0
+end_define
+
+begin_comment
+comment|/* Attempt to enable execute permissions on the stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRANSFER_FROM_TRAMPOLINE
+value|NETBSD_ENABLE_EXECUTE_STACK
 end_define
 
 end_unit

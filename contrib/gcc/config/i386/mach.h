@@ -3,33 +3,20 @@ begin_comment
 comment|/* Configuration for an i386 running Mach as the target machine.  */
 end_comment
 
-begin_comment
-comment|/* We do want to add an underscore to the front of each user symbol.    i386/gas.h checks this.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|YES_UNDERSCORES
+name|TARGET_VERSION
+value|fprintf (stderr, " (80386, Mach)");
 end_define
 
-begin_include
-include|#
-directive|include
-file|"i386/gstabs.h"
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Dunix -DMACH -Asystem=unix -Asystem=mach"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("MACH");		\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=mach");		\     }						\   while (0)
 end_define
 
 begin_comment

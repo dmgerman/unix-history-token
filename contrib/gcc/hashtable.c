@@ -122,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Initialise an obstack.  */
+comment|/* Initialize an obstack.  */
 end_comment
 
 begin_function
@@ -513,6 +513,12 @@ condition|)
 break|break;
 if|if
 condition|(
+name|node
+operator|->
+name|hash_value
+operator|==
+name|hash
+operator|&&
 name|HT_LEN
 argument_list|(
 name|node
@@ -610,6 +616,12 @@ name|node
 argument_list|)
 operator|=
 name|len
+expr_stmt|;
+name|node
+operator|->
+name|hash_value
+operator|=
+name|hash
 expr_stmt|;
 if|if
 condition|(
@@ -762,20 +774,12 @@ name|hash2
 decl_stmt|;
 name|hash
 operator|=
-name|calc_hash
-argument_list|(
-name|HT_STR
-argument_list|(
+operator|(
 operator|*
 name|p
-argument_list|)
-argument_list|,
-name|HT_LEN
-argument_list|(
-operator|*
-name|p
-argument_list|)
-argument_list|)
+operator|)
+operator|->
+name|hash_value
 expr_stmt|;
 name|hash2
 operator|=

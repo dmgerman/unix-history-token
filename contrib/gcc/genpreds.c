@@ -103,12 +103,10 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
+argument_list|(
 name|predicate
-operator|/
-sizeof|sizeof
-expr|*
-name|predicate
+argument_list|)
 condition|;
 name|i
 operator|++

@@ -9,6 +9,18 @@ directive|include
 file|"varray.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hard-reg-set.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"basic-block.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -141,6 +153,13 @@ name|reg_n_info
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|bitmap_head
+name|subregs_of_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Indexed by n, gives number of times (REG n) is used or set.  */
 end_comment
@@ -220,20 +239,6 @@ parameter_list|(
 name|N
 parameter_list|)
 value|(VARRAY_REG (reg_n_info, N)->deaths)
-end_define
-
-begin_comment
-comment|/* Indexed by N; says whether a pseudo register N was ever used    within a SUBREG that changes the mode of the reg in some way    that is illegal for a given class (usually floating-point)    of registers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REG_CHANGES_MODE
-parameter_list|(
-name|N
-parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->changes_mode)
 end_define
 
 begin_comment

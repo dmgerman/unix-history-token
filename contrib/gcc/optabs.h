@@ -25,16 +25,21 @@ begin_comment
 comment|/* Optabs are tables saying how to generate insn bodies    for various machine modes and numbers of operands.    Each optab applies to one operation.    For example, add_optab applies to addition.     The insn_code slot is the enum insn_code that says how to    generate an insn for this operation on a particular machine mode.    It is CODE_FOR_nothing if there is no such insn on the target machine.     The `lib_call' slot is the name of the library function that    can be used to perform the operation.     A few optabs, such as move_optab and cmp_optab, are used    by special code.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
+begin_decl_stmt
+name|struct
 name|optab
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|enum
 name|rtx_code
 name|code
 decl_stmt|;
 struct|struct
+name|optab_handlers
 block|{
 name|enum
 name|insn_code
@@ -50,7 +55,17 @@ name|NUM_MACHINE_MODES
 index|]
 struct|;
 block|}
-typedef|*
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_typedef
+typedef|typedef
+name|struct
+name|optab
+modifier|*
 name|optab
 typedef|;
 end_typedef
@@ -188,6 +203,12 @@ block|,
 comment|/* Cosine */
 name|OTI_cos
 block|,
+comment|/* Exponential */
+name|OTI_exp
+block|,
+comment|/* Natural Logarithm */
+name|OTI_log
+block|,
 comment|/* Compare insn; two operands.  */
 name|OTI_cmp
 block|,
@@ -215,8 +236,12 @@ block|}
 enum|;
 end_enum
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|optab
 name|optab_table
 index|[
@@ -510,6 +535,20 @@ define|#
 directive|define
 name|cos_optab
 value|(optab_table[OTI_cos])
+end_define
+
+begin_define
+define|#
+directive|define
+name|exp_optab
+value|(optab_table[OTI_exp])
+end_define
+
+begin_define
+define|#
+directive|define
+name|log_optab
+value|(optab_table[OTI_log])
 end_define
 
 begin_define

@@ -92,44 +92,16 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"\ -D__vxworks -D__vxworks__ -Asystem=vxworks -Asystem=embedded \ -Acpu=powerpc -Amachine=powerpc"
-end_define
-
-begin_comment
-comment|/* Don't define _LITTLE_ENDIAN or _BIG_ENDIAN */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_ENDIAN_BIG_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_ENDIAN_BIG_SPEC
-value|"-D__BIG_ENDIAN__ -Amachine=bigendian"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_ENDIAN_LITTLE_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_ENDIAN_LITTLE_SPEC
-value|"-D__LITTLE_ENDIAN__ -Amachine=littleendian"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                      \     {                                     \       builtin_define ("__vxworks");       \       builtin_define ("__vxworks__");     \       builtin_assert ("system=vxworks");  \       builtin_assert ("system=embedded"); \       builtin_assert ("cpu=powerpc");     \       builtin_assert ("machine=powerpc"); \     }                                     \   while (0)
 end_define
 
 begin_comment

@@ -539,7 +539,7 @@ name|v
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|ggc_mark_nonnull_tree
+name|ggc_mark_tree
 argument_list|(
 name|HT_IDENT_TO_GCC_IDENT
 argument_list|(

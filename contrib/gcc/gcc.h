@@ -22,6 +22,72 @@ file|"version.h"
 end_include
 
 begin_comment
+comment|/* The mapping of a spec function name to the C function that    implements it.  */
+end_comment
+
+begin_struct
+struct|struct
+name|spec_function
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+specifier|const
+name|char
+operator|*
+operator|(
+operator|*
+name|func
+operator|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* This defines which switch letters take arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_SWITCH_TAKES_ARG
+parameter_list|(
+name|CHAR
+parameter_list|)
+define|\
+value|((CHAR) == 'D' || (CHAR) == 'U' || (CHAR) == 'o' \    || (CHAR) == 'e' || (CHAR) == 'T' || (CHAR) == 'u' \    || (CHAR) == 'I' || (CHAR) == 'm' || (CHAR) == 'x' \    || (CHAR) == 'L' || (CHAR) == 'A' || (CHAR) == 'V' \    || (CHAR) == 'B' || (CHAR) == 'b')
+end_define
+
+begin_comment
+comment|/* This defines which multi-letter switches take arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_WORD_SWITCH_TAKES_ARG
+parameter_list|(
+name|STR
+parameter_list|)
+define|\
+value|(!strcmp (STR, "Tdata") || !strcmp (STR, "Ttext")	\   || !strcmp (STR, "Tbss") || !strcmp (STR, "include")	\   || !strcmp (STR, "imacros") || !strcmp (STR, "aux-info") \   || !strcmp (STR, "idirafter") || !strcmp (STR, "iprefix") \   || !strcmp (STR, "iwithprefix") || !strcmp (STR, "iwithprefixbefore") \   || !strcmp (STR, "isystem") || !strcmp (STR, "-param") \   || !strcmp (STR, "specs") \   || !strcmp (STR, "MF") || !strcmp (STR, "MT") || !strcmp (STR, "MQ"))
+end_define
+
+begin_comment
 comment|/* These are exported by gcc.c.  */
 end_comment
 
@@ -221,6 +287,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|lang_specific_extra_outfiles
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Table of language-specific spec functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|spec_function
+name|lang_specific_spec_functions
+index|[]
 decl_stmt|;
 end_decl_stmt
 

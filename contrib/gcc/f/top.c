@@ -162,16 +162,6 @@ comment|/* Externals defined here. */
 end_comment
 
 begin_decl_stmt
-name|int
-name|flag_traditional
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Shouldn't need this (C front end only)! */
-end_comment
-
-begin_decl_stmt
 name|bool
 name|ffe_is_do_internal_checks_
 init|=

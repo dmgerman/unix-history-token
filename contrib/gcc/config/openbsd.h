@@ -383,6 +383,12 @@ directive|undef
 name|SET_ASM_OP
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|GLOBAL_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -402,6 +408,13 @@ define|#
 directive|define
 name|SET_ASM_OP
 value|"\t.set\t"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLOBAL_ASM_OP
+value|"\t.globl\t"
 end_define
 
 begin_comment
@@ -479,7 +492,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     fputs (" , ", FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "function");			\     putc ('\n', FILE);							\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do {									\     ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");			\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
 end_define
 
 begin_endif
@@ -515,7 +528,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     if (!flag_inhibit_size_directive)					\       {									\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\ 	fputs (" , . - ", FILE);					\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
+value|do {								\     if (!flag_inhibit_size_directive)				\       ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\   } while (0)
 end_define
 
 begin_endif
@@ -551,7 +564,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     fputs (" , ", FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, " , %d\n", int_size_in_bytes (TREE_TYPE (DECL)));\       }									\     ASM_OUTPUT_LABEL (FILE, NAME);					\   } while (0)
+value|do {								\       HOST_WIDE_INT size;					\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");		\       size_directive_output = 0;				\       if (!flag_inhibit_size_directive				\&& (DECL)&& DECL_SIZE (DECL))			\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, size);		\ 	}							\       ASM_OUTPUT_LABEL (FILE, NAME);				\   } while (0)
 end_define
 
 begin_comment
@@ -578,7 +591,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									 \      const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "%s", SIZE_ASM_OP);				 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, " , %d\n", int_size_in_bytes (TREE_TYPE (DECL)));\        }								 \    } while (0)
+value|do {									 \      const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		 \      HOST_WIDE_INT size;						 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 size = int_size_in_bytes (TREE_TYPE (DECL));			 \ 	 ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);			 \        }								 \    } while (0)
 end_define
 
 begin_endif
@@ -625,34 +638,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Tell the assembler that a symbol is global.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASM_GLOBALIZE_LABEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { fputs ("\t.globl\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_escape
 end_escape
 
@@ -682,6 +667,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 end_unit

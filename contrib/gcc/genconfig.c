@@ -229,7 +229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* RECOG_P will be non-zero if this pattern was seen in a context where it will    be used to recognize, rather than just generate an insn.      NON_PC_SET_SRC will be non-zero if this pattern was seen in a SET_SRC    of a SET whose destination is not (pc).  */
+comment|/* RECOG_P will be nonzero if this pattern was seen in a context where it will    be used to recognize, rather than just generate an insn.      NON_PC_SET_SRC will be nonzero if this pattern was seen in a SET_SRC    of a SET whose destination is not (pc).  */
 end_comment
 
 begin_function

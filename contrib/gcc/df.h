@@ -171,6 +171,11 @@ block|{
 name|DF_REF_READ_WRITE
 init|=
 literal|1
+block|,
+comment|/* This flag is set on register references itself representing a or        being inside a subreg on machines which have CLASS_CANNOT_CHANGE_MODE        and where the mode change of that subreg expression is invalid for        this class.  Note, that this flag can also be set on df_refs        representing the REG itself (i.e. one might not see the subreg        anyore).  Also note, that this flag is set also for hardreg refs.        I.e. you must check yourself if it's a pseudo.  */
+name|DF_REF_MODE_CHANGE
+init|=
+literal|2
 block|}
 enum|;
 end_enum
@@ -207,6 +212,7 @@ name|df_ref_type
 name|type
 decl_stmt|;
 comment|/* Type of ref.  */
+name|unsigned
 name|int
 name|id
 decl_stmt|;

@@ -4,7 +4,7 @@ comment|/* Subroutines needed for unwinding stack frames for exception handling.
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -273,6 +273,17 @@ name|encoding
 operator|=
 name|DW_EH_PE_omit
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DWARF2_OBJECT_END_PTR_EXTENSION
+name|ob
+operator|->
+name|fde_end
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|init_object_mutex_once
 argument_list|()
 expr_stmt|;
@@ -566,7 +577,7 @@ comment|/* Called from crtbegin.o to deregister the unwind info for an object.  
 end_comment
 
 begin_comment
-comment|/* ??? Glibc has for a while now exported __register_frame_info and    __deregister_frame_info.  If we call __register_frame_info_bases    from crtbegin (wherein it is declared weak), and this object does    not get pulled from libgcc.a for other reasons, then the    invocation of __deregister_frame_info will be resolved from glibc.    Since the registration did not happen there, we'll abort.     Therefore, declare a new deregistration entry point that does the    exact same thing, but will resolve to the same library as     implements __register_frame_info_bases.  */
+comment|/* ??? Glibc has for a while now exported __register_frame_info and    __deregister_frame_info.  If we call __register_frame_info_bases    from crtbegin (wherein it is declared weak), and this object does    not get pulled from libgcc.a for other reasons, then the    invocation of __deregister_frame_info will be resolved from glibc.    Since the registration did not happen there, we'll abort.     Therefore, declare a new deregistration entry point that does the    exact same thing, but will resolve to the same library as    implements __register_frame_info_bases.  */
 end_comment
 
 begin_function
@@ -1624,7 +1635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Split LINEAR into a linear sequence with low values and an erratic    sequence with high values, put the linear one (of longest possible    length) into LINEAR and the erratic one into ERRATIC. This is O(N).        Because the longest linear sequence we are trying to locate within the    incoming LINEAR array can be interspersed with (high valued) erratic    entries.  We construct a chain indicating the sequenced entries.    To avoid having to allocate this chain, we overlay it onto the space of    the ERRATIC array during construction.  A final pass iterates over the    chain to determine what should be placed in the ERRATIC array, and    what is the linear sequence.  This overlay is safe from aliasing.  */
+comment|/* Split LINEAR into a linear sequence with low values and an erratic    sequence with high values, put the linear one (of longest possible    length) into LINEAR and the erratic one into ERRATIC. This is O(N).     Because the longest linear sequence we are trying to locate within the    incoming LINEAR array can be interspersed with (high valued) erratic    entries.  We construct a chain indicating the sequenced entries.    To avoid having to allocate this chain, we overlay it onto the space of    the ERRATIC array during construction.  A final pass iterates over the    chain to determine what should be placed in the ERRATIC array, and    what is the linear sequence.  This overlay is safe from aliasing.  */
 end_comment
 
 begin_function
@@ -2608,7 +2619,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Update encoding, mixed_encoding, and pc_begin for OB for the     fde array beginning at THIS_FDE.  Return the number of fdes    encountered along the way.  */
+comment|/* Update encoding, mixed_encoding, and pc_begin for OB for the    fde array beginning at THIS_FDE.  Return the number of fdes    encountered along the way.  */
 end_comment
 
 begin_function
@@ -2651,11 +2662,13 @@ decl_stmt|;
 for|for
 control|(
 init|;
+operator|!
+name|last_fde
+argument_list|(
+name|ob
+argument_list|,
 name|this_fde
-operator|->
-name|length
-operator|!=
-literal|0
+argument_list|)
 condition|;
 name|this_fde
 operator|=
@@ -2919,11 +2932,13 @@ decl_stmt|;
 for|for
 control|(
 init|;
+operator|!
+name|last_fde
+argument_list|(
+name|ob
+argument_list|,
 name|this_fde
-operator|->
-name|length
-operator|!=
-literal|0
+argument_list|)
 condition|;
 name|this_fde
 operator|=
@@ -3411,11 +3426,13 @@ decl_stmt|;
 for|for
 control|(
 init|;
+operator|!
+name|last_fde
+argument_list|(
+name|ob
+argument_list|,
 name|this_fde
-operator|->
-name|length
-operator|!=
-literal|0
+argument_list|)
 condition|;
 name|this_fde
 operator|=

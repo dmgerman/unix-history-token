@@ -95,22 +95,28 @@ begin_comment
 comment|/* Some defines for CPP.    arm32 is the NetBSD port name, so we always define arm32 and __arm32__.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"\ -Dunix -Driscbsd -Darm32 -D__arm32__ -D__arm__ -D__NetBSD__ \ -Asystem=unix -Asystem=NetBSD"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {					\ 	NETBSD_OS_CPP_BUILTINS_AOUT();		\ 	builtin_define_std ("arm32");		\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("riscbsd");		\     } while (0)
 end_define
 
-begin_comment
-comment|/* Define _POSIX_SOURCE if necessary.  */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "netbsd_cpp_spec",  NETBSD_CPP_SPEC }, \   { "netbsd_link_spec", NETBSD_LINK_SPEC_AOUT },
+end_define
 
 begin_undef
 undef|#
@@ -122,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %(cpp_cpu_arch) %(cpp_apcs_pc) %(cpp_float) %(cpp_endian) \ %{posix:-D_POSIX_SOURCE} \ "
+value|"\ %(cpp_cpu_arch) %(cpp_apcs_pc) %(cpp_float) %(cpp_endian) %(netbsd_cpp_spec) \ "
 end_define
 
 begin_comment
@@ -173,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\ -X %{!shared:%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{R*} \ %{static:-Bstatic}} %{shared} %{assert*} \ "
+value|"-X %(netbsd_link_spec)"
 end_define
 
 begin_undef
@@ -206,6 +212,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment
@@ -300,6 +307,48 @@ define|#
 directive|define
 name|DEFAULT_STRUCTURE_SIZE_BOUNDARY
 value|8
+end_define
+
+begin_comment
+comment|/* Emit code to set up a trampoline and synchronize the caches.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INITIALIZE_TRAMPOLINE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_TRAMPOLINE
+parameter_list|(
+name|TRAMP
+parameter_list|,
+name|FNADDR
+parameter_list|,
+name|CXT
+parameter_list|)
+define|\
+value|{                                                                      \   emit_move_insn (gen_rtx (MEM, SImode, plus_constant ((TRAMP), 8)),   \                  (CXT));                                               \   emit_move_insn (gen_rtx (MEM, SImode, plus_constant ((TRAMP), 12)),  \                  (FNADDR));                                            \   emit_library_call (gen_rtx_SYMBOL_REF (Pmode, "__clear_cache"),      \                     0, VOIDmode, 2, TRAMP, Pmode,                      \                     plus_constant (TRAMP, TRAMPOLINE_SIZE), Pmode);    \ }
+end_define
+
+begin_comment
+comment|/* Clear the instruction cache from `BEG' to `END'.  This makes a    call to the ARM32_SYNC_ICACHE architecture specific syscall.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEAR_INSN_CACHE
+parameter_list|(
+name|BEG
+parameter_list|,
+name|END
+parameter_list|)
+define|\
+value|{                                                                      \   extern int sysarch(int number, void *args);                          \   struct {                                                             \     unsigned int  addr;                                                \     int           len;                                                 \   } s;                                                                 \   s.addr = (unsigned int)(BEG);                                        \   s.len = (END) - (BEG);                                               \   (void)sysarch(0,&s);                                                \ }
 end_define
 
 end_unit

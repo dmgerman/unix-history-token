@@ -9,27 +9,59 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|cselib_val_struct
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* The hash value.  */
 name|unsigned
 name|int
 name|value
-decl_stmt|;
+block|;
 union|union
+name|cselib_val_u
 block|{
 comment|/* A VALUE rtx that points back to this structure.  */
 name|rtx
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"1"
+argument_list|)
+operator|)
+argument_list|)
 name|val_rtx
-decl_stmt|;
+block|;
 comment|/* Used to keep a list of free cselib_val structures.  */
 name|struct
 name|cselib_val_struct
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|)
+argument_list|)
 name|next_free
-decl_stmt|;
-block|}
+block|;   }
+name|GTY
+argument_list|(
+operator|(
+name|desc
+argument_list|(
+literal|"1"
+argument_list|)
+operator|)
+argument_list|)
 name|u
 union|;
 comment|/* All rtl expressions that hold this value at the current time during a      scan.  */
@@ -37,25 +69,32 @@ name|struct
 name|elt_loc_list
 modifier|*
 name|locs
-decl_stmt|;
+block|;
 comment|/* If this value is used as an address, points to a list of values that      use it as an address in a MEM.  */
 name|struct
 name|elt_list
 modifier|*
 name|addr_list
-decl_stmt|;
-block|}
-name|cselib_val
-typedef|;
+block|; }
 end_typedef
+
+begin_expr_stmt
+name|cselib_val
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* A list of rtl expressions that hold the same value.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|elt_loc_list
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* Next element in the list.  */
 name|struct
@@ -71,17 +110,29 @@ comment|/* The insn that made the equivalence.  */
 name|rtx
 name|setting_insn
 decl_stmt|;
+comment|/* True when setting insn is inside libcall.  */
+name|bool
+name|in_libcall
+decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* A list of cselib_val structures.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|elt_list
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|struct
 name|elt_list
@@ -93,8 +144,11 @@ modifier|*
 name|elt
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|extern

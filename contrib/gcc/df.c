@@ -3,12 +3,6 @@ begin_comment
 comment|/* Dataflow support routines.    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Michael P. Hayes (m.hayes@elec.canterbury.ac.nz,                                     mhayes@redhat.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   OVERVIEW:  This file provides some dataflow routines for computing reaching defs, upward exposed uses, live variables, def-use chains, and use-def chains.  The global dataflow is performed using simple iterative methods with a worklist and could be sped up by ordering the blocks with a depth first search order.  A `struct ref' data structure (ref) is allocated for every register reference (def or use) and this records the insn and bb the ref is found within.  The refs are linked together in chains of uses and defs for each insn and for each register.  Each ref also has a chain field that links all the use refs for a def or all the def refs for a use. This is used to create use-def or def-use chains.   USAGE:  Here's an example of using the dataflow routines.        struct df *df;        df = df_init ();        df_analyse (df, 0, DF_ALL);        df_dump (df, DF_ALL, stderr);        df_finish (df);   df_init simply creates a poor man's object (df) that needs to be passed to all the dataflow routines.  df_finish destroys this object and frees up any allocated memory.  df_analyse performs the following:  1. Records defs and uses by scanning the insns in each basic block    or by scanning the insns queued by df_insn_modify. 2. Links defs and uses into insn-def and insn-use chains. 3. Links defs and uses into reg-def and reg-use chains. 4. Assigns LUIDs to each insn (for modified blocks). 5. Calculates local reaching definitions. 6. Calculates global reaching definitions. 7. Creates use-def chains. 8. Calculates local reaching uses (upwards exposed uses). 9. Calculates global reaching uses. 10. Creates def-use chains. 11. Calculates local live registers. 12. Calculates global live registers. 13. Calculates register lifetimes and determines local registers.   PHILOSOPHY:  Note that the dataflow information is not updated for every newly deleted or created insn.  If the dataflow information requires updating then all the changed, new, or deleted insns needs to be marked with df_insn_modify (or df_insns_modify) either directly or indirectly (say through calling df_insn_delete).  df_insn_modify marks all the modified insns to get processed the next time df_analyse  is called.  Beware that tinkering with insns may invalidate the dataflow information. The philosophy behind these routines is that once the dataflow information has been gathered, the user should store what they require before they tinker with any insn.  Once a reg is replaced, for example, then the reg-def/reg-use chains will point to the wrong place.  Once a whole lot of changes have been made, df_analyse can be called again to update the dataflow information.  Currently, this is not very smart with regard to propagating changes to the dataflow so it should not be called very often.   DATA STRUCTURES:  The basic object is a REF (reference) and this may either be a DEF (definition) or a USE of a register.  These are linked into a variety of lists; namely reg-def, reg-use,   insn-def, insn-use, def-use, and use-def lists.  For example, the reg-def lists contain all the refs that define a given register while the insn-use lists contain all the refs used by an insn.  Note that the reg-def and reg-use chains are generally short (except for the hard registers) and thus it is much faster to search these chains rather than searching the def or use bitmaps.  If the insns are in SSA form then the reg-def and use-def lists should only contain the single defining ref.  TODO:  1) Incremental dataflow analysis.  Note that if a loop invariant insn is hoisted (or sunk), we do not need to change the def-use or use-def chains.  All we have to do is to change the bb field for all the associated defs and uses and to renumber the LUIDs for the original and new basic blocks of the insn.  When shadowing loop mems we create new uses and defs for new pseudos so we do not affect the existing dataflow information.  My current strategy is to queue up all modified, created, or deleted insns so when df_analyse is called we can easily determine all the new or deleted refs.  Currently the global dataflow information is recomputed from scratch but this could be propagated more efficiently.  2) Improved global data flow computation using depth first search.  3) Reduced memory requirements.  We could operate a pool of ref structures.  When a ref is deleted it gets returned to the pool (say by linking on to a chain of free refs). This will require a pair of bitmaps for defs and uses so that we can tell which ones have been changed.  Alternatively, we could periodically squeeze the def and use tables and associated bitmaps and renumber the def and use ids.  4) Ordering of reg-def and reg-use lists.  Should the first entry in the def list be the first def (within a BB)? Similarly, should the first entry in the use list be the last use (within a BB)?  5) Working with a sub-CFG.  Often the whole CFG does not need to be analysed, for example, when optimising a loop, only certain registers are of interest. Perhaps there should be a bitmap argument to df_analyse to specify  which registers should be analysed?   */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HANDLE_SUBREG
-end_define
-
 begin_include
 include|#
 directive|include
@@ -102,19 +96,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|FOR_ALL_BBS
-parameter_list|(
-name|BB
-parameter_list|,
-name|CODE
-parameter_list|)
-define|\
-value|do {								\   int node_;							\   for (node_ = 0; node_< n_basic_blocks; node_++)		\     {(BB) = BASIC_BLOCK (node_); CODE;};} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|FOR_EACH_BB_IN_BITMAP
 parameter_list|(
 name|BITMAP
@@ -126,55 +107,7 @@ parameter_list|,
 name|CODE
 parameter_list|)
 define|\
-value|do {								\   unsigned int node_;						\   EXECUTE_IF_SET_IN_BITMAP (BITMAP, MIN, node_, 		\     {(BB) = BASIC_BLOCK (node_); CODE;});} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOR_EACH_BB_IN_BITMAP_REV
-parameter_list|(
-name|BITMAP
-parameter_list|,
-name|MIN
-parameter_list|,
-name|BB
-parameter_list|,
-name|CODE
-parameter_list|)
-define|\
-value|do {								\   unsigned int node_;						\   EXECUTE_IF_SET_IN_BITMAP_REV (BITMAP, node_, 		\     {(BB) = BASIC_BLOCK (node_); CODE;});} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOR_EACH_BB_IN_SBITMAP
-parameter_list|(
-name|BITMAP
-parameter_list|,
-name|MIN
-parameter_list|,
-name|BB
-parameter_list|,
-name|CODE
-parameter_list|)
-define|\
-value|do {                                                            \   unsigned int node_;                                           \   EXECUTE_IF_SET_IN_SBITMAP (BITMAP, MIN, node_,                \     {(BB) = BASIC_BLOCK (node_); CODE;});} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
+value|do							\     {							\       unsigned int node_;				\       EXECUTE_IF_SET_IN_BITMAP (BITMAP, MIN, node_,	\       {(BB) = BASIC_BLOCK (node_); CODE;});		\     }							\   while (0)
 end_define
 
 begin_decl_stmt
@@ -234,6 +167,7 @@ expr|struct
 name|df
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|)
 argument_list|)
@@ -1545,7 +1479,7 @@ comment|/* Local memory allocation/deallocation routines.  */
 end_comment
 
 begin_comment
-comment|/* Increase the insn info table by SIZE more elements.  */
+comment|/* Increase the insn info table to have space for at least SIZE + 1    elements.  */
 end_comment
 
 begin_function
@@ -1562,29 +1496,31 @@ name|df
 modifier|*
 name|df
 decl_stmt|;
+name|unsigned
 name|int
 name|size
 decl_stmt|;
 block|{
-comment|/* Make table 25 percent larger by default.  */
+name|size
+operator|++
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|size
-condition|)
-name|size
-operator|=
+operator|<=
 name|df
 operator|->
 name|insn_size
-operator|/
-literal|4
-expr_stmt|;
+condition|)
+return|return;
+comment|/* Make the table a little larger than requested, so we don't need      to enlarge it so often.  */
 name|size
 operator|+=
 name|df
 operator|->
 name|insn_size
+operator|/
+literal|4
 expr_stmt|;
 name|df
 operator|->
@@ -1711,6 +1647,18 @@ name|df
 operator|->
 name|reg_size
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+name|max_reg_num
+argument_list|()
+condition|)
+name|size
+operator|=
+name|max_reg_num
+argument_list|()
+expr_stmt|;
 name|df
 operator|->
 name|regs
@@ -1798,7 +1746,7 @@ comment|/* Link all the new refs together, overloading the chain field.  */
 end_comment
 
 begin_endif
-unit|for (i = 0; i< size - 1; i++)       refs[i].chain = (struct df_link *)(refs + i + 1);   refs[size - 1].chain = 0; }
+unit|for (i = 0; i< size - 1; i++)     refs[i].chain = (struct df_link *) (refs + i + 1);   refs[size - 1].chain = 0; }
 endif|#
 directive|endif
 end_endif
@@ -1825,14 +1773,13 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-name|unsigned
-name|int
-name|i
-decl_stmt|;
 name|int
 name|dflags
 init|=
 literal|0
+decl_stmt|;
+name|basic_block
+name|bb
 decl_stmt|;
 comment|/* Free the bitmaps if they need resizing.  */
 if|if
@@ -1927,30 +1874,11 @@ name|df
 operator|->
 name|use_id
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|df
-operator|->
-name|n_bbs
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB
 argument_list|(
-name|i
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|struct
 name|bb_info
 modifier|*
@@ -2177,34 +2105,14 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-name|unsigned
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|df
-operator|->
-name|n_bbs
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|basic_block
 name|bb
-init|=
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
 decl_stmt|;
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
+block|{
 name|struct
 name|bb_info
 modifier|*
@@ -2446,7 +2354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocate and initialise dataflow memory.  */
+comment|/* Allocate and initialize dataflow memory.  */
 end_comment
 
 begin_function
@@ -2470,8 +2378,8 @@ block|{
 name|int
 name|n_insns
 decl_stmt|;
-name|int
-name|i
+name|basic_block
+name|bb
 decl_stmt|;
 name|gcc_obstack_init
 argument_list|(
@@ -2575,7 +2483,7 @@ name|df
 operator|->
 name|n_bbs
 operator|=
-name|n_basic_blocks
+name|last_basic_block
 expr_stmt|;
 comment|/* Allocate temporary working array used during local dataflow analysis.  */
 name|df
@@ -2638,9 +2546,7 @@ name|bbs
 operator|=
 name|xcalloc
 argument_list|(
-name|df
-operator|->
-name|n_bbs
+name|last_basic_block
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2656,26 +2562,19 @@ operator|=
 name|BITMAP_XMALLOC
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 name|bitmap_set_bit
 argument_list|(
 name|df
 operator|->
 name|all_blocks
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 block|}
@@ -2929,24 +2828,10 @@ name|use
 decl_stmt|;
 name|reg
 operator|=
-name|regno
-operator|>=
-name|FIRST_PSEUDO_REGISTER
-condition|?
 name|regno_reg_rtx
 index|[
 name|regno
 index|]
-else|:
-name|gen_rtx_REG
-argument_list|(
-name|reg_raw_mode
-index|[
-name|regno
-index|]
-argument_list|,
-name|regno
-argument_list|)
 expr_stmt|;
 name|use
 operator|=
@@ -2990,24 +2875,10 @@ name|use
 decl_stmt|;
 name|reg
 operator|=
-name|regno
-operator|>=
-name|FIRST_PSEUDO_REGISTER
-condition|?
 name|regno_reg_rtx
 index|[
 name|regno
 index|]
-else|:
-name|gen_rtx_REG
-argument_list|(
-name|reg_raw_mode
-index|[
-name|regno
-index|]
-argument_list|,
-name|regno
-argument_list|)
 expr_stmt|;
 name|use
 operator|=
@@ -4093,8 +3964,6 @@ return|return;
 comment|/* GET_MODE (reg) is correct here.  We don't want to go into a SUBREG          for the mode, because we only want to add references to regs, which 	 are really referenced.  E.g. a (subreg:SI (reg:DI 0) 0) does _not_ 	 reference the whole reg 0 in DI mode (which would also include 	 reg 1, at least, if 0 and 1 are SImode registers).  */
 name|endregno
 operator|=
-name|regno
-operator|+
 name|HARD_REGNO_NREGS
 argument_list|(
 name|regno
@@ -4104,6 +3973,44 @@ argument_list|(
 name|reg
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|reg
+argument_list|)
+operator|==
+name|SUBREG
+condition|)
+name|regno
+operator|+=
+name|subreg_regno_offset
+argument_list|(
+name|regno
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|SUBREG_REG
+argument_list|(
+name|reg
+argument_list|)
+argument_list|)
+argument_list|,
+name|SUBREG_BYTE
+argument_list|(
+name|reg
+argument_list|)
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|reg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|endregno
+operator|+=
+name|regno
 expr_stmt|;
 for|for
 control|(
@@ -4122,15 +4029,10 @@ name|df_ref_record_1
 argument_list|(
 name|df
 argument_list|,
-name|gen_rtx_REG
-argument_list|(
-name|reg_raw_mode
+name|regno_reg_rtx
 index|[
 name|i
 index|]
-argument_list|,
-name|i
-argument_list|)
 argument_list|,
 name|loc
 argument_list|,
@@ -4164,7 +4066,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Writes to SUBREG of inndermode wider than word and outermode shorter than    word are read-modify-write.  */
+comment|/* Writes to paradoxical subregs, or subregs which are too narrow    are read-modify-write.  */
 end_comment
 
 begin_function
@@ -4179,6 +4081,12 @@ name|rtx
 name|x
 decl_stmt|;
 block|{
+name|unsigned
+name|int
+name|isize
+decl_stmt|,
+name|osize
+decl_stmt|;
 if|if
 condition|(
 name|GET_CODE
@@ -4191,8 +4099,8 @@ condition|)
 return|return
 name|false
 return|;
-if|if
-condition|(
+name|isize
+operator|=
 name|GET_MODE_SIZE
 argument_list|(
 name|GET_MODE
@@ -4203,6 +4111,29 @@ name|x
 argument_list|)
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|osize
+operator|=
+name|GET_MODE_SIZE
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isize
+operator|<=
+name|osize
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|isize
 operator|<=
 name|UNITS_PER_WORD
 condition|)
@@ -4211,14 +4142,8 @@ name|false
 return|;
 if|if
 condition|(
-name|GET_MODE_SIZE
-argument_list|(
-name|GET_MODE
-argument_list|(
-name|x
-argument_list|)
-argument_list|)
-operator|>
+name|osize
+operator|>=
 name|UNITS_PER_WORD
 condition|)
 return|return
@@ -4345,6 +4270,40 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|CLASS_CANNOT_CHANGE_MODE
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|dst
+argument_list|)
+operator|==
+name|SUBREG
+operator|&&
+name|CLASS_CANNOT_CHANGE_MODE_P
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|SUBREG_REG
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|DF_REF_MODE_CHANGE
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* May be, we should flag the use of strict_low_part somehow.  Might be      handy for the reg allocator.  */
 while|while
 condition|(
@@ -4402,6 +4361,40 @@ operator|*
 name|loc
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CLASS_CANNOT_CHANGE_MODE
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|dst
+argument_list|)
+operator|==
+name|SUBREG
+operator|&&
+name|CLASS_CANNOT_CHANGE_MODE_P
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|SUBREG_REG
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|DF_REF_MODE_CHANGE
+expr_stmt|;
+endif|#
+directive|endif
 name|loc
 operator|=
 operator|&
@@ -4710,6 +4703,9 @@ case|case
 name|PC
 case|:
 case|case
+name|CC0
+case|:
+case|case
 name|ADDR_VEC
 case|:
 case|case
@@ -4830,6 +4826,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|CLASS_CANNOT_CHANGE_MODE
+if|if
+condition|(
+name|CLASS_CANNOT_CHANGE_MODE_P
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|SUBREG_REG
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|DF_REF_MODE_CHANGE
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* ... Fall through ...  */
 case|case
 name|REG
@@ -4890,6 +4913,10 @@ name|dst
 argument_list|)
 condition|)
 block|{
+name|enum
+name|df_ref_flags
+name|use_flags
+decl_stmt|;
 case|case
 name|SUBREG
 case|:
@@ -4901,6 +4928,37 @@ name|dst
 argument_list|)
 condition|)
 block|{
+name|use_flags
+operator|=
+name|DF_REF_READ_WRITE
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLASS_CANNOT_CHANGE_MODE
+if|if
+condition|(
+name|CLASS_CANNOT_CHANGE_MODE_P
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|dst
+argument_list|)
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|SUBREG_REG
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+name|use_flags
+operator||=
+name|DF_REF_MODE_CHANGE
+expr_stmt|;
+endif|#
+directive|endif
 name|df_uses_record
 argument_list|(
 name|df
@@ -4917,7 +4975,7 @@ name|bb
 argument_list|,
 name|insn
 argument_list|,
-name|DF_REF_READ_WRITE
+name|use_flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4927,7 +4985,13 @@ case|case
 name|REG
 case|:
 case|case
+name|PARALLEL
+case|:
+case|case
 name|PC
+case|:
+case|case
+name|CC0
 case|:
 break|break;
 case|case
@@ -4980,6 +5044,37 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+name|use_flags
+operator|=
+name|DF_REF_READ_WRITE
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLASS_CANNOT_CHANGE_MODE
+if|if
+condition|(
+name|CLASS_CANNOT_CHANGE_MODE_P
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|dst
+argument_list|)
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|SUBREG_REG
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+name|use_flags
+operator||=
+name|DF_REF_MODE_CHANGE
+expr_stmt|;
+endif|#
+directive|endif
 name|df_uses_record
 argument_list|(
 name|df
@@ -4996,7 +5091,7 @@ name|bb
 argument_list|,
 name|insn
 argument_list|,
-name|DF_REF_READ_WRITE
+name|use_flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6026,6 +6121,19 @@ argument_list|(
 name|def
 argument_list|)
 decl_stmt|;
+comment|/* Don't add ref's to the chain two times.  I.e. only add              new refs.  XXX the same could be done by testing if the current              insn is a modified (or a new) one.  This would be faster.  */
+if|if
+condition|(
+name|DF_REF_ID
+argument_list|(
+name|def
+argument_list|)
+operator|<
+name|df
+operator|->
+name|def_id_save
+condition|)
+continue|continue;
 name|df
 operator|->
 name|regs
@@ -6210,6 +6318,19 @@ argument_list|(
 name|use
 argument_list|)
 decl_stmt|;
+comment|/* Don't add ref's to the chain two times.  I.e. only add              new refs.  XXX the same could be done by testing if the current              insn is a modified (or a new) one.  This would be faster.  */
+if|if
+condition|(
+name|DF_REF_ID
+argument_list|(
+name|use
+argument_list|)
+operator|<
+name|df
+operator|->
+name|use_id_save
+condition|)
+continue|continue;
 name|df
 operator|->
 name|regs
@@ -8390,6 +8511,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|basic_block
+name|bb
+decl_stmt|;
 name|dflags
 operator|=
 literal|0
@@ -8598,7 +8722,7 @@ argument_list|(
 name|int
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|df
@@ -8612,7 +8736,7 @@ argument_list|(
 name|int
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|df
@@ -8626,7 +8750,7 @@ argument_list|(
 name|int
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|flow_depth_first_order_compute
@@ -8730,9 +8854,6 @@ name|all_blocks
 argument_list|)
 expr_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|bitmap
 modifier|*
 name|in
@@ -8744,7 +8865,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -8758,7 +8879,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -8772,7 +8893,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -8786,87 +8907,74 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|in
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|rd_in
 expr_stmt|;
 name|out
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|rd_out
 expr_stmt|;
 name|gen
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|rd_gen
 expr_stmt|;
 name|kill
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|rd_kill
@@ -8978,9 +9086,6 @@ name|all_blocks
 argument_list|)
 expr_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|bitmap
 modifier|*
 name|in
@@ -8992,7 +9097,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -9006,7 +9111,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -9020,7 +9125,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -9034,87 +9139,74 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|in
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|ru_in
 expr_stmt|;
 name|out
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|ru_out
 expr_stmt|;
 name|gen
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|ru_gen
 expr_stmt|;
 name|kill
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|ru_kill
@@ -9238,9 +9330,6 @@ name|all_blocks
 argument_list|)
 expr_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|bitmap
 modifier|*
 name|in
@@ -9252,7 +9341,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -9266,7 +9355,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -9280,7 +9369,7 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|bitmap
@@ -9294,87 +9383,74 @@ argument_list|(
 name|bitmap
 argument_list|)
 operator|*
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|in
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|lr_in
 expr_stmt|;
 name|out
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|lr_out
 expr_stmt|;
 name|use
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|lr_use
 expr_stmt|;
 name|def
 index|[
-name|i
+name|bb
+operator|->
+name|index
 index|]
 operator|=
 name|DF_BB_INFO
 argument_list|(
 name|df
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 operator|->
 name|lr_def
@@ -9492,7 +9568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialise dataflow analysis.  */
+comment|/* Initialize dataflow analysis.  */
 end_comment
 
 begin_function
@@ -9819,15 +9895,6 @@ argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
-name|bitmap_clear_bit
-argument_list|(
-name|df
-operator|->
-name|insns_modified
-argument_list|,
-name|uid
-argument_list|)
-expr_stmt|;
 name|count
 operator|++
 expr_stmt|;
@@ -9921,7 +9988,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if any of the requested blocks in the bitmap    BLOCKS have been modified.  */
+comment|/* Return nonzero if any of the requested blocks in the bitmap    BLOCKS have been modified.  */
 end_comment
 
 begin_function
@@ -9942,30 +10009,28 @@ name|bitmap
 name|blocks
 decl_stmt|;
 block|{
-name|unsigned
-name|int
-name|j
-decl_stmt|;
 name|int
 name|update
 init|=
 literal|0
 decl_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
+name|basic_block
+name|bb
+decl_stmt|;
+if|if
+condition|(
+operator|!
 name|df
 operator|->
 name|n_bbs
-condition|;
-name|j
-operator|++
-control|)
+condition|)
+return|return
+literal|0
+return|;
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 if|if
 condition|(
 name|bitmap_bit_p
@@ -9974,7 +10039,9 @@ name|df
 operator|->
 name|bbs_modified
 argument_list|,
-name|j
+name|bb
+operator|->
+name|index
 argument_list|)
 operator|&&
 operator|(
@@ -9995,7 +10062,9 @@ name|bitmap_bit_p
 argument_list|(
 name|blocks
 argument_list|,
-name|j
+name|bb
+operator|->
+name|index
 argument_list|)
 operator|)
 condition|)
@@ -10056,7 +10125,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|n_basic_blocks
+name|last_basic_block
 condition|)
 name|abort
 argument_list|()
@@ -10103,7 +10172,7 @@ name|df
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Allocate and initialise data structures.  */
+comment|/* Allocate and initialize data structures.  */
 name|df_alloc
 argument_list|(
 name|df
@@ -10172,6 +10241,13 @@ argument_list|(
 name|df
 operator|->
 name|bbs_modified
+argument_list|)
+expr_stmt|;
+name|bitmap_zero
+argument_list|(
+name|df
+operator|->
+name|insns_modified
 argument_list|)
 expr_stmt|;
 block|}
@@ -10368,7 +10444,7 @@ comment|/* Unlink all the refs in the basic blocks specified by BLOCKS.    Not c
 end_comment
 
 begin_endif
-unit|static void df_refs_unlink (df, blocks)      struct df *df;      bitmap blocks; {   basic_block bb;    if (blocks)     {       FOR_EACH_BB_IN_BITMAP (blocks, 0, bb,       { 	df_bb_refs_unlink (df, bb);       });     }   else     {       FOR_ALL_BBS (bb,       { 	df_bb_refs_unlink (df, bb);       });     } }
+unit|static void df_refs_unlink (df, blocks)      struct df *df;      bitmap blocks; {   basic_block bb;    if (blocks)     {       FOR_EACH_BB_IN_BITMAP (blocks, 0, bb,       { 	df_bb_refs_unlink (df, bb);       });     }   else     {       FOR_EACH_BB (bb) 	df_bb_refs_unlink (df, bb);     } }
 endif|#
 directive|endif
 end_endif
@@ -10493,7 +10569,7 @@ name|df_insn_table_realloc
 argument_list|(
 name|df
 argument_list|,
-literal|0
+name|uid
 argument_list|)
 expr_stmt|;
 name|bitmap_set_bit
@@ -11534,7 +11610,7 @@ name|df_insn_table_realloc
 argument_list|(
 name|df
 argument_list|,
-literal|0
+name|uid
 argument_list|)
 expr_stmt|;
 name|df_insn_modify
@@ -12225,7 +12301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if all DF dominates all the uses within the bitmap    BLOCKS.  */
+comment|/* Return nonzero if all DF dominates all the uses within the bitmap    BLOCKS.  */
 end_comment
 
 begin_function
@@ -12344,7 +12420,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if all the defs of INSN within BB dominates    all the corresponding uses.  */
+comment|/* Return nonzero if all the defs of INSN within BB dominates    all the corresponding uses.  */
 end_comment
 
 begin_function
@@ -12569,7 +12645,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if REG used in multiple basic blocks.  */
+comment|/* Return nonzero if REG used in multiple basic blocks.  */
 end_comment
 
 begin_function
@@ -12643,7 +12719,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if REG live at start of BB.  */
+comment|/* Return nonzero if REG live at start of BB.  */
 end_comment
 
 begin_function
@@ -12713,7 +12789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if REG live at end of BB.  */
+comment|/* Return nonzero if REG live at end of BB.  */
 end_comment
 
 begin_function
@@ -13668,11 +13744,10 @@ decl_stmt|;
 block|{
 name|unsigned
 name|int
-name|i
-decl_stmt|;
-name|unsigned
-name|int
 name|j
+decl_stmt|;
+name|basic_block
+name|bb
 decl_stmt|;
 if|if
 condition|(
@@ -13720,6 +13795,9 @@ operator|&
 name|DF_RD
 condition|)
 block|{
+name|basic_block
+name|bb
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|file
@@ -13727,30 +13805,11 @@ argument_list|,
 literal|"Reaching defs:\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|df
-operator|->
-name|n_bbs
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB
 argument_list|(
-name|i
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|struct
 name|bb_info
 modifier|*
@@ -13777,7 +13836,9 @@ name|file
 argument_list|,
 literal|"bb %d in  \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -13795,7 +13856,9 @@ name|file
 argument_list|,
 literal|"bb %d gen \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -13813,7 +13876,9 @@ name|file
 argument_list|,
 literal|"bb %d kill\t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -13831,7 +13896,9 @@ name|file
 argument_list|,
 literal|"bb %d out \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -13998,30 +14065,11 @@ argument_list|,
 literal|"Reaching uses:\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|df
-operator|->
-name|n_bbs
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB
 argument_list|(
-name|i
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|struct
 name|bb_info
 modifier|*
@@ -14048,7 +14096,9 @@ name|file
 argument_list|,
 literal|"bb %d in  \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -14066,7 +14116,9 @@ name|file
 argument_list|,
 literal|"bb %d gen \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -14084,7 +14136,9 @@ name|file
 argument_list|,
 literal|"bb %d kill\t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -14102,7 +14156,9 @@ name|file
 argument_list|,
 literal|"bb %d out \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -14269,30 +14325,11 @@ argument_list|,
 literal|"Live regs:\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|df
-operator|->
-name|n_bbs
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB
 argument_list|(
-name|i
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|struct
 name|bb_info
 modifier|*
@@ -14319,7 +14356,9 @@ name|file
 argument_list|,
 literal|"bb %d in  \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -14337,7 +14376,9 @@ name|file
 argument_list|,
 literal|"bb %d use \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -14355,7 +14396,9 @@ name|file
 argument_list|,
 literal|"bb %d def \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -14373,7 +14416,9 @@ name|file
 argument_list|,
 literal|"bb %d out \t"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|dump_bitmap
@@ -16749,7 +16794,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* gen = GEN set.    kill = KILL set.    in, out = Filled in by function.    blocks = Blocks to analyze.    dir = Dataflow direction.    conf_op = Confluence operation.    transfun = Transfer function.    order = Order to iterate in. (Should map block numbers -> order)    data = Whatever you want.  It's passed to the transfer function.        This function will perform iterative bitvector dataflow, producing    the in and out sets.  Even if you only want to perform it for a    small number of blocks, the vectors for in and out must be large    enough for *all* blocks, because changing one block might affect    others.  However, it'll only put what you say to analyze on the    initial worklist.        For forward problems, you probably want to pass in a mapping of    block number to rc_order (like df->inverse_rc_map). */
+comment|/* gen = GEN set.    kill = KILL set.    in, out = Filled in by function.    blocks = Blocks to analyze.    dir = Dataflow direction.    conf_op = Confluence operation.    transfun = Transfer function.    order = Order to iterate in. (Should map block numbers -> order)    data = Whatever you want.  It's passed to the transfer function.     This function will perform iterative bitvector dataflow, producing    the in and out sets.  Even if you only want to perform it for a    small number of blocks, the vectors for in and out must be large    enough for *all* blocks, because changing one block might affect    others.  However, it'll only put what you say to analyze on the    initial worklist.     For forward problems, you probably want to pass in a mapping of    block number to rc_order (like df->inverse_rc_map). */
 end_comment
 
 begin_function
@@ -16851,14 +16896,14 @@ name|pending
 operator|=
 name|sbitmap_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|visited
 operator|=
 name|sbitmap_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|sbitmap_zero
@@ -16884,7 +16929,7 @@ literal|0
 argument_list|,
 argument|i
 argument_list|,
-argument|{     fibheap_insert (worklist, order[i], (void *) (size_t) i);      SET_BIT (pending, i);     if (dir == FORWARD)       sbitmap_copy (out[i], gen[i]);     else       sbitmap_copy (in[i], gen[i]);   }
+argument|{     fibheap_insert (worklist, order[i], (void *) (size_t) i);     SET_BIT (pending, i);     if (dir == FORWARD)       sbitmap_copy (out[i], gen[i]);     else       sbitmap_copy (in[i], gen[i]);   }
 argument_list|)
 empty_stmt|;
 while|while
@@ -17116,14 +17161,14 @@ name|pending
 operator|=
 name|sbitmap_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|visited
 operator|=
 name|sbitmap_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|sbitmap_zero

@@ -467,7 +467,7 @@ literal|"-fno-implicit-templates"
 operator|,
 name|N_
 argument_list|(
-literal|"Only emit explicit template instatiations"
+literal|"Only emit explicit template instantiations"
 argument_list|)
 block|}
 end_block
@@ -494,7 +494,7 @@ literal|"-fno-implicit-inline-templates"
 operator|,
 name|N_
 argument_list|(
-literal|"Only emit explicit instatiations of inline templates"
+literal|"Only emit explicit instantiations of inline templates"
 argument_list|)
 block|}
 end_block

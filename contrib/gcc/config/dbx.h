@@ -7,22 +7,12 @@ begin_comment
 comment|/* This file causes gcc to prefer using DBX (stabs) debugging    information.  The configure script will add a #include of this file    to tm.h when --with-stabs is used for certain targets.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DBX_DEBUGGING_INFO
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#

@@ -6,9 +6,10 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-Darm -Dsemi"
+value|do {					\ 	builtin_define_std ("arm");		\ 	builtin_define_std ("semi");		\     } while (0)
 end_define
 
 begin_define

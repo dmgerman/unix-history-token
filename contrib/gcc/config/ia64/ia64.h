@@ -22,19 +22,25 @@ begin_comment
 comment|/* Run-time target specifications */
 end_comment
 
+begin_comment
+comment|/* Target CPU builtins.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|EXTRA_SPECS
+name|TARGET_CPU_CPP_BUILTINS
+parameter_list|()
 define|\
-value|{ "cpp_cpu", CPP_CPU_SPEC }, \   { "asm_extra", ASM_EXTRA_SPEC },
+value|do {						\ 	builtin_assert("cpu=ia64");		\ 	builtin_assert("machine=ia64");		\ 	builtin_define("__ia64");		\ 	builtin_define("__ia64__");		\ 	builtin_define("__itanium__");		\ 	builtin_define("__ELF__");		\ 	if (!TARGET_ILP32)			\ 	  {					\ 	    builtin_define("_LP64");		\ 	    builtin_define("__LP64__");		\ 	  }					\ 	if (TARGET_BIG_ENDIAN)			\ 	  builtin_define("__BIG_ENDIAN__");	\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CPP_CPU_SPEC
-value|" \   -Acpu=ia64 -Amachine=ia64 -D__ia64 -D__ia64__ %{!milp32:-D_LP64 -D__LP64__} \   -D__ELF__"
+name|EXTRA_SPECS
+define|\
+value|{ "asm_extra", ASM_EXTRA_SPEC },
 end_define
 
 begin_define
@@ -190,7 +196,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK_INLINE_DIV_LAT
+name|MASK_INLINE_FLOAT_DIV_LAT
 value|0x00000800
 end_define
 
@@ -201,7 +207,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK_INLINE_DIV_THR
+name|MASK_INLINE_FLOAT_DIV_THR
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* inline div, max throughput.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_INLINE_INT_DIV_LAT
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* inline div, min latency.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_INLINE_INT_DIV_THR
 value|0x00001000
 end_define
 
@@ -300,23 +328,45 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_INLINE_DIV_LAT
-value|(target_flags& MASK_INLINE_DIV_LAT)
+name|TARGET_INLINE_FLOAT_DIV_LAT
+value|(target_flags& MASK_INLINE_FLOAT_DIV_LAT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_INLINE_DIV_THR
-value|(target_flags& MASK_INLINE_DIV_THR)
+name|TARGET_INLINE_FLOAT_DIV_THR
+value|(target_flags& MASK_INLINE_FLOAT_DIV_THR)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_INLINE_DIV
+name|TARGET_INLINE_INT_DIV_LAT
+value|(target_flags& MASK_INLINE_INT_DIV_LAT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_INLINE_INT_DIV_THR
+value|(target_flags& MASK_INLINE_INT_DIV_THR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_INLINE_FLOAT_DIV
 define|\
-value|(target_flags& (MASK_INLINE_DIV_LAT | MASK_INLINE_DIV_THR))
+value|(target_flags& (MASK_INLINE_FLOAT_DIV_LAT | MASK_INLINE_FLOAT_DIV_THR))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_INLINE_INT_DIV
+define|\
+value|(target_flags& (MASK_INLINE_INT_DIV_LAT | MASK_INLINE_INT_DIV_THR))
 end_define
 
 begin_define
@@ -325,6 +375,59 @@ directive|define
 name|TARGET_DWARF2_ASM
 value|(target_flags& MASK_DWARF2_ASM)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ia64_tls_size
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TARGET_TLS14
+value|(ia64_tls_size == 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_TLS22
+value|(ia64_tls_size == 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_TLS64
+value|(ia64_tls_size == 64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_HPUX_LD
+value|0
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_AS_LTOFFX_LDXMOV_RELOCS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_AS_LTOFFX_LDXMOV_RELOCS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This macro defines names of command options to set and clear bits in    `target_flags'.  Its definition is an initializer with a subgrouping for    each command option.  */
@@ -335,7 +438,7 @@ define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{									\   { "big-endian",	MASK_BIG_ENDIAN,				\       N_("Generate big endian code") },					\   { "little-endian",	-MASK_BIG_ENDIAN,				\       N_("Generate little endian code") },				\   { "gnu-as",		MASK_GNU_AS,					\       N_("Generate code for GNU as") },					\   { "no-gnu-as",	-MASK_GNU_AS,					\       N_("Generate code for Intel as") },				\   { "gnu-ld",		MASK_GNU_LD,					\       N_("Generate code for GNU ld") },					\   { "no-gnu-ld",	-MASK_GNU_LD,					\       N_("Generate code for Intel ld") },				\   { "no-pic",		MASK_NO_PIC,					\       N_("Generate code without GP reg") },				\   { "volatile-asm-stop", MASK_VOL_ASM_STOP,				\       N_("Emit stop bits before and after volatile extended asms") },	\   { "no-volatile-asm-stop", -MASK_VOL_ASM_STOP,				\       N_("Don't emit stop bits before and after volatile extended asms") }, \   { "b-step",		MASK_B_STEP,					\       N_("Emit code for Itanium (TM) processor B step")},		\   { "register-names",	MASK_REG_NAMES,					\       N_("Use in/loc/out register names")},				\   { "no-sdata",		MASK_NO_SDATA,					\       N_("Disable use of sdata/scommon/sbss")},				\   { "sdata",		-MASK_NO_SDATA,					\       N_("Enable use of sdata/scommon/sbss")},				\   { "constant-gp",	MASK_CONST_GP,					\       N_("gp is constant (but save/restore gp on indirect calls)") },	\   { "auto-pic",		MASK_AUTO_PIC,					\       N_("Generate self-relocatable code") },				\   { "inline-divide-min-latency", MASK_INLINE_DIV_LAT,			\       N_("Generate inline division, optimize for latency") },		\   { "inline-divide-max-throughput", MASK_INLINE_DIV_THR,		\       N_("Generate inline division, optimize for throughput") },	\   { "dwarf2-asm", 	MASK_DWARF2_ASM,				\       N_("Enable Dwarf 2 line debug info via GNU as")},			\   { "no-dwarf2-asm", 	-MASK_DWARF2_ASM,				\       N_("Disable Dwarf 2 line debug info via GNU as")},		\   SUBTARGET_SWITCHES							\   { "",			TARGET_DEFAULT | TARGET_CPU_DEFAULT,		\       NULL }								\ }
+value|{									\   { "big-endian",	MASK_BIG_ENDIAN,				\       N_("Generate big endian code") },					\   { "little-endian",	-MASK_BIG_ENDIAN,				\       N_("Generate little endian code") },				\   { "gnu-as",		MASK_GNU_AS,					\       N_("Generate code for GNU as") },					\   { "no-gnu-as",	-MASK_GNU_AS,					\       N_("Generate code for Intel as") },				\   { "gnu-ld",		MASK_GNU_LD,					\       N_("Generate code for GNU ld") },					\   { "no-gnu-ld",	-MASK_GNU_LD,					\       N_("Generate code for Intel ld") },				\   { "no-pic",		MASK_NO_PIC,					\       N_("Generate code without GP reg") },				\   { "volatile-asm-stop", MASK_VOL_ASM_STOP,				\       N_("Emit stop bits before and after volatile extended asms") },	\   { "no-volatile-asm-stop", -MASK_VOL_ASM_STOP,				\       N_("Don't emit stop bits before and after volatile extended asms") }, \   { "b-step",		MASK_B_STEP,					\       N_("Emit code for Itanium (TM) processor B step")},		\   { "register-names",	MASK_REG_NAMES,					\       N_("Use in/loc/out register names")},				\   { "no-sdata",		MASK_NO_SDATA,					\       N_("Disable use of sdata/scommon/sbss")},				\   { "sdata",		-MASK_NO_SDATA,					\       N_("Enable use of sdata/scommon/sbss")},				\   { "constant-gp",	MASK_CONST_GP,					\       N_("gp is constant (but save/restore gp on indirect calls)") },	\   { "auto-pic",		MASK_AUTO_PIC,					\       N_("Generate self-relocatable code") },				\   { "inline-float-divide-min-latency", MASK_INLINE_FLOAT_DIV_LAT,	\       N_("Generate inline floating point division, optimize for latency") },\   { "inline-float-divide-max-throughput", MASK_INLINE_FLOAT_DIV_THR,	\       N_("Generate inline floating point division, optimize for throughput") },\   { "inline-int-divide-min-latency", MASK_INLINE_INT_DIV_LAT,		\       N_("Generate inline integer division, optimize for latency") },	\   { "inline-int-divide-max-throughput", MASK_INLINE_INT_DIV_THR,	\       N_("Generate inline integer division, optimize for throughput") },\   { "dwarf2-asm", 	MASK_DWARF2_ASM,				\       N_("Enable Dwarf 2 line debug info via GNU as")},			\   { "no-dwarf2-asm", 	-MASK_DWARF2_ASM,				\       N_("Disable Dwarf 2 line debug info via GNU as")},		\   SUBTARGET_SWITCHES							\   { "",			TARGET_DEFAULT | TARGET_CPU_DEFAULT,		\       NULL }								\ }
 end_define
 
 begin_comment
@@ -408,12 +511,21 @@ name|ia64_fixed_range_string
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ia64_tls_size_string
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{									\   { "fixed-range=",&ia64_fixed_range_string,			\       N_("Specify range of registers to make fixed")},			\ }
+value|{									\   { "fixed-range=",&ia64_fixed_range_string,			\       N_("Specify range of registers to make fixed")},			\   { "tls-size=",&ia64_tls_size_string,				\       N_("Specify bit size of immediate TLS offsets")},			\ }
 end_define
 
 begin_comment
@@ -440,42 +552,6 @@ end_escape
 
 begin_comment
 comment|/* Driver configuration */
-end_comment
-
-begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    CPP.  It can also specify how to translate options you give to GNU CC into    options for GNU CC to pass to the CPP.  */
-end_comment
-
-begin_comment
-comment|/* ??? __LONG_MAX__ depends on LP64/ILP32 switch.  */
-end_comment
-
-begin_comment
-comment|/* ??? An alternative is to modify glimits.h to check for __LP64__ instead    of checked for CPU specific defines.  We could also get rid of all LONG_MAX    defines in other tm.h files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-define|\
-value|"%{mcpu=itanium:-D__itanium__} %{mbig-endian:-D__BIG_ENDIAN__}	\    %(cpp_cpu)	\    -D__LONG_MAX__=9223372036854775807L"
-end_define
-
-begin_comment
-comment|/* This is always "long" so it doesn't "change" in ILP32 vs. LP64.  */
-end_comment
-
-begin_comment
-comment|/* #define NO_BUILTIN_SIZE_TYPE */
-end_comment
-
-begin_comment
-comment|/* This is always "long" so it doesn't "change" in ILP32 vs. LP64.  */
-end_comment
-
-begin_comment
-comment|/* #define NO_BUILTIN_PTRDIFF_TYPE */
 end_comment
 
 begin_comment
@@ -571,20 +647,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_UNIT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_WORD
-value|64
-end_define
 
 begin_define
 define|#
@@ -750,7 +812,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define this if you wish to imitate the way many other C compilers handle    alignment of bitfields and the structures that contain them.    The behavior is that the type written for a bitfield (`int', `short', or    other integer type) imposes an alignment for the entire structure, as if the    structure really did contain an ordinary field of that type.  In addition,    the bitfield is placed within the structure so that it would fit within such    a field, not crossing a boundary for it.  */
+comment|/* Define this if you wish to imitate the way many other C compilers handle    alignment of bitfields and the structures that contain them.    The behavior is that the type written for a bit-field (`int', `short', or    other integer type) imposes an alignment for the entire structure, as if the    structure really did contain an ordinary field of that type.  In addition,    the bit-field is placed within the structure so that it would fit within such    a field, not crossing a boundary for it.  */
 end_comment
 
 begin_define
@@ -776,25 +838,36 @@ value|GET_MODE_BITSIZE (TImode)
 end_define
 
 begin_comment
-comment|/* A code distinguishing the floating point format of the target machine.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_FLOAT_FORMAT
-value|IEEE_FLOAT_FORMAT
-end_define
-
-begin_comment
-comment|/* By default, the C++ compiler will use function addresses in the    vtable entries.  Setting this non-zero tells the compiler to use    function descriptors instead.  The value of this macro says how    many words wide the descriptor is (normally 2).  It is assumed    that the address of a function descriptor may be treated as a    pointer to a function.  */
+comment|/* By default, the C++ compiler will use function addresses in the    vtable entries.  Setting this nonzero tells the compiler to use    function descriptors instead.  The value of this macro says how    many words wide the descriptor is (normally 2).  It is assumed    that the address of a function descriptor may be treated as a    pointer to a function.     For reasons known only to HP, the vtable entries (as opposed to    normal function descriptors) are 16 bytes wide in 32-bit mode as    well, even though the 3rd and 4th words are unused.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TARGET_VTABLE_USES_DESCRIPTORS
-value|2
+value|(TARGET_ILP32 ? 4 : 2)
+end_define
+
+begin_comment
+comment|/* Due to silliness in the HPUX linker, vtable entries must be    8-byte aligned even in 32-bit mode.  Rather than create multiple    ABIs, force this restriction on everyone else too.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_VTABLE_ENTRY_ALIGN
+value|64
+end_define
+
+begin_comment
+comment|/* Due to the above, we need extra padding for the data entries below 0    to retain the alignment of the descriptors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_VTABLE_DATA_ENTRY_DISTANCE
+value|(TARGET_ILP32 ? 2 : 1)
 end_define
 
 begin_escape
@@ -842,13 +915,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHAR_TYPE_SIZE
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|FLOAT_TYPE_SIZE
 value|32
 end_define
@@ -868,7 +934,7 @@ value|128
 end_define
 
 begin_comment
-comment|/* Tell real.c that this is the 80-bit Intel extended float format    packaged in a 128-bit entity.  */
+comment|/* By default we use the 80-bit Intel extended float format packaged    in a 128-bit entity.  */
 end_comment
 
 begin_define
@@ -1333,17 +1399,6 @@ value|(IN_REGNO_P (REGNO) || LOC_REGNO_P (REGNO))
 end_define
 
 begin_comment
-comment|/* Add any extra modes needed to represent the condition code.     CCImode is used to mark a single predicate register instead    of a register pair.  This is currently only used in reg_raw_mode    so that flow doesn't do something stupid.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_CC_MODES
-value|CC(CCImode, "CCI")
-end_define
-
-begin_comment
 comment|/* Given a comparison code (EQ, NE, etc.) and the first operand of a COMPARE,    return the mode to be used for the comparison.  Must be defined if    EXTRA_CC_MODES is defined.  */
 end_comment
 
@@ -1761,7 +1816,7 @@ value|ia64_secondary_reload_class (CLASS, MODE, X)
 end_define
 
 begin_comment
-comment|/* Certain machines have the property that some registers cannot be copied to    some other registers without using memory.  Define this macro on those    machines to be a C expression that is non-zero if objects of mode M in    registers of CLASS1 can only be copied to registers of class CLASS2 by    storing a register of CLASS1 into memory and loading that memory location    into a register of CLASS2.  */
+comment|/* Certain machines have the property that some registers cannot be copied to    some other registers without using memory.  Define this macro on those    machines to be a C expression that is nonzero if objects of mode M in    registers of CLASS1 can only be copied to registers of class CLASS2 by    storing a register of CLASS1 into memory and loading that memory location    into a register of CLASS2.  */
 end_comment
 
 begin_if
@@ -1812,31 +1867,22 @@ value|((MODE) == BImode&& (CLASS) == PR_REGS ? 2			\    : ((CLASS) == FR_REGS&& 
 end_define
 
 begin_comment
-comment|/* If defined, gives a class of registers that cannot be used as the    operand of a SUBREG that changes the mode of the object illegally.  */
+comment|/* In FP regs, we can't change FP values to integer values and vice    versa, but we can change e.g. DImode to SImode.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLASS_CANNOT_CHANGE_MODE
-value|FR_REGS
-end_define
-
-begin_comment
-comment|/* Defines illegal mode changes for CLASS_CANNOT_CHANGE_MODE.    In FP regs, we can't change FP values to integer values and vice    versa, but we can change e.g. DImode to SImode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLASS_CANNOT_CHANGE_MODE_P
+name|CANNOT_CHANGE_MODE_CLASS
 parameter_list|(
 name|FROM
 parameter_list|,
 name|TO
+parameter_list|,
+name|CLASS
 parameter_list|)
 define|\
-value|(GET_MODE_CLASS (FROM) != GET_MODE_CLASS (TO))
+value|(GET_MODE_CLASS (FROM) != GET_MODE_CLASS (TO)		\    ? reg_classes_intersect_p (CLASS, FR_REGS) : 0)
 end_define
 
 begin_comment
@@ -2317,7 +2363,7 @@ value|{									\   {ARG_POINTER_REGNUM,	 STACK_POINTER_REGNUM},				\   {ARG_POI
 end_define
 
 begin_comment
-comment|/* A C expression that returns non-zero if the compiler is allowed to try to    replace register number FROM with register number TO.  The frame pointer    is automatically handled.  */
+comment|/* A C expression that returns nonzero if the compiler is allowed to try to    replace register number FROM with register number TO.  The frame pointer    is automatically handled.  */
 end_comment
 
 begin_define
@@ -2689,25 +2735,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Implement `va_start' for varargs and stdarg.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXPAND_BUILTIN_VA_START
-parameter_list|(
-name|stdarg
-parameter_list|,
-name|valist
-parameter_list|,
-name|nextarg
-parameter_list|)
-define|\
-value|ia64_va_start (stdarg, valist, nextarg)
-end_define
-
-begin_comment
 comment|/* Implement `va_arg'.  */
 end_comment
 
@@ -2903,27 +2930,6 @@ value|emit_safe_across_calls (FILE)
 end_define
 
 begin_comment
-comment|/* A C compound statement that outputs the assembler code for a thunk function,    used to implement C++ virtual function calls with multiple inheritance.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_MI_THUNK
-parameter_list|(
-name|FILE
-parameter_list|,
-name|THUNK_FNDECL
-parameter_list|,
-name|DELTA
-parameter_list|,
-name|FUNCTION
-parameter_list|)
-define|\
-value|do {									\   if (CONST_OK_FOR_I (DELTA))						\     {									\       fprintf (FILE, "\tadds r32 = ");					\       fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, (DELTA));			\       fprintf (FILE, ", r32\n");					\     }									\   else									\     {									\       if (CONST_OK_FOR_J (DELTA))					\         {								\           fprintf (FILE, "\taddl r2 = ");				\           fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, (DELTA));		\           fprintf (FILE, ", r0\n");					\         }								\       else								\         {								\ 	  fprintf (FILE, "\tmovl r2 = ");				\ 	  fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, (DELTA));		\ 	  fprintf (FILE, "\n");						\         }								\       fprintf (FILE, "\t;;\n");						\       fprintf (FILE, "\tadd r32 = r2, r32\n");				\     }									\   fprintf (FILE, "\tbr ");						\   assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	\   fprintf (FILE, "\n");							\ } while (0)
-end_define
-
-begin_comment
 comment|/* Output part N of a function descriptor for DECL.  For ia64, both    words are emitted with a single relocation, so ignore N> 0.  */
 end_comment
 
@@ -2939,7 +2945,7 @@ parameter_list|,
 name|PART
 parameter_list|)
 define|\
-value|do {									\   if ((PART) == 0)							\     {									\       fputs ("\tdata16.ua @iplt(", FILE);				\       assemble_name (FILE, XSTR (XEXP (DECL_RTL (DECL), 0), 0));	\       fputs (")\n", FILE);						\     }									\ } while (0)
+value|do {									\   if ((PART) == 0)							\     {									\       if (TARGET_ILP32)							\         fputs ("\tdata8.ua @iplt(", FILE);				\       else								\         fputs ("\tdata16.ua @iplt(", FILE);				\       assemble_name (FILE, XSTR (XEXP (DECL_RTL (DECL), 0), 0));	\       fputs (")\n", FILE);						\       if (TARGET_ILP32)							\ 	fputs ("\tdata8.ua 0\n", FILE);					\     }									\ } while (0)
 end_define
 
 begin_escape
@@ -3503,39 +3509,10 @@ name|BSS_SECTION_ASM_OP
 value|"\t.bss"
 end_define
 
-begin_comment
-comment|/* Define this macro if references to a symbol must be treated differently    depending on something about the variable or function named by the symbol    (such as what section it is in).  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-value|ia64_encode_section_info (DECL)
-end_define
-
-begin_comment
-comment|/* If a variable is weakened, made one only or moved into a different    section, it may be necessary to redo the section info to move the    variable out of sdata.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REDO_SECTION_INFO_P
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|((TREE_CODE (DECL) == VAR_DECL)					\&& (DECL_ONE_ONLY (DECL) || DECL_WEAK (DECL) || DECL_COMMON (DECL)	\ 	|| DECL_SECTION_NAME (DECL) != 0))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDATA_NAME_FLAG_CHAR
+name|ENCODE_SECTION_INFO_CHAR
 value|'@'
 end_define
 
@@ -3544,23 +3521,6 @@ define|#
 directive|define
 name|IA64_DEFAULT_GVALUE
 value|8
-end_define
-
-begin_comment
-comment|/* Decode SYM_NAME and store the real name part in VAR, sans the characters    that encode section info.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|SYMBOL_NAME
-parameter_list|)
-define|\
-value|do {						\   (VAR) = (SYMBOL_NAME);			\   if ((VAR)[0] == SDATA_NAME_FLAG_CHAR)		\     (VAR)++;					\   if ((VAR)[0] == '*')				\     (VAR)++;					\ } while (0)
 end_define
 
 begin_escape
@@ -3647,93 +3607,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Output of Data.  */
-end_comment
-
-begin_comment
-comment|/* This is how to output an assembler line defining a `char' constant    to an xdata segment.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_XDATA_CHAR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SECTION
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|do {									\   fprintf (FILE, "\t.xdata1\t\"%s\", ", SECTION);			\   output_addr_const (FILE, (VALUE));					\   fprintf (FILE, "\n");							\ } while (0)
-end_define
-
-begin_comment
-comment|/* This is how to output an assembler line defining a `short' constant    to an xdata segment.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_XDATA_SHORT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SECTION
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|do {									\   fprintf (FILE, "\t.xdata2\t\"%s\", ", SECTION);			\   output_addr_const (FILE, (VALUE));					\   fprintf (FILE, "\n");							\ } while (0)
-end_define
-
-begin_comment
-comment|/* This is how to output an assembler line defining an `int' constant    to an xdata segment.  We also handle symbol output here.  */
-end_comment
-
-begin_comment
-comment|/* ??? For ILP32, also need to handle function addresses here.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_XDATA_INT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SECTION
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|do {									\   fprintf (FILE, "\t.xdata4\t\"%s\", ", SECTION);			\   output_addr_const (FILE, (VALUE));					\   fprintf (FILE, "\n");							\ } while (0)
-end_define
-
-begin_comment
-comment|/* This is how to output an assembler line defining a `long' constant    to an xdata segment.  We also handle symbol output here.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_XDATA_DOUBLE_INT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SECTION
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|do {									\   int need_closing_paren = 0;						\   fprintf (FILE, "\t.xdata8\t\"%s\", ", SECTION);			\   if (!(TARGET_NO_PIC || TARGET_AUTO_PIC)				\&& GET_CODE (VALUE) == SYMBOL_REF)				\     {									\       fprintf (FILE, SYMBOL_REF_FLAG (VALUE) ? "@fptr(" : "@segrel(");	\       need_closing_paren = 1;						\     }									\   output_addr_const (FILE, VALUE);					\   if (need_closing_paren)						\     fprintf (FILE, ")");						\   fprintf (FILE, "\n");							\ } while (0)
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Output of Uninitialized Variables.  */
 end_comment
 
@@ -3777,20 +3650,14 @@ value|do {									\   ia64_asm_output_label = 1;						\   assemble_name (STREAM
 end_define
 
 begin_comment
-comment|/* A C statement (sans semicolon) to output to the stdio stream STREAM some    commands that will make the label NAME global; that is, available for    reference from other files.  */
+comment|/* Globalizing directive for a label.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\   fputs ("\t.global ", STREAM);						\   assemble_name (STREAM, NAME);						\   fputs ("\n", STREAM);							\ } while (0)
+name|GLOBAL_ASM_OP
+value|"\t.global "
 end_define
 
 begin_comment
@@ -4047,7 +3914,7 @@ parameter_list|,
 name|REL
 parameter_list|)
 define|\
-value|fprintf (STREAM, "\tdata8 @pcrel(.L%d)\n", VALUE)
+value|do {								\   if (TARGET_ILP32)						\     fprintf (STREAM, "\tdata4 @pcrel(.L%d)\n", VALUE);		\   else								\     fprintf (STREAM, "\tdata8 @pcrel(.L%d)\n", VALUE);		\   } while (0)
 end_define
 
 begin_comment
@@ -4101,7 +3968,7 @@ parameter_list|,
 name|GLOBAL
 parameter_list|)
 define|\
-value|(((CODE) == 1 ? DW_EH_PE_textrel : DW_EH_PE_datarel)	\    | ((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_udata8)
+value|(((CODE) == 1 ? DW_EH_PE_textrel : DW_EH_PE_datarel)	\    | ((GLOBAL) ? DW_EH_PE_indirect : 0)			\    | (TARGET_ILP32 ? DW_EH_PE_udata4 : DW_EH_PE_udata8))
 end_define
 
 begin_comment
@@ -4241,6 +4108,7 @@ begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
@@ -4311,23 +4179,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Cross Compilation and Floating Point.  */
-end_comment
-
-begin_comment
-comment|/* Define to enable software floating point emulation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_ARITHMETIC
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Register Renaming Parameters.  */
 end_comment
 
@@ -4364,7 +4215,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{ "call_operand", {SUBREG, REG, SYMBOL_REF}},				\ { "got_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\ { "sdata_symbolic_operand", {SYMBOL_REF, CONST}},			\ { "symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},			\ { "function_operand", {SYMBOL_REF}},					\ { "setjmp_operand", {SYMBOL_REF}},					\ { "destination_operand", {SUBREG, REG, MEM}},				\ { "not_postinc_memory_operand", {MEM}},					\ { "move_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     CONSTANT_P_RTX, SYMBOL_REF, CONST, LABEL_REF}},	\ { "gr_register_operand", {SUBREG, REG}},				\ { "fr_register_operand", {SUBREG, REG}},				\ { "grfr_register_operand", {SUBREG, REG}},				\ { "gr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "fr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "grfr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "gr_reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\ { "gr_reg_or_5bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_6bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "grfr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_8bit_adjusted_operand", {SUBREG, REG, CONST_INT,		\ 				     CONSTANT_P_RTX}},			\ { "gr_reg_or_8bit_and_adjusted_operand", {SUBREG, REG, CONST_INT,	\ 					 CONSTANT_P_RTX}},		\ { "gr_reg_or_14bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_22bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "shift_count_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "shift_32bit_count_operand", {SUBREG, REG, CONST_INT,			\ 				  CONSTANT_P_RTX}},			\ { "shladd_operand", {CONST_INT}},					\ { "fetchadd_operand", {CONST_INT}},					\ { "fr_reg_or_fp01_operand", {SUBREG, REG, CONST_DOUBLE}},		\ { "normal_comparison_operator", {EQ, NE, GT, LE, GTU, LEU}},		\ { "adjusted_comparison_operator", {LT, GE, LTU, GEU}},			\ { "signed_inequality_operator", {GE, GT, LE, LT}},			\ { "predicate_operator", {NE, EQ}},					\ { "condop_operator", {PLUS, MINUS, IOR, XOR, AND}},			\ { "ar_lc_reg_operand", {REG}},						\ { "ar_ccv_reg_operand", {REG}},						\ { "ar_pfs_reg_operand", {REG}},						\ { "general_tfmode_operand", {SUBREG, REG, CONST_DOUBLE, MEM}},		\ { "destination_tfmode_operand", {SUBREG, REG, MEM}},			\ { "tfreg_or_fp01_operand", {REG, CONST_DOUBLE}},
+value|{ "call_operand", {SUBREG, REG, SYMBOL_REF}},				\ { "got_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\ { "sdata_symbolic_operand", {SYMBOL_REF, CONST}},			\ { "symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},			\ { "function_operand", {SYMBOL_REF}},					\ { "setjmp_operand", {SYMBOL_REF}},					\ { "destination_operand", {SUBREG, REG, MEM}},				\ { "not_postinc_memory_operand", {MEM}},					\ { "move_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     CONSTANT_P_RTX, SYMBOL_REF, CONST, LABEL_REF}},	\ { "gr_register_operand", {SUBREG, REG}},				\ { "fr_register_operand", {SUBREG, REG}},				\ { "grfr_register_operand", {SUBREG, REG}},				\ { "gr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "fr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "grfr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "gr_reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\ { "gr_reg_or_5bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_6bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "grfr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_8bit_adjusted_operand", {SUBREG, REG, CONST_INT,		\ 				     CONSTANT_P_RTX}},			\ { "gr_reg_or_8bit_and_adjusted_operand", {SUBREG, REG, CONST_INT,	\ 					 CONSTANT_P_RTX}},		\ { "gr_reg_or_14bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_22bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "shift_count_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "shift_32bit_count_operand", {SUBREG, REG, CONST_INT,			\ 				  CONSTANT_P_RTX}},			\ { "shladd_operand", {CONST_INT}},					\ { "fetchadd_operand", {CONST_INT}},					\ { "fr_reg_or_fp01_operand", {SUBREG, REG, CONST_DOUBLE}},		\ { "normal_comparison_operator", {EQ, NE, GT, LE, GTU, LEU}},		\ { "adjusted_comparison_operator", {LT, GE, LTU, GEU}},			\ { "signed_inequality_operator", {GE, GT, LE, LT}},			\ { "predicate_operator", {NE, EQ}},					\ { "condop_operator", {PLUS, MINUS, IOR, XOR, AND}},			\ { "ar_lc_reg_operand", {REG}},						\ { "ar_ccv_reg_operand", {REG}},						\ { "ar_pfs_reg_operand", {REG}},						\ { "general_tfmode_operand", {SUBREG, REG, CONST_DOUBLE, MEM}},		\ { "destination_tfmode_operand", {SUBREG, REG, MEM}},			\ { "tfreg_or_fp01_operand", {REG, CONST_DOUBLE}},			\ { "basereg_operand", {SUBREG, REG}},
 end_define
 
 begin_comment
@@ -4375,7 +4226,7 @@ begin_define
 define|#
 directive|define
 name|CASE_VECTOR_MODE
-value|Pmode
+value|ptr_mode
 end_define
 
 begin_comment
@@ -4511,6 +4362,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment
@@ -4582,26 +4434,25 @@ begin_comment
 comment|/* This function contains machine specific function data.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|machine_function
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* The new stack pointer when unwinding from EH.  */
-name|struct
-name|rtx_def
-modifier|*
+name|rtx
 name|ia64_eh_epilogue_sp
 decl_stmt|;
 comment|/* The new bsp value when unwinding from EH.  */
-name|struct
-name|rtx_def
-modifier|*
+name|rtx
 name|ia64_eh_epilogue_bsp
 decl_stmt|;
 comment|/* The GP value save register.  */
-name|struct
-name|rtx_def
-modifier|*
+name|rtx
 name|ia64_gp_save
 decl_stmt|;
 comment|/* The number of varargs registers to save.  */
@@ -4609,8 +4460,11 @@ name|int
 name|n_varargs
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_enum
 enum|enum
@@ -4737,6 +4591,16 @@ define|#
 directive|define
 name|PROFILE_BEFORE_PROLOGUE
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_OK_FOR_SIBCALL
+parameter_list|(
+name|DECL
+parameter_list|)
+value|ia64_function_ok_for_sibcall (DECL)
 end_define
 
 begin_comment

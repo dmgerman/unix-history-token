@@ -6,14 +6,16 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|EXTRA_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D_WIN32 -DWIN32 \   -D__MINGW32__=0.2 -DWINNT  -D_X86_=1 \   -Asystem=winnt"
+name|EXTRA_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do { builtin_define ("__MINGW32__=0.2"); } while (0)
 end_define
 
 begin_undef

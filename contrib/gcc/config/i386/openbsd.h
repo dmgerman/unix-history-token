@@ -1,39 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Configuration for an OpenBSD i386 target.    Copyright (C) 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_comment
-comment|/* This is tested by i386gas.h.  */
+comment|/* Configuration for an OpenBSD i386 target.    Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|YES_UNDERSCORES
+name|TARGET_VERSION
+value|fprintf (stderr, " (OpenBSD/i386)");
 end_define
-
-begin_include
-include|#
-directive|include
-file|<i386/gstabs.h>
-end_include
-
-begin_comment
-comment|/* Get generic OpenBSD definitions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OBSD_OLD_GAS
-end_define
-
-begin_include
-include|#
-directive|include
-file|<openbsd.h>
-end_include
 
 begin_comment
 comment|/* This goes away when the math-emulator is fixed */
@@ -53,15 +28,13 @@ define|\
 value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
 end_define
 
-begin_comment
-comment|/* Run-time target specifications */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__unix__ -D__OpenBSD__ \  -Asystem=unix -Asystem=bsd -Asystem=OpenBSD"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define ("__unix__");		\ 	builtin_define ("__OpenBSD__");		\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=bsd");		\ 	builtin_assert ("system=OpenBSD");	\     }						\   while (0)
 end_define
 
 begin_comment
@@ -258,10 +231,6 @@ undef|#
 directive|undef
 name|ASM_PREFERRED_EH_DATA_FORMAT
 end_undef
-
-begin_comment
-comment|/* Note that we pick up ASM_OUTPUT_MI_THUNK from unix.h.  */
-end_comment
 
 begin_undef
 undef|#

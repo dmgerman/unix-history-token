@@ -237,7 +237,7 @@ comment|/* Values of TARGET_CPU_DEFAULT, set via -D in the Makefile,    and spec
 end_comment
 
 begin_comment
-comment|/* Note that TARGET_CPU_v9 is assumed to start the list of 64-bit     capable cpu's.  */
+comment|/* Note that TARGET_CPU_v9 is assumed to start the list of 64-bit    capable cpu's.  */
 end_comment
 
 begin_define
@@ -351,6 +351,13 @@ name|TARGET_CPU_ultrasparc
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|TARGET_CPU_ultrasparc3
+value|9
+end_define
+
 begin_if
 if|#
 directive|if
@@ -362,6 +369,11 @@ operator|||
 name|TARGET_CPU_DEFAULT
 operator|==
 name|TARGET_CPU_ultrasparc
+expr|\
+operator|||
+name|TARGET_CPU_DEFAULT
+operator|==
+name|TARGET_CPU_ultrasparc3
 end_if
 
 begin_define
@@ -433,6 +445,33 @@ define|#
 directive|define
 name|ASM_CPU64_DEFAULT_SPEC
 value|"-Av9a"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|TARGET_CPU_DEFAULT
+operator|==
+name|TARGET_CPU_ultrasparc3
+end_if
+
+begin_define
+define|#
+directive|define
+name|CPP_CPU64_DEFAULT_SPEC
+value|"-D__sparc_v9__"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_CPU64_DEFAULT_SPEC
+value|"-Av9b"
 end_define
 
 begin_endif
@@ -647,216 +686,384 @@ name|CPP_CPU64_DEFAULT_SPEC
 argument_list|)
 end_if
 
-begin_expr_stmt
-name|Unrecognized
-name|value
-name|in
-name|TARGET_CPU_DEFAULT
-operator|.
+begin_error
+error|#
+directive|error
+error|Unrecognized value in TARGET_CPU_DEFAULT.
+end_error
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|SPARC_BI_ARCH
+end_ifdef
+
+begin_define
 define|#
 directive|define
 name|CPP_CPU_DEFAULT_SPEC
 define|\
 value|(DEFAULT_ARCH32_P ? "\ %{m64:" CPP_CPU64_DEFAULT_SPEC "} \ %{!m64:" CPP_CPU32_DEFAULT_SPEC "} \ " : "\ %{m32:" CPP_CPU32_DEFAULT_SPEC "} \ %{!m32:" CPP_CPU64_DEFAULT_SPEC "} \ ")
+end_define
+
+begin_define
 define|#
 directive|define
 name|ASM_CPU_DEFAULT_SPEC
 define|\
 value|(DEFAULT_ARCH32_P ? "\ %{m64:" ASM_CPU64_DEFAULT_SPEC "} \ %{!m64:" ASM_CPU32_DEFAULT_SPEC "} \ " : "\ %{m32:" ASM_CPU32_DEFAULT_SPEC "} \ %{!m32:" ASM_CPU64_DEFAULT_SPEC "} \ ")
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* !SPARC_BI_ARCH */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CPP_CPU_DEFAULT_SPEC
 value|(DEFAULT_ARCH32_P ? CPP_CPU32_DEFAULT_SPEC : CPP_CPU64_DEFAULT_SPEC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|ASM_CPU_DEFAULT_SPEC
 value|(DEFAULT_ARCH32_P ? ASM_CPU32_DEFAULT_SPEC : ASM_CPU64_DEFAULT_SPEC)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* !SPARC_BI_ARCH */
+end_comment
+
+begin_comment
 comment|/* Define macros to distinguish architectures.  */
+end_comment
+
+begin_comment
 comment|/* Common CPP definitions used by CPP_SPEC amongst the various targets    for handling -mcpu=xxx switches.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CPP_CPU_SPEC
-value|"\ %{msoft-float:-D_SOFT_FLOAT} \ %{mcypress:} \ %{msparclite:-D__sparclite__} \ %{mf930:-D__sparclite__} %{mf934:-D__sparclite__} \ %{mv8:-D__sparc_v8__} \ %{msupersparc:-D__supersparc__ -D__sparc_v8__} \ %{mcpu=sparclet:-D__sparclet__} %{mcpu=tsc701:-D__sparclet__} \ %{mcpu=sparclite:-D__sparclite__} \ %{mcpu=f930:-D__sparclite__} %{mcpu=f934:-D__sparclite__} \ %{mcpu=v8:-D__sparc_v8__} \ %{mcpu=supersparc:-D__supersparc__ -D__sparc_v8__} \ %{mcpu=hypersparc:-D__hypersparc__ -D__sparc_v8__} \ %{mcpu=sparclite86x:-D__sparclite86x__} \ %{mcpu=v9:-D__sparc_v9__} \ %{mcpu=ultrasparc:-D__sparc_v9__} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(cpp_cpu_default)}}}}}}} \ "
+value|"\ %{msoft-float:-D_SOFT_FLOAT} \ %{mcypress:} \ %{msparclite:-D__sparclite__} \ %{mf930:-D__sparclite__} %{mf934:-D__sparclite__} \ %{mv8:-D__sparc_v8__} \ %{msupersparc:-D__supersparc__ -D__sparc_v8__} \ %{mcpu=sparclet:-D__sparclet__} %{mcpu=tsc701:-D__sparclet__} \ %{mcpu=sparclite:-D__sparclite__} \ %{mcpu=f930:-D__sparclite__} %{mcpu=f934:-D__sparclite__} \ %{mcpu=v8:-D__sparc_v8__} \ %{mcpu=supersparc:-D__supersparc__ -D__sparc_v8__} \ %{mcpu=hypersparc:-D__hypersparc__ -D__sparc_v8__} \ %{mcpu=sparclite86x:-D__sparclite86x__} \ %{mcpu=v9:-D__sparc_v9__} \ %{mcpu=ultrasparc:-D__sparc_v9__} \ %{mcpu=ultrasparc3:-D__sparc_v9__} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(cpp_cpu_default)}}}}}}} \ "
+end_define
+
+begin_comment
 comment|/* ??? The GCC_NEW_VARARGS macro is now obsolete, because gcc always uses    the right varags.h file when bootstrapping.  */
+end_comment
+
+begin_comment
 comment|/* ??? It's not clear what value we want to use for -Acpu/machine for    sparc64 in 32 bit environments, so for now we only use `sparc64' in    64 bit environments.  */
-ifdef|#
-directive|ifdef
-name|SPARC_BI_ARCH
-define|#
-directive|define
-name|CPP_ARCH32_SPEC
-value|"-D__SIZE_TYPE__=unsigned\\ int -D__PTRDIFF_TYPE__=int \ -D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
-define|#
-directive|define
-name|CPP_ARCH64_SPEC
-value|"-D__SIZE_TYPE__=long\\ unsigned\\ int -D__PTRDIFF_TYPE__=long\\ int \ -D__arch64__ -Acpu=sparc64 -Amachine=sparc64"
-else|#
-directive|else
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CPP_ARCH32_SPEC
 value|"-D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
+end_define
+
+begin_define
 define|#
 directive|define
 name|CPP_ARCH64_SPEC
 value|"-D__arch64__ -Acpu=sparc64 -Amachine=sparc64"
-endif|#
-directive|endif
+end_define
+
+begin_define
 define|#
 directive|define
 name|CPP_ARCH_DEFAULT_SPEC
 define|\
 value|(DEFAULT_ARCH32_P ? CPP_ARCH32_SPEC : CPP_ARCH64_SPEC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|CPP_ARCH_SPEC
 value|"\ %{m32:%(cpp_arch32)} \ %{m64:%(cpp_arch64)} \ %{!m32:%{!m64:%(cpp_arch_default)}} \ "
+end_define
+
+begin_comment
 comment|/* Macros to distinguish endianness.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CPP_ENDIAN_SPEC
 value|"\ %{mlittle-endian:-D__LITTLE_ENDIAN__} \ %{mlittle-endian-data:-D__LITTLE_ENDIAN_DATA__}"
+end_define
+
+begin_comment
 comment|/* Macros to distinguish the particular subtarget.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 value|""
+end_define
+
+begin_define
 define|#
 directive|define
 name|CPP_SPEC
 value|"%(cpp_cpu) %(cpp_arch) %(cpp_endian) %(cpp_subtarget)"
+end_define
+
+begin_comment
 comment|/* Prevent error on `-sun4' and `-target sun4' options.  */
+end_comment
+
+begin_comment
 comment|/* This used to translate -dalign to -malign, but that is no good    because it can't turn off the usual meaning of making debugging dumps.  */
+end_comment
+
+begin_comment
 comment|/* Translate old style -m<cpu> into new style -mcpu=<cpu>.    ??? Delete support for -m<cpu> for 2.9.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CC1_SPEC
 value|"\ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ "
+end_define
+
+begin_comment
 comment|/* Override in target specific files.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ASM_CPU_SPEC
-value|"\ %{mcpu=sparclet:-Asparclet} %{mcpu=tsc701:-Asparclet} \ %{msparclite:-Asparclite} \ %{mf930:-Asparclite} %{mf934:-Asparclite} \ %{mcpu=sparclite:-Asparclite} \ %{mcpu=sparclite86x:-Asparclite} \ %{mcpu=f930:-Asparclite} %{mcpu=f934:-Asparclite} \ %{mv8plus:-Av8plus} \ %{mcpu=v9:-Av9} \ %{mcpu=ultrasparc:%{!mv8plus:-Av9a}} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(asm_cpu_default)}}}}}}} \ "
+value|"\ %{mcpu=sparclet:-Asparclet} %{mcpu=tsc701:-Asparclet} \ %{msparclite:-Asparclite} \ %{mf930:-Asparclite} %{mf934:-Asparclite} \ %{mcpu=sparclite:-Asparclite} \ %{mcpu=sparclite86x:-Asparclite} \ %{mcpu=f930:-Asparclite} %{mcpu=f934:-Asparclite} \ %{mv8plus:-Av8plus} \ %{mcpu=v9:-Av9} \ %{mcpu=ultrasparc:%{!mv8plus:-Av9a}} \ %{mcpu=ultrasparc3:%{!mv8plus:-Av9b}} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(asm_cpu_default)}}}}}}} \ "
+end_define
+
+begin_comment
 comment|/* Word size selection, among other things.    This is what GAS uses.  Add %(asm_arch) to ASM_SPEC to enable.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ASM_ARCH32_SPEC
 value|"-32"
+end_define
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_AS_REGISTER_PSEUDO_OP
+end_ifdef
+
+begin_define
 define|#
 directive|define
 name|ASM_ARCH64_SPEC
 value|"-64 -no-undeclared-regs"
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|ASM_ARCH64_SPEC
 value|"-64"
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_define
 define|#
 directive|define
 name|ASM_ARCH_DEFAULT_SPEC
 define|\
 value|(DEFAULT_ARCH32_P ? ASM_ARCH32_SPEC : ASM_ARCH64_SPEC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|ASM_ARCH_SPEC
 value|"\ %{m32:%(asm_arch32)} \ %{m64:%(asm_arch64)} \ %{!m32:%{!m64:%(asm_arch_default)}} \ "
+end_define
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_AS_RELAX_OPTION
+end_ifdef
+
+begin_define
 define|#
 directive|define
 name|ASM_RELAX_SPEC
 value|"%{!mno-relax:-relax}"
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|ASM_RELAX_SPEC
 value|""
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Special flags to the Sun-4 assembler when using pipe for input.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ASM_SPEC
 value|"\ %| %{R} %{!pg:%{!p:%{fpic:-k} %{fPIC:-k}}} %{keep-local-as-symbols:-L} \ %(asm_cpu) %(asm_relax)"
+end_define
+
+begin_comment
 comment|/* This macro defines names of additional specifications to put in the specs    that can be used in various specifications like CC1_SPEC.  Its definition    is an initializer with a subgrouping for each command option.     Each subgrouping contains a string constant, that defines the    specification name, and a string constant that used by the GNU CC driver    program.     Do not define this macro if it does not need to do anything.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|EXTRA_SPECS
 define|\
 value|{ "cpp_cpu",		CPP_CPU_SPEC },		\   { "cpp_cpu_default",	CPP_CPU_DEFAULT_SPEC },	\   { "cpp_arch32",	CPP_ARCH32_SPEC },	\   { "cpp_arch64",	CPP_ARCH64_SPEC },	\   { "cpp_arch_default",	CPP_ARCH_DEFAULT_SPEC },\   { "cpp_arch",		CPP_ARCH_SPEC },	\   { "cpp_endian",	CPP_ENDIAN_SPEC },	\   { "cpp_subtarget",	CPP_SUBTARGET_SPEC },	\   { "asm_cpu",		ASM_CPU_SPEC },		\   { "asm_cpu_default",	ASM_CPU_DEFAULT_SPEC },	\   { "asm_arch32",	ASM_ARCH32_SPEC },	\   { "asm_arch64",	ASM_ARCH64_SPEC },	\   { "asm_relax",	ASM_RELAX_SPEC },	\   { "asm_arch_default",	ASM_ARCH_DEFAULT_SPEC },\   { "asm_arch",		ASM_ARCH_SPEC },	\   SUBTARGET_EXTRA_SPECS
+end_define
+
+begin_define
 define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
+end_define
+
+begin_comment
 comment|/* Because libgcc can generate references back to libc (via .umul etc.) we have    to list libc again after the second libgcc.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|LINK_GCC_C_SEQUENCE_SPEC
 value|"%G %L %G %L"
-ifdef|#
-directive|ifdef
-name|SPARC_BI_ARCH
-define|#
-directive|define
-name|NO_BUILTIN_PTRDIFF_TYPE
-define|#
-directive|define
-name|NO_BUILTIN_SIZE_TYPE
-endif|#
-directive|endif
+end_define
+
+begin_escape
+end_escape
+
+begin_define
 define|#
 directive|define
 name|PTRDIFF_TYPE
 value|(TARGET_ARCH64 ? "long int" : "int")
+end_define
+
+begin_define
 define|#
 directive|define
 name|SIZE_TYPE
 value|(TARGET_ARCH64 ? "long unsigned int" : "unsigned int")
+end_define
+
+begin_comment
 comment|/* ??? This should be 32 bits for v9 but what can we do?  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
 value|"short unsigned int"
+end_define
+
+begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
 value|16
+end_define
+
+begin_comment
 comment|/* Show we can debug even without a frame pointer.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CAN_DEBUG_WITHOUT_FP
+end_define
+
+begin_define
 define|#
 directive|define
 name|OVERRIDE_OPTIONS
 value|sparc_override_options ()
+end_define
+
+begin_comment
 comment|/* Generate DBX debugging information.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* Run-time compilation parameters selecting different hardware subsets.  */
-expr|extern
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|target_flags
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Nonzero if we should generate code to use the fpu.  */
@@ -967,7 +1174,7 @@ value|(target_flags& MASK_V9)
 end_define
 
 begin_comment
-comment|/* Non-zero to generate code that uses the instructions deprecated in    the v9 architecture.  This option only applies to v9 systems.  */
+comment|/* Nonzero to generate code that uses the instructions deprecated in    the v9 architecture.  This option only applies to v9 systems.  */
 end_comment
 
 begin_comment
@@ -1001,7 +1208,7 @@ value|(MASK_V8 + MASK_SPARCLITE + MASK_SPARCLET + MASK_V9 + MASK_DEPRECATED_V8_I
 end_define
 
 begin_comment
-comment|/* Non-zero means don't pass `-assert pure-text' to the linker.  */
+comment|/* Nonzero means don't pass `-assert pure-text' to the linker.  */
 end_comment
 
 begin_define
@@ -1037,7 +1244,7 @@ value|(target_flags& MASK_FLAT)
 end_define
 
 begin_comment
-comment|/* Nonzero means use the registers that the Sparc ABI reserves for    application software.  This must be the default to coincide with the    setting in FIXED_REGISTERS.  */
+comment|/* Nonzero means use the registers that the SPARC ABI reserves for    application software.  This must be the default to coincide with the    setting in FIXED_REGISTERS.  */
 end_comment
 
 begin_define
@@ -1073,7 +1280,7 @@ value|(target_flags& MASK_HARD_QUAD)
 end_define
 
 begin_comment
-comment|/* Non-zero on little-endian machines.  */
+comment|/* Nonzero on little-endian machines.  */
 end_comment
 
 begin_comment
@@ -1139,7 +1346,7 @@ comment|/* 0x20000,0x40000 unused */
 end_comment
 
 begin_comment
-comment|/* Non-zero means use a stack bias of 2047.  Stack offsets are obtained by    adding 2047 to %sp.  This option is for v9 only and is the default.  */
+comment|/* Nonzero means use a stack bias of 2047.  Stack offsets are obtained by    adding 2047 to %sp.  This option is for v9 only and is the default.  */
 end_comment
 
 begin_define
@@ -1161,7 +1368,7 @@ comment|/* 0x100000,0x200000 unused */
 end_comment
 
 begin_comment
-comment|/* Non-zero means -m{,no-}fpu was passed on the command line.  */
+comment|/* Nonzero means -m{,no-}fpu was passed on the command line.  */
 end_comment
 
 begin_define
@@ -1281,7 +1488,7 @@ name|TARGET_SWITCHES
 define|\
 value|{ {"fpu", MASK_FPU | MASK_FPU_SET,					\      N_("Use hardware fp") },						\     {"no-fpu", -MASK_FPU,						\      N_("Do not use hardware fp") },					\     {"no-fpu", MASK_FPU_SET,				NULL, },	\     {"hard-float", MASK_FPU | MASK_FPU_SET,				\      N_("Use hardware fp") },						\     {"soft-float", -MASK_FPU,						\      N_("Do not use hardware fp") },					\     {"soft-float", MASK_FPU_SET,			NULL },		\     {"unaligned-doubles", MASK_UNALIGNED_DOUBLES,			\      N_("Assume possible double misalignment") },			\     {"no-unaligned-doubles", -MASK_UNALIGNED_DOUBLES,			\      N_("Assume all doubles are aligned") },				\     {"impure-text", MASK_IMPURE_TEXT,					\      N_("Pass -assert pure-text to linker") }, 				\     {"no-impure-text", -MASK_IMPURE_TEXT,				\      N_("Do not pass -assert pure-text to linker") }, 			\     {"flat", MASK_FLAT,							\      N_("Use flat register window model") }, 				\     {"no-flat", -MASK_FLAT,						\      N_("Do not use flat register window model") }, 			\     {"app-regs", MASK_APP_REGS,						\      N_("Use ABI reserved registers") },				\     {"no-app-regs", -MASK_APP_REGS,					\      N_("Do not use ABI reserved registers") }, 			\     {"hard-quad-float", MASK_HARD_QUAD,					\      N_("Use hardware quad fp instructions") }, 			\     {"soft-quad-float", -MASK_HARD_QUAD,				\      N_("Do not use hardware quad fp instructions") }, 			\     {"v8plus", MASK_V8PLUS,						\      N_("Compile for v8plus ABI") },					\     {"no-v8plus", -MASK_V8PLUS,						\      N_("Do not compile for v8plus ABI") }, 				\     {"vis", MASK_VIS,							\      N_("Utilize Visual Instruction Set") }, 				\     {"no-vis", -MASK_VIS,						\      N_("Do not utilize Visual Instruction Set") }, 			\
 comment|/* ??? These are deprecated, coerced to -mcpu=.  Delete in 2.9.  */
-value|\     {"cypress", 0,							\      N_("Optimize for Cypress processors") }, 				\     {"sparclite", 0,							\      N_("Optimize for SparcLite processors") }, 			\     {"f930", 0,								\      N_("Optimize for F930 processors") }, 				\     {"f934", 0,								\      N_("Optimize for F934 processors") }, 				\     {"v8", 0,								\      N_("Use V8 Sparc ISA") }, 						\     {"supersparc", 0,							\      N_("Optimize for SuperSparc processors") }, 			\
+value|\     {"cypress", 0,							\      N_("Optimize for Cypress processors") }, 				\     {"sparclite", 0,							\      N_("Optimize for SPARCLite processors") }, 			\     {"f930", 0,								\      N_("Optimize for F930 processors") }, 				\     {"f934", 0,								\      N_("Optimize for F934 processors") }, 				\     {"v8", 0,								\      N_("Use V8 SPARC ISA") }, 						\     {"supersparc", 0,							\      N_("Optimize for SuperSPARC processors") }, 			\
 comment|/* End of deprecated options.  */
 value|\     {"ptr64", MASK_PTR64,						\      N_("Pointers are 64-bit") }, 					\     {"ptr32", -MASK_PTR64,						\      N_("Pointers are 32-bit") }, 					\     {"32", -MASK_64BIT,							\      N_("Use 32-bit ABI") }, 						\     {"64", MASK_64BIT,							\      N_("Use 64-bit ABI") }, 						\     {"stack-bias", MASK_STACK_BIAS,					\      N_("Use stack bias") }, 						\     {"no-stack-bias", -MASK_STACK_BIAS,					\      N_("Do not use stack bias") }, 					\     {"faster-structs", MASK_FASTER_STRUCTS,				\      N_("Use structs on stronger alignment for double-word copies") }, 	\     {"no-faster-structs", -MASK_FASTER_STRUCTS,				\      N_("Do not use structs on stronger alignment for double-word copies") }, \     {"relax", 0,							\      N_("Optimize tail call instructions in assembler and linker") },	\     {"no-relax", 0,							\      N_("Do not optimize tail call instructions in assembler or linker") }, \     SUBTARGET_SWITCHES			\     { "", TARGET_DEFAULT, ""}}
 end_define
@@ -1340,6 +1547,8 @@ block|,
 name|PROCESSOR_V9
 block|,
 name|PROCESSOR_ULTRASPARC
+block|,
+name|PROCESSOR_ULTRASPARC3
 block|}
 enum|;
 end_enum
@@ -1372,7 +1581,7 @@ define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{								\   { "cpu=",&sparc_select[1].string,				\     N_("Use features of and schedule code for given CPU") },	\   { "tune=",&sparc_select[2].string,				\     N_("Schedule code for given CPU") },			\   { "cmodel=",&sparc_cmodel_string,				\     N_("Use given Sparc code model") },				\   SUBTARGET_OPTIONS 						\ }
+value|{								\   { "cpu=",&sparc_select[1].string,				\     N_("Use features of and schedule code for given CPU") },	\   { "tune=",&sparc_select[2].string,				\     N_("Schedule code for given CPU") },			\   { "cmodel=",&sparc_cmodel_string,				\     N_("Use given SPARC code model") },				\   SUBTARGET_OPTIONS 						\ }
 end_define
 
 begin_comment
@@ -1431,16 +1640,6 @@ end_escape
 begin_comment
 comment|/* target machine storage layout */
 end_comment
-
-begin_comment
-comment|/* Define for cross-compilation to a sparc target with no TFmode from a host    with a different float format (e.g. VAX).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_ARITHMETIC
-end_define
 
 begin_comment
 comment|/* Define this if most significant bit is lowest numbered    in instructions that operate on numbered bit-fields.  */
@@ -1516,28 +1715,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* number of bits in an addressable storage unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_UNIT
-value|8
-end_define
-
-begin_comment
-comment|/* Width in bits of a "word", which is the contents of a machine register.    Note that this is not necessarily the width of data type `int';    if using 16-bit ints on a 68000, this would still be 32.    But on a machine with 16-bit registers, this would be 16.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_WORD
-value|(TARGET_ARCH64 ? 64 : 32)
-end_define
 
 begin_define
 define|#
@@ -1662,7 +1839,7 @@ comment|/* ??? This does not work in SunOS 4.x, so it is not enabled here.    In
 end_comment
 
 begin_comment
-comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words.  */
+comment|/* Define for support of TFmode long double.    SPARC ABI says that long double is 4 words.  */
 end_comment
 
 begin_define
@@ -1831,7 +2008,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* A bitfield declared as `int' forces `int' alignment for the struct.  */
+comment|/* A bit-field declared as `int' forces `int' alignment for the struct.  */
 end_comment
 
 begin_define
@@ -1963,29 +2140,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Use text section for a constant    unless we need more alignment than that offers.  */
-end_comment
-
-begin_comment
-comment|/* This is defined differently for v9 in a cover file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SELECT_RTX_SECTION
-parameter_list|(
-name|MODE
-parameter_list|,
-name|X
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|{						\   if (GET_MODE_BITSIZE (MODE)<= MAX_TEXT_ALIGN \&& ! (flag_pic&& (symbolic_operand ((X), (MODE)) || SUNOS4_SHARED_LIBRARIES)))  \     text_section ();				\   else						\     data_section ();				\ }
-end_define
 
 begin_escape
 end_escape
@@ -2146,13 +2300,13 @@ define|\
 value|do								\   {								\     if (PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)		\       {								\ 	fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\ 	call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\       }								\
 comment|/* If the user has passed -f{fixed,call-{used,saved}}-g5 */
 value|\
-comment|/* then honour it.  */
+comment|/* then honor it.  */
 value|\     if (TARGET_ARCH32&& fixed_regs[5])				\       fixed_regs[5] = 1;					\     else if (TARGET_ARCH64&& fixed_regs[5] == 2)		\       fixed_regs[5] = 0;					\     if (! TARGET_V9)						\       {								\ 	int regno;						\ 	for (regno = SPARC_FIRST_V9_FP_REG;			\ 	     regno<= SPARC_LAST_V9_FP_REG;			\ 	     regno++)						\ 	  fixed_regs[regno] = 1;				\
 comment|/* %fcc0 is used by v8 and v9.  */
 value|\ 	for (regno = SPARC_FIRST_V9_FCC_REG + 1;		\ 	     regno<= SPARC_LAST_V9_FCC_REG;			\ 	     regno++)						\ 	  fixed_regs[regno] = 1;				\       }								\     if (! TARGET_FPU)						\       {								\ 	int regno;						\ 	for (regno = 32; regno< SPARC_LAST_V9_FCC_REG; regno++) \ 	  fixed_regs[regno] = 1;				\       }								\
 comment|/* If the user has passed -f{fixed,call-{used,saved}}-g2 */
 value|\
-comment|/* then honour it.  Likewise with g3 and g4.  */
+comment|/* then honor it.  Likewise with g3 and g4.  */
 value|\     if (fixed_regs[2] == 2)					\       fixed_regs[2] = ! TARGET_APP_REGS;			\     if (fixed_regs[3] == 2)					\       fixed_regs[3] = ! TARGET_APP_REGS;			\     if (TARGET_ARCH32&& fixed_regs[4] == 2)			\       fixed_regs[4] = ! TARGET_APP_REGS;			\     else if (TARGET_CM_EMBMEDANY)				\       fixed_regs[4] = 1;					\     else if (fixed_regs[4] == 2)				\       fixed_regs[4] = 0;					\     if (TARGET_FLAT)						\       {								\ 	int regno;						\
 comment|/* Let the compiler believe the frame pointer is still	\ 	   %fp, but output it as %i7.  */
 value|\ 	fixed_regs[31] = 1;					\ 	reg_names[HARD_FRAME_POINTER_REGNUM] = "%i7";		\
@@ -2337,7 +2491,7 @@ define|#
 directive|define
 name|FRAME_POINTER_REQUIRED
 define|\
-value|(TARGET_FLAT						\    ? (current_function_calls_alloca			\       || current_function_varargs			\       || !leaf_function_p ())				\    : ! (leaf_function_p ()&& only_leaf_regs_used ()))
+value|(TARGET_FLAT						\    ? (current_function_calls_alloca			\       || !leaf_function_p ())				\    : ! (leaf_function_p ()&& only_leaf_regs_used ()))
 end_define
 
 begin_comment
@@ -2385,7 +2539,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/* Sparc ABI says that quad-precision floats and all structures are returned    in memory.    For v9: unions<= 32 bytes in size are returned in int regs,    structures up to 32 bytes are returned in int and fp regs.  */
+comment|/* SPARC ABI says that quad-precision floats and all structures are returned    in memory.    For v9: unions<= 32 bytes in size are returned in int regs,    structures up to 32 bytes are returned in int and fp regs.  */
 end_comment
 
 begin_define
@@ -2545,7 +2699,7 @@ value|sparc_regno_reg_class[(REGNO)]
 end_define
 
 begin_comment
-comment|/* This is the order in which to allocate registers normally.          We put %f0/%f1 last among the float registers, so as to make it more    likely that a pseudo-register which dies in the float return register    will get allocated to the float return register, thus saving a move    instruction at the end of the function.  */
+comment|/* This is the order in which to allocate registers normally.     We put %f0-%f7 last among the float registers, so as to make it more    likely that a pseudo-register which dies in the float return register    area will get allocated to the float return register, thus saving a move    instruction at the end of the function.     Similarly for integer return value registers.     We know in this case that we will not end up with a leaf function.     The register allocater is given the global and out registers first    because these registers are call clobbered and thus less useful to    global register allocation.     Next we list the local and in registers.  They are not call clobbered    and thus very useful for global register allocation.  We list the input    registers before the locals so that it is more likely the incoming    arguments received in those registers can just stay there and not be    reloaded.  */
 end_comment
 
 begin_define
@@ -2553,8 +2707,16 @@ define|#
 directive|define
 name|REG_ALLOC_ORDER
 define|\
-value|{ 8, 9, 10, 11, 12, 13, 2, 3,		\   15, 16, 17, 18, 19, 20, 21, 22,	\   23, 24, 25, 26, 27, 28, 29, 31,	\   34, 35, 36, 37, 38, 39,
-comment|/* %f2-%f7 */
+value|{ 1, 2, 3, 4, 5, 6, 7,
+comment|/* %g1-%g7 */
+value|\   13, 12, 11, 10, 9, 8,
+comment|/* %o5-%o0 */
+value|\   15,
+comment|/* %o7 */
+value|\   16, 17, 18, 19, 20, 21, 22, 23,
+comment|/* %l0-%l7 */
+value|\   29, 28, 27, 26, 25, 24, 31,
+comment|/* %i5-%i0,%i7 */
 value|\   40, 41, 42, 43, 44, 45, 46, 47,
 comment|/* %f8-%f15 */
 value|\   48, 49, 50, 51, 52, 53, 54, 55,
@@ -2569,15 +2731,19 @@ value|\   80, 81, 82, 83, 84, 85, 86, 87,
 comment|/* %f48-%f55 */
 value|\   88, 89, 90, 91, 92, 93, 94, 95,
 comment|/* %f56-%f63 */
-value|\   32, 33,
-comment|/* %f0,%f1 */
-value|\   96, 97, 98, 99, 100,
-comment|/* %fcc0-3, %icc */
-value|\   1, 4, 5, 6, 7, 0, 14, 30, 101}
+value|\   39, 38, 37, 36, 35, 34, 33, 32,
+comment|/* %f7-%f0 */
+value|\   96, 97, 98, 99,
+comment|/* %fcc0-3 */
+value|\   100, 0, 14, 30, 101}
 end_define
 
 begin_comment
-comment|/* This is the order in which to allocate registers for    leaf functions.  If all registers can fit in the "gi" registers,    then we have the possibility of having a leaf function.  */
+comment|/* %icc, %g0, %o6, %i6, %sfp */
+end_comment
+
+begin_comment
+comment|/* This is the order in which to allocate registers for    leaf functions.  If all registers can fit in the global and    output registers, then we have the possibility of having a leaf    function.     The macro actually mentioned the input registers first,    because they get renumbered into the output registers once    we know really do have a leaf function.     To be more precise, this register allocation order is used    when %o7 is found to not be clobbered right before register    allocation.  Normally, the reason %o7 would be clobbered is    due to a call which could not be transformed into a sibling    call.     As a consequence, it is possible to use the leaf register    allocation order and not end up with a leaf function.  We will    not get suboptimal register allocation in that case because by    definition of being potentially leaf, there were no function    calls.  Therefore, allocation order within the local register    window is not critical like it is when we do have function calls.  */
 end_comment
 
 begin_define
@@ -2585,8 +2751,40 @@ define|#
 directive|define
 name|REG_LEAF_ALLOC_ORDER
 define|\
-value|{ 2, 3, 24, 25, 26, 27, 28, 29,		\   4, 5, 6, 7, 1,			\   15, 8, 9, 10, 11, 12, 13,		\   16, 17, 18, 19, 20, 21, 22, 23,	\   34, 35, 36, 37, 38, 39,		\   40, 41, 42, 43, 44, 45, 46, 47,	\   48, 49, 50, 51, 52, 53, 54, 55,	\   56, 57, 58, 59, 60, 61, 62, 63,	\   64, 65, 66, 67, 68, 69, 70, 71,	\   72, 73, 74, 75, 76, 77, 78, 79,	\   80, 81, 82, 83, 84, 85, 86, 87,	\   88, 89, 90, 91, 92, 93, 94, 95,	\   32, 33,				\   96, 97, 98, 99, 100,			\   0, 14, 30, 31, 101}
+value|{ 1, 2, 3, 4, 5, 6, 7,
+comment|/* %g1-%g7 */
+value|\   29, 28, 27, 26, 25, 24,
+comment|/* %i5-%i0 */
+value|\   15,
+comment|/* %o7 */
+value|\   13, 12, 11, 10, 9, 8,
+comment|/* %o5-%o0 */
+value|\   16, 17, 18, 19, 20, 21, 22, 23,
+comment|/* %l0-%l7 */
+value|\   40, 41, 42, 43, 44, 45, 46, 47,
+comment|/* %f8-%f15 */
+value|\   48, 49, 50, 51, 52, 53, 54, 55,
+comment|/* %f16-%f23 */
+value|\   56, 57, 58, 59, 60, 61, 62, 63,
+comment|/* %f24-%f31 */
+value|\   64, 65, 66, 67, 68, 69, 70, 71,
+comment|/* %f32-%f39 */
+value|\   72, 73, 74, 75, 76, 77, 78, 79,
+comment|/* %f40-%f47 */
+value|\   80, 81, 82, 83, 84, 85, 86, 87,
+comment|/* %f48-%f55 */
+value|\   88, 89, 90, 91, 92, 93, 94, 95,
+comment|/* %f56-%f63 */
+value|\   39, 38, 37, 36, 35, 34, 33, 32,
+comment|/* %f7-%f0 */
+value|\   96, 97, 98, 99,
+comment|/* %fcc0-3 */
+value|\   100, 0, 14, 30, 31, 101}
 end_define
+
+begin_comment
+comment|/* %icc, %g0, %o6, %i6, %i7, %sfp */
+end_comment
 
 begin_define
 define|#
@@ -2676,7 +2874,7 @@ value|(TARGET_V9					\  ? ((C) == 'f' ? FP_REGS			\     : (C) == 'e' ? EXTRA_FP_
 end_define
 
 begin_comment
-comment|/* The letters I, J, K, L and M in a register constraint string    can be used to stand for particular ranges of immediate operands.    This macro defines what the ranges are.    C is the letter, and VALUE is a constant value.    Return 1 if VALUE is in the range specified by C.     `I' is used for the range of constants an insn can actually contain.    `J' is used for the range which is just zero (since that is R0).    `K' is used for constants which can be loaded with a single sethi insn.    `L' is used for the range of constants supported by the movcc insns.    `M' is used for the range of constants supported by the movrcc insns.    `N' is like K, but for constants wider than 32 bits.  */
+comment|/* The letters I, J, K, L and M in a register constraint string    can be used to stand for particular ranges of immediate operands.    This macro defines what the ranges are.    C is the letter, and VALUE is a constant value.    Return 1 if VALUE is in the range specified by C.     `I' is used for the range of constants an insn can actually contain.    `J' is used for the range which is just zero (since that is R0).    `K' is used for constants which can be loaded with a single sethi insn.    `L' is used for the range of constants supported by the movcc insns.    `M' is used for the range of constants supported by the movrcc insns.    `N' is like K, but for constants wider than 32 bits.    `O' is used for the range which is just 4096.  */
 end_comment
 
 begin_define
@@ -2769,7 +2967,7 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'I' ? SPARC_SIMM13_P (VALUE)			\    : (C) == 'J' ? (VALUE) == 0				\    : (C) == 'K' ? SPARC_SETHI32_P (VALUE)		\    : (C) == 'L' ? SPARC_SIMM11_P (VALUE)		\    : (C) == 'M' ? SPARC_SIMM10_P (VALUE)		\    : (C) == 'N' ? SPARC_SETHI_P (VALUE)			\    : 0)
+value|((C) == 'I' ? SPARC_SIMM13_P (VALUE)			\    : (C) == 'J' ? (VALUE) == 0				\    : (C) == 'K' ? SPARC_SETHI32_P (VALUE)		\    : (C) == 'L' ? SPARC_SIMM11_P (VALUE)		\    : (C) == 'M' ? SPARC_SIMM10_P (VALUE)		\    : (C) == 'N' ? SPARC_SETHI_P (VALUE)			\    : (C) == 'O' ? (VALUE) == 4096			\    : 0)
 end_define
 
 begin_comment
@@ -2786,7 +2984,7 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'G' ? fp_zero_operand (VALUE, GET_MODE (VALUE))	\    : (C) == 'H' ? arith_double_operand (VALUE, DImode)		\    : 0)
+value|((C) == 'G' ? fp_zero_operand (VALUE, GET_MODE (VALUE))	\    : (C) == 'H' ? arith_double_operand (VALUE, DImode)		\    : (C) == 'O' ? arith_double_4096_operand (VALUE, DImode)	\    : 0)
 end_define
 
 begin_comment
@@ -2845,7 +3043,7 @@ value|((FP_REG_CLASS_P (CLASS)					\&& ((MODE) == HImode || (MODE) == QImode)			
 end_define
 
 begin_comment
-comment|/* On SPARC it is not possible to directly move data between     GENERAL_REGS and FP_REGS.  */
+comment|/* On SPARC it is not possible to directly move data between    GENERAL_REGS and FP_REGS.  */
 end_comment
 
 begin_define
@@ -3314,11 +3512,11 @@ comment|/* number of words passed so far */
 name|int
 name|prototype_p
 decl_stmt|;
-comment|/* non-zero if a prototype is present */
+comment|/* nonzero if a prototype is present */
 name|int
 name|libcall_p
 decl_stmt|;
-comment|/* non-zero if a library call */
+comment|/* nonzero if a library call */
 block|}
 struct|;
 end_struct
@@ -3514,14 +3712,24 @@ begin_comment
 comment|/* Define the information needed to generate branch and scc insns.  This is    stored from the compare operation.  Note that we can't use "rtx" here    since it hasn't been defined!  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
-name|struct
-name|rtx_def
-modifier|*
+unit|))
+name|rtx
 name|sparc_compare_op0
-decl_stmt|,
-modifier|*
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|rtx
 name|sparc_compare_op1
 decl_stmt|;
 end_decl_stmt
@@ -3530,7 +3738,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Generate the special assembly code needed to tell the assembler whatever    it might need to know about the return value of a function.     For Sparc assemblers, we need to output a .proc pseudo-op which conveys    information to the assembler relating to peephole optimization (done in    the assembler).  */
+comment|/* Generate the special assembly code needed to tell the assembler whatever    it might need to know about the return value of a function.     For SPARC assemblers, we need to output a .proc pseudo-op which conveys    information to the assembler relating to peephole optimization (done in    the assembler).  */
 end_comment
 
 begin_define
@@ -3547,7 +3755,7 @@ value|fprintf ((FILE), "\t.proc\t0%lo\n", sparc_type_code (TREE_TYPE (RESULT)))
 end_define
 
 begin_comment
-comment|/* Output the special assembly code needed to tell the assembler some    register is used as global register variable.       SPARC 64bit psABI declares registers %g2 and %g3 as application    registers and %g6 and %g7 as OS registers.  Any object using them    should declare (for %g2/%g3 has to, for %g6/%g7 can) that it uses them    and how they are used (scratch or some global variable).    Linker will then refuse to link together objects which use those    registers incompatibly.     Unless the registers are used for scratch, two different global    registers cannot be declared to the same name, so in the unlikely    case of a global register variable occupying more than one register    we prefix the second and following registers with .gnu.part1. etc.  */
+comment|/* Output the special assembly code needed to tell the assembler some    register is used as global register variable.     SPARC 64bit psABI declares registers %g2 and %g3 as application    registers and %g6 and %g7 as OS registers.  Any object using them    should declare (for %g2/%g3 has to, for %g6/%g7 can) that it uses them    and how they are used (scratch or some global variable).    Linker will then refuse to link together objects which use those    registers incompatibly.     Unless the registers are used for scratch, two different global    registers cannot be declared to the same name, so in the unlikely    case of a global register variable occupying more than one register    we prefix the second and following registers with .gnu.part1. etc.  */
 end_comment
 
 begin_decl_stmt
@@ -3751,14 +3959,12 @@ define|#
 directive|define
 name|EXPAND_BUILTIN_VA_START
 parameter_list|(
-name|stdarg
-parameter_list|,
 name|valist
 parameter_list|,
 name|nextarg
 parameter_list|)
 define|\
-value|sparc_va_start (stdarg, valist, nextarg)
+value|sparc_va_start (valist, nextarg)
 end_define
 
 begin_comment
@@ -4339,6 +4545,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SYMBOLIC_CONST
+parameter_list|(
+name|X
+parameter_list|)
+value|symbolic_operand (X, VOIDmode)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTX_OK_FOR_BASE_P
 parameter_list|(
 name|X
@@ -4392,7 +4608,7 @@ parameter_list|,
 name|ADDR
 parameter_list|)
 define|\
-value|{ if (RTX_OK_FOR_BASE_P (X))				\     goto ADDR;						\   else if (GET_CODE (X) == PLUS)			\     {							\       register rtx op0 = XEXP (X, 0);			\       register rtx op1 = XEXP (X, 1);			\       if (flag_pic&& op0 == pic_offset_table_rtx)	\ 	{						\ 	  if (RTX_OK_FOR_BASE_P (op1))			\ 	    goto ADDR;					\ 	  else if (flag_pic == 1			\&& GET_CODE (op1) != REG		\&& GET_CODE (op1) != LO_SUM		\&& GET_CODE (op1) != MEM		\&& (GET_CODE (op1) != CONST_INT	\ 		       || SMALL_INT (op1)))		\ 	    goto ADDR;					\ 	}						\       else if (RTX_OK_FOR_BASE_P (op0))			\ 	{						\ 	  if ((RTX_OK_FOR_INDEX_P (op1)			\
+value|{ if (RTX_OK_FOR_BASE_P (X))				\     goto ADDR;						\   else if (GET_CODE (X) == PLUS)			\     {							\       register rtx op0 = XEXP (X, 0);			\       register rtx op1 = XEXP (X, 1);			\       if (flag_pic&& op0 == pic_offset_table_rtx)	\ 	{						\ 	  if (RTX_OK_FOR_BASE_P (op1))			\ 	    goto ADDR;					\ 	  else if (flag_pic == 1			\&& GET_CODE (op1) != REG		\&& GET_CODE (op1) != LO_SUM		\&& GET_CODE (op1) != MEM		\&& (! SYMBOLIC_CONST (op1)		\ 		       || MODE == Pmode)		\&& (GET_CODE (op1) != CONST_INT	\ 		       || SMALL_INT (op1)))		\ 	    goto ADDR;					\ 	}						\       else if (RTX_OK_FOR_BASE_P (op0))			\ 	{						\ 	  if ((RTX_OK_FOR_INDEX_P (op1)			\
 comment|/* We prohibit REG + REG for TFmode when	\ 		 there are no instructions which accept	\ 		 REG+REG instructions.  We do this	\ 		 because REG+REG is not an offsetable	\ 		 address.  If we get the situation	\ 		 in reload where source and destination	\ 		 of a movtf pattern are both MEMs with	\ 		 REG+REG address, then only one of them	\ 		 gets converted to an offsetable	\ 		 address.  */
 value|\&& (MODE != TFmode			\ 		   || (TARGET_FPU&& TARGET_ARCH64	\&& TARGET_V9			\&& TARGET_HARD_QUAD))		\
 comment|/* We prohibit REG + REG on ARCH32 if	\ 		 not optimizing for DFmode/DImode	\ 		 because then mem_min_alignment is	\ 		 likely to be zero after reload and the \ 		 forced split would lack a matching	\ 		 splitter pattern.  */
@@ -4401,6 +4617,23 @@ comment|/* See the previous comment.  */
 value|\&& (MODE != TFmode			\ 		  || (TARGET_FPU&& TARGET_ARCH64	\&& TARGET_V9			\&& TARGET_HARD_QUAD))		\&& (TARGET_ARCH64 || optimize		\ 		   || (MODE != DFmode			\&& MODE != DImode)))		\ 	      || RTX_OK_FOR_OFFSET_P (op0))		\ 	    goto ADDR;					\ 	}						\       else if (USE_AS_OFFSETABLE_LO10			\&& GET_CODE (op0) == LO_SUM		\&& TARGET_ARCH64				\&& ! TARGET_CM_MEDMID			\&& RTX_OK_FOR_OLO10_P (op1))		\ 	{						\ 	  register rtx op00 = XEXP (op0, 0);		\ 	  register rtx op01 = XEXP (op0, 1);		\ 	  if (RTX_OK_FOR_BASE_P (op00)			\&& CONSTANT_P (op01))			\ 	    goto ADDR;					\ 	}						\       else if (USE_AS_OFFSETABLE_LO10			\&& GET_CODE (op1) == LO_SUM		\&& TARGET_ARCH64				\&& ! TARGET_CM_MEDMID			\&& RTX_OK_FOR_OLO10_P (op0))		\ 	{						\ 	  register rtx op10 = XEXP (op1, 0);		\ 	  register rtx op11 = XEXP (op1, 1);		\ 	  if (RTX_OK_FOR_BASE_P (op10)			\&& CONSTANT_P (op11))			\ 	    goto ADDR;					\ 	}						\     }							\   else if (GET_CODE (X) == LO_SUM)			\     {							\       register rtx op0 = XEXP (X, 0);			\       register rtx op1 = XEXP (X, 1);			\       if (RTX_OK_FOR_BASE_P (op0)			\&& CONSTANT_P (op1)				\
 comment|/* We can't allow TFmode, because an offset	\ 	     greater than or equal to the alignment (8)	\ 	     may cause the LO_SUM to overflow if !v9.  */
 value|\&& (MODE != TFmode || TARGET_V9))		\ 	goto ADDR;					\     }							\   else if (GET_CODE (X) == CONST_INT&& SMALL_INT (X))	\     goto ADDR;						\ }
+end_define
+
+begin_comment
+comment|/* Go to LABEL if ADDR (a legitimate address expression)    has an effect that depends on the machine mode it is used for.     In PIC mode,        (mem:HI [%l7+a])     is not equivalent to           (mem:QI [%l7+a]) (mem:QI [%l7+a+1])     because [%l7+a+1] is interpreted as the address of (a+1).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GO_IF_MODE_DEPENDENT_ADDRESS
+parameter_list|(
+name|ADDR
+parameter_list|,
+name|LABEL
+parameter_list|)
+define|\
+value|{							\   if (flag_pic == 1)					\     {							\       if (GET_CODE (ADDR) == PLUS)			\ 	{						\ 	  rtx op0 = XEXP (ADDR, 0);			\ 	  rtx op1 = XEXP (ADDR, 1);			\ 	  if (op0 == pic_offset_table_rtx		\&& SYMBOLIC_CONST (op1))			\ 	    goto LABEL;					\ 	}						\     }							\ }
 end_define
 
 begin_escape
@@ -4432,7 +4665,7 @@ value|{ rtx sparc_x = (X);						\   if (GET_CODE (X) == PLUS&& GET_CODE (XEXP (X
 end_define
 
 begin_comment
-comment|/* Try a machine-dependent way of reloading an illegitimate address    operand.  If we find one, push the reload and jump to WIN.  This    macro is used in only one place: `find_reloads_address' in reload.c.     For Sparc 32, we wish to handle addresses by splitting them into    HIGH+LO_SUM pairs, retaining the LO_SUM in the memory reference.     This cuts the number of extra insns by one.     Do nothing when generating PIC code and the address is a    symbolic operand or requires a scratch register.  */
+comment|/* Try a machine-dependent way of reloading an illegitimate address    operand.  If we find one, push the reload and jump to WIN.  This    macro is used in only one place: `find_reloads_address' in reload.c.     For SPARC 32, we wish to handle addresses by splitting them into    HIGH+LO_SUM pairs, retaining the LO_SUM in the memory reference.    This cuts the number of extra insns by one.     Do nothing when generating PIC code and the address is a    symbolic operand or requires a scratch register.  */
 end_comment
 
 begin_define
@@ -4458,36 +4691,6 @@ comment|/* Decompose SImode constants into hi+lo_sum.  We do have to 		\      re
 value|\   if (CONSTANT_P (X)							\&& (MODE != TFmode || TARGET_ARCH64)				\&& GET_MODE (X) == SImode						\&& GET_CODE (X) != LO_SUM&& GET_CODE (X) != HIGH			\&& ! (flag_pic							\&& (symbolic_operand (X, Pmode)				\ 		|| pic_address_needs_scratch (X)))			\&& sparc_cmodel<= CM_MEDLOW)					\     {									\       X = gen_rtx_LO_SUM (GET_MODE (X),					\ 			  gen_rtx_HIGH (GET_MODE (X), X), X);		\       push_reload (XEXP (X, 0), NULL_RTX,&XEXP (X, 0), NULL,		\                    BASE_REG_CLASS, GET_MODE (X), VOIDmode, 0, 0,	\                    OPNUM, TYPE);					\       goto WIN;								\     }									\
 comment|/* ??? 64-bit reloads.  */
 value|\ } while (0)
-end_define
-
-begin_comment
-comment|/* Go to LABEL if ADDR (a legitimate address expression)    has an effect that depends on the machine mode it is used for.    On the SPARC this is never true.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GO_IF_MODE_DEPENDENT_ADDRESS
-parameter_list|(
-name|ADDR
-parameter_list|,
-name|LABEL
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* If we are referencing a function make the SYMBOL_REF special.    In the Embedded Medium/Anywhere code model, %g4 points to the data segment    so we must not add it to function addresses.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|do {							\     if (TARGET_CM_EMBMEDANY&& TREE_CODE (DECL) == FUNCTION_DECL) \       SYMBOL_REF_FLAG (XEXP (DECL_RTL (DECL), 0)) = 1;	\   } while (0)
 end_define
 
 begin_escape
@@ -4715,18 +4918,6 @@ name|TARGET_MEM_FUNCTIONS
 end_define
 
 begin_comment
-comment|/* Add any extra modes needed to represent the condition code.     On the Sparc, we have a "no-overflow" mode which is used when an add or    subtract insn is used to set the condition code.  Different branches are    used in this case for some operations.     We also have two modes to indicate that the relevant condition code is    in the floating-point condition code register.  One for comparisons which    will generate an exception if the result is unordered (CCFPEmode) and    one for comparisons which will never trap (CCFPmode).     CCXmode and CCX_NOOVmode are only used by v9.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_CC_MODES
-define|\
-value|CC(CCXmode,	     "CCX")		\     CC(CC_NOOVmode,  "CC_NOOV")		\     CC(CCX_NOOVmode, "CCX_NOOV")	\     CC(CCFPmode,     "CCFP")		\     CC(CCFPEmode,    "CCFPE")
-end_define
-
-begin_comment
 comment|/* Given a comparison code (EQ, NE, etc.) and the first operand of a COMPARE,    return the mode to be used for the comparison.  For floating-point,    CCFP[E]mode is used.  CC_NOOVmode should be used when the first operand    is a PLUS, MINUS, NEG, or ASHIFT.  CCmode should be used when no special    processing is needed.  */
 end_comment
 
@@ -4745,7 +4936,7 @@ value|select_cc_mode ((OP), (X), (Y))
 end_define
 
 begin_comment
-comment|/* Return non-zero if MODE implies a floating point inequality can be    reversed.  For Sparc this is always true because we have a full    compliment of ordered and unordered comparisons, but until generic    code knows how to reverse it correctly we keep the old definition.  */
+comment|/* Return nonzero if MODE implies a floating point inequality can be    reversed.  For SPARC this is always true because we have a full    compliment of ordered and unordered comparisons, but until generic    code knows how to reverse it correctly we keep the old definition.  */
 end_comment
 
 begin_define
@@ -5014,35 +5205,6 @@ value|((MODE) == TFmode)
 end_define
 
 begin_comment
-comment|/* Compute the cost of computing a constant rtl expression RTX    whose rtx-code is CODE.  The body of this macro is a portion    of a switch statement.  If the code is computed here,    return it with a return statement.  Otherwise, break from the switch.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_COSTS
-parameter_list|(
-name|RTX
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case CONST_INT:						\     if (INTVAL (RTX)< 0x1000&& INTVAL (RTX)>= -0x1000)	\       return 0;							\   case HIGH:							\     return 2;							\   case CONST:							\   case LABEL_REF:						\   case SYMBOL_REF:						\     return 4;							\   case CONST_DOUBLE:						\     if (GET_MODE (RTX) == DImode)				\       if ((XINT (RTX, 3) == 0					\&& (unsigned) XINT (RTX, 2)< 0x1000)		\ 	  || (XINT (RTX, 3) == -1				\&& XINT (RTX, 2)< 0				\&& XINT (RTX, 2)>= -0x1000))			\ 	return 0;						\     return 8;
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADDRESS_COST
-parameter_list|(
-name|RTX
-parameter_list|)
-value|1
-end_define
-
-begin_comment
 comment|/* Compute extra cost of moving data between one register class    and another.  */
 end_comment
 
@@ -5068,11 +5230,11 @@ parameter_list|,
 name|CLASS2
 parameter_list|)
 define|\
-value|(((FP_REG_CLASS_P (CLASS1)&& GENERAL_OR_I64 (CLASS2)) \     || (GENERAL_OR_I64 (CLASS1)&& FP_REG_CLASS_P (CLASS2)) \     || (CLASS1) == FPCC_REGS || (CLASS2) == FPCC_REGS)		\    ? (sparc_cpu == PROCESSOR_ULTRASPARC ? 12 : 6) : 2)
+value|(((FP_REG_CLASS_P (CLASS1)&& GENERAL_OR_I64 (CLASS2)) \     || (GENERAL_OR_I64 (CLASS1)&& FP_REG_CLASS_P (CLASS2)) \     || (CLASS1) == FPCC_REGS || (CLASS2) == FPCC_REGS)		\    ? ((sparc_cpu == PROCESSOR_ULTRASPARC \        || sparc_cpu == PROCESSOR_ULTRASPARC3) ? 12 : 6) : 2)
 end_define
 
 begin_comment
-comment|/* Provide the cost of a branch.  For pre-v9 processors we use    a value of 3 to take into account the potential annulling of    the delay slot (which ends up being a bubble in the pipeline slot)    plus a cycle to take into consideration the instruction cache    effects.     On v9 and later, which have branch prediction facilities, we set    it to the depth of the pipeline as that is the cost of a    mispredicted branch.     ??? Set to 9 when PROCESSOR_ULTRASPARC3 is added  */
+comment|/* Provide the cost of a branch.  For pre-v9 processors we use    a value of 3 to take into account the potential annulling of    the delay slot (which ends up being a bubble in the pipeline slot)    plus a cycle to take into consideration the instruction cache    effects.     On v9 and later, which have branch prediction facilities, we set    it to the depth of the pipeline as that is the cost of a    mispredicted branch.  */
 end_comment
 
 begin_define
@@ -5080,11 +5242,23 @@ define|#
 directive|define
 name|BRANCH_COST
 define|\
-value|((sparc_cpu == PROCESSOR_V9 \ 	  || sparc_cpu == PROCESSOR_ULTRASPARC) \ 	 ? 7 : 3)
+value|((sparc_cpu == PROCESSOR_V9 \ 	  || sparc_cpu == PROCESSOR_ULTRASPARC) \ 	 ? 7 \          : (sparc_cpu == PROCESSOR_ULTRASPARC3 \             ? 9 : 3))
 end_define
 
 begin_comment
-comment|/* Provide the costs of a rtl expression.  This is in the body of a    switch on CODE.  The purpose for the cost of MULT is to encourage    `synth_mult' to find a synthetic multiply when reasonable.     If we need more than 12 insns to do a multiply, then go out-of-line,    since the call overhead will be< 10% of the cost of the multiply.  */
+comment|/* The cases that RTX_COSTS handles.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTX_COSTS_CASES
+define|\
+value|case PLUS: case MINUS: case ABS: case NEG: \ case FLOAT: case UNSIGNED_FLOAT: \ case FIX: case UNSIGNED_FIX: \ case FLOAT_EXTEND: case FLOAT_TRUNCATE: \ case SQRT: \ case COMPARE: case IF_THEN_ELSE: \ case MEM: \ case MULT: case DIV: case UDIV: case MOD: case UMOD: \ case CONST_INT: case HIGH: case CONST: \ case LABEL_REF: case SYMBOL_REF: case CONST_DOUBLE:
+end_define
+
+begin_comment
+comment|/* Provide the costs of a rtl expression.  This is in the body of a    switch on CODE.  */
 end_comment
 
 begin_define
@@ -5099,9 +5273,17 @@ parameter_list|,
 name|OUTER_CODE
 parameter_list|)
 define|\
-value|case MULT:						\     if (sparc_cpu == PROCESSOR_ULTRASPARC)		\       return (GET_MODE (X) == DImode ?			\               COSTS_N_INSNS (34) : COSTS_N_INSNS (19));	\     return TARGET_HARD_MUL ? COSTS_N_INSNS (5) : COSTS_N_INSNS (25); \   case DIV:						\   case UDIV:						\   case MOD:						\   case UMOD:						\     if (sparc_cpu == PROCESSOR_ULTRASPARC)		\       return (GET_MODE (X) == DImode ?			\               COSTS_N_INSNS (68) : COSTS_N_INSNS (37));	\     return COSTS_N_INSNS (25);				\
-comment|/* Make FLOAT and FIX more expensive than CONST_DOUBLE,\      so that cse will favor the latter.  */
-value|\   case FLOAT:						\   case FIX:						\     return 19;
+value|RTX_COSTS_CASES					\     return sparc_rtx_costs(X,CODE,OUTER_CODE);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDRESS_COST
+parameter_list|(
+name|RTX
+parameter_list|)
+value|1
 end_define
 
 begin_define
@@ -5109,19 +5291,15 @@ define|#
 directive|define
 name|PREFETCH_BLOCK
 define|\
-value|((sparc_cpu == PROCESSOR_ULTRASPARC) ? 64 : 32)
+value|((sparc_cpu == PROCESSOR_ULTRASPARC \           || sparc_cpu == PROCESSOR_ULTRASPARC3) \          ? 64 : 32)
 end_define
-
-begin_comment
-comment|/* ??? UltraSPARC-III note: Can set this to 8 for ultra3.  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SIMULTANEOUS_PREFETCHES
 define|\
-value|((sparc_cpu == PROCESSOR_ULTRASPARC) ? 2 : 3)
+value|((sparc_cpu == PROCESSOR_ULTRASPARC) \          ? 2 \          : (sparc_cpu == PROCESSOR_ULTRASPARC3 \             ? 8 : 3))
 end_define
 
 begin_escape
@@ -5242,37 +5420,18 @@ value|1000
 end_define
 
 begin_comment
-comment|/* This is how to output the definition of a user-level label named NAME,    such as the label on a static function or variable NAME.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { assemble_name (FILE, NAME); fputs (":\n", FILE); } while (0)
-end_define
-
-begin_comment
 comment|/* This is how to output a command to make the user-level label named NAME    defined for reference from other files.  */
 end_comment
 
+begin_comment
+comment|/* Globalizing directive for a label.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { fputs ("\t.global ", FILE); assemble_name (FILE, NAME); fputs ("\n", FILE);} while (0)
+name|GLOBAL_ASM_OP
+value|"\t.global "
 end_define
 
 begin_comment
@@ -5446,6 +5605,23 @@ define|\
 value|if ((LOG) != 0)			\     fprintf (FILE, "\t.align %d\n", (1<<(LOG)))
 end_define
 
+begin_comment
+comment|/* This is how to output an assembler line that says to advance    the location counter to a multiple of 2**LOG bytes using the    "nop" instruction as padding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGN_WITH_NOP
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|)
+define|\
+value|if ((LOG) != 0)                             \     fprintf (FILE, "\t.align %d,0x1000000\n", (1<<(LOG)))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -5567,27 +5743,6 @@ define|\
 value|fprintf (FILE, "%s\"%s\"\n", IDENT_ASM_OP, NAME);
 end_define
 
-begin_comment
-comment|/* Output code to add DELTA to the first argument, and then jump to FUNCTION.    Used for C++ multiple inheritance.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_MI_THUNK
-parameter_list|(
-name|FILE
-parameter_list|,
-name|THUNK_FNDECL
-parameter_list|,
-name|DELTA
-parameter_list|,
-name|FUNCTION
-parameter_list|)
-define|\
-value|sparc_output_mi_thunk (FILE, THUNK_FNDECL, DELTA, FUNCTION)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -5649,7 +5804,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		\ {"fp_zero_operand", {CONST_DOUBLE}},					\ {"fp_register_operand", {SUBREG, REG}},					\ {"intreg_operand", {SUBREG, REG}},					\ {"fcc_reg_operand", {REG}},						\ {"fcc0_reg_operand", {REG}},						\ {"icc_or_fcc_reg_operand", {REG}},					\ {"restore_operand", {REG}},						\ {"call_operand", {MEM}},						\ {"call_operand_address", {SYMBOL_REF, LABEL_REF, CONST, CONST_DOUBLE,	\ 	ADDRESSOF, SUBREG, REG, PLUS, LO_SUM, CONST_INT}},		\ {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\ {"symbolic_memory_operand", {SUBREG, MEM}},				\ {"label_ref_operand", {LABEL_REF}},					\ {"sp64_medium_pic_operand", {CONST}},					\ {"data_segment_operand", {SYMBOL_REF, PLUS, CONST}},			\ {"text_segment_operand", {LABEL_REF, SYMBOL_REF, PLUS, CONST}},		\ {"reg_or_nonsymb_mem_operand", {SUBREG, REG, MEM}},			\ {"splittable_symbolic_memory_operand", {MEM}},				\ {"splittable_immediate_memory_operand", {MEM}},				\ {"eq_or_neq", {EQ, NE}},						\ {"normal_comp_operator", {GE, GT, LE, LT, GTU, LEU}},			\ {"noov_compare_op", {NE, EQ, GE, GT, LE, LT, GEU, GTU, LEU, LTU}},	\ {"noov_compare64_op", {NE, EQ, GE, GT, LE, LT, GEU, GTU, LEU, LTU}},	\ {"v9_regcmp_op", {EQ, NE, GE, LT, LE, GT}},				\ {"extend_op", {SIGN_EXTEND, ZERO_EXTEND}},				\ {"cc_arithop", {AND, IOR, XOR}},					\ {"cc_arithopn", {AND, IOR}},						\ {"arith_operand", {SUBREG, REG, CONST_INT}},				\ {"arith_add_operand", {SUBREG, REG, CONST_INT}},			\ {"arith11_operand", {SUBREG, REG, CONST_INT}},				\ {"arith10_operand", {SUBREG, REG, CONST_INT}},				\ {"arith_double_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"arith_double_add_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"arith11_double_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"arith10_double_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"small_int", {CONST_INT}},						\ {"small_int_or_double", {CONST_INT, CONST_DOUBLE}},			\ {"uns_small_int", {CONST_INT}},						\ {"uns_arith_operand", {SUBREG, REG, CONST_INT}},			\ {"clobbered_register", {REG}},						\ {"input_operand", {SUBREG, REG, CONST_INT, MEM, CONST}},		\ {"const64_operand", {CONST_INT, CONST_DOUBLE}},				\ {"const64_high_operand", {CONST_INT, CONST_DOUBLE}},
+value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		\ {"const1_operand", {CONST_INT}},					\ {"fp_zero_operand", {CONST_DOUBLE}},					\ {"fp_register_operand", {SUBREG, REG}},					\ {"intreg_operand", {SUBREG, REG}},					\ {"fcc_reg_operand", {REG}},						\ {"fcc0_reg_operand", {REG}},						\ {"icc_or_fcc_reg_operand", {REG}},					\ {"restore_operand", {REG}},						\ {"call_operand", {MEM}},						\ {"call_operand_address", {SYMBOL_REF, LABEL_REF, CONST, CONST_DOUBLE,	\ 	ADDRESSOF, SUBREG, REG, PLUS, LO_SUM, CONST_INT}},		\ {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\ {"symbolic_memory_operand", {SUBREG, MEM}},				\ {"label_ref_operand", {LABEL_REF}},					\ {"sp64_medium_pic_operand", {CONST}},					\ {"data_segment_operand", {SYMBOL_REF, PLUS, CONST}},			\ {"text_segment_operand", {LABEL_REF, SYMBOL_REF, PLUS, CONST}},		\ {"reg_or_nonsymb_mem_operand", {SUBREG, REG, MEM}},			\ {"splittable_symbolic_memory_operand", {MEM}},				\ {"splittable_immediate_memory_operand", {MEM}},				\ {"eq_or_neq", {EQ, NE}},						\ {"normal_comp_operator", {GE, GT, LE, LT, GTU, LEU}},			\ {"noov_compare_op", {NE, EQ, GE, GT, LE, LT, GEU, GTU, LEU, LTU}},	\ {"noov_compare64_op", {NE, EQ, GE, GT, LE, LT, GEU, GTU, LEU, LTU}},	\ {"v9_regcmp_op", {EQ, NE, GE, LT, LE, GT}},				\ {"extend_op", {SIGN_EXTEND, ZERO_EXTEND}},				\ {"cc_arithop", {AND, IOR, XOR}},					\ {"cc_arithopn", {AND, IOR}},						\ {"arith_operand", {SUBREG, REG, CONST_INT}},				\ {"arith_add_operand", {SUBREG, REG, CONST_INT}},			\ {"arith11_operand", {SUBREG, REG, CONST_INT}},				\ {"arith10_operand", {SUBREG, REG, CONST_INT}},				\ {"arith_double_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"arith_double_add_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"arith11_double_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"arith10_double_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},	\ {"small_int", {CONST_INT}},						\ {"small_int_or_double", {CONST_INT, CONST_DOUBLE}},			\ {"uns_small_int", {CONST_INT}},						\ {"uns_arith_operand", {SUBREG, REG, CONST_INT}},			\ {"clobbered_register", {REG}},						\ {"input_operand", {SUBREG, REG, CONST_INT, MEM, CONST}},		\ {"const64_operand", {CONST_INT, CONST_DOUBLE}},				\ {"const64_high_operand", {CONST_INT, CONST_DOUBLE}},
 end_define
 
 begin_comment

@@ -366,5 +366,26 @@ begin_comment
 comment|/* Not used for C.  */
 end_comment
 
+begin_comment
+comment|/* Table of language-specific spec functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|spec_function
+name|lang_specific_spec_functions
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

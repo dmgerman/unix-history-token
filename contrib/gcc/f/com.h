@@ -525,44 +525,155 @@ directive|include
 file|"symbol.h"
 end_include
 
-begin_comment
-comment|/* Structure definitions. */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|int
+name|global_bindings_p
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|getdecls
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pushlevel
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|poplevel
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|insert_block
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_block
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|pushdecl
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Global objects accessed by users of this module. */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|string_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_integer_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_integer_zero_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_integer_one_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_tree_type
 index|[
@@ -608,113 +719,177 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_integer_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_address_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_real_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_doublereal_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_complex_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_doublecomplex_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_longint_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_logical_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_flag_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_ftnlen_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_ftnlen_zero_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_ftnlen_one_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_ftnlen_two_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_ptr_to_ftnlen_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_ftnint_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|ffecom_f2c_ptr_to_ftnint_type_node
 decl_stmt|;
@@ -911,6 +1086,23 @@ name|args
 parameter_list|,
 name|tree
 name|hook
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|tree
+name|ffecom_constantunion_with_type
+parameter_list|(
+name|ffebldConstantUnion
+modifier|*
+name|cu
+parameter_list|,
+name|tree
+name|tree_type
+parameter_list|,
+name|ffebldConst
+name|ct
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1542,6 +1734,15 @@ name|tree
 name|ffecom_which_entrypoint_decl
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ffe_parse_file
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* elfos.h  --  operating system specific defines to be used when    targeting GCC for some generic ELF system    Copyright (C) 1991, 1994, 1995, 1999, 2000, 2001    Free Software Foundation, Inc.    Based on svr4.h contributed by Ron Guilmette (rfg@netcom.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* elfos.h  --  operating system specific defines to be used when    targeting GCC for some generic ELF system    Copyright (C) 1991, 1994, 1995, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Based on svr4.h contributed by Ron Guilmette (rfg@netcom.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -63,8 +63,14 @@ name|NO_DOLLAR_IN_LABEL
 end_define
 
 begin_comment
-comment|/* Writing `int' for a bitfield forces int alignment for the structure.  */
+comment|/* Writing `int' for a bit-field forces int alignment for the structure.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCC_BITFIELD_TYPE_MATTERS
+end_ifndef
 
 begin_define
 define|#
@@ -72,6 +78,11 @@ directive|define
 name|PCC_BITFIELD_TYPE_MATTERS
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Implicit library calls should use memcpy, not bcopy, etc.  */
@@ -91,51 +102,30 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment
 comment|/* System V Release 4 uses DWARF debugging info.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DWARF_DEBUGGING_INFO
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|DWARF_DEBUGGING_INFO
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* All ELF targets can support DWARF-2.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DWARF2_DEBUGGING_INFO
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The GNU tools operate better with dwarf2, and it is required by some    psABI's.  Since we don't have any native tools to be compatible with,    default to dwarf2.  */
@@ -389,7 +379,7 @@ parameter_list|,
 name|FUN
 parameter_list|)
 define|\
-value|ASM_GLOBALIZE_LABEL (FILE, XSTR (FUN, 0))
+value|(*targetm.asm_out.globalize_label) (FILE, XSTR (FUN, 0))
 end_define
 
 begin_comment
@@ -478,20 +468,13 @@ value|"\t.ascii\t"
 end_define
 
 begin_comment
-comment|/* Support const sections and the ctors and dtors sections for g++.    Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.  */
+comment|/* Support a read-only data section.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USE_CONST_SECTION
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_ASM_OP
+name|READONLY_DATA_SECTION_ASM_OP
 value|"\t.section\t.rodata"
 end_define
 
@@ -513,6 +496,10 @@ name|FINI_SECTION_ASM_OP
 value|"\t.section\t.fini"
 end_define
 
+begin_comment
+comment|/* Output assembly directive to move to the beginning of current section.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -525,10 +512,6 @@ directive|define
 name|ASM_SECTION_START_OP
 value|"\t.subsection\t-1"
 end_define
-
-begin_comment
-comment|/* Output assembly directive to move to the beginning of current section.  */
-end_comment
 
 begin_define
 define|#
@@ -546,57 +529,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* A default list of other sections which we might be "in" at any given    time.  For targets that use additional sections (e.g. .tdesc) you    should override this definition in the target-specific file which    includes this file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_const
-end_define
-
-begin_comment
-comment|/* A default list of extra section function definitions.  For targets    that use additional sections (e.g. .tdesc) you should override this    definition in the target-specific file which includes this file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|CONST_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|READONLY_DATA_SECTION
-parameter_list|()
-value|const_section ()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_FUNCTION
-define|\
-value|void								\ const_section ()						\ {								\   if (!USE_CONST_SECTION)					\     text_section ();						\   else if (in_section != in_const)				\     {								\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);	\       in_section = in_const;					\     }								\ }
-end_define
-
 begin_define
 define|#
 directive|define
@@ -605,21 +537,6 @@ parameter_list|(
 name|DECL
 parameter_list|)
 value|(DECL_WEAK (DECL) = 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do								\     {								\       int len;							\       int sec;							\       const char *name;						\       char *string;						\       const char *prefix;					\       static const char *const prefixes[4][2] =			\       {								\ 	{ ".text.",   ".gnu.linkonce.t." },			\ 	{ ".rodata.", ".gnu.linkonce.r." },			\ 	{ ".data.",   ".gnu.linkonce.d." },			\ 	{ ".bss.",    ".gnu.linkonce.b." }			\       };							\       								\       if (TREE_CODE (DECL) == FUNCTION_DECL)			\ 	sec = 0;						\       else if (DECL_INITIAL (DECL) == 0				\ 	       || DECL_INITIAL (DECL) == error_mark_node)	\         sec =  3;						\       else if (DECL_READONLY_SECTION (DECL, RELOC))		\ 	sec = 1;						\       else							\ 	sec = 2;						\       								\       name   = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));	\
-comment|/* Strip off any encoding in name.  */
-value|\       STRIP_NAME_ENCODING (name, name);				\       prefix = prefixes[sec][DECL_ONE_ONLY(DECL)];		\       len    = strlen (name) + strlen (prefix);			\       string = alloca (len + 1);				\       								\       sprintf (string, "%s%s", prefix, name);			\       								\       DECL_SECTION_NAME (DECL) = build_string (len, string);	\     }								\   while (0)
 end_define
 
 begin_comment
@@ -633,56 +550,30 @@ name|TARGET_ASM_NAMED_SECTION
 value|default_elf_asm_named_section
 end_define
 
-begin_comment
-comment|/* A C statement or statements to switch to the appropriate    section for output of RTX in mode MODE.  RTX is some kind    of constant in RTL.  The argument MODE is redundant except    in the case of a `const_int' rtx.    If assembler supports SHF_MERGE sections, put it into    a .rodata.cstN section where N is size of the constant,    otherwise into const section.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
-name|SELECT_RTX_SECTION
+name|TARGET_ASM_SELECT_RTX_SECTION
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SELECT_RTX_SECTION
-parameter_list|(
-name|MODE
-parameter_list|,
-name|RTX
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|mergeable_constant_section ((MODE), (ALIGN), 0)
+name|TARGET_ASM_SELECT_RTX_SECTION
+value|default_elf_select_rtx_section
 end_define
 
-begin_comment
-comment|/* A C statement or statements to switch to the appropriate    section for output of DECL.  DECL is either a `VAR_DECL' node    or a constant of some sort.  RELOC indicates whether forming    the initial value of DECL requires link-time relocations.        To optimize loading of shared programs, define following subsections    of data section by attaching:     .rel      Section with this string in name contains data that do have      relocations, so they get grouped together and dynamic linker      will visit fewer pages in memory.    .ro      Marks data read only otherwise.  This is useful with prelinking      as most of relocations won't be dynamically linked and thus      stay read only.    .local      Marks data containing relocations only to local objects.  These      relocation will get fully resolved by prelinking.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
-name|SELECT_SECTION
+name|TARGET_ASM_SELECT_SECTION
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SELECT_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|{								\   if (TREE_CODE (DECL) == STRING_CST)				\     {								\       if (! flag_writable_strings)				\ 	mergeable_string_section ((DECL), (ALIGN), 0);		\       else							\ 	data_section ();					\     }								\   else if (TREE_CODE (DECL) == VAR_DECL)			\     {								\       if (!TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)	\ 	  || !DECL_INITIAL (DECL)				\ 	  || (DECL_INITIAL (DECL) != error_mark_node		\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))		\ 	{							\ 	  if (flag_pic&& ((RELOC)& 2))			\ 	    named_section (NULL_TREE, ".data.rel", RELOC);	\ 	  else if (flag_pic&& (RELOC))				\ 	    named_section (NULL_TREE, ".data.rel.local", RELOC);\ 	  else							\ 	    data_section ();					\ 	}							\       else if (flag_pic&& ((RELOC)& 2))			\ 	named_section (NULL_TREE, ".data.rel.ro", RELOC);	\       else if (flag_pic&& (RELOC))				\ 	named_section (NULL_TREE, ".data.rel.ro.local", RELOC);	\       else if (flag_merge_constants< 2)			\
-comment|/* C and C++ don't allow different variables to share	\ 	   the same location.  -fmerge-all-constants allows	\ 	   even that (at the expense of not conforming).  */
-value|\ 	const_section ();					\       else if (TREE_CODE (DECL_INITIAL (DECL)) == STRING_CST)	\ 	mergeable_string_section (DECL_INITIAL (DECL), (ALIGN),	\ 				  0);				\       else							\ 	mergeable_constant_section (DECL_MODE (DECL), (ALIGN),	\ 				    0);				\     }								\   else if (TREE_CODE (DECL) == CONSTRUCTOR)			\     {								\       if ((flag_pic&& RELOC)					\ 	  || TREE_SIDE_EFFECTS (DECL)				\ 	  || ! TREE_CONSTANT (DECL))				\ 	data_section ();					\       else							\ 	const_section ();					\     }								\   else								\     const_section ();						\ }
+name|TARGET_ASM_SELECT_SECTION
+value|default_elf_select_section
 end_define
 
 begin_comment
@@ -783,7 +674,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do							\     {							\       fprintf (FILE, "%s", TYPE_ASM_OP);		\       assemble_name (FILE, NAME);			\       putc (',', FILE);					\       fprintf (FILE, TYPE_OPERAND_FMT, "function");	\       putc ('\n', FILE);				\       							\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));	\       ASM_OUTPUT_LABEL(FILE, NAME);			\     }							\   while (0)
+value|do								\     {								\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");	\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));		\       ASM_OUTPUT_LABEL (FILE, NAME);				\     }								\   while (0)
 end_define
 
 begin_endif
@@ -807,7 +698,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do								\     {								\       fprintf (FILE, "%s", TYPE_ASM_OP);			\       assemble_name (FILE, NAME);				\       putc (',', FILE);						\       fprintf (FILE, TYPE_OPERAND_FMT, "object");		\       putc ('\n', FILE);					\       								\       size_directive_output = 0;				\       								\       if (!flag_inhibit_size_directive				\&& (DECL)&& DECL_SIZE (DECL))			\ 	{							\ 	  size_directive_output = 1;				\ 	  fprintf (FILE, "%s", SIZE_ASM_OP);			\ 	  assemble_name (FILE, NAME);				\ 	  putc (',', FILE);					\ 	  fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,		\ 		   int_size_in_bytes (TREE_TYPE (DECL)));	\ 	  fputc ('\n', FILE);					\ 	}							\       								\       ASM_OUTPUT_LABEL (FILE, NAME);				\     }								\   while (0)
+value|do								\     {								\       HOST_WIDE_INT size;					\ 								\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");		\ 								\       size_directive_output = 0;				\       if (!flag_inhibit_size_directive				\&& (DECL)&& DECL_SIZE (DECL))			\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, size);		\ 	}							\ 								\       ASM_OUTPUT_LABEL (FILE, NAME);				\     }								\   while (0)
 end_define
 
 begin_comment
@@ -828,7 +719,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do								\     {								\       const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);	\       								\       if (!flag_inhibit_size_directive				\&& DECL_SIZE (DECL)					\&& ! AT_END&& TOP_LEVEL				\&& DECL_INITIAL (DECL) == error_mark_node		\&& !size_directive_output)				\ 	{							\ 	  size_directive_output = 1;				\ 	  fprintf (FILE, "%s", SIZE_ASM_OP);			\ 	  assemble_name (FILE, name);				\ 	  putc (',', FILE);					\ 	  fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,		\ 		   int_size_in_bytes (TREE_TYPE (DECL))); 	\ 	  fputc ('\n', FILE);					\ 	}							\     }								\   while (0)
+value|do								\     {								\       const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);	\       HOST_WIDE_INT size;					\       								\       if (!flag_inhibit_size_directive				\&& DECL_SIZE (DECL)					\&& ! AT_END&& TOP_LEVEL				\&& DECL_INITIAL (DECL) == error_mark_node		\&& !size_directive_output)				\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);		\ 	}							\     }								\   while (0)
 end_define
 
 begin_comment
@@ -853,7 +744,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do								\     {								\       if (!flag_inhibit_size_directive)				\ 	{							\ 	  char label[256];					\ 	  static int labelno;					\ 	  							\ 	  labelno++;						\ 	  							\ 	  ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);	\ 	  ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);	\ 	  							\ 	  fprintf (FILE, "%s", SIZE_ASM_OP);			\ 	  assemble_name (FILE, (FNAME));			\ 	  fprintf (FILE, ",");					\ 	  assemble_name (FILE, label);				\ 	  fprintf (FILE, "-");					\ 	  assemble_name (FILE, (FNAME));			\ 	  putc ('\n', FILE);					\ 	}							\     }								\   while (0)
+value|do								\     {								\       if (!flag_inhibit_size_directive)				\ 	ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\     }								\   while (0)
 end_define
 
 begin_endif
@@ -892,7 +783,7 @@ value|"\t.string\t"
 end_define
 
 begin_comment
-comment|/* The routine used to output NUL terminated strings.  We use a special    version of this for most svr4 targets because doing so makes the    generated assembly code more compact (and thus faster to assemble)    as well as more readable, especially for targets like the i386    (where the only alternative is to output character sequences as    comma separated lists of numbers).   */
+comment|/* The routine used to output NUL terminated strings.  We use a special    version of this for most svr4 targets because doing so makes the    generated assembly code more compact (and thus faster to assemble)    as well as more readable, especially for targets like the i386    (where the only alternative is to output character sequences as    comma separated lists of numbers).  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ste.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       ste.c     Description:       Implements the various statements and such like.     Modifications: */
+comment|/* ste.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 2000, 2002, 2003 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       ste.c     Description:       Implements the various statements and such like.     Modifications: */
 end_comment
 
 begin_comment
@@ -3885,6 +3885,17 @@ begin_comment
 comment|/* Make arglist with ptr to BACKSPACE/ENDFILE/REWIND control list.     Returns a tree suitable as an argument list containing a pointer to    a BACKSPACE/ENDFILE/REWIND control list.  First, generates that control    list, if necessary, along with any static and run-time initializations    that are needed as specified by the arguments to this function.     Must ensure that all expressions are prepared before being evaluated,    for any whose evaluation might result in the generation of temporaries.     Note that this means this function causes a transition, within the    current block being code-generated via the back end, from the    declaration of variables (temporaries) to the expanding of expressions,    statements, etc.  */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|f2c_alist_struct
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|tree
@@ -3903,12 +3914,6 @@ name|int
 name|unit_dflt
 parameter_list|)
 block|{
-specifier|static
-name|tree
-name|f2c_alist_struct
-init|=
-name|NULL_TREE
-decl_stmt|;
 name|tree
 name|t
 decl_stmt|;
@@ -4001,14 +4006,6 @@ expr_stmt|;
 name|layout_type
 argument_list|(
 name|ref
-argument_list|)
-expr_stmt|;
-name|ggc_add_tree_root
-argument_list|(
-operator|&
-name|f2c_alist_struct
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|f2c_alist_struct
@@ -4271,6 +4268,17 @@ begin_comment
 comment|/* Make arglist with ptr to external-I/O control list.     Returns a tree suitable as an argument list containing a pointer to    an external-I/O control list.  First, generates that control    list, if necessary, along with any static and run-time initializations    that are needed as specified by the arguments to this function.     Must ensure that all expressions are prepared before being evaluated,    for any whose evaluation might result in the generation of temporaries.     Note that this means this function causes a transition, within the    current block being code-generated via the back end, from the    declaration of variables (temporaries) to the expanding of expressions,    statements, etc.  */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|f2c_cilist_struct
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|tree
@@ -4305,12 +4313,6 @@ name|ffebld
 name|rec_expr
 parameter_list|)
 block|{
-specifier|static
-name|tree
-name|f2c_cilist_struct
-init|=
-name|NULL_TREE
-decl_stmt|;
 name|tree
 name|t
 decl_stmt|;
@@ -4458,14 +4460,6 @@ expr_stmt|;
 name|layout_type
 argument_list|(
 name|ref
-argument_list|)
-expr_stmt|;
-name|ggc_add_tree_root
-argument_list|(
-operator|&
-name|f2c_cilist_struct
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|f2c_cilist_struct
@@ -5088,6 +5082,17 @@ begin_comment
 comment|/* Make arglist with ptr to CLOSE control list.     Returns a tree suitable as an argument list containing a pointer to    a CLOSE-statement control list.  First, generates that control    list, if necessary, along with any static and run-time initializations    that are needed as specified by the arguments to this function.     Must ensure that all expressions are prepared before being evaluated,    for any whose evaluation might result in the generation of temporaries.     Note that this means this function causes a transition, within the    current block being code-generated via the back end, from the    declaration of variables (temporaries) to the expanding of expressions,    statements, etc.  */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|f2c_close_struct
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|tree
@@ -5104,12 +5109,6 @@ modifier|*
 name|stat_spec
 parameter_list|)
 block|{
-specifier|static
-name|tree
-name|f2c_close_struct
-init|=
-name|NULL_TREE
-decl_stmt|;
 name|tree
 name|t
 decl_stmt|;
@@ -5225,14 +5224,6 @@ expr_stmt|;
 name|layout_type
 argument_list|(
 name|ref
-argument_list|)
-expr_stmt|;
-name|ggc_add_tree_root
-argument_list|(
-operator|&
-name|f2c_close_struct
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|f2c_close_struct
@@ -5485,6 +5476,17 @@ begin_comment
 comment|/* Make arglist with ptr to internal-I/O control list.     Returns a tree suitable as an argument list containing a pointer to    an internal-I/O control list.  First, generates that control    list, if necessary, along with any static and run-time initializations    that are needed as specified by the arguments to this function.     Must ensure that all expressions are prepared before being evaluated,    for any whose evaluation might result in the generation of temporaries.     Note that this means this function causes a transition, within the    current block being code-generated via the back end, from the    declaration of variables (temporaries) to the expanding of expressions,    statements, etc.  */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|f2c_icilist_struct
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|tree
@@ -5507,12 +5509,6 @@ modifier|*
 name|format_spec
 parameter_list|)
 block|{
-specifier|static
-name|tree
-name|f2c_icilist_struct
-init|=
-name|NULL_TREE
-decl_stmt|;
 name|tree
 name|t
 decl_stmt|;
@@ -5679,14 +5675,6 @@ expr_stmt|;
 name|layout_type
 argument_list|(
 name|ref
-argument_list|)
-expr_stmt|;
-name|ggc_add_tree_root
-argument_list|(
-operator|&
-name|f2c_icilist_struct
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|f2c_icilist_struct
@@ -6374,6 +6362,17 @@ begin_comment
 comment|/* Make arglist with ptr to INQUIRE control list     Returns a tree suitable as an argument list containing a pointer to    an INQUIRE-statement control list.  First, generates that control    list, if necessary, along with any static and run-time initializations    that are needed as specified by the arguments to this function.     Must ensure that all expressions are prepared before being evaluated,    for any whose evaluation might result in the generation of temporaries.     Note that this means this function causes a transition, within the    current block being code-generated via the back end, from the    declaration of variables (temporaries) to the expanding of expressions,    statements, etc.  */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|f2c_inquire_struct
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|tree
@@ -6447,12 +6446,6 @@ modifier|*
 name|blank_spec
 parameter_list|)
 block|{
-specifier|static
-name|tree
-name|f2c_inquire_struct
-init|=
-name|NULL_TREE
-decl_stmt|;
 name|tree
 name|t
 decl_stmt|;
@@ -7001,14 +6994,6 @@ expr_stmt|;
 name|layout_type
 argument_list|(
 name|ref
-argument_list|)
-expr_stmt|;
-name|ggc_add_tree_root
-argument_list|(
-operator|&
-name|f2c_inquire_struct
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|f2c_inquire_struct
@@ -7759,6 +7744,17 @@ begin_comment
 comment|/* Make arglist with ptr to OPEN control list     Returns a tree suitable as an argument list containing a pointer to    an OPEN-statement control list.  First, generates that control    list, if necessary, along with any static and run-time initializations    that are needed as specified by the arguments to this function.     Must ensure that all expressions are prepared before being evaluated,    for any whose evaluation might result in the generation of temporaries.     Note that this means this function causes a transition, within the    current block being code-generated via the back end, from the    declaration of variables (temporaries) to the expanding of expressions,    statements, etc.  */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|f2c_open_struct
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|tree
@@ -7795,12 +7791,6 @@ modifier|*
 name|blank_spec
 parameter_list|)
 block|{
-specifier|static
-name|tree
-name|f2c_open_struct
-init|=
-name|NULL_TREE
-decl_stmt|;
 name|tree
 name|t
 decl_stmt|;
@@ -8030,14 +8020,6 @@ expr_stmt|;
 name|layout_type
 argument_list|(
 name|ref
-argument_list|)
-expr_stmt|;
-name|ggc_add_tree_root
-argument_list|(
-operator|&
-name|f2c_open_struct
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|f2c_open_struct
@@ -9749,7 +9731,7 @@ operator|)
 condition|?
 name|NULL_TREE
 else|:
-name|ffecom_constantunion
+name|ffecom_constantunion_with_type
 argument_list|(
 operator|&
 name|ffebld_constant_union
@@ -9758,14 +9740,6 @@ name|c
 operator|->
 name|low
 argument_list|)
-argument_list|,
-name|s
-operator|->
-name|type
-argument_list|,
-name|s
-operator|->
-name|kindtype
 argument_list|,
 name|ffecom_tree_type
 index|[
@@ -9778,6 +9752,12 @@ name|s
 operator|->
 name|kindtype
 index|]
+argument_list|,
+name|c
+operator|->
+name|low
+operator|->
+name|consttype
 argument_list|)
 expr_stmt|;
 if|if
@@ -9803,7 +9783,7 @@ operator|)
 condition|?
 name|NULL_TREE
 else|:
-name|ffecom_constantunion
+name|ffecom_constantunion_with_type
 argument_list|(
 operator|&
 name|ffebld_constant_union
@@ -9812,14 +9792,6 @@ name|c
 operator|->
 name|high
 argument_list|)
-argument_list|,
-name|s
-operator|->
-name|type
-argument_list|,
-name|s
-operator|->
-name|kindtype
 argument_list|,
 name|ffecom_tree_type
 index|[
@@ -9832,6 +9804,12 @@ name|s
 operator|->
 name|kindtype
 index|]
+argument_list|,
+name|c
+operator|->
+name|high
+operator|->
+name|consttype
 argument_list|)
 expr_stmt|;
 name|pushok
@@ -9868,11 +9846,59 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+operator|(
 name|pushok
-operator|==
+operator|!=
+literal|2
+operator|)
+operator|||
+operator|(
+name|pushok
+operator|!=
 literal|0
+operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pushok
+operator|==
+literal|2
+condition|)
+block|{
+name|ffebad_start_msg
+argument_list|(
+literal|"SELECT (at %0) has duplicate cases -- check integer overflow of CASE(s)"
+argument_list|,
+name|FFEBAD_severityFATAL
+argument_list|)
+expr_stmt|;
+name|ffebad_here
+argument_list|(
+literal|0
+argument_list|,
+name|ffestw_line
+argument_list|(
+name|block
+argument_list|)
+argument_list|,
+name|ffestw_col
+argument_list|(
+name|block
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ffebad_finish
+argument_list|()
+expr_stmt|;
+name|ffestw_set_select_texpr
+argument_list|(
+name|block
+argument_list|,
+name|error_mark_node
+argument_list|)
+expr_stmt|;
+block|}
 name|c
 operator|=
 name|c
@@ -15886,6 +15912,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"gt-f-ste.h"
+end_include
 
 end_unit
 

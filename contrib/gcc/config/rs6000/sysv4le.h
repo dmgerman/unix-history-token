@@ -19,19 +19,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_ENDIAN_DEFAULT_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_ENDIAN_DEFAULT_SPEC
-value|"%(cpp_endian_little)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|CC1_ENDIAN_DEFAULT_SPEC
 end_undef
 

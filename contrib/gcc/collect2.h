@@ -144,14 +144,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|obstack
-name|permanent_obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|char
 modifier|*
 name|temporary_firstobj

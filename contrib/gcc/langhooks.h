@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* The lang_hooks data structure.    Copyright 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* The lang_hooks data structure.    Copyright 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,16 @@ define|#
 directive|define
 name|GCC_LANG_HOOKS_H
 end_define
+
+begin_comment
+comment|/* This file should be #include-d after tree.h.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|diagnostic_context
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* A print hook for print_tree ().  */
@@ -283,6 +293,74 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Lang hooks for management of language-specific data or status    when entering / leaving functions etc.  */
+end_comment
+
+begin_struct
+struct|struct
+name|lang_hooks_for_functions
+block|{
+comment|/* Called when entering a function.  */
+name|void
+argument_list|(
+argument|*init
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called when leaving a function.  */
+name|void
+argument_list|(
+argument|*final
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called when entering a nested function.  */
+name|void
+argument_list|(
+argument|*enter_nested
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called when leaving a nested function.  */
+name|void
+argument_list|(
+argument|*leave_nested
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* The following hooks are used by tree-dump.c.  */
 end_comment
 
@@ -290,7 +368,7 @@ begin_struct
 struct|struct
 name|lang_hooks_for_tree_dump
 block|{
-comment|/* Dump language-specific parts of tree nodes.  Returns non-zero if it       does not want the usual dumping of the second argument.  */
+comment|/* Dump language-specific parts of tree nodes.  Returns nonzero if it      does not want the usual dumping of the second argument.  */
 name|int
 argument_list|(
 argument|*dump_tree
@@ -309,6 +387,262 @@ comment|/* Determine type qualifiers in a language-specific way.  */
 name|int
 argument_list|(
 argument|*type_quals
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Hooks related to types.  */
+end_comment
+
+begin_struct
+struct|struct
+name|lang_hooks_for_types
+block|{
+comment|/* Return a new type (with the indicated CODE), doing whatever      language-specific processing is required.  */
+name|tree
+argument_list|(
+argument|*make_type
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|tree_code
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Given MODE and UNSIGNEDP, return a suitable type-tree with that      mode.  */
+name|tree
+argument_list|(
+argument|*type_for_mode
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Given PRECISION and UNSIGNEDP, return a suitable type-tree for an      integer type with at least that precision.  */
+name|tree
+argument_list|(
+argument|*type_for_size
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Given an integer type T, return a type like T but unsigned.      If T is unsigned, the value is T.  */
+name|tree
+argument_list|(
+argument|*unsigned_type
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Given an integer type T, return a type like T but signed.      If T is signed, the value is T.  */
+name|tree
+argument_list|(
+argument|*signed_type
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Return a type the same as TYPE except unsigned or signed      according to UNSIGNEDP.  */
+name|tree
+argument_list|(
+argument|*signed_or_unsigned_type
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Given a type, apply default promotions to unnamed function      arguments and return the new type.  Return the same type if no      change.  Required by any language that supports variadic      arguments.  The default hook aborts.  */
+name|tree
+argument_list|(
+argument|*type_promotes_to
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* This routine is called in tree.c to print an error message for      invalid use of an incomplete type.  VALUE is the expression that      was used (or 0 if that isn't known) and TYPE is the type that was      invalid.  */
+name|void
+argument_list|(
+argument|*incomplete_type_error
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+name|value
+operator|,
+name|tree
+name|type
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Language hooks related to decls and the symbol table.  */
+end_comment
+
+begin_struct
+struct|struct
+name|lang_hooks_for_decls
+block|{
+comment|/* Enter a new lexical scope.  Argument is always zero when called      from outside the front end.  */
+name|void
+argument_list|(
+argument|*pushlevel
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Exit a lexical scope and return a BINDING for that scope.      Takes three arguments:      KEEP -- nonzero if there were declarations in this scope.      REVERSE -- reverse the order of decls before returning them.      FUNCTIONBODY -- nonzero if this level is the body of a function.  */
+name|tree
+argument_list|(
+argument|*poplevel
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Returns nonzero if we are in the global binding level.  Ada      returns -1 for an undocumented reason used in stor-layout.c.  */
+name|int
+argument_list|(
+argument|*global_bindings_p
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Insert BLOCK at the end of the list of subblocks of the      current binding level.  This is used when a BIND_EXPR is expanded,      to handle the BLOCK node inside the BIND_EXPR.  */
+name|void
+argument_list|(
+argument|*insert_block
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Set the BLOCK node for the current scope level.  */
+name|void
+argument_list|(
+argument|*set_block
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Function to add a decl to the current scope level.  Takes one      argument, a decl to add.  Returns that decl, or, if the same      symbol is already declared, may return a different decl for that      name.  */
+name|tree
+argument_list|(
+argument|*pushdecl
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Returns the chain of decls so far in the current scope level.  */
+name|tree
+argument_list|(
+argument|*getdecls
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Returns true when we should warn for an unused global DECL.      We will already have checked that it has static binding.  */
+name|bool
+argument_list|(
+argument|*warn_unused_global
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Obtain a list of globals and do final output on them at end      of compilation */
+name|void
+argument_list|(
+argument|*final_write_globals
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* True if this decl may be called via a sibcall.  */
+name|bool
+argument_list|(
+argument|*ok_for_sibcall
 argument_list|)
 name|PARAMS
 argument_list|(
@@ -351,7 +685,7 @@ name|void
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Function called with an option vector as argument, to decode a      single option (typically starting with -f or -W or +).  It should      return the number of command-line arguments it uses if it handles      the option, or 0 and not complain if it does not recognise the      option.  If this function returns a negative number, then its      absolute value is the number of command-line arguments used, but,      in addition, no language-independent option processing should be      done for this option.  */
+comment|/* Function called with an option vector as argument, to decode a      single option (typically starting with -f or -W or +).  It should      return the number of command-line arguments it uses if it handles      the option, or 0 and not complain if it does not recognize the      option.  If this function returns a negative number, then its      absolute value is the number of command-line arguments used, but,      in addition, no language-independent option processing should be      done for this option.  */
 name|int
 argument_list|(
 argument|*decode_option
@@ -367,8 +701,8 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Called when all command line options have been parsed.  Should do      any required consistency checks, modifications etc.  Complex      initialization should be left to the "init" callback, since GC      and the identifier hashes are set up between now and then.       If errorcount is non-zero after this call the compiler exits      immediately and the finish hook is not called.  */
-name|void
+comment|/* Called when all command line options have been parsed.  Should do      any required consistency checks, modifications etc.  Complex      initialization should be left to the "init" callback, since GC      and the identifier hashes are set up between now and then.       Should return zero unless the compiler back-end does not need to      be initialized, such as with the -E option.            If errorcount is nonzero after this call the compiler exits      immediately and the finish hook is not called.  */
+name|bool
 argument_list|(
 argument|*post_options
 argument_list|)
@@ -408,6 +742,18 @@ name|void
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Parses the entire file.  The argument is nonzero to cause bison      parsers to dump debugging information during parsing.  */
+name|void
+argument_list|(
+argument|*parse_file
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Called immediately after parsing to clear the binding stack.  */
 name|void
 argument_list|(
@@ -444,6 +790,49 @@ name|tree
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Called by expand_expr for language-specific tree codes.      Fourth argument is actually an enum expand_modifier.  */
+name|rtx
+argument_list|(
+argument|*expand_expr
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|rtx
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Prepare expr to be an argument of a TRUTH_NOT_EXPR or other logical      operation.       This preparation consists of taking the ordinary representation      of an expression expr and producing a valid tree boolean      expression describing whether expr is nonzero.  We could simply      always do build_binary_op (NE_EXPR, expr, integer_zero_node, 1),      but we optimize comparisons,&&, ||, and !.       The result should be an expression of boolean type (if not an      error_mark_node).  */
+name|tree
+argument_list|(
+argument|*truthvalue_conversion
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Possibly apply default attributes to a function (represented by      a FUNCTION_DECL).  */
+name|void
+argument_list|(
+argument|*insert_default_attributes
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Hook called by safe_from_p for language-specific tree codes.  It is      up to the language front-end to install a hook if it has any such      codes that safe_from_p needs to know about.  Since same_from_p will      recursively explore the TREE_OPERANDs of an expression, this hook      should not reexamine those pieces.  This routine may recursively      call safe_from_p; it should always pass `0' as the TOP_P      parameter.  */
 name|int
 argument_list|(
@@ -458,6 +847,42 @@ name|tree
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Function to finish handling an incomplete decl at the end of      compilation.  Default hook is does nothing.  */
+name|void
+argument_list|(
+argument|*finish_incomplete_decl
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Function used by unsafe_for_reeval.  A non-negative number is      returned directly from unsafe_for_reeval, a negative number falls      through.  The default hook returns a negative number.  */
+name|int
+argument_list|(
+argument|*unsafe_for_reeval
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Mark EXP saying that we need to be able to take the address of      it; it should not be allocated in a register.  Return true if      successful.  */
+name|bool
+argument_list|(
+argument|*mark_addressable
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Hook called by staticp for language-specific tree codes.  */
 name|int
 argument_list|(
@@ -467,6 +892,66 @@ name|PARAMS
 argument_list|(
 operator|(
 name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Replace the DECL_LANG_SPECIFIC data, which may be NULL, of the      DECL_NODE with a newly GC-allocated copy.  */
+name|void
+argument_list|(
+argument|*dup_lang_specific_decl
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called before its argument, an UNSAVE_EXPR, is to be      unsaved.  Modify it in-place so that all the evaluate only once      things are cleared out.  */
+name|tree
+argument_list|(
+argument|*unsave_expr_now
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called by expand_expr to build and return the cleanup-expression      for the passed TARGET_EXPR.  Return NULL if there is none.  */
+name|tree
+argument_list|(
+argument|*maybe_build_cleanup
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Set the DECL_ASSEMBLER_NAME for a node.  If it is the sort of      thing that the assembler should talk about, set      DECL_ASSEMBLER_NAME to an appropriate IDENTIFIER_NODE.      Otherwise, set it to the ERROR_MARK_NODE to ensure that the      assembler does not talk about it.  */
+name|void
+argument_list|(
+argument|*set_decl_assembler_name
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Return nonzero if fold-const is free to use bit-field      optimizations, for instance in fold_truthop().  */
+name|bool
+argument_list|(
+argument|*can_use_bit_fields_p
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 expr_stmt|;
@@ -500,15 +985,40 @@ decl_stmt|;
 name|lang_print_tree_hook
 name|print_identifier
 decl_stmt|;
-comment|/* Set yydebug for bison-based parsers, when -dy is given on the      command line.  By default, if the parameter is non-zero, prints a      warning that the front end does not use such a parser.  */
+comment|/* Computes the name to use to print a declaration.  DECL is the      non-NULL declaration in question.  VERBOSITY determines what      information will be printed: 0: DECL_NAME, demangled as      necessary.  1: and scope information.  2: and any other      information that might be interesting, such as function parameter      types in C++.  */
+specifier|const
+name|char
+operator|*
+operator|(
+operator|*
+name|decl_printable_name
+operator|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+name|decl
+operator|,
+name|int
+name|verbosity
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called by report_error_function to print out function name.  */
 name|void
 argument_list|(
-argument|*set_yydebug
+argument|*print_error_function
 argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|int
+expr|struct
+name|diagnostic_context
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
@@ -524,6 +1034,30 @@ name|tree
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Pointers to machine-independent attribute tables, for front ends      using attribs.c.  If one is NULL, it is ignored.  Respectively, a      table of attributes specific to the language, a table of      attributes common to two or more languages (to allow easy      sharing), and a table of attributes for checking formats.  */
+specifier|const
+name|struct
+name|attribute_spec
+modifier|*
+name|attribute_table
+decl_stmt|;
+specifier|const
+name|struct
+name|attribute_spec
+modifier|*
+name|common_attribute_table
+decl_stmt|;
+specifier|const
+name|struct
+name|attribute_spec
+modifier|*
+name|format_attribute_table
+decl_stmt|;
+comment|/* Function-related language hooks.  */
+name|struct
+name|lang_hooks_for_functions
+name|function
+decl_stmt|;
 name|struct
 name|lang_hooks_for_tree_inlining
 name|tree_inlining
@@ -531,6 +1065,14 @@ decl_stmt|;
 name|struct
 name|lang_hooks_for_tree_dump
 name|tree_dump
+decl_stmt|;
+name|struct
+name|lang_hooks_for_decls
+name|decls
+decl_stmt|;
+name|struct
+name|lang_hooks_for_types
+name|types
 decl_stmt|;
 comment|/* Whenever you add entries here, make sure you adjust langhooks-def.h      and langhooks.c accordingly.  */
 block|}

@@ -29,7 +29,7 @@ name|C
 operator|.
 else|#
 directive|else
-comment|/* This file can only be compiled with DEC C, due the the call to    lib$establish. */
+comment|/* This file can only be compiled with DEC C, due to the call to    lib$establish. */
 include|#
 directive|include
 file|<stdlib.h>

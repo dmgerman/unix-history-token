@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* XCOFF definitions.  These are needed in dbxout.c, final.c,    and xcoffout.h.     Copyright (C) 1998, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* XCOFF definitions.  These are needed in dbxout.c, final.c,    and xcoffout.h.    Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -66,7 +66,7 @@ value|N_STSYM
 end_define
 
 begin_comment
-comment|/* For static variables, output code to define the start of a static block.     ??? The IBM rs6000/AIX assembler has a bug that causes bss block debug    info to be occasionally lost.  A simple example is this: 	int a; static int b;    The commands `gcc -g -c tmp.c; dump -t tmp.o' gives [10]	m   0x00000016         1     0    0x8f  0x0000            .bs [11]	m   0x00000000         1     0    0x90  0x0000            .es ... [21]	m   0x00000000        -2     0    0x85  0x0000            b:S-1    which is wrong.  The `b:S-1' must be between the `.bs' and `.es'.    We can apparently work around the problem by forcing the text section    (even if we are already in the text section) immediately before outputting    the `.bs'.  This should be fixed in the next major AIX release (3.3?).  */
+comment|/* For static variables, output code to define the start of a static block.  */
 end_comment
 
 begin_define
@@ -79,7 +79,7 @@ parameter_list|,
 name|CODE
 parameter_list|)
 define|\
-value|{									\   if ((CODE) == N_STSYM)						\     fprintf ((ASMFILE), "\t.bs\t%s[RW]\n", xcoff_private_data_section_name);\   else if ((CODE) == N_LCSYM)						\     {									\       fprintf ((ASMFILE), "%s\n", TEXT_SECTION_ASM_OP);			\       fprintf ((ASMFILE), "\t.bs\t%s\n", xcoff_bss_section_name);	\     }									\ }
+value|{									\   if ((CODE) == N_STSYM)						\     fprintf ((ASMFILE), "\t.bs\t%s[RW]\n", xcoff_private_data_section_name);\   else if ((CODE) == N_LCSYM)						\     fprintf ((ASMFILE), "\t.bs\t%s\n", xcoff_bss_section_name);	\ }
 end_define
 
 begin_comment
@@ -135,7 +135,7 @@ parameter_list|)
 define|\
 value|{								\   if (current_sym_addr&& current_sym_code == N_FUN)		\     fprintf (asmfile, "\",.");					\   else								\     fprintf (asmfile, "\",");					\
 comment|/* If we are writing a function name, we must ensure that	\      there is no storage-class suffix on the name.  */
-value|\   if (current_sym_addr&& current_sym_code == N_FUN		\&& GET_CODE (current_sym_addr) == SYMBOL_REF)		\     {								\       const char *_p = XSTR (current_sym_addr, 0);		\       if (*_p == '*')						\ 	fprintf (asmfile, "%s", _p+1);				\       else							\         for (; *_p != '['&& *_p; _p++)				\ 	  fprintf (asmfile, "%c", *_p);				\     }								\   else if (current_sym_addr)					\     output_addr_const (asmfile, current_sym_addr);		\   else if (current_sym_code == N_GSYM)				\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (sym), 0), 0)); \   else								\     fprintf (asmfile, "%d", current_sym_value);			\   fprintf (asmfile, ",%d,0\n", stab_to_sclass (current_sym_code)); \ }
+value|\   if (current_sym_addr&& current_sym_code == N_FUN		\&& GET_CODE (current_sym_addr) == SYMBOL_REF)		\     {								\       const char *_p = XSTR (current_sym_addr, 0);		\       if (*_p == '*')						\ 	fprintf (asmfile, "%s", _p+1);				\       else							\ 	for (; *_p != '['&& *_p; _p++)				\ 	  fprintf (asmfile, "%c", *_p);				\     }								\   else if (current_sym_addr)					\     output_addr_const (asmfile, current_sym_addr);		\   else if (current_sym_code == N_GSYM)				\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (sym), 0), 0)); \   else								\     fprintf (asmfile, "%d", current_sym_value);			\   fprintf (asmfile, ",%d,0\n", stab_to_sclass (current_sym_code)); \ }
 end_define
 
 begin_comment
@@ -427,7 +427,12 @@ name|xcoffout_end_epilogue
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|unsigned
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

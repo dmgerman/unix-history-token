@@ -50,24 +50,6 @@ file|"basic-block.h"
 end_include
 
 begin_comment
-comment|/* Use malloc to allocate obstack chunks.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
-begin_comment
 comment|/* A register conflict graph is an undirected graph containing nodes    for some or all of the regs used in a function.  Arcs represent    conflicts, i.e. two nodes are connected by an arc if there is a    point in the function at which the regs corresponding to the two    nodes are both live.     The conflict graph is represented by the data structures described    in Morgan section 11.3.1.  Nodes are not stored explicitly; only    arcs are.  An arc stores the numbers of the regs it connects.     Arcs can be located by two methods:       - The two reg numbers for each arc are hashed into a single        value, and the arc is placed in a hash table according to this        value.  This permits quick determination of whether a specific        conflict is present in the graph.         - Additionally, the arc data structures are threaded by a set of        linked lists by single reg number.  Since each arc references        two regs, there are two next pointers, one for the        smaller-numbered reg and one for the larger-numbered reg.  This        permits the quick enumeration of conflicts for a single        register.     Arcs are allocated from an obstack.  */
 end_comment
 
@@ -181,7 +163,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|hashval_t
 name|arc_hash
 name|PARAMS
 argument_list|(
@@ -258,7 +240,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
+name|hashval_t
 name|arc_hash
 parameter_list|(
 name|arcp
@@ -502,7 +484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Adds a conflict to GRAPH between regs REG1 and REG2, which must be    distinct.  Returns non-zero, unless the conflict is already present    in GRAPH, in which case it does nothing and returns zero.  */
+comment|/* Adds a conflict to GRAPH between regs REG1 and REG2, which must be    distinct.  Returns nonzero, unless the conflict is already present    in GRAPH, in which case it does nothing and returns zero.  */
 end_comment
 
 begin_function
@@ -699,7 +681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns non-zero if a conflict exists in GRAPH between regs REG1    and REG2.  */
+comment|/* Returns nonzero if a conflict exists in GRAPH between regs REG1    and REG2.  */
 end_comment
 
 begin_function
@@ -1304,9 +1286,6 @@ name|partition
 name|p
 decl_stmt|;
 block|{
-name|int
-name|b
-decl_stmt|;
 name|conflict_graph
 name|graph
 init|=
@@ -1334,6 +1313,9 @@ init|=
 operator|&
 name|born_head
 decl_stmt|;
+name|basic_block
+name|bb
+decl_stmt|;
 name|INIT_REG_SET
 argument_list|(
 name|live
@@ -1344,27 +1326,11 @@ argument_list|(
 name|born
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|b
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|b
-operator|>=
-literal|0
-condition|;
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB_REVERSE
 argument_list|(
-name|b
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|rtx
 name|insn
 decl_stmt|;

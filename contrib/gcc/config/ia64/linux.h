@@ -32,14 +32,16 @@ value|"%{profile:-p} %{G*}"
 end_define
 
 begin_comment
-comment|/* ??? Maybe this should be in sysv4.h?  */
+comment|/* Target OS builtins.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"\   -D__gnu_linux__ -D__linux -D__linux__ -D_LONGLONG \   -Dlinux -Dunix -Asystem=linux"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {						\ 	builtin_assert("system=linux");		\ 	builtin_define_std("linux");		\ 	builtin_define_std("unix");		\ 	builtin_define("__gnu_linux__");	\ 	builtin_define("_LONGLONG");		\ } while (0)
 end_define
 
 begin_comment

@@ -4,8 +4,48 @@ comment|/* Generate code from machine description to compute values of attribute
 end_comment
 
 begin_comment
-comment|/* This program handles insn attributes and the DEFINE_DELAY and    DEFINE_FUNCTION_UNIT definitions.     It produces a series of functions named `get_attr_...', one for each insn    attribute.  Each of these is given the rtx for an insn and returns a member    of the enum for the attribute.     These subroutines have the form of a `switch' on the INSN_CODE (via    `recog_memoized').  Each case either returns a constant attribute value    or a value that depends on tests on other attributes, the form of    operands, or some random C expression (encoded with a SYMBOL_REF    expression).     If the attribute `alternative', or a random C expression is present,    `constrain_operands' is called.  If either of these cases of a reference to    an operand is found, `extract_insn' is called.     The special attribute `length' is also recognized.  For this operand,    expressions involving the address of an operand or the current insn,    (address (pc)), are valid.  In this case, an initial pass is made to    set all lengths that do not depend on address.  Those that do are set to    the maximum length.  Then each insn that depends on an address is checked    and possibly has its length changed.  The process repeats until no further    changed are made.  The resulting lengths are saved for use by    `get_attr_length'.     A special form of DEFINE_ATTR, where the expression for default value is a    CONST expression, indicates an attribute that is constant for a given run    of the compiler.  The subroutine generated for these attributes has no    parameters as it does not depend on any particular insn.  Constant    attributes are typically used to specify which variety of processor is    used.     Internal attributes are defined to handle DEFINE_DELAY and    DEFINE_FUNCTION_UNIT.  Special routines are output for these cases.     This program works by keeping a list of possible values for each attribute.    These include the basic attribute choices, default values for attribute, and    all derived quantities.     As the description file is read, the definition for each insn is saved in a    `struct insn_def'.   When the file reading is complete, a `struct insn_ent'    is created for each insn and chained to the corresponding attribute value,    either that specified, or the default.     An optimization phase is then run.  This simplifies expressions for each    insn.  EQ_ATTR tests are resolved, whenever possible, to a test that    indicates when the attribute has the specified value for the insn.  This    avoids recursive calls during compilation.     The strategy used when processing DEFINE_DELAY and DEFINE_FUNCTION_UNIT    definitions is to create arbitrarily complex expressions and have the    optimization simplify them.     Once optimization is complete, any required routines and definitions    will be written.     An optimization that is not yet implemented is to hoist the constant    expressions entirely out of the routines and definitions that are written.    A way to do this is to iterate over all possible combinations of values    for constant attributes and generate a set of functions for that given    combination.  An initialization function would be written that evaluates    the attributes and installs the corresponding set of routines and    definitions (each would be accessed through a pointer).     We use the flags in an RTX as follows:    `unchanging' (RTX_UNCHANGING_P): This rtx is fully simplified       independent of the insn code.    `in_struct' (MEM_IN_STRUCT_P): This rtx is fully simplified       for the insn code currently being processed (see optimize_attrs).    `integrated' (RTX_INTEGRATED_P): This rtx is permanent and unique       (see attr_rtx).    `volatil' (MEM_VOLATILE_P): During simplify_by_exploding the value of an       EQ_ATTR rtx is true if !volatil and false if volatil.  */
+comment|/* This program handles insn attributes and the DEFINE_DELAY and    DEFINE_FUNCTION_UNIT definitions.     It produces a series of functions named `get_attr_...', one for each insn    attribute.  Each of these is given the rtx for an insn and returns a member    of the enum for the attribute.     These subroutines have the form of a `switch' on the INSN_CODE (via    `recog_memoized').  Each case either returns a constant attribute value    or a value that depends on tests on other attributes, the form of    operands, or some random C expression (encoded with a SYMBOL_REF    expression).     If the attribute `alternative', or a random C expression is present,    `constrain_operands' is called.  If either of these cases of a reference to    an operand is found, `extract_insn' is called.     The special attribute `length' is also recognized.  For this operand,    expressions involving the address of an operand or the current insn,    (address (pc)), are valid.  In this case, an initial pass is made to    set all lengths that do not depend on address.  Those that do are set to    the maximum length.  Then each insn that depends on an address is checked    and possibly has its length changed.  The process repeats until no further    changed are made.  The resulting lengths are saved for use by    `get_attr_length'.     A special form of DEFINE_ATTR, where the expression for default value is a    CONST expression, indicates an attribute that is constant for a given run    of the compiler.  The subroutine generated for these attributes has no    parameters as it does not depend on any particular insn.  Constant    attributes are typically used to specify which variety of processor is    used.     Internal attributes are defined to handle DEFINE_DELAY and    DEFINE_FUNCTION_UNIT.  Special routines are output for these cases.     This program works by keeping a list of possible values for each attribute.    These include the basic attribute choices, default values for attribute, and    all derived quantities.     As the description file is read, the definition for each insn is saved in a    `struct insn_def'.   When the file reading is complete, a `struct insn_ent'    is created for each insn and chained to the corresponding attribute value,    either that specified, or the default.     An optimization phase is then run.  This simplifies expressions for each    insn.  EQ_ATTR tests are resolved, whenever possible, to a test that    indicates when the attribute has the specified value for the insn.  This    avoids recursive calls during compilation.     The strategy used when processing DEFINE_DELAY and DEFINE_FUNCTION_UNIT    definitions is to create arbitrarily complex expressions and have the    optimization simplify them.     Once optimization is complete, any required routines and definitions    will be written.     An optimization that is not yet implemented is to hoist the constant    expressions entirely out of the routines and definitions that are written.    A way to do this is to iterate over all possible combinations of values    for constant attributes and generate a set of functions for that given    combination.  An initialization function would be written that evaluates    the attributes and installs the corresponding set of routines and    definitions (each would be accessed through a pointer).     We use the flags in an RTX as follows:    `unchanging' (ATTR_IND_SIMPLIFIED_P): This rtx is fully simplified       independent of the insn code.    `in_struct' (ATTR_CURR_SIMPLIFIED_P): This rtx is fully simplified       for the insn code currently being processed (see optimize_attrs).    `integrated' (ATTR_PERMANENT_P): This rtx is permanent and unique       (see attr_rtx).    `volatil' (ATTR_EQ_ATTR_P): During simplify_by_exploding the value of an       EQ_ATTR rtx is true if !volatil and false if volatil.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTR_IND_SIMPLIFIED_P
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(RTX_FLAG((RTX), unchanging))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_CURR_SIMPLIFIED_P
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(RTX_FLAG((RTX), in_struct))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_PERMANENT_P
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(RTX_FLAG((RTX), integrated))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_EQ_ATTR_P
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(RTX_FLAG((RTX), volatil))
+end_define
 
 begin_include
 include|#
@@ -70,6 +110,12 @@ directive|include
 file|"errors.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"genattrtab.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -101,20 +147,6 @@ operator|&
 name|obstack2
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
 
 begin_comment
 comment|/* enough space to reserve for printing out ints */
@@ -555,7 +587,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* An expression where all the unknown terms are EQ_ATTR tests can be    rearranged into a COND provided we can enumerate all possible    combinations of the unknown values.  The set of combinations become the    tests of the COND; the value of the expression given that combination is    computed and becomes the corresponding value.  To do this, we must be    able to enumerate all values for each attribute used in the expression    (currently, we give up if we find a numeric attribute).     If the set of EQ_ATTR tests used in an expression tests the value of N    different attributes, the list of all possible combinations can be made    by walking the N-dimensional attribute space defined by those    attributes.  We record each of these as a struct dimension.     The algorithm relies on sharing EQ_ATTR nodes: if two nodes in an    expression are the same, the will also have the same address.  We find    all the EQ_ATTR nodes by marking them MEM_VOLATILE_P.  This bit later    represents the value of an EQ_ATTR node, so once all nodes are marked,    they are also given an initial value of FALSE.     We then separate the set of EQ_ATTR nodes into dimensions for each    attribute and put them on the VALUES list.  Terms are added as needed by    `add_values_to_cover' so that all possible values of the attribute are    tested.     Each dimension also has a current value.  This is the node that is    currently considered to be TRUE.  If this is one of the nodes added by    `add_values_to_cover', all the EQ_ATTR tests in the original expression    will be FALSE.  Otherwise, only the CURRENT_VALUE will be true.     NUM_VALUES is simply the length of the VALUES list and is there for    convenience.     Once the dimensions are created, the algorithm enumerates all possible    values and computes the current value of the given expression.  */
+comment|/* An expression where all the unknown terms are EQ_ATTR tests can be    rearranged into a COND provided we can enumerate all possible    combinations of the unknown values.  The set of combinations become the    tests of the COND; the value of the expression given that combination is    computed and becomes the corresponding value.  To do this, we must be    able to enumerate all values for each attribute used in the expression    (currently, we give up if we find a numeric attribute).     If the set of EQ_ATTR tests used in an expression tests the value of N    different attributes, the list of all possible combinations can be made    by walking the N-dimensional attribute space defined by those    attributes.  We record each of these as a struct dimension.     The algorithm relies on sharing EQ_ATTR nodes: if two nodes in an    expression are the same, the will also have the same address.  We find    all the EQ_ATTR nodes by marking them ATTR_EQ_ATTR_P.  This bit later    represents the value of an EQ_ATTR node, so once all nodes are marked,    they are also given an initial value of FALSE.     We then separate the set of EQ_ATTR nodes into dimensions for each    attribute and put them on the VALUES list.  Terms are added as needed by    `add_values_to_cover' so that all possible values of the attribute are    tested.     Each dimension also has a current value.  This is the node that is    currently considered to be TRUE.  If this is one of the nodes added by    `add_values_to_cover', all the EQ_ATTR tests in the original expression    will be FALSE.  Otherwise, only the CURRENT_VALUE will be true.     NUM_VALUES is simply the length of the VALUES list and is there for    convenience.     Once the dimensions are created, the algorithm enumerates all possible    values and computes the current value of the given expression.  */
 end_comment
 
 begin_struct
@@ -666,6 +698,12 @@ begin_decl_stmt
 specifier|static
 name|int
 name|num_insn_ents
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|num_dfa_decls
 decl_stmt|;
 end_decl_stmt
 
@@ -800,7 +838,7 @@ parameter_list|,
 name|INSN_INDEX
 parameter_list|)
 define|\
-value|(RTX_UNCHANGING_P (EXP) || MEM_IN_STRUCT_P (EXP) ? (EXP)	\    : simplify_test_exp (EXP, INSN_CODE, INSN_INDEX))
+value|(ATTR_IND_SIMPLIFIED_P (EXP) || ATTR_CURR_SIMPLIFIED_P (EXP) ? (EXP)	\    : simplify_test_exp (EXP, INSN_CODE, INSN_INDEX))
 end_define
 
 begin_comment
@@ -904,28 +942,6 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|attr_printf
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
 name|attr_string
 name|PARAMS
 argument_list|(
@@ -933,23 +949,6 @@ operator|(
 specifier|const
 name|char
 operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|rtx
-name|check_attr_test
-name|PARAMS
-argument_list|(
-operator|(
-name|rtx
-operator|,
-name|int
 operator|,
 name|int
 operator|)
@@ -1183,10 +1182,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* dpx2 compiler chokes if we specify the arg types of the args.  */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2121,21 +2116,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|n_comma_elts
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|next_comma_elt
@@ -2172,25 +2152,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|make_internal_attr
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|rtx
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|attr_value
 modifier|*
@@ -2216,19 +2177,6 @@ operator|(
 expr|struct
 name|attr_desc
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|rtx
-name|make_numeric_value
-name|PARAMS
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2580,7 +2528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate an RTL expression, but avoid duplicates.    Set the RTX_INTEGRATED_P flag for these permanent objects.     In some cases we cannot uniquify; then we return an ordinary    impermanent rtx with RTX_INTEGRATED_P clear.     Args are like gen_rtx, but without the mode:     rtx attr_rtx (code, [element1, ..., elementn])  */
+comment|/* Generate an RTL expression, but avoid duplicates.    Set the ATTR_PERMANENT_P flag for these permanent objects.     In some cases we cannot uniquify; then we return an ordinary    impermanent rtx with ATTR_PERMANENT_P clear.     Args are like gen_rtx, but without the mode:     rtx attr_rtx (code, [element1, ..., elementn])  */
 end_comment
 
 begin_function
@@ -2646,7 +2594,7 @@ comment|/* A permanent object cannot point to impermanent ones.  */
 if|if
 condition|(
 operator|!
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|arg0
 argument_list|)
@@ -2822,13 +2770,13 @@ comment|/* A permanent object cannot point to impermanent ones.  */
 if|if
 condition|(
 operator|!
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|arg0
 argument_list|)
 operator|||
 operator|!
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|arg1
 argument_list|)
@@ -3548,7 +3496,7 @@ argument_list|,
 name|rt_val
 argument_list|)
 expr_stmt|;
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|rt_val
 argument_list|)
@@ -3621,7 +3569,6 @@ comment|/* Create a new string printed with the printf line arguments into a spa
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|attr_printf
@@ -4031,12 +3978,12 @@ operator|||
 operator|(
 operator|!
 operator|(
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|x
 argument_list|)
 operator|&&
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|y
 argument_list|)
@@ -4091,7 +4038,7 @@ decl_stmt|;
 comment|/* No need to copy a permanent object.  */
 if|if
 condition|(
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|orig
 argument_list|)
@@ -4161,37 +4108,45 @@ name|orig
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ATTR_IND_SIMPLIFIED_P
+argument_list|(
 name|copy
-operator|->
-name|in_struct
+argument_list|)
 operator|=
+name|ATTR_IND_SIMPLIFIED_P
+argument_list|(
 name|orig
-operator|->
-name|in_struct
+argument_list|)
 expr_stmt|;
+name|ATTR_CURR_SIMPLIFIED_P
+argument_list|(
 name|copy
-operator|->
-name|volatil
+argument_list|)
 operator|=
+name|ATTR_CURR_SIMPLIFIED_P
+argument_list|(
 name|orig
-operator|->
-name|volatil
+argument_list|)
 expr_stmt|;
+name|ATTR_PERMANENT_P
+argument_list|(
 name|copy
-operator|->
-name|unchanging
+argument_list|)
 operator|=
+name|ATTR_PERMANENT_P
+argument_list|(
 name|orig
-operator|->
-name|unchanging
+argument_list|)
 expr_stmt|;
+name|ATTR_EQ_ATTR_P
+argument_list|(
 name|copy
-operator|->
-name|integrated
+argument_list|)
 operator|=
+name|ATTR_EQ_ATTR_P
+argument_list|(
 name|orig
-operator|->
-name|integrated
+argument_list|)
 expr_stmt|;
 name|format_ptr
 operator|=
@@ -4446,7 +4401,6 @@ comment|/* Given a test expression for an attribute, ensure it is validly formed
 end_comment
 
 begin_function
-specifier|static
 name|rtx
 name|check_attr_test
 parameter_list|(
@@ -4612,7 +4566,7 @@ operator|=
 name|alternative_name
 expr_stmt|;
 comment|/* This can't be simplified any further.  */
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -4685,7 +4639,7 @@ name|attr
 operator|->
 name|is_const
 condition|)
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -5012,7 +4966,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* These cases can't be simplified.  */
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -5121,7 +5075,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* These cases can't be simplified.  */
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -5152,7 +5106,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -6703,7 +6657,7 @@ comment|/* Make a COND with all tests but the last, and in the original order.  
 end_comment
 
 begin_endif
-unit|condexp = rtx_alloc (COND);   XVEC (condexp, 0) = rtvec_alloc ((num_alt - 1) * 2);   av = attr->first_value;   XEXP (condexp, 1) = av->value;    for (i = num_alt - 2; av = av->next, i>= 0; i--)     {       char *p, *string;       rtx value;        string = p = (char *) oballoc (2 				     + strlen (attr->name) 				     + strlen (XSTR (av->value, 0)));       strcpy (p, attr->name);       strcat (p, "_");       strcat (p, XSTR (av->value, 0));       for (; *p != '\0'; p++) 	*p = TOUPPER (*p);        value = attr_rtx (SYMBOL_REF, string);       RTX_UNCHANGING_P (value) = 1;        XVECEXP (condexp, 0, 2 * i) = attr_rtx (EQ, exp, value);        XVECEXP (condexp, 0, 2 * i + 1) = av->value;     }    return condexp; }
+unit|condexp = rtx_alloc (COND);   XVEC (condexp, 0) = rtvec_alloc ((num_alt - 1) * 2);   av = attr->first_value;   XEXP (condexp, 1) = av->value;    for (i = num_alt - 2; av = av->next, i>= 0; i--)     {       char *p, *string;       rtx value;        string = p = (char *) oballoc (2 				     + strlen (attr->name) 				     + strlen (XSTR (av->value, 0)));       strcpy (p, attr->name);       strcat (p, "_");       strcat (p, XSTR (av->value, 0));       for (; *p != '\0'; p++) 	*p = TOUPPER (*p);        value = attr_rtx (SYMBOL_REF, string);       ATTR_IND_SIMPLIFIED_P (value) = 1;        XVECEXP (condexp, 0, 2 * i) = attr_rtx (EQ, exp, value);        XVECEXP (condexp, 0, 2 * i + 1) = av->value;     }    return condexp; }
 endif|#
 directive|endif
 end_endif
@@ -6817,14 +6771,14 @@ name|attr
 operator|->
 name|is_const
 operator|||
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
 condition|)
 break|break;
 comment|/* The SYMBOL_REF is constant for a given run, so mark it as unchanging. 	 This makes the COND something that won't be considered an arbitrary 	 expression by walk_attr_value.  */
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -6835,7 +6789,7 @@ if|#
 directive|if
 literal|0
 comment|/* ??? Why do we do this?  With attribute values { A B C D E }, this          tends to generate (!(x==A)&& !(x==B)&& !(x==C)&& !(x==D)) rather 	 than (x==E).  */
-block|exp = convert_const_symbol_ref (exp, attr);       RTX_UNCHANGING_P (exp) = 1;       exp = check_attr_value (exp, attr);
+block|exp = convert_const_symbol_ref (exp, attr);       ATTR_IND_SIMPLIFIED_P (exp) = 1;       exp = check_attr_value (exp, attr);
 comment|/* Goto COND case since this is now a COND.  Note that while the          new expression is rescanned, all symbol_ref notes are marked as 	 unchanging.  */
 block|goto cond;
 else|#
@@ -8698,7 +8652,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Once all attributes and DEFINE_FUNCTION_UNITs have been read, we    construct a number of attributes.     The first produces a function `function_units_used' which is given an    insn and produces an encoding showing which function units are required    for the execution of that insn.  If the value is non-negative, the insn    uses that unit; otherwise, the value is a one's compliment mask of units    used.     The second produces a function `result_ready_cost' which is used to    determine the time that the result of an insn will be ready and hence    a worst-case schedule.     Both of these produce quite complex expressions which are then set as the    default value of internal attributes.  Normal attribute simplification    should produce reasonable expressions.     For each unit, a `<name>_unit_ready_cost' function will take an    insn and give the delay until that unit will be ready with the result    and a `<name>_unit_conflict_cost' function is given an insn already    executing on the unit and a candidate to execute and will give the    cost from the time the executing insn started until the candidate    can start (ignore limitations on the number of simultaneous insns).     For each unit, a `<name>_unit_blockage' function is given an insn    already executing on the unit and a candidate to execute and will    give the delay incurred due to function unit conflicts.  The range of    blockage cost values for a given executing insn is given by the    `<name>_unit_blockage_range' function.  These values are encoded in    an int where the upper half gives the minimum value and the lower    half gives the maximum value.  */
+comment|/* Once all attributes and DEFINE_FUNCTION_UNITs have been read, we    construct a number of attributes.     The first produces a function `function_units_used' which is given an    insn and produces an encoding showing which function units are required    for the execution of that insn.  If the value is non-negative, the insn    uses that unit; otherwise, the value is a one's complement mask of units    used.     The second produces a function `result_ready_cost' which is used to    determine the time that the result of an insn will be ready and hence    a worst-case schedule.     Both of these produce quite complex expressions which are then set as the    default value of internal attributes.  Normal attribute simplification    should produce reasonable expressions.     For each unit, a `<name>_unit_ready_cost' function will take an    insn and give the delay until that unit will be ready with the result    and a `<name>_unit_conflict_cost' function is given an insn already    executing on the unit and a candidate to execute and will give the    cost from the time the executing insn started until the candidate    can start (ignore limitations on the number of simultaneous insns).     For each unit, a `<name>_unit_blockage' function is given an insn    already executing on the unit and a candidate to execute and will    give the delay incurred due to function unit conflicts.  The range of    blockage cost values for a given executing insn is given by the    `<name>_unit_blockage_range' function.  These values are encoded in    an int where the upper half gives the minimum value and the lower    half gives the maximum value.  */
 end_comment
 
 begin_function
@@ -9821,7 +9775,7 @@ operator|->
 name|condexp
 argument_list|)
 expr_stmt|;
-comment|/* Determine the blockage cost the executing insn (E) given 	     the candidate insn (C).  This is the maximum of the issue 	     delay, the pipeline delay, and the simultaneity constraint. 	     Each function_unit_op represents the characteristics of the 	     candidate insn, so in the expressions below, C is a known 	     term and E is an unknown term.  	     We compute the blockage cost for each E for every possible C. 	     Thus OP represents E, and READYCOST is a list of values for 	     every possible C.  	     The issue delay function for C is op->issue_exp and is used to 	     write the `<name>_unit_conflict_cost' function.  Symbolicly 	     this is "ISSUE-DELAY (E,C)".  	     The pipeline delay results form the FIFO constraint on the 	     function unit and is "READY-COST (E) + 1 - READY-COST (C)".  	     The simultaneity constraint is based on how long it takes to 	     fill the unit given the minimum issue delay.  FILL-TIME is the 	     constant "MIN (ISSUE-DELAY (*,*)) * (SIMULTANEITY - 1)", and 	     the simultaneity constraint is "READY-COST (E) - FILL-TIME" 	     if SIMULTANEITY is non-zero and zero otherwise.  	     Thus, BLOCKAGE (E,C) when SIMULTANEITY is zero is  	         MAX (ISSUE-DELAY (E,C), 		      READY-COST (E) - (READY-COST (C) - 1))  	     and otherwise  	         MAX (ISSUE-DELAY (E,C), 		      READY-COST (E) - (READY-COST (C) - 1), 		      READY-COST (E) - FILL-TIME)  	     The `<name>_unit_blockage' function is computed by determining 	     this value for each candidate insn.  As these values are 	     computed, we also compute the upper and lower bounds for 	     BLOCKAGE (E,*).  These are combined to form the function 	     `<name>_unit_blockage_range'.  Finally, the maximum blockage 	     cost, MAX (BLOCKAGE (*,*)), is computed.  */
+comment|/* Determine the blockage cost the executing insn (E) given 	     the candidate insn (C).  This is the maximum of the issue 	     delay, the pipeline delay, and the simultaneity constraint. 	     Each function_unit_op represents the characteristics of the 	     candidate insn, so in the expressions below, C is a known 	     term and E is an unknown term.  	     We compute the blockage cost for each E for every possible C. 	     Thus OP represents E, and READYCOST is a list of values for 	     every possible C.  	     The issue delay function for C is op->issue_exp and is used to 	     write the `<name>_unit_conflict_cost' function.  Symbolicly 	     this is "ISSUE-DELAY (E,C)".  	     The pipeline delay results form the FIFO constraint on the 	     function unit and is "READY-COST (E) + 1 - READY-COST (C)".  	     The simultaneity constraint is based on how long it takes to 	     fill the unit given the minimum issue delay.  FILL-TIME is the 	     constant "MIN (ISSUE-DELAY (*,*)) * (SIMULTANEITY - 1)", and 	     the simultaneity constraint is "READY-COST (E) - FILL-TIME" 	     if SIMULTANEITY is nonzero and zero otherwise.  	     Thus, BLOCKAGE (E,C) when SIMULTANEITY is zero is  	         MAX (ISSUE-DELAY (E,C), 		      READY-COST (E) - (READY-COST (C) - 1))  	     and otherwise  	         MAX (ISSUE-DELAY (E,C), 		      READY-COST (E) - (READY-COST (C) - 1), 		      READY-COST (E) - FILL-TIME)  	     The `<name>_unit_blockage' function is computed by determining 	     this value for each candidate insn.  As these values are 	     computed, we also compute the upper and lower bounds for 	     BLOCKAGE (E,*).  These are combined to form the function 	     `<name>_unit_blockage_range'.  Finally, the maximum blockage 	     cost, MAX (BLOCKAGE (*,*)), is computed.  */
 for|for
 control|(
 name|op
@@ -10401,7 +10355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate the CONST_STRING expressions in X to change the encoding of    value.  On input, the value is a bitmask with a one bit for each unit    used; on output, the value is the unit number (zero based) if one    and only one unit is used or the one's compliment of the bitmask.  */
+comment|/* Translate the CONST_STRING expressions in X to change the encoding of    value.  On input, the value is a bitmask with a one bit for each unit    used; on output, the value is the unit number (zero based) if one    and only one unit is used or the one's complement of the bitmask.  */
 end_comment
 
 begin_function
@@ -10463,7 +10417,7 @@ name|i
 operator|<
 literal|0
 condition|)
-comment|/* The sign bit encodes a one's compliment mask.  */
+comment|/* The sign bit encodes a one's complement mask.  */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -13068,7 +13022,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|newexp
 argument_list|)
@@ -13518,7 +13472,7 @@ else|else
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* If uses an address, must return original expression.  But set the      RTX_UNCHANGING_P bit so we don't try to simplify it again.  */
+comment|/* If uses an address, must return original expression.  But set the      ATTR_IND_SIMPLIFIED_P bit so we don't try to simplify it again.  */
 name|address_used
 operator|=
 literal|0
@@ -13537,7 +13491,7 @@ comment|/* This had `&& current_alternative_string', which seems to be wrong.  *
 if|if
 condition|(
 operator|!
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -14935,7 +14889,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Simplify test expression and use temporary obstack in order to avoid    memory bloat.  Use RTX_UNCHANGING_P to avoid unnecesary simplifications    and avoid unnecesary copying if possible.  */
+comment|/* Simplify test expression and use temporary obstack in order to avoid    memory bloat.  Use ATTR_IND_SIMPLIFIED to avoid unnecesary simplifications    and avoid unnecesary copying if possible.  */
 end_comment
 
 begin_function
@@ -14968,7 +14922,7 @@ name|old
 decl_stmt|;
 if|if
 condition|(
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -15076,12 +15030,12 @@ decl_stmt|;
 comment|/* Don't re-simplify something we already simplified.  */
 if|if
 condition|(
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
 operator|||
-name|MEM_IN_STRUCT_P
+name|ATTR_CURR_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -16458,7 +16412,7 @@ literal|2
 comment|/* Seems wrong:&& current_alternative_string.  */
 operator|&&
 operator|!
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|newexp
 argument_list|)
@@ -16767,7 +16721,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Clear the MEM_IN_STRUCT_P flag everywhere relevant. 	 We use it to mean "already simplified for this insn".  */
+comment|/* Clear the ATTR_CURR_SIMPLIFIED_P flag everywhere relevant. 	 We use it to mean "already simplified for this insn".  */
 for|for
 control|(
 name|iv
@@ -17587,7 +17541,7 @@ operator|==
 name|CONST_STRING
 operator|&&
 operator|!
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|condval
 index|[
@@ -17597,7 +17551,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Mark the unmarked constant value and count how many are marked.  */
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|condval
 index|[
@@ -17634,7 +17588,7 @@ argument_list|)
 operator|==
 name|CONST_STRING
 operator|&&
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|condval
 index|[
@@ -17687,7 +17641,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|condval
 index|[
@@ -17842,7 +17796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the MEM_VOLATILE_P flag for all EQ_ATTR expressions in EXP and    verify that EXP can be simplified to a constant term if all the EQ_ATTR    tests have known value.  */
+comment|/* Set the ATTR_EQ_ATTR_P flag for all EQ_ATTR expressions in EXP and    verify that EXP can be simplified to a constant term if all the EQ_ATTR    tests have known value.  */
 end_comment
 
 begin_function
@@ -17890,7 +17844,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|exp
 argument_list|)
@@ -17933,7 +17887,7 @@ name|nterms
 operator|+=
 literal|1
 expr_stmt|;
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|exp
 argument_list|)
@@ -18103,7 +18057,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Clear the MEM_VOLATILE_P flag in all EQ_ATTR expressions on LIST and    in the values of the NDIM-dimensional attribute space SPACE.  */
+comment|/* Clear the ATTR_EQ_ATTR_P flag in all EQ_ATTR expressions on LIST and    in the values of the NDIM-dimensional attribute space SPACE.  */
 end_comment
 
 begin_function
@@ -18200,7 +18154,7 @@ argument_list|)
 operator|==
 name|EQ_ATTR
 condition|)
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|exp
 argument_list|)
@@ -18399,7 +18353,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|exp
 argument_list|)
@@ -18804,7 +18758,7 @@ argument_list|)
 operator|==
 name|EQ_ATTR
 condition|)
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|x
 argument_list|)
@@ -18857,7 +18811,7 @@ argument_list|)
 operator|==
 name|EQ_ATTR
 condition|)
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|x
 argument_list|)
@@ -18872,7 +18826,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reduce the expression EXP based on the MEM_VOLATILE_P settings of    all EQ_ATTR expressions.  */
+comment|/* Reduce the expression EXP based on the ATTR_EQ_ATTR_P settings of    all EQ_ATTR expressions.  */
 end_comment
 
 begin_function
@@ -18905,7 +18859,7 @@ name|EQ_ATTR
 case|:
 if|if
 condition|(
-name|MEM_VOLATILE_P
+name|ATTR_EQ_ATTR_P
 argument_list|(
 name|exp
 argument_list|)
@@ -19265,7 +19219,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Clear the MEM_IN_STRUCT_P flag in EXP and its subexpressions.  */
+comment|/* Clear the ATTR_CURR_SIMPLIFIED_P flag in EXP and its subexpressions.  */
 end_comment
 
 begin_function
@@ -19294,7 +19248,7 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
-name|MEM_IN_STRUCT_P
+name|ATTR_CURR_SIMPLIFIED_P
 argument_list|(
 name|x
 argument_list|)
@@ -19303,7 +19257,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|x
 argument_list|)
@@ -20166,7 +20120,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Returns non-zero if the given expression contains an EQ_ATTR with the    `alternative' attribute.  */
+comment|/* Returns nonzero if the given expression contains an EQ_ATTR with the    `alternative' attribute.  */
 end_comment
 
 begin_function
@@ -20319,7 +20273,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Returns non-zero is INNER is contained in EXP.  */
+comment|/* Returns nonzero is INNER is contained in EXP.  */
 end_comment
 
 begin_function
@@ -21308,7 +21262,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a piece of RTX, print a C expression to test its truth value.    We use AND and IOR both for logical and bit-wise operations, so    interpret them as logical unless they are inside a comparison expression.    The first bit of FLAGS will be non-zero in that case.     Set the second bit of FLAGS to make references to attribute values use    a cached local variable instead of calling a function.  */
+comment|/* Given a piece of RTX, print a C expression to test its truth value.    We use AND and IOR both for logical and bit-wise operations, so    interpret them as logical unless they are inside a comparison expression.    The first bit of FLAGS will be nonzero in that case.     Set the second bit of FLAGS to make references to attribute values use    a cached local variable instead of calling a function.  */
 end_comment
 
 begin_function
@@ -22640,7 +22594,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|exp
 argument_list|)
@@ -25106,7 +25060,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Write a subroutine that is given an insn that requires a delay slot, a    delay slot ordinal, and a candidate insn.  It returns non-zero if the    candidate can be placed in the specified delay slot of the insn.     We can write as many as three subroutines.  `eligible_for_delay'    handles normal delay slots, `eligible_for_annul_true' indicates that    the specified insn can be annulled if the branch is true, and likewise    for `eligible_for_annul_false'.     KIND is a string distinguishing these three cases ("delay", "annul_true",    or "annul_false").  */
+comment|/* Write a subroutine that is given an insn that requires a delay slot, a    delay slot ordinal, and a candidate insn.  It returns nonzero if the    candidate can be placed in the specified delay slot of the insn.     We can write as many as three subroutines.  `eligible_for_delay'    handles normal delay slots, `eligible_for_annul_true' indicates that    the specified insn can be annulled if the branch is true, and likewise    for `eligible_for_annul_false'.     KIND is a string distinguishing these three cases ("delay", "annul_true",    or "annul_false").  */
 end_comment
 
 begin_function
@@ -25984,6 +25938,17 @@ literal|"}, \n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|num_units
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"{\"dummy\", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} /* a dummy element */"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"};\n\n"
@@ -26497,64 +26462,6 @@ comment|/* This page contains miscellaneous utility routines.  */
 end_comment
 
 begin_comment
-comment|/* Given a string, return the number of comma-separated elements in it.    Return 0 for the null string.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|n_comma_elts
-parameter_list|(
-name|s
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-name|int
-name|n
-decl_stmt|;
-if|if
-condition|(
-operator|*
-name|s
-operator|==
-literal|'\0'
-condition|)
-return|return
-literal|0
-return|;
-for|for
-control|(
-name|n
-operator|=
-literal|1
-init|;
-operator|*
-name|s
-condition|;
-name|s
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|s
-operator|==
-literal|','
-condition|)
-name|n
-operator|++
-expr_stmt|;
-return|return
-name|n
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Given a pointer to a (char *), return a malloc'ed string containing the    next comma-separated element.  Advance the pointer to after the string    scanned, or the end-of-string.  Return NULL if at end of string.  */
 end_comment
 
@@ -26573,88 +26480,43 @@ modifier|*
 name|pstr
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|out_str
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|p
+name|start
 decl_stmt|;
+name|start
+operator|=
+name|scan_comma_elt
+argument_list|(
+name|pstr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|*
-operator|*
-name|pstr
+name|start
 operator|==
-literal|'\0'
+name|NULL
 condition|)
 return|return
 name|NULL
 return|;
-comment|/* Find end of string to compute length.  */
-for|for
-control|(
-name|p
-operator|=
-operator|*
-name|pstr
-init|;
-operator|*
-name|p
-operator|!=
-literal|','
-operator|&&
-operator|*
-name|p
-operator|!=
-literal|'\0'
-condition|;
-name|p
-operator|++
-control|)
-empty_stmt|;
-name|out_str
-operator|=
+return|return
 name|attr_string
 argument_list|(
-operator|*
-name|pstr
+name|start
 argument_list|,
-name|p
+operator|*
+name|pstr
 operator|-
-operator|*
-name|pstr
+name|start
 argument_list|)
-expr_stmt|;
-operator|*
-name|pstr
-operator|=
-name|p
-expr_stmt|;
-if|if
-condition|(
-operator|*
-operator|*
-name|pstr
-operator|==
-literal|','
-condition|)
-operator|(
-operator|*
-name|pstr
-operator|)
-operator|++
-expr_stmt|;
-return|return
-name|out_str
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Return a `struct attr_desc' pointer for a given named attribute.  If CREATE    is non-zero, build a new attribute, if one does not exist.  */
+comment|/* Return a `struct attr_desc' pointer for a given named attribute.  If CREATE    is nonzero, build a new attribute, if one does not exist.  */
 end_comment
 
 begin_function
@@ -26888,7 +26750,6 @@ comment|/* Create internal attribute with the given default value.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|make_internal_attr
 parameter_list|(
@@ -27181,7 +27042,6 @@ comment|/* Return (attr_value "n") */
 end_comment
 
 begin_function
-specifier|static
 name|rtx
 name|make_numeric_value
 parameter_list|(
@@ -27346,12 +27206,12 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|orig
 argument_list|)
 operator|||
-name|MEM_IN_STRUCT_P
+name|ATTR_CURR_SIMPLIFIED_P
 argument_list|(
 name|orig
 argument_list|)
@@ -27359,7 +27219,7 @@ condition|)
 return|return
 name|orig
 return|;
-name|MEM_IN_STRUCT_P
+name|ATTR_CURR_SIMPLIFIED_P
 argument_list|(
 name|orig
 argument_list|)
@@ -27372,7 +27232,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|code = GET_CODE (orig);   switch (code)     {     case CONST_INT:     case CONST_DOUBLE:     case SYMBOL_REF:     case CODE_LABEL:       return orig;      default:       break;     }    copy = rtx_alloc (code);   PUT_MODE (copy, GET_MODE (orig));   RTX_UNCHANGING_P (copy) = 1;    memcpy (&XEXP (copy, 0),&XEXP (orig, 0), 	  GET_RTX_LENGTH (GET_CODE (copy)) * sizeof (rtx));   return copy;
+block|code = GET_CODE (orig);   switch (code)     {     case CONST_INT:     case CONST_DOUBLE:     case SYMBOL_REF:     case CODE_LABEL:       return orig;      default:       break;     }    copy = rtx_alloc (code);   PUT_MODE (copy, GET_MODE (orig));   ATTR_IND_SIMPLIFIED_P (copy) = 1;    memcpy (&XEXP (copy, 0),&XEXP (orig, 0), 	  GET_RTX_LENGTH (GET_CODE (copy)) * sizeof (rtx));   return copy;
 endif|#
 directive|endif
 block|}
@@ -27663,24 +27523,24 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|true_rtx
 argument_list|)
 operator|=
-name|RTX_UNCHANGING_P
+name|ATTR_IND_SIMPLIFIED_P
 argument_list|(
 name|false_rtx
 argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|true_rtx
 argument_list|)
 operator|=
-name|RTX_INTEGRATED_P
+name|ATTR_PERMANENT_P
 argument_list|(
 name|false_rtx
 argument_list|)
@@ -27705,6 +27565,13 @@ literal|"/* Generated automatically by the program `genattrtab'\n\ from the mach
 argument_list|)
 expr_stmt|;
 comment|/* Read the machine description.  */
+name|initiate_automaton_gen
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -27789,6 +27656,96 @@ name|lineno
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|DEFINE_CPU_UNIT
+case|:
+name|gen_cpu_unit
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DEFINE_QUERY_CPU_UNIT
+case|:
+name|gen_query_cpu_unit
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DEFINE_BYPASS
+case|:
+name|gen_bypass
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXCLUSION_SET
+case|:
+name|gen_excl_set
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PRESENCE_SET
+case|:
+name|gen_presence_set
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ABSENCE_SET
+case|:
+name|gen_absence_set
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DEFINE_AUTOMATON
+case|:
+name|gen_automaton
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AUTOMATA_OPTION
+case|:
+name|gen_automata_option
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DEFINE_RESERVATION
+case|:
+name|gen_reserv
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DEFINE_INSN_RESERVATION
+case|:
+name|gen_insn_reserv
+argument_list|(
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -27857,14 +27814,22 @@ condition|)
 name|expand_delays
 argument_list|()
 expr_stmt|;
-comment|/* Expand DEFINE_FUNCTION_UNIT information into new attributes.  */
 if|if
 condition|(
 name|num_units
+operator|||
+name|num_dfa_decls
 condition|)
+block|{
+comment|/* Expand DEFINE_FUNCTION_UNIT information into new attributes.  */
 name|expand_units
 argument_list|()
 expr_stmt|;
+comment|/* Build DFA, output some functions and expand DFA information 	 into new attributes.  */
+name|expand_automata
+argument_list|()
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"#include \"config.h\"\n"
@@ -27923,6 +27888,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"flags.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"function.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -28222,14 +28192,22 @@ literal|"annul_false"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Write out information about function units.  */
 if|if
 condition|(
 name|num_units
+operator|||
+name|num_dfa_decls
 condition|)
+block|{
+comment|/* Write out information about function units.  */
 name|write_function_unit_info
 argument_list|()
 expr_stmt|;
+comment|/* Output code for pipeline hazards recognition based on DFA 	 (deterministic finite state automata.  */
+name|write_automata
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* Write out constant delay slot info */
 name|write_const_num_delay_slots
 argument_list|()

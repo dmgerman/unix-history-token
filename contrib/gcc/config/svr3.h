@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996, 2000 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr3.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr3.h, put something    like:  	#include "?????.h" 	#include "svr3.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR3.  You should    probably override that in your target-specific ?????svr3.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
+comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr3.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr3.h, put something    like:  	#include "?????.h" 	#include "svr3.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR3.  You should    probably override that in your target-specific ?????svr3.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
 end_comment
 
 begin_comment
@@ -212,16 +212,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Allow #sccs in preprocessor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCCS_DIRECTIVE
-end_define
-
-begin_comment
 comment|/* Output #ident as a .ident.  */
 end_comment
 
@@ -272,6 +262,7 @@ begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -425,19 +416,12 @@ value|"."
 end_define
 
 begin_comment
-comment|/* Support const sections and the ctors and dtors sections for g++.    Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.    However, use of the const section is turned off by default    unless the specific tm.h file turns it on by defining    USE_CONST_SECTION as 1.  */
+comment|/* Support const sections and the ctors and dtors sections for g++.  */
 end_comment
 
 begin_comment
 comment|/* Define a few machine-specific details of the implementation of    constructors.     The __CTORS_LIST__ goes in the .init section.  Define CTOR_LIST_BEGIN    and CTOR_LIST_END to contribute to the .init section an instruction to    push a word containing 0 (or some equivalent of that).     Define TARGET_ASM_CONSTRUCTOR to push the address of the constructor.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|USE_CONST_SECTION
-value|0
-end_define
 
 begin_define
 define|#
@@ -451,13 +435,6 @@ define|#
 directive|define
 name|FINI_SECTION_ASM_OP
 value|"\t.section .fini,\"x\""
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_ASM_OP
-value|"\t.section\t.rodata, \"x\""
 end_define
 
 begin_define
@@ -515,10 +492,6 @@ begin_comment
 comment|/* STACK_GROWS_DOWNWARD */
 end_comment
 
-begin_comment
-comment|/* Add extra sections .rodata, .init and .fini.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -529,7 +502,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_init, in_fini
+value|in_init, in_fini
 end_define
 
 begin_undef
@@ -543,7 +516,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION					\   INIT_SECTION_FUNCTION						\   FINI_SECTION_FUNCTION
+value|INIT_SECTION_FUNCTION						\   FINI_SECTION_FUNCTION
 end_define
 
 begin_define
@@ -560,73 +533,6 @@ directive|define
 name|FINI_SECTION_FUNCTION
 define|\
 value|void								\ fini_section ()							\ {								\   if (in_section != in_fini)					\     {								\       fprintf (asm_out_file, "%s\n", FINI_SECTION_ASM_OP);	\       in_section = in_fini;					\     }								\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|READONLY_DATA_SECTION
-parameter_list|()
-value|const_section ()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_FUNCTION
-define|\
-value|void									\ const_section ()							\ {									\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
-end_define
-
-begin_comment
-comment|/* A C statement or statements to switch to the appropriate    section for output of DECL.  DECL is either a `VAR_DECL' node    or a constant of some sort.  RELOC indicates whether forming    the initial value of DECL requires link-time relocations.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SELECT_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SELECT_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((0&& RELOC)
-comment|/* should be (flag_pic&& RELOC) */
-value|\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
-end_define
-
-begin_comment
-comment|/* A C statement or statements to switch to the appropriate    section for output of RTX in mode MODE.  RTX is some kind    of constant in RTL.  The argument MODE is redundant except    in the case of a `const_int' rtx.  Currently, these always    go into the const section.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SELECT_RTX_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SELECT_RTX_SECTION
-parameter_list|(
-name|MODE
-parameter_list|,
-name|RTX
-parameter_list|,
-name|ALIGN
-parameter_list|)
-value|const_section()
 end_define
 
 end_unit

@@ -88,7 +88,7 @@ file|"toplev.h"
 end_include
 
 begin_comment
-comment|/* This pass of the compiler performs global register allocation.    It assigns hard register numbers to all the pseudo registers    that were not handled in local_alloc.  Assignments are recorded    in the vector reg_renumber, not by changing the rtl code.    (Such changes are made by final).  The entry point is    the function global_alloc.     After allocation is complete, the reload pass is run as a subroutine    of this pass, so that when a pseudo reg loses its hard reg due to    spilling it is possible to make a second attempt to find a hard    reg for it.  The reload pass is independent in other respects    and it is run even when stupid register allocation is in use.     1. Assign allocation-numbers (allocnos) to the pseudo-registers    still needing allocations and to the pseudo-registers currently    allocated by local-alloc which may be spilled by reload.    Set up tables reg_allocno and allocno_reg to map     reg numbers to allocnos and vice versa.    max_allocno gets the number of allocnos in use.     2. Allocate a max_allocno by max_allocno conflict bit matrix and clear it.    Allocate a max_allocno by FIRST_PSEUDO_REGISTER conflict matrix    for conflicts between allocnos and explicit hard register use    (which includes use of pseudo-registers allocated by local_alloc).     3. For each basic block     walk forward through the block, recording which     pseudo-registers and which hardware registers are live.     Build the conflict matrix between the pseudo-registers     and another of pseudo-registers versus hardware registers.     Also record the preferred hardware registers     for each pseudo-register.     4. Sort a table of the allocnos into order of    desirability of the variables.     5. Allocate the variables in that order; each if possible into    a preferred register, else into another register.  */
+comment|/* This pass of the compiler performs global register allocation.    It assigns hard register numbers to all the pseudo registers    that were not handled in local_alloc.  Assignments are recorded    in the vector reg_renumber, not by changing the rtl code.    (Such changes are made by final).  The entry point is    the function global_alloc.     After allocation is complete, the reload pass is run as a subroutine    of this pass, so that when a pseudo reg loses its hard reg due to    spilling it is possible to make a second attempt to find a hard    reg for it.  The reload pass is independent in other respects    and it is run even when stupid register allocation is in use.     1. Assign allocation-numbers (allocnos) to the pseudo-registers    still needing allocations and to the pseudo-registers currently    allocated by local-alloc which may be spilled by reload.    Set up tables reg_allocno and allocno_reg to map    reg numbers to allocnos and vice versa.    max_allocno gets the number of allocnos in use.     2. Allocate a max_allocno by max_allocno conflict bit matrix and clear it.    Allocate a max_allocno by FIRST_PSEUDO_REGISTER conflict matrix    for conflicts between allocnos and explicit hard register use    (which includes use of pseudo-registers allocated by local_alloc).     3. For each basic block     walk forward through the block, recording which     pseudo-registers and which hardware registers are live.     Build the conflict matrix between the pseudo-registers     and another of pseudo-registers versus hardware registers.     Also record the preferred hardware registers     for each pseudo-register.     4. Sort a table of the allocnos into order of    desirability of the variables.     5. Allocate the variables in that order; each if possible into    a preferred register, else into another register.  */
 end_comment
 
 begin_escape
@@ -268,19 +268,6 @@ define|\
 value|(conflicts[(I) * allocno_row_words + (unsigned) (J) / INT_BITS]	\& ((INT_TYPE) 1<< ((unsigned) (J) % INT_BITS)))
 end_define
 
-begin_define
-define|#
-directive|define
-name|SET_CONFLICT
-parameter_list|(
-name|I
-parameter_list|,
-name|J
-parameter_list|)
-define|\
-value|(conflicts[(I) * allocno_row_words + (unsigned) (J) / INT_BITS]	\   |= ((INT_TYPE) 1<< ((unsigned) (J) % INT_BITS)))
-end_define
-
 begin_comment
 comment|/* For any allocno set in ALLOCNO_SET, set ALLOCNO to that allocno,    and execute CODE.  */
 end_comment
@@ -410,25 +397,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Test a bit in TABLE, a vector of HARD_REG_SETs,    for vector element I, and hard register number J.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGBITP
-parameter_list|(
-name|TABLE
-parameter_list|,
-name|I
-parameter_list|,
-name|J
-parameter_list|)
-value|TEST_HARD_REG_BIT (allocno[I].TABLE, J)
-end_define
-
-begin_comment
-comment|/* Set to 1 a bit in a vector of HARD_REG_SETs.  Works like REGBITP.  */
+comment|/* Set to 1 a bit in a vector TABLE of HARD_REG_SETs, for vector    element I, and hard register number J.  */
 end_comment
 
 begin_define
@@ -460,17 +429,6 @@ end_decl_stmt
 begin_comment
 comment|/* Test, set or clear bit number I in allocnos_live,    a bit vector indexed by allocno.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ALLOCNO_LIVE_P
-parameter_list|(
-name|I
-parameter_list|)
-define|\
-value|(allocnos_live[(unsigned) (I) / INT_BITS]		\& ((INT_TYPE) 1<< ((unsigned) (I) % INT_BITS)))
-end_define
 
 begin_define
 define|#
@@ -1039,12 +997,15 @@ directive|ifdef
 name|LEAF_REGISTERS
 comment|/* If we are doing the leaf function optimization, and this is a leaf      function, it means that the registers that take work to save are those      that need a register window.  So prefer the ones that can be used in      a leaf function.  */
 block|{
+specifier|const
 name|char
 modifier|*
 name|cheap_regs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|leaf_regs
 init|=
 name|LEAF_REGISTERS
@@ -2344,9 +2305,10 @@ name|global_conflicts
 parameter_list|()
 block|{
 name|int
-name|b
-decl_stmt|,
 name|i
+decl_stmt|;
+name|basic_block
+name|b
 decl_stmt|;
 name|rtx
 name|insn
@@ -2390,19 +2352,10 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|b
-operator|=
-literal|0
-init|;
-name|b
-operator|<
-name|n_basic_blocks
-condition|;
-name|b
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|b
+argument_list|)
 block|{
 name|memset
 argument_list|(
@@ -2427,10 +2380,7 @@ block|{
 name|regset
 name|old
 init|=
-name|BASIC_BLOCK
-argument_list|(
 name|b
-argument_list|)
 operator|->
 name|global_live_at_start
 decl_stmt|;
@@ -2481,10 +2431,7 @@ for|for
 control|(
 name|e
 operator|=
-name|BASIC_BLOCK
-argument_list|(
 name|b
-argument_list|)
 operator|->
 name|pred
 init|;
@@ -2518,9 +2465,9 @@ argument|allocnos_live
 argument_list|,
 argument|ax
 argument_list|,
-argument|{                   allocno[ax].no_stack_reg =
+argument|{ 		  allocno[ax].no_stack_reg =
 literal|1
-argument|;                 }
+argument|; 		}
 argument_list|)
 empty_stmt|;
 for|for
@@ -2548,10 +2495,9 @@ directive|endif
 block|}
 name|insn
 operator|=
-name|BLOCK_HEAD
-argument_list|(
 name|b
-argument_list|)
+operator|->
+name|head
 expr_stmt|;
 comment|/* Scan the code of this basic block, noting which allocnos 	 and hard regs are born or die.  When one is born, 	 record a conflict with all others currently live.  */
 while|while
@@ -2918,10 +2864,9 @@ if|if
 condition|(
 name|insn
 operator|==
-name|BLOCK_END
-argument_list|(
 name|b
-argument_list|)
+operator|->
+name|end
 condition|)
 break|break;
 name|insn
@@ -3265,7 +3210,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Prune the preferences for global registers to exclude registers that cannot    be used.        Compute `regs_someone_prefers', which is a bitmask of the hard registers    that are preferred by conflicting registers of lower priority.  If possible,    we will avoid using these registers.  */
+comment|/* Prune the preferences for global registers to exclude registers that cannot    be used.     Compute `regs_someone_prefers', which is a bitmask of the hard registers    that are preferred by conflicting registers of lower priority.  If possible,    we will avoid using these registers.  */
 end_comment
 
 begin_function
@@ -3523,7 +3468,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Assign a hard register to allocno NUM; look for one that is the beginning    of a long enough stretch of hard regs none of which conflicts with ALLOCNO.    The registers marked in PREFREGS are tried first.     LOSERS, if non-zero, is a HARD_REG_SET indicating registers that cannot    be used for this allocation.     If ALT_REGS_P is zero, consider only the preferred class of ALLOCNO's reg.    Otherwise ignore that preferred class and use the alternate class.     If ACCEPT_CALL_CLOBBERED is nonzero, accept a call-clobbered hard reg that    will have to be saved and restored at calls.     RETRYING is nonzero if this is called from retry_global_alloc.     If we find one, record it in reg_renumber.    If not, do nothing.  */
+comment|/* Assign a hard register to allocno NUM; look for one that is the beginning    of a long enough stretch of hard regs none of which conflicts with ALLOCNO.    The registers marked in PREFREGS are tried first.     LOSERS, if nonzero, is a HARD_REG_SET indicating registers that cannot    be used for this allocation.     If ALT_REGS_P is zero, consider only the preferred class of ALLOCNO's reg.    Otherwise ignore that preferred class and use the alternate class.     If ACCEPT_CALL_CLOBBERED is nonzero, accept a call-clobbered hard reg that    will have to be saved and restored at calls.     RETRYING is nonzero if this is called from retry_global_alloc.     If we find one, record it in reg_renumber.    If not, do nothing.  */
 end_comment
 
 begin_function
@@ -3564,13 +3509,6 @@ name|best_reg
 decl_stmt|,
 name|pass
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HARD_REG_SET
-specifier|register
-comment|/* Declare it register if it's a scalar.  */
-endif|#
-directive|endif
 name|HARD_REG_SET
 name|used
 decl_stmt|,
@@ -3711,30 +3649,20 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CLASS_CANNOT_CHANGE_MODE
-if|if
-condition|(
-name|REG_CHANGES_MODE
+name|CANNOT_CHANGE_MODE_CLASS
+name|cannot_change_mode_set_regs
 argument_list|(
+operator|&
+name|used1
+argument_list|,
+name|mode
+argument_list|,
 name|allocno
 index|[
 name|num
 index|]
 operator|.
 name|reg
-argument_list|)
-condition|)
-name|IOR_HARD_REG_SET
-argument_list|(
-name|used1
-argument_list|,
-name|reg_class_contents
-index|[
-operator|(
-name|int
-operator|)
-name|CLASS_CANNOT_CHANGE_MODE
-index|]
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3946,7 +3874,7 @@ directive|endif
 block|}
 block|}
 block|}
-comment|/* See if there is a preferred register with the same class as the register      we allocated above.  Making this restriction prevents register      preferencing from creating worse register allocation.       Remove from the preferred registers and conflicting registers.  Note that      additional conflicts may have been added after `prune_preferences' was      called.        First do this for those register with copy preferences, then all      preferred registers.  */
+comment|/* See if there is a preferred register with the same class as the register      we allocated above.  Making this restriction prevents register      preferencing from creating worse register allocation.       Remove from the preferred registers and conflicting registers.  Note that      additional conflicts may have been added after `prune_preferences' was      called.       First do this for those register with copy preferences, then all      preferred registers.  */
 name|AND_COMPL_HARD_REG_SET
 argument_list|(
 name|allocno
@@ -4443,7 +4371,7 @@ block|}
 block|}
 name|no_prefs
 label|:
-comment|/* If we haven't succeeded yet, try with caller-saves.       We need not check to see if the current function has nonlocal      labels because we don't put any pseudos that are live over calls in      registers in that case.  */
+comment|/* If we haven't succeeded yet, try with caller-saves.      We need not check to see if the current function has nonlocal      labels because we don't put any pseudos that are live over calls in      registers in that case.  */
 if|if
 condition|(
 name|flag_caller_saves
@@ -4632,6 +4560,16 @@ name|regno
 argument_list|,
 name|mode
 argument_list|)
+comment|/* The code below assumes that we need only a single 		 register, but the check of allocno[num].size above 		 was not enough.  Sometimes we need more than one 		 register for a single-word value.  */
+operator|&&
+name|HARD_REGNO_NREGS
+argument_list|(
+name|regno
+argument_list|,
+name|mode
+argument_list|)
+operator|==
+literal|1
 operator|&&
 operator|(
 name|allocno
@@ -4655,35 +4593,20 @@ argument_list|)
 operator|)
 ifdef|#
 directive|ifdef
-name|CLASS_CANNOT_CHANGE_MODE
+name|CANNOT_CHANGE_MODE_CLASS
 operator|&&
 operator|!
-operator|(
-name|REG_CHANGES_MODE
+name|invalid_mode_change_p
 argument_list|(
-name|allocno
-index|[
-name|num
-index|]
-operator|.
-name|reg
-argument_list|)
-operator|&&
-operator|(
-name|TEST_HARD_REG_BIT
-argument_list|(
-name|reg_class_contents
-index|[
-operator|(
-name|int
-operator|)
-name|CLASS_CANNOT_CHANGE_MODE
-index|]
+name|regno
 argument_list|,
+name|REGNO_REG_CLASS
+argument_list|(
 name|regno
 argument_list|)
-operator|)
-operator|)
+argument_list|,
+name|mode
+argument_list|)
 endif|#
 directive|endif
 ifdef|#
@@ -6004,7 +5927,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Try to set a preference for an allocno to a hard register.    We are passed DEST and SRC which are the operands of a SET.  It is known    that SRC is a register.  If SRC or the first operand of SRC is a register,    try to set a preference.  If one of the two is a hard register and the other    is a pseudo-register, mark the preference.        Note that we are not as aggressive as local-alloc in trying to tie a    pseudo-register to a hard register.  */
+comment|/* Try to set a preference for an allocno to a hard register.    We are passed DEST and SRC which are the operands of a SET.  It is known    that SRC is a register.  If SRC or the first operand of SRC is a register,    try to set a preference.  If one of the two is a hard register and the other    is a pseudo-register, mark the preference.     Note that we are not as aggressive as local-alloc in trying to tie a    pseudo-register to a hard register.  */
 end_comment
 
 begin_function
@@ -6540,30 +6463,18 @@ decl_stmt|,
 name|to
 decl_stmt|;
 block|{
-name|int
-name|i
+name|basic_block
+name|bb
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|regset
 name|r
 init|=
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 operator|->
 name|global_live_at_start
 decl_stmt|;
@@ -6908,10 +6819,12 @@ name|prev
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|basic_block
 name|b
 init|=
-literal|0
+name|ENTRY_BLOCK_PTR
+operator|->
+name|next_bb
 decl_stmt|;
 name|regset_head
 name|live_relevant_regs_head
@@ -6945,10 +6858,9 @@ if|if
 condition|(
 name|first
 operator|==
-name|BLOCK_HEAD
-argument_list|(
 name|b
-argument_list|)
+operator|->
+name|head
 condition|)
 block|{
 name|int
@@ -6961,7 +6873,7 @@ argument_list|)
 expr_stmt|;
 name|EXECUTE_IF_SET_IN_BITMAP
 argument_list|(
-argument|BASIC_BLOCK (b)->global_live_at_start
+argument|b->global_live_at_start
 argument_list|,
 literal|0
 argument_list|,
@@ -7028,6 +6940,8 @@ operator|->
 name|block
 operator|=
 name|b
+operator|->
+name|index
 expr_stmt|;
 if|if
 condition|(
@@ -7229,20 +7143,22 @@ if|if
 condition|(
 name|first
 operator|==
-name|BLOCK_END
-argument_list|(
 name|b
-argument_list|)
+operator|->
+name|end
 condition|)
 name|b
-operator|++
+operator|=
+name|b
+operator|->
+name|next_bb
 expr_stmt|;
 comment|/* Stop after we pass the end of the last basic block.  Verify that 	 no real insns are after the end of the last basic block.  	 We may want to reorganize the loop somewhat since this test should 	 always be the right exit test.  Allow an ADDR_VEC or ADDR_DIF_VEC if 	 the previous real insn is a JUMP_INSN.  */
 if|if
 condition|(
 name|b
 operator|==
-name|n_basic_blocks
+name|EXIT_BLOCK_PTR
 condition|)
 block|{
 for|for

@@ -226,8 +226,12 @@ begin_comment
 comment|/* SYMBOL_REF rtx's for the library functions that are called    implicitly and not via optabs.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|libfunc_table
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Defs for interface to demanglers.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Defs for interface to demanglers.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -22,155 +22,92 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ansidecl.h>
+file|"ansidecl.h"
 end_include
 
-begin_comment
-comment|/* Options passed to cplus_demangle (in 2nd parameter). */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_define
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/* __cplusplus */
+comment|/* Options passed to cplus_demangle (in 2nd parameter). */
 define|#
 directive|define
 name|DMGL_NO_OPTS
 value|0
-end_define
-
-begin_comment
 comment|/* For readability... */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_PARAMS
 value|(1<< 0)
-end_define
-
-begin_comment
 comment|/* Include function args */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_ANSI
 value|(1<< 1)
-end_define
-
-begin_comment
 comment|/* Include const, volatile, etc */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_JAVA
 value|(1<< 2)
-end_define
-
-begin_comment
 comment|/* Demangle as Java rather than C++. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_VERBOSE
 value|(1<< 3)
-end_define
-
-begin_comment
 comment|/* Include implementation details.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_TYPES
 value|(1<< 4)
-end_define
-
-begin_comment
 comment|/* Also try to demangle type encodings.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_AUTO
 value|(1<< 8)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DMGL_GNU
 value|(1<< 9)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DMGL_LUCID
 value|(1<< 10)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DMGL_ARM
 value|(1<< 11)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DMGL_HP
 value|(1<< 12)
-end_define
-
-begin_comment
 comment|/* For the HP aCC compiler;                                             same as ARM except for                                             template arguments, etc. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_EDG
 value|(1<< 13)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DMGL_GNU_V3
 value|(1<< 14)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DMGL_GNAT
 value|(1<< 15)
-end_define
-
-begin_comment
 comment|/* If none of these are set, use 'current_demangling_style' as the default. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DMGL_STYLE_MASK
 value|(DMGL_AUTO|DMGL_GNU|DMGL_LUCID|DMGL_ARM|DMGL_HP|DMGL_EDG|DMGL_GNU_V3|DMGL_JAVA|DMGL_GNAT)
-end_define
-
-begin_comment
 comment|/* Enumeration of possible demangling styles.     Lucid and ARM styles are still kept logically distinct, even though    they now both behave identically.  The resulting style is actual the    union of both.  I.E. either style recognizes both "__pt__" and "__rf__"    for operator "->", even though the first is lucid style and the second    is ARM style. (FIXME?) */
-end_comment
-
-begin_enum
 specifier|extern
 enum|enum
 name|demangling_styles
@@ -222,161 +159,89 @@ name|DMGL_GNAT
 block|}
 name|current_demangling_style
 enum|;
-end_enum
-
-begin_comment
 comment|/* Define string names for the various demangling styles. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NO_DEMANGLING_STYLE_STRING
 value|"none"
-end_define
-
-begin_define
 define|#
 directive|define
 name|AUTO_DEMANGLING_STYLE_STRING
 value|"auto"
-end_define
-
-begin_define
 define|#
 directive|define
 name|GNU_DEMANGLING_STYLE_STRING
 value|"gnu"
-end_define
-
-begin_define
 define|#
 directive|define
 name|LUCID_DEMANGLING_STYLE_STRING
 value|"lucid"
-end_define
-
-begin_define
 define|#
 directive|define
 name|ARM_DEMANGLING_STYLE_STRING
 value|"arm"
-end_define
-
-begin_define
 define|#
 directive|define
 name|HP_DEMANGLING_STYLE_STRING
 value|"hp"
-end_define
-
-begin_define
 define|#
 directive|define
 name|EDG_DEMANGLING_STYLE_STRING
 value|"edg"
-end_define
-
-begin_define
 define|#
 directive|define
 name|GNU_V3_DEMANGLING_STYLE_STRING
 value|"gnu-v3"
-end_define
-
-begin_define
 define|#
 directive|define
 name|JAVA_DEMANGLING_STYLE_STRING
 value|"java"
-end_define
-
-begin_define
 define|#
 directive|define
 name|GNAT_DEMANGLING_STYLE_STRING
 value|"gnat"
-end_define
-
-begin_comment
 comment|/* Some macros to test what demangling style is active. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CURRENT_DEMANGLING_STYLE
 value|current_demangling_style
-end_define
-
-begin_define
 define|#
 directive|define
 name|AUTO_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_AUTO)
-end_define
-
-begin_define
 define|#
 directive|define
 name|GNU_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_GNU)
-end_define
-
-begin_define
 define|#
 directive|define
 name|LUCID_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_LUCID)
-end_define
-
-begin_define
 define|#
 directive|define
 name|ARM_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_ARM)
-end_define
-
-begin_define
 define|#
 directive|define
 name|HP_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_HP)
-end_define
-
-begin_define
 define|#
 directive|define
 name|EDG_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_EDG)
-end_define
-
-begin_define
 define|#
 directive|define
 name|GNU_V3_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_GNU_V3)
-end_define
-
-begin_define
 define|#
 directive|define
 name|JAVA_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_JAVA)
-end_define
-
-begin_define
 define|#
 directive|define
 name|GNAT_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_GNAT)
-end_define
-
-begin_comment
 comment|/* Provide information about the available demangle styles. This code is    pulled from gdb into libiberty because it is useful to binutils also.  */
-end_comment
-
-begin_struct
 specifier|extern
 specifier|const
 struct|struct
@@ -403,9 +268,6 @@ block|}
 name|libiberty_demanglers
 index|[]
 struct|;
-end_struct
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -423,9 +285,6 @@ name|options
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|cplus_demangle_opname
@@ -446,9 +305,6 @@ name|options
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|char
@@ -467,13 +323,7 @@ name|options
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Note: This sets global state.  FIXME if you care about multi-threading. */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|set_cplus_marker_for_demangling
@@ -485,9 +335,6 @@ name|ch
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|enum
 name|demangling_styles
@@ -501,9 +348,6 @@ name|style
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|enum
 name|demangling_styles
@@ -518,13 +362,7 @@ name|name
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* V3 ABI demangling entry points, defined in cp-demangle.c.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -542,9 +380,6 @@ name|options
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -559,9 +394,6 @@ name|mangled
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_enum
 enum|enum
 name|gnu_v3_ctor_kinds
 block|{
@@ -574,13 +406,7 @@ block|,
 name|gnu_v3_complete_object_allocating_ctor
 block|}
 enum|;
-end_enum
-
-begin_comment
 comment|/* Return non-zero iff NAME is the mangled form of a constructor name    in the G++ V3 ABI demangling style.  Specifically, return an `enum    gnu_v3_ctor_kinds' value indicating what kind of constructor    it is.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|enum
 name|gnu_v3_ctor_kinds
@@ -595,9 +421,6 @@ name|name
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_enum
 enum|enum
 name|gnu_v3_dtor_kinds
 block|{
@@ -610,13 +433,7 @@ block|,
 name|gnu_v3_base_object_dtor
 block|}
 enum|;
-end_enum
-
-begin_comment
 comment|/* Return non-zero iff NAME is the mangled form of a destructor name    in the G++ V3 ABI demangling style.  Specifically, return an `enum    gnu_v3_dtor_kinds' value, indicating what kind of destructor    it is.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|enum
 name|gnu_v3_dtor_kinds
@@ -631,7 +448,20 @@ name|name
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __cplusplus */
+end_comment
 
 begin_endif
 endif|#

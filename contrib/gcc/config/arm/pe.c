@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Routines for GCC for ARM/pe.    Copyright (C) 1995, 1996, 2000, 2001 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Routines for GCC for ARM/pe.    Copyright (C) 1995, 1996, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -68,7 +68,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return non-zero if DECL is a dllexport'd object.  */
+comment|/* Return nonzero if DECL is a dllexport'd object.  */
 end_comment
 
 begin_decl_stmt
@@ -139,7 +139,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if DECL is a dllimport'd object.  */
+comment|/* Return nonzero if DECL is a dllimport'd object.  */
 end_comment
 
 begin_function
@@ -214,7 +214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if SYMBOL is marked as being dllexport'd.  */
+comment|/* Return nonzero if SYMBOL is marked as being dllexport'd.  */
 end_comment
 
 begin_function
@@ -255,7 +255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if SYMBOL is marked as being dllimport'd.  */
+comment|/* Return nonzero if SYMBOL is marked as being dllimport'd.  */
 end_comment
 
 begin_function
@@ -757,21 +757,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Cover function to implement ENCODE_SECTION_INFO.  */
-end_comment
-
 begin_function
 name|void
 name|arm_pe_encode_section_info
 parameter_list|(
 name|decl
+parameter_list|,
+name|first
 parameter_list|)
 name|tree
 name|decl
 decl_stmt|;
+name|int
+name|first
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
-comment|/* This bit is copied from arm.h.  */
+comment|/* This bit is copied from arm_encode_section_info.  */
 if|if
 condition|(
 name|optimize
@@ -1023,10 +1025,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Cover function for UNIQUE_SECTION.  */
-end_comment
-
 begin_function
 name|void
 name|arm_pe_unique_section
@@ -1069,11 +1067,10 @@ name|decl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Strip off any encoding in fnname.  */
-name|STRIP_NAME_ENCODING
-argument_list|(
 name|name
-argument_list|,
+operator|=
+name|arm_strip_name_encoding
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
@@ -1094,7 +1091,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|DECL_READONLY_SECTION
+name|decl_readonly_section
 argument_list|(
 name|decl
 argument_list|,

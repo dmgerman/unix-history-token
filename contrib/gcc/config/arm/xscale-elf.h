@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|SUBTARGET_EXTRA_ASM_SPEC
-value|"%{!mcpu=*:-mxscale} %{!mhard-float:-mno-fpu}"
+value|"%{!mcpu=*:-mcpu=xscale} %{!mhard-float:-mno-fpu}"
 end_define
 
 begin_ifndef

@@ -260,7 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Examine a CALL_PLACEHOLDER pattern and determine where the call's    return value is located.  P_HARD_RETURN receives the hard register    that the function used; P_SOFT_RETURN receives the pseudo register    that the sequence used.  Return non-zero if the values were located.  */
+comment|/* Examine a CALL_PLACEHOLDER pattern and determine where the call's    return value is located.  P_HARD_RETURN receives the hard register    that the function used; P_SOFT_RETURN receives the pseudo register    that the sequence used.  Return nonzero if the values were located.  */
 end_comment
 
 begin_function
@@ -738,7 +738,7 @@ return|return
 name|orig_insn
 return|;
 block|}
-comment|/* The destination must be the same as the called function's return      value to ensure that any return value is put in the same place by the      current function and the function we're calling.        Further, the source must be the same as the pseudo into which the      called function's return value was copied.  Otherwise we're returning      some other value.  */
+comment|/* The destination must be the same as the called function's return      value to ensure that any return value is put in the same place by the      current function and the function we're calling.       Further, the source must be the same as the pseudo into which the      called function's return value was copied.  Otherwise we're returning      some other value.  */
 ifndef|#
 directive|ifndef
 name|OUTGOING_REGNO
@@ -2170,7 +2170,7 @@ name|use
 operator|==
 name|sibcall_use_tail_recursion
 condition|)
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|XEXP
 argument_list|(
@@ -2192,7 +2192,7 @@ name|use
 operator|==
 name|sibcall_use_sibcall
 condition|)
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|XEXP
 argument_list|(
@@ -2214,7 +2214,7 @@ name|use
 operator|==
 name|sibcall_use_normal
 condition|)
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|XEXP
 argument_list|(
@@ -2312,26 +2312,6 @@ operator|=
 name|get_insns
 argument_list|()
 expr_stmt|;
-comment|/* We do not perform these calls when flag_exceptions is true, so this      is probably a NOP at the current time.  However, we may want to support      sibling and tail recursion optimizations in the future, so let's plan      ahead and find all the EH labels.  */
-name|find_exception_handler_labels
-argument_list|()
-expr_stmt|;
-name|rebuild_jump_labels
-argument_list|(
-name|insns
-argument_list|)
-expr_stmt|;
-comment|/* We need cfg information to determine which blocks are succeeded      only by the epilogue.  */
-name|find_basic_blocks
-argument_list|(
-name|insns
-argument_list|,
-name|max_reg_num
-argument_list|()
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cleanup_cfg
 argument_list|(
 name|CLEANUP_PRE_SIBCALL
@@ -2347,7 +2327,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* If we are using sjlj exceptions, we may need to add a call to       _Unwind_SjLj_Unregister at exit of the function.  Which means      that we cannot do any sibcall transformations.  */
+comment|/* If we are using sjlj exceptions, we may need to add a call to      _Unwind_SjLj_Unregister at exit of the function.  Which means      that we cannot do any sibcall transformations.  */
 if|if
 condition|(
 name|USING_SJLJ_EXCEPTIONS
@@ -2408,12 +2388,11 @@ for|for
 control|(
 name|insn
 operator|=
-name|BLOCK_HEAD
-argument_list|(
-name|n_basic_blocks
-operator|-
-literal|1
-argument_list|)
+name|EXIT_BLOCK_PTR
+operator|->
+name|prev_bb
+operator|->
+name|head
 init|;
 name|insn
 condition|;
@@ -2629,8 +2608,6 @@ if|if
 condition|(
 name|current_function_calls_alloca
 operator|||
-name|current_function_varargs
-operator|||
 name|current_function_stdarg
 condition|)
 name|sibcall
@@ -2747,11 +2724,11 @@ decl_stmt|;
 name|tree
 name|arg
 decl_stmt|;
-comment|/* A sibling call sequence invalidates any REG_EQUIV notes made for 	 this function's incoming arguments.   	 At the start of RTL generation we know the only REG_EQUIV notes 	 in the rtl chain are those for incoming arguments, so we can safely 	 flush any REG_EQUIV note.   	 This is (slight) overkill.  We could keep track of the highest 	 argument we clobber and be more selective in removing notes, but it 	 does not seem to be worth the effort.  */
+comment|/* A sibling call sequence invalidates any REG_EQUIV notes made for 	 this function's incoming arguments.  	 At the start of RTL generation we know the only REG_EQUIV notes 	 in the rtl chain are those for incoming arguments, so we can safely 	 flush any REG_EQUIV note.  	 This is (slight) overkill.  We could keep track of the highest 	 argument we clobber and be more selective in removing notes, but it 	 does not seem to be worth the effort.  */
 name|purge_reg_equiv_notes
 argument_list|()
 expr_stmt|;
-comment|/* A sibling call sequence also may invalidate RTX_UNCHANGING_P 	 flag of some incoming arguments MEM RTLs, because it can write into 	 those slots.  We clear all those bits now. 	  	 This is (slight) overkill, we could keep track of which arguments 	 we actually write into.  */
+comment|/* A sibling call sequence also may invalidate RTX_UNCHANGING_P 	 flag of some incoming arguments MEM RTLs, because it can write into 	 those slots.  We clear all those bits now.  	 This is (slight) overkill, we could keep track of which arguments 	 we actually write into.  */
 for|for
 control|(
 name|insn
@@ -2785,7 +2762,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Similarly, invalidate RTX_UNCHANGING_P for any incoming 	 arguments passed in registers. */
+comment|/* Similarly, invalidate RTX_UNCHANGING_P for any incoming 	 arguments passed in registers.  */
 for|for
 control|(
 name|arg
@@ -2827,7 +2804,7 @@ name|false
 expr_stmt|;
 block|}
 block|}
-comment|/* There may have been NOTE_INSN_BLOCK_{BEGIN,END} notes in the       CALL_PLACEHOLDER alternatives that we didn't emit.  Rebuild the      lexical block tree to correspond to the notes that still exist.  */
+comment|/* There may have been NOTE_INSN_BLOCK_{BEGIN,END} notes in the      CALL_PLACEHOLDER alternatives that we didn't emit.  Rebuild the      lexical block tree to correspond to the notes that still exist.  */
 if|if
 condition|(
 name|replaced_call_placeholder
@@ -2839,6 +2816,12 @@ comment|/* This information will be invalid after inline expansion.  Kill it now
 name|free_basic_block_vars
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|free_EXPR_LIST_list
+argument_list|(
+operator|&
+name|tail_recursion_label_list
 argument_list|)
 expr_stmt|;
 block|}

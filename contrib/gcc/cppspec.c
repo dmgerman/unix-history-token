@@ -25,25 +25,6 @@ begin_comment
 comment|/* The `cpp' executable installed in $(bindir) and $(cpp_install_dir)    is a customized version of the gcc driver.  It forces -E; -S and -c    are errors.  It defaults to -x c for files with unrecognized    extensions, unless -x options appear in argv, in which case we    assume the user knows what they're doing.  If no explicit input is    mentioned, it will read stdin.  */
 end_comment
 
-begin_comment
-comment|/* Snarfed from gcc.c: */
-end_comment
-
-begin_comment
-comment|/* This defines which switch letters take arguments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_SWITCH_TAKES_ARG
-parameter_list|(
-name|CHAR
-parameter_list|)
-define|\
-value|((CHAR) == 'D' || (CHAR) == 'U' || (CHAR) == 'o' \    || (CHAR) == 'e' || (CHAR) == 'T' || (CHAR) == 'u' \    || (CHAR) == 'I' || (CHAR) == 'm' || (CHAR) == 'x' \    || (CHAR) == 'L' || (CHAR) == 'A' || (CHAR) == 'V' \    || (CHAR) == 'B' || (CHAR) == 'b')
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -64,21 +45,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* This defines which multi-letter switches take arguments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_WORD_SWITCH_TAKES_ARG
-parameter_list|(
-name|STR
-parameter_list|)
-define|\
-value|(!strcmp (STR, "Tdata") || !strcmp (STR, "Ttext")	\   || !strcmp (STR, "Tbss") || !strcmp (STR, "include")	\   || !strcmp (STR, "imacros") || !strcmp (STR, "aux-info") \   || !strcmp (STR, "idirafter") || !strcmp (STR, "iprefix") \   || !strcmp (STR, "iwithprefix") || !strcmp (STR, "iwithprefixbefore") \   || !strcmp (STR, "isystem") || !strcmp (STR, "specs") \   || !strcmp (STR, "MF") || !strcmp (STR, "MT") || !strcmp (STR, "MQ"))
-end_define
 
 begin_ifndef
 ifndef|#
@@ -869,6 +835,27 @@ end_decl_stmt
 begin_comment
 comment|/* Not used for cpp.  */
 end_comment
+
+begin_comment
+comment|/* Table of language-specific spec functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|spec_function
+name|lang_specific_spec_functions
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

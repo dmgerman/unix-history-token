@@ -3,34 +3,25 @@ begin_comment
 comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on Tru64 5.    Copyright (C) 2000, 2001 Free Software Foundation, Inc.     This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU CC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GNU CC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|LONG_DOUBLE_TYPE_SIZE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LONG_DOUBLE_TYPE_SIZE
-value|128
-end_define
+begin_comment
+comment|/* Tru64 5.1 uses IEEE QUAD format.  */
+end_comment
 
 begin_comment
-comment|/* Tru64 UNIX V5 has a 16 byte long double type and requires __X_FLOAT to be    defined to get the appropriate prototypes for the long double functions    in<math.h>.  */
+comment|/* ??? However, since there is no support for VAX H_floating, we must    drop back to a 64-bit long double to avoid a crash looking for the    format associated with TFmode.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|CPP_XFLOAT_SPEC
+name|LONG_DOUBLE_TYPE_SIZE
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_XFLOAT_SPEC
-value|"-D__X_FLOAT"
+name|LONG_DOUBLE_TYPE_SIZE
+value|(TARGET_FLOAT_VAX ? 64 : 128)
 end_define
 
 begin_comment

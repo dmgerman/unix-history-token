@@ -133,20 +133,6 @@ directive|ifdef
 name|DELAY_SLOTS
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2436,7 +2422,30 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|trial
+argument_list|)
+operator|==
+name|JUMP_INSN
+operator|||
+name|GET_CODE
+argument_list|(
+name|trial
+argument_list|)
+operator|==
+name|CALL_INSN
+operator|||
+name|GET_CODE
+argument_list|(
+name|trial
+argument_list|)
+operator|==
+name|INSN
+condition|)
 name|INSN_ANNULLED_BRANCH_P
 argument_list|(
 name|trial
@@ -3486,7 +3495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return truth value of the statement that this branch    is mostly taken.  If we think that the branch is extremely likely    to be taken, we return 2.  If the branch is slightly more likely to be    taken, return 1.  If the branch is slightly less likely to be taken,    return 0 and if the branch is highly unlikely to be taken, return -1.     CONDITION, if non-zero, is the condition that JUMP_INSN is testing.  */
+comment|/* Return truth value of the statement that this branch    is mostly taken.  If we think that the branch is extremely likely    to be taken, we return 2.  If the branch is slightly more likely to be    taken, return 1.  If the branch is slightly less likely to be taken,    return 0 and if the branch is highly unlikely to be taken, return -1.     CONDITION, if nonzero, is the condition that JUMP_INSN is testing.  */
 end_comment
 
 begin_function
@@ -4292,7 +4301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if CONDITION is more strict than the condition of    INSN, i.e., if INSN will always branch if CONDITION is true.  */
+comment|/* Return nonzero if CONDITION is more strict than the condition of    INSN, i.e., if INSN will always branch if CONDITION is true.  */
 end_comment
 
 begin_function
@@ -4441,7 +4450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if redirecting JUMP to NEWLABEL does not invalidate    any insns already in the delay slot of JUMP.  */
+comment|/* Return nonzero if redirecting JUMP to NEWLABEL does not invalidate    any insns already in the delay slot of JUMP.  */
 end_comment
 
 begin_function
@@ -4476,7 +4485,7 @@ argument_list|(
 name|seq
 argument_list|)
 decl_stmt|;
-comment|/* Make sure all the delay slots of this jump would still      be valid after threading the jump.  If they are still      valid, then return non-zero.  */
+comment|/* Make sure all the delay slots of this jump would still      be valid after threading the jump.  If they are still      valid, then return nonzero.  */
 name|flags
 operator|=
 name|get_jump_flags
@@ -4635,7 +4644,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if redirecting JUMP to NEWLABEL does not invalidate    any insns we wish to place in the delay slot of JUMP.  */
+comment|/* Return nonzero if redirecting JUMP to NEWLABEL does not invalidate    any insns we wish to place in the delay slot of JUMP.  */
 end_comment
 
 begin_function
@@ -4665,7 +4674,7 @@ decl_stmt|;
 name|rtx
 name|li
 decl_stmt|;
-comment|/* Make sure all the insns in DELAY_LIST would still be      valid after threading the jump.  If they are still      valid, then return non-zero.  */
+comment|/* Make sure all the insns in DELAY_LIST would still be      valid after threading the jump.  If they are still      valid, then return nonzero.  */
 name|flags
 operator|=
 name|get_jump_flags
@@ -4901,7 +4910,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* INSN branches to an insn whose pattern SEQ is a SEQUENCE.  Given that    the condition tested by INSN is CONDITION and the resources shown in    OTHER_NEEDED are needed after INSN, see whether INSN can take all the insns    from SEQ's delay list, in addition to whatever insns it may execute    (in DELAY_LIST).   SETS and NEEDED are denote resources already set and    needed while searching for delay slot insns.  Return the concatenated    delay list if possible, otherwise, return 0.     SLOTS_TO_FILL is the total number of slots required by INSN, and    PSLOTS_FILLED points to the number filled so far (also the number of    insns in DELAY_LIST).  It is updated with the number that have been    filled from the SEQUENCE, if any.     PANNUL_P points to a non-zero value if we already know that we need    to annul INSN.  If this routine determines that annulling is needed,    it may set that value non-zero.     PNEW_THREAD points to a location that is to receive the place at which    execution should continue.  */
+comment|/* INSN branches to an insn whose pattern SEQ is a SEQUENCE.  Given that    the condition tested by INSN is CONDITION and the resources shown in    OTHER_NEEDED are needed after INSN, see whether INSN can take all the insns    from SEQ's delay list, in addition to whatever insns it may execute    (in DELAY_LIST).   SETS and NEEDED are denote resources already set and    needed while searching for delay slot insns.  Return the concatenated    delay list if possible, otherwise, return 0.     SLOTS_TO_FILL is the total number of slots required by INSN, and    PSLOTS_FILLED points to the number filled so far (also the number of    insns in DELAY_LIST).  It is updated with the number that have been    filled from the SEQUENCE, if any.     PANNUL_P points to a nonzero value if we already know that we need    to annul INSN.  If this routine determines that annulling is needed,    it may set that value nonzero.     PNEW_THREAD points to a location that is to receive the place at which    execution should continue.  */
 end_comment
 
 begin_function
@@ -7748,7 +7757,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return 1 if THREAD can only be executed in one way.  If LABEL is non-zero,    it is the target of the branch insn being scanned.  If ALLOW_FALLTHROUGH    is non-zero, we are allowed to fall into this thread; otherwise, we are    not.     If LABEL is used more than one or we pass a label other than LABEL before    finding an active insn, we do not own this thread.  */
+comment|/* Return 1 if THREAD can only be executed in one way.  If LABEL is nonzero,    it is the target of the branch insn being scanned.  If ALLOW_FALLTHROUGH    is nonzero, we are allowed to fall into this thread; otherwise, we are    not.     If LABEL is used more than one or we pass a label other than LABEL before    finding an active insn, we do not own this thread.  */
 end_comment
 
 begin_function
@@ -8391,7 +8400,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Scan a function looking for insns that need a delay slot and find insns to    put into the delay slot.     NON_JUMPS_P is non-zero if we are to only try to fill non-jump insns (such    as calls).  We do these first since we don't want jump insns (that are    easier to fill) to get the only insns that could be used for non-jump insns.    When it is zero, only try to fill JUMP_INSNs.     When slots are filled in this manner, the insns (including the    delay_insn) are put together in a SEQUENCE rtx.  In this fashion,    it is possible to tell whether a delay slot has really been filled    or not.  `final' knows how to deal with this, by communicating    through FINAL_SEQUENCE.  */
+comment|/* Scan a function looking for insns that need a delay slot and find insns to    put into the delay slot.     NON_JUMPS_P is nonzero if we are to only try to fill non-jump insns (such    as calls).  We do these first since we don't want jump insns (that are    easier to fill) to get the only insns that could be used for non-jump insns.    When it is zero, only try to fill JUMP_INSNs.     When slots are filled in this manner, the insns (including the    delay_insn) are put together in a SEQUENCE rtx.  In this fashion,    it is possible to tell whether a delay slot has really been filled    or not.  `final' knows how to deal with this, by communicating    through FINAL_SEQUENCE.  */
 end_comment
 
 begin_function
@@ -10204,7 +10213,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Try to find insns to place in delay slots.     INSN is the jump needing SLOTS_TO_FILL delay slots.  It tests CONDITION    or is an unconditional branch if CONDITION is const_true_rtx.    *PSLOTS_FILLED is updated with the number of slots that we have filled.     THREAD is a flow-of-control, either the insns to be executed if the    branch is true or if the branch is false, THREAD_IF_TRUE says which.     OPPOSITE_THREAD is the thread in the opposite direction.  It is used    to see if any potential delay slot insns set things needed there.     LIKELY is non-zero if it is extremely likely that the branch will be    taken and THREAD_IF_TRUE is set.  This is used for the branch at the    end of a loop back up to the top.     OWN_THREAD and OWN_OPPOSITE_THREAD are true if we are the only user of the    thread.  I.e., it is the fallthrough code of our jump or the target of the    jump when we are the only jump going there.     If OWN_THREAD is false, it must be the "true" thread of a jump.  In that    case, we can only take insns from the head of the thread for our delay    slot.  We then adjust the jump to point after the insns we have taken.  */
+comment|/* Try to find insns to place in delay slots.     INSN is the jump needing SLOTS_TO_FILL delay slots.  It tests CONDITION    or is an unconditional branch if CONDITION is const_true_rtx.    *PSLOTS_FILLED is updated with the number of slots that we have filled.     THREAD is a flow-of-control, either the insns to be executed if the    branch is true or if the branch is false, THREAD_IF_TRUE says which.     OPPOSITE_THREAD is the thread in the opposite direction.  It is used    to see if any potential delay slot insns set things needed there.     LIKELY is nonzero if it is extremely likely that the branch will be    taken and THREAD_IF_TRUE is set.  This is used for the branch at the    end of a loop back up to the top.     OWN_THREAD and OWN_OPPOSITE_THREAD are true if we are the only user of the    thread.  I.e., it is the fallthrough code of our jump or the target of the    jump when we are the only jump going there.     If OWN_THREAD is false, it must be the "true" thread of a jump.  In that    case, we can only take insns from the head of the thread for our delay    slot.  We then adjust the jump to point after the insns we have taken.  */
 end_comment
 
 begin_function
@@ -12855,6 +12864,9 @@ operator|==
 name|RETURN
 condition|)
 block|{
+name|rtx
+name|after
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -12904,13 +12916,65 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-name|emit_insn_after
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|pat
+argument_list|)
+operator|!=
+name|SEQUENCE
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+name|after
+operator|=
+name|trial
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|XVECLEN
 argument_list|(
 name|pat
 argument_list|,
-name|trial
+literal|0
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|rtx
+name|this_insn
+init|=
+name|XVECEXP
+argument_list|(
+name|pat
+argument_list|,
+literal|0
+argument_list|,
+name|i
+argument_list|)
+decl_stmt|;
+name|add_insn_after
+argument_list|(
+name|this_insn
+argument_list|,
+name|after
 argument_list|)
 expr_stmt|;
+name|after
+operator|=
+name|this_insn
+expr_stmt|;
+block|}
 name|delete_scheduled_jump
 argument_list|(
 name|delay_insn
@@ -13346,6 +13410,9 @@ endif|#
 directive|endif
 condition|)
 block|{
+name|rtx
+name|after
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -13395,13 +13462,65 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-name|emit_insn_after
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|pat
+argument_list|)
+operator|!=
+name|SEQUENCE
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+name|after
+operator|=
+name|trial
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|XVECLEN
 argument_list|(
 name|pat
 argument_list|,
-name|trial
+literal|0
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|rtx
+name|this_insn
+init|=
+name|XVECEXP
+argument_list|(
+name|pat
+argument_list|,
+literal|0
+argument_list|,
+name|i
+argument_list|)
+decl_stmt|;
+name|add_insn_after
+argument_list|(
+name|this_insn
+argument_list|,
+name|after
 argument_list|)
 expr_stmt|;
+name|after
+operator|=
+name|this_insn
+expr_stmt|;
+block|}
 name|delete_scheduled_jump
 argument_list|(
 name|delay_insn
@@ -13801,6 +13920,19 @@ name|slots
 decl_stmt|,
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DELAY_SLOTS_FOR_EPILOGUE
+comment|/* If a previous pass filled delay slots in the epilogue, things get a      bit more complicated, as those filler insns would generally (without      data flow analysis) have to be executed after any existing branch      delay slot filler insns.  It is also unknown whether such a      transformation would actually be profitable.  Note that the existing      code only cares for branches with (some) filled delay slots.  */
+if|if
+condition|(
+name|current_function_epilogue_delay_list
+operator|!=
+name|NULL
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* See if there is a RETURN insn in the function other than the one we      made for END_OF_FUNCTION_LABEL.  If so, set up anything we can't change      into a RETURN to jump to it.  */
 for|for
 control|(

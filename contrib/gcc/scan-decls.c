@@ -221,7 +221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function scans a C source file (actually, the output of cpp),    reading from FP.  It looks for function declarations, and    external variable declarations.       The following grammar (as well as some extra stuff) is recognized:     declaration:      (decl-specifier)* declarator ("," declarator)* ";"    decl-specifier:      identifier      keyword      extern "C"    declarator:      (ptr-operator)* dname [ "(" argument-declaration-list ")" ]    ptr-operator:      ("*" | "&") ("const" | "volatile")*    dname:      identifier  Here dname is the actual name being declared. */
+comment|/* This function scans a C source file (actually, the output of cpp),    reading from FP.  It looks for function declarations, and    external variable declarations.     The following grammar (as well as some extra stuff) is recognized:     declaration:      (decl-specifier)* declarator ("," declarator)* ";"    decl-specifier:      identifier      keyword      extern "C"    declarator:      (ptr-operator)* dname [ "(" argument-declaration-list ")" ]    ptr-operator:      ("*" | "&") ("const" | "volatile")*    dname:      identifier  Here dname is the actual name being declared. */
 end_comment
 
 begin_function

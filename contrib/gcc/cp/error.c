@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"toplev.h"
 end_include
 
@@ -55,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"langhooks-def.h"
 end_include
 
 begin_enum
@@ -151,19 +151,6 @@ name|BUFFER
 parameter_list|)
 define|\
 value|print_non_consecutive_character ((BUFFER), '>')
-end_define
-
-begin_define
-define|#
-directive|define
-name|print_whitespace
-parameter_list|(
-name|BUFFER
-parameter_list|,
-name|TFI
-parameter_list|)
-define|\
-value|do {                                      \      output_add_space (BUFFER);              \      put_whitespace (TFI) = none;            \    } while (0)
 end_define
 
 begin_define
@@ -834,29 +821,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|lang_print_error_function
-name|PARAMS
-argument_list|(
-operator|(
-name|diagnostic_context
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|maybe_print_instantiation_context
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
+name|diagnostic_context
 operator|*
 operator|)
 argument_list|)
@@ -870,7 +839,7 @@ name|print_instantiation_full_context
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
+name|diagnostic_context
 operator|*
 operator|)
 argument_list|)
@@ -884,7 +853,7 @@ name|print_instantiation_partial_context
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
+name|diagnostic_context
 operator|*
 operator|,
 name|tree
@@ -906,10 +875,10 @@ name|cp_diagnostic_starter
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
+name|diagnostic_context
 operator|*
 operator|,
-name|diagnostic_context
+name|diagnostic_info
 operator|*
 operator|)
 argument_list|)
@@ -923,10 +892,10 @@ name|cp_diagnostic_finalizer
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
+name|diagnostic_context
 operator|*
 operator|,
-name|diagnostic_context
+name|diagnostic_info
 operator|*
 operator|)
 argument_list|)
@@ -940,10 +909,10 @@ name|cp_print_error_function
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
+name|diagnostic_context
 operator|*
 operator|,
-name|diagnostic_context
+name|diagnostic_info
 operator|*
 operator|)
 argument_list|)
@@ -952,12 +921,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|bool
 name|cp_printer
 name|PARAMS
 argument_list|(
 operator|(
 name|output_buffer
+operator|*
+operator|,
+name|text_info
 operator|*
 operator|)
 argument_list|)
@@ -1018,10 +990,6 @@ name|void
 name|init_error
 parameter_list|()
 block|{
-name|print_error_function
-operator|=
-name|lang_print_error_function
-expr_stmt|;
 name|diagnostic_starter
 argument_list|(
 name|global_dc
@@ -1850,7 +1818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Dump into the obstack a human-readable equivalent of TYPE.  FLAGS    controls the format.  */
+comment|/* Dump a human-readable equivalent of TYPE.  FLAGS controls the    format.  */
 end_comment
 
 begin_function
@@ -2052,7 +2020,7 @@ argument_list|)
 decl_stmt|;
 name|elt
 operator|=
-name|type_for_mode
+name|c_common_type_for_mode
 argument_list|(
 name|TYPE_MODE
 argument_list|(
@@ -2194,7 +2162,7 @@ break|break;
 case|case
 name|TEMPLATE_TEMPLATE_PARM
 case|:
-comment|/* For parameters inside template signature. */
+comment|/* For parameters inside template signature.  */
 if|if
 condition|(
 name|TYPE_IDENTIFIER
@@ -2341,6 +2309,7 @@ name|TYPENAME_TYPE
 case|:
 if|if
 condition|(
+operator|!
 name|IMPLICIT_TYPENAME_P
 argument_list|(
 name|t
@@ -2435,7 +2404,7 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-comment|/* Fall through to error. */
+comment|/* Fall through to error.  */
 case|case
 name|ERROR_MARK
 case|:
@@ -3236,6 +3205,9 @@ case|:
 case|case
 name|VECTOR_TYPE
 case|:
+case|case
+name|TYPEOF_TYPE
+case|:
 name|dump_type
 argument_list|(
 name|t
@@ -3635,6 +3607,9 @@ case|:
 case|case
 name|VECTOR_TYPE
 case|:
+case|case
+name|TYPEOF_TYPE
+case|:
 break|break;
 default|default:
 name|sorry_for_unsupported_tree
@@ -3890,7 +3865,7 @@ argument_list|)
 operator|==
 name|TEMPLATE_TYPE_PARM
 condition|)
-comment|/* Say `class T' not just `T'. */
+comment|/* Say `class T' not just `T'.  */
 name|output_add_string
 argument_list|(
 name|scratch_buffer
@@ -4619,14 +4594,28 @@ argument_list|(
 name|scratch_buffer
 argument_list|)
 expr_stmt|;
-name|print_tree_identifier
+name|dump_decl
 argument_list|(
-name|scratch_buffer
-argument_list|,
 name|DECL_NAME
 argument_list|(
 name|t
 argument_list|)
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|BASELINK
+case|:
+name|dump_decl
+argument_list|(
+name|BASELINK_FUNCTIONS
+argument_list|(
+name|t
+argument_list|)
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4801,7 +4790,7 @@ argument_list|(
 name|t
 argument_list|)
 condition|)
-comment|/* Say `template<arg> class TT' not just `template<arg> TT'. */
+comment|/* Say `template<arg> class TT' not just `template<arg> TT'.  */
 name|output_add_string
 argument_list|(
 name|scratch_buffer
@@ -4915,7 +4904,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* This case can occur with some illegal code.  */
+comment|/* This case can occur with some invalid code.  */
 name|dump_type
 argument_list|(
 name|TREE_TYPE
@@ -4948,7 +4937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Pretty print a function decl. There are several ways we want to print a    function declaration. The TFF_ bits in FLAGS tells us how to behave.    As error can only apply the '#' flag once to give 0 and 1 for V, there    is %D which doesn't print the throw specs, and %F which does. */
+comment|/* Pretty print a function decl. There are several ways we want to print a    function declaration. The TFF_ bits in FLAGS tells us how to behave.    As error can only apply the '#' flag once to give 0 and 1 for V, there    is %D which doesn't print the throw specs, and %F which does.  */
 end_comment
 
 begin_function
@@ -5348,7 +5337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print a parameter list. If this is for a member function, the    member object ptr (and any other hidden args) should have    already been removed. */
+comment|/* Print a parameter list. If this is for a member function, the    member object ptr (and any other hidden args) should have    already been removed.  */
 end_comment
 
 begin_function
@@ -5476,7 +5465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print an exception specification. T is the exception specification. */
+comment|/* Print an exception specification. T is the exception specification.  */
 end_comment
 
 begin_function
@@ -5587,6 +5576,22 @@ argument_list|(
 name|t
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|TEMPLATE_DECL
+condition|)
+name|t
+operator|=
+name|DECL_TEMPLATE_RESULT
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 comment|/* Don't let the user see __comp_ctor et al.  */
 if|if
 condition|(
@@ -6328,7 +6333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print out an expression E under control of FLAGS. */
+comment|/* Print out an expression E under control of FLAGS.  */
 end_comment
 
 begin_function
@@ -6740,89 +6745,26 @@ break|break;
 case|case
 name|REAL_CST
 case|:
-ifndef|#
-directive|ifndef
-name|REAL_IS_NOT_DOUBLE
-name|sprintf
+name|real_to_decimal
 argument_list|(
 name|digit_buffer
 argument_list|,
-literal|"%g"
-argument_list|,
-name|TREE_REAL_CST
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-block|{
-specifier|const
-name|unsigned
-name|char
-modifier|*
-name|p
-init|=
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
 operator|&
 name|TREE_REAL_CST
 argument_list|(
 name|t
 argument_list|)
-decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
-name|strcpy
-argument_list|(
-name|digit_buffer
 argument_list|,
-literal|"0x"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
 sizeof|sizeof
-name|TREE_REAL_CST
-operator|(
-name|t
-operator|)
-condition|;
-name|i
-operator|++
-control|)
-name|sprintf
 argument_list|(
 name|digit_buffer
-operator|+
-literal|2
-operator|+
-literal|2
-operator|*
-name|i
+argument_list|)
 argument_list|,
-literal|"%02x"
+literal|0
 argument_list|,
-operator|*
-name|p
-operator|++
+literal|1
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|output_add_string
 argument_list|(
 name|scratch_buffer
@@ -7418,6 +7360,16 @@ argument_list|,
 literal|1
 argument_list|)
 decl_stmt|;
+name|tree
+name|init
+init|=
+name|TREE_OPERAND
+argument_list|(
+name|t
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|NEW_EXPR_USE_GLOBAL
@@ -7524,12 +7476,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TREE_OPERAND
-argument_list|(
-name|t
-argument_list|,
-literal|2
-argument_list|)
+name|init
 condition|)
 block|{
 name|print_left_paren
@@ -7537,14 +7484,35 @@ argument_list|(
 name|scratch_buffer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|init
+argument_list|)
+operator|==
+name|TREE_LIST
+condition|)
 name|dump_expr_list
 argument_list|(
-name|TREE_OPERAND
-argument_list|(
-name|t
+name|init
 argument_list|,
-literal|2
+name|flags
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|init
+operator|==
+name|void_zero_node
+condition|)
+comment|/* This representation indicates an empty initializer, 		 e.g.: "new int()".  */
+empty_stmt|;
+else|else
+name|dump_expr
+argument_list|(
+name|init
 argument_list|,
 name|flags
 argument_list|)
@@ -8392,15 +8360,11 @@ block|{
 name|tree
 name|idx
 init|=
-name|build_component_ref
+name|build_ptrmemfunc_access_expr
 argument_list|(
 name|t
 argument_list|,
 name|pfn_identifier
-argument_list|,
-name|NULL_TREE
-argument_list|,
-literal|0
 argument_list|)
 decl_stmt|;
 if|if
@@ -8540,6 +8504,39 @@ break|break;
 block|}
 block|}
 block|}
+comment|/* We've gotten an rvalue of the form 'T()'.  */
+elseif|else
+if|if
+condition|(
+name|TREE_TYPE
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+name|dump_type
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|t
+argument_list|)
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|print_left_paren
+argument_list|(
+name|scratch_buffer
+argument_list|)
+expr_stmt|;
+name|print_right_paren
+argument_list|(
+name|scratch_buffer
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|output_add_character
 argument_list|(
 name|scratch_buffer
@@ -8564,6 +8561,7 @@ argument_list|,
 literal|'}'
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|OFFSET_REF
@@ -8627,7 +8625,7 @@ name|dump_expr
 argument_list|(
 name|OVL_CURRENT
 argument_list|(
-name|TREE_VALUE
+name|BASELINK_FUNCTIONS
 argument_list|(
 name|t
 argument_list|)
@@ -9302,6 +9300,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|BASELINK
+case|:
+name|print_tree_identifier
+argument_list|(
+name|scratch_buffer
+argument_list|,
+name|DECL_NAME
+argument_list|(
+name|get_first_fn
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|TREE_LIST
 case|:
 if|if
@@ -9673,7 +9688,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate the three forms of printable names for lang_printable_name.  */
+comment|/* Generate the three forms of printable names for cxx_printable_name.  */
 end_comment
 
 begin_function
@@ -10051,8 +10066,6 @@ condition|)
 name|flags
 operator||=
 name|TFF_DECL_SPECIFIERS
-operator||
-name|TFF_FUNCTION_DEFAULT_ARGUMENTS
 expr_stmt|;
 elseif|else
 if|if
@@ -10635,10 +10648,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Langhook for print_error_function.  */
+end_comment
+
 begin_function
-specifier|static
 name|void
-name|lang_print_error_function
+name|cxx_print_error_function
 parameter_list|(
 name|context
 parameter_list|,
@@ -10654,49 +10670,27 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
-name|output_state
-name|os
-decl_stmt|;
-name|default_print_error_function
+name|lhd_print_error_function
 argument_list|(
 name|context
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|os
-operator|=
-name|output_buffer_state
-argument_list|(
-name|context
-argument_list|)
-expr_stmt|;
 name|output_set_prefix
 argument_list|(
-operator|(
-name|output_buffer
-operator|*
-operator|)
+operator|&
 name|context
+operator|->
+name|buffer
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
 name|maybe_print_instantiation_context
 argument_list|(
-operator|(
-name|output_buffer
-operator|*
-operator|)
 name|context
 argument_list|)
-expr_stmt|;
-name|output_buffer_state
-argument_list|(
-name|context
-argument_list|)
-operator|=
-name|os
 expr_stmt|;
 block|}
 end_function
@@ -10706,56 +10700,46 @@ specifier|static
 name|void
 name|cp_diagnostic_starter
 parameter_list|(
-name|buffer
+name|context
 parameter_list|,
-name|dc
+name|diagnostic
 parameter_list|)
-name|output_buffer
-modifier|*
-name|buffer
-decl_stmt|;
 name|diagnostic_context
 modifier|*
-name|dc
+name|context
+decl_stmt|;
+name|diagnostic_info
+modifier|*
+name|diagnostic
 decl_stmt|;
 block|{
-name|report_problematic_module
+name|diagnostic_report_current_module
 argument_list|(
-name|buffer
+name|context
 argument_list|)
 expr_stmt|;
 name|cp_print_error_function
 argument_list|(
-name|buffer
+name|context
 argument_list|,
-name|dc
+name|diagnostic
 argument_list|)
 expr_stmt|;
 name|maybe_print_instantiation_context
 argument_list|(
-name|buffer
+name|context
 argument_list|)
 expr_stmt|;
 name|output_set_prefix
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|,
-name|context_as_prefix
+name|diagnostic_build_prefix
 argument_list|(
-name|diagnostic_file_location
-argument_list|(
-name|dc
-argument_list|)
-argument_list|,
-name|diagnostic_line_location
-argument_list|(
-name|dc
-argument_list|)
-argument_list|,
-name|diagnostic_is_warning
-argument_list|(
-name|dc
-argument_list|)
+name|diagnostic
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10767,24 +10751,24 @@ specifier|static
 name|void
 name|cp_diagnostic_finalizer
 argument_list|(
-name|buffer
+name|context
 argument_list|,
-name|dc
+name|diagnostic
 argument_list|)
-name|output_buffer
+name|diagnostic_context
 modifier|*
-name|buffer
+name|context
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|diagnostic_context
+name|diagnostic_info
 modifier|*
-name|dc
+name|diagnostic
 name|__attribute__
 argument_list|(
 operator|(
-name|__unused__
+name|unused
 operator|)
 argument_list|)
 decl_stmt|;
@@ -10794,6 +10778,9 @@ begin_block
 block|{
 name|output_destroy_prefix
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
@@ -10809,59 +10796,69 @@ specifier|static
 name|void
 name|cp_print_error_function
 parameter_list|(
-name|buffer
+name|context
 parameter_list|,
-name|dc
+name|diagnostic
 parameter_list|)
-name|output_buffer
-modifier|*
-name|buffer
-decl_stmt|;
 name|diagnostic_context
 modifier|*
-name|dc
+name|context
+decl_stmt|;
+name|diagnostic_info
+modifier|*
+name|diagnostic
 decl_stmt|;
 block|{
 if|if
 condition|(
-name|error_function_changed
-argument_list|()
+name|diagnostic_last_function_changed
+argument_list|(
+name|context
+argument_list|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
-name|prefix
+name|old_prefix
 init|=
-name|diagnostic_file_location
+name|output_prefix
 argument_list|(
-name|dc
+operator|&
+name|context
+operator|->
+name|buffer
 argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|new_prefix
+init|=
+name|diagnostic
+operator|->
+name|location
+operator|.
+name|file
 condition|?
 name|file_name_as_prefix
 argument_list|(
-name|diagnostic_file_location
-argument_list|(
-name|dc
-argument_list|)
+name|diagnostic
+operator|->
+name|location
+operator|.
+name|file
 argument_list|)
 else|:
 name|NULL
 decl_stmt|;
-name|output_state
-name|os
-decl_stmt|;
-name|os
-operator|=
-name|output_buffer_state
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
 name|output_set_prefix
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|,
-name|prefix
+name|new_prefix
 argument_list|)
 expr_stmt|;
 if|if
@@ -10872,6 +10869,9 @@ name|NULL
 condition|)
 name|output_add_string
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|,
 literal|"At global scope:"
@@ -10880,6 +10880,9 @@ expr_stmt|;
 else|else
 name|output_printf
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|,
 literal|"In %s `%s':"
@@ -10889,10 +10892,7 @@ argument_list|(
 name|current_function_decl
 argument_list|)
 argument_list|,
-call|(
-modifier|*
-name|decl_printable_name
-call|)
+name|cxx_printable_name
 argument_list|(
 name|current_function_decl
 argument_list|,
@@ -10902,23 +10902,34 @@ argument_list|)
 expr_stmt|;
 name|output_add_newline
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
-name|record_last_error_function
-argument_list|()
+name|diagnostic_set_last_function
+argument_list|(
+name|context
+argument_list|)
 expr_stmt|;
 name|output_destroy_prefix
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
-name|output_buffer_state
-argument_list|(
+name|context
+operator|->
 name|buffer
-argument_list|)
+operator|.
+name|state
+operator|.
+name|prefix
 operator|=
-name|os
+name|old_prefix
 expr_stmt|;
 block|}
 block|}
@@ -11013,11 +11024,11 @@ specifier|static
 name|void
 name|print_instantiation_full_context
 parameter_list|(
-name|buffer
+name|context
 parameter_list|)
-name|output_buffer
+name|diagnostic_context
 modifier|*
-name|buffer
+name|context
 decl_stmt|;
 block|{
 name|tree
@@ -11074,6 +11085,9 @@ empty_stmt|;
 else|else
 name|output_verbatim
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|,
 literal|"%s: In instantiation of `%s':\n"
@@ -11118,7 +11132,7 @@ block|}
 block|}
 name|print_instantiation_partial_context
 argument_list|(
-name|buffer
+name|context
 argument_list|,
 name|p
 argument_list|,
@@ -11139,7 +11153,7 @@ specifier|static
 name|void
 name|print_instantiation_partial_context
 parameter_list|(
-name|buffer
+name|context
 parameter_list|,
 name|t
 parameter_list|,
@@ -11147,9 +11161,9 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-name|output_buffer
+name|diagnostic_context
 modifier|*
-name|buffer
+name|context
 decl_stmt|;
 name|tree
 name|t
@@ -11178,6 +11192,9 @@ control|)
 block|{
 name|output_verbatim
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|,
 literal|"%s:%d:   instantiated from `%s'\n"
@@ -11216,6 +11233,9 @@ expr_stmt|;
 block|}
 name|output_verbatim
 argument_list|(
+operator|&
+name|context
+operator|->
 name|buffer
 argument_list|,
 literal|"%s:%d:   instantiated from here\n"
@@ -11237,11 +11257,11 @@ specifier|static
 name|void
 name|maybe_print_instantiation_context
 parameter_list|(
-name|buffer
+name|context
 parameter_list|)
-name|output_buffer
+name|diagnostic_context
 modifier|*
-name|buffer
+name|context
 decl_stmt|;
 block|{
 if|if
@@ -11261,7 +11281,7 @@ argument_list|()
 expr_stmt|;
 name|print_instantiation_full_context
 argument_list|(
-name|buffer
+name|context
 argument_list|)
 expr_stmt|;
 block|}
@@ -11278,7 +11298,7 @@ parameter_list|()
 block|{
 name|print_instantiation_partial_context
 argument_list|(
-name|diagnostic_buffer
+name|global_dc
 argument_list|,
 name|current_instantiation
 argument_list|()
@@ -11288,8 +11308,10 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
-name|flush_diagnostic_buffer
-argument_list|()
+name|diagnostic_flush_buffer
+argument_list|(
+name|global_dc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11303,14 +11325,20 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|cp_printer
 parameter_list|(
 name|buffer
+parameter_list|,
+name|text
 parameter_list|)
 name|output_buffer
 modifier|*
 name|buffer
+decl_stmt|;
+name|text_info
+modifier|*
+name|text
 decl_stmt|;
 block|{
 name|int
@@ -11326,42 +11354,39 @@ decl_stmt|;
 define|#
 directive|define
 name|next_tree
-value|va_arg (output_buffer_format_args (buffer), tree)
+value|va_arg (*text->args_ptr, tree)
 define|#
 directive|define
 name|next_tcode
-value|va_arg (output_buffer_format_args (buffer), enum tree_code)
+value|va_arg (*text->args_ptr, enum tree_code)
 define|#
 directive|define
 name|next_lang
-value|va_arg (output_buffer_format_args (buffer), enum languages)
+value|va_arg (*text->args_ptr, enum languages)
 define|#
 directive|define
 name|next_int
-value|va_arg (output_buffer_format_args (buffer), int)
+value|va_arg (*text->args_ptr, int)
 if|if
 condition|(
 operator|*
-name|output_buffer_text_cursor
-argument_list|(
-name|buffer
-argument_list|)
+name|text
+operator|->
+name|format_spec
 operator|==
 literal|'+'
 condition|)
 operator|++
-name|output_buffer_text_cursor
-argument_list|(
-name|buffer
-argument_list|)
+name|text
+operator|->
+name|format_spec
 expr_stmt|;
 if|if
 condition|(
 operator|*
-name|output_buffer_text_cursor
-argument_list|(
-name|buffer
-argument_list|)
+name|text
+operator|->
+name|format_spec
 operator|==
 literal|'#'
 condition|)
@@ -11371,19 +11396,17 @@ operator|=
 literal|1
 expr_stmt|;
 operator|++
-name|output_buffer_text_cursor
-argument_list|(
-name|buffer
-argument_list|)
+name|text
+operator|->
+name|format_spec
 expr_stmt|;
 block|}
 switch|switch
 condition|(
 operator|*
-name|output_buffer_text_cursor
-argument_list|(
-name|buffer
-argument_list|)
+name|text
+operator|->
+name|format_spec
 condition|)
 block|{
 case|case
@@ -11531,7 +11554,7 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-literal|0
+name|false
 return|;
 block|}
 name|output_add_string
@@ -11542,7 +11565,7 @@ name|result
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|true
 return|;
 undef|#
 directive|undef
@@ -11917,8 +11940,8 @@ block|{
 name|tree
 name|here
 decl_stmt|;
-name|diagnostic_context
-name|dc
+name|diagnostic_info
+name|diagnostic
 decl_stmt|;
 name|VA_OPEN
 argument_list|(
@@ -11970,10 +11993,10 @@ argument_list|,
 name|msgid
 argument_list|)
 expr_stmt|;
-name|set_diagnostic_context
+name|diagnostic_set_info
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|,
 name|msgid
 argument_list|,
@@ -11990,14 +12013,13 @@ argument_list|(
 name|here
 argument_list|)
 argument_list|,
-comment|/* warning = */
-literal|0
+name|DK_ERROR
 argument_list|)
 expr_stmt|;
 name|report_diagnostic
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|)
 expr_stmt|;
 name|VA_CLOSE
@@ -12026,8 +12048,8 @@ block|{
 name|tree
 name|here
 decl_stmt|;
-name|diagnostic_context
-name|dc
+name|diagnostic_info
+name|diagnostic
 decl_stmt|;
 name|VA_OPEN
 argument_list|(
@@ -12079,10 +12101,10 @@ argument_list|,
 name|msgid
 argument_list|)
 expr_stmt|;
-name|set_diagnostic_context
+name|diagnostic_set_info
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|,
 name|msgid
 argument_list|,
@@ -12099,14 +12121,13 @@ argument_list|(
 name|here
 argument_list|)
 argument_list|,
-comment|/* warning = */
-literal|1
+name|DK_WARNING
 argument_list|)
 expr_stmt|;
 name|report_diagnostic
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|)
 expr_stmt|;
 name|VA_CLOSE
@@ -12135,8 +12156,8 @@ block|{
 name|tree
 name|here
 decl_stmt|;
-name|diagnostic_context
-name|dc
+name|diagnostic_info
+name|diagnostic
 decl_stmt|;
 name|VA_OPEN
 argument_list|(
@@ -12188,10 +12209,10 @@ argument_list|,
 name|msgid
 argument_list|)
 expr_stmt|;
-name|set_diagnostic_context
+name|diagnostic_set_info
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|,
 name|msgid
 argument_list|,
@@ -12208,15 +12229,14 @@ argument_list|(
 name|here
 argument_list|)
 argument_list|,
-comment|/* warning = */
-operator|!
-name|flag_pedantic_errors
+name|pedantic_error_kind
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|report_diagnostic
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|)
 expr_stmt|;
 name|VA_CLOSE

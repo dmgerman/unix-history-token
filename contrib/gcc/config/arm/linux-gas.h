@@ -101,7 +101,7 @@ value|BITS_PER_WORD
 end_define
 
 begin_comment
-comment|/* Emit code to set up a trampoline and synchronise the caches.  */
+comment|/* Emit code to set up a trampoline and synchronize the caches.  */
 end_comment
 
 begin_undef

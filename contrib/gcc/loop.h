@@ -55,7 +55,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_FIRST_PASS
+name|LOOP_AUTO_UNROLL
 value|8
 end_define
 
@@ -335,7 +335,7 @@ name|induction
 modifier|*
 name|same
 decl_stmt|;
-comment|/* If this giv has been combined with another 				   giv, this points to the base giv.  The base 				   giv will have COMBINED_WITH non-zero.  */
+comment|/* If this giv has been combined with another 				   giv, this points to the base giv.  The base 				   giv will have COMBINED_WITH nonzero.  */
 name|HOST_WIDE_INT
 name|const_adjust
 decl_stmt|;
@@ -588,7 +588,7 @@ begin_struct
 struct|struct
 name|loop_reg
 block|{
-comment|/* Number of times the reg is set during the loop being scanned.      During code motion, a negative value indicates a reg that has      been made a candidate; in particular -2 means that it is an      candidate that we know is equal to a constant and -1 means that      it is an candidate not known equal to a constant.  After code      motion, regs moved have 0 (which is accurate now) while the      failed candidates have the original number of times set.       Therefore, at all times, == 0 indicates an invariant register;< 0 a conditionally invariant one.  */
+comment|/* Number of times the reg is set during the loop being scanned.      During code motion, a negative value indicates a reg that has      been made a candidate; in particular -2 means that it is an      candidate that we know is equal to a constant and -1 means that      it is a candidate not known equal to a constant.  After code      motion, regs moved have 0 (which is accurate now) while the      failed candidates have the original number of times set.       Therefore, at all times, == 0 indicates an invariant register;< 0 a conditionally invariant one.  */
 name|int
 name|set_in_loop
 decl_stmt|;
@@ -677,6 +677,10 @@ decl_stmt|;
 comment|/* Nonzero if there is a non constant call in the current loop.  */
 name|int
 name|has_nonconst_call
+decl_stmt|;
+comment|/* Nonzero if there is a prefetch instruction in the current loop.  */
+name|int
+name|has_prefetch
 decl_stmt|;
 comment|/* Nonzero if there is a volatile memory reference in the current      loop.  */
 name|int
@@ -797,7 +801,7 @@ name|struct
 name|loop_ivs
 name|ivs
 decl_stmt|;
-comment|/* Non-zero if call is in pre_header extended basic block.  */
+comment|/* Nonzero if call is in pre_header extended basic block.  */
 name|int
 name|pre_header_has_call
 decl_stmt|;

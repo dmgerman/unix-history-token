@@ -68,7 +68,7 @@ define|#
 directive|define
 name|ASM_CPU_SPEC
 define|\
-value|"%{!mcpu*: %{!maix64: \   %{mpower: %{!mpower2: -mpwr}} \   %{mpower2: -mpwr2} \   %{mpowerpc*: %{!mpowerpc64: -mppc}} \   %{mpowerpc64: -mppc64} \   %{!mpower*: %{!mpowerpc*: %(asm_default)}}}} \ %{mcpu=common: -mcom} \ %{mcpu=power: -mpwr} \ %{mcpu=power2: -mpwr2} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rios: -mpwr} \ %{mcpu=rios1: -mpwr} \ %{mcpu=rios2: -mpwr2} \ %{mcpu=rsc: -mpwr} \ %{mcpu=rsc1: -mpwr} \ %{mcpu=rs64a: -mppc} \ %{mcpu=403: -mppc} \ %{mcpu=505: -mppc} \ %{mcpu=601: -m601} \ %{mcpu=602: -mppc} \ %{mcpu=603: -m603} \ %{mcpu=603e: -m603} \ %{mcpu=604: -m604} \ %{mcpu=604e: -m604} \ %{mcpu=620: -mppc} \ %{mcpu=630: -mppc} \ %{mcpu=821: -mppc} \ %{mcpu=860: -mppc}"
+value|"%{!mcpu*: %{!maix64: \   %{mpower: %{!mpower2: -mpwr}} \   %{mpower2: -mpwr2} \   %{mpowerpc*: %{!mpowerpc64: -mppc}} \   %{mpowerpc64: -mppc64} \   %{!mpower*: %{!mpowerpc*: %(asm_default)}}}} \ %{mcpu=common: -mcom} \ %{mcpu=power: -mpwr} \ %{mcpu=power2: -mpwr2} \ %{mcpu=power3: -m604} \ %{mcpu=power4: -m604} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rios: -mpwr} \ %{mcpu=rios1: -mpwr} \ %{mcpu=rios2: -mpwr2} \ %{mcpu=rsc: -mpwr} \ %{mcpu=rsc1: -mpwr} \ %{mcpu=rs64a: -mppc} \ %{mcpu=601: -m601} \ %{mcpu=602: -mppc} \ %{mcpu=603: -m603} \ %{mcpu=603e: -m603} \ %{mcpu=604: -m604} \ %{mcpu=604e: -m604} \ %{mcpu=620: -mppc} \ %{mcpu=630: -m604}"
 end_define
 
 begin_undef
@@ -87,14 +87,16 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D_IBMR2 -D_POWER -D_AIX -D_AIX32 -D_AIX41 -D_AIX43 \ -D_LONG_LONG -Asystem=unix -Asystem=aix"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                  \     {                                 \       builtin_define ("_IBMR2");      \       builtin_define ("_POWER");      \       builtin_define ("_AIX");        \       builtin_define ("_AIX32");      \       builtin_define ("_AIX41");      \       builtin_define ("_AIX43");      \       builtin_define ("_LONG_LONG");  \       builtin_assert ("system=unix"); \       builtin_assert ("system=aix");  \     }                                 \   while (0)
 end_define
 
 begin_undef
@@ -107,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix: -D_POSIX_SOURCE}\    %{ansi: -D_ANSI_C_SOURCE}\    %{maix64: -D__64BIT__ -D_ARCH_PPC -D__LONG_MAX__=9223372036854775807L}\    %{mpe: -I/usr/lpp/ppe.poe/include}\    %{pthread: -D_THREAD_SAFE}\    %(cpp_cpu)"
+value|"%{posix: -D_POSIX_SOURCE}\    %{ansi: -D_ANSI_C_SOURCE}\    %{maix64: -D__64BIT__}\    %{mpe: -I/usr/lpp/ppe.poe/include}\    %{pthread: -D_THREAD_SAFE}"
 end_define
 
 begin_comment
@@ -125,38 +127,7 @@ define|#
 directive|define
 name|CPLUSPLUS_CPP_SPEC
 define|\
-value|"-D_XOPEN_SOURCE=500				\    -D_XOPEN_SOURCE_EXTENDED=1			\    -D_LARGE_FILE_API				\    -D_ALL_SOURCE                                \    %{maix64: -D__64BIT__ -D_ARCH_PPC -D__LONG_MAX__=9223372036854775807L}\    %{mpe: -I/usr/lpp/ppe.poe/include}\    %{pthread: -D_THREAD_SAFE}\    %(cpp_cpu)"
-end_define
-
-begin_comment
-comment|/* Common CPP definitions used by CPP_SPEC among the various targets    for handling -mcpu=xxx switches.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_CPU_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_SPEC
-define|\
-value|"%{!mcpu*: %{!maix64: \   %{mpower: %{!mpower2: -D_ARCH_PWR}} \   %{mpower2: -D_ARCH_PWR2} \   %{mpowerpc*: -D_ARCH_PPC} \   %{!mpower*: %{!mpowerpc*: %(cpp_default)}}}} \ %{mcpu=common: -D_ARCH_COM} \ %{mcpu=power: -D_ARCH_PWR} \ %{mcpu=power2: -D_ARCH_PWR2} \ %{mcpu=powerpc: -D_ARCH_PPC} \ %{mcpu=rios: -D_ARCH_PWR} \ %{mcpu=rios1: -D_ARCH_PWR} \ %{mcpu=rios2: -D_ARCH_PWR2} \ %{mcpu=rsc: -D_ARCH_PWR} \ %{mcpu=rsc1: -D_ARCH_PWR} \ %{mcpu=rs64a: -D_ARCH_PPC} \ %{mcpu=403: -D_ARCH_PPC} \ %{mcpu=505: -D_ARCH_PPC} \ %{mcpu=601: -D_ARCH_PPC -D_ARCH_PWR} \ %{mcpu=602: -D_ARCH_PPC} \ %{mcpu=603: -D_ARCH_PPC} \ %{mcpu=603e: -D_ARCH_PPC} \ %{mcpu=604: -D_ARCH_PPC} \ %{mcpu=620: -D_ARCH_PPC} \ %{mcpu=630: -D_ARCH_PPC} \ %{mcpu=821: -D_ARCH_PPC} \ %{mcpu=860: -D_ARCH_PPC}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_DEFAULT_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_DEFAULT_SPEC
-value|"-D_ARCH_COM"
+value|"-D_XOPEN_SOURCE=500				\    -D_XOPEN_SOURCE_EXTENDED=1			\    -D_LARGE_FILE_API				\    -D_ALL_SOURCE				\    %{maix64: -D__64BIT__}			\    %{mpe: -I/usr/lpp/ppe.poe/include}		\    %{pthread: -D_THREAD_SAFE}"
 end_define
 
 begin_undef
@@ -182,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|PROCESSOR_DEFAULT
-value|PROCESSOR_PPC604
+value|PROCESSOR_PPC604e
 end_define
 
 begin_comment

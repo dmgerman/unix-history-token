@@ -319,6 +319,9 @@ specifier|const
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|tag
 decl_stmt|;
 name|int
 name|is_const
@@ -348,15 +351,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* If numeric attribute, don't need to write an enum.  */
-if|if
-condition|(
-operator|*
+name|p
+operator|=
 name|XSTR
 argument_list|(
 name|attr
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
 operator|==
 literal|'\0'
 condition|)
@@ -394,6 +401,21 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|tag
+operator|=
+name|scan_comma_elt
+argument_list|(
+operator|&
+name|p
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|write_upcase
 argument_list|(
 name|XSTR
@@ -404,31 +426,27 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|"_"
+literal|'_'
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|XSTR
-argument_list|(
-name|attr
-argument_list|,
-literal|1
-argument_list|)
-init|;
-operator|*
-name|p
+while|while
+condition|(
+name|tag
 operator|!=
-literal|'\0'
-condition|;
 name|p
+condition|)
+name|putchar
+argument_list|(
+name|TOUPPER
+argument_list|(
+operator|*
+name|tag
 operator|++
-control|)
-block|{
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -436,42 +454,19 @@ name|p
 operator|==
 literal|','
 condition|)
-block|{
-name|printf
+name|fputs
 argument_list|(
 literal|", "
-argument_list|)
-expr_stmt|;
-name|write_upcase
-argument_list|(
-name|XSTR
-argument_list|(
-name|attr
 argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"_"
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|putchar
-argument_list|(
-name|TOUPPER
-argument_list|(
-operator|*
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
+name|fputs
 argument_list|(
 literal|"};\n"
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 name|printf
@@ -519,29 +514,9 @@ literal|"length"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"extern void shorten_branches PARAMS ((rtx));\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"extern int insn_default_length PARAMS ((rtx));\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"extern int insn_variable_length_p PARAMS ((rtx));\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"extern int insn_current_length PARAMS ((rtx));\n\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#include \"insn-addr.h\"\n\n"
+literal|"\ extern void shorten_branches PARAMS ((rtx));\n\ extern int insn_default_length PARAMS ((rtx));\n\ extern int insn_variable_length_p PARAMS ((rtx));\n\ extern int insn_current_length PARAMS ((rtx));\n\n\ #include \"insn-addr.h\"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -898,6 +873,11 @@ literal|0
 decl_stmt|;
 name|int
 name|have_annul_false
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|num_insn_reservations
 init|=
 literal|0
 decl_stmt|;
@@ -1506,14 +1486,53 @@ name|max
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|desc
+argument_list|)
+operator|==
+name|DEFINE_INSN_RESERVATION
+condition|)
+name|num_insn_reservations
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|num_units
 operator|>
 literal|0
+operator|||
+name|num_insn_reservations
+operator|>
+literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|num_units
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"#define TRADITIONAL_PIPELINE_INTERFACE 1\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num_insn_reservations
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"#define DFA_PIPELINE_INTERFACE 1\n"
+argument_list|)
+expr_stmt|;
 comment|/* Compute the range of blockage cost values.  See genattrtab.c 	 for the derivation.  BLOCKAGE (E,C) when SIMULTANEITY is zero is  	     MAX (ISSUE-DELAY (E,C), 		  READY-COST (E) - (READY-COST (C) - 1))  	 and otherwise  	     MAX (ISSUE-DELAY (E,C), 		  READY-COST (E) - (READY-COST (C) - 1), 		  READY-COST (E) - FILL-TIME)  */
 for|for
 control|(
@@ -1680,6 +1699,442 @@ name|all_issue_delay
 argument_list|,
 operator|&
 name|all_blockage
+argument_list|)
+expr_stmt|;
+comment|/* Output interface for pipeline hazards recognition based on 	 DFA (deterministic finite state automata.  */
+name|printf
+argument_list|(
+literal|"\n/* DFA based pipeline interface.  */"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n#ifndef AUTOMATON_STATE_ALTS\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define AUTOMATON_STATE_ALTS 0\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#endif\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#ifndef CPU_UNITS_QUERY\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define CPU_UNITS_QUERY 0\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#endif\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* Interface itself: */
+name|printf
+argument_list|(
+literal|"extern int max_dfa_issue_rate;\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following macro value is calculated from the\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   automaton based pipeline description and is equal to\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   maximal number of all insns described in constructions\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   `define_insn_reservation' which can be issued on the\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   same processor cycle. */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define MAX_DFA_ISSUE_RATE max_dfa_issue_rate\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Insn latency time defined in define_insn_reservation. */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int insn_default_latency PARAMS ((rtx));\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Return nonzero if there is a bypass for given insn\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   which is a data producer.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int bypass_p PARAMS ((rtx));\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Insn latency time on data consumed by the 2nd insn.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   Use the function if bypass_p returns nonzero for\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   the 1st insn. */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int insn_latency PARAMS ((rtx, rtx));\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following function returns number of alternative\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   reservations of given insn.  It may be used for better\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   insns scheduling heuristics. */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int insn_alts PARAMS ((rtx));\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Maximal possible number of insns waiting results being\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   produced by insns whose execution is not finished. */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int max_insn_queue_index;\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Pointer to data describing current state of DFA.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"typedef void *state_t;\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Size of the data in bytes.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int state_size PARAMS ((void));\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Initiate given DFA state, i.e. Set up the state\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   as all functional units were not reserved.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern void state_reset PARAMS ((state_t));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following function returns negative value if given\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   insn can be issued in processor state described by given\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   DFA state.  In this case, the DFA state is changed to\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   reflect the current and future reservations by given\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   insn.  Otherwise the function returns minimal time\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   delay to issue the insn.  This delay may be zero\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   for superscalar or VLIW processors.  If the second\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   parameter is NULL the function changes given DFA state\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   as new processor cycle started.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int state_transition PARAMS ((state_t, rtx));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n#if AUTOMATON_STATE_ALTS\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following function returns number of possible\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   alternative reservations of given insn in given\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   DFA state.  It may be used for better insns scheduling\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   heuristics.  By default the function is defined if\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   macro AUTOMATON_STATE_ALTS is defined because its\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   implementation may require much memory.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int state_alts PARAMS ((state_t, rtx));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#endif\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int min_issue_delay PARAMS ((state_t, rtx));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following function returns nonzero if no one insn\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   can be issued in current DFA state. */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int state_dead_lock_p PARAMS ((state_t));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The function returns minimal delay of issue of the 2nd\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   insn after issuing the 1st insn in given DFA state.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   The 1st insn should be issued in given state (i.e.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    state_transition should return negative value for\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    the insn and the state).  Data dependencies between\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    the insns are ignored by the function.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int min_insn_conflict_delay PARAMS ((state_t, rtx, rtx));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following function outputs reservations for given\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   insn as they are described in the corresponding\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   define_insn_reservation.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern void print_reservation PARAMS ((FILE *, rtx));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n#if CPU_UNITS_QUERY\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following function returns code of functional unit\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   with given name (see define_cpu_unit). */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int get_cpu_unit_code PARAMS ((const char *));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* The following function returns nonzero if functional\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   unit with given code is currently reserved in given\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   DFA state.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern int cpu_unit_reservation_p PARAMS ((state_t, int));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#endif\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Initiate and finish work with DFA.  They should be\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   called as the first and the last interface\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   functions.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern void dfa_start PARAMS ((void));\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern void dfa_finish PARAMS ((void));\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Otherwise we do no scheduling, but we need these typedefs 	 in order to avoid uglifying other code with more ifdefs.  */
+name|printf
+argument_list|(
+literal|"typedef void *state_t;\n\n"
 argument_list|)
 expr_stmt|;
 block|}

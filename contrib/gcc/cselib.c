@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"hashtab.h"
 end_include
 
@@ -132,8 +126,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|hashval_t
 name|get_value_hash
 name|PARAMS
 argument_list|(
@@ -502,12 +495,16 @@ begin_comment
 comment|/* A table that enables us to look up elts by their value.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|(param_is (cselib_val))
+argument_list|)
 name|htab_t
 name|hash_table
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* This is a global so we don't have to pass this through every function.    It is used in new_elt_loc_list to set SETTING_INSN.  */
@@ -517,6 +514,13 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|cselib_current_insn
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|cselib_current_insn_in_libcall
 decl_stmt|;
 end_decl_stmt
 
@@ -570,12 +574,29 @@ begin_comment
 comment|/* This table maps from register number to values.  It does not contain    pointers to cselib_val structures, but rather elt_lists.  The purpose is    to be able to refer to the same register in different modes.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|varray_type
 name|reg_values
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|(deletable (
+literal|""
+argument|))
+argument_list|)
+name|varray_type
+name|reg_values_old
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -588,7 +609,7 @@ value|VARRAY_ELT_LIST (reg_values, (I))
 end_define
 
 begin_comment
-comment|/* The largest number of hard regs used by any entry added to the    REG_VALUES table.  Cleared on each clear_table() invocation.   */
+comment|/* The largest number of hard regs used by any entry added to the    REG_VALUES table.  Cleared on each clear_table() invocation.  */
 end_comment
 
 begin_decl_stmt
@@ -603,77 +624,92 @@ begin_comment
 comment|/* Here the set of indices I with REG_VALUES(I) != 0 is saved.  This is used    in clear_table() for fast emptying.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|varray_type
 name|used_regs
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|(deletable (
+literal|""
+argument|))
+argument_list|)
+name|varray_type
+name|used_regs_old
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* We pass this to cselib_invalidate_mem to invalidate all of    memory for a non-const call instruction.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|rtx
 name|callmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Memory for our structures is allocated from this obstack.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|obstack
-name|cselib_obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Used to quickly free all memory.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|cselib_startobj
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Caches for unused structures.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|(deletable (
+literal|""
+argument|))
+argument_list|)
 name|cselib_val
-modifier|*
+operator|*
 name|empty_vals
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|GTY
+argument_list|(
+argument|(deletable (
+literal|""
+argument|))
+argument_list|)
+expr|struct
 name|elt_list
-modifier|*
+operator|*
 name|empty_elt_lists
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|GTY
+argument_list|(
+argument|(deletable (
+literal|""
+argument|))
+argument_list|)
+expr|struct
 name|elt_loc_list
-modifier|*
+operator|*
 name|empty_elt_loc_lists
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Set by discard_useless_locs if it deleted the last location of any    value.  */
@@ -739,11 +775,8 @@ expr|struct
 name|elt_list
 operator|*
 operator|)
-name|obstack_alloc
+name|ggc_alloc
 argument_list|(
-operator|&
-name|cselib_obstack
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -818,11 +851,8 @@ expr|struct
 name|elt_loc_list
 operator|*
 operator|)
-name|obstack_alloc
+name|ggc_alloc
 argument_list|(
-operator|&
-name|cselib_obstack
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -847,6 +877,12 @@ operator|->
 name|setting_insn
 operator|=
 name|cselib_current_insn
+expr_stmt|;
+name|el
+operator|->
+name|in_libcall
+operator|=
+name|cselib_current_insn_in_libcall
 expr_stmt|;
 return|return
 name|el
@@ -1077,26 +1113,6 @@ argument_list|(
 name|hash_table
 argument_list|)
 expr_stmt|;
-name|obstack_free
-argument_list|(
-operator|&
-name|cselib_obstack
-argument_list|,
-name|cselib_startobj
-argument_list|)
-expr_stmt|;
-name|empty_vals
-operator|=
-literal|0
-expr_stmt|;
-name|empty_elt_lists
-operator|=
-literal|0
-expr_stmt|;
-name|empty_elt_loc_lists
-operator|=
-literal|0
-expr_stmt|;
 name|n_useless_values
 operator|=
 literal|0
@@ -1296,8 +1312,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
-name|int
+name|hashval_t
 name|get_value_hash
 parameter_list|(
 name|entry
@@ -2596,29 +2611,14 @@ argument_list|)
 operator|!=
 name|VOIDmode
 condition|)
-for|for
-control|(
-name|i
-operator|=
-literal|2
-init|;
-name|i
-operator|<
-name|GET_RTX_LENGTH
-argument_list|(
-name|CONST_DOUBLE
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
 name|hash
 operator|+=
-name|XWINT
+name|real_hash
+argument_list|(
+name|CONST_DOUBLE_REAL_VALUE
 argument_list|(
 name|x
-argument_list|,
-name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3128,11 +3128,8 @@ operator|(
 name|cselib_val
 operator|*
 operator|)
-name|obstack_alloc
+name|ggc_alloc
 argument_list|(
-operator|&
-name|cselib_obstack
-argument_list|,
 sizeof|sizeof
 argument_list|(
 name|cselib_val
@@ -4367,12 +4364,17 @@ condition|(
 name|regno
 operator|<
 name|FIRST_PSEUDO_REGISTER
-operator|&&
-name|mode
-operator|!=
-name|VOIDmode
 condition|)
 block|{
+if|if
+condition|(
+name|mode
+operator|==
+name|VOIDmode
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|regno
@@ -5865,6 +5867,36 @@ decl_stmt|;
 name|rtx
 name|x
 decl_stmt|;
+if|if
+condition|(
+name|find_reg_note
+argument_list|(
+name|insn
+argument_list|,
+name|REG_LIBCALL
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|cselib_current_insn_in_libcall
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+name|find_reg_note
+argument_list|(
+name|insn
+argument_list|,
+name|REG_RETVAL
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|cselib_current_insn_in_libcall
+operator|=
+name|false
+expr_stmt|;
 name|cselib_current_insn
 operator|=
 name|insn
@@ -5982,7 +6014,10 @@ name|cselib_invalidate_regno
 argument_list|(
 name|i
 argument_list|,
-name|VOIDmode
+name|reg_raw_mode
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -6185,29 +6220,12 @@ name|void
 name|cselib_init
 parameter_list|()
 block|{
-comment|/* These are only created once.  */
+comment|/* This is only created once.  */
 if|if
 condition|(
 operator|!
 name|callmem
 condition|)
-block|{
-name|gcc_obstack_init
-argument_list|(
-operator|&
-name|cselib_obstack
-argument_list|)
-expr_stmt|;
-name|cselib_startobj
-operator|=
-name|obstack_alloc
-argument_list|(
-operator|&
-name|cselib_obstack
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|callmem
 operator|=
 name|gen_rtx_MEM
@@ -6217,20 +6235,46 @@ argument_list|,
 name|const0_rtx
 argument_list|)
 expr_stmt|;
-name|ggc_add_rtx_root
-argument_list|(
-operator|&
-name|callmem
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|cselib_nregs
 operator|=
 name|max_reg_num
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|reg_values_old
+operator|!=
+name|NULL
+operator|&&
+name|VARRAY_SIZE
+argument_list|(
+name|reg_values_old
+argument_list|)
+operator|>=
+name|cselib_nregs
+condition|)
+block|{
+name|reg_values
+operator|=
+name|reg_values_old
+expr_stmt|;
+name|used_regs
+operator|=
+name|used_regs_old
+expr_stmt|;
+name|VARRAY_CLEAR
+argument_list|(
+name|reg_values
+argument_list|)
+expr_stmt|;
+name|VARRAY_CLEAR
+argument_list|(
+name|used_regs
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|VARRAY_ELT_LIST_INIT
 argument_list|(
 name|reg_values
@@ -6249,9 +6293,10 @@ argument_list|,
 literal|"used_regs"
 argument_list|)
 expr_stmt|;
+block|}
 name|hash_table
 operator|=
-name|htab_create
+name|htab_create_ggc
 argument_list|(
 literal|31
 argument_list|,
@@ -6267,6 +6312,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|cselib_current_insn_in_libcall
+operator|=
+name|false
+expr_stmt|;
 block|}
 end_function
 
@@ -6279,28 +6328,42 @@ name|void
 name|cselib_finish
 parameter_list|()
 block|{
-name|clear_table
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|VARRAY_FREE
-argument_list|(
+name|reg_values_old
+operator|=
 name|reg_values
-argument_list|)
 expr_stmt|;
-name|VARRAY_FREE
-argument_list|(
+name|reg_values
+operator|=
+literal|0
+expr_stmt|;
+name|used_regs_old
+operator|=
 name|used_regs
-argument_list|)
 expr_stmt|;
-name|htab_delete
-argument_list|(
+name|used_regs
+operator|=
+literal|0
+expr_stmt|;
 name|hash_table
-argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|n_useless_values
+operator|=
+literal|0
+expr_stmt|;
+name|next_unknown_value
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|"gt-cselib.h"
+end_include
 
 end_unit
 

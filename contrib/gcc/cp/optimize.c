@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Perform optimizations on tree structure.    Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Written by Mark Michell (mark@codesourcery.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Perform optimizations on tree structure.    Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Mark Michell (mark@codesourcery.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Optimize the body of FN. */
+comment|/* Optimize the body of FN.  */
 end_comment
 
 begin_function
@@ -176,7 +176,7 @@ expr_stmt|;
 if|if
 condition|(
 name|flag_inline_trees
-comment|/* We do not inline thunks, as (a) the backend tries to optimize          the call to the thunkee, (b) tree based inlining breaks that          optimization, (c) virtual functions are rarely inlineable,          and (d) ASM_OUTPUT_MI_THUNK is there to DTRT anyway.  */
+comment|/* We do not inline thunks, as (a) the backend tries to optimize          the call to the thunkee, (b) tree based inlining breaks that          optimization, (c) virtual functions are rarely inlineable,          and (d) TARGET_ASM_OUTPUT_MI_THUNK is there to DTRT anyway.  */
 operator|&&
 operator|!
 name|DECL_THUNK_P
@@ -272,7 +272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns non-zero if FN calls `setjmp' or some other function that    can return more than once.  This function is conservative; it may    occasionally return a non-zero value even when FN does not actually    call `setjmp'.  */
+comment|/* Returns nonzero if FN calls `setjmp' or some other function that    can return more than once.  This function is conservative; it may    occasionally return a nonzero value even when FN does not actually    call `setjmp'.  */
 end_comment
 
 begin_function
@@ -331,7 +331,7 @@ argument_list|)
 operator|=
 name|parm
 expr_stmt|;
-comment|/* We may have taken its address. */
+comment|/* We may have taken its address.  */
 name|TREE_ADDRESSABLE
 argument_list|(
 name|cloned_parm
@@ -342,7 +342,7 @@ argument_list|(
 name|parm
 argument_list|)
 expr_stmt|;
-comment|/* The definition might have different constness. */
+comment|/* The definition might have different constness.  */
 name|TREE_READONLY
 argument_list|(
 name|cloned_parm
@@ -363,7 +363,7 @@ argument_list|(
 name|parm
 argument_list|)
 expr_stmt|;
-comment|/* The name may have changed from the declaration. */
+comment|/* The name may have changed from the declaration.  */
 name|DECL_NAME
 argument_list|(
 name|cloned_parm
@@ -374,22 +374,12 @@ argument_list|(
 name|parm
 argument_list|)
 expr_stmt|;
-name|DECL_SOURCE_FILE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|cloned_parm
 argument_list|)
 operator|=
-name|DECL_SOURCE_FILE
-argument_list|(
-name|parm
-argument_list|)
-expr_stmt|;
-name|DECL_SOURCE_LINE
-argument_list|(
-name|cloned_parm
-argument_list|)
-operator|=
-name|DECL_SOURCE_LINE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|parm
 argument_list|)
@@ -398,7 +388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FN is a function that has a complete body.  Clone the body as    necessary.  Returns non-zero if there's no longer any need to    process the main body.  */
+comment|/* FN is a function that has a complete body.  Clone the body as    necessary.  Returns nonzero if there's no longer any need to    process the main body.  */
 end_comment
 
 begin_function
@@ -490,22 +480,12 @@ name|splay_tree
 name|decl_map
 decl_stmt|;
 comment|/* Update CLONE's source position information to match FN's.  */
-name|DECL_SOURCE_FILE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|clone
 argument_list|)
 operator|=
-name|DECL_SOURCE_FILE
-argument_list|(
-name|fn
-argument_list|)
-expr_stmt|;
-name|DECL_SOURCE_LINE
-argument_list|(
-name|clone
-argument_list|)
-operator|=
-name|DECL_SOURCE_LINE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|fn
 argument_list|)
@@ -516,6 +496,16 @@ name|clone
 argument_list|)
 operator|=
 name|DECL_INLINE
+argument_list|(
+name|fn
+argument_list|)
+expr_stmt|;
+name|DID_INLINE_FUNC
+argument_list|(
+name|clone
+argument_list|)
+operator|=
+name|DID_INLINE_FUNC
 argument_list|(
 name|fn
 argument_list|)
@@ -620,7 +610,7 @@ argument_list|(
 name|fn
 argument_list|)
 expr_stmt|;
-comment|/* Adjust the parameter names and locations. */
+comment|/* Adjust the parameter names and locations.  */
 name|parm
 operator|=
 name|DECL_ARGUMENTS
@@ -727,7 +717,7 @@ argument_list|,
 name|clone_parm
 argument_list|)
 expr_stmt|;
-comment|/* We should only give unused information for one clone. */
+comment|/* We should only give unused information for one clone.  */
 if|if
 condition|(
 operator|!
@@ -972,6 +962,17 @@ argument_list|(
 name|decl_map
 argument_list|)
 expr_stmt|;
+comment|/* The clone can throw iff the original function can throw.  */
+name|cp_function_chain
+operator|->
+name|can_throw
+operator|=
+operator|!
+name|TREE_NOTHROW
+argument_list|(
+name|fn
+argument_list|)
+expr_stmt|;
 comment|/* Now, expand this function into RTL, if appropriate.  */
 name|finish_function
 argument_list|(
@@ -1008,7 +1009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Dump FUNCTION_DECL FN as tree dump PHASE. */
+comment|/* Dump FUNCTION_DECL FN as tree dump PHASE.  */
 end_comment
 
 begin_function

@@ -1,35 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* This is tested by i386gas.h.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       NETBSD_OS_CPP_BUILTINS_AOUT();		\     }						\   while (0)
+end_define
 
 begin_define
 define|#
 directive|define
-name|YES_UNDERSCORES
+name|TARGET_VERSION
+value|fprintf (stderr, " (NetBSD/i386 a.out)");
 end_define
-
-begin_include
-include|#
-directive|include
-file|<i386/gstabs.h>
-end_include
-
-begin_comment
-comment|/* Get generic NetBSD definitions.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netbsd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netbsd-aout.h>
-end_include
 
 begin_comment
 comment|/* This goes away when the math-emulator is fixed */
@@ -52,14 +36,28 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|SUBTARGET_EXTRA_SPECS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Dunix -D__NetBSD__ \  -Asystem=unix -Asystem=bsd -Asystem=NetBSD"
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "netbsd_cpp_spec", NETBSD_CPP_SPEC },
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|"%(netbsd_cpp_spec)"
 end_define
 
 begin_escape
@@ -193,6 +191,34 @@ define|#
 directive|define
 name|DWARF2_UNWIND_INFO
 value|0
+end_define
+
+begin_comment
+comment|/* Redefine this so that it becomes "_GLOBAL_OFFSET_TABLE_" when the label    prefix is added.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GOT_SYMBOL_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|GOT_SYMBOL_NAME
+value|"GLOBAL_OFFSET_TABLE_"
+end_define
+
+begin_comment
+comment|/* Attempt to enable execute permissions on the stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRANSFER_FROM_TRAMPOLINE
+value|NETBSD_ENABLE_EXECUTE_STACK
 end_define
 
 end_unit

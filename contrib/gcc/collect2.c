@@ -180,24 +180,6 @@ directive|include
 file|"version.h"
 end_include
 
-begin_comment
-comment|/* Obstack allocation and deallocation routines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
 begin_escape
 end_escape
 
@@ -508,7 +490,7 @@ comment|/* OBJECT_FORMAT_NONE */
 end_comment
 
 begin_comment
-comment|/* Some systems use __main in a way incompatible with its use in gcc, in these    cases use the macros NAME__MAIN to give a quoted symbol and SYMBOL__MAIN to    give the same symbol without quotes for an alternative entry point.  You    must define both, or neither.  */
+comment|/* Some systems use __main in a way incompatible with its use in gcc, in these    cases use the macros NAME__MAIN to give a quoted symbol and SYMBOL__MAIN to    give the same symbol without quotes for an alternative entry point.  */
 end_comment
 
 begin_ifndef
@@ -522,13 +504,6 @@ define|#
 directive|define
 name|NAME__MAIN
 value|"__main"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYMBOL__MAIN
-value|__main
 end_define
 
 begin_endif
@@ -1037,13 +1012,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|obstack
-name|permanent_obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|temporary_firstobj
@@ -1059,40 +1027,6 @@ name|int
 name|pexecute_pid
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Defined in the automatically-generated underscore.c.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|prepends_underscore
-decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GET_ENV_PATH_LIST
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|GET_ENV_PATH_LIST
-parameter_list|(
-name|VAR
-parameter_list|,
-name|NAME
-parameter_list|)
-value|do { (VAR) = getenv (NAME); } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Structure to hold all the directories in which to search for files to    execute.  */
@@ -2730,15 +2664,25 @@ name|word
 expr_stmt|;
 if|if
 condition|(
-operator|*
+operator|!
+name|strncmp
+argument_list|(
 name|p
-operator|==
-literal|'_'
-operator|&&
-name|prepends_underscore
+argument_list|,
+name|USER_LABEL_PREFIX
+argument_list|,
+name|strlen
+argument_list|(
+name|USER_LABEL_PREFIX
+argument_list|)
+argument_list|)
 condition|)
-operator|++
 name|p
+operator|+=
+name|strlen
+argument_list|(
+name|USER_LABEL_PREFIX
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3807,7 +3751,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|GET_ENV_PATH_LIST
+name|GET_ENVIRONMENT
 argument_list|(
 name|p
 argument_list|,
@@ -4602,14 +4546,6 @@ name|obstack_begin
 argument_list|(
 operator|&
 name|temporary_obstack
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|obstack_begin
-argument_list|(
-operator|&
-name|permanent_obstack
 argument_list|,
 literal|0
 argument_list|)
@@ -5424,17 +5360,9 @@ operator|*
 name|c_ptr
 operator|++
 operator|=
-name|obstack_copy0
-argument_list|(
-operator|&
-name|permanent_obstack
-argument_list|,
-name|q
-argument_list|,
-name|strlen
+name|xstrdup
 argument_list|(
 name|q
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5461,17 +5389,9 @@ operator|*
 name|c_ptr
 operator|++
 operator|=
-name|obstack_copy0
-argument_list|(
-operator|&
-name|permanent_obstack
-argument_list|,
-name|q
-argument_list|,
-name|strlen
+name|xstrdup
 argument_list|(
 name|q
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5508,17 +5428,9 @@ operator|*
 name|c_ptr
 operator|++
 operator|=
-name|obstack_copy0
-argument_list|(
-operator|&
-name|permanent_obstack
-argument_list|,
-name|q
-argument_list|,
-name|strlen
+name|xstrdup
 argument_list|(
 name|q
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5543,17 +5455,9 @@ operator|*
 name|c_ptr
 operator|++
 operator|=
-name|obstack_copy0
-argument_list|(
-operator|&
-name|permanent_obstack
-argument_list|,
-name|q
-argument_list|,
-name|strlen
+name|xstrdup
 argument_list|(
 name|q
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7182,7 +7086,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Wait for a process to finish, and exit if a non-zero status is found.  */
+comment|/* Wait for a process to finish, and exit if a nonzero status is found.  */
 end_comment
 
 begin_function
@@ -7244,13 +7148,14 @@ argument_list|(
 name|sig
 argument_list|)
 argument_list|,
+name|WCOREDUMP
+argument_list|(
 name|status
-operator|&
-literal|0200
+argument_list|)
 condition|?
-literal|""
-else|:
 literal|", core dumped"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|collect_exit
@@ -9963,7 +9868,7 @@ argument_list|)
 expr_stmt|;
 name|fatal_perror
 argument_list|(
-literal|"execvp %s"
+literal|"execv %s"
 argument_list|,
 name|nm_file_name
 argument_list|)
@@ -13299,6 +13204,15 @@ directive|endif
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OBJECT_FORMAT_COFF */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -13668,13 +13582,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* OBJECT_FORMAT_COFF */
+comment|/* COLLECT_EXPORT_LIST */
 end_comment
 
 begin_escape

@@ -18,6 +18,7 @@ begin_define
 define|#
 directive|define
 name|XCOFF_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -114,26 +115,7 @@ value|read_only_data_section
 end_define
 
 begin_comment
-comment|/* Select the section for an initialized data object.     On the RS/6000, we have a special section for all variables except those    that are static.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SELECT_SECTION
-parameter_list|(
-name|EXP
-parameter_list|,
-name|RELOC
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|{							\   if ((TREE_CODE (EXP) == STRING_CST			\&& ! flag_writable_strings)			\       || (TREE_CODE_CLASS (TREE_CODE (EXP)) == 'd'	\&& TREE_READONLY (EXP)&& ! TREE_THIS_VOLATILE (EXP) \&& DECL_INITIAL (EXP)				\&& (DECL_INITIAL (EXP) == error_mark_node	\ 	      || TREE_CONSTANT (DECL_INITIAL (EXP)))	\&& ! (RELOC)))				\     {							\       if (TREE_PUBLIC (EXP))				\         read_only_data_section ();			\       else						\         read_only_private_data_section ();		\     }							\   else							\     {							\       if (TREE_PUBLIC (EXP))				\         data_section ();				\       else						\         private_data_section ();			\     }							\ }
-end_define
-
-begin_comment
-comment|/* Return non-zero if this entry is to be written into the constant    pool in a special way.  We do so if this is a SYMBOL_REF, LABEL_REF    or a CONST containing one of them.  If -mfp-in-toc (the default),    we also do this for floating-point constants.  We actually can only    do this if the FP formats of the target and host machines are the    same, but we can't check that since not every file that uses    GO_IF_LEGITIMATE_ADDRESS_P includes real.h.  We also do this when    we can write the entry into the TOC and the entry is not larger    than a TOC entry.  */
+comment|/* Return nonzero if this entry is to be written into the constant    pool in a special way.  We do so if this is a SYMBOL_REF, LABEL_REF    or a CONST containing one of them.  If -mfp-in-toc (the default),    we also do this for floating-point constants.  We actually can only    do this if the FP formats of the target and host machines are the    same, but we can't check that since not every file that uses    GO_IF_LEGITIMATE_ADDRESS_P includes real.h.  We also do this when    we can write the entry into the TOC and the entry is not larger    than a TOC entry.  */
 end_comment
 
 begin_define
@@ -149,38 +131,60 @@ define|\
 value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (GET_CODE (X) == CONST_DOUBLE					\&& (TARGET_POWERPC64						\ 	       || TARGET_MINIMAL_TOC					\ 	       || (GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT		\&& ! TARGET_NO_FP_IN_TOC)))))
 end_define
 
-begin_comment
-comment|/* Select section for constant in constant pool.     On RS/6000, all constants are in the private read-only data area.    However, if this is being placed in the TOC it must be output as a    toc entry.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SELECT_RTX_SECTION
-parameter_list|(
-name|MODE
-parameter_list|,
-name|X
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|{ if (ASM_OUTPUT_SPECIAL_POOL_ENTRY_P (X, MODE))	\     toc_section ();					\   else							\     read_only_private_data_section ();			\ }
+name|TARGET_ASM_GLOBALIZE_LABEL
+value|rs6000_xcoff_asm_globalize_label
 end_define
 
-begin_comment
-comment|/* If we are referencing a function that is static or is known to be    in this file, make the SYMBOL_REF special.  We can use this to indicate    that we can branch to this function without emitting a no-op after the    call.  Do not set this flag if the function is weakly defined.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_NAMED_SECTION
+value|rs6000_xcoff_asm_named_section
+end_define
 
 begin_define
 define|#
 directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|if (TREE_CODE (DECL) == FUNCTION_DECL			\&& !TREE_PUBLIC (DECL)				\&& !DECL_WEAK (DECL))				\     SYMBOL_REF_FLAG (XEXP (DECL_RTL (DECL), 0)) = 1;
+name|TARGET_ASM_SELECT_SECTION
+value|rs6000_xcoff_select_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_SELECT_RTX_SECTION
+value|rs6000_xcoff_select_rtx_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_UNIQUE_SECTION
+value|rs6000_xcoff_unique_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ENCODE_SECTION_INFO
+value|rs6000_xcoff_encode_section_info
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_STRIP_NAME_ENCODING
+value|rs6000_xcoff_strip_name_encoding
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_SECTION_TYPE_FLAGS
+value|rs6000_xcoff_section_type_flags
 end_define
 
 begin_comment
@@ -276,7 +280,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|{						\     const char *_p;				\ 						\     STRIP_NAME_ENCODING (_p, (NAME));		\     assemble_name ((FILE), _p);			\   }
+value|assemble_name ((FILE), (*targetm.strip_name_encoding) (NAME))
 end_define
 
 begin_comment
@@ -300,34 +304,15 @@ begin_comment
 comment|/* This is how to output a command to make the user-level label named NAME    defined for reference from other files.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { fputs ("\t.globl ", FILE);	\        RS6000_OUTPUT_BASENAME (FILE, NAME); putc ('\n', FILE);} while (0)
-end_define
-
 begin_comment
-comment|/* Remove any trailing [DS] or the like from the symbol name.  */
+comment|/* Globalizing directive for a label.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do							\     {							\       const char *_name = (NAME);			\       size_t _len;					\       if (*_name == '*')				\         _name++;					\       _len = strlen (_name);				\       if (_name[_len - 1] != ']')			\ 	(VAR) = _name;					\       else						\ 	{						\ 	  char *_new_name = (char *) alloca (_len + 1);	\ 	  strcpy (_new_name, _name);			\ 	  _new_name[_len - 4] = '\0';			\ 	  (VAR) = _new_name;				\ 	}						\     }							\   while (0)
+name|GLOBAL_ASM_OP
+value|"\t.globl "
 end_define
 
 begin_comment
@@ -342,7 +327,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{								\   rs6000_gen_section_name (&xcoff_bss_section_name,		\ 			   main_input_filename, ".bss_");	\   rs6000_gen_section_name (&xcoff_private_data_section_name,	\ 			   main_input_filename, ".rw_");	\   rs6000_gen_section_name (&xcoff_read_only_section_name,	\ 			   main_input_filename, ".ro_");	\ 								\   fprintf (FILE, "\t.file\t\"%s\"\n", main_input_filename);	\   if (TARGET_64BIT)						\     fputs ("\t.machine\t\"ppc64\"\n", FILE);			\   toc_section ();						\   if (write_symbols != NO_DEBUG)				\     private_data_section ();					\   text_section ();						\   if (profile_flag)						\     fprintf (FILE, "\t.extern %s\n", RS6000_MCOUNT);		\   rs6000_file_start (FILE, TARGET_CPU_DEFAULT);			\ }
+value|{								\   rs6000_gen_section_name (&xcoff_bss_section_name,		\ 			   main_input_filename, ".bss_");	\   rs6000_gen_section_name (&xcoff_private_data_section_name,	\ 			   main_input_filename, ".rw_");	\   rs6000_gen_section_name (&xcoff_read_only_section_name,	\ 			   main_input_filename, ".ro_");	\ 								\   fputs ("\t.file\t", FILE);                                    \   output_quoted_string (FILE, main_input_filename);             \   fputc ('\n', FILE);                                           \   if (TARGET_64BIT)						\     fputs ("\t.machine\t\"ppc64\"\n", FILE);			\   toc_section ();						\   if (write_symbols != NO_DEBUG)				\     private_data_section ();					\   text_section ();						\   if (profile_flag)						\     fprintf (FILE, "\t.extern %s\n", RS6000_MCOUNT);		\   rs6000_file_start (FILE, TARGET_CPU_DEFAULT);			\ }
 end_define
 
 begin_comment
@@ -376,7 +361,9 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|{ rtx sym_ref = XEXP (DECL_RTL (DECL), 0);			\   if (!DECL_WEAK (DECL))					\     SYMBOL_REF_FLAG (sym_ref) = 1;				\   if (TREE_PUBLIC (DECL))					\     {								\       if (!RS6000_WEAK || !DECL_WEAK (decl))			\ 	{							\ 	  fputs ("\t.globl .", FILE);				\ 	  RS6000_OUTPUT_BASENAME (FILE, NAME);			\ 	  putc ('\n', FILE);					\ 	}							\     }								\   else								\     {								\       fputs ("\t.lglobl .", FILE);				\       RS6000_OUTPUT_BASENAME (FILE, NAME);			\       putc ('\n', FILE);					\     }								\   fputs ("\t.csect ", FILE);					\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (TARGET_32BIT ? "[DS]\n" : "[DS],3\n", FILE);		\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   fputs (TARGET_32BIT ? "\t.long ." : "\t.llong .", FILE);	\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (", TOC[tc0], 0\n", FILE);				\   in_section = no_section;					\   function_section(DECL);					\   putc ('.', FILE);						\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   if (write_symbols == XCOFF_DEBUG)				\     xcoffout_declare_function (FILE, DECL, NAME);		\ }
+value|{ rtx sym_ref = XEXP (DECL_RTL (DECL), 0);			\   if ((*targetm.binds_local_p) (DECL))				\     SYMBOL_REF_FLAG (sym_ref) = 1;				\   if (TREE_PUBLIC (DECL))					\     {								\       if (!RS6000_WEAK || !DECL_WEAK (decl))			\ 	{							\ 	  fputs ("\t.globl .", FILE);				\ 	  RS6000_OUTPUT_BASENAME (FILE, NAME);			\ 	  putc ('\n', FILE);					\ 	}							\     }								\   else								\     {								\       fputs ("\t.lglobl .", FILE);				\       RS6000_OUTPUT_BASENAME (FILE, NAME);			\       putc ('\n', FILE);					\     }								\   fputs ("\t.csect ", FILE);					\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (TARGET_32BIT ? "[DS]\n" : "[DS],3\n", FILE);		\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   fputs (TARGET_32BIT ? "\t.long ." : "\t.llong .", FILE);	\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (", TOC[tc0], 0\n", FILE);				\   in_section = no_section;					\   function_section(DECL);					\   putc ('.', FILE);						\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   if (write_symbols == XCOFF_DEBUG				\
+comment|/* When called before targetm.asm_out.output_mi_thunk,	\ 	 we won't be emitting the rest of the debug info that	\ 	 goes along with this, leading to assembler errors.  */
+value|\&& !(current_function_is_thunk&& !no_new_pseudos))	\     xcoffout_declare_function (FILE, DECL, NAME);		\ }
 end_define
 
 begin_comment
@@ -418,7 +405,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|{ rtx _symref = XEXP (DECL_RTL (DECL), 0);	\   if ((TREE_CODE (DECL) == VAR_DECL		\        || TREE_CODE (DECL) == FUNCTION_DECL)	\&& (NAME)[strlen (NAME) - 1] != ']')	\     {						\       char *_name = (char *) permalloc (strlen (XSTR (_symref, 0)) + 5); \       strcpy (_name, XSTR (_symref, 0));	\       strcat (_name, TREE_CODE (DECL) == FUNCTION_DECL ? "[DS]" : "[RW]"); \       XSTR (_symref, 0) = _name;		\     }						\ }
+value|{ rtx _symref = XEXP (DECL_RTL (DECL), 0);				\   if ((TREE_CODE (DECL) == VAR_DECL					\        || TREE_CODE (DECL) == FUNCTION_DECL)				\&& (NAME)[strlen (NAME) - 1] != ']')				\     {									\       XSTR (_symref, 0) = concat (XSTR (_symref, 0),			\ 				  (TREE_CODE (DECL) == FUNCTION_DECL	\ 				   ? "[DS]" : "[RW]"),			\ 				  NULL);				\     }									\ }
 end_define
 
 begin_comment
@@ -522,6 +509,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SKIP_ASM_OP
+value|"\t.space "
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASM_OUTPUT_SKIP
 parameter_list|(
 name|FILE
@@ -529,12 +523,19 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|fprintf (FILE, "\t.space %d\n", (SIZE))
+value|fprintf (FILE, "%s%u\n", SKIP_ASM_OP, (SIZE))
 end_define
 
 begin_comment
 comment|/* This says how to output an assembler line    to define a global common symbol.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|COMMON_ASM_OP
+value|"\t.comm "
+end_define
 
 begin_define
 define|#
@@ -547,15 +548,22 @@ name|NAME
 parameter_list|,
 name|SIZE
 parameter_list|,
-name|ALIGNMENT
+name|ALIGN
 parameter_list|)
 define|\
-value|do { fputs ("\t.comm ", (FILE));			\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        if ( (SIZE)> 4)					\          fprintf ((FILE), ",%d,3\n", (SIZE));		\        else						\ 	 fprintf ((FILE), ",%d\n", (SIZE));		\   } while (0)
+value|do { fputs (COMMON_ASM_OP, (FILE));			\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        if ((ALIGN)> 32)				\ 	 fprintf ((FILE), ",%u,%u\n", (SIZE),		\ 		  exact_log2 ((ALIGN) / BITS_PER_UNIT)); \        else if ((SIZE)> 4)				\          fprintf ((FILE), ",%u,3\n", (SIZE));		\        else						\ 	 fprintf ((FILE), ",%u\n", (SIZE));		\   } while (0)
 end_define
 
 begin_comment
 comment|/* This says how to output an assembler line    to define a local common symbol.    Alignment cannot be specified, but we can try to maintain    alignment after preceding TOC section if it was aligned    for 64-bit mode.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_COMMON_ASM_OP
+value|"\t.lcomm "
+end_define
 
 begin_define
 define|#
@@ -571,7 +579,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|do { fputs ("\t.lcomm ", (FILE));			\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        fprintf ((FILE), ",%d,%s\n", (TARGET_32BIT ? (SIZE) : (ROUNDED)), \ 		xcoff_bss_section_name);		\      } while (0)
+value|do { fputs (LOCAL_COMMON_ASM_OP, (FILE));		\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        fprintf ((FILE), ",%u,%s\n", (TARGET_32BIT ? (SIZE) : (ROUNDED)), \ 		xcoff_bss_section_name);		\      } while (0)
 end_define
 
 begin_comment
@@ -635,34 +643,6 @@ define|#
 directive|define
 name|DATA_SECTION_ASM_OP
 value|"\t.csect .data[RW],3"
-end_define
-
-begin_comment
-comment|/* Define unique section name -- functions only.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do {							\     int len;						\     const char *name;					\     char *string;					\ 							\     if (TREE_CODE (DECL) == FUNCTION_DECL) {		\       name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL)); \       len = strlen (name) + 5;				\       string = alloca (len + 1);			\       sprintf (string, ".%s[PR]", name);		\       DECL_SECTION_NAME (DECL) = build_string (len, string); \     }							\   } while (0)
-end_define
-
-begin_comment
-comment|/* Switch into a generic section.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_NAMED_SECTION
-value|xcoff_asm_named_section
 end_define
 
 begin_comment

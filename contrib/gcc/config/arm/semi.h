@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"\ %{fpic: -k} %{fPIC: -k} \ %{mbig-endian:-EB} \ %{mcpu=*:-m%*} \ %{march=*:-m%*} \ %{mapcs-float:-mfloat} \ %{msoft-float:-mno-fpu} \ %{mthumb-interwork:-mthumb-interwork} \ %(subtarget_extra_asm_spec)"
+value|"\ %{fpic: -k} %{fPIC: -k} \ %{mbig-endian:-EB} \ %{mcpu=*:-mcpu=%*} \ %{march=*:-march=%*} \ %{mapcs-float:-mfloat} \ %{msoft-float:-mno-fpu} \ %{mthumb-interwork:-mthumb-interwork} \ %(subtarget_extra_asm_spec)"
 end_define
 
 begin_endif
