@@ -1939,17 +1939,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means the expression being parsed will never be evaluated.    This is a count, since unevaluated expressions can nest.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|skip_evaluation
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero means `$' can be in an identifier.  */
 end_comment
 
