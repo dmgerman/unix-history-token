@@ -1975,7 +1975,11 @@ name|i
 decl_stmt|;
 comment|/* NO OUTPUT ALLOWED UNTIL FURTHER NOTICE */
 comment|/* 	 * TODO: Disable interrupts, floating point etc. 	 * Maybe flush cache and tlb 	 */
-asm|__asm __volatile("mov ar.fpsr=%0" :: "r"(IA64_FPSR_DEFAULT));
+name|ia64_set_fpsr
+argument_list|(
+name|IA64_FPSR_DEFAULT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * TODO: Get critical system information (if possible, from the 	 * information provided by the boot program). 	 */
 comment|/* 	 * Gross and disgusting hack. The bootinfo is written into 	 * memory at a fixed address. 	 */
 name|bootinfo
