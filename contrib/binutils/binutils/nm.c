@@ -1585,10 +1585,30 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Usage: %s [-aABCDglnopPrsuvV] [-t radix] [--radix=radix] [--target=bfdname]\n\        [--debug-syms] [--extern-only] [--print-armap] [--print-file-name]\n\        [--numeric-sort] [--no-sort] [--reverse-sort] [--size-sort]\n\        [--undefined-only] [--portability] [-f {bsd,sysv,posix}]\n\        [--format={bsd,sysv,posix}] [--demangle] [--no-demangle] [--dynamic]\n\        [--defined-only] [--line-numbers]\n\        [--version] [--help]\n\        [file...]\n"
+literal|"Usage: %s [OPTION]... [FILE]...\n"
 argument_list|)
 argument_list|,
 name|program_name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"List symbols from FILEs (a.out by default).\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\n\   -a, --debug-syms       Display debugger-only symbols\n\   -A, --print-file-name  Print name of the input file before every symbol\n\   -B                     Same as --format=bsd\n\   -C, --demangle         Decode low-level symbol names into user-level names\n\       --no-demangle      Do not demangle low-level symbol names\n\   -D, --dynamic          Display dynamic symbols instead of normal symbols\n\       --defined-only     Display only defined symbols\n\   -e                     (ignored)\n\   -f, --format=FORMAT    Use the output format FORMAT.  FORMAT can be `bsd',\n\                            `sysv' or `posix'.  The default is `bsd'\n\   -g, --extern-only      Display only external symbols\n\   -h, --help             Display this information\n\   -l, --line-numbers     Use debugging information to find a filename and\n\                            line number for each symbol\n\   -n, --numeric-sort     Sort symbols numerically by address\n\   -o                     Same as -A\n\   -p, --no-sort          Do not sort the symbols\n\   -P, --portability      Same as --format=posix\n\   -r, --reverse-sort     Reverse the sense of the sort\n\   -s, --print-armap      Include index for symbols from archive members\n\       --size-sort        Sort symbols by size\n\   -t, --radix=RADIX      Use RADIX for printing symbol values\n\       --target=BFDNAME   Specify the target object format as BFDNAME\n\   -u, --undefined-only   Display only undefined symbols\n\   -V, --version          Display this program's version number\n\ \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|list_supported_targets
@@ -1610,7 +1630,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"Report bugs to %s\n"
+literal|"Report bugs to %s.\n"
 argument_list|)
 argument_list|,
 name|REPORT_BUGS_TO

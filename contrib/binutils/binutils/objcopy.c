@@ -7870,7 +7870,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:O:F:K:N:R:o:sSpgxXVv"
+literal|"I:O:F:K:N:R:o:sSpdgxXVv"
 argument_list|,
 name|strip_options
 argument_list|,
@@ -7953,6 +7953,10 @@ case|:
 case|case
 literal|'g'
 case|:
+case|case
+literal|'d'
+case|:
+comment|/* NetBSD, historic BSD strip */
 name|strip_symbols
 operator|=
 name|STRIP_DEBUG

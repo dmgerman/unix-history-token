@@ -2905,6 +2905,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_CHECKSUM
+value|0x6ffffdf8
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_PLTPADSZ
 value|0x6ffffdf9
 end_define
@@ -2926,7 +2933,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DT_FEATURE_1
+name|DT_FEATURE
 value|0x6ffffdfc
 end_define
 
@@ -2963,6 +2970,41 @@ define|#
 directive|define
 name|DT_ADDRRNGLO
 value|0x6ffffe00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_CONFIG
+value|0x6ffffefa
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_DEPAUDIT
+value|0x6ffffefb
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_AUDIT
+value|0x6ffffefc
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_PLTPAD
+value|0x6ffffefd
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_MOVETAB
+value|0x6ffffefe
 end_define
 
 begin_define
@@ -3079,7 +3121,7 @@ value|0x7fffffff
 end_define
 
 begin_comment
-comment|/* Values used in DT_FEATURE_1 .dynamic entry.  */
+comment|/* Values used in DT_FEATURE .dynamic entry.  */
 end_comment
 
 begin_define
@@ -3087,6 +3129,17 @@ define|#
 directive|define
 name|DTF_1_PARINIT
 value|0x00000001
+end_define
+
+begin_comment
+comment|/* From     http://docs.sun.com:80/ab2/coll.45.13/LLM/@Ab2PageView/21165?Ab2Lang=C&Ab2Enc=iso-8859-1     DTF_1_CONFEXP is the same as DTF_1_PARINIT. It is a typo. The value    defined here is the same as the one in<sys/link.h> on Solaris 8. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTF_1_CONFEXP
+value|0x00000002
 end_define
 
 begin_comment
@@ -3108,7 +3161,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Flag value in in the DT_1_FLAGS .dynamic entry.  */
+comment|/* Flag value in in the DT_FLAGS_1 .dynamic entry.  */
 end_comment
 
 begin_define
@@ -3186,6 +3239,27 @@ define|#
 directive|define
 name|DF_1_INTERPOSE
 value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|DF_1_NODEFLIB
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DF_1_NODUMP
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DF_1_CONLFAT
+value|0x00002000
 end_define
 
 begin_comment

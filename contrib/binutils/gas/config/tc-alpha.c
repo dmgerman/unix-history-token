@@ -6434,7 +6434,11 @@ condition|(
 operator|!
 name|alpha_noat_on
 operator|&&
+operator|(
 name|num
+operator|+
+name|is_float
+operator|)
 operator|==
 name|AXP_REG_AT
 condition|)

@@ -7223,6 +7223,22 @@ name|true
 return|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|W65MAGIC
+case|case
+name|bfd_arch_w65
+case|:
+operator|*
+name|magicp
+operator|=
+name|W65MAGIC
+expr_stmt|;
+return|return
+name|true
+return|;
+endif|#
+directive|endif
 default|default:
 comment|/* Unknown architecture */
 comment|/* return false;  -- fall through to "return false" below, to avoid        "statement never reached" errors on the one below. */
