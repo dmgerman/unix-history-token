@@ -584,15 +584,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|ivar
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ivar
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|child
