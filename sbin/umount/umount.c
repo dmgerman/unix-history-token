@@ -1738,7 +1738,31 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Compatability for old kernels. */
+comment|/* Compatibility for old kernels. */
+if|if
+condition|(
+name|sfs
+operator|->
+name|f_fsid
+operator|.
+name|val
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|||
+name|sfs
+operator|->
+name|f_fsid
+operator|.
+name|val
+index|[
+literal|1
+index|]
+operator|!=
+literal|0
+condition|)
 name|warnx
 argument_list|(
 literal|"retrying using path instead of file system ID"
@@ -2740,7 +2764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a hexidecimal filesystem ID to an fsid_t.  * Returns 0 on success.  */
+comment|/*  * Convert a hexadecimal filesystem ID to an fsid_t.  * Returns 0 on success.  */
 end_comment
 
 begin_function
