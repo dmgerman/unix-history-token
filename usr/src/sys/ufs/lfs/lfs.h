@@ -1,6 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_LABELPAD
+value|8192
+end_define
+
+begin_comment
+comment|/* LFS label size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_SBPAD
+value|8192
+end_define
+
+begin_comment
+comment|/* LFS superblock size */
 end_comment
 
 begin_define
@@ -17,9 +39,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LFSBLKSIZE
-value|(4*1024)
+name|LFS_BLKSIZE
+value|4096
 end_define
+
+begin_comment
+comment|/* LFS block size */
+end_comment
 
 begin_comment
 comment|/* On-disk super block. */
@@ -33,11 +59,15 @@ block|{
 define|#
 directive|define
 name|LFS_MAGIC
-value|0xabababab
+value|0xdeadbeef
 name|u_long
 name|lfs_magic
 decl_stmt|;
 comment|/* magic number */
+define|#
+directive|define
+name|LFS_VERSION
+value|1
 name|u_long
 name|lfs_version
 decl_stmt|;
@@ -159,12 +189,16 @@ decl_stmt|;
 comment|/* fsbtodb and dbtofsb shift constant */
 define|#
 directive|define
-name|MAXNUMSB
+name|LFS_MAXNUMSB
 value|10
+define|#
+directive|define
+name|LFS_MIN_SBINTERVAL
+value|5
 name|daddr_t
 name|lfs_sboffs
 index|[
-name|MAXNUMSB
+name|LFS_MAXNUMSB
 index|]
 decl_stmt|;
 comment|/* super-block disk offsets */
@@ -527,19 +561,52 @@ value|fs_super.lfs_version
 end_define
 
 begin_comment
-comment|/* Data structures in the ifile */
+comment|/* Fixed inode numbers. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IFILE_NUM
+name|LFS_UNUSED_INUM
+value|0
+end_define
+
+begin_comment
+comment|/* Out of band inode number. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_IFILE_INUM
 value|1
 end_define
 
 begin_comment
-comment|/* inode number of the ifile */
+comment|/* Inode number of the ifile. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_FIRST_INUM
+value|2
+end_define
+
+begin_comment
+comment|/* First free inode number. */
+end_comment
+
+begin_comment
+comment|/*   * Used to access the first spare of the dinode which we use to store  * the ifile number so we can identify them  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|di_inum
+value|di_spare[0]
+end_define
 
 begin_typedef
 typedef|typedef
@@ -575,11 +642,11 @@ union|;
 define|#
 directive|define
 name|if_st_atime
-value|__ifile_u.st_atime;
+value|__ifile_u.st_atime
 define|#
 directive|define
 name|if_nextfree
-value|__ifile_u.nextfree;
+value|__ifile_u.nextfree
 block|}
 name|IFILE
 typedef|;
@@ -600,6 +667,17 @@ define|\
 value|(((fs)->fs_nseg * sizeof(SEGUSAGE) + \ 	    ((fs)->fs_bsize - 1))<< (fs)->fs_bshift)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SEGTABSIZE_SU
+parameter_list|(
+name|fs
+parameter_list|)
+define|\
+value|(((fs)->lfs_nseg * sizeof(SEGUSAGE) + \ 	    ((fs)->lfs_bsize - 1))>> (fs)->lfs_bshift)
+end_define
+
 begin_comment
 comment|/* In-memory and on-disk checkpoint segment usage structure. */
 end_comment
@@ -617,10 +695,28 @@ name|u_long
 name|su_lastmod
 decl_stmt|;
 comment|/* last modified timestamp */
+define|#
+directive|define
+name|SEGUSAGE_DIRTY
+value|0x1
+name|u_long
+name|su_flags
+decl_stmt|;
 block|}
 name|SEGUSAGE
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * All summary blocks are the same size, so we can always read a summary  * block easily from a segment  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_SUMMARY_SIZE
+value|512
+end_define
 
 begin_comment
 comment|/* On-disk segment summary information */
