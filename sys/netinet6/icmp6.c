@@ -901,7 +901,7 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Multicast destination check. For unrecognized option errors, 	 * this check has already done in ip6_unknown_opt(), so we can 	 * check only for other errors. 	 */
+comment|/* 	 * If the destination address of the erroneous packet is a multicast 	 * address, or the packet was sent using link-layer multicast, 	 * we should basically suppress sending an error (RFC 2463, Section 	 * 2.4). 	 * We have two exceptions (the item e.2 in that section): 	 * - the Pakcet Too Big message can be sent for path MTU discovery. 	 * - the Parameter Problem Message that can be allowed an icmp6 error 	 *   in the option type field.  This check has been done in 	 *   ip6_unknown_opt(), so we can just check the type and code. 	 */
 if|if
 condition|(
 operator|(
@@ -943,7 +943,7 @@ condition|)
 goto|goto
 name|freeit
 goto|;
-comment|/* Source address check. XXX: the case of anycast source? */
+comment|/* 	 * RFC 2463, 2.4 (e.5): source address check. 	 * XXX: the case of anycast source? 	 */
 if|if
 condition|(
 name|IN6_IS_ADDR_UNSPECIFIED
@@ -4799,6 +4799,33 @@ name|struct
 name|sockaddr_in6
 name|sin6
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * RFC2460 section 5, last paragraph. 	 * even though minimum link MTU for IPv6 is IPV6_MMTU, 	 * we may see ICMPv6 too big with mtu< IPV6_MMTU 	 * due to packet translator in the middle. 	 * see ip6_output() and ip6_getpmtu() "alwaysfrag" case for 	 * special handling. 	 */
+block|if (mtu< IPV6_MMTU) 		return;
+endif|#
+directive|endif
+comment|/* 	 * we reject ICMPv6 too big with abnormally small value. 	 * XXX what is the good definition of "abnormally small"? 	 */
+if|if
+condition|(
+name|mtu
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_frag
+argument_list|)
+operator|+
+literal|8
+condition|)
+return|return;
 if|if
 condition|(
 operator|!
@@ -9457,6 +9484,22 @@ name|ip6_nxt
 operator|=
 name|IPPROTO_ICMPV6
 expr_stmt|;
+if|if
+condition|(
+name|outif
+condition|)
+name|ip6
+operator|->
+name|ip6_hlim
+operator|=
+name|ND_IFINFO
+argument_list|(
+name|outif
+argument_list|)
+operator|->
+name|chlim
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|m

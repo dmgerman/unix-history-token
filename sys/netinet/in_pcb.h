@@ -477,9 +477,6 @@ decl_stmt|;
 name|short
 name|inp6_hops
 decl_stmt|;
-name|u_int8_t
-name|inp6_hlim
-decl_stmt|;
 block|}
 name|inp_depend6
 struct|;
@@ -515,10 +512,6 @@ define|#
 directive|define
 name|in6p_route
 value|inp_inc.inc6_route
-define|#
-directive|define
-name|in6p_ip6_hlim
-value|inp_depend6.inp6_hlim
 define|#
 directive|define
 name|in6p_hops
@@ -1057,6 +1050,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IN6P_TCLASS
+value|0x400000
+end_define
+
+begin_comment
+comment|/* receive traffic class value */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_RTHDRDSTOPTS
 value|0x200000
 end_define
@@ -1079,15 +1083,37 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IN6P_RFC2292
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* used RFC2292 API on the socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6P_MTU
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* receive path MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INP_CONTROLOPTS
-value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_AUTOFLOWLABEL)
+value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INP_UNMAPPABLEOPTS
-value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR|\ 				 IN6P_AUTOFLOWLABEL)
+value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL)
 end_define
 
 begin_comment

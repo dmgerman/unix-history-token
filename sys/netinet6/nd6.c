@@ -5006,13 +5006,13 @@ operator|)
 name|data
 decl_stmt|;
 name|struct
-name|in6_prlist
+name|in6_oprlist
 modifier|*
-name|prl
+name|oprl
 init|=
 operator|(
 expr|struct
-name|in6_prlist
+name|in6_oprlist
 operator|*
 operator|)
 name|data
@@ -5137,9 +5137,7 @@ name|dr
 operator|->
 name|rtaddr
 expr_stmt|;
-if|if
-condition|(
-name|IN6_IS_ADDR_LINKLOCAL
+name|in6_clearscope
 argument_list|(
 operator|&
 name|drl
@@ -5150,47 +5148,6 @@ name|i
 index|]
 operator|.
 name|rtaddr
-argument_list|)
-condition|)
-block|{
-comment|/* XXX: need to this hack for KAME stack */
-name|drl
-operator|->
-name|defrouter
-index|[
-name|i
-index|]
-operator|.
-name|rtaddr
-operator|.
-name|s6_addr16
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"default router list contains a "
-literal|"non-linklocal address(%s)\n"
-argument_list|,
-name|ip6_sprintf
-argument_list|(
-operator|&
-name|drl
-operator|->
-name|defrouter
-index|[
-name|i
-index|]
-operator|.
-name|rtaddr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|drl
@@ -5269,16 +5226,16 @@ break|break;
 case|case
 name|SIOCGPRLST_IN6
 case|:
-comment|/* 		 * obsolete API, use sysctl under net.inet6.icmp6 		 */
+comment|/* 		 * obsolete API, use sysctl under net.inet6.icmp6 		 * 		 * XXX the structure in6_prlist was changed in backward- 		 * incompatible manner.  in6_oprlist is used for SIOCGPRLST_IN6, 		 * in6_prlist is used for nd6_sysctl() - fill_prlist(). 		 */
 comment|/* 		 * XXX meaning of fields, especialy "raflags", is very 		 * differnet between RA prefix list and RR/static prefix list. 		 * how about separating ioctls into two? 		 */
 name|bzero
 argument_list|(
-name|prl
+name|oprl
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|prl
+name|oprl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5316,7 +5273,7 @@ operator|)
 name|in6_embedscope
 argument_list|(
 operator|&
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5335,7 +5292,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5348,7 +5305,7 @@ name|pr
 operator|->
 name|ndpr_raf
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5361,7 +5318,7 @@ name|pr
 operator|->
 name|ndpr_plen
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5374,7 +5331,7 @@ name|pr
 operator|->
 name|ndpr_vltime
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5387,7 +5344,7 @@ name|pr
 operator|->
 name|ndpr_pltime
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5402,7 +5359,7 @@ name|ndpr_ifp
 operator|->
 name|if_index
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5442,7 +5399,7 @@ block|{
 define|#
 directive|define
 name|RTRADDR
-value|prl->prefix[i].advrtr[j]
+value|oprl->prefix[i].advrtr[j]
 name|RTRADDR
 operator|=
 name|pfr
@@ -5451,40 +5408,10 @@ name|router
 operator|->
 name|rtaddr
 expr_stmt|;
-if|if
-condition|(
-name|IN6_IS_ADDR_LINKLOCAL
+name|in6_clearscope
 argument_list|(
 operator|&
 name|RTRADDR
-argument_list|)
-condition|)
-block|{
-comment|/* XXX: hack for KAME */
-name|RTRADDR
-operator|.
-name|s6_addr16
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"a router(%s) advertises "
-literal|"a prefix with "
-literal|"non-link local address\n"
-argument_list|,
-name|ip6_sprintf
-argument_list|(
-operator|&
-name|RTRADDR
-argument_list|)
 argument_list|)
 expr_stmt|;
 undef|#
@@ -5501,7 +5428,7 @@ operator|->
 name|pfr_next
 expr_stmt|;
 block|}
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5512,7 +5439,7 @@ name|advrtrs
 operator|=
 name|j
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5574,7 +5501,7 @@ operator|)
 name|in6_embedscope
 argument_list|(
 operator|&
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5593,7 +5520,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5606,7 +5533,7 @@ name|rpp
 operator|->
 name|rp_raf
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5619,7 +5546,7 @@ name|rpp
 operator|->
 name|rp_plen
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5632,7 +5559,7 @@ name|rpp
 operator|->
 name|rp_vltime
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5645,7 +5572,7 @@ name|rpp
 operator|->
 name|rp_pltime
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5660,7 +5587,7 @@ name|rp_ifp
 operator|->
 name|if_index
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5673,7 +5600,7 @@ name|rpp
 operator|->
 name|rp_expire
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[
@@ -5684,7 +5611,7 @@ name|advrtrs
 operator|=
 literal|0
 expr_stmt|;
-name|prl
+name|oprl
 operator|->
 name|prefix
 index|[

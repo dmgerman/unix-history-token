@@ -263,7 +263,7 @@ index|[
 literal|4
 index|]
 operator|=
-name|IP6OPT_RTALERT
+name|IP6OPT_ROUTER_ALERT
 expr_stmt|;
 name|hbh_buf
 index|[

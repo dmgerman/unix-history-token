@@ -1160,27 +1160,6 @@ name|ifp
 operator|=
 name|ifp
 expr_stmt|;
-name|dr0
-operator|.
-name|advint
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Mobile IPv6 */
-name|dr0
-operator|.
-name|advint_expire
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Mobile IPv6 */
-name|dr0
-operator|.
-name|advints_lost
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Mobile IPv6 */
 comment|/* unspecified or not? (RFC 2461 6.3.4) */
 if|if
 condition|(

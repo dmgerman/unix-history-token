@@ -643,12 +643,20 @@ operator|->
 name|ip6r0_segleft
 operator|--
 expr_stmt|;
-comment|/* note that ip6r0_addr does not exist in RFC2292bis */
 name|nextaddr
 operator|=
+operator|(
+operator|(
+expr|struct
+name|in6_addr
+operator|*
+operator|)
+operator|(
 name|rh0
-operator|->
-name|ip6r0_addr
+operator|+
+literal|1
+operator|)
+operator|)
 operator|+
 name|index
 expr_stmt|;

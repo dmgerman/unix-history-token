@@ -1048,12 +1048,27 @@ name|SIOCGDRLST_IN6
 value|_IOWR('i', 74, struct in6_drlist)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* XXX: SIOCGPRLST_IN6 is exposed in KAME but in6_oprlist is not. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SIOCGPRLST_IN6
-value|_IOWR('i', 75, struct in6_prlist)
+value|_IOWR('i', 75, struct in6_oprlist)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -1231,89 +1231,6 @@ begin_comment
 comment|/*  * Options for use with [gs]etsockopt at the IPV6 level.  * First word of comment is data type; bool is stored in int.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPV6_JOIN_GROUP
-value|12
-end_define
-
-begin_comment
-comment|/* ip6_mreq; join a group membership */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_LEAVE_GROUP
-value|13
-end_define
-
-begin_comment
-comment|/* ip6_mreq; leave a group membership */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_MULTICAST_HOPS
-value|10
-end_define
-
-begin_comment
-comment|/* int; set/get IP6 multicast hops */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_MULTICAST_IF
-value|9
-end_define
-
-begin_comment
-comment|/* u_int; set/get IP6 multicast i/f  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_MULTICAST_LOOP
-value|11
-end_define
-
-begin_comment
-comment|/* u_int; set/get IP6 multicast loopback */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_UNICAST_HOPS
-value|4
-end_define
-
-begin_comment
-comment|/* int; IP6 hops */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_V6ONLY
-value|27
-end_define
-
-begin_comment
-comment|/* bool; only bind INET6 at wildcard bind */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
 begin_comment
 comment|/* no hdrincl */
 end_comment
@@ -1402,6 +1319,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPV6_UNICAST_HOPS
+value|4
+end_define
+
+begin_comment
+comment|/* int; IP6 hops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MULTICAST_IF
+value|9
+end_define
+
+begin_comment
+comment|/* u_int; set/get IP6 multicast i/f  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MULTICAST_HOPS
+value|10
+end_define
+
+begin_comment
+comment|/* int; set/get IP6 multicast hops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MULTICAST_LOOP
+value|11
+end_define
+
+begin_comment
+comment|/* u_int; set/get IP6 multicast loopback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_JOIN_GROUP
+value|12
+end_define
+
+begin_comment
+comment|/* ip6_mreq; join a group membership */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_LEAVE_GROUP
+value|13
+end_define
+
+begin_comment
+comment|/* ip6_mreq; leave a group membership */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPV6_PORTRANGE
 value|14
 end_define
@@ -1425,10 +1408,16 @@ begin_comment
 comment|/* RFC2292 options */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|IPV6_PKTINFO
+name|IPV6_2292PKTINFO
 value|19
 end_define
 
@@ -1439,7 +1428,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_HOPLIMIT
+name|IPV6_2292HOPLIMIT
 value|20
 end_define
 
@@ -1450,7 +1439,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_NEXTHOP
+name|IPV6_2292NEXTHOP
 value|21
 end_define
 
@@ -1461,7 +1450,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_HOPOPTS
+name|IPV6_2292HOPOPTS
 value|22
 end_define
 
@@ -1472,18 +1461,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_DSTOPTS
+name|IPV6_2292DSTOPTS
 value|23
 end_define
 
 begin_comment
-comment|/* bool; destination option */
+comment|/* bool; destinaion option */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPV6_RTHDR
+name|IPV6_2292RTHDR
 value|24
 end_define
 
@@ -1494,13 +1483,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_PKTOPTIONS
+name|IPV6_2292PKTOPTIONS
 value|25
 end_define
 
 begin_comment
 comment|/* buf/cmsghdr; set/get IPv6 options */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1511,6 +1505,17 @@ end_define
 
 begin_comment
 comment|/* int; checksum offset for raw socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_V6ONLY
+value|27
+end_define
+
+begin_comment
+comment|/* bool; make AF_INET6 sockets v6 only */
 end_comment
 
 begin_ifndef
@@ -1639,6 +1644,308 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* new socket options introduced in RFC2292bis */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RTHDRDSTOPTS
+value|35
+end_define
+
+begin_comment
+comment|/* ip6_dest; send dst option before rthdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVPKTINFO
+value|36
+end_define
+
+begin_comment
+comment|/* bool; recv if, dst addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVHOPLIMIT
+value|37
+end_define
+
+begin_comment
+comment|/* bool; recv hop limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVRTHDR
+value|38
+end_define
+
+begin_comment
+comment|/* bool; recv routing header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVHOPOPTS
+value|39
+end_define
+
+begin_comment
+comment|/* bool; recv hop-by-hop option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVDSTOPTS
+value|40
+end_define
+
+begin_comment
+comment|/* bool; recv dst option after rthdr */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVRTHDRDSTOPTS
+value|41
+end_define
+
+begin_comment
+comment|/* bool; recv dst option before rthdr */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPV6_USE_MIN_MTU
+value|42
+end_define
+
+begin_comment
+comment|/* bool; send packets at the minimum MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVPATHMTU
+value|43
+end_define
+
+begin_comment
+comment|/* bool; notify an according MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_PATHMTU
+value|44
+end_define
+
+begin_comment
+comment|/* mtuinfo; get the current path MTU (sopt), 				      4 bytes int; MTU notification (cmsg) */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*obsoleted during 2292bis -> 3542*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_REACHCONF
+value|45
+end_define
+
+begin_comment
+comment|/* no data; ND reachability confirm 				      (cmsg only/not in of RFC3542) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* more new socket options introduced in RFC2292bis */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_PKTINFO
+value|46
+end_define
+
+begin_comment
+comment|/* in6_pktinfo; send if, src addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_HOPLIMIT
+value|47
+end_define
+
+begin_comment
+comment|/* int; send hop limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_NEXTHOP
+value|48
+end_define
+
+begin_comment
+comment|/* sockaddr; next hop addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_HOPOPTS
+value|49
+end_define
+
+begin_comment
+comment|/* ip6_hbh; send hop-by-hop option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_DSTOPTS
+value|50
+end_define
+
+begin_comment
+comment|/* ip6_dest; send dst option befor rthdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RTHDR
+value|51
+end_define
+
+begin_comment
+comment|/* ip6_rthdr; send routing header */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|IPV6_PKTOPTIONS
+value|52
+end_define
+
+begin_comment
+comment|/* buf/cmsghdr; set/get IPv6 options */
+end_comment
+
+begin_comment
+comment|/* obsoleted by 2292bis */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVTCLASS
+value|57
+end_define
+
+begin_comment
+comment|/* bool; recv traffic class values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_AUTOFLOWLABEL
+value|59
+end_define
+
+begin_comment
+comment|/* bool; attach flowlabel automagically */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_TCLASS
+value|61
+end_define
+
+begin_comment
+comment|/* int; send traffic class value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_DONTFRAG
+value|62
+end_define
+
+begin_comment
+comment|/* bool; disable IPv6 fragmentation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_PREFER_TEMPADDR
+value|63
+end_define
+
+begin_comment
+comment|/* int; prefer temporary addresses as 				    * the source address. 				    */
+end_comment
+
+begin_comment
 comment|/* to define items, should talk with KAME guys first, for *BSD compatibility */
 end_comment
 
@@ -1744,6 +2051,26 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Control structure for IPV6_RECVPATHMTU socket option.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip6_mtuinfo
+block|{
+name|struct
+name|sockaddr_in6
+name|ip6m_addr
+decl_stmt|;
+comment|/* or sockaddr_storage? */
+name|u_int32_t
+name|ip6m_mtu
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Argument for IPV6_PORTRANGE:  * - which range to search when port is unspecified at bind() or connect()  */
 end_comment
 
@@ -1779,6 +2106,12 @@ end_define
 begin_comment
 comment|/* "low" - vouchsafe security */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Definitions for inet6 sysctl operations.  *  * Third level is protocol number.  * Fourth level is desired variable within that protocol.  */
@@ -2163,6 +2496,15 @@ name|IPV6CTL_MAXID
 value|42
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
 begin_comment
 comment|/*  * Redefinition of mbuf flags  */
 end_comment
@@ -2473,6 +2815,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_macro
 name|__BEGIN_DECLS
 end_macro
@@ -2542,7 +2890,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|uint8_t
+name|u_int8_t
 modifier|*
 name|inet6_option_alloc
 name|__P
@@ -2574,7 +2922,7 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|,
-name|uint8_t
+name|u_int8_t
 operator|*
 operator|*
 operator|)
@@ -2594,7 +2942,7 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|,
-name|uint8_t
+name|u_int8_t
 operator|*
 operator|*
 operator|,
@@ -2757,7 +3105,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|size_t
+name|socklen_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2773,15 +3121,15 @@ operator|(
 name|void
 operator|*
 operator|,
-name|size_t
+name|socklen_t
 operator|,
 name|int
 operator|,
-name|uint8_t
+name|u_int8_t
 operator|,
-name|size_t
+name|socklen_t
 operator|,
-name|uint8_t
+name|u_int8_t
 operator|,
 name|void
 operator|*
@@ -2801,7 +3149,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|size_t
+name|socklen_t
 operator|,
 name|int
 operator|)
@@ -2819,12 +3167,12 @@ operator|(
 name|void
 operator|*
 operator|,
-name|size_t
+name|int
 operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2840,14 +3188,14 @@ operator|(
 name|void
 operator|*
 operator|,
-name|size_t
+name|socklen_t
 operator|,
 name|int
 operator|,
-name|uint8_t
+name|u_int8_t
 operator|*
 operator|,
-name|size_t
+name|socklen_t
 operator|*
 operator|,
 name|void
@@ -2868,13 +3216,13 @@ operator|(
 name|void
 operator|*
 operator|,
-name|size_t
+name|socklen_t
 operator|,
 name|int
 operator|,
-name|uint8_t
+name|u_int8_t
 operator|,
-name|size_t
+name|socklen_t
 operator|*
 operator|,
 name|void
@@ -2895,12 +3243,12 @@ operator|(
 name|void
 operator|*
 operator|,
-name|size_t
+name|int
 operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2908,7 +3256,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|size_t
+name|socklen_t
 name|inet6_rth_space
 name|__P
 argument_list|(
@@ -2932,7 +3280,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|,
 name|int
 operator|,

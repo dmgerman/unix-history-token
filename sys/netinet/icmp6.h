@@ -81,7 +81,12 @@ block|}
 name|icmp6_dataun
 union|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -230,34 +235,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICMP6_MEMBERSHIP_QUERY
-value|130
-end_define
-
-begin_comment
-comment|/* group membership query */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MLD_LISTENER_QUERY
 value|130
 end_define
 
 begin_comment
 comment|/* multicast listener query */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICMP6_MEMBERSHIP_REPORT
-value|131
-end_define
-
-begin_comment
-comment|/* group membership report */
 end_comment
 
 begin_define
@@ -274,23 +257,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICMP6_MEMBERSHIP_REDUCTION
-value|132
-end_define
-
-begin_comment
-comment|/* group membership termination */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MLD_LISTENER_DONE
 value|132
 end_define
 
 begin_comment
 comment|/* multicast listener done */
+end_comment
+
+begin_comment
+comment|/* RFC2292 decls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_MEMBERSHIP_QUERY
+value|130
+end_define
+
+begin_comment
+comment|/* group membership query */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_MEMBERSHIP_REPORT
+value|131
+end_define
+
+begin_comment
+comment|/* group membership report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_MEMBERSHIP_REDUCTION
+value|132
+end_define
+
+begin_comment
+comment|/* group membership termination */
 end_comment
 
 begin_ifndef
@@ -487,28 +496,6 @@ begin_comment
 comment|/* mtrace messages */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICMP6_HADISCOV_REQUEST
-value|202
-end_define
-
-begin_comment
-comment|/* XXX To be defined */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICMP6_HADISCOV_REPLY
-value|203
-end_define
-
-begin_comment
-comment|/* XXX To be defined */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -538,7 +525,7 @@ begin_define
 define|#
 directive|define
 name|ICMP6_MAXTYPE
-value|203
+value|201
 end_define
 
 begin_define
@@ -816,7 +803,12 @@ name|mld_addr
 decl_stmt|;
 comment|/* multicast address */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -938,7 +930,12 @@ name|nd_rs_hdr
 decl_stmt|;
 comment|/* could be followed by options */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -989,7 +986,12 @@ decl_stmt|;
 comment|/* retransmit timer */
 comment|/* could be followed by options */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1131,7 +1133,12 @@ decl_stmt|;
 comment|/*target address */
 comment|/* could be followed by options */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1179,7 +1186,12 @@ decl_stmt|;
 comment|/* target address */
 comment|/* could be followed by options */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1305,7 +1317,12 @@ decl_stmt|;
 comment|/* destination address */
 comment|/* could be followed by options */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1350,7 +1367,12 @@ name|nd_opt_len
 decl_stmt|;
 comment|/* followed by option specific data*/
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1431,7 +1453,12 @@ name|in6_addr
 name|nd_opt_pi_prefix
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1468,7 +1495,12 @@ name|nd_opt_rh_reserved2
 decl_stmt|;
 comment|/* followed by IP header and data */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1490,7 +1522,12 @@ name|u_int32_t
 name|nd_opt_mtu_mtu
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1516,7 +1553,12 @@ name|nd_opt_rti_lifetime
 decl_stmt|;
 comment|/* prefix follows */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1549,7 +1591,12 @@ endif|#
 directive|endif
 comment|/* could be followed by options */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1573,7 +1620,12 @@ index|]
 decl_stmt|;
 comment|/* could be followed by reply data */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2007,7 +2059,12 @@ index|]
 decl_stmt|;
 comment|/* XXX: alignment */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2037,7 +2094,12 @@ name|u_int32_t
 name|rr_reserved
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2135,7 +2197,12 @@ name|in6_addr
 name|rpm_prefix
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2198,7 +2265,12 @@ name|in6_addr
 name|rpu_prefix
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2287,7 +2359,12 @@ name|in6_addr
 name|rrr_prefix
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 

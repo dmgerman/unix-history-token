@@ -236,6 +236,42 @@ name|ip6po_route
 value|ip6po_rhinfo.ip6po_rhi_route
 end_define
 
+begin_comment
+comment|/* Nexthop related info */
+end_comment
+
+begin_struct
+struct|struct
+name|ip6po_nhinfo
+block|{
+name|struct
+name|sockaddr
+modifier|*
+name|ip6po_nhi_nexthop
+decl_stmt|;
+name|struct
+name|route_in6
+name|ip6po_nhi_route
+decl_stmt|;
+comment|/* Route to the nexthop */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ip6po_nexthop
+value|ip6po_nhinfo.ip6po_nhi_nexthop
+end_define
+
+begin_define
+define|#
+directive|define
+name|ip6po_nextroute
+value|ip6po_nhinfo.ip6po_nhi_route
+end_define
+
 begin_struct
 struct|struct
 name|ip6_pktopts
@@ -256,12 +292,11 @@ name|in6_pktinfo
 modifier|*
 name|ip6po_pktinfo
 decl_stmt|;
+comment|/* Next-hop address information */
 name|struct
-name|sockaddr
-modifier|*
-name|ip6po_nexthop
+name|ip6po_nhinfo
+name|ip6po_nhinfo
 decl_stmt|;
-comment|/* Next-hop address */
 name|struct
 name|ip6_hbh
 modifier|*
@@ -285,6 +320,81 @@ name|ip6_dest
 modifier|*
 name|ip6po_dest2
 decl_stmt|;
+name|int
+name|ip6po_tclass
+decl_stmt|;
+comment|/* traffic class */
+name|int
+name|ip6po_minmtu
+decl_stmt|;
+comment|/* fragment vs PMTU discovery policy */
+define|#
+directive|define
+name|IP6PO_MINMTU_MCASTONLY
+value|-1
+comment|/* default; send at min MTU for multicast*/
+define|#
+directive|define
+name|IP6PO_MINMTU_DISABLE
+value|0
+comment|/* always perform pmtu disc */
+define|#
+directive|define
+name|IP6PO_MINMTU_ALL
+value|1
+comment|/* always send at min MTU */
+name|int
+name|ip6po_prefer_tempaddr
+decl_stmt|;
+comment|/* whether temporary addresses are 					   preferred as source address */
+define|#
+directive|define
+name|IP6PO_TEMPADDR_SYSTEM
+value|-1
+comment|/* follow the system default */
+define|#
+directive|define
+name|IP6PO_TEMPADDR_NOTPREFER
+value|0
+comment|/* not prefer temporary address */
+define|#
+directive|define
+name|IP6PO_TEMPADDR_PREFER
+value|1
+comment|/* prefer temporary address */
+name|int
+name|ip6po_flags
+decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* parameters in this block is obsolete. do not reuse the values. */
+define|#
+directive|define
+name|IP6PO_REACHCONF
+value|0x01
+comment|/* upper-layer reachability confirmation. */
+define|#
+directive|define
+name|IP6PO_MINMTU
+value|0x02
+comment|/* use minimum MTU (IPV6_USE_MIN_MTU) */
+endif|#
+directive|endif
+define|#
+directive|define
+name|IP6PO_DONTFRAG
+value|0x04
+comment|/* disable fragmentation (IPV6_DONTFRAG) */
+define|#
+directive|define
+name|IP6PO_USECOA
+value|0x08
+comment|/* use care of address */
+name|int
+name|needfree
+decl_stmt|;
+comment|/* members dynamically allocated */
 block|}
 struct|;
 end_struct
@@ -1425,6 +1535,12 @@ expr|struct
 name|ip6_pktopts
 operator|*
 operator|,
+expr|struct
+name|ip6_pktopts
+operator|*
+operator|,
+name|int
+operator|,
 name|int
 operator|,
 name|int
@@ -1442,8 +1558,6 @@ operator|(
 expr|struct
 name|ip6_pktopts
 operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|)

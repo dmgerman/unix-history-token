@@ -425,9 +425,13 @@ argument_list|,
 operator|&
 name|opt
 argument_list|,
+name|stickyopt
+argument_list|,
 name|priv
 argument_list|,
 literal|0
+argument_list|,
+name|IPPROTO_UDP
 argument_list|)
 operator|)
 operator|!=
@@ -1075,8 +1079,6 @@ argument_list|(
 name|in6p
 operator|->
 name|in6p_outputopts
-argument_list|,
-literal|0
 argument_list|,
 operator|-
 literal|1
