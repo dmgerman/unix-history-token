@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.14 %G%"
+literal|"@(#)cpp.c	1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,8 @@ operator||
 name|vax
 operator||
 name|mc68000
+operator||
+name|tahoe
 end_if
 
 begin_define
@@ -9596,6 +9598,18 @@ operator|=
 name|stsym
 argument_list|(
 literal|"vax"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|tahoe
+name|varloc
+operator|=
+name|stsym
+argument_list|(
+literal|"tahoe"
 argument_list|)
 expr_stmt|;
 endif|#

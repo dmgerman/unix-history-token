@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yylex.c	1.3 %G%"
+literal|"@(#)yylex.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,8 @@ operator||
 name|vax
 operator||
 name|mc68000
+operator||
+name|tahoe
 end_if
 
 begin_define
