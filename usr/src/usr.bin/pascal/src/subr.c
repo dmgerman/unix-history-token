@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c 1.4 %G%"
+literal|"@(#)subr.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ begin_block
 block|{
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 name|struct
 name|stat
 name|stb
