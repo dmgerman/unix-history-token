@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.29 1998/03/02 20:51:06 guido Exp $"
+literal|"$Id: cardd.c,v 1.30 1998/03/09 05:18:50 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,12 +428,6 @@ name|slot
 operator|=
 name|i
 expr_stmt|;
-name|sp
-operator|->
-name|state
-operator|=
-name|empty
-expr_stmt|;
 comment|/* Check to see if the controller memory has been set up. */
 if|if
 condition|(
@@ -523,23 +517,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%p %p\n"
-argument_list|,
-name|sp
-argument_list|,
-operator|&
-name|sp
-operator|->
-name|next
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sp
 operator|->
 name|next
@@ -604,26 +581,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|state
-operator|.
-name|state
-operator|==
-name|sp
-operator|->
-name|state
-condition|)
-name|logmsg
-argument_list|(
-literal|"State same as before, continuing anyway"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|state
@@ -637,6 +594,14 @@ case|:
 case|case
 name|noslot
 case|:
+if|if
+condition|(
+name|state
+operator|.
+name|laststate
+operator|==
+name|filled
+condition|)
 name|card_removed
 argument_list|(
 name|sp
@@ -646,16 +611,14 @@ break|break;
 case|case
 name|filled
 case|:
-comment|/* 		 * If state was already filled, fake a removal first to get 		 * our state in sync with the kernel. This happens when the 		 * systems resumes and we only get to process the state  		 * change from suspend to empty after inserted() has run. 		 * In that case the kernel state is perfectly normal. 		 * 		 * The reason for not doing nothing is that the kernel 		 * has to be informed again about IRQ and IO window. 		 */
+comment|/* 		 * If the previous state was suspend, fake a removal to get 		 * our state in sync with the kernel. This happens when the 		 * system resumes, since we can only reliably process 		 * the state change after we resume. 		 */
 if|if
 condition|(
 name|state
 operator|.
-name|state
+name|laststate
 operator|==
-name|sp
-operator|->
-name|state
+name|suspend
 condition|)
 name|card_removed
 argument_list|(
@@ -674,14 +637,6 @@ case|:
 comment|/* ignored */
 break|break;
 block|}
-name|sp
-operator|->
-name|state
-operator|=
-name|state
-operator|.
-name|state
-expr_stmt|;
 block|}
 end_function
 
