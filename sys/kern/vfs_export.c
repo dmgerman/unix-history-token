@@ -510,6 +510,9 @@ name|sockaddr
 operator|*
 operator|)
 operator|(
+operator|(
+name|caddr_t
+operator|)
 name|saddr
 operator|+
 name|argp
