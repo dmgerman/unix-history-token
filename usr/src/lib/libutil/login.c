@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.2 (Berkeley) %G%"
+literal|"@(#)login.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,8 +103,10 @@ argument_list|(
 name|_PATH_UTMP
 argument_list|,
 name|O_WRONLY
+operator||
+name|O_CREAT
 argument_list|,
-literal|0
+literal|0644
 argument_list|)
 operator|)
 operator|>=
