@@ -410,27 +410,28 @@ name|USB_PRODUCT_MUSTEK_1200CU
 block|}
 block|,
 block|{
-name|USB_VENDOR_NATIONAL
-block|,
-name|USB_PRODUCT_NATIONAL_BEARPAW
-block|}
-block|,
-block|{
-name|USB_VENDOR_NATIONAL
+name|USB_VENDOR_MUSTEK
 block|,
 name|USB_PRODUCT_MUSTEK_600CU
 block|}
 block|,
 block|{
-name|USB_VENDOR_NATIONAL
+name|USB_VENDOR_MUSTEK
 block|,
 name|USB_PRODUCT_MUSTEK_1200USB
 block|}
 block|,
 block|{
-name|USB_VENDOR_NATIONAL
+name|USB_VENDOR_MUSTEK
 block|,
 name|USB_PRODUCT_MUSTEK_1200UB
+block|}
+block|,
+comment|/* National */
+block|{
+name|USB_VENDOR_NATIONAL
+block|,
+name|USB_PRODUCT_NATIONAL_BEARPAW1200
 block|}
 block|,
 comment|/* Primax */
