@@ -912,7 +912,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	printf("b: [rl: %d, rp %d, fl %d, fp %d]; bs: [rl: %d, rp %d, fl %d, fp %d]\n", 		b->rl, b->rp, b->fl, b->fp, bs->rl, bs->rp, bs->fl, bs->fp); 	*/
+name|DEB
+argument_list|(
+argument|if (c->flags& CHN_F_CLOSING) 		printf(
+literal|"b: [rl: %d, rp %d, fl %d, fp %d]; bs: [rl: %d, rp %d, fl %d, fp %d]\n"
+argument|, 			b->rl, b->rp, b->fl, b->fp, bs->rl, bs->rp, bs->fl, bs->fp)
+argument_list|)
+empty_stmt|;
 comment|/* Don't allow write unaligned data */
 while|while
 condition|(
@@ -4022,14 +4028,27 @@ name|int
 name|go
 parameter_list|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+name|b
+argument_list|,
+operator|(
+literal|"buf_isadma called with b == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|ISA_DMA
 argument_list|(
 name|b
 argument_list|)
-condition|)
-block|{
+argument_list|,
+operator|(
+literal|"buf_isadma called on non-ISA channel"
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|go
@@ -4038,16 +4057,6 @@ block|{
 case|case
 name|PCMTRIG_START
 case|:
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"buf 0x%p ISA DMA started\n"
-argument_list|,
-name|b
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|isa_dmastart
 argument_list|(
 name|b
@@ -4076,16 +4085,6 @@ case|:
 case|case
 name|PCMTRIG_ABORT
 case|:
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"buf 0x%p ISA DMA stopped\n"
-argument_list|,
-name|b
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|isa_dmastop
 argument_list|(
 name|b
@@ -4116,15 +4115,28 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
-else|else
-name|KASSERT
+name|DEB
 argument_list|(
-literal|1
+name|printf
+argument_list|(
+literal|"buf 0x%p ISA DMA %s, channel %d\n"
+argument_list|,
+name|b
 argument_list|,
 operator|(
-literal|"buf_isadma called on invalid channel"
+name|go
+operator|==
+name|PCMTRIG_START
 operator|)
+condition|?
+literal|"started"
+else|:
+literal|"stopped"
+argument_list|,
+name|b
+operator|->
+name|chan
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4704,6 +4716,16 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|b
+operator|->
+name|dl
+condition|)
+return|return
+literal|0
+return|;
 name|c
 operator|->
 name|flags
@@ -4723,16 +4745,8 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|b
-operator|->
-name|dl
-condition|)
+else|else
 block|{
-name|resid_p
-operator|=
 name|resid
 operator|=
 name|b
@@ -4742,6 +4756,10 @@ operator|+
 name|bs
 operator|->
 name|rl
+expr_stmt|;
+name|resid_p
+operator|=
+name|resid
 expr_stmt|;
 name|count
 operator|=
@@ -4832,7 +4850,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"chn_flush: now rl = %d, fl = %d\n"
+literal|"chn_flush: now rl = %d, fl = %d, resid = %d\n"
 argument_list|,
 name|b
 operator|->
@@ -4841,6 +4859,8 @@ argument_list|,
 name|b
 operator|->
 name|fl
+argument_list|,
+name|resid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4892,12 +4912,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|c
-operator|->
-name|direction
-operator|==
-name|PCMDIR_PLAY
-operator|&&
 name|b
 operator|->
 name|dl
