@@ -254,12 +254,16 @@ name|prot
 decl_stmt|;
 name|KASSERT
 argument_list|(
+operator|(
 name|rw
 operator|&
 operator|(
 operator|~
 name|VM_PROT_ALL
 operator|)
+operator|)
+operator|==
+literal|0
 argument_list|,
 operator|(
 literal|"illegal ``rw'' argument to kernacc (%x)\n"
@@ -360,12 +364,16 @@ name|save_hint
 decl_stmt|;
 name|KASSERT
 argument_list|(
+operator|(
 name|rw
 operator|&
 operator|(
 operator|~
 name|VM_PROT_ALL
 operator|)
+operator|)
+operator|==
+literal|0
 argument_list|,
 operator|(
 literal|"illegal ``rw'' argument to useracc (%x)\n"
