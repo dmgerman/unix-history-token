@@ -364,10 +364,6 @@ name|UMASS_MAX_TRANSFER_SIZE
 value|65536
 end_define
 
-begin_comment
-comment|/* The transfer speed determines the timeout value */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -392,6 +388,17 @@ directive|define
 name|UMASS_ZIP100_TRANSFER_SPEED
 value|650
 end_define
+
+begin_define
+define|#
+directive|define
+name|UMASS_TIMEOUT
+value|5000
+end_define
+
+begin_comment
+comment|/* msecs */
+end_comment
 
 begin_comment
 comment|/* CAM specific definitions */
@@ -1273,10 +1280,6 @@ name|int
 name|transfer_speed
 decl_stmt|;
 comment|/* in kb/s */
-name|int
-name|timeout
-decl_stmt|;
-comment|/* in msecs */
 block|}
 struct|;
 end_struct
@@ -2504,30 +2507,6 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-comment|/* The timeout is based on the maximum expected transfer size 	 * divided by the expected transfer speed. 	 * We multiply by 4 to make sure a busy system doesn't make things 	 * fail. 	 */
-name|sc
-operator|->
-name|timeout
-operator|=
-literal|4
-operator|*
-operator|(
-literal|1000
-operator|*
-name|UMASS_MAX_TRANSFER_SIZE
-operator|/
-name|sc
-operator|->
-name|transfer_speed
-operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|timeout
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* add some leeway for spin up of a drive */
 return|return
 operator|(
 name|UMATCH_DEVCLASS_DEVSUBCLASS_DEVPROTO
@@ -3802,9 +3781,7 @@ name|buflen
 argument_list|,
 name|flags
 argument_list|,
-name|sc
-operator|->
-name|timeout
+name|UMASS_TIMEOUT
 argument_list|,
 name|sc
 operator|->
@@ -3912,9 +3889,7 @@ operator|*
 operator|)
 name|sc
 argument_list|,
-name|sc
-operator|->
-name|timeout
+name|UMASS_TIMEOUT
 argument_list|,
 name|req
 argument_list|,
