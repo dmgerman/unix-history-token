@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tags.c	5.3 (Berkeley) %G%"
+literal|"@(#)tags.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<less.h>
 end_include
 
 begin_define
@@ -51,7 +57,6 @@ value|((c)==' ' || (c)=='\t')
 end_define
 
 begin_decl_stmt
-name|public
 name|char
 modifier|*
 name|tagfile
@@ -59,7 +64,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|public
 name|char
 modifier|*
 name|tagpattern
@@ -102,18 +106,19 @@ begin_comment
 comment|/*  * Find a tag in the "tags" file.  * Sets "tagfile" to the name of the file containing the tag,  * and "tagpattern" to the search pattern which should be used  * to find the tag.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_expr_stmt
 name|findtag
-parameter_list|(
+argument_list|(
 name|tag
-parameter_list|)
+argument_list|)
 specifier|register
 name|char
-modifier|*
+operator|*
 name|tag
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|char
@@ -366,6 +371,9 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|f
@@ -373,6 +381,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|f
@@ -388,22 +399,26 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Search for a tag.  * This is a stripped-down version of search().  * We don't use search() for several reasons:  *   -	We don't want to blow away any search string we may have saved.  *   -	The various regular-expression functions (from different systems:  *	regcmp vs. re_comp) behave differently in the presence of   *	parentheses (which are almost always found in a tag).  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|tagsearch
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|,
 name|linepos
+decl_stmt|,
+name|forw_raw_line
+argument_list|()
 decl_stmt|;
 name|int
 name|linenum
@@ -411,7 +426,7 @@ decl_stmt|;
 name|pos
 operator|=
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 expr_stmt|;
@@ -515,7 +530,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)signal.c	5.4 (Berkeley) %G%"
+literal|"@(#)signal.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<less.h>
 end_include
 
 begin_include
@@ -49,7 +49,6 @@ comment|/*  * "sigs" contains bits indicating signals which need to be processed
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|sigs
 decl_stmt|;
@@ -153,11 +152,10 @@ begin_comment
 comment|/*  * "Stop" (^Z) signal handler.  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|HANDLER
 name|stop
-parameter_list|()
+argument_list|()
 block|{
 operator|(
 name|void
@@ -168,11 +166,11 @@ name|SIGTSTP
 argument_list|,
 name|stop
 argument_list|)
-expr_stmt|;
+block|;
 name|sigs
 operator||=
 name|S_STOP
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|reading
@@ -181,7 +179,7 @@ name|intread
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -198,12 +196,16 @@ begin_comment
 comment|/*  * "Window" change handler  */
 end_comment
 
-begin_function
-name|public
-name|HANDLER
+begin_macro
 name|winch
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGWINCH
@@ -223,7 +225,7 @@ name|intread
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_else
 else|#
@@ -240,12 +242,16 @@ begin_comment
 comment|/*  * "Window" change handler  */
 end_comment
 
-begin_function
-name|public
-name|HANDLER
+begin_macro
 name|winch
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGWIND
@@ -265,7 +271,7 @@ name|intread
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
@@ -281,17 +287,25 @@ begin_comment
 comment|/*  * Set up the signal handlers.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|init_signals
-parameter_list|(
-name|on
-parameter_list|)
+argument_list|(
+argument|on
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|on
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
+name|int
+name|quit
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|on
@@ -416,17 +430,18 @@ endif|#
 directive|endif
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Process any signals we have received.  * A received signal cause a bit to be set in "sigs".  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|psignals
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -517,6 +532,9 @@ comment|/* 		 * Clean up the terminal. 		 */
 ifdef|#
 directive|ifdef
 name|SIGTTOU
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -535,6 +553,9 @@ expr_stmt|;
 name|deinit
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|flush
 argument_list|()
 expr_stmt|;
@@ -546,6 +567,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGTTOU
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -555,6 +579,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -562,6 +589,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 name|getpid
@@ -571,6 +601,9 @@ name|SIGTSTP
 argument_list|)
 expr_stmt|;
 comment|/* 		 * ... Bye bye. ... 		 * Hopefully we'll be back later and resume here... 		 * Reset the terminal and arrange to repaint the 		 * screen when we get back to the main command loop. 		 */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -594,7 +627,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 end_unit
 

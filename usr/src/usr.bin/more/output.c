@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.4 (Berkeley) %G%"
+literal|"@(#)output.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,11 +35,16 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<less.h>
 end_include
 
 begin_decl_stmt
-name|public
 name|int
 name|errmsgs
 decl_stmt|;
@@ -102,13 +107,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|twiddle
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|screen_trashed
 decl_stmt|;
 end_decl_stmt
@@ -128,23 +126,16 @@ name|line
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|first_cmd
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Display the line which is in the line buffer.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|put_line
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|char
@@ -185,12 +176,6 @@ name|NULL
 condition|)
 name|line
 operator|=
-operator|(
-name|twiddle
-operator|)
-condition|?
-literal|"~"
-else|:
 literal|""
 expr_stmt|;
 name|column
@@ -308,7 +293,7 @@ operator|&
 literal|0200
 condition|)
 block|{
-comment|/* 				 * Control characters arrive here as the 				 * normal character [carat_char(c)] with 				 * the 0200 bit set.  See pappend(). 				 */
+comment|/* 				 * Control characters arrive here as the 				 * normal character [CARAT_CHAR(c)] with 				 * the 0200 bit set.  See pappend(). 				 */
 name|putchr
 argument_list|(
 literal|'^'
@@ -356,71 +341,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Is a given character a "control" character?  * {{ ASCII DEPENDENT }}  */
-end_comment
-
-begin_function
-name|public
-name|int
-name|control_char
-parameter_list|(
-name|c
-parameter_list|)
-name|int
-name|c
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|c
-operator|<
-literal|' '
-operator|||
-name|c
-operator|==
-literal|'\177'
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Return the printable character used to identify a control character  * (printed after a carat; e.g. '\3' => "^C").  * {{ ASCII DEPENDENT }}  */
-end_comment
-
-begin_function
-name|public
-name|int
-name|carat_char
-parameter_list|(
-name|c
-parameter_list|)
-name|int
-name|c
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|(
-name|c
-operator|==
-literal|'\177'
-operator|)
-condition|?
-literal|'?'
-else|:
-operator|(
-name|c
-operator||
-literal|0100
-operator|)
-operator|)
-return|;
-block|}
-end_function
+end_block
 
 begin_decl_stmt
 specifier|static
@@ -446,11 +367,12 @@ begin_comment
 comment|/*  * Flush buffered output.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|flush
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -491,22 +413,26 @@ operator|=
 name|obuf
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Output a character.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|putchr
-parameter_list|(
-name|c
-parameter_list|)
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 if|if
 condition|(
@@ -531,24 +457,25 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Output a string.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_expr_stmt
 name|putstr
-parameter_list|(
+argument_list|(
 name|s
-parameter_list|)
+argument_list|)
 specifier|register
 name|char
-modifier|*
+operator|*
 name|s
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 while|while
 condition|(
@@ -565,7 +492,7 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Output a message in the lower left corner of the screen  * and wait for carriage return.  */
@@ -581,31 +508,24 @@ literal|"  (press RETURN)"
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|public
-name|void
+begin_macro
 name|error
-parameter_list|(
-name|s
-parameter_list|)
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-specifier|register
-name|int
-name|c
-decl_stmt|;
-specifier|static
-name|char
-name|buf
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|errmsgs
 operator|++
+name|errmsgs
 expr_stmt|;
 if|if
 condition|(
@@ -613,7 +533,10 @@ operator|!
 name|any_display
 condition|)
 block|{
-comment|/* 		 * Nothing has been displayed yet. 		 * Output this message on error output (file 		 * descriptor 2) and don't wait for a keystroke 		 * to continue. 		 * 		 * This has the desirable effect of producing all 		 * error messages on error output if standard output 		 * is directed to a file.  It also does the same if 		 * we never produce any real output; for example, if 		 * the input file(s) cannot be opened.  If we do 		 * eventually produce output, code in edit() makes 		 * sure these messages can be seen before they are 		 * overwritten or scrolled away. 		 */
+comment|/* 		 * Nothing has been displayed yet.  Output this message on 		 * error output (file descriptor 2) and don't wait for a 		 * keystroke to continue. 		 * 		 * This has the desirable effect of producing all error 		 * messages on error output if standard output is directed 		 * to a file.  It also does the same if we never produce 		 * any real output; for example, if the input file(s) cannot 		 * be opened.  If we do eventually produce output, code in 		 * edit() makes sure these messages can be seen before they 		 * are overwritten or scrolled away. 		 */
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -626,6 +549,9 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -659,42 +585,12 @@ expr_stmt|;
 name|so_exit
 argument_list|()
 expr_stmt|;
-name|c
-operator|=
+operator|(
+name|void
+operator|)
 name|getchr
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|!=
-literal|'\n'
-operator|&&
-name|c
-operator|!=
-literal|'\r'
-operator|&&
-name|c
-operator|!=
-literal|' '
-operator|&&
-name|c
-operator|!=
-name|READ_INTR
-condition|)
-block|{
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-name|c
-expr_stmt|;
-name|first_cmd
-operator|=
-name|buf
-expr_stmt|;
-block|}
 name|lower_left
 argument_list|()
 expr_stmt|;
@@ -726,7 +622,7 @@ name|flush
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_decl_stmt
 specifier|static
@@ -738,17 +634,21 @@ literal|"... (interrupt to abort)"
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|public
-name|void
+begin_macro
 name|ierror
-parameter_list|(
-name|s
-parameter_list|)
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|lower_left
 argument_list|()
@@ -776,7 +676,7 @@ name|flush
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

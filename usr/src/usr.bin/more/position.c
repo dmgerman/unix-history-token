@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)position.c	5.2 (Berkeley) %G%"
+literal|"@(#)position.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,13 +35,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"position.h"
+file|<less.h>
 end_include
 
 begin_define
@@ -57,7 +57,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|POSITION
+name|off_t
 name|table
 index|[
 name|NPOS
@@ -72,8 +72,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|sc_width
-decl_stmt|,
 name|sc_height
 decl_stmt|;
 end_decl_stmt
@@ -83,8 +81,7 @@ comment|/*  * Return the starting file position of a line displayed on the scree
 end_comment
 
 begin_function
-name|public
-name|POSITION
+name|off_t
 name|position
 parameter_list|(
 name|where
@@ -143,16 +140,20 @@ begin_comment
 comment|/*  * Add a new file position to the bottom of the position table.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|add_forw_pos
-parameter_list|(
-name|pos
-parameter_list|)
-name|POSITION
+argument_list|(
+argument|pos
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -194,22 +195,26 @@ operator|=
 name|pos
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Add a new file position to the top of the position table.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|add_back_pos
-parameter_list|(
-name|pos
-parameter_list|)
-name|POSITION
+argument_list|(
+argument|pos
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -251,17 +256,18 @@ operator|=
 name|pos
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Initialize the position table, done whenever we clear the screen.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|pos_clear
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -288,22 +294,26 @@ operator|=
 name|NULL_POSITION
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * See if the byte at a specified position is currently on the screen.  * Check the position table to see if the position falls within its range.  * Return the position table entry if found, -1 if not.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|onscreen
-parameter_list|(
-name|pos
-parameter_list|)
-name|POSITION
+argument_list|(
+argument|pos
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -360,7 +370,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyin.c	5.2 (Berkeley) %G%"
+literal|"@(#)ttyin.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<less.h>
 end_include
 
 begin_decl_stmt
@@ -49,28 +49,30 @@ begin_comment
 comment|/*  * Open keyboard for input.  * (Just use file descriptor 2.)  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|open_getchr
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tty
 operator|=
 literal|2
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Get a character from the keyboard.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|getchr
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|char
 name|c
@@ -131,7 +133,7 @@ literal|0177
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

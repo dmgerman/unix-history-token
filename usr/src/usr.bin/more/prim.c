@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prim.c	5.4 (Berkeley) %G%"
+literal|"@(#)prim.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,28 +35,47 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"position.h"
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<less.h>
 end_include
 
 begin_decl_stmt
-name|public
+name|int
+name|back_scroll
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|hit_eof
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Keeps track of how many times we hit end of file */
+comment|/* keeps track of how many times we hit end of file */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|screen_trashed
 decl_stmt|;
@@ -72,21 +91,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|quiet
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|sigs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|how_search
 decl_stmt|;
 end_decl_stmt
 
@@ -100,23 +105,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|back_scroll
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|sc_width
 decl_stmt|,
 name|sc_height
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|quit_at_eof
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +128,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|plusoption
+name|tagoption
 decl_stmt|;
 end_decl_stmt
 
@@ -150,57 +141,46 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|first_cmd
+name|off_t
+name|position
+argument_list|()
+decl_stmt|,
+name|forw_line
+argument_list|()
+decl_stmt|,
+name|back_line
+argument_list|()
+decl_stmt|,
+name|forw_raw_line
+argument_list|()
+decl_stmt|,
+name|back_raw_line
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|tagoption
+name|off_t
+name|ch_length
+argument_list|()
+decl_stmt|,
+name|ch_tell
+argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Sound the bell to indicate he is trying to move past end of file.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|eof_bell
-parameter_list|()
-block|{
-if|if
-condition|(
-name|quiet
-operator|==
-name|NOT_QUIET
-condition|)
-name|bell
-argument_list|()
-expr_stmt|;
-else|else
-name|vbell
-argument_list|()
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Check to see if the end of file is currently "displayed".  */
 end_comment
 
-begin_function
-specifier|static
-name|void
+begin_macro
 name|eof_check
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|;
 if|if
@@ -231,24 +211,24 @@ name|hit_eof
 operator|++
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * If the screen is "squished", repaint it.  * "Squished" means the first displayed line is not at the top  * of the screen; this can happen when we display a short file  * for the first time.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
+begin_macro
 name|squish_check
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
-operator|!
 name|squished
 condition|)
-return|return;
+block|{
 name|squished
 operator|=
 literal|0
@@ -257,57 +237,62 @@ name|repaint
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+block|}
+end_block
 
 begin_comment
-comment|/*  * Display n lines, scrolling forward,   * starting at position pos in the input file.  * "force" means display the n lines even if we hit end of file.  * "only_last" means display only the last screenful if n> screen size.  */
+comment|/*  * Display n lines, scrolling forward, starting at position pos in the  * input file.  "force" means display the n lines even if we hit end of  * file.  "only_last" means display only the last screenful if n> screen  * size.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
 name|forw
-parameter_list|(
+argument_list|(
 name|n
-parameter_list|,
+argument_list|,
 name|pos
-parameter_list|,
+argument_list|,
 name|force
-parameter_list|,
+argument_list|,
 name|only_last
-parameter_list|)
+argument_list|)
 specifier|register
 name|int
 name|n
-decl_stmt|;
-name|POSITION
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|force
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|only_last
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|int
-name|eof
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|nlines
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|do_repaint
-decl_stmt|;
 specifier|static
 name|int
 name|first_time
 init|=
 literal|1
+decl_stmt|;
+name|int
+name|eof
+init|=
+literal|0
+decl_stmt|,
+name|do_repaint
 decl_stmt|;
 name|squish_check
 argument_list|()
@@ -343,12 +328,6 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * Start a new screen. 			 * {{ This is not really desirable if we happen 			 *    to hit eof in the middle of this screen, 			 *    but we don't yet know if that will happen. }} 			 */
-if|if
-condition|(
-name|top_scroll
-operator|==
-literal|2
-condition|)
 name|clear
 argument_list|()
 expr_stmt|;
@@ -369,6 +348,7 @@ name|clear_eol
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 		 * This is not contiguous with what is currently displayed. 		 * Clear the screen image (position table) and start a new 		 * screen. 		 */
 if|if
 condition|(
 name|pos
@@ -379,7 +359,6 @@ name|BOTTOM_PLUS_ONE
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * This is not contiguous with what is 			 * currently displayed.  Clear the screen image  			 * (position table) and start a new screen. 			 */
 name|pos_clear
 argument_list|()
 expr_stmt|;
@@ -397,12 +376,6 @@ condition|(
 name|top_scroll
 condition|)
 block|{
-if|if
-condition|(
-name|top_scroll
-operator|==
-literal|2
-condition|)
 name|clear
 argument_list|()
 expr_stmt|;
@@ -416,13 +389,11 @@ condition|(
 operator|!
 name|first_time
 condition|)
-block|{
 name|putstr
 argument_list|(
 literal|"...skipping...\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 while|while
@@ -477,15 +448,12 @@ argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-name|nlines
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|do_repaint
 condition|)
 continue|continue;
-comment|/* 		 * If this is the first screen displayed and 		 * we hit an early EOF (i.e. before the requested 		 * number of lines), we "squish" the display down 		 * at the bottom of the screen. 		 * But don't do this if a + option or a -t option 		 * was given.  These options can cause us to 		 * start the display after the beginning of the file, 		 * and it is not appropriate to squish in that case. 		 */
+comment|/* 		 * If this is the first screen displayed and we hit an early 		 * EOF (i.e. before the requested number of lines), we 		 * "squish" the display down at the bottom of the screen. 		 * But don't do this if a -t option was given; it can cause 		 * us to start the display after the beginning of the file, 		 * and it is not appropriate to squish in that case. 		 */
 if|if
 condition|(
 name|first_time
@@ -499,9 +467,6 @@ name|top_scroll
 operator|&&
 operator|!
 name|tagoption
-operator|&&
-operator|!
-name|plusoption
 condition|)
 block|{
 name|squished
@@ -510,15 +475,6 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|top_scroll
-operator|==
-literal|1
-condition|)
-name|clear_eol
-argument_list|()
-expr_stmt|;
 name|put_line
 argument_list|()
 expr_stmt|;
@@ -539,16 +495,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|nlines
-operator|==
-literal|0
-condition|)
-name|eof_bell
-argument_list|()
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|do_repaint
 condition|)
 name|repaint
@@ -567,44 +513,49 @@ name|BOTTOM
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Display n lines, scrolling backward.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
 name|back
-parameter_list|(
+argument_list|(
 name|n
-parameter_list|,
+argument_list|,
 name|pos
-parameter_list|,
+argument_list|,
 name|force
-parameter_list|,
+argument_list|,
 name|only_last
-parameter_list|)
+argument_list|)
 specifier|register
 name|int
 name|n
-decl_stmt|;
-name|POSITION
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|force
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|only_last
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|int
-name|nlines
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|do_repaint
 decl_stmt|;
@@ -675,9 +626,6 @@ argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-name|nlines
-operator|++
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -700,16 +648,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|nlines
-operator|==
-literal|0
-condition|)
-name|eof_bell
-argument_list|()
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|do_repaint
 condition|)
 name|repaint
@@ -724,39 +662,44 @@ name|BOTTOM
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Display n more lines, forward.  * Start just after the line currently displayed at the bottom of the screen.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|forward
-parameter_list|(
-name|n
-parameter_list|,
-name|only_last
-parameter_list|)
+argument_list|(
+argument|n
+argument_list|,
+argument|only_last
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|only_last
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|;
 if|if
 condition|(
-name|quit_at_eof
-operator|&&
 name|hit_eof
 condition|)
 block|{
-comment|/* 		 * If the -e flag is set and we're trying to go 		 * forward from end-of-file, go on to the next file. 		 */
+comment|/* 		 * If we're trying to go forward from end-of-file, 		 * go on to the next file. 		 */
 name|next_file
 argument_list|(
 literal|1
@@ -778,9 +721,6 @@ operator|==
 name|NULL_POSITION
 condition|)
 block|{
-name|eof_bell
-argument_list|()
-expr_stmt|;
 name|hit_eof
 operator|++
 expr_stmt|;
@@ -798,29 +738,36 @@ name|only_last
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Display n more lines, backward.  * Start just before the line currently displayed at the top of the screen.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|backward
-parameter_list|(
-name|n
-parameter_list|,
-name|only_last
-parameter_list|)
+argument_list|(
+argument|n
+argument_list|,
+argument|only_last
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|only_last
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|;
 name|pos
@@ -830,19 +777,14 @@ argument_list|(
 name|TOP
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This will almost never happen, because the top line is almost 	 * never empty. 	 */
 if|if
 condition|(
 name|pos
 operator|==
 name|NULL_POSITION
 condition|)
-block|{
-comment|/*  		 * This will almost never happen, 		 * because the top line is almost never empty.  		 */
-name|eof_bell
-argument_list|()
-expr_stmt|;
 return|return;
-block|}
 name|back
 argument_list|(
 name|n
@@ -855,22 +797,26 @@ name|only_last
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Repaint the screen, starting from a specified position.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
+begin_macro
 name|prepaint
-parameter_list|(
-name|pos
-parameter_list|)
-name|POSITION
+argument_list|(
+argument|pos
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|hit_eof
 operator|=
@@ -894,17 +840,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Repaint the screen.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|repaint
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 comment|/* 	 * Start at the line currently at the top of the screen 	 * and redisplay the screen. 	 */
 name|prepaint
@@ -916,19 +863,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Jump to the end of the file.  * It is more convenient to paint the screen backward,  * from the end of the file toward the beginning.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|jump_forw
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|;
 if|if
@@ -977,29 +925,29 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Jump to line n in the file.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_expr_stmt
 name|jump_back
-parameter_list|(
+argument_list|(
 name|n
-parameter_list|)
+argument_list|)
 specifier|register
 name|int
 name|n
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
 name|c
-decl_stmt|;
-name|int
+decl_stmt|,
 name|nlines
 decl_stmt|;
 comment|/* 	 * This is done the slow way, by starting at the beginning 	 * of the file and counting newlines. 	 * 	 * {{ Now that we have line numbering (in linenum.c), 	 *    we could improve on this by starting at the 	 *    nearest known line rather than at the beginning. }} 	 */
@@ -1008,7 +956,7 @@ condition|(
 name|ch_seek
 argument_list|(
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 argument_list|)
@@ -1053,7 +1001,6 @@ condition|;
 name|nlines
 operator|++
 control|)
-block|{
 while|while
 condition|(
 operator|(
@@ -1099,7 +1046,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
 name|jump_loc
 argument_list|(
 name|ch_tell
@@ -1107,27 +1053,34 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Jump to a specified percentage into the file.  * This is a poor compensation for not being able to  * quickly jump to a specific line number.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|jump_percent
-parameter_list|(
-name|percent
-parameter_list|)
+argument_list|(
+argument|percent
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|percent
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|,
 name|len
+decl_stmt|,
+name|ch_length
+argument_list|()
 decl_stmt|;
 specifier|register
 name|int
@@ -1214,28 +1167,32 @@ name|pos
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Jump to a specified position in the file.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|jump_loc
-parameter_list|(
-name|pos
-parameter_list|)
-name|POSITION
+argument_list|(
+argument|pos
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
 name|nline
 decl_stmt|;
-name|POSITION
+name|off_t
 name|tpos
 decl_stmt|;
 if|if
@@ -1285,7 +1242,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * See if the desired line is BEFORE the currently 	 * displayed screen.  If so, then move forward far 	 * enough so the line we're on will be at the bottom 	 * of the screen, in order to be able to call back() 	 * to make the screen scroll backwards& put the line 	 * at the top of the screen. 	 * {{ This seems inefficient, but it's not so bad, 	 *    since we can never move forward more than a 	 *    screenful before we stop to redraw the screen. }} 	 */
+comment|/* 	 * See if the desired line is BEFORE the currently displayed screen. 	 * If so, then move forward far enough so the line we're on will be 	 * at the bottom of the screen, in order to be able to call back() 	 * to make the screen scroll backwards& put the line at the top of 	 * the screen. 	 * {{ This seems inefficient, but it's not so bad, 	 *    since we can never move forward more than a 	 *    screenful before we stop to redraw the screen. }} 	 */
 name|tpos
 operator|=
 name|position
@@ -1304,7 +1261,7 @@ operator|<
 name|tpos
 condition|)
 block|{
-name|POSITION
+name|off_t
 name|npos
 init|=
 name|pos
@@ -1383,7 +1340,7 @@ name|pos
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * The table of marks.  * A mark is simply a position in the file.  */
@@ -1413,7 +1370,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|POSITION
+name|off_t
 name|marks
 index|[
 name|NMARKS
@@ -1425,11 +1382,12 @@ begin_comment
 comment|/*  * Initialize the mark table to show no marks are set.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|init_mark
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -1455,7 +1413,7 @@ operator|=
 name|NULL_POSITION
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * See if a mark letter is valid (between a and z).  */
@@ -1506,16 +1464,20 @@ begin_comment
 comment|/*  * Set a mark.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|setmark
-parameter_list|(
-name|c
-parameter_list|)
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1538,13 +1500,14 @@ name|TOP
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|public
-name|void
+begin_macro
 name|lastmark
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|marks
 index|[
@@ -1557,24 +1520,28 @@ name|TOP
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Go to a previously set mark.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|gomark
-parameter_list|(
-name|c
-parameter_list|)
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|;
 if|if
@@ -1627,17 +1594,18 @@ name|pos
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Get the backwards scroll limit.  * Must call this function instead of just using the value of  * back_scroll, because the default case depends on sc_height and  * top_scroll, as well as back_scroll.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|get_back_scroll
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1669,43 +1637,53 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Search for the n-th occurence of a specified pattern,   * either forward or backward.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_expr_stmt
 name|search
-parameter_list|(
+argument_list|(
 name|search_forward
-parameter_list|,
+argument_list|,
 name|pattern
-parameter_list|,
+argument_list|,
 name|n
-parameter_list|,
+argument_list|,
 name|wantmatch
-parameter_list|)
+argument_list|)
 specifier|register
 name|int
 name|search_forward
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|pattern
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|int
 name|n
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|wantmatch
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|,
 name|linepos
@@ -1726,8 +1704,8 @@ decl_stmt|;
 name|int
 name|linematch
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|RECOMP
 name|char
 modifier|*
@@ -1740,8 +1718,8 @@ name|errmsg
 decl_stmt|;
 else|#
 directive|else
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|REGCMP
 name|char
 modifier|*
@@ -1780,6 +1758,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* 	 * For a caseless search, convert any uppercase in the pattern to 	 * lowercase. 	 */
 if|if
 condition|(
 name|caseless
@@ -1788,8 +1767,6 @@ name|pattern
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* 		 * For a caseless search, convert any uppercase 		 * in the pattern to lowercase. 		 */
 for|for
 control|(
 name|p
@@ -1798,34 +1775,29 @@ name|pattern
 init|;
 operator|*
 name|p
-operator|!=
-literal|'\0'
 condition|;
 name|p
 operator|++
 control|)
 if|if
 condition|(
+name|isupper
+argument_list|(
 operator|*
 name|p
-operator|>=
-literal|'A'
-operator|&&
-operator|*
-name|p
-operator|<=
-literal|'Z'
+argument_list|)
 condition|)
 operator|*
 name|p
-operator|+=
-literal|'a'
-operator|-
-literal|'A'
+operator|=
+name|tolower
+argument_list|(
+operator|*
+name|p
+argument_list|)
 expr_stmt|;
-block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|RECOMP
 comment|/* 	 * (re_comp handles a null pattern internally,  	 *  so there is no need to check for a null pattern here.) 	 */
 if|if
@@ -1847,12 +1819,16 @@ argument_list|(
 name|errmsg
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 else|#
 directive|else
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|REGCMP
 if|if
 condition|(
@@ -1879,7 +1855,11 @@ argument_list|(
 literal|"No previous regular expression"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 else|else
@@ -1910,7 +1890,11 @@ argument_list|(
 literal|"Invalid pattern"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1955,7 +1939,11 @@ argument_list|(
 literal|"No previous regular expression"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|pattern
 operator|=
@@ -1994,11 +1982,11 @@ operator|==
 name|NULL_POSITION
 condition|)
 block|{
-comment|/* 		 * Nothing is currently displayed. 		 * Start at the beginning of the file. 		 * (This case is mainly for first_cmd searches, 		 * for example, "+/xyz" on the command line.) 		 */
+comment|/* 		 * Nothing is currently displayed.  Start at the beginning 		 * of the file.  (This case is mainly for searches from the 		 * command line. 		 */
 name|pos
 operator|=
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 expr_stmt|;
@@ -2016,60 +2004,6 @@ operator|=
 name|position
 argument_list|(
 name|TOP
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|how_search
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * Start at the second real line displayed on the screen. 		 */
-name|pos
-operator|=
-name|position
-argument_list|(
-name|TOP
-argument_list|)
-expr_stmt|;
-do|do
-name|pos
-operator|=
-name|forw_raw_line
-argument_list|(
-name|pos
-argument_list|)
-expr_stmt|;
-do|while
-condition|(
-name|pos
-operator|<
-name|position
-argument_list|(
-name|TOP
-operator|+
-literal|1
-argument_list|)
-condition|)
-do|;
-block|}
-elseif|else
-if|if
-condition|(
-name|how_search
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* 		 * Start just after the bottom line displayed on the screen. 		 */
-name|pos
-operator|=
-name|position
-argument_list|(
-name|BOTTOM_PLUS_ONE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2097,7 +2031,11 @@ argument_list|(
 literal|"Nothing to search"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|linenum
 operator|=
@@ -2118,7 +2056,11 @@ condition|(
 name|sigs
 condition|)
 comment|/* 			 * A signal aborts the search. 			 */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|search_forward
@@ -2183,7 +2125,11 @@ argument_list|(
 literal|"Pattern not found"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 		 * If we're using line numbers, we might as well 		 * remember the information we have now (the position 		 * and line number of the current line). 		 */
 if|if
@@ -2197,12 +2143,11 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If this is a caseless search, convert uppercase in the 		 * input line to lowercase. 		 */
 if|if
 condition|(
 name|caseless
 condition|)
-block|{
-comment|/* 			 * If this is a caseless search, convert  			 * uppercase in the input line to lowercase. 			 * While we're at it, remove any backspaces 			 * along with the preceeding char. 			 * This allows us to match text which is  			 * underlined or overstruck. 			 */
 for|for
 control|(
 name|p
@@ -2213,8 +2158,6 @@ name|line
 init|;
 operator|*
 name|p
-operator|!=
-literal|'\0'
 condition|;
 name|p
 operator|++
@@ -2222,31 +2165,42 @@ operator|,
 name|q
 operator|++
 control|)
-block|{
-if|if
-condition|(
-operator|*
-name|p
-operator|>=
-literal|'A'
-operator|&&
-operator|*
-name|p
-operator|<=
-literal|'Z'
-condition|)
-comment|/* Convert uppercase to lowercase. */
 operator|*
 name|q
 operator|=
+name|isupper
+argument_list|(
 operator|*
 name|p
-operator|+
-literal|'a'
-operator|-
-literal|'A'
+argument_list|)
+condition|?
+name|tolower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+else|:
+operator|*
+name|p
 expr_stmt|;
-elseif|else
+comment|/* 		 * Remove any backspaces along with the preceeding char. 		 * This allows us to match text which is underlined or 		 * overstruck. 		 */
+for|for
+control|(
+name|p
+operator|=
+name|q
+operator|=
+name|line
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+operator|,
+name|q
+operator|++
+control|)
 if|if
 condition|(
 name|q
@@ -2271,11 +2225,9 @@ operator|=
 operator|*
 name|p
 expr_stmt|;
-block|}
-block|}
 comment|/* 		 * Test the next line to see if we have a match. 		 * This is done in a variety of ways, depending 		 * on what pattern matching functions are available. 		 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|REGCMP
 name|linematch
 operator|=
@@ -2292,8 +2244,8 @@ operator|)
 expr_stmt|;
 else|#
 directive|else
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|RECOMP
 name|linematch
 operator|=
@@ -2353,44 +2305,50 @@ argument_list|(
 name|linepos
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 begin_if
 if|#
 directive|if
-operator|(
 operator|!
+name|defined
+argument_list|(
 name|REGCMP
-operator|)
+argument_list|)
 operator|&&
-operator|(
 operator|!
+name|defined
+argument_list|(
 name|RECOMP
-operator|)
+argument_list|)
 end_if
 
 begin_comment
 comment|/*  * We have neither regcmp() nor re_comp().  * We use this function to do simple pattern matching.  * It supports no metacharacters like *, etc.  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|int
 name|match
-parameter_list|(
-name|pattern
-parameter_list|,
-name|buf
-parameter_list|)
+argument_list|(
+argument|pattern
+argument_list|,
+argument|buf
+argument_list|)
 name|char
-modifier|*
+operator|*
 name|pattern
-decl_stmt|,
-decl|*
+operator|,
+operator|*
 name|buf
-decl_stmt|;
-end_function
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

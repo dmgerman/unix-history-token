@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	5.3 (Berkeley) %G%"
+literal|"@(#)screen.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,31 +35,14 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|XENIX
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<less.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -198,10 +181,6 @@ name|sc_b_out
 decl_stmt|,
 comment|/* Exit bold mode */
 modifier|*
-name|sc_visual_bell
-decl_stmt|,
-comment|/* Visual bell (flash screen) sequence */
-modifier|*
 name|sc_backspace
 decl_stmt|,
 comment|/* Backspace cursor */
@@ -219,7 +198,6 @@ comment|/* Exit terminal de-intialization */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|auto_wrap
 decl_stmt|;
@@ -230,7 +208,6 @@ comment|/* Terminal does \r\n when write past margin */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|ignaw
 decl_stmt|;
@@ -240,25 +217,28 @@ begin_comment
 comment|/* Terminal ignores \n immediately after wrap */
 end_comment
 
-begin_decl_stmt
-name|public
-name|int
-name|erase_char
-decl_stmt|,
-name|kill_char
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* The user's erase and line-kill chars */
 end_comment
 
 begin_decl_stmt
-name|public
+name|int
+name|erase_char
+decl_stmt|,
+name|kill_char
+decl_stmt|,
+name|werase_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|sc_width
 decl_stmt|,
 name|sc_height
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -267,7 +247,6 @@ comment|/* Height& width of screen */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|sc_window
 init|=
@@ -281,7 +260,6 @@ comment|/* window size for forward and backward */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|bo_width
 decl_stmt|,
@@ -294,7 +272,6 @@ comment|/* Printing width of boldface sequences */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|ul_width
 decl_stmt|,
@@ -307,7 +284,6 @@ comment|/* Printing width of underline sequences */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|so_width
 decl_stmt|,
@@ -354,28 +330,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|quiet
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* If VERY_QUIET, use visual bell for bell */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|know_dumb
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Don't complain about a dumb terminal */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|back_scroll
 decl_stmt|;
 end_decl_stmt
@@ -400,16 +354,20 @@ begin_comment
 comment|/*  * Change terminal to "raw mode", or restore to "normal" mode.  * "Raw mode" means   *	1. An outstanding read will complete on receipt of a single keystroke.  *	2. Input is not echoed.    *	3. On output, \n is mapped to \r\n.  *	4. \t is NOT expanded into spaces.  *	5. Signal-causing characters such as ctrl-C (interrupt),  *	   etc. are NOT disabled.  * It doesn't matter whether an input \n is mapped to \r, or vice versa.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|raw_mode
-parameter_list|(
-name|on
-parameter_list|)
+argument_list|(
+argument|on
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|on
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 if|#
 directive|if
@@ -429,6 +387,9 @@ name|on
 condition|)
 block|{
 comment|/* 		 * Get terminal modes. 		 */
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|2
@@ -468,6 +429,15 @@ operator|.
 name|c_cc
 index|[
 name|VKILL
+index|]
+expr_stmt|;
+name|werase_char
+operator|=
+name|s
+operator|.
+name|c_cc
+index|[
+name|VWERASE
 index|]
 expr_stmt|;
 comment|/* 		 * Set the modes to the way we want them. 		 */
@@ -540,6 +510,9 @@ operator|=
 name|save_term
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|2
@@ -567,6 +540,9 @@ name|on
 condition|)
 block|{
 comment|/* 		 * Get terminal modes. 		 */
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|2
@@ -600,6 +576,11 @@ name|s
 operator|.
 name|sg_kill
 expr_stmt|;
+name|werase_char
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 		 * Set the modes to the way we want them. 		 */
 name|s
 operator|.
@@ -627,6 +608,9 @@ operator|=
 name|save_term
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|2
@@ -640,19 +624,21 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|void
 name|cannot
-parameter_list|(
-name|s
-parameter_list|)
+argument_list|(
+argument|s
+argument_list|)
 name|char
-modifier|*
+operator|*
 name|s
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 name|char
 name|message
@@ -660,12 +646,6 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|know_dumb
-condition|)
-comment|/*  		 * He knows he has a dumb terminal, so don't tell him.  		 */
-return|return;
 operator|(
 name|void
 operator|)
@@ -684,17 +664,18 @@ name|message
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Get terminal capabilities via termcap.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|get_term
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|char
 name|termbuf
@@ -789,6 +770,13 @@ literal|"dumb:co#80:hc:"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get size of the screen. 	 */
+if|if
+condition|(
+name|sc_height
+operator|==
+operator|-
+literal|1
+condition|)
 ifdef|#
 directive|ifdef
 name|TIOCGWINSZ
@@ -818,7 +806,6 @@ name|w
 operator|.
 name|ws_row
 expr_stmt|;
-elseif|else
 else|#
 directive|else
 ifdef|#
@@ -854,11 +841,11 @@ name|w
 operator|.
 name|uw_vs
 expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 else|else
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|sc_height
 operator|=
 name|tgetnum
@@ -1324,28 +1311,6 @@ operator|=
 literal|""
 expr_stmt|;
 block|}
-name|sc_visual_bell
-operator|=
-name|tgetstr
-argument_list|(
-literal|"vb"
-argument_list|,
-operator|&
-name|sp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hard
-operator|||
-name|sc_visual_bell
-operator|==
-name|NULL
-condition|)
-name|sc_visual_bell
-operator|=
-literal|""
-expr_stmt|;
 name|sc_home
 operator|=
 name|tgetstr
@@ -1604,21 +1569,29 @@ literal|"\b"
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Below are the functions which perform all the   * terminal-specific screen manipulation.  */
 end_comment
 
+begin_function_decl
+name|int
+name|putchr
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Initialize terminal  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|init
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1630,17 +1603,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Deinitialize terminal  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|deinit
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1652,17 +1626,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Home cursor (move to upper left corner of screen).  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|home
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1674,17 +1649,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Add a blank line (called with cursor at home).  * Should scroll the display down.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|add_line
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1696,17 +1672,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Move cursor to lower left corner of screen.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|lower_left
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1718,75 +1695,37 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Ring the terminal bell.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|bell
-parameter_list|()
-block|{
-if|if
-condition|(
-name|quiet
-operator|==
-name|VERY_QUIET
-condition|)
-name|vbell
 argument_list|()
-expr_stmt|;
-else|else
+end_macro
+
+begin_block
+block|{
 name|putchr
 argument_list|(
 literal|'\7'
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Output the "visual bell", if there is one.  */
-end_comment
-
-begin_function
-name|public
-name|void
-name|vbell
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|*
-name|sc_visual_bell
-operator|==
-literal|'\0'
-condition|)
-return|return;
-name|tputs
-argument_list|(
-name|sc_visual_bell
-argument_list|,
-name|sc_height
-argument_list|,
-name|putchr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Clear the screen.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|clear
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1798,17 +1737,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Clear from the cursor to the end of the cursor's line.  * {{ This must not move the cursor. }}  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|clear_eol
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1820,17 +1760,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Begin "standout" (bold, underline, or whatever).  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|so_enter
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1842,17 +1783,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * End "standout".  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|so_exit
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1864,17 +1806,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Begin "underline" (hopefully real underlining,   * otherwise whatever the terminal provides).  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|ul_enter
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1886,17 +1829,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * End "underline".  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|ul_exit
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1908,17 +1852,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Begin "bold"  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|bo_enter
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1930,17 +1875,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * End "bold".  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|bo_exit
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -1952,17 +1898,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Erase the character to the left of the cursor   * and move the cursor left.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|backspace
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 comment|/*  	 * Try to erase the previous character by overstriking with a space. 	 */
 name|tputs
@@ -1989,17 +1936,18 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Output a plain backspace, without erasing the previous char.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|putbs
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -2011,7 +1959,7 @@ name|putchr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 
