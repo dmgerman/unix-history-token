@@ -443,13 +443,13 @@ name|vfsoptlist
 modifier|*
 name|mnt_opt
 decl_stmt|;
-comment|/* mount options */
+comment|/* current mount options */
 name|struct
 name|vfsoptlist
 modifier|*
 name|mnt_optnew
 decl_stmt|;
-comment|/* for MNT_UPDATE */
+comment|/* new options passed to fs */
 name|int
 name|mnt_kern_flag
 decl_stmt|;
