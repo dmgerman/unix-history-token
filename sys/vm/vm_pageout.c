@@ -2347,7 +2347,6 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	 * Remove all mappings if a process is swapped out, this will free page 	 * table pages. 	 */
 if|if
 condition|(
@@ -2357,6 +2356,10 @@ literal|0
 operator|&&
 name|nothingwired
 condition|)
+block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|vm_map_pmap
@@ -2375,12 +2378,15 @@ name|map
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+block|}
 name|vm_map_unlock
 argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
