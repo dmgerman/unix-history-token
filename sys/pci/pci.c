@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.94 1999/04/11 02:47:31 eivind Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.95 1999/04/16 21:22:52 peter Exp $  *  */
 end_comment
 
 begin_include
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -4044,51 +4050,46 @@ comment|/*  * Create a new style driver around each old pci driver.  */
 end_comment
 
 begin_function
-specifier|static
-name|void
-name|pci_wrap_old_drivers
+name|int
+name|compat_pci_handler
 parameter_list|(
+name|struct
+name|moduledata
+modifier|*
+name|mod
+parameter_list|,
+name|int
+name|type
+parameter_list|,
 name|void
+modifier|*
+name|data
 parameter_list|)
 block|{
 name|struct
 name|pci_device
 modifier|*
-modifier|*
-name|dvpp
-decl_stmt|,
-modifier|*
 name|dvp
-decl_stmt|;
-name|dvpp
-operator|=
+init|=
 operator|(
 expr|struct
 name|pci_device
 operator|*
-operator|*
 operator|)
-name|pcidevice_set
-operator|.
-name|ls_items
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|dvp
-operator|=
-operator|*
-name|dvpp
-operator|++
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
+name|data
+decl_stmt|;
 name|driver_t
 modifier|*
 name|driver
 decl_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
 name|driver
 operator|=
 name|malloc
@@ -4108,7 +4109,9 @@ condition|(
 operator|!
 name|driver
 condition|)
-continue|continue;
+return|return
+name|ENOMEM
+return|;
 name|bzero
 argument_list|(
 name|driver
@@ -4164,7 +4167,28 @@ argument_list|,
 name|driver
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|MOD_UNLOAD
+case|:
+name|printf
+argument_list|(
+literal|"%s: module unload not supported!\n"
+argument_list|,
+name|mod
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+name|EOPNOTSUPP
+return|;
+default|default:
+break|break;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -5919,9 +5943,7 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|pci_wrap_old_drivers
-argument_list|()
-expr_stmt|;
+comment|/* pci_wrap_old_drivers(); */
 break|break;
 case|case
 name|MOD_UNLOAD
