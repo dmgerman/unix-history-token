@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -875,6 +875,27 @@ begin_struct
 struct|struct
 name|sigcontext
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
+argument_list|)
 name|int
 name|sc_onstack
 decl_stmt|;
@@ -903,6 +924,50 @@ name|int
 name|sc_ps
 decl_stmt|;
 comment|/* psl to restore */
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|mips
+argument_list|)
+name|int
+name|sc_onstack
+decl_stmt|;
+comment|/* sigstack state to restore */
+name|int
+name|sc_mask
+decl_stmt|;
+comment|/* signal mask to restore */
+name|int
+name|sc_pc
+decl_stmt|;
+comment|/* pc at time of signal */
+name|int
+name|sc_regs
+index|[
+literal|34
+index|]
+decl_stmt|;
+comment|/* processor regs 0 to 31, mullo, mullhi */
+name|int
+name|sc_fpused
+decl_stmt|;
+comment|/* fp has been used */
+name|int
+name|sc_fpregs
+index|[
+literal|33
+index|]
+decl_stmt|;
+comment|/* fp regs 0 to 31 and csr */
+name|int
+name|sc_fpc_eir
+decl_stmt|;
+comment|/* floating point exception instruction reg */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
