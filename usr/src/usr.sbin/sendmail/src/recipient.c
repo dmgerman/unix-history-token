@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.1 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2427,6 +2427,13 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|ADDRESS
+modifier|*
+name|ca
+decl_stmt|;
+name|uid_t
+name|uid
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2454,7 +2461,54 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|14
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ctladdr "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|ctladdr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  If home directory is remote mounted but server is down, 	**  this can hang or give errors; use a timeout to avoid this 	*/
+name|ca
+operator|=
+name|getctladdr
+argument_list|(
+name|ctladdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ca
+operator|==
+name|NULL
+condition|)
+name|uid
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|uid
+operator|=
+name|ca
+operator|->
+name|q_uid
+expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -2502,11 +2556,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* if forwarding, the input file must be marked safe */
+comment|/* the input file must be marked safe */
 if|if
 condition|(
-name|forwarding
-operator|&&
 operator|(
 name|ret
 operator|=
@@ -2514,9 +2566,7 @@ name|safefile
 argument_list|(
 name|fname
 argument_list|,
-name|ctladdr
-operator|->
-name|q_uid
+name|uid
 argument_list|,
 name|S_IREAD
 argument_list|)
@@ -2544,9 +2594,7 @@ name|printf
 argument_list|(
 literal|"include: not safe (uid=%d): %s\n"
 argument_list|,
-name|ctladdr
-operator|->
-name|q_uid
+name|uid
 argument_list|,
 name|errstring
 argument_list|(
@@ -2590,10 +2638,7 @@ return|;
 block|}
 if|if
 condition|(
-name|getctladdr
-argument_list|(
-name|ctladdr
-argument_list|)
+name|ca
 operator|==
 name|NULL
 condition|)
