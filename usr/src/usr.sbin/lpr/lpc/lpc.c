@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	5.8 (Berkeley) %G%"
+literal|"@(#)lpc.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,6 +449,13 @@ literal|0
 index|]
 operator|==
 literal|0
+operator|||
+name|cmdline
+index|[
+literal|0
+index|]
+operator|==
+literal|'\n'
 condition|)
 break|break;
 name|makeargv
