@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.6 1996/02/03 11:49:29 markm Exp $"
+literal|"$Id: rsh.c,v 1.7 1996/02/11 09:14:12 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -281,6 +287,8 @@ operator|,
 name|pid_t
 operator|,
 name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -372,6 +380,11 @@ name|p
 decl_stmt|,
 modifier|*
 name|user
+decl_stmt|;
+name|int
+name|timeout
+init|=
+literal|0
 decl_stmt|;
 name|argoff
 operator|=
@@ -479,13 +492,13 @@ name|CRYPT
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:k:l:nwx"
+value|"8KLde:k:l:nt:wx"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:k:l:nw"
+value|"8KLde:k:l:nt:w"
 endif|#
 directive|endif
 else|#
@@ -493,7 +506,7 @@ directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:l:nw"
+value|"8KLde:l:nt:w"
 endif|#
 directive|endif
 while|while
@@ -613,6 +626,17 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+case|case
+literal|'t'
+case|:
+name|timeout
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -1341,6 +1365,8 @@ argument_list|,
 name|pid
 argument_list|,
 name|rem
+argument_list|,
+name|timeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1377,6 +1403,8 @@ parameter_list|,
 name|pid
 parameter_list|,
 name|rem
+parameter_list|,
+name|timeout
 parameter_list|)
 name|int
 name|nflag
@@ -1411,6 +1439,13 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|;
+name|struct
+name|timeval
+name|tvtimeout
+decl_stmt|;
+name|int
+name|srval
 decl_stmt|;
 if|if
 condition|(
@@ -1622,6 +1657,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|tvtimeout
+operator|.
+name|tv_sec
+operator|=
+name|timeout
+expr_stmt|;
+name|tvtimeout
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1660,6 +1707,31 @@ name|readfrom
 expr_stmt|;
 if|if
 condition|(
+name|timeout
+condition|)
+block|{
+name|srval
+operator|=
+name|select
+argument_list|(
+literal|16
+argument_list|,
+operator|&
+name|ready
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|tvtimeout
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|srval
+operator|=
 name|select
 argument_list|(
 literal|16
@@ -1673,6 +1745,11 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|srval
 operator|<
 literal|0
 condition|)
@@ -1692,6 +1769,21 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|srval
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"timeout reached (%d seconds)\n"
+argument_list|,
+name|timeout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|FD_ISSET
@@ -2194,7 +2286,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-nd%s]%s[-l login] host [command]\n"
+literal|"usage: rsh [-nd%s]%s[-l login] [-t timeout] host [command]\n"
 argument_list|,
 ifdef|#
 directive|ifdef
