@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_query.c	5.2 (Berkeley) %G%"
+literal|"@(#)res_query.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -470,7 +470,7 @@ name|NOERROR
 case|:
 name|h_errno
 operator|=
-name|NO_ADDRESS
+name|NO_DATA
 expr_stmt|;
 break|break;
 case|case
@@ -582,6 +582,10 @@ name|int
 name|n
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|got_nodata
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -616,6 +620,11 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|h_errno
+operator|=
+name|HOST_NOT_FOUND
+expr_stmt|;
+comment|/* default, if we never query */
 for|for
 control|(
 name|cp
@@ -739,7 +748,7 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* 		 * If no server present, give up. 		 * If name isn't found in this domain, 		 * keep trying higher domains in the search list 		 * (if that's enabled). 		 * On a NO_ADDRESS error, keep trying, otherwise 		 * a wildcard entry of another type could keep us 		 * from finding this entry higher in the domain. 		 * If we get some other error (non-authoritative negative 		 * answer or server failure), then stop searching up, 		 * but try the input name below in case it's fully-qualified. 		 */
+comment|/* 		 * If no server present, give up. 		 * If name isn't found in this domain, 		 * keep trying higher domains in the search list 		 * (if that's enabled). 		 * On a NO_DATA error, keep trying, otherwise 		 * a wildcard entry of another type could keep us 		 * from finding this entry higher in the domain. 		 * If we get some other error (non-authoritative negative 		 * answer or server failure), then stop searching up, 		 * but try the input name below in case it's fully-qualified. 		 */
 if|if
 condition|(
 name|errno
@@ -760,6 +769,15 @@ return|;
 block|}
 if|if
 condition|(
+name|h_errno
+operator|==
+name|NO_DATA
+condition|)
+name|got_nodata
+operator|++
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|h_errno
 operator|!=
@@ -767,7 +785,7 @@ name|HOST_NOT_FOUND
 operator|&&
 name|h_errno
 operator|!=
-name|NO_ADDRESS
+name|NO_DATA
 operator|)
 operator|||
 operator|(
@@ -813,9 +831,13 @@ name|anslen
 argument_list|)
 operator|)
 return|;
+if|if
+condition|(
+name|got_nodata
+condition|)
 name|h_errno
 operator|=
-name|HOST_NOT_FOUND
+name|NO_DATA
 expr_stmt|;
 return|return
 operator|(
@@ -911,6 +933,32 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"res_querydomain(%s, %s, %d, %d)\n"
+argument_list|,
+name|name
+argument_list|,
+name|domain
+argument_list|,
+name|class
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|domain
