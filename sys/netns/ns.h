@@ -365,31 +365,6 @@ name|sns_port
 value|sns_addr.x_port
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ns_netof
-parameter_list|(
-name|a
-parameter_list|)
-value|(*(long *)& ((a).x_net))
-end_define
-
-begin_comment
-comment|/* XXX - not needed */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
