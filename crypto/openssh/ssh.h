@@ -4,10 +4,6 @@ comment|/*	$OpenBSD: ssh.h,v 1.70 2002/06/03 12:04:07 deraadt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -22,6 +18,83 @@ define|#
 directive|define
 name|SSH_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_in */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_comment
+comment|/* For struct pw */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_comment
+comment|/* For va_list */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_comment
+comment|/* For LOG_AUTH and friends */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_storage */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/fake-socket.h"
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_storage */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SELECT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Cipher used for encrypting authentication files. */
@@ -114,6 +187,33 @@ name|SSH_SERVICE_NAME
 value|"ssh"
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_PAM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SSHD_PAM_SERVICE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SSHD_PAM_SERVICE
+value|__progname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Name of the environment variable containing the pathname of the  * authentication socket.  */
 end_comment
@@ -195,12 +295,23 @@ begin_comment
 comment|/*  * unprivileged user when UsePrivilegeSeparation=yes;  * sshd will change its privileges to this user and its  * primary group.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSH_PRIVSEP_USER
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SSH_PRIVSEP_USER
 value|"sshd"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Minimum modulus size (n) for RSA keys. */
@@ -212,27 +323,6 @@ directive|define
 name|SSH_RSA_MINIMUM_MODULUS_SIZE
 value|768
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PAM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"auth-pam.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_PAM */
-end_comment
 
 begin_endif
 endif|#

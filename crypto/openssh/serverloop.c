@@ -17,14 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -708,7 +700,7 @@ name|child_terminated
 operator|=
 literal|1
 expr_stmt|;
-name|signal
+name|mysignal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -2078,7 +2070,7 @@ name|child_terminated
 operator|=
 literal|0
 expr_stmt|;
-name|signal
+name|mysignal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -2634,7 +2626,7 @@ name|channel_free_all
 argument_list|()
 expr_stmt|;
 comment|/* We no longer want our SIGCHLD handler to be called. */
-name|signal
+name|mysignal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -2935,7 +2927,7 @@ argument_list|(
 literal|"Entering interactive session for SSH2."
 argument_list|)
 expr_stmt|;
-name|signal
+name|mysignal
 argument_list|(
 name|SIGCHLD
 argument_list|,

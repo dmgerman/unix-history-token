@@ -17,14 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -2294,6 +2286,18 @@ return|return
 literal|0
 return|;
 comment|/* 	 * if a key owned by the user is accessed, then we check the 	 * permissions of the file. if the key owned by a different user, 	 * then we don't care. 	 */
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+if|if
+condition|(
+name|check_ntsec
+argument_list|(
+name|filename
+argument_list|)
+condition|)
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

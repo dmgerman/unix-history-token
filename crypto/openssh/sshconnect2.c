@@ -17,14 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -2246,7 +2238,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|uint32_t
+name|u_int32_t
 name|seqnr
 parameter_list|,
 name|void

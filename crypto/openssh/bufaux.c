@@ -17,14 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -604,6 +596,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_U_INT64_T
+end_ifdef
+
 begin_function
 name|u_int64_t
 name|buffer_get_int64
@@ -640,6 +638,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Stores integers in the buffer, msb first.  */
@@ -719,6 +722,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_U_INT64_T
+end_ifdef
+
 begin_function
 name|void
 name|buffer_put_int64
@@ -755,6 +764,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Returns an arbitrary binary string from the buffer.  The string cannot  * be longer than 256k.  The returned value points to memory allocated  * with xmalloc; it is the responsibility of the calling function to free  * the data.  If length_ptr is non-NULL, the length of the returned data  * will be stored there.  A null character will be automatically appended  * to the returned string, and is not counted in length.  */
