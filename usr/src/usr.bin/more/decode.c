@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)decode.c	5.6 (Berkeley) %G%"
+literal|"@(#)decode.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,6 +384,14 @@ block|,
 literal|0
 block|,
 name|A_TAGFILE
+block|,
+literal|':'
+block|,
+literal|'a'
+block|,
+literal|0
+block|,
+name|A_FILE_LIST
 block|,
 literal|'Z'
 block|,

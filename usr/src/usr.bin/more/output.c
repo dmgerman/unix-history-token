@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.7 (Berkeley) %G%"
+literal|"@(#)output.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,7 +524,7 @@ name|char
 name|return_to_continue
 index|[]
 init|=
-literal|"  (press RETURN)"
+literal|"(press RETURN)"
 decl_stmt|;
 end_decl_stmt
 
@@ -599,11 +599,22 @@ expr_stmt|;
 name|so_enter
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|s
+condition|)
+block|{
 name|putstr
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|putstr
+argument_list|(
+literal|"  "
+argument_list|)
+expr_stmt|;
+block|}
 name|putstr
 argument_list|(
 name|return_to_continue
@@ -623,10 +634,21 @@ operator|)
 operator|!=
 literal|'\n'
 condition|)
+block|{
+if|if
+condition|(
+name|ch
+operator|==
+literal|'q'
+condition|)
+name|quit
+argument_list|()
+expr_stmt|;
 name|cmdstack
 operator|=
 name|ch
 expr_stmt|;
+block|}
 name|lower_left
 argument_list|()
 expr_stmt|;
