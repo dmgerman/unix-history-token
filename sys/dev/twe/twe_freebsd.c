@@ -2575,33 +2575,6 @@ name|TWED_BIO_OUT
 expr_stmt|;
 return|return;
 block|}
-comment|/* do-nothing operation? */
-if|if
-condition|(
-name|TWE_BIO_LENGTH
-argument_list|(
-name|bp
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|TWE_BIO_RESID
-argument_list|(
-name|bp
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-name|TWE_BIO_DONE
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|TWED_BIO_OUT
-expr_stmt|;
-return|return;
-block|}
 comment|/* perform accounting */
 name|TWE_BIO_STATS_START
 argument_list|(

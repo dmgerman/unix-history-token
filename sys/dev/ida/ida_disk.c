@@ -635,18 +635,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * If it's a null transfer, return immediately 	 */
-if|if
-condition|(
-name|bp
-operator|->
-name|bio_bcount
-operator|==
-literal|0
-condition|)
-goto|goto
-name|done
-goto|;
 name|bp
 operator|->
 name|bio_driver1

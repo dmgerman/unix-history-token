@@ -715,18 +715,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* do-nothing operation */
-if|if
-condition|(
-name|bp
-operator|->
-name|bio_bcount
-operator|==
-literal|0
-condition|)
-goto|goto
-name|done
-goto|;
 name|devstat_start_transaction
 argument_list|(
 operator|&

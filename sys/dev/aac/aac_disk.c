@@ -605,31 +605,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* do-nothing operation? */
-if|if
-condition|(
-name|bp
-operator|->
-name|bio_bcount
-operator|==
-literal|0
-condition|)
-block|{
-name|bp
-operator|->
-name|bio_resid
-operator|=
-name|bp
-operator|->
-name|bio_bcount
-expr_stmt|;
-name|biodone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* perform accounting */
 name|devstat_start_transaction
 argument_list|(
