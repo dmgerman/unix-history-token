@@ -454,11 +454,9 @@ name|error
 operator|==
 name|ENXIO
 condition|)
-block|{
 goto|goto
 name|end
 goto|;
-block|}
 comment|/* If we had some other problem. */
 if|if
 condition|(
@@ -473,11 +471,9 @@ operator|==
 name|ENOENT
 operator|)
 condition|)
-block|{
 goto|goto
 name|end
 goto|;
-block|}
 comment|/* Heuristic probes */
 ifdef|#
 directive|ifdef
@@ -520,11 +516,9 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 goto|goto
 name|end
 goto|;
-block|}
 name|ed_release_resources
 argument_list|(
 name|dev
@@ -548,11 +542,9 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 goto|goto
 name|end
 goto|;
-block|}
 break|break;
 comment|/* 	 * NE2000-like boards probe routine 	 */
 case|case
@@ -785,7 +777,6 @@ argument_list|)
 operator|==
 name|ED_TYPE98_GENERIC
 condition|)
-block|{
 name|ed_alloc_port
 argument_list|(
 name|dev
@@ -799,9 +790,7 @@ operator|->
 name|port_used
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ed98_alloc_port
 argument_list|(
 name|dev
@@ -811,7 +800,6 @@ operator|->
 name|port_rid
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2299,7 +2287,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|io_res
 index|[
 name|i
@@ -2314,7 +2301,6 @@ index|]
 operator|+
 name|offset
 expr_stmt|;
-block|}
 name|res
 operator|=
 name|isa_alloc_resourcev
@@ -2338,13 +2324,11 @@ condition|(
 operator|!
 name|res
 condition|)
-block|{
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|port_rid
@@ -2437,7 +2421,6 @@ condition|;
 name|n
 operator|++
 control|)
-block|{
 name|io_res
 index|[
 name|n
@@ -2452,7 +2435,6 @@ index|]
 operator|+
 name|offset
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|ED_TYPE98_CNET98
@@ -2497,7 +2479,6 @@ condition|;
 name|n
 operator|++
 control|)
-block|{
 name|io_res
 index|[
 name|n
@@ -2512,7 +2493,6 @@ index|]
 operator|+
 name|offset
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|ED_TYPE98_NC5098
@@ -2529,7 +2509,6 @@ name|reset
 operator|!=
 name|ED_NOVELL_RESET
 condition|)
-block|{
 name|io_res
 index|[
 name|ED_NOVELL_ASIC_OFFSET
@@ -2544,7 +2523,6 @@ operator|+
 name|reset
 index|]
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|data
@@ -2590,13 +2568,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 ifdef|#
 directive|ifdef
 name|ED_DEBUG
@@ -2622,7 +2598,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
 literal|"%x,"
@@ -2633,7 +2608,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -2704,13 +2678,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2725,13 +2697,11 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|error
 operator|=
 name|ed_alloc_memory
@@ -2750,13 +2720,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|mem_start
@@ -2844,13 +2812,11 @@ operator||
 name|ED_CR_STP
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -2935,13 +2901,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|asic_offset
@@ -3127,13 +3091,11 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* Test memory via PIO */
 ifdef|#
 directive|ifdef
@@ -3179,13 +3141,11 @@ argument_list|,
 name|flags
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* Setup the board type */
 ifdef|#
 directive|ifdef
@@ -3319,7 +3279,6 @@ condition|;
 name|n
 operator|++
 control|)
-block|{
 name|sc
 operator|->
 name|arpcom
@@ -3338,7 +3297,6 @@ operator|+
 name|n
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|ed_pio_readmem
@@ -3368,7 +3326,6 @@ condition|;
 name|n
 operator|++
 control|)
-block|{
 name|sc
 operator|->
 name|arpcom
@@ -3391,7 +3348,6 @@ literal|1
 operator|)
 index|]
 expr_stmt|;
-block|}
 break|break;
 block|}
 comment|/* clear any pending interrupts that might have occurred above */
@@ -3464,13 +3420,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|asic_offset
@@ -3496,13 +3450,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* Reset card to force it into a known state. */
 name|ed_asic_outb
 argument_list|(
@@ -3624,7 +3576,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sum
 operator|^=
 operator|(
@@ -3647,7 +3598,6 @@ literal|2
 index|]
 operator|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|ED_DEBUG
@@ -3674,13 +3624,11 @@ name|sum
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -3714,13 +3662,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|vendor
@@ -3755,7 +3701,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -3765,9 +3710,7 @@ argument_list|,
 literal|0x90
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -3777,7 +3720,6 @@ argument_list|,
 literal|0x8e
 argument_list|)
 expr_stmt|;
-block|}
 name|DELAY
 argument_list|(
 literal|100
@@ -3834,23 +3776,19 @@ operator|&
 name|ED_FLAGS_NO_MULTI_BUFFERING
 operator|)
 condition|)
-block|{
 name|sc
 operator|->
 name|txb_cnt
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
 name|sc
 operator|->
 name|txb_cnt
 operator|=
 literal|2
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|tx_page_start
@@ -4323,13 +4261,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|asic_offset
@@ -4355,13 +4291,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* Check I/O address. 0x[a-f]3d0 are allowed. */
 if|if
 condition|(
@@ -4569,13 +4503,11 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* 	 *  Set window ethernet address area 	 *    board memory base 0x480000  data 256byte 	 */
 name|ed_winsel_CNET98
 argument_list|(
@@ -4916,13 +4848,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|asic_offset
@@ -5016,13 +4946,11 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* Test memory via PIO */
 name|sc
 operator|->
@@ -5044,13 +4972,11 @@ argument_list|,
 name|flags
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* This looks like a C-NET(98)E/L board. */
 name|sc
 operator|->
@@ -5080,13 +5006,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|conf_irq
@@ -5189,7 +5113,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sc
 operator|->
 name|arpcom
@@ -5206,7 +5129,6 @@ operator|*
 literal|2
 index|]
 expr_stmt|;
-block|}
 comment|/* clear any pending interrupts that might have occurred above */
 name|ed_nic_outb
 argument_list|(
@@ -5280,13 +5202,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* LA/T-98 does not need IRQ setting. */
 if|if
 condition|(
@@ -5297,13 +5217,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* 	 * Set IRQ. PC-9801-77 only allows a choice of irq 3,5,6,12,13. 	 */
 name|error
 operator|=
@@ -5326,13 +5244,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|conf_irq
@@ -5471,13 +5387,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* Networld 98X3 does not need IRQ setting. */
 if|if
 condition|(
@@ -5488,13 +5402,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* 	 * Set IRQ. EC/EP-98X only allows a choice of irq 3,5,6,12,13. 	 */
 name|error
 operator|=
@@ -5517,13 +5429,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|conf_irq
@@ -6020,13 +5930,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|asic_offset
@@ -6176,13 +6084,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|conf_irq
@@ -6247,12 +6153,10 @@ name|flags
 operator|&
 name|ED_FLAGS_DISABLE_TRANCEIVER
 condition|)
-block|{
 name|tmp
 operator||=
 name|ED_SB98_CFG_ALTPORT
 expr_stmt|;
-block|}
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -6328,13 +6232,11 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* Test memory via PIO */
 name|sc
 operator|->
@@ -6741,23 +6643,19 @@ operator|&
 name|ED_FLAGS_NO_MULTI_BUFFERING
 operator|)
 condition|)
-block|{
 name|sc
 operator|->
 name|txb_cnt
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
 name|sc
 operator|->
 name|txb_cnt
 operator|=
 literal|2
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|rec_page_start
