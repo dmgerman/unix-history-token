@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.3 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.4 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -115,13 +115,6 @@ directive|include
 file|<miscfs/portal/portal.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|u_short
-name|portal_mntid
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|portal_init
@@ -199,17 +192,14 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|error
-init|=
-literal|0
+name|struct
+name|file
+modifier|*
+name|fp
 decl_stmt|;
 name|struct
 name|portal_args
 name|args
-decl_stmt|;
-name|u_int
-name|size
 decl_stmt|;
 name|struct
 name|portalmount
@@ -217,19 +207,20 @@ modifier|*
 name|fmp
 decl_stmt|;
 name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|rvp
 decl_stmt|;
-name|struct
-name|file
-modifier|*
-name|fp
+name|u_int
+name|size
 decl_stmt|;
-name|struct
-name|socket
-modifier|*
-name|so
+name|int
+name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
