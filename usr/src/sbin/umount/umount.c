@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	8.3 (Berkeley) %G%"
+literal|"@(#)umount.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1537,6 +1537,10 @@ name|int
 name|type
 decl_stmt|;
 block|{
+name|int
+modifier|*
+name|av
+decl_stmt|;
 comment|/* If no type specified, it's always selected. */
 if|if
 condition|(
@@ -1551,14 +1555,17 @@ operator|)
 return|;
 for|for
 control|(
+name|av
+operator|=
+name|typelist
 init|;
 operator|*
-name|typelist
+name|av
 operator|!=
-name|MOUNT_NONE
+name|NULL
 condition|;
 operator|++
-name|typelist
+name|av
 control|)
 if|if
 condition|(
