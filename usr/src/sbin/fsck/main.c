@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.14 (Berkeley) %G%"
+literal|"@(#)main.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3036,6 +3036,8 @@ block|}
 if|if
 condition|(
 name|imax
+operator|-
+name|ROOTINO
 operator|-
 name|n_files
 operator|!=
@@ -7296,10 +7298,19 @@ name|sblock
 operator|.
 name|fs_cgsize
 operator|!=
-name|cgsize
+sizeof|sizeof
 argument_list|(
-operator|&
+expr|struct
+name|cg
+argument_list|)
+operator|+
+name|howmany
+argument_list|(
 name|sblock
+operator|.
+name|fs_fpg
+argument_list|,
+name|NBBY
 argument_list|)
 condition|)
 block|{
@@ -7525,6 +7536,10 @@ name|iblk
 decl_stmt|;
 if|if
 condition|(
+name|inum
+operator|<
+name|ROOTINO
+operator|||
 name|inum
 operator|>
 name|imax

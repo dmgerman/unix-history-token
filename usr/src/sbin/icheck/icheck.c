@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.10 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2689,6 +2689,43 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ROOTINO
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|setbit
+argument_list|(
+name|cgrp
+operator|.
+name|cg_iused
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|cgrp
+operator|.
+name|cg_cs
+operator|.
+name|cs_nifree
+operator|--
 expr_stmt|;
 block|}
 for|for
