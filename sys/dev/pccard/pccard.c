@@ -3003,10 +3003,9 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
-name|bus_addr_t
-name|iosize
-decl_stmt|;
 name|bus_size_t
+name|iosize
+decl_stmt|,
 name|tmp
 decl_stmt|;
 if|if
@@ -3125,17 +3124,17 @@ name|pf
 operator|->
 name|dev
 operator|,
-literal|"MFC: I/O base 0x%llx IOSIZE %lld\n"
+literal|"MFC: I/O base 0x%jx IOSIZE %jd\n"
 operator|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|pf
 operator|->
 name|pf_mfc_iobase
 operator|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|iosize
 operator|)
