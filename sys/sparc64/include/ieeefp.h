@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_IEEEFP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/fsr.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|int
@@ -26,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_IMP
-value|0x01
+value|FSR_NX
 end_define
 
 begin_comment
@@ -37,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_DZ
-value|0x02
+value|FSR_DZ
 end_define
 
 begin_comment
@@ -48,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_UFL
-value|0x04
+value|FSR_UF
 end_define
 
 begin_comment
@@ -59,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_OFL
-value|0x08
+value|FSR_OF
 end_define
 
 begin_comment
@@ -70,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|FP_X_INV
-value|0x10
+value|FSR_NV
 end_define
 
 begin_comment
@@ -83,22 +89,22 @@ enum|enum
 block|{
 name|FP_RN
 init|=
-literal|0
+name|FSR_RD_N
 block|,
 comment|/* round to nearest representable number */
 name|FP_RZ
 init|=
-literal|1
+name|FSR_RD_Z
 block|,
 comment|/* round to zero (truncate) */
 name|FP_RP
 init|=
-literal|2
+name|FSR_RD_PINF
 block|,
 comment|/* round toward positive infinity */
 name|FP_RM
 init|=
-literal|3
+name|FSR_RD_NINF
 comment|/* round toward negative infinity */
 block|}
 name|fp_rnd_t
