@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.84.1.3 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.127 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9063,11 +9063,13 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|putline
+name|putxline
 argument_list|(
 name|buf
 argument_list|,
 name|mci
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
