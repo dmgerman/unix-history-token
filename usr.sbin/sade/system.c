@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/console.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -40,7 +46,7 @@ file|<sys/wait.h>
 end_include
 
 begin_comment
-comment|/* Handle interrupt signals (duh!) */
+comment|/*  * Handle interrupt signals - this probably won't work in all cases  * due to our having bogotified the internal state of dialog or curses,  * but we'll give it a try.  */
 end_comment
 
 begin_function
@@ -51,7 +57,37 @@ parameter_list|(
 name|int
 name|sig
 parameter_list|)
-block|{ }
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Are you sure you want to abort the installation?"
+argument_list|)
+condition|)
+name|systemShutdown
+argument_list|()
+expr_stmt|;
+else|else
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|clear
+argument_list|()
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 end_function
 
 begin_comment
@@ -64,7 +100,13 @@ name|systemWelcome
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|printf
+argument_list|(
+literal|"Installation system initializing..\n"
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -793,11 +835,42 @@ begin_function
 name|void
 name|systemChangeFont
 parameter_list|(
-name|char
-modifier|*
+specifier|const
+name|u_char
 name|font
+index|[]
 parameter_list|)
-block|{ }
+block|{
+if|if
+condition|(
+name|OnVTY
+condition|)
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|PIO_FONT8x14
+argument_list|,
+name|font
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Sorry!  Unable to load font for %s"
+argument_list|,
+name|getenv
+argument_list|(
+literal|"LANG"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 end_function
 
 begin_function
@@ -827,12 +900,83 @@ name|char
 modifier|*
 name|color
 parameter_list|,
+specifier|const
+name|u_char
+name|c_term
+index|[]
+parameter_list|,
 name|char
 modifier|*
 name|mono
+parameter_list|,
+specifier|const
+name|u_char
+name|m_term
+index|[]
 parameter_list|)
 block|{
-comment|/* Do something with setterm */
+if|if
+condition|(
+operator|!
+name|OnSerial
+condition|)
+block|{
+if|if
+condition|(
+name|ColorDisplay
+condition|)
+block|{
+name|setenv
+argument_list|(
+literal|"TERM"
+argument_list|,
+name|color
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"TERMCAP"
+argument_list|,
+name|c_term
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setterm
+argument_list|(
+name|color
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|setenv
+argument_list|(
+literal|"TERM"
+argument_list|,
+name|mono
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"TERMCAP"
+argument_list|,
+name|m_term
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setterm
+argument_list|(
+name|mono
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -840,11 +984,42 @@ begin_function
 name|void
 name|systemChangeScreenmap
 parameter_list|(
-name|char
-modifier|*
+specifier|const
+name|u_char
 name|newmap
+index|[]
 parameter_list|)
-block|{ }
+block|{
+if|if
+condition|(
+name|OnVTY
+condition|)
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|PIO_SCRNMAP
+argument_list|,
+name|newmap
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Sorry!  Unable to load the screenmap for %s"
+argument_list|,
+name|getenv
+argument_list|(
+literal|"LANG"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 end_function
 
 end_unit
