@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioccom.h>
 end_include
 
@@ -1960,7 +1966,7 @@ name|random_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* 	 * We're the random or urandom device.  The only ioctls are for 	 * selecting and inspecting which interrupts are used in the muck 	 * gathering business. 	 */
+comment|/* 	 * We're the random or urandom device.  The only ioctls are for 	 * selecting and inspecting which interrupts are used in the muck 	 * gathering business and the fcntl() stuff. 	 */
 if|if
 condition|(
 name|cmd
@@ -1974,6 +1980,14 @@ operator|&&
 name|cmd
 operator|!=
 name|MEM_RETURNIRQ
+operator|&&
+name|cmd
+operator|!=
+name|FIONBIO
+operator|&&
+name|cmd
+operator|!=
+name|FIOASYNC
 condition|)
 return|return
 operator|(
@@ -2049,6 +2063,14 @@ condition|(
 name|cmd
 condition|)
 block|{
+comment|/* Really handled in upper layer */
+case|case
+name|FIOASYNC
+case|:
+case|case
+name|FIONBIO
+case|:
+break|break;
 case|case
 name|MEM_SETIRQ
 case|:
