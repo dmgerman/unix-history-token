@@ -979,6 +979,18 @@ literal|"USB100TX Ethernet"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_LINKSYS
+block|,
+name|USB_PRODUCT_LINKSYS_USB10TA
+block|,
+literal|0
+block|,
+literal|"Linksys Inc."
+block|,
+literal|"USB10TA Ethernet"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_LOGITECH
 block|,
 name|USB_PRODUCT_LOGITECH_M2452
