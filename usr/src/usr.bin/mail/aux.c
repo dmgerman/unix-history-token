@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	2.4 %G%"
+literal|"@(#)aux.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3224,6 +3224,31 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGRETRO
+end_ifndef
+
+begin_comment
+comment|/*  * This routine is used by the sigretro package to  * reset held signals to ignored signals.  If you're not  * using sigretro, you don't need to do anything, but you DO  * need this stub to keep everyone happy.  */
+end_comment
+
+begin_macro
+name|sigchild
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|SIGRETRO
+end_endif
 
 end_unit
 
