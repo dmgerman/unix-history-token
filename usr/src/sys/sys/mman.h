@@ -1,43 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mman.h	5.1	82/07/17	*/
+comment|/*	mman.h	4.2	82/09/04	*/
 end_comment
-
-begin_if
-if|#
-directive|if
-name|vax
-end_if
-
-begin_define
-define|#
-directive|define
-name|PAGESIZE
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|sun
-end_if
-
-begin_define
-define|#
-directive|define
-name|PAGESIZE
-value|2048
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* protections are chosen from these bits, or-ed together */
