@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpass.c	4.1 (Berkeley) %G% */
+comment|/* @(#)getpass.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -158,7 +158,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"%s"
+argument_list|,
 name|prompt
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 for|for
@@ -211,6 +218,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|ttyb
