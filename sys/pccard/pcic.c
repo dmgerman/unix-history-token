@@ -1915,6 +1915,7 @@ operator|=
 operator|~
 literal|0ul
 expr_stmt|;
+comment|/* 	 * If we're using PCI interrupt routing, then force the IRQ to 	 * use and to heck with what the user requested.  If they want 	 * to be able to request IRQs, they must use ISA interrupt 	 * routing.  If we don't give them an irq, and it is the 	 * pccardd 0,0 case, then just return (giving the "bad resource" 	 * return in pr->resource_addr). 	 */
 if|if
 condition|(
 name|pr
@@ -1922,13 +1923,16 @@ operator|->
 name|type
 operator|==
 name|SYS_RES_IRQ
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|sp
 operator|->
 name|sc
 operator|->
 name|func_route
-operator|==
+operator|>=
 name|pci_parallel
 condition|)
 block|{
@@ -1948,6 +1952,27 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|pr
+operator|->
+name|min
+operator|==
+literal|0
+operator|&&
+name|pr
+operator|->
+name|max
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Make sure we grok this type. 	 */
 switch|switch
 condition|(
 name|pr
@@ -1972,6 +1997,7 @@ name|SYS_RES_IOPORT
 case|:
 break|break;
 block|}
+comment|/* 	 * Allocate the resource, and align it to the most natural 	 * size.  If we get it, then tell userland what we actually got 	 * in the range they requested. 	 */
 name|flags
 operator|=
 name|rman_make_alignment_flags
