@@ -1894,13 +1894,6 @@ operator|->
 name|vc_txmax
 expr_stmt|;
 comment|/* optimal transfer block size */
-name|sbp
-operator|->
-name|f_spare2
-operator|=
-literal|0
-expr_stmt|;
-comment|/* placeholder */
 name|smb_makescred
 argument_list|(
 operator|&
