@@ -5972,15 +5972,15 @@ argument_list|(
 name|announce_buf
 argument_list|)
 argument_list|,
-literal|"%quMB (%qu %u byte sectors: %dH %dS/T %dC)"
+literal|"%juMB (%ju %u byte sectors: %dH %dS/T %dC)"
 argument_list|,
 call|(
-name|uint64_t
+name|uintmax_t
 call|)
 argument_list|(
 operator|(
 operator|(
-name|u_int64_t
+name|uintmax_t
 operator|)
 name|dp
 operator|->
@@ -5998,6 +5998,9 @@ literal|1024
 operator|)
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dp
 operator|->
 name|sectors
