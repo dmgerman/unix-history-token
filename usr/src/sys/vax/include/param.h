@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.1	82/11/09	*/
+comment|/*	param.h	4.2	82/12/09	*/
 end_comment
 
 begin_comment
@@ -198,7 +198,7 @@ name|BASEPRI
 parameter_list|(
 name|ps
 parameter_list|)
-value|(((ps)& PSL_IPL) != 0)
+value|(((ps)& PSL_IPL) == 0)
 end_define
 
 begin_define
