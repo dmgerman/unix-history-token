@@ -2249,9 +2249,29 @@ decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Is this machine's CMOS clock set to local time?\n"
+literal|"If it is set to UTC, please select NO here"
+argument_list|)
+condition|)
+name|system
+argument_list|(
+literal|"touch /etc/wall_cmos_clock"
+argument_list|)
+expr_stmt|;
+else|else
+name|system
+argument_list|(
+literal|"rm -f /etc/wall_cmos_clock"
+argument_list|)
+expr_stmt|;
 name|systemExecute
 argument_list|(
-literal|"rm -f /etc/wall_cmos_clock /etc/localtime; tzsetup"
+literal|"rm -f /etc/localtime; tzsetup"
 argument_list|)
 expr_stmt|;
 name|restorescr
@@ -2326,9 +2346,9 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"The FreeBSD package collection is a collection of over 700 ready-to-run\n"
-literal|"applications, from text editors to games to WEB servers.  Would you like\n"
-literal|"to browse the collection now?"
+literal|"The FreeBSD package collection is a collection of hundreds of ready-to-run\n"
+literal|"applications, from text editors to games to WEB servers and more.  Would you\n"
+literal|"like to browse the collection now?"
 argument_list|)
 condition|)
 name|configPackages
