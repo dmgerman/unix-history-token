@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysexits.c	5.3 (Berkeley) %G%"
+literal|"@(#)sysexits.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,14 +34,8 @@ directive|include
 file|<sysexits.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"useful.h"
-end_include
-
 begin_comment
-comment|/* **  SYSEXITS.C -- error messages corresponding to sysexits.h */
+comment|/*  *  SYSEXITS.C -- error messages corresponding to sysexits.h  */
 end_comment
 
 begin_decl_stmt
@@ -92,6 +86,9 @@ literal|"554 Remote protocol error"
 block|,
 comment|/* 77 NOPERM */
 literal|"550 Insufficient permission"
+block|,
+comment|/* 78 CONFIG */
+literal|"554 Local configuration error"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -101,21 +98,22 @@ name|int
 name|N_SysEx
 init|=
 sizeof|sizeof
+argument_list|(
 name|SysExMsg
+argument_list|)
 operator|/
 sizeof|sizeof
+argument_list|(
 name|SysExMsg
 index|[
 literal|0
 index|]
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  STATSTRING -- return string corresponding to an error status ** **	Parameters: **		stat -- the status to decode. ** **	Returns: **		The string corresponding to that status ** **	Side Effects: **		none. */
+comment|/*  *  STATSTRING -- return string corresponding to an error status  *  *	Parameters:  *		stat -- the status to decode.  *  *	Returns:  *		The string corresponding to that status  *  *	Side Effects:  *		none.  */
 end_comment
 
 begin_function
@@ -133,7 +131,7 @@ specifier|static
 name|char
 name|ebuf
 index|[
-literal|100
+literal|50
 index|]
 decl_stmt|;
 name|stat
