@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.27 (Berkeley) 5/27/95  * $Id: ufs_vnops.c,v 1.68 1997/11/18 14:20:09 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.27 (Berkeley) 5/27/95  * $Id: ufs_vnops.c,v 1.69 1997/11/20 16:08:56 bde Exp $  */
 end_comment
 
 begin_include
@@ -6080,7 +6080,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|I
-comment|/* 		 * if we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit.  		 * If user's UID an ddir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
+comment|/* 		 * If we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit. 		 * If user's UID an ddir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
 if|if
 condition|(
 operator|(
@@ -6134,7 +6134,7 @@ operator|->
 name|cr_uid
 condition|)
 block|{
-comment|/* 				 * make sure the correct user gets charged 				 * for the space. 				 * Make a dummy credential for the victim. 				 * XXX This seems to never be accessed out of 				 * our context so a stack variable is ok. 				 */
+comment|/* 				 * Make sure the correct user gets charged 				 * for the space. 				 * Make a dummy credential for the victim. 				 * XXX This seems to never be accessed out of 				 * our context so a stack variable is ok. 				 */
 name|ucred
 operator|.
 name|cr_ref
@@ -6174,10 +6174,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|I
 block|}
 else|else
-block|{
 name|ip
 operator|->
 name|i_uid
@@ -6188,7 +6186,6 @@ name|cn_cred
 operator|->
 name|cr_uid
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -6260,6 +6257,7 @@ directive|endif
 block|}
 else|#
 directive|else
+comment|/* !SUIDDIR */
 name|ip
 operator|->
 name|i_uid
@@ -6342,6 +6340,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* !SUIDDIR */
 name|ip
 operator|->
 name|i_flag
@@ -9103,7 +9102,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|I
-comment|/* 		 * if we are 		 * not the owner of the directory, 		 * and we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * Note that this drops off the execute bits for security. 		 */
+comment|/* 		 * If we are not the owner of the directory, 		 * and we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * Note that this drops off the execute bits for security. 		 */
 if|if
 condition|(
 operator|(
@@ -9157,7 +9156,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
-comment|/* 			 * make sure the correct user gets charged 			 * for the space. 			 * Quickly knock up a dummy credential for the victim. 			 * XXX This seems to never be accessed out of our 			 * context so a stack variable is ok. 			 */
+comment|/* 			 * Make sure the correct user gets charged 			 * for the space. 			 * Quickly knock up a dummy credential for the victim. 			 * XXX This seems to never be accessed out of our 			 * context so a stack variable is ok. 			 */
 name|ucred
 operator|.
 name|cr_ref
@@ -9196,10 +9195,8 @@ name|ucred
 expr_stmt|;
 endif|#
 directive|endif
-endif|I
 block|}
 else|else
-block|{
 name|ip
 operator|->
 name|i_uid
@@ -9210,7 +9207,6 @@ name|cn_cred
 operator|->
 name|cr_uid
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -9282,6 +9278,7 @@ directive|endif
 block|}
 else|#
 directive|else
+comment|/* !SUIDDIR */
 name|ip
 operator|->
 name|i_uid
@@ -9364,6 +9361,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* !SUIDDIR */
 name|ip
 operator|->
 name|i_flag
