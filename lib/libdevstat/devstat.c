@@ -5942,11 +5942,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|nl
 index|[
 literal|0
@@ -5954,6 +5949,10 @@ index|]
 operator|.
 name|n_name
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 expr_stmt|;
 name|nl
