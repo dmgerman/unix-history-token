@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.27 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -996,7 +996,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Always preserve the flags. */
+comment|/* Always preserve the flags, except for the dump flag. */
 if|if
 condition|(
 name|fchflags
@@ -1006,6 +1006,9 @@ argument_list|,
 name|from_sb
 operator|.
 name|st_flags
+operator|&
+operator|~
+name|NODUMP
 argument_list|)
 condition|)
 block|{
