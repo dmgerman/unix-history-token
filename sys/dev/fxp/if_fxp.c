@@ -1142,7 +1142,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|fxp_scb_wait
 parameter_list|(
@@ -1156,7 +1155,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|fxp_scb_cmd
 parameter_list|(
@@ -1173,7 +1171,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|fxp_dma_wait
 parameter_list|(
@@ -1423,7 +1420,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|fxp_scb_wait
 parameter_list|(
@@ -1503,7 +1499,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|fxp_scb_cmd
 parameter_list|(
@@ -1556,7 +1551,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|fxp_dma_wait
 parameter_list|(
@@ -1642,7 +1636,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return identification string if this is device is ours.  */
+comment|/*  * Return identification string if this device is ours.  */
 end_comment
 
 begin_function
@@ -10249,7 +10243,6 @@ operator|-
 name|RFA_ALIGNMENT_FUDGE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the rest of the RFA.  Note that since the RFA 	 * is misaligned, we cannot store values directly.  Instead, 	 * we use an optimized, inline copy. 	 */
 name|rfa
 operator|->
 name|rfa_status
@@ -10271,6 +10264,7 @@ name|actual_size
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Initialize the rest of the RFA.  Note that since the RFA 	 * is misaligned, we cannot store values directly.  We're thus 	 * using the le32enc() function which handles endianness and 	 * is also alignment-safe. 	 */
 name|le32enc
 argument_list|(
 operator|&
