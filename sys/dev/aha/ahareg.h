@@ -1681,6 +1681,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADP0100_PNP
+value|0x00019004
+end_define
+
+begin_comment
+comment|/* ADP0100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHA1540_PNP
+value|0x40159004
+end_define
+
+begin_comment
+comment|/* ADP1540 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AHA1542_PNP
 value|0x42159004
 end_define
@@ -1698,6 +1720,17 @@ end_define
 
 begin_comment
 comment|/* PNP00A0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU0091_PNP
+value|0X91005AA4
+end_define
+
+begin_comment
+comment|/* ICU0091 */
 end_comment
 
 begin_endif

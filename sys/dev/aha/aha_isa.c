@@ -84,19 +84,40 @@ index|[]
 init|=
 block|{
 block|{
+name|ADP0100_PNP
+block|,
+literal|"Adaptec 1540/1542 ISA SCSI"
+block|}
+block|,
+comment|/* ADP0100 */
+block|{
+name|AHA1540_PNP
+block|,
+literal|"Adaptec 1540/aha-1640/aha-1535"
+block|}
+block|,
+comment|/* ADP1542 */
+block|{
 name|AHA1542_PNP
 block|,
-name|NULL
+literal|"Adaptec 1542/aha-1535"
 block|}
 block|,
 comment|/* ADP1542 */
 block|{
 name|AHA1542_PNPCOMPAT
 block|,
-name|NULL
+literal|"Adaptec 1542 compatible"
 block|}
 block|,
 comment|/* PNP00A0 */
+block|{
+name|ICU0091_PNP
+block|,
+literal|"Adaptec AHA-1540/1542 SCSI"
+block|}
+block|,
+comment|/* ICU0091 */
 block|{
 literal|0
 block|}
