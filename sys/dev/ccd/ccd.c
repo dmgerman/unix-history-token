@@ -6767,10 +6767,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|struct
-name|vattr
-name|va
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
