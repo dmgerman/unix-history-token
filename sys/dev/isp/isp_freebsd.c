@@ -4021,6 +4021,8 @@ block|}
 if|if
 condition|(
 name|isp_tdebug
+operator|>
+literal|1
 operator|&&
 name|ssptr
 operator|&&
@@ -4229,6 +4231,8 @@ block|}
 if|if
 condition|(
 name|isp_tdebug
+operator|>
+literal|1
 operator|&&
 operator|(
 name|cso
@@ -4809,6 +4813,8 @@ expr_stmt|;
 if|if
 condition|(
 name|isp_tdebug
+operator|>
+literal|1
 condition|)
 block|{
 name|printf
@@ -5299,6 +5305,8 @@ expr_stmt|;
 if|if
 condition|(
 name|isp_tdebug
+operator|>
+literal|1
 condition|)
 block|{
 name|printf
@@ -5487,6 +5495,8 @@ block|}
 if|if
 condition|(
 name|isp_tdebug
+operator|>
+literal|1
 condition|)
 block|{
 name|printf
@@ -5557,6 +5567,8 @@ expr_stmt|;
 if|if
 condition|(
 name|isp_tdebug
+operator|>
+literal|1
 condition|)
 block|{
 name|printf
@@ -7633,18 +7645,6 @@ operator|<<
 name|bus
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|isp_control
-argument_list|(
-name|isp
-argument_list|,
-name|ISPCTL_UPDATE_PARAMS
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 operator|(
 name|void
@@ -7769,7 +7769,6 @@ operator|=
 name|splcam
 argument_list|()
 expr_stmt|;
-comment|/* 				 * First do a refresh to see if things 				 * have changed recently! 				 */
 name|sdp
 operator|->
 name|isp_devparam
@@ -10100,7 +10099,7 @@ name|arg
 decl_stmt|;
 name|ITDEBUG
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
 literal|"%s: bus %d iid %d tgt %d lun %d ttype %x tval %x"
@@ -10166,7 +10165,7 @@ name|arg
 decl_stmt|;
 name|ITDEBUG
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
 literal|"%s: bus %d event code 0x%x\n"
