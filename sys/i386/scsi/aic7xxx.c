@@ -5166,13 +5166,7 @@ name|caddr_t
 operator|)
 name|scb
 argument_list|,
-operator|(
-literal|100
-operator|*
 name|hz
-operator|)
-operator|/
-literal|1000
 argument_list|)
 expr_stmt|;
 break|break;
