@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_init.c	8.3 (Berkeley) 1/4/94  * $Id: vfs_init.c,v 1.36 1998/10/25 10:52:34 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_init.c	8.3 (Berkeley) 1/4/94  * $Id: vfs_init.c,v 1.37 1998/10/25 17:44:52 phk Exp $  */
 end_comment
 
 begin_include
@@ -247,8 +247,6 @@ parameter_list|)
 block|{
 name|int
 name|j
-decl_stmt|,
-name|k
 decl_stmt|;
 name|vop_t
 modifier|*
@@ -266,6 +264,16 @@ name|vnodeopv_entry_desc
 modifier|*
 name|opve_descp
 decl_stmt|;
+name|int
+name|default_vector
+decl_stmt|;
+name|default_vector
+operator|=
+name|VOFFSET
+argument_list|(
+name|vop_default
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate the dynamic vectors and fill them in. 	 */
 name|opv_desc_vector_p
 operator|=
@@ -383,23 +391,18 @@ name|opve_op
 operator|->
 name|vdesc_offset
 operator|!=
-name|VOFFSET
-argument_list|(
-name|vop_default
-argument_list|)
+name|default_vector
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"operation %s not listed in %s.\n"
+literal|"operation %s not listed in vfs_op_descs[].\n"
 argument_list|,
 name|opve_descp
 operator|->
 name|opve_op
 operator|->
 name|vdesc_name
-argument_list|,
-literal|"vfs_op_descs"
 argument_list|)
 expr_stmt|;
 name|panic
@@ -423,7 +426,7 @@ operator|->
 name|opve_impl
 expr_stmt|;
 block|}
-comment|/* 	 * Finally, go back and replace unfilled routines 	 * with their default.  (Sigh, an O(n^3) algorithm.  I 	 * could make it better, but that'd be work, and n is small.) 	 */
+comment|/* 	 * Finally, go back and replace unfilled routines with their default. 	 */
 name|opv_desc_vector
 operator|=
 operator|*
@@ -433,59 +436,50 @@ operator|->
 name|opv_desc_vector_p
 operator|)
 expr_stmt|;
-comment|/* 	 * Force every operations vector to have a default routine. 	 */
 if|if
 condition|(
 name|opv_desc_vector
 index|[
-name|VOFFSET
-argument_list|(
-name|vop_default
-argument_list|)
+name|default_vector
 index|]
 operator|==
 name|NULL
 condition|)
-block|{
 name|panic
 argument_list|(
-literal|"vfs_opv_init: operation vector without default routine."
+literal|"vfs_opv_init: operation vector without a default."
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
-name|k
+name|j
 operator|=
 literal|0
 init|;
-name|k
+name|j
 operator|<
 name|vfs_opv_numops
 condition|;
-name|k
+name|j
 operator|++
 control|)
 if|if
 condition|(
 name|opv_desc_vector
 index|[
-name|k
+name|j
 index|]
 operator|==
 name|NULL
 condition|)
 name|opv_desc_vector
 index|[
-name|k
+name|j
 index|]
 operator|=
 name|opv_desc_vector
 index|[
-name|VOFFSET
-argument_list|(
-name|vop_default
-argument_list|)
+name|default_vector
 index|]
 expr_stmt|;
 block|}
@@ -522,38 +516,6 @@ name|vfs_opv_numops
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|unused
-comment|/* 	 * Set all vnode vectors to a well known value. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|vfs_opv_descs
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-operator|*
-operator|(
-name|vfs_opv_descs
-index|[
-name|i
-index|]
-operator|->
-name|opv_desc_vector_p
-operator|)
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * assign each op to its offset 	 * 	 * XXX This should not be needed, but is because the per 	 * XXX FS ops tables are not sorted according to the 	 * XXX vnodeop_desc's offset in vfs_op_descs.  This 	 * XXX is the same reason we have to take the hit for 	 * XXX the static inline function calls instead of using 	 * XXX simple macro references. 	 */
 for|for
 control|(
@@ -577,34 +539,6 @@ name|vdesc_offset
 operator|=
 name|i
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|unused
-comment|/* Finish the job */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|vfs_opv_descs
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-name|vfs_opv_init
-argument_list|(
-name|vfs_opv_descs
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1009,6 +943,7 @@ operator|)
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* XXX there is a memory leak on unload here */
 name|vfs_opv_init
 argument_list|(
 name|opv
