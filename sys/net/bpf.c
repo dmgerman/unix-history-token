@@ -4242,7 +4242,7 @@ decl_stmt|;
 name|int
 name|ready
 decl_stmt|;
-name|BPFD_LOCK
+name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
 argument_list|)
@@ -4321,11 +4321,6 @@ operator|=
 name|BPF_WAITING
 expr_stmt|;
 block|}
-name|BPFD_UNLOCK
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ready
