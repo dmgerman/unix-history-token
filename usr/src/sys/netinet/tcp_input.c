@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3631,21 +3631,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Return any desired output. 	 */
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|newwin
 operator|||
+operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
 name|TF_ACKNOW
+operator|)
 condition|)
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -3660,27 +3657,9 @@ label|:
 comment|/* 	 * Generate an ACK dropping incoming segment if it occupies 	 * sequence space, where the ACK reflects our state. 	 */
 if|if
 condition|(
-operator|(
 name|tiflags
 operator|&
 name|TH_RST
-operator|)
-operator|||
-name|tlen
-operator|==
-literal|0
-operator|&&
-operator|(
-name|tiflags
-operator|&
-operator|(
-name|TH_SYN
-operator||
-name|TH_FIN
-operator|)
-operator|)
-operator|==
-literal|0
 condition|)
 goto|goto
 name|drop
