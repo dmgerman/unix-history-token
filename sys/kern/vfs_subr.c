@@ -3675,10 +3675,6 @@ argument_list|,
 name|v_freelist
 argument_list|)
 expr_stmt|;
-name|vp
-operator|=
-name|NULL
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -3687,6 +3683,10 @@ literal|0
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|vp
+operator|=
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}
