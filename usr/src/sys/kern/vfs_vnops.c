@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_vnops.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_vnops.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -421,7 +421,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|vn_access
+name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
@@ -449,24 +449,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|error
-operator|=
-name|vn_access
-argument_list|(
-name|vp
-argument_list|,
-name|VWRITE
-argument_list|,
-name|ndp
-operator|->
-name|ni_cred
-argument_list|)
-condition|)
-goto|goto
-name|bad
-goto|;
-if|if
-condition|(
 name|vp
 operator|->
 name|v_type
@@ -482,6 +464,35 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|vn_writechk
+argument_list|(
+name|vp
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|error
+operator|=
+name|VOP_ACCESS
+argument_list|(
+name|vp
+argument_list|,
+name|VWRITE
+argument_list|,
+name|ndp
+operator|->
+name|ni_cred
+argument_list|)
+operator|)
+condition|)
+goto|goto
+name|bad
+goto|;
 block|}
 block|}
 if|if
@@ -596,17 +607,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check mode permission on vnode pointer. Mode is READ, WRITE or EXEC.  * In the case of WRITE, the read-only status of the file system is  * checked. Also in WRITE, prototype text segments cannot be written.  */
+comment|/*  * Check for write permissions on the specified vnode.  * The read-only status of the file system is checked.  * Also, prototype text segments cannot be written.  */
 end_comment
 
 begin_expr_stmt
-name|vn_access
+name|vn_writechk
 argument_list|(
 name|vp
-argument_list|,
-name|mode
-argument_list|,
-name|cred
 argument_list|)
 specifier|register
 expr|struct
@@ -616,30 +623,9 @@ name|vp
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|mode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-if|if
-condition|(
-name|mode
-operator|&
-name|VWRITE
-condition|)
-block|{
-comment|/* 		 * Disallow write attempts on read-only file systems; 		 * unless the file is a socket or a block or character 		 * device resident on the file system. 		 */
+comment|/* 	 * Disallow write attempts on read-only file systems; 	 * unless the file is a socket or a block or character 	 * device resident on the file system. 	 */
 if|if
 condition|(
 operator|(
@@ -675,7 +661,7 @@ operator|(
 name|EROFS
 operator|)
 return|;
-comment|/* 		 * If there's shared text associated with 		 * the inode, try to free it up once.  If 		 * we fail, we can't allow writing. 		 */
+comment|/* 	 * If there's shared text associated with 	 * the vnode, try to free it up once.  If 	 * we fail, we can't allow writing. 	 */
 if|if
 condition|(
 name|vp
@@ -702,17 +688,9 @@ operator|(
 name|ETXTBSY
 operator|)
 return|;
-block|}
 return|return
 operator|(
-name|VOP_ACCESS
-argument_list|(
-name|vp
-argument_list|,
-name|mode
-argument_list|,
-name|cred
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}
