@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) %G%"
+literal|"@(#)misc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,9 @@ name|int
 name|notused
 decl_stmt|;
 block|{
+name|time_t
+name|secs
+decl_stmt|;
 name|int
 name|len
 decl_stmt|;
@@ -87,6 +90,31 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|secs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|secs
+operator|-=
+name|st
+operator|.
+name|start
+operator|)
+operator|==
+literal|0
+condition|)
+name|secs
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Use snprintf(3) so that we don't reenter stdio(3). */
 name|len
 operator|=
@@ -99,7 +127,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u+%u records in\n%u+%u records out\n"
+literal|"%u+%u records in\n%u+%u records out\n%u bytes transferred in %u secs (%u bytes/sec)\n"
 argument_list|,
 name|st
 operator|.
@@ -116,6 +144,18 @@ argument_list|,
 name|st
 operator|.
 name|out_part
+argument_list|,
+name|st
+operator|.
+name|bytes
+argument_list|,
+name|secs
+argument_list|,
+name|st
+operator|.
+name|bytes
+operator|/
+name|secs
 argument_list|)
 expr_stmt|;
 operator|(
@@ -318,6 +358,10 @@ function|va_dcl
 endif|#
 directive|endif
 block|{
+specifier|extern
+name|int
+name|errstats
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -375,6 +419,15 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstats
+condition|)
+name|summary
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|exit

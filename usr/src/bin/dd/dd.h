@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)dd.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)dd.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -118,6 +118,14 @@ name|u_long
 name|swab
 decl_stmt|;
 comment|/* # of odd-length swab blocks */
+name|u_long
+name|bytes
+decl_stmt|;
+comment|/* # of bytes written */
+name|time_t
+name|start
+decl_stmt|;
+comment|/* start time of dd */
 block|}
 name|STAT
 typedef|;

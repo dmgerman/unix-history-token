@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.11 (Berkeley) %G%"
+literal|"@(#)dd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,6 +254,16 @@ comment|/* # of files to copy */
 end_comment
 
 begin_decl_stmt
+name|int
+name|errstats
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show statistics on error */
+end_comment
+
+begin_decl_stmt
 name|u_char
 modifier|*
 name|ctab
@@ -308,11 +318,16 @@ argument_list|,
 name|terminate
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|errstats
+operator|=
+literal|1
+init|;
 name|files_cnt
 operator|--
-condition|)
+condition|;
+control|)
 name|dd_in
 argument_list|()
 expr_stmt|;
@@ -1091,6 +1106,18 @@ name|u2l
 else|:
 name|l2u
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|st
+operator|.
+name|start
+argument_list|)
+expr_stmt|;
+comment|/* Statistics timestamp. */
 block|}
 end_function
 
@@ -1636,6 +1663,12 @@ name|outp
 argument_list|,
 name|cnt
 argument_list|)
+expr_stmt|;
+name|st
+operator|.
+name|bytes
+operator|+=
+name|nw
 expr_stmt|;
 if|if
 condition|(
