@@ -298,12 +298,12 @@ decl_stmt|;
 name|int
 name|initattr_rlevel
 init|=
-name|UFS_EXTATTR_PERM_OWNER
+name|UFS_EXTATTR_PERM_ROOT
 decl_stmt|;
 name|int
 name|initattr_wlevel
 init|=
-name|UFS_EXTATTR_PERM_OWNER
+name|UFS_EXTATTR_PERM_ROOT
 decl_stmt|;
 name|int
 name|ch
