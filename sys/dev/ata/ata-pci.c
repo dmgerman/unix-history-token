@@ -1704,6 +1704,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+literal|5
+condition|)
+block|{
+comment|/* HPT368/370 */
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -1788,6 +1799,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+comment|/* FALLTHROUGH */
 case|case
 literal|0x00051103
 case|:
