@@ -2627,7 +2627,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"fvwm2"
+literal|"fvwm"
 argument_list|)
 expr_stmt|;
 if|if
