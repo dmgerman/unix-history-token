@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.14 (Berkeley) %G%"
+literal|"@(#)err.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,14 +370,6 @@ endif|#
 directive|endif
 block|{
 name|VA_LOCAL_DECL
-specifier|extern
-name|char
-name|SuprErrs
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 if|if
 condition|(
 name|SuprErrs
