@@ -2793,7 +2793,7 @@ name|Disk
 modifier|*
 name|d
 decl_stmt|;
-comment|/* Skip memory disks */
+comment|/* Ignore memory disks */
 if|if
 condition|(
 operator|!
@@ -2825,7 +2825,8 @@ condition|(
 operator|!
 name|d
 condition|)
-name|msgFatal
+block|{
+name|msgDebug
 argument_list|(
 literal|"Unable to open disk %s"
 argument_list|,
@@ -2835,6 +2836,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 name|deviceRegister
 argument_list|(
 name|names
