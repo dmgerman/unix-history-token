@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.24	82/03/27	*/
+comment|/*	kern_proc.c	4.25	82/04/02	*/
 end_comment
 
 begin_include
@@ -2247,7 +2247,7 @@ name|u
 operator|.
 name|u_signal
 index|[
-literal|0
+literal|1
 index|]
 operator|,
 name|sigmask
@@ -3143,6 +3143,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|psignal
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -3151,15 +3160,6 @@ operator|)
 name|p
 operator|->
 name|p_pptr
-argument_list|)
-expr_stmt|;
-name|psignal
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|,
-name|SIGCHLD
 argument_list|)
 expr_stmt|;
 name|swtch
