@@ -91,7 +91,7 @@ condition|)
 block|{
 name|_thread_critical_enter
 argument_list|(
-name|curthread
+name|thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -113,7 +113,7 @@ argument_list|)
 expr_stmt|;
 name|_thread_critical_exit
 argument_list|(
-name|curthread
+name|thread
 argument_list|)
 expr_stmt|;
 block|}
