@@ -5998,7 +5998,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal form of close.  * Decrement reference count on file structure.  * Note: p may be NULL when closing a file  * that was being passed in a message.  */
+comment|/*  * Internal form of close.  * Decrement reference count on file structure.  * Note: td may be NULL when closing a file  * that was being passed in a message.  */
 end_comment
 
 begin_function
@@ -6023,15 +6023,6 @@ name|td
 decl_stmt|;
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
@@ -6054,10 +6045,12 @@ return|;
 comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descriptor. 	 */
 if|if
 condition|(
-name|p
+name|td
 operator|&&
 operator|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_flag
 operator|&
@@ -6116,7 +6109,9 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_leader
 argument_list|,
