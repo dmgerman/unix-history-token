@@ -36,7 +36,7 @@ file|<time.h>
 end_include
 
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.h,v 1.8.2.1 1996/11/28 08:09:56 phk Exp $  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.h,v 1.8.2.2 1997/05/05 11:19:11 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ modifier|*
 name|file
 decl_stmt|;
 name|int
-name|errno
+name|error
 decl_stmt|;
 name|int
 name|is_binary
@@ -373,7 +373,7 @@ modifier|*
 name|ftpErrString
 parameter_list|(
 name|int
-name|errno
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.15.2.3 1997/08/03 18:45:21 peter Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.15.2.4 1997/10/01 07:22:06 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -561,7 +561,7 @@ parameter_list|)
 block|{
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -634,7 +634,7 @@ else|else
 block|{
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|var
 expr_stmt|;
@@ -891,7 +891,7 @@ decl_stmt|;
 return|return
 name|ftp
 operator|->
-name|errno
+name|error
 return|;
 block|}
 end_function
@@ -903,7 +903,7 @@ modifier|*
 name|ftpErrString
 parameter_list|(
 name|int
-name|errno
+name|error
 parameter_list|)
 block|{
 name|int
@@ -911,7 +911,7 @@ name|k
 decl_stmt|;
 if|if
 condition|(
-name|errno
+name|error
 operator|==
 operator|-
 literal|1
@@ -920,6 +920,19 @@ return|return
 operator|(
 literal|"connection in wrong state"
 operator|)
+return|;
+if|if
+condition|(
+name|error
+operator|<
+literal|100
+condition|)
+comment|/* XXX soon UNIX errnos will catch up with FTP protocol errnos */
+return|return
+name|strerror
+argument_list|(
+name|error
+argument_list|)
 return|;
 for|for
 control|(
@@ -943,7 +956,7 @@ index|]
 operator|.
 name|num
 operator|==
-name|errno
+name|error
 condition|)
 return|return
 operator|(
@@ -1569,7 +1582,7 @@ switch|switch
 condition|(
 name|n
 operator|->
-name|errno
+name|error
 condition|)
 block|{
 case|case
@@ -1597,7 +1610,7 @@ name|retcode
 operator|=
 name|n
 operator|->
-name|errno
+name|error
 expr_stmt|;
 break|break;
 block|}
@@ -2195,7 +2208,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 return|return
 name|FAILURE
@@ -2399,7 +2412,7 @@ name|FALSE
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -3144,7 +3157,7 @@ if|if
 condition|(
 name|ftp
 operator|->
-name|errno
+name|error
 operator|!=
 name|FTP_TIMED_OUT
 condition|)
@@ -3445,7 +3458,7 @@ argument_list|)
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 operator|-
 literal|1
@@ -3531,7 +3544,7 @@ condition|)
 block|{
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -3603,7 +3616,7 @@ condition|)
 block|{
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 operator|-
 literal|1
@@ -3645,7 +3658,7 @@ argument_list|)
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 expr_stmt|;
@@ -3727,7 +3740,7 @@ literal|0
 condition|)
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|i
 expr_stmt|;
@@ -3845,7 +3858,7 @@ condition|)
 block|{
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|errno
 expr_stmt|;
@@ -3896,7 +3909,7 @@ name|FtpTimedOut
 condition|)
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|FTP_TIMED_OUT
 expr_stmt|;
@@ -4118,7 +4131,7 @@ argument_list|)
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|i
 expr_stmt|;
@@ -4166,7 +4179,7 @@ argument_list|)
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|i
 expr_stmt|;
@@ -4420,7 +4433,7 @@ argument_list|)
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|i
 expr_stmt|;
@@ -4475,7 +4488,7 @@ argument_list|)
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 name|i
 expr_stmt|;
@@ -4508,7 +4521,7 @@ argument_list|)
 expr_stmt|;
 name|ftp
 operator|->
-name|errno
+name|error
 operator|=
 literal|401
 expr_stmt|;
