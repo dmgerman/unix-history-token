@@ -222,7 +222,7 @@ argument|interfaces
 argument_list|,
 argument|SI_SUB_PROTO_IF
 argument_list|,
-argument|SI_ORDER_FIRST
+argument|SI_ORDER_SECOND
 argument_list|,
 argument|bdginit
 argument_list|,
@@ -1059,7 +1059,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * initialization of bridge code.  */
+comment|/*  * initialization of bridge code.  *  * This will have to change to support kldload.  */
 end_comment
 
 begin_function
@@ -1076,6 +1076,8 @@ decl_stmt|;
 block|{
 name|int
 name|i
+decl_stmt|,
+name|s
 decl_stmt|;
 name|struct
 name|ifnet
@@ -1092,6 +1094,12 @@ modifier|*
 name|eth_addr
 decl_stmt|;
 comment|/*      * initialization of bridge code      */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+comment|/* XXX does this matter? */
 if|if
 condition|(
 name|bdg_table
@@ -1370,6 +1378,11 @@ expr_stmt|;
 name|do_bridge
 operator|=
 literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_function
