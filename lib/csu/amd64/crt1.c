@@ -170,7 +170,7 @@ directive|define
 name|get_rtld_cleanup
 parameter_list|()
 define|\
-value|({ fptr __value;					\        __asm__("movl %%edx,%0" : "=rm"(__value));	\        __value; })
+value|({ fptr __value;				\ 	    __asm__("movl %%edx,%0" : "=rm"(__value));	\ 	    __value; })
 end_define
 
 begin_else
