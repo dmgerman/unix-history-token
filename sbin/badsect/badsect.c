@@ -305,7 +305,6 @@ name|stbuf
 decl_stmt|,
 name|devstat
 decl_stmt|;
-specifier|register
 name|struct
 name|dirent
 modifier|*
