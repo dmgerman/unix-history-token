@@ -447,7 +447,7 @@ literal|"FreeBSD"
 block|,
 literal|"/compat/ia32"
 block|,
-literal|"/usr/libexec/ld-elf.so.1"
+literal|"/lib/ld-elf.so.1"
 block|,
 operator|&
 name|ia32_freebsd_sysvec

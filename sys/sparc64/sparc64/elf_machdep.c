@@ -174,7 +174,7 @@ literal|"FreeBSD"
 block|,
 literal|""
 block|,
-literal|"/usr/libexec/ld-elf.so.1"
+literal|"/libexec/ld-elf.so.1"
 block|,
 operator|&
 name|elf64_freebsd_sysvec
