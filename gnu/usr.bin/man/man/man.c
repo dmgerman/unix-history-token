@@ -1521,6 +1521,9 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 case|case
 literal|'o'
 case|:
@@ -1528,6 +1531,8 @@ name|use_original
 operator|++
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'p'
 case|:
