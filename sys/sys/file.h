@@ -577,6 +577,11 @@ modifier|*
 name|xf_data
 decl_stmt|;
 comment|/* file descriptor specific data */
+name|void
+modifier|*
+name|xf_vnode
+decl_stmt|;
+comment|/* vnode pointer */
 name|u_int
 name|xf_flag
 decl_stmt|;
