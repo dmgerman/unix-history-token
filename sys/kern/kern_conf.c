@@ -937,7 +937,7 @@ name|x
 operator|->
 name|si_udev
 operator|&
-literal|0xffff00ff
+name|MAXMINOR
 operator|)
 return|;
 block|}
@@ -989,7 +989,8 @@ argument_list|(
 operator|(
 name|_minor
 operator|&
-literal|0xff00
+operator|~
+name|MAXMINOR
 operator|)
 operator|==
 literal|0
@@ -1391,7 +1392,7 @@ return|return
 operator|(
 name|dev
 operator|&
-literal|0xffff00ff
+name|MAXMINOR
 operator|)
 return|;
 block|}
@@ -1410,7 +1411,8 @@ operator|(
 operator|(
 name|dev
 operator|&
-literal|0xff00
+operator|~
+name|MAXMINOR
 operator|)
 operator|>>
 literal|8
@@ -2043,7 +2045,7 @@ operator|(
 name|minornr
 operator|&
 operator|~
-literal|0xffff00ff
+name|MAXMINOR
 operator|)
 operator|==
 literal|0

@@ -6007,7 +6007,7 @@ argument_list|(
 operator|&
 name|mdctl_cdevsw
 argument_list|,
-literal|0xffff00ff
+name|MAXMINOR
 argument_list|,
 name|UID_ROOT
 argument_list|,
