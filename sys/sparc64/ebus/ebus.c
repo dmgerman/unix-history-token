@@ -859,6 +859,12 @@ argument_list|(
 literal|"ebus_probe: no interrupt map found"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_imap_type
+operator|=
+name|EBUS_IT_PCI
+expr_stmt|;
 block|}
 else|else
 block|{
