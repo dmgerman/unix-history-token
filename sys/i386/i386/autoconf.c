@@ -1451,14 +1451,6 @@ name|ifa
 operator|=
 name|NULL
 expr_stmt|;
-name|ifp
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ifnet
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
