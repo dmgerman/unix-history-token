@@ -1313,6 +1313,8 @@ name|archive_read_format_tar_read_header
 argument_list|,
 name|archive_read_format_tar_read_data
 argument_list|,
+name|NULL
+argument_list|,
 name|archive_read_format_tar_cleanup
 argument_list|)
 expr_stmt|;

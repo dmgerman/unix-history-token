@@ -881,6 +881,8 @@ name|archive_read_format_iso9660_read_header
 argument_list|,
 name|archive_read_format_iso9660_read_data
 argument_list|,
+name|NULL
+argument_list|,
 name|archive_read_format_iso9660_cleanup
 argument_list|)
 expr_stmt|;
