@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	5.2 (Berkeley) %G%"
+literal|"@(#)kill.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ literal|"prof"
 block|,
 literal|"winch"
 block|,
-literal|"29"
+literal|"info"
 block|,
 literal|"usr1"
 block|,
