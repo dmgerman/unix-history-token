@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.4	82/02/16	*/
+comment|/*	if_imphost.c	4.5	82/02/21	*/
 end_comment
 
 begin_include
@@ -387,9 +387,9 @@ name|addr
 expr_stmt|;
 name|hp
 operator|->
-name|h_status
+name|h_qcnt
 operator|=
-name|HOSTS_UP
+literal|0
 expr_stmt|;
 name|foundhost
 label|:
@@ -740,6 +740,73 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Remove a packet from the holding q.  * The RFNM counter is also bumped.  */
+end_comment
+
+begin_function
+name|struct
+name|mbuf
+modifier|*
+name|hostdeque
+parameter_list|(
+name|hp
+parameter_list|)
+specifier|register
+name|struct
+name|host
+modifier|*
+name|hp
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|hp
+operator|->
+name|h_rfnm
+operator|--
+expr_stmt|;
+name|HOST_DEQUE
+argument_list|(
+name|hp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+return|return
+operator|(
+name|m
+operator|)
+return|;
+if|if
+condition|(
+name|hp
+operator|->
+name|h_rfnm
+operator|==
+literal|0
+condition|)
+name|hostfree
+argument_list|(
+name|hp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

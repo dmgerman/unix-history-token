@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.h	4.3	82/02/16	*/
+comment|/*	if_imphost.h	4.4	82/02/21	*/
 end_comment
 
 begin_comment
@@ -22,10 +22,10 @@ name|in_addr
 name|h_addr
 decl_stmt|;
 comment|/* host's address */
-name|u_short
-name|h_status
+name|short
+name|h_qcnt
 decl_stmt|;
-comment|/* host status */
+comment|/* size of holding q */
 name|u_char
 name|h_rfnm
 decl_stmt|;
@@ -38,28 +38,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|HOSTS_DOWN
-value|0
-end_define
-
-begin_comment
-comment|/* host believed down */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HOSTS_UP
-value|128
-end_define
-
-begin_comment
-comment|/* host up */
-end_comment
-
 begin_comment
 comment|/*  * Host structures, as seen inside an mbuf.  * Hashing on the host address is used to  * select an index into the first mbuf.  Collisions  * are then resolved by searching successive  * mbuf's at the same index.  Reclamation is done  * automatically at the time a structure is free'd.  */
 end_comment
@@ -71,6 +49,12 @@ name|HPMBUF
 value|((MLEN - sizeof(int)) / sizeof(struct host))
 end_define
 
+begin_if
+if|#
+directive|if
+name|vax
+end_if
+
 begin_define
 define|#
 directive|define
@@ -78,7 +62,40 @@ name|HOSTHASH
 parameter_list|(
 name|a
 parameter_list|)
-value|(((a).s_addr&~0x80000000) % HPMBUF)
+value|((((a).s_addr>>8)+(a).s_net) % HPMBUF)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * In-line expansions for queuing operations on  * host message holding queue.  Queue is maintained  * as circular list with the head pointing to the  * last message in the queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HOST_ENQUE
+parameter_list|(
+name|hp
+parameter_list|,
+name|m
+parameter_list|)
+value|{ \ 	register struct mbuf *n; \ 	hp->h_qcnt++; \ 	if ((n = hp->h_q) == 0) \ 		hp->h_q = m->m_act = m; \ 	else { \ 		m->m_act = n->m_act; \ 		hp->h_q = n->m_act = m; \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_DEQUE
+parameter_list|(
+name|hp
+parameter_list|,
+name|m
+parameter_list|)
+value|{ \ 	if (m = hp->h_q) { \ 		if (m->m_act == m) \ 			hp->h_q = 0; \ 		else { \ 			m = m->m_act; \ 			hp->h_q->m_act = m->m_act; \ 		} \ 		hp->h_qcnt--; \ 	} \ }
 end_define
 
 begin_struct
@@ -121,6 +138,15 @@ name|struct
 name|host
 modifier|*
 name|hostenter
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|hostdeque
 parameter_list|()
 function_decl|;
 end_function_decl
