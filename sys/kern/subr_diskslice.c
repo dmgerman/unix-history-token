@@ -1661,11 +1661,6 @@ name|diskslices
 modifier|*
 name|ssp
 decl_stmt|;
-name|struct
-name|partition
-modifier|*
-name|pp
-decl_stmt|;
 name|slice
 operator|=
 name|dkslice
