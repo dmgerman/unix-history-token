@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.32 1997/10/01 20:46:25 sos Exp $  */
+comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.33 1997/12/07 08:08:49 yokota Exp $  */
 end_comment
 
 begin_ifndef
@@ -183,6 +183,20 @@ define|#
 directive|define
 name|PIO_KEYMAP
 value|_IOW('k', 7, keymap_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIO_DEADKEYMAP
+value|_IOR('k', 8, accentmap_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIO_DEADKEYMAP
+value|_IOW('k', 9, accentmap_t)
 end_define
 
 begin_define
@@ -967,6 +981,66 @@ end_struct
 begin_define
 define|#
 directive|define
+name|NUM_DEADKEYS
+value|15
+end_define
+
+begin_comment
+comment|/* number of accent keys */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_ACCENTCHARS
+value|52
+end_define
+
+begin_comment
+comment|/* max number of accent chars */
+end_comment
+
+begin_struct
+struct|struct
+name|acc_t
+block|{
+name|u_char
+name|accchar
+decl_stmt|;
+name|u_char
+name|map
+index|[
+name|NUM_ACCENTCHARS
+index|]
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|accentmap
+block|{
+name|u_short
+name|n_accs
+decl_stmt|;
+name|struct
+name|acc_t
+name|acc
+index|[
+name|NUM_DEADKEYS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
 name|MAXFK
 value|16
 end_define
@@ -1099,6 +1173,14 @@ typedef|typedef
 name|struct
 name|keymap
 name|keymap_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|accentmap
+name|accentmap_t
 typedef|;
 end_typedef
 
@@ -1480,6 +1562,204 @@ end_comment
 begin_define
 define|#
 directive|define
+name|F_ACC
+value|DGRA
+end_define
+
+begin_comment
+comment|/* first accent key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DGRA
+value|0x89
+end_define
+
+begin_comment
+comment|/* grave			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DACU
+value|0x8a
+end_define
+
+begin_comment
+comment|/* acute			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCIR
+value|0x8b
+end_define
+
+begin_comment
+comment|/* circumflex			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTIL
+value|0x8c
+end_define
+
+begin_comment
+comment|/* tilde			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAC
+value|0x8d
+end_define
+
+begin_comment
+comment|/* macron			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBRE
+value|0x8e
+end_define
+
+begin_comment
+comment|/* breve			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDOT
+value|0x8f
+end_define
+
+begin_comment
+comment|/* dot				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUML
+value|0x90
+end_define
+
+begin_comment
+comment|/* umlaut/diaresis		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDIA
+value|0x90
+end_define
+
+begin_comment
+comment|/* diaresis			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSLA
+value|0x91
+end_define
+
+begin_comment
+comment|/* slash			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRIN
+value|0x92
+end_define
+
+begin_comment
+comment|/* ring				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCED
+value|0x93
+end_define
+
+begin_comment
+comment|/* cedilla			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DAPO
+value|0x94
+end_define
+
+begin_comment
+comment|/* apostrophe			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDAC
+value|0x95
+end_define
+
+begin_comment
+comment|/* double acute			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOGO
+value|0x96
+end_define
+
+begin_comment
+comment|/* ogonek			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCAR
+value|0x97
+end_define
+
+begin_comment
+comment|/* caron			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L_ACC
+value|DCAR
+end_define
+
+begin_comment
+comment|/* last accent key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|F
 parameter_list|(
 name|x
@@ -1495,6 +1775,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)+F_SCR-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)+F_ACC)
 end_define
 
 begin_define
