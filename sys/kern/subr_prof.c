@@ -784,16 +784,22 @@ name|lowpc
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Profiling kernel, textsize=%lu [%x..%x]\n"
+literal|"Profiling kernel, textsize=%lu [%jx..%jx]\n"
 argument_list|,
 name|p
 operator|->
 name|textsize
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 operator|->
 name|lowpc
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 operator|->
 name|highpc
