@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)locate.c	2.5	%G%"
+literal|"@(#)locate.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|maxrefs
-value|200
+value|1000
 end_define
 
 begin_struct
