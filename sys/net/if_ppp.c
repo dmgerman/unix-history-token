@@ -937,6 +937,13 @@ operator|.
 name|ifq_mtx
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_PPP
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -964,6 +971,12 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|LIST_INIT
+argument_list|(
+operator|&
+name|ppp_softc_list
+argument_list|)
+expr_stmt|;
 name|if_clone_attach
 argument_list|(
 operator|&
