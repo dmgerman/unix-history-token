@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.4.2.2 1997/08/29 05:29:15 imp Exp $"
+literal|"$Id: gcore.c,v 1.4.2.3 1997/09/15 08:17:14 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -568,7 +568,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"process exiting"
+literal|"%d: process exiting"
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
 if|if
@@ -585,6 +587,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"%d: system process"
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
 if|if
