@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.7 %G%"
+literal|"@(#)diffreg.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1810,6 +1810,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|int
 modifier|*
 name|c
@@ -2188,21 +2189,26 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-operator|(
+literal|1
+condition|)
+block|{
 name|l
 operator|=
-operator|(
 name|i
 operator|+
 name|j
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|l
+operator|>>=
+literal|1
 operator|)
-operator|/
-literal|2
-operator|)
-operator|>
+operator|<=
 name|i
 condition|)
-block|{
+break|break;
 name|t
 operator|=
 name|clist
@@ -4586,19 +4592,17 @@ begin_comment
 comment|/*  * hashing has the effect of  * arranging line in 7-bit bytes and then  * summing 1-s complement in 16-bit hunks   */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|readhash
 argument_list|(
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
 name|f
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+name|FILE
+operator|*
+name|f
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4671,8 +4675,10 @@ name|t
 operator|<<
 operator|(
 name|shift
-operator|%=
+operator|&=
 name|HALFLONG
+operator|-
+literal|1
 operator|)
 expr_stmt|;
 block|}
@@ -4739,8 +4745,10 @@ name|t
 operator|<<
 operator|(
 name|shift
-operator|%=
+operator|&=
 name|HALFLONG
+operator|-
+literal|1
 operator|)
 expr_stmt|;
 name|shift
