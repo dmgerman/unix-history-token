@@ -3041,16 +3041,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBXOPT_RIO_16BIT_DELAY
+name|ICBXOPT_RIO_16BIT_IOCB
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICBXOPT_RIO_32BIT_DELAY
+name|ICBXOPT_RIO_32BIT_IOCB
 value|4
 end_define
+
+begin_define
+define|#
+directive|define
+name|ICBZOPT_ENA_RDXFR_RDY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBZOPT_ENA_OOF
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* out of order frame handling */
+end_comment
 
 begin_comment
 comment|/* These 3 only apply to the 2300 */

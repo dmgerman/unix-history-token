@@ -1497,6 +1497,28 @@ name|u_int64_t
 name|isp_intbogus
 decl_stmt|;
 comment|/* spurious int count */
+name|u_int64_t
+name|isp_intmboxc
+decl_stmt|;
+comment|/* mbox completions */
+name|u_int64_t
+name|isp_intoasync
+decl_stmt|;
+comment|/* other async */
+name|u_int64_t
+name|isp_rsltccmplt
+decl_stmt|;
+comment|/* CMDs on result q */
+name|u_int64_t
+name|isp_fphccmplt
+decl_stmt|;
+comment|/* CMDs via fastpost */
+name|u_int16_t
+name|isp_rscchiwater
+decl_stmt|;
+name|u_int16_t
+name|isp_fpcchiwater
+decl_stmt|;
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|u_int32_t
@@ -2096,6 +2118,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_FC_2312
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_SCSI
 parameter_list|(
 name|isp
@@ -2216,11 +2245,31 @@ end_define
 begin_define
 define|#
 directive|define
-name|IS_2300
+name|IS_23XX
 parameter_list|(
 name|isp
 parameter_list|)
 value|((isp)->isp_type>= ISP_HA_FC_2300)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2300
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type == ISP_HA_FC_2300)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2312
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type == ISP_HA_FC_2312)
 end_define
 
 begin_comment

@@ -99,5 +99,99 @@ name|ISP_FC_GETDINFO
 value|_IOWR(ISP_IOC, 4, struct isp_fc_device)
 end_define
 
+begin_comment
+comment|/*  * Get/Clear Stats  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_STATS_VERSION
+value|0
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint8_t
+name|isp_stat_version
+decl_stmt|;
+name|uint8_t
+name|isp_type
+decl_stmt|;
+comment|/* (ro) reflects chip type */
+name|uint8_t
+name|isp_revision
+decl_stmt|;
+comment|/* (ro) reflects chip version */
+name|uint8_t
+name|unused1
+decl_stmt|;
+name|uint32_t
+name|unused2
+decl_stmt|;
+comment|/* 	 * Statistics Counters 	 */
+define|#
+directive|define
+name|ISP_NSTATS
+value|16
+define|#
+directive|define
+name|ISP_INTCNT
+value|0
+define|#
+directive|define
+name|ISP_INTBOGUS
+value|1
+define|#
+directive|define
+name|ISP_INTMBOXC
+value|2
+define|#
+directive|define
+name|ISP_INGOASYNC
+value|3
+define|#
+directive|define
+name|ISP_RSLTCCMPLT
+value|4
+define|#
+directive|define
+name|ISP_FPHCCMCPLT
+value|5
+define|#
+directive|define
+name|ISP_RSCCHIWAT
+value|6
+define|#
+directive|define
+name|ISP_FPCCHIWAT
+value|7
+name|uint64_t
+name|isp_stats
+index|[
+name|ISP_NSTATS
+index|]
+decl_stmt|;
+block|}
+name|isp_stats_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ISP_GET_STATS
+value|_IOR(ISP_IOC, 6, isp_stats_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_CLR_STATS
+value|_IO(ISP_IOC, 7)
+end_define
+
 end_unit
 
