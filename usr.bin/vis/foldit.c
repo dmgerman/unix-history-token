@@ -61,6 +61,11 @@ name|char
 modifier|*
 name|chunk
 decl_stmt|;
+name|int
+name|col
+decl_stmt|,
+name|max
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -102,9 +107,11 @@ literal|'\t'
 case|:
 name|col
 operator|=
+operator|(
 name|col
 operator|+
 literal|8
+operator|)
 operator|&
 operator|~
 literal|07
