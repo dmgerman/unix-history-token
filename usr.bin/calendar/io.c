@@ -1556,7 +1556,14 @@ literal|"cpp"
 argument_list|,
 literal|"-P"
 argument_list|,
+literal|"-traditional"
+argument_list|,
+literal|"-nostdinc"
+argument_list|,
+comment|/* GCC specific opts */
 literal|"-I."
+argument_list|,
+literal|"-I"
 argument_list|,
 name|_PATH_INCLUDE
 argument_list|,
