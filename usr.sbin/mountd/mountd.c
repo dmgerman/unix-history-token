@@ -4977,7 +4977,7 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-comment|/* 	 * And delete exports that are in the kernel for all local 	 * file systems. 	 * XXX: Should know how to handle all local exportable file systems 	 *      instead of just "ufs". 	 */
+comment|/* 	 * And delete exports that are in the kernel for all local 	 * filesystems. 	 * XXX: Should know how to handle all local exportable filesystems 	 *      instead of just "ufs". 	 */
 name|num
 operator|=
 name|getmntinfo
@@ -9156,7 +9156,7 @@ operator|)
 return|;
 block|}
 empty_stmt|;
-comment|/* 		 * XXX: 		 * Maybe I should just use the fsb->f_mntonname path instead 		 * of looping back up the dirp to the mount point?? 		 * Also, needs to know how to export all types of local 		 * exportable file systems and not just "ufs". 		 */
+comment|/* 		 * XXX: 		 * Maybe I should just use the fsb->f_mntonname path instead 		 * of looping back up the dirp to the mount point?? 		 * Also, needs to know how to export all types of local 		 * exportable filesystems and not just "ufs". 		 */
 while|while
 condition|(
 name|mount

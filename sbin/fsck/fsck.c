@@ -876,7 +876,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s has unknown file system type."
+literal|"%s has unknown filesystem type."
 argument_list|,
 name|spec
 argument_list|)

@@ -747,7 +747,7 @@ name|runcmdshell
 argument_list|()
 expr_stmt|;
 break|break;
-comment|/* 	 * Incremental restoration of a file system. 	 */
+comment|/* 	 * Incremental restoration of a filesystem. 	 */
 case|case
 literal|'r'
 case|:
@@ -895,7 +895,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Resume an incremental file system restoration. 	 */
+comment|/* 	 * Resume an incremental filesystem restoration. 	 */
 case|case
 literal|'R'
 case|:

@@ -1253,7 +1253,7 @@ name|getfstab
 argument_list|()
 expr_stmt|;
 comment|/* /etc/fstab snarfed */
-comment|/* 	 *	disk can be either the full special file name, 	 *	the suffix of the special file name, 	 *	the special name missing the leading '/', 	 *	the file system name with or without the leading '/'. 	 */
+comment|/* 	 *	disk can be either the full special file name, 	 *	the suffix of the special file name, 	 *	the special name missing the leading '/', 	 *	the filesystem name with or without the leading '/'. 	 */
 name|dt
 operator|=
 name|fstabsearch
@@ -1335,7 +1335,7 @@ name|spcl
 operator|.
 name|c_filesys
 argument_list|,
-literal|"an unlisted file system"
+literal|"an unlisted filesystem"
 argument_list|,
 name|NAMELEN
 argument_list|)
@@ -1599,7 +1599,7 @@ name|errx
 argument_list|(
 name|X_STARTUP
 argument_list|,
-literal|"%s: unknown file system"
+literal|"%s: unknown filesystem"
 argument_list|,
 name|disk
 argument_list|)

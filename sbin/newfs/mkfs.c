@@ -162,7 +162,7 @@ file|"newfs.h"
 end_include
 
 begin_comment
-comment|/*  * make file system for cylinder-group style file systems  */
+comment|/*  * make filesystem for cylinder-group style filesystems  */
 end_comment
 
 begin_comment
@@ -601,7 +601,7 @@ name|fs_flags
 operator||=
 name|FS_DOSOFTDEP
 expr_stmt|;
-comment|/* 	 * Validate the given file system size. 	 * Verify that its last block can actually be accessed. 	 */
+comment|/* 	 * Validate the given filesystem size. 	 * Verify that its last block can actually be accessed. 	 */
 if|if
 condition|(
 name|fssize
@@ -2207,7 +2207,7 @@ name|sblock
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now have size for file system and nsect and ntrak. 	 * Determine number of cylinders and blocks in the file system. 	 */
+comment|/* 	 * Now have size for filesystem and nsect and ntrak. 	 * Determine number of cylinders and blocks in the filesystem. 	 */
 name|sblock
 operator|.
 name|fs_size
@@ -2278,7 +2278,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"file systems must have at least one cylinder\n"
+literal|"filesystems must have at least one cylinder\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2287,7 +2287,7 @@ literal|28
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Determine feasability/values of rotational layout tables. 	 * 	 * The size of the rotational layout tables is limited by the 	 * size of the superblock, SBSIZE. The amount of space available 	 * for tables is calculated as (SBSIZE - sizeof (struct fs)). 	 * The size of these tables is inversely proportional to the block 	 * size of the file system. The size increases if sectors per track 	 * are not powers of two, because more cylinders must be described 	 * by the tables before the rotational pattern repeats (fs_cpc). 	 */
+comment|/* 	 * Determine feasability/values of rotational layout tables. 	 * 	 * The size of the rotational layout tables is limited by the 	 * size of the superblock, SBSIZE. The amount of space available 	 * for tables is calculated as (SBSIZE - sizeof (struct fs)). 	 * The size of these tables is inversely proportional to the block 	 * size of the filesystem. The size increases if sectors per track 	 * are not powers of two, because more cylinders must be described 	 * by the tables before the rotational pattern repeats (fs_cpc). 	 */
 name|sblock
 operator|.
 name|fs_interleave
@@ -2913,7 +2913,7 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Dump out summary information about file system. 	 */
+comment|/* 	 * Dump out summary information about filesystem. 	 */
 name|printf
 argument_list|(
 literal|"%s:\t%d sectors in %d %s of %d tracks, %d sectors\n"
@@ -3150,7 +3150,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now construct the initial file system, 	 * then write out the super-block. 	 */
+comment|/* 	 * Now construct the initial filesystem, 	 * then write out the super-block. 	 */
 name|fsinit
 argument_list|(
 name|utime
@@ -4558,7 +4558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initialize the file system  */
+comment|/*  * initialize the filesystem  */
 end_comment
 
 begin_decl_stmt
@@ -5777,7 +5777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read a block from the file system  */
+comment|/*  * read a block from the filesystem  */
 end_comment
 
 begin_function
@@ -6018,7 +6018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * write a block to the file system  */
+comment|/*  * write a block to the filesystem  */
 end_comment
 
 begin_function

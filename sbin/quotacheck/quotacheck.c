@@ -336,7 +336,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* all file systems */
+comment|/* all filesystems */
 end_comment
 
 begin_decl_stmt

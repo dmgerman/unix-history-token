@@ -15,7 +15,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* run mkfs without writing file system */
+comment|/* run mkfs without writing filesystem */
 end_comment
 
 begin_decl_stmt
@@ -37,7 +37,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* enable soft updates for file system */
+comment|/* enable soft updates for filesystem */
 end_comment
 
 begin_decl_stmt
@@ -48,7 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file system size */
+comment|/* filesystem size */
 end_comment
 
 begin_decl_stmt

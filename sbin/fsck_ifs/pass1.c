@@ -161,7 +161,7 @@ name|struct
 name|inodesc
 name|idesc
 decl_stmt|;
-comment|/* 	 * Set file system reserved blocks in used block map. 	 */
+comment|/* 	 * Set filesystem reserved blocks in used block map. 	 */
 for|for
 control|(
 name|c

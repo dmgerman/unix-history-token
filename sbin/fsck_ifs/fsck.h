@@ -292,7 +292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file system superblock */
+comment|/* filesystem superblock */
 end_comment
 
 begin_decl_stmt
@@ -745,7 +745,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* convert to newer file system format */
+comment|/* convert to newer filesystem format */
 end_comment
 
 begin_decl_stmt
@@ -835,7 +835,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mark file system clean when done */
+comment|/* mark filesystem clean when done */
 end_comment
 
 begin_decl_stmt
@@ -855,7 +855,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* skip clean file systems if preening */
+comment|/* skip clean filesystems if preening */
 end_comment
 
 begin_decl_stmt
@@ -865,7 +865,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 => write done to file system */
+comment|/* 1 => write done to filesystem */
 end_comment
 
 begin_decl_stmt
@@ -875,7 +875,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file descriptor for reading file system */
+comment|/* file descriptor for reading filesystem */
 end_comment
 
 begin_decl_stmt
@@ -885,7 +885,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file descriptor for writing file system */
+comment|/* file descriptor for writing filesystem */
 end_comment
 
 begin_decl_stmt
@@ -895,7 +895,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of blocks in the file system */
+comment|/* number of blocks in the filesystem */
 end_comment
 
 begin_decl_stmt
@@ -916,7 +916,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of inodes in file system */
+comment|/* number of inodes in filesystem */
 end_comment
 
 begin_decl_stmt

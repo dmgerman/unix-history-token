@@ -1011,7 +1011,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Converting to new file system format.\n"
+literal|"Converting to new filesystem format.\n"
 argument_list|)
 expr_stmt|;
 block|}

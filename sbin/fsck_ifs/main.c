@@ -859,7 +859,7 @@ name|MNT_ROOTFS
 condition|)
 name|printf
 argument_list|(
-literal|"** Root file system\n"
+literal|"** Root filesystem\n"
 argument_list|)
 expr_stmt|;
 name|printf

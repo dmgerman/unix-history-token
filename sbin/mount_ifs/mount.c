@@ -610,7 +610,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-comment|/* the root file system can always be remounted */
+comment|/* the root filesystem can always be remounted */
 return|return
 operator|(
 literal|0

@@ -239,7 +239,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* Fix file system FAT */
+comment|/* Fix filesystem FAT */
 end_comment
 
 begin_comment

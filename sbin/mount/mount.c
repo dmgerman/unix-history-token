@@ -1285,7 +1285,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: unknown special file or file system"
+literal|"%s: unknown special file or filesystem"
 argument_list|,
 operator|*
 name|argv
@@ -1304,7 +1304,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s has unknown file system type"
+literal|"%s has unknown filesystem type"
 argument_list|,
 operator|*
 name|argv
@@ -1628,7 +1628,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-comment|/* the root file system can always be remounted */
+comment|/* the root filesystem can always be remounted */
 return|return
 operator|(
 literal|0

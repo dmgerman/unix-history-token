@@ -636,7 +636,7 @@ name|EROFS
 operator|)
 condition|)
 block|{
-comment|/* and not read-only file system */
+comment|/* and not read-only filesystem */
 name|fprintf
 argument_list|(
 name|stderr

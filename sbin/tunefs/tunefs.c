@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * tunefs: change layout parameters to an existing file system.  */
+comment|/*  * tunefs: change layout parameters to an existing filesystem.  */
 end_comment
 
 begin_include
@@ -1013,7 +1013,7 @@ name|errx
 argument_list|(
 literal|10
 argument_list|,
-literal|"%s: unknown file system"
+literal|"%s: unknown filesystem"
 argument_list|,
 name|special
 argument_list|)
@@ -1700,7 +1700,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"file system reloaded"
+literal|"filesystem reloaded"
 argument_list|)
 expr_stmt|;
 block|}

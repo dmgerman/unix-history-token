@@ -1020,7 +1020,7 @@ argument_list|,
 name|Nflag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Dump out summary information about file system. 	 */
+comment|/* 	 * Dump out summary information about filesystem. 	 */
 name|printf
 argument_list|(
 literal|"growfs:\t%d sectors in %d %s of %d tracks, %d sectors\n"
@@ -3661,7 +3661,7 @@ operator|.
 name|fs_frag
 expr_stmt|;
 block|}
-comment|/* 	 * Now  we have to update the free fragment bitmap for our new  free 	 * space.  There again we have to handle the fragmentation and  also 	 * the  rotational  layout tables and the cluster summary.  This  is 	 * also  done per fragment for the first new block if the  old  file 	 * system end was not on a block boundary, per fragment for the  new 	 * last block if the new file system end is not on a block boundary, 	 * and per block for all space in between. 	 * 	 * Handle the first new block here if it was partially available 	 * before. 	 */
+comment|/* 	 * Now  we have to update the free fragment bitmap for our new  free 	 * space.  There again we have to handle the fragmentation and  also 	 * the  rotational  layout tables and the cluster summary.  This  is 	 * also  done per fragment for the first new block if the  old  file 	 * system end was not on a block boundary, per fragment for the  new 	 * last block if the new filesystem end is not on a block boundary, 	 * and per block for all space in between. 	 * 	 * Handle the first new block here if it was partially available 	 * before. 	 */
 if|if
 condition|(
 name|osblock
@@ -3749,7 +3749,7 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Check  if the fragment just created could join  an 			 * already existing fragment at the former end of the 			 * file system. 			 */
+comment|/* 			 * Check  if the fragment just created could join  an 			 * already existing fragment at the former end of the 			 * filesystem. 			 */
 if|if
 condition|(
 name|isblock
@@ -6119,7 +6119,7 @@ name|cs_nffree
 operator|--
 expr_stmt|;
 block|}
-comment|/* 		 * No cluster handling is needed here, as there was at least 		 * one  fragment in use by the cylinder summary in  the  old 		 * file system. 		 * No block-free counter handling here as this block was not 		 * a free block. 		 */
+comment|/* 		 * No cluster handling is needed here, as there was at least 		 * one  fragment in use by the cylinder summary in  the  old 		 * filesystem. 		 * No block-free counter handling here as this block was not 		 * a free block. 		 */
 block|}
 name|frag_adjust
 argument_list|(
@@ -9140,7 +9140,7 @@ comment|/* ************************************************************** main *
 end_comment
 
 begin_comment
-comment|/*  * growfs(8)  is a utility which allows to increase the size of  an  existing  * ufs filesystem. Currently this can only be done on unmounted file  system.  * It  recognizes some command line options to specify the new desired  size,  * and  it does some basic checkings. The old file system size is  determined  * and  after some more checks like we can really access the new  last  block  * on the disk etc. we calculate the new parameters for the superblock. After  * having  done  this we just call growfs() which will do  the  work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand  what data structures are always replicated in the snapshot  on  * creation,  for all other blocks we touch during our procedure, we have  to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in  that  * way.  * Also  we  have to consider in what order we actually update  the  critical  * data structures of the filesystem to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The  foreseen last step then will be to provide for growing  even  mounted  * file  systems. There we have to extend the mount() system call to  provide  * userland access to the file system locking facility.  */
+comment|/*  * growfs(8)  is a utility which allows to increase the size of  an  existing  * ufs filesystem. Currently this can only be done on unmounted file  system.  * It  recognizes some command line options to specify the new desired  size,  * and  it does some basic checkings. The old filesystem size is  determined  * and  after some more checks like we can really access the new  last  block  * on the disk etc. we calculate the new parameters for the superblock. After  * having  done  this we just call growfs() which will do  the  work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand  what data structures are always replicated in the snapshot  on  * creation,  for all other blocks we touch during our procedure, we have  to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in  that  * way.  * Also  we  have to consider in what order we actually update  the  critical  * data structures of the filesystem to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The  foreseen last step then will be to provide for growing  even  mounted  * file  systems. There we have to extend the mount() system call to  provide  * userland access to the filesystem locking facility.  */
 end_comment
 
 begin_function
@@ -9661,7 +9661,7 @@ literal|"unknown device"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check if that partition looks suited for growing a file system. 	 */
+comment|/* 	 * Check if that partition looks suited for growing a filesystem. 	 */
 if|if
 condition|(
 name|pp
@@ -10020,7 +10020,7 @@ argument_list|,
 name|Nflag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now calculate new superblock values and check for reasonable 	 * bound for new file system size: 	 *     fs_size:    is derived from label or user input 	 *     fs_dsize:   should get updated in the routines creating or 	 *                 updating the cylinder groups on the fly 	 *     fs_cstotal: should get updated in the routines creating or 	 *                 updating the cylinder groups 	 */
+comment|/* 	 * Now calculate new superblock values and check for reasonable 	 * bound for new filesystem size: 	 *     fs_size:    is derived from label or user input 	 *     fs_dsize:   should get updated in the routines creating or 	 *                 updating the cylinder groups on the fly 	 *     fs_cstotal: should get updated in the routines creating or 	 *                 updating the cylinder groups 	 */
 comment|/* 	 * Update the number of cylinders in the filesystem. 	 */
 name|sblock
 operator|.

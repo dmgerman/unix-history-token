@@ -245,7 +245,7 @@ value|((bsize) / sizeof(daddr_t))
 end_define
 
 begin_comment
-comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NFPI fragments, expecting this  * to be far more than we will ever need.  */
+comment|/*  * Each filesystem has a number of inodes statically allocated.  * We allocate one inode slot per NFPI fragments, expecting this  * to be far more than we will ever need.  */
 end_comment
 
 begin_define
@@ -277,7 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* run without writing file system */
+comment|/* run without writing filesystem */
 end_comment
 
 begin_decl_stmt
@@ -297,7 +297,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* enable soft updates for file system */
+comment|/* enable soft updates for filesystem */
 end_comment
 
 begin_decl_stmt
@@ -307,7 +307,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file system size */
+comment|/* filesystem size */
 end_comment
 
 begin_decl_stmt
@@ -988,7 +988,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: bad file system size"
+literal|"%s: bad filesystem size"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1294,7 +1294,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: can't figure out file system partition"
+literal|"%s: can't figure out filesystem partition"
 argument_list|,
 name|special
 argument_list|)
@@ -1400,7 +1400,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: maximum file system size %d"
+literal|"%s: maximum filesystem size %d"
 argument_list|,
 name|special
 argument_list|,
@@ -1935,7 +1935,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-N do not create file system, just print out parameters\n"
+literal|"\t-N do not create filesystem, just print out parameters\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2040,7 +2040,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-s file system size (sectors)\n"
+literal|"\t-s filesystem size (sectors)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
