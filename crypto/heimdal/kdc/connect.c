@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,10 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: connect.c,v 1.68 1999/12/02 17:04:58 joda Exp $"
+literal|"$Id: connect.c,v 1.69 2000/02/11 17:45:45 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * a tuple describing on what to listen  */
+end_comment
 
 begin_struct
 struct|struct
@@ -34,6 +38,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* the current ones */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -49,6 +57,10 @@ name|int
 name|num_ports
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * add `family, port, protocol' to the list with duplicate suppresion.  */
+end_comment
 
 begin_function
 specifier|static
@@ -170,6 +182,23 @@ name|ports
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ports
+operator|==
+name|NULL
+condition|)
+name|krb5_err
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"realloc"
+argument_list|)
+expr_stmt|;
 name|ports
 index|[
 name|num_ports
@@ -202,6 +231,10 @@ operator|++
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * add a triple but with service -> port lookup  * (this prints warnings for stuff that does not exist)  */
+end_comment
 
 begin_function
 specifier|static
@@ -249,6 +282,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * add the port with service -> port lookup or string -> number  * (no warning is printed)  */
+end_comment
 
 begin_function
 specifier|static
@@ -340,6 +377,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * add the standard collection of ports for `family'  */
+end_comment
 
 begin_function
 specifier|static
@@ -453,6 +494,10 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|/*  * parse the set of space-delimited ports in `str' and add them.  * "+" => all the standard ones  * otherwise it's port|service[/protocol]  */
+end_comment
 
 begin_function
 specifier|static
@@ -645,6 +690,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * every socket we listen on  */
+end_comment
+
 begin_struct
 struct|struct
 name|descr
@@ -769,7 +818,7 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"krb5_anyaddr"
+literal|"krb5_addr2sockaddr"
 argument_list|)
 expr_stmt|;
 name|close
@@ -911,13 +960,39 @@ operator|<
 literal|0
 condition|)
 block|{
+name|char
+name|a_str
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|krb5_print_address
+argument_list|(
+name|a
+argument_list|,
+name|a_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|a_str
+argument_list|)
+argument_list|,
+operator|&
+name|len
+argument_list|)
+expr_stmt|;
 name|krb5_warn
 argument_list|(
 name|context
 argument_list|,
 name|errno
 argument_list|,
-literal|"bind(%d)"
+literal|"bind %s/%d"
+argument_list|,
+name|a_str
 argument_list|,
 name|ntohs
 argument_list|(
@@ -959,13 +1034,44 @@ operator|<
 literal|0
 condition|)
 block|{
+name|char
+name|a_str
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|krb5_print_address
+argument_list|(
+name|a
+argument_list|,
+name|a_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|a_str
+argument_list|)
+argument_list|,
+operator|&
+name|len
+argument_list|)
+expr_stmt|;
 name|krb5_warn
 argument_list|(
 name|context
 argument_list|,
 name|errno
 argument_list|,
-literal|"listen"
+literal|"listen %s/%d"
+argument_list|,
+name|a_str
+argument_list|,
+name|ntohs
+argument_list|(
+name|port
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -974,6 +1080,13 @@ name|d
 operator|->
 name|s
 argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|s
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 return|return;
 block|}
@@ -1017,6 +1130,20 @@ decl_stmt|;
 name|krb5_addresses
 name|addresses
 decl_stmt|;
+if|if
+condition|(
+name|explicit_addresses
+operator|.
+name|len
+condition|)
+block|{
+name|addresses
+operator|=
+name|explicit_addresses
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ret
 operator|=
 name|krb5_get_all_server_addrs
@@ -1042,6 +1169,7 @@ argument_list|,
 literal|"krb5_get_all_server_addrs"
 argument_list|)
 expr_stmt|;
+block|}
 name|parse_ports
 argument_list|(
 name|port_str
@@ -1299,6 +1427,10 @@ name|num
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * handle the request in `buf, len', from `addr' (or `from' as a string),  * sending a reply in `reply'.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3902,6 +4034,12 @@ case|case
 operator|-
 literal|1
 case|:
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
 name|krb5_warn
 argument_list|(
 name|context

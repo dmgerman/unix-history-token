@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_req.c,v 1.40 2000/02/06 05:20:31 assar Exp $"
+literal|"$Id: rd_req.c,v 1.41 2000/02/07 13:31:55 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -652,6 +652,18 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static krb5_error_code check_transited(krb5_context context, 		krb5_ticket *ticket) {     char **realms;     int num_realms;     krb5_error_code ret;      if(ticket->ticket.transited.tr_type != DOMAIN_X500_COMPRESS) 	return KRB5KDC_ERR_TRTYPE_NOSUPP;      ret = krb5_domain_x500_decode(ticket->ticket.transited.contents,&realms,&num_realms,  				  ticket->client->realm, 				  ticket->server->realm);     if(ret) 	return ret;     ret = krb5_check_transited_realms(context, realms, num_realms, NULL);     free(realms);     return ret; }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|krb5_error_code
