@@ -7483,7 +7483,7 @@ argument_list|)
 decl_stmt|;
 name|vr_detach
 argument_list|(
-name|sc
+name|dev
 argument_list|)
 expr_stmt|;
 block|}
