@@ -1074,7 +1074,7 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|YP
-literal|"usage: chpass [-l] [-y] [-d domain [-h host]] [-a list] [-p encpass] [-s shell] [-e mmm dd yy] [user]\n"
+literal|"usage: chpass [-o] [-l] [-y] [-d domain] [-h host] [-a list] [-p encpass] [-s shell] [-e mmm dd yy] [user]\n"
 argument_list|)
 expr_stmt|;
 else|#
