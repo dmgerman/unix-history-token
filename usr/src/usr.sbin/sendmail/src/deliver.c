@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.33 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4298,9 +4298,9 @@ name|strncmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"From"
+literal|"From "
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 operator|==
 literal|0
