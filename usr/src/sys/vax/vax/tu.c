@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.17	83/06/01	*/
+comment|/*	tu.c	4.18	83/06/16	*/
 end_comment
 
 begin_if
@@ -18,7 +18,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * TU58 DECtape II device driver  *  * This driver controls the console TU58s on a VAX-11/750 or VAX-11/730.  * It could be easily modified for a Unibus TU58.  The TU58  * is treated as a block device (only).  Error detection and  * recovery is almost non-existant.  It is assumed that the  * TU58 will follow the RSP protocol exactly, very few protocol  * errors are checked for.  It is assumed that the 750 uses standard  * RSP while the 730 uses Modified RSP (MRSP).  At the time when 750's  * are converted to MRSP (by replacing EPROMS in the TU58), the tests  * based on MRSP can be removed.  */
+comment|/*  * TU58 DECtape II device driver  *  * This driver controls the console TU58(s) on a VAX-11/750 or VAX-11/730.  * The TU58 is treated as a block device (only).  The error detection and  * recovery is not extensive, but sufficient for most situations. It is   * assumed that the TU58 will follow the RSP (or MRSP) protocol   * exactly, very few protocol errors are checked for.    * It is also assumed that the 730 uses Modified RSP  * (MRSP), while the 750 may use either RSP or MRSP depending on  * whether defined(MRSP) is true or not.  * In the case of a 750 without MRSP, the only way for the CPU to  * keep up with the tu58 is to lock out virtually everything else.  * This is taken care of by a pseudo DMA routine in locore.s.  */
 end_comment
 
 begin_include
@@ -128,30 +128,6 @@ begin_comment
 comment|/* mask for drive number (should match NTU) */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MRSP
-argument_list|)
-operator|||
-name|lint
-end_if
-
-begin_define
-define|#
-directive|define
-name|MRSP
-value|(cpu != VAX_750)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -191,6 +167,73 @@ directive|define
 name|TUIPL
 value|((cpu == VAX_750) ? 0x17 : 0x14)
 end_define
+
+begin_comment
+comment|/*  * State information   */
+end_comment
+
+begin_struct
+struct|struct
+name|tu
+block|{
+name|u_char
+modifier|*
+name|tu_rbptr
+decl_stmt|;
+comment|/* pointer to buffer for read */
+name|int
+name|tu_rcnt
+decl_stmt|;
+comment|/* how much to read */
+name|u_char
+modifier|*
+name|tu_wbptr
+decl_stmt|;
+comment|/* pointer to buffer for write */
+name|int
+name|tu_wcnt
+decl_stmt|;
+comment|/* how much to write */
+name|int
+name|tu_state
+decl_stmt|;
+comment|/* current state of tansfer operation */
+name|int
+name|tu_flag
+decl_stmt|;
+comment|/* read in progress flag */
+name|char
+modifier|*
+name|tu_addr
+decl_stmt|;
+comment|/* real buffer data address */
+name|int
+name|tu_count
+decl_stmt|;
+comment|/* real requested count */
+name|int
+name|tu_serrs
+decl_stmt|;
+comment|/* count of soft errors */
+name|int
+name|tu_cerrs
+decl_stmt|;
+comment|/* count of checksum errors */
+name|int
+name|tu_herrs
+decl_stmt|;
+comment|/* count of hard errors */
+name|char
+name|tu_dopen
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* drive is open */
+block|}
+name|tu
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Device register bits  */
@@ -263,13 +306,6 @@ comment|/* a command or data returned from TU58 */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|tu
-name|tu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|tustates
@@ -303,6 +339,10 @@ block|,
 literal|"GET"
 block|,
 literal|"WAIT"
+block|,
+literal|"RCVERR"
+block|,
+literal|"CHKERR"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -506,16 +546,9 @@ argument_list|,
 name|IE
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|ok
+goto|;
 block|}
 comment|/*  	 * Must initialize, reset the cassette 	 * and wait for things to settle down. 	 */
 name|tureset
@@ -549,12 +582,6 @@ operator|!=
 name|TUS_IDLE
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENXIO
-expr_stmt|;
 name|tu
 operator|.
 name|tu_state
@@ -599,7 +626,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
+name|ok
+label|:
 name|splx
 argument_list|(
 name|s
@@ -643,61 +682,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|tutimer
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|tu
-operator|.
-name|tu_serrs
-operator|+
-name|tu
-operator|.
-name|tu_cerrs
-operator|+
-name|tu
-operator|.
-name|tu_herrs
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 		 * A tu58 is like nothing ever seen before; 		 * I guess this is appropriate then... 		 */
-name|uprintf
-argument_list|(
-literal|"tu%d: %d soft errors, %d chksum errors, %d hard errors\n"
-argument_list|,
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|tu
-operator|.
-name|tu_serrs
-argument_list|,
-name|tu
-operator|.
-name|tu_cerrs
-argument_list|,
-name|tu
-operator|.
-name|tu_herrs
-argument_list|)
-expr_stmt|;
-name|tu
-operator|.
-name|tu_serrs
-operator|=
-name|tu
-operator|.
-name|tu_cerrs
-operator|=
-name|tu
-operator|.
-name|tu_herrs
 operator|=
 literal|0
 expr_stmt|;
@@ -780,16 +764,25 @@ name|pk_seq
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MRSP
 name|tucmd
 operator|.
 name|pk_sw
 operator|=
-name|MRSP
-condition|?
 name|TUSW_MRSP
-else|:
+expr_stmt|;
+else|#
+directive|else
+name|tucmd
+operator|.
+name|pk_sw
+operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|tutab
 operator|.
 name|b_active
@@ -1067,16 +1060,25 @@ operator|&
 name|DNUM
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MRSP
 name|tucmd
 operator|.
 name|pk_sw
 operator|=
-name|MRSP
-condition|?
 name|TUSW_MRSP
-else|:
+expr_stmt|;
+else|#
+directive|else
+name|tucmd
+operator|.
+name|pk_sw
+operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|tucmd
 operator|.
 name|pk_count
@@ -1156,14 +1158,6 @@ name|b_addr
 expr_stmt|;
 name|tu
 operator|.
-name|tu_count
-operator|=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
-name|tu
-operator|.
 name|tu_wbptr
 operator|=
 operator|(
@@ -1218,12 +1212,9 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* get the char, clear the interrupt */
-if|if
-condition|(
+ifdef|#
+directive|ifdef
 name|MRSP
-condition|)
-block|{
 while|while
 condition|(
 operator|(
@@ -1246,9 +1237,6 @@ name|TUF_CONT
 argument_list|)
 expr_stmt|;
 comment|/* ACK */
-block|}
-name|top
-label|:
 if|if
 condition|(
 name|tu
@@ -1256,7 +1244,6 @@ operator|.
 name|tu_rcnt
 condition|)
 block|{
-comment|/* still waiting for data? */
 operator|*
 name|tu
 operator|.
@@ -1265,7 +1252,6 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-comment|/* yup, put it there */
 if|if
 condition|(
 operator|--
@@ -1273,11 +1259,11 @@ name|tu
 operator|.
 name|tu_rcnt
 condition|)
-comment|/* decrement count, any left? */
 return|return;
-comment|/* get some more */
 block|}
-comment|/* 	 * We got all the data we were expecting for now, 	 * switch on the state of the transfer. 	 */
+endif|#
+directive|endif
+comment|/* 	 * Switch on the state of the transfer. 	 */
 switch|switch
 condition|(
 name|tu
@@ -1285,6 +1271,30 @@ operator|.
 name|tu_state
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|MRSP
+comment|/* 	 * Probably an overrun error, 	 * cannot happen if MRSP is used 	 */
+case|case
+name|TUS_RCVERR
+case|:
+name|printf
+argument_list|(
+literal|" overrun, recovered "
+argument_list|)
+expr_stmt|;
+comment|/* DEBUG */
+name|tu
+operator|.
+name|tu_serrs
+operator|++
+expr_stmt|;
+name|tu_restart
+argument_list|()
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 comment|/* 	 * If we get an unexpected "continue", 	 * start all over again... 	 */
 case|case
 name|TUS_INIT2
@@ -1446,6 +1456,8 @@ sizeof|sizeof
 argument_list|(
 name|tudata
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|tu
 operator|.
@@ -1460,9 +1472,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|top
-goto|;
+operator|*
+name|tu
+operator|.
+name|tu_rbptr
+operator|=
+name|c
+expr_stmt|;
+break|break;
 case|case
 name|TUF_INITF
 case|:
@@ -1501,10 +1518,13 @@ name|tureset
 argument_list|()
 expr_stmt|;
 break|break;
-comment|/* 	 * Got header, now get data; amount to 	 * fetch is include in packet. 	 */
+comment|/* 	 * Got header, now get data; amount to 	 * fetch is included in packet. 	 */
 case|case
 name|TUS_GETH
 case|:
+ifdef|#
+directive|ifdef
+name|MRSP
 if|if
 condition|(
 name|tudata
@@ -1525,6 +1545,8 @@ name|tu
 operator|.
 name|tu_addr
 expr_stmt|;
+endif|#
+directive|endif
 name|tu
 operator|.
 name|tu_rcnt
@@ -1575,16 +1597,18 @@ operator|=
 name|TUS_GETC
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|MRSP
 case|case
 name|TUS_GET
 case|:
+endif|#
+directive|endif
 case|case
 name|TUS_GETC
 case|:
 comment|/* got entire packet */
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|tudata
@@ -1614,10 +1638,18 @@ name|pk_flag
 operator|==
 name|TUF_DATA
 condition|?
+operator|(
+name|u_short
+operator|*
+operator|)
 name|tu
 operator|.
 name|tu_addr
 else|:
+operator|(
+name|u_short
+operator|*
+operator|)
 operator|&
 name|tudata
 operator|.
@@ -1632,11 +1664,21 @@ operator|.
 name|pk_mcount
 argument_list|)
 condition|)
+case|case
+name|TUS_CHKERR
+case|:
 name|tu
 operator|.
 name|tu_cerrs
 operator|++
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MRSP
+case|case
+name|TUS_GET
+case|:
+comment|/*  		 * The checksum has already been calculated and 		 * verified in the pseudo DMA routine 		 */
 endif|#
 directive|endif
 if|if
@@ -1746,7 +1788,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tu: no bp, active %d\n"
+literal|"tu%d: no bp, active %d\n"
+argument_list|,
+name|tudata
+operator|.
+name|pk_unit
 argument_list|,
 name|tutab
 operator|.
@@ -1779,11 +1825,22 @@ operator|.
 name|tu_herrs
 operator|++
 expr_stmt|;
-name|harderr
+name|printf
+argument_list|(
+literal|"tu%d: hard error bn%d,"
+argument_list|,
+name|minor
 argument_list|(
 name|bp
+operator|->
+name|b_dev
+argument_list|)
+operator|&
+name|DNUM
 argument_list|,
-literal|"tu"
+name|bp
+operator|->
+name|b_blkno
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1874,23 +1931,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"neither data nor end: %o %o\n"
-argument_list|,
-name|tudata
-operator|.
-name|pk_flag
-operator|&
-literal|0xff
-argument_list|,
-name|tudata
-operator|.
-name|pk_op
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Neither data nor end: data was lost 			 * somehow, restart the transfer 			 */
 name|mtpr
 argument_list|(
 name|CSRS
@@ -1899,11 +1940,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* flush the rest */
+name|tu_restart
+argument_list|()
+expr_stmt|;
 name|tu
 operator|.
-name|tu_state
-operator|=
-name|TUS_INIT1
+name|tu_serrs
+operator|++
 expr_stmt|;
 block|}
 break|break;
@@ -1926,7 +1969,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tu protocol error, state="
+literal|"tu%d protocol error, state="
+argument_list|,
+operator|(
+name|int
+operator|)
+name|tudata
+operator|.
+name|pk_unit
 argument_list|)
 expr_stmt|;
 name|printstate
@@ -2027,7 +2077,14 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"tu receive state error, state="
+literal|"tu%d: receive state error, state="
+argument_list|,
+operator|(
+name|int
+operator|)
+name|tudata
+operator|.
+name|pk_unit
 argument_list|)
 expr_stmt|;
 name|printstate
@@ -2042,6 +2099,8 @@ argument_list|(
 literal|", byte=%x\n"
 argument_list|,
 name|c
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2053,8 +2112,6 @@ name|tu_state
 operator|=
 name|TUS_INIT1
 expr_stmt|;
-operator|*
-operator|/
 endif|#
 directive|endif
 name|wakeup
@@ -2215,11 +2272,6 @@ name|tu_flag
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-case|case
-name|TUS_IDLE
-case|:
-comment|/* stray interrupt? */
 break|break;
 comment|/* 	 * Read cmd packet sent, get ready for data 	 */
 case|case
@@ -2469,6 +2521,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 comment|/* 	 * Random interrupt, probably from MRSP ACK 	 */
+case|case
+name|TUS_IDLE
+case|:
+comment|/* stray interrupt? */
 default|default:
 break|break;
 block|}
@@ -2759,7 +2815,11 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"tu: read stalled\n"
+literal|"tu%d: read stalled\n"
+argument_list|,
+name|tudata
+operator|.
+name|pk_unit
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2799,18 +2859,18 @@ operator|.
 name|tu_count
 argument_list|)
 expr_stmt|;
-name|tu
-operator|.
-name|tu_flag
-operator|=
-literal|0
-expr_stmt|;
 name|s
 operator|=
 name|splx
 argument_list|(
 name|TUIPL
 argument_list|)
+expr_stmt|;
+name|tu
+operator|.
+name|tu_flag
+operator|=
+literal|0
 expr_stmt|;
 operator|(
 name|void
@@ -3056,6 +3116,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_macro
+name|tu_restart
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|tureset
+argument_list|()
+expr_stmt|;
+name|timeout
+argument_list|(
+name|tustart
+argument_list|()
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+name|hz
+operator|*
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
