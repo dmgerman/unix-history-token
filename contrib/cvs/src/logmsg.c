@@ -1076,6 +1076,17 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|repository
