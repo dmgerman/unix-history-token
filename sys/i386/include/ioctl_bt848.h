@@ -66,6 +66,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHNLSET_FRANCE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHNLSET_MIN
 value|CHNLSET_NABCST
 end_define
@@ -74,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|CHNLSET_MAX
-value|CHNLSET_AUSTRALIA
+value|CHNLSET_FRANCE
 end_define
 
 begin_comment
