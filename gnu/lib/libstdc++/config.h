@@ -903,9 +903,12 @@ begin_comment
 comment|/* Define to 1 if you have the `floorl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FLOORL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FLOORL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `fmodf' function. */
