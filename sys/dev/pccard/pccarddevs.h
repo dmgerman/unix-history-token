@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.45 2003/03/18 02:36:54 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.46 2003/04/10 06:58:40 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.177 2002/09/15 17:43:48 bouyer Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.182 2003/04/09 02:09:55 christos Exp $ */
 end_comment
 
 begin_comment
@@ -4477,7 +4477,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_AMBICOM
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4488,7 +4488,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_ACCTON
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4499,7 +4499,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_ADDTRON
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4510,7 +4510,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_ARGOSY
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4521,7 +4521,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_AMD
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4532,7 +4532,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_BILLIONTON
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4543,7 +4543,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_CNET
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4554,7 +4554,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_DIGITAL
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4565,7 +4565,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_DLINK
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4576,7 +4576,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_DYNALINK
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4587,7 +4587,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_EIGERLABS
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4598,7 +4598,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_EPSON
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4609,7 +4609,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_EXP
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4620,7 +4620,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_FUTUREDOMAIN
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4631,7 +4631,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_GEMTEK
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4642,7 +4642,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_ICOM
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4653,7 +4653,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_INTERSIL
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4664,7 +4664,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_IODATA3
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4675,7 +4675,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_LANTECH
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4686,7 +4686,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_NAKAGAWAMETAL
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4697,7 +4697,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_NDC
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4708,7 +4708,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_NEC
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4719,7 +4719,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_PLANET
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4730,7 +4730,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_PLANEX
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4741,7 +4741,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_PREMAX
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4752,7 +4752,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_RPTI
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4763,7 +4763,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_SVEC
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4774,7 +4774,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_SYNERGY21
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4785,7 +4785,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_TEAC
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4795,8 +4795,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_TOSHIBA
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* TOSHIBA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_WORKBIT2
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4807,7 +4818,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_YEDATA
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4818,7 +4829,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_YIS
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4829,7 +4840,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_VENDOR_ZOOM
-value|-1
+value|0xffffffff
 end_define
 
 begin_comment
@@ -4847,7 +4858,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ACCTON_EN2212
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -4868,7 +4879,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ACCTON_EN2216
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -4889,7 +4900,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ACCTON_EN2226
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -4910,7 +4921,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ADDTRON_AWP100
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -4931,7 +4942,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ALLIEDTELESIS_WR211PCM
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -4952,7 +4963,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_AMBICOM_AMB8002T
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -4973,7 +4984,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_AMD_AM79C930
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -4994,7 +5005,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ARGOSY_SP320
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5002,6 +5013,27 @@ define|#
 directive|define
 name|PCMCIA_STR_ARGOSY_SP320
 value|"} ARGOSY SP320 Dual port serial PCMCIA"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BILLIONTON_CFLT10N
+value|{ "CF", "10Base-Ethernet", "1.0", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BILLIONTON_CFLT10N
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BILLIONTON_CFLT10N
+value|"Billionton Systems Inc. CFLT10N Ethernet"
 end_define
 
 begin_define
@@ -5015,7 +5047,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_BILLIONTON_LNT10TN
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5025,26 +5057,37 @@ name|PCMCIA_STR_BILLIONTON_LNT10TN
 value|"Billionton Systems Inc. LNT-10TN NE2000 Compatible Card"
 end_define
 
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_CNET_NE2000
-value|{ "CNet", "CN40BC Ethernet", "D", "NE2000" }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_CNET_NE2000
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_CNET_NE2000
-value|"CNet CN40BC NE2000 Compatible"
-end_define
+begin_expr_stmt
+operator|+
+name|product
+name|BILLIONTON
+name|CFLT10N
+block|{
+literal|"CF"
+block|,
+literal|"10Base-Ethernet"
+block|,
+literal|"1.0"
+block|,
+name|NULL
+block|}
+name|Billionproduct
+name|CNET
+name|NE2000
+block|{
+literal|"CNet"
+block|,
+literal|"CN40BC&spEthernet"
+block|,
+literal|"D"
+block|,
+literal|"NE2000"
+block|}
+name|CNet
+name|CN40BC
+name|NE2000
+name|Compatible
+end_expr_stmt
 
 begin_define
 define|#
@@ -5057,7 +5100,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_ETHER_PCC_T
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5078,7 +5121,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_ETHER_PCC_TD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5099,7 +5142,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_ETHER_II_PCC_T
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5120,7 +5163,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_ETHER_II_PCC_TD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5141,7 +5184,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_FAST_ETHER_PCC_TX
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5162,7 +5205,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_FETHER_PCC_TXD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5183,7 +5226,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_FETHER_PCC_TXF
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5204,7 +5247,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_WIRELESS_LAN_PCC_11
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5225,7 +5268,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_WIRELESS_LAN_PCCA_11
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5246,7 +5289,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_COREGA_WIRELESS_LAN_PCCB_11
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5254,6 +5297,27 @@ define|#
 directive|define
 name|PCMCIA_STR_COREGA_WIRELESS_LAN_PCCB_11
 value|"Corega Wireless LAN PCCB-11"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_COREGA_WIRELESS_LAN_PCCL_11
+value|{ "corega", "WL PCCL-11", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_COREGA_WIRELESS_LAN_PCCL_11
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_COREGA_WIRELESS_LAN_PCCL_11
+value|"Corega Wireless LAN PCCL-11"
 end_define
 
 begin_define
@@ -5267,7 +5331,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_DIGITAL_DEPCMXX
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5288,7 +5352,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_DLINK_DE650
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5309,7 +5373,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_DLINK_DE660
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5330,7 +5394,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_DLINK_DE660PLUS
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5351,7 +5415,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_DLINK_DFE670TXD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5372,7 +5436,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_DLINK_DWL650H
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5393,7 +5457,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_DYNALINK_L10C
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5418,7 +5482,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_EIGERLABS_EPX_AA2000
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5439,7 +5503,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_EPSON_EEN10B
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5460,7 +5524,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_EPSON_SC200
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5481,7 +5545,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_EXP_EXPMULTIMEDIA
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5502,7 +5566,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_FUJITSU_FMV_J181
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5523,7 +5587,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_FUJITSU_FMV_J182
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5544,7 +5608,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_FUJITSU_FMV_J182A
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5565,7 +5629,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_FUJITSU_ITCFJ182A
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5586,7 +5650,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_FUTUREDOMAIN_SCSI2GO
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5607,7 +5671,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_GEMTEK_WLAN
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5628,7 +5692,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_IBM_SCSICARD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5649,7 +5713,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ICOM_SL200
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5670,7 +5734,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_INTERSIL_PRISM2
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5691,7 +5755,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_IODATA_CBIDE2
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5712,7 +5776,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_IODATA3_CBSC16
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5733,7 +5797,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_IODATA_PCLAT
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5754,7 +5818,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_LANTECH_FASTNETTX
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5775,7 +5839,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_LINKSYS_ECARD_2
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5796,7 +5860,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_LINKSYS_PCM100
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5817,7 +5881,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_MACNICA_MPS100
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5838,7 +5902,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_MEGAHERTZ_XJ2288
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5859,7 +5923,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_MELCO_LPC2_TX
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5880,7 +5944,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_NAKAGAWAMETAL_LNT10TN
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5901,7 +5965,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_NANOSPEED_PRISM2
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5922,7 +5986,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_NDC_ND5100_E
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5943,7 +6007,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_NEC_CMZ_RT_WP
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5964,7 +6028,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_NEC_PC9801N_J03R
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -5985,7 +6049,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_NEWMEDIA_BASICS_SCSI
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6006,7 +6070,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_NTT_ME_WLAN
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6027,7 +6091,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_PLANET_SMARTCOM2000
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6094,7 +6158,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RPTI_EP400
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6115,7 +6179,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RPTI_EP401
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6136,7 +6200,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_PREMAX_PE200
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6157,7 +6221,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RATOC_REX_R280
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6178,7 +6242,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RATOC_REX5536
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6199,7 +6263,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RATOC_REX5536AM
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6220,7 +6284,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RATOC_REX5536M
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6241,7 +6305,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RATOC_REX5572
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6262,7 +6326,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_RATOC_REX9530
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6283,7 +6347,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_SIMPLETECH_SPECTRUM24_ALT
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6304,7 +6368,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_SMC_2632W
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6325,7 +6389,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_SVEC_COMBOCARD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6346,7 +6410,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_SVEC_LANCARD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6392,7 +6456,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_SYNERGY21_S21810
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6413,7 +6477,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_TEAC_IDECARDII
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6421,6 +6485,27 @@ define|#
 directive|define
 name|PCMCIA_STR_TEAC_IDECARDII
 value|"TEAC IDE Card/II"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_TOSHIBA_CBIDE2
+value|{ "LOOKMEET", "CBIDE2      ", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_TOSHIBA_CBIDE2
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_TOSHIBA_CBIDE2
+value|"TOSHIBA PA2673U CBIDE2/16-bit mode (IO-DATA OEM)"
 end_define
 
 begin_define
@@ -6434,7 +6519,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_WORKBIT2_NINJA_SCSI3
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6455,7 +6540,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_XIRCOM_CFE_10
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6476,7 +6561,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_YEDATA_EXTERNAL_FDD
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6497,7 +6582,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_YIS_YWL11B
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
@@ -6518,7 +6603,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_ZOOM_AIR_4000
-value|-1
+value|0xffffffff
 end_define
 
 begin_define
