@@ -2933,6 +2933,9 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This is absolutely necessary or UFS will blow up. 	 */

@@ -609,6 +609,9 @@ argument_list|,
 name|FSCRED
 argument_list|,
 name|td
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1382,6 +1385,9 @@ argument_list|,
 name|FSCRED
 argument_list|,
 name|td
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

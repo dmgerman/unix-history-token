@@ -4644,6 +4644,9 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

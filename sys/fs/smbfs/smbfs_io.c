@@ -2914,6 +2914,9 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|error
@@ -2996,7 +2999,7 @@ operator|->
 name|td_ucred
 expr_stmt|;
 comment|/* XXX */
-comment|/*	VOP_OPEN(vp, FWRITE, cred, td);*/
+comment|/*	VOP_OPEN(vp, FWRITE, cred, td, -1);*/
 name|np
 operator|=
 name|VTOSMB

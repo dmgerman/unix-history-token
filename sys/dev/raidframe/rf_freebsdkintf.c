@@ -9543,11 +9543,11 @@ block|ac_list = NULL;
 comment|/* we begin by trolling through *all* the disk devices on the system */
 block|disk = NULL; 	while ((disk = disk_enumerate(disk))) {
 comment|/* we don't care about floppies... */
-block|devname = disk->d_dev->si_name; 		if (!strncmp(devname, "fd", 2) || 		    !strncmp(devname, "cd", 2) || 		    !strncmp(devname, "acd", 3)) 			continue;  		rf_printf(1, "Examining %s\n", disk->d_dev->si_name); 		if (bdevvp(disk->d_dev,&vp)) 			panic("RAIDframe can't alloc vnode"); 		vref(vp);  		vn_lock(vp, LK_EXCLUSIVE | LK_RETRY, td); 		error = VOP_OPEN(vp, FREAD, td->td_ucred, td); 		VOP_UNLOCK(vp, 0, td); 		if (error) { 			vput(vp); 			continue; 		}  		error = VOP_IOCTL(vp, DIOCGSLICEINFO, (caddr_t)slices, 		    FREAD, td->td_ucred, td); 		VOP_CLOSE(vp, FREAD | FWRITE, td->td_ucred, td); 		vrele(vp); 		if (error) {
+block|devname = disk->d_dev->si_name; 		if (!strncmp(devname, "fd", 2) || 		    !strncmp(devname, "cd", 2) || 		    !strncmp(devname, "acd", 3)) 			continue;  		rf_printf(1, "Examining %s\n", disk->d_dev->si_name); 		if (bdevvp(disk->d_dev,&vp)) 			panic("RAIDframe can't alloc vnode"); 		vref(vp);  		vn_lock(vp, LK_EXCLUSIVE | LK_RETRY, td); 		error = VOP_OPEN(vp, FREAD, td->td_ucred, td, -1); 		VOP_UNLOCK(vp, 0, td); 		if (error) { 			vput(vp); 			continue; 		}  		error = VOP_IOCTL(vp, DIOCGSLICEINFO, (caddr_t)slices, 		    FREAD, td->td_ucred, td); 		VOP_CLOSE(vp, FREAD | FWRITE, td->td_ucred, td); 		vrele(vp); 		if (error) {
 comment|/* No slice table. */
 block|continue; 		}  		nslices = slices->dss_nslices; 		if ((nslices == 0) || (nslices> MAX_SLICES)) 			continue;
 comment|/* Iterate through the slices */
-block|for (j = 1; j< nslices; j++) {  			rf_printf(1, "Examining slice %d\n", j); 			slice =&slices->dss_slices[j - 1]; 			dev = dkmodslice(disk->d_dev, j); 			if (bdevvp(dev,&vp)) 				panic("RAIDframe can't alloc vnode");  			vref(vp); 			vn_lock(vp, LK_EXCLUSIVE | LK_RETRY, td); 			error = VOP_OPEN(vp, FREAD, td->td_ucred, td); 			VOP_UNLOCK(vp, 0, td); 			if (error) { 				continue; 			}  			error = VOP_IOCTL(vp, DIOCGDINFO, (caddr_t)label, 			    FREAD, td->td_ucred, td); 			VOP_CLOSE(vp, FREAD | FWRITE, td->td_ucred, td); 			vrele(vp); 			if (error) 				continue;  			rf_search_label(dev, label,&ac_list); 		} 	}  	FREE(label, M_RAIDFRAME); 	FREE(slices, M_RAIDFRAME);
+block|for (j = 1; j< nslices; j++) {  			rf_printf(1, "Examining slice %d\n", j); 			slice =&slices->dss_slices[j - 1]; 			dev = dkmodslice(disk->d_dev, j); 			if (bdevvp(dev,&vp)) 				panic("RAIDframe can't alloc vnode");  			vref(vp); 			vn_lock(vp, LK_EXCLUSIVE | LK_RETRY, td); 			error = VOP_OPEN(vp, FREAD, td->td_ucred, td, -1); 			VOP_UNLOCK(vp, 0, td); 			if (error) { 				continue; 			}  			error = VOP_IOCTL(vp, DIOCGDINFO, (caddr_t)label, 			    FREAD, td->td_ucred, td); 			VOP_CLOSE(vp, FREAD | FWRITE, td->td_ucred, td); 			vrele(vp); 			if (error) 				continue;  			rf_search_label(dev, label,&ac_list); 		} 	}  	FREE(label, M_RAIDFRAME); 	FREE(slices, M_RAIDFRAME);
 endif|#
 directive|endif
 return|return
@@ -9714,6 +9714,9 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
