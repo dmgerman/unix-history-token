@@ -1268,11 +1268,19 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+operator|->
+name|busy
+condition|)
 name|vm_page_deactivate
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* optimisation from mach 3.0 - 						 * andrew@werple.apana.org.au, 						 * Feb '93 						 */
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -3192,6 +3200,18 @@ condition|(
 name|pp
 condition|)
 block|{
+if|#
+directive|if
+literal|1
+comment|/* 					     *  This should never happen -- the 					     *  parent cannot have ever had an 					     *  external memory object, and thus 					     *  cannot have absent pages. 					     */
+name|panic
+argument_list|(
+literal|"vm_object_collapse: bad case"
+argument_list|)
+expr_stmt|;
+comment|/* andrew@werple.apana.org.au - from 					       mach 3.0 VM */
+else|#
+directive|else
 comment|/* may be someone waiting for it */
 name|PAGE_WAKEUP
 argument_list|(
@@ -3209,7 +3229,10 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+comment|/* 					 *	Parent now has no page. 					 *	Move the backing object's page 					 *	up. 					 */
 name|vm_page_rename
 argument_list|(
 name|p
@@ -3231,12 +3254,39 @@ name|backing_object
 operator|->
 name|pager
 expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* Mach 3.0 code */
+comment|/* andrew@werple.apana.org.au, 12 Feb 1993 */
+comment|/* 			 * If there is no pager, leave paging-offset alone. 			 */
+if|if
+condition|(
+name|object
+operator|->
+name|pager
+condition|)
+name|object
+operator|->
+name|paging_offset
+operator|=
+name|backing_object
+operator|->
+name|paging_offset
+operator|+
+name|backing_offset
+expr_stmt|;
+else|#
+directive|else
+comment|/* old VM 2.5 version */
 name|object
 operator|->
 name|paging_offset
 operator|+=
 name|backing_offset
 expr_stmt|;
+endif|#
+directive|endif
 name|backing_object
 operator|->
 name|pager
@@ -3465,6 +3515,28 @@ name|backing_object
 operator|->
 name|shadow_offset
 expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* Mach 3.0 code */
+comment|/* andrew@werple.apana.org.au, 12 Feb 1993 */
+comment|/* 			 *      Backing object might have had a copy pointer 			 *      to us.  If it did, clear it. 			 */
+if|if
+condition|(
+name|backing_object
+operator|->
+name|copy
+operator|==
+name|object
+condition|)
+name|backing_object
+operator|->
+name|copy
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*	Drop the reference count on backing_object. 			 *	Since its ref_count was at least 2, it 			 *	will not vanish; so we don't need to call 			 *	vm_object_deallocate. 			 */
 name|backing_object
 operator|->
