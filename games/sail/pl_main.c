@@ -1013,7 +1013,7 @@ expr_stmt|;
 else|else
 name|captain
 index|[
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|captain
 argument_list|)
@@ -1088,7 +1088,7 @@ name|void
 operator|)
 name|scanf
 argument_list|(
-literal|"%s"
+literal|"%9s"
 argument_list|,
 name|buf
 argument_list|)
