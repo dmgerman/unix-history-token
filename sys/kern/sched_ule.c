@@ -624,7 +624,7 @@ name|SCHED_CURR
 parameter_list|(
 name|kg
 parameter_list|)
-value|(((kg)->kg_slptime> (kg)->kg_runtime&&	\ 	sched_slp_ratio((kg)->kg_slptime, (kg)->kg_runtime)> 4) ||	\ 	(kg)->kg_pri_class != PRI_TIMESHARE)
+value|(((kg)->kg_slptime> (kg)->kg_runtime&&	\ 	sched_slp_ratio((kg)->kg_slptime, (kg)->kg_runtime)> 4))
 end_define
 
 begin_comment
@@ -3180,6 +3180,18 @@ literal|"sched_add: process swapped out"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Timeshare threads get placed on the appropriate queue on their 	 * bound cpu. 	 */
+if|if
+condition|(
+name|ke
+operator|->
+name|ke_ksegrp
+operator|->
+name|kg_pri_class
+operator|==
+name|PRI_TIMESHARE
+condition|)
+block|{
 name|kseq
 operator|=
 name|KSEQ_CPU
@@ -3223,6 +3235,24 @@ operator|=
 name|kseq
 operator|->
 name|ksq_next
+expr_stmt|;
+block|}
+comment|/* 	 * If we're a real-time or interrupt thread place us on the curr 	 * queue for the current processor.  Hopefully this will yield the 	 * lowest latency response. 	 */
+block|}
+else|else
+block|{
+name|kseq
+operator|=
+name|KSEQ_SELF
+argument_list|()
+expr_stmt|;
+name|ke
+operator|->
+name|ke_runq
+operator|=
+name|kseq
+operator|->
+name|ksq_curr
 expr_stmt|;
 block|}
 name|ke
