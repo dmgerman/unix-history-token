@@ -117,6 +117,16 @@ begin_comment
 comment|/* Old??  This is not documented. */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|STANDARD_BINDIR_PREFIX
+end_undef
+
+begin_comment
+comment|/* We don't need one for now. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -124,12 +134,15 @@ name|STANDARD_EXEC_PREFIX
 value|PREFIX"/libexec/"
 end_define
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|MD_EXEC_PREFIX
-value|PREFIX"/libexec/"
-end_define
+end_undef
+
+begin_comment
+comment|/* We don't want one. */
+end_comment
 
 begin_comment
 comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */

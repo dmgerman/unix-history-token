@@ -5313,6 +5313,12 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|FREEBSD_NATIVE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|STANDARD_BINDIR_PREFIX
 end_ifndef
 
@@ -5327,6 +5333,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not FREEBSD_NATIVE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -5442,6 +5457,12 @@ name|tooldir_prefix
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -5453,6 +5474,15 @@ init|=
 name|STANDARD_BINDIR_PREFIX
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not FREEBSD_NATIVE */
+end_comment
 
 begin_comment
 comment|/* Subdirectory to use for locating libraries.  Set by    set_multilib_dir based on the compilation options.  */
@@ -13573,6 +13603,9 @@ block|}
 comment|/* Set up the default search paths.  If there is no GCC_EXEC_PREFIX,      see if we can create it from the pathname specified in argv[0].  */
 ifndef|#
 directive|ifndef
+name|FREEBSD_NATIVE
+ifndef|#
+directive|ifndef
 name|VMS
 comment|/* FIXME: make_relative_prefix doesn't yet work for VMS.  */
 if|if
@@ -13614,6 +13647,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* not FREEBSD_NATIVE */
 if|if
 condition|(
 name|gcc_exec_prefix
@@ -17005,9 +17041,6 @@ argument_list|,
 name|warn_std_ptr
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|FREEBSD_NATIVE
 name|add_prefix
 argument_list|(
 operator|&
@@ -17024,6 +17057,9 @@ argument_list|,
 name|warn_std_ptr
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 name|add_prefix
 argument_list|(
 operator|&
