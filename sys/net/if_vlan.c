@@ -1451,7 +1451,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|if_capabilities
+name|if_capenable
 operator|&
 name|IFCAP_VLAN_HWTAGGING
 condition|)
@@ -2341,27 +2341,14 @@ name|p
 operator|->
 name|if_link_state
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * Not ready yet.  We need notification from the parent 	 * when hw checksumming flags in its if_capenable change. 	 * Flags set in if_capabilities only are useless. 	 */
 comment|/* 	 * If the parent interface can do hardware-assisted 	 * VLAN encapsulation, then propagate its hardware- 	 * assisted checksumming flags. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|if_capabilities
-operator|&
-name|IFCAP_VLAN_HWTAGGING
-condition|)
-name|ifv
-operator|->
-name|ifv_if
-operator|.
-name|if_capabilities
-operator||=
-name|p
-operator|->
-name|if_capabilities
-operator|&
-name|IFCAP_HWCSUM
-expr_stmt|;
+block|if (p->if_capabilities& IFCAP_VLAN_HWTAGGING) 		ifv->ifv_if.if_capabilities |= p->if_capabilities& IFCAP_HWCSUM;
+endif|#
+directive|endif
 comment|/* 	 * Set up our ``Ethernet address'' to reflect the underlying 	 * physical interface's. 	 */
 name|ifa1
 operator|=
