@@ -399,7 +399,7 @@ parameter_list|(
 name|_chain
 parameter_list|)
 define|\
-value|mtx_init(&(_chain)->mtx, "IPFW static rules", NULL, MTX_DEF)
+value|mtx_init(&(_chain)->mtx, "IPFW static rules", NULL, \ 		MTX_DEF | MTX_RECURSE)
 end_define
 
 begin_define
