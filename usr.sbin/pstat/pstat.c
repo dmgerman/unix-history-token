@@ -5448,7 +5448,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-11s %*s %8s %8s %8s  %s\n"
+literal|"%-15s %*s %8s %8s %8s  %s\n"
 argument_list|,
 literal|"Device"
 argument_list|,
@@ -5484,7 +5484,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-11s %*d "
+literal|"%-15s %*d "
 argument_list|,
 name|kswap
 index|[
@@ -5633,7 +5633,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-11s %*d %8d %8d %5.0f%%\n"
+literal|"%-15s %*d %8d %8d %5.0f%%\n"
 argument_list|,
 literal|"Total"
 argument_list|,
