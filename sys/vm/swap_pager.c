@@ -3646,9 +3646,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"swap_pager: indefinite wait buffer: device:"
-literal|" %s, blkno: %ld, size: %ld\n"
+literal|"swap_pager: indefinite wait buffer: device: "
+literal|"%s, blkno: %jd, size: %ld\n"
 argument_list|,
+name|bp
+operator|->
+name|b_dev
+operator|==
+name|NULL
+condition|?
+literal|"[NULL]"
+else|:
 name|devtoname
 argument_list|(
 name|bp
@@ -3657,7 +3665,7 @@ name|b_dev
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->
