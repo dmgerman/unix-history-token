@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.7 1996/10/22 21:41:43 scrappy Exp $"
+literal|"$Id: main.c,v 1.7.2.1 1997/05/02 21:51:45 danny Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1985,8 +1985,6 @@ operator|==
 literal|'/'
 condition|)
 block|{
-name|n
-operator|=
 name|n
 operator|++
 expr_stmt|;
