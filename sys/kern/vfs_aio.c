@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.48 1999/05/06 20:00:25 phk Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.49 1999/05/08 06:39:46 phk Exp $  */
 end_comment
 
 begin_comment
@@ -4197,9 +4197,6 @@ name|int
 name|fd
 decl_stmt|;
 name|int
-name|majordev
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|int
@@ -4354,18 +4351,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|majordev
-operator|=
-name|major
-argument_list|(
+if|if
+condition|(
 name|vp
 operator|->
 name|v_rdev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|majordev
 operator|==
 name|NODEV
 condition|)
