@@ -1363,10 +1363,8 @@ name|size
 decl_stmt|;
 comment|/* Number of cells in dict (total)*/
 name|CELL
+modifier|*
 name|dict
-index|[
-literal|1
-index|]
 decl_stmt|;
 comment|/* Base of dictionary memory      */
 block|}
@@ -1841,6 +1839,17 @@ modifier|*
 name|pVM
 parameter_list|)
 function_decl|;
+comment|/* ** Dictionary on-demand resizing */
+specifier|extern
+name|unsigned
+name|int
+name|dictThreshold
+decl_stmt|;
+specifier|extern
+name|unsigned
+name|int
+name|dictIncrease
+decl_stmt|;
 comment|/* ** So we can more easily debug... */
 ifdef|#
 directive|ifdef
