@@ -1284,6 +1284,13 @@ name|i
 operator|=
 literal|0
 init|;
+name|rootpath
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+operator|&&
 name|i
 operator|<
 name|FNAME_SIZE
@@ -1308,6 +1315,13 @@ operator|&&
 name|i
 operator|!=
 name|FNAME_SIZE
+operator|&&
+name|rootpath
+index|[
+name|i
+index|]
+operator|==
+literal|':'
 condition|)
 block|{
 name|rootpath
