@@ -208,6 +208,15 @@ specifier|extern
 specifier|const
 name|struct
 name|ngcmd
+name|config_cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ngcmd
 name|connect_cmd
 decl_stmt|;
 end_decl_stmt

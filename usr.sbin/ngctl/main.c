@@ -203,6 +203,9 @@ index|[]
 init|=
 block|{
 operator|&
+name|config_cmd
+block|,
+operator|&
 name|connect_cmd
 block|,
 operator|&

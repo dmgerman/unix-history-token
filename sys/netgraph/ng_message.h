@@ -372,6 +372,17 @@ begin_comment
 comment|/* convert ascii to struct ng_mesg */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NGM_TEXT_CONFIG
+value|14
+end_define
+
+begin_comment
+comment|/* (optional) get/set text config */
+end_comment
+
 begin_comment
 comment|/* Structure used for NGM_MKPEER */
 end_comment
