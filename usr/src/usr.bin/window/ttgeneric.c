@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.18 83/12/17"
+literal|"@(#)ttgeneric.c	3.19 83/12/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -1684,7 +1684,7 @@ operator|&&
 name|gen_BS
 condition|)
 name|gen_BC
-operator|==
+operator|=
 literal|"\b"
 expr_stmt|;
 block|{
