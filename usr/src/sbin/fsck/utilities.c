@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.24 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,6 +389,17 @@ name|char
 modifier|*
 name|bufp
 decl_stmt|;
+name|pbp
+operator|=
+name|pdirbp
+operator|=
+operator|(
+expr|struct
+name|bufarea
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|bufp
 operator|=
 name|malloc
@@ -1277,6 +1288,17 @@ name|b_size
 operator|-
 name|cnt
 argument_list|)
+expr_stmt|;
+name|pbp
+operator|=
+name|pdirbp
+operator|=
+operator|(
+expr|struct
+name|bufarea
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 if|if
 condition|(
