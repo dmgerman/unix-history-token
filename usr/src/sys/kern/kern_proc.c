@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.17	81/11/21	*/
+comment|/*	kern_proc.c	4.18	82/01/19	*/
 end_comment
 
 begin_include
@@ -2382,6 +2382,8 @@ name|u_ofile
 index|[
 name|i
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|u
@@ -2749,6 +2751,8 @@ expr_stmt|;
 name|closef
 argument_list|(
 name|f
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

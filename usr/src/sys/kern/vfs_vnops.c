@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.18	82/01/19	*/
+comment|/*	vfs_vnops.c	4.19	82/01/19	*/
 end_comment
 
 begin_include
@@ -81,6 +81,12 @@ directive|include
 file|"../h/socketvar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
+end_include
+
 begin_comment
 comment|/*  * Convert a user supplied file descriptor into a pointer  * to a file structure.  Only task is to check range of the descriptor.  * Critical paths should use the GETF macro, defined in inline.h.  */
 end_comment
@@ -148,13 +154,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal form of close.  * Decrement reference count on  * file structure.  * Also make sure the pipe protocol  * does not constipate.  *  * Decrement reference count on the inode following  * removal to the referencing file structure.  * Call device handler on last close.  */
+comment|/*  * Internal form of close.  * Decrement reference count on  * file structure.  * Also make sure the pipe protocol  * does not constipate.  *  * Decrement reference count on the inode following  * removal to the referencing file structure.  * Call device handler on last close.  * Nouser indicates that the user isn't available to present  * errors to.  */
 end_comment
 
 begin_expr_stmt
 name|closef
 argument_list|(
 name|fp
+argument_list|,
+name|nouser
 argument_list|)
 specifier|register
 expr|struct
@@ -236,15 +244,16 @@ name|fp
 operator|->
 name|f_socket
 argument_list|,
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SWEXIT
+name|nouser
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+return|return;
 name|fp
 operator|->
 name|f_socket

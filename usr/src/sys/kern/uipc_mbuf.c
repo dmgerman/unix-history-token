@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.25	81/12/23	*/
+comment|/*	uipc_mbuf.c	1.26	82/01/19	*/
 end_comment
 
 begin_include
@@ -175,6 +175,12 @@ name|ncl
 operator|*
 name|CLSIZE
 expr_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+comment|/* careful: rmalloc isn't reentrant */
 name|mbx
 operator|=
 name|rmalloc
@@ -182,6 +188,11 @@ argument_list|(
 name|mbmap
 argument_list|,
 name|npg
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if

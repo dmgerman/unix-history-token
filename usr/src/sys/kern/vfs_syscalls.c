@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	4.16	82/01/16	*/
+comment|/*	vfs_syscalls.c	4.17	82/01/19	*/
 end_comment
 
 begin_include
@@ -664,8 +664,17 @@ name|u_ofile
 index|[
 name|i
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+return|return;
 name|u
 operator|.
 name|u_ofile
