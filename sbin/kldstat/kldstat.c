@@ -349,7 +349,7 @@ name|char
 modifier|*
 name|filename
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 while|while
 condition|(
@@ -426,6 +426,8 @@ expr_stmt|;
 if|if
 condition|(
 name|filename
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -465,6 +467,8 @@ expr_stmt|;
 if|if
 condition|(
 name|fileid
+operator|!=
+literal|0
 condition|)
 name|printfile
 argument_list|(

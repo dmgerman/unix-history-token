@@ -125,7 +125,7 @@ name|char
 modifier|*
 name|filename
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 while|while
 condition|(
@@ -206,11 +206,13 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fileid
+operator|==
+literal|0
 operator|&&
-operator|!
 name|filename
+operator|==
+name|NULL
 operator|&&
 operator|(
 name|argc
@@ -236,8 +238,12 @@ literal|0
 operator|||
 operator|(
 name|fileid
+operator|!=
+literal|0
 operator|&&
 name|filename
+operator|!=
+name|NULL
 operator|)
 condition|)
 name|usage
@@ -251,7 +257,7 @@ literal|0
 operator|&&
 name|filename
 operator|==
-literal|0
+name|NULL
 condition|)
 name|usage
 argument_list|()
@@ -259,6 +265,8 @@ expr_stmt|;
 if|if
 condition|(
 name|filename
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if

@@ -688,6 +688,8 @@ expr_stmt|;
 if|if
 condition|(
 name|modpath
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
