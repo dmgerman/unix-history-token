@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.20 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -958,6 +958,16 @@ literal|"bulk"
 argument_list|,
 literal|4
 argument_list|)
+operator|||
+operator|!
+name|strncasecmp
+argument_list|(
+name|p
+argument_list|,
+literal|"list"
+argument_list|,
+literal|4
+argument_list|)
 condition|)
 name|exit
 argument_list|(
@@ -1105,7 +1115,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * junkmail --  *	read the header and return if automagic/junk/bulk mail  */
+comment|/*  * junkmail --  *	read the header and return if automagic/junk/bulk/list mail  */
 end_comment
 
 begin_expr_stmt
