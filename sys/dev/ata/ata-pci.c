@@ -1184,6 +1184,12 @@ block|}
 return|return
 name|NULL
 return|;
+case|case
+literal|0x000116ca
+case|:
+return|return
+literal|"Cenatek Rocket Drive controller"
+return|;
 comment|/* unsupported but known chipsets, generic DMA only */
 case|case
 literal|0x10001042
