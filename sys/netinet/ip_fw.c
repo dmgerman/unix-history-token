@@ -250,7 +250,7 @@ name|print_ip
 parameter_list|(
 name|a
 parameter_list|)
-value|printf("%d.%d.%d.%d",(ntohl(a.s_addr)>>24)&0xFF,\ 					      (ntohl(a.s_addr)>>16)&0xFF,\ 					      (ntohl(a.s_addr)>>8)&0xFF,\ 					      (ntohl(a.s_addr))&0xFF);
+value|printf("%ld.%ld.%ld.%ld",(ntohl(a.s_addr)>>24)&0xFF,\ 				 		  (ntohl(a.s_addr)>>16)&0xFF,\ 						  (ntohl(a.s_addr)>>8)&0xFF,\ 						  (ntohl(a.s_addr))&0xFF);
 end_define
 
 begin_ifdef

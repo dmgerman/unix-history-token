@@ -4220,7 +4220,8 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d: cisco input: %d bytes<%xh %xh %xh %xh %xh-%xh>\n"
+literal|"%s%d: cisco input: %d bytes "
+literal|"<%lxh %lxh %lxh %xh %xh-%xh>\n"
 argument_list|,
 name|ifp
 operator|->
@@ -4285,7 +4286,7 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d: unknown cisco packet type: 0x%x\n"
+literal|"%s%d: unknown cisco packet type: 0x%lx\n"
 argument_list|,
 name|ifp
 operator|->
@@ -5094,7 +5095,7 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d: cisco output:<%xh %xh %xh %xh %xh-%xh>\n"
+literal|"%s%d: cisco output:<%lxh %lxh %lxh %xh %xh-%xh>\n"
 argument_list|,
 name|ifp
 operator|->

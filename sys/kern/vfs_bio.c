@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.42 1995/04/16 12:02:42 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.43 1995/04/30 05:09:13 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -5599,7 +5599,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"biodone: page busy< 0, off: %d, foff: %d, resid: %d, index: %d\n"
+literal|"biodone: page busy< 0, "
+literal|"off: %ld, foff: %ld, "
+literal|"resid: %d, index: %d\n"
 argument_list|,
 name|m
 operator|->
@@ -5614,7 +5616,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" iosize: %d, lblkno: %d\n"
+literal|" iosize: %ld, lblkno: %ld\n"
 argument_list|,
 name|bp
 operator|->

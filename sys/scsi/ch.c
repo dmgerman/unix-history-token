@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.18 1995/04/14 15:10:26 dufault Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.19 1995/05/03 18:09:08 dufault Exp $  */
 end_comment
 
 begin_include
@@ -891,7 +891,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ch%d: scsi changer :- offline\n"
+literal|"ch%ld: scsi changer :- offline\n"
 argument_list|,
 name|unit
 argument_list|)
