@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	8.3 (Berkeley) %G%"
+literal|"@(#)lpd.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -945,6 +945,32 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Main loop: accept, do a request, continue. 	 */
+name|memset
+argument_list|(
+operator|&
+name|frominet
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|frominet
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|fromunix
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fromunix
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
