@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *      @(#)mount_cd9660.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *      @(#)mount_cd9660.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_cd9660.c	8.6 (Berkeley) %G%"
+literal|"@(#)mount_cd9660.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +283,19 @@ define|#
 directive|define
 name|DEFAULT_ROOTUID
 value|-2
+comment|/* 	 * ISO 9660 filesystems are not writeable. 	 */
+name|mntflags
+operator||=
+name|MNT_RDONLY
+expr_stmt|;
+name|args
+operator|.
+name|export
+operator|.
+name|ex_flags
+operator|=
+name|MNT_EXRDONLY
+expr_stmt|;
 name|args
 operator|.
 name|fspec
@@ -296,29 +309,6 @@ operator|.
 name|ex_root
 operator|=
 name|DEFAULT_ROOTUID
-expr_stmt|;
-if|if
-condition|(
-name|mntflags
-operator|&
-name|MNT_RDONLY
-condition|)
-name|args
-operator|.
-name|export
-operator|.
-name|ex_flags
-operator|=
-name|MNT_EXRDONLY
-expr_stmt|;
-else|else
-name|args
-operator|.
-name|export
-operator|.
-name|ex_flags
-operator|=
-literal|0
 expr_stmt|;
 name|args
 operator|.
