@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 88/02/08 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  *	$Id: clnt.h,v 1.3 1995/05/30 04:55:14 rgrimes Exp $  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 88/02/08 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  *	$Id: clnt.h,v 1.4 1996/01/30 23:31:48 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -155,11 +155,11 @@ decl_stmt|;
 comment|/* why the auth error occurred */
 struct|struct
 block|{
-name|u_long
+name|u_int32_t
 name|low
 decl_stmt|;
 comment|/* lowest verion supported */
-name|u_long
+name|u_int32_t
 name|high
 decl_stmt|;
 comment|/* highest verion supported */
@@ -169,10 +169,10 @@ struct|;
 struct|struct
 block|{
 comment|/* maybe meaningful if RPC_FAILED */
-name|long
+name|int32_t
 name|s1
 decl_stmt|;
-name|long
+name|int32_t
 name|s2
 decl_stmt|;
 block|}
@@ -209,6 +209,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|__rpc_client
 block|{
 name|AUTH
 modifier|*
@@ -218,55 +219,118 @@ comment|/* authenticator */
 struct|struct
 name|clnt_ops
 block|{
+comment|/* call remote procedure */
 name|enum
 name|clnt_stat
-function_decl|(
-modifier|*
+argument_list|(
+operator|*
 name|cl_call
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* call remote procedure */
-name|void
-function_decl|(
-modifier|*
-name|cl_abort
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+name|u_long
+operator|,
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+expr|struct
+name|timeval
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* abort a call */
 name|void
-function_decl|(
-modifier|*
-name|cl_geterr
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*cl_abort
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* get specific error code */
-name|bool_t
-function_decl|(
-modifier|*
-name|cl_freeres
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* frees results */
 name|void
-function_decl|(
-modifier|*
-name|cl_destroy
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* destroy this structure */
+argument_list|(
+argument|*cl_geterr
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+expr|struct
+name|rpc_err
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* frees results */
 name|bool_t
-function_decl|(
-modifier|*
-name|cl_control
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*cl_freeres
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* destroy this structure */
+name|void
+argument_list|(
+argument|*cl_destroy
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* the ioctl() of rpc */
+name|bool_t
+argument_list|(
+argument|*cl_control
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+name|u_int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 modifier|*
 name|cl_ops
@@ -308,7 +372,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, argsp, xres, resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, (caddr_t)argsp, \ 		xres, (caddr_t)resp, secs))
 end_define
 
 begin_define
@@ -331,7 +395,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, argsp, xres, resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, (caddr_t)argsp, \ 		xres, (caddr_t)resp, secs))
 end_define
 
 begin_comment
