@@ -5046,7 +5046,7 @@ literal|"witness lock"
 argument_list|,
 name|MTX_COLD
 operator||
-name|MTX_DEF
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 for|for
