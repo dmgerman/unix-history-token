@@ -2685,6 +2685,8 @@ name|elem
 expr_stmt|;
 block|}
 block|}
+name|wc1
+operator|=
 name|wc
 operator|=
 name|WEOF
