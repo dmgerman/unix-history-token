@@ -330,7 +330,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|linker_file_sysinit
 parameter_list|(
 name|linker_file_t
@@ -412,7 +412,10 @@ condition|(
 operator|!
 name|sysinits
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+comment|/* XXX is this correct ? No sysinit ? */
 comment|/* HACK ALERT! */
 for|for
 control|(
@@ -469,6 +472,7 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"linker_file_sysinit \"%s\" failed to register! %d\n"
@@ -480,6 +484,10 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+return|return
+name|error
+return|;
+block|}
 block|}
 block|}
 comment|/*      * Perform a bubble sort of the system initialization objects by      * their subsystem (primary key) and order (secondary key).      *      * Since some things care about execution order, this is the      * operation which ensures continued function.      */
@@ -642,6 +650,10 @@ name|udata
 operator|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
+comment|/* no errors */
 block|}
 end_function
 
@@ -1247,6 +1259,8 @@ argument_list|(
 name|lf
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|linker_file_sysinit
 argument_list|(
 name|lf
@@ -1256,10 +1270,6 @@ operator|*
 name|result
 operator|=
 name|lf
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 goto|goto
 name|out
