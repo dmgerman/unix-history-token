@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_lookup.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_lookup.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1483,15 +1483,19 @@ goto|goto
 name|dirloop
 goto|;
 block|}
-comment|/* 	 * Check for read-only file systems and executing texts 	 */
+comment|/* 	 * Check for read-only file systems. 	 */
 if|if
 condition|(
 name|flag
-operator|!=
-name|LOOKUP
+operator|==
+name|DELETE
+operator|||
+name|flag
+operator|==
+name|RENAME
 condition|)
 block|{
-comment|/* 		 * Disallow write attempts on read-only file systems; 		 * unless the file is a socket or a block or character 		 * device resident on the file system. 		 */
+comment|/* 		 * Disallow directory write attempts on read-only 		 * file systems. 		 */
 if|if
 condition|(
 operator|(
@@ -1503,72 +1507,9 @@ name|m_flag
 operator|&
 name|M_RDONLY
 operator|)
-operator|&&
-name|dp
-operator|->
-name|v_type
-operator|!=
-name|VCHR
-operator|&&
-name|dp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
-name|dp
-operator|->
-name|v_type
-operator|!=
-name|VSOCK
-condition|)
-block|{
-name|error
-operator|=
-name|EROFS
-expr_stmt|;
-goto|goto
-name|bad2
-goto|;
-block|}
-comment|/* 		 * If there's shared text associated with 		 * the inode, try to free it up once.  If 		 * we fail, we can't allow writing. 		 */
-if|if
-condition|(
-name|dp
-operator|->
-name|v_flag
-operator|&
-name|VTEXT
-condition|)
-name|xrele
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|->
-name|v_flag
-operator|&
-name|VTEXT
-condition|)
-block|{
-name|error
-operator|=
-name|ETXTBSY
-expr_stmt|;
-goto|goto
-name|bad2
-goto|;
-block|}
-if|if
-condition|(
+operator|||
+operator|(
 name|wantparent
-operator|&&
-name|flag
-operator|!=
-name|CREATE
 operator|&&
 operator|(
 name|ndp
@@ -1580,6 +1521,7 @@ operator|->
 name|m_flag
 operator|&
 name|M_RDONLY
+operator|)
 operator|)
 condition|)
 block|{
