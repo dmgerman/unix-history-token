@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_disksubr.c	7.16 (Berkeley) 5/4/91  *	from: ufs_disksubr.c,v 1.8 1994/06/07 01:21:39 phk Exp $  *	$Id: diskslice_machdep.c,v 1.8 1995/03/15 16:25:08 bde Exp $  */
+comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_disksubr.c	7.16 (Berkeley) 5/4/91  *	from: ufs_disksubr.c,v 1.8 1994/06/07 01:21:39 phk Exp $  *	$Id: diskslice_machdep.c,v 1.9 1995/03/25 12:07:31 bde Exp $  */
 end_comment
 
 begin_include
@@ -32,6 +32,13 @@ define|#
 directive|define
 name|DOSPTYP_EXTENDED
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_ONTRACK
+value|84
 end_define
 
 begin_include
@@ -201,6 +208,9 @@ name|nsectors
 operator|,
 name|int
 name|ntracks
+operator|,
+name|u_long
+name|mbr_offset
 operator|)
 argument_list|)
 decl_stmt|;
@@ -248,6 +258,9 @@ name|nsectors
 operator|,
 name|int
 name|ntracks
+operator|,
+name|u_long
+name|mbr_offset
 operator|)
 argument_list|)
 decl_stmt|;
@@ -267,6 +280,8 @@ parameter_list|,
 name|nsectors
 parameter_list|,
 name|ntracks
+parameter_list|,
+name|mbr_offset
 parameter_list|)
 name|char
 modifier|*
@@ -285,6 +300,9 @@ name|nsectors
 decl_stmt|;
 name|int
 name|ntracks
+decl_stmt|;
+name|u_long
+name|mbr_offset
 decl_stmt|;
 block|{
 name|int
@@ -363,6 +381,8 @@ operator|+
 name|chs_scyl
 operator|*
 name|secpercyl
+operator|+
+name|mbr_offset
 expr_stmt|;
 name|ssector1
 operator|=
@@ -475,6 +495,8 @@ operator|+
 name|chs_ecyl
 operator|*
 name|secpercyl
+operator|+
+name|mbr_offset
 expr_stmt|;
 name|esector1
 operator|=
@@ -570,9 +592,13 @@ name|EINVAL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: start %lu, end = %lu, size %lu%s\n"
+literal|"%s: type 0x%x, start %lu, end = %lu, size %lu %s\n"
 argument_list|,
 name|sname
+argument_list|,
+name|dp
+operator|->
+name|dp_typ
 argument_list|,
 name|ssector1
 argument_list|,
@@ -744,6 +770,11 @@ name|diskslices
 modifier|*
 name|ssp
 decl_stmt|;
+name|u_long
+name|mbr_offset
+init|=
+name|DOSBBSECTOR
+decl_stmt|;
 comment|/* 	 * Allocate a dummy slices "struct" and initialize it to contain 	 * only an empty compatibility slice (pointing to itself) and a 	 * whole disk slice (covering the disk as described by the label). 	 * If there is an error, then the dummy struct becomes final. 	 */
 name|ssp
 operator|=
@@ -817,6 +848,8 @@ name|lp
 operator|->
 name|d_secperunit
 expr_stmt|;
+name|reread_mbr
+label|:
 comment|/* Read master boot record. */
 name|bp
 operator|=
@@ -850,7 +883,7 @@ name|bp
 operator|->
 name|b_blkno
 operator|=
-name|DOSBBSECTOR
+name|mbr_offset
 expr_stmt|;
 name|bp
 operator|->
@@ -986,6 +1019,67 @@ operator|+
 name|DOSPARTOFF
 operator|)
 expr_stmt|;
+comment|/* Check for "OnTrack Diskmanager" */
+for|for
+control|(
+name|dospart
+operator|=
+literal|0
+init|;
+name|dospart
+operator|<
+name|NDOSPART
+condition|;
+name|dospart
+operator|++
+operator|,
+name|sp
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|dp0
+operator|+
+name|dospart
+operator|)
+operator|->
+name|dp_typ
+operator|==
+name|DOSPTYP_ONTRACK
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: Detected \"Ontrack Disk Manager\"\n"
+argument_list|,
+name|sname
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator|=
+name|B_INVAL
+operator||
+name|B_AGE
+expr_stmt|;
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|mbr_offset
+operator|=
+literal|63
+expr_stmt|;
+comment|/* XXX This might be nsect instead */
+goto|goto
+name|reread_mbr
+goto|;
+block|}
+block|}
 if|if
 condition|(
 name|bcmp
@@ -1203,6 +1297,14 @@ argument_list|,
 name|BASE_SLICE
 operator|+
 name|dospart
+operator|+
+operator|(
+name|mbr_offset
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
 argument_list|,
 name|RAW_PART
 argument_list|,
@@ -1216,14 +1318,13 @@ name|sname
 argument_list|,
 name|dp
 argument_list|,
-operator|(
-name|u_long
-operator|)
-literal|0
+name|mbr_offset
 argument_list|,
 name|max_nsectors
 argument_list|,
 name|max_ntracks
+argument_list|,
+name|mbr_offset
 argument_list|)
 expr_stmt|;
 block|}
@@ -1370,6 +1471,45 @@ name|sp
 operator|+=
 name|BASE_SLICE
 expr_stmt|;
+name|ssp
+operator|->
+name|dss_nslices
+operator|=
+name|BASE_SLICE
+expr_stmt|;
+comment|/* Even if we're running OnTrack, we still want to account for it */
+if|if
+condition|(
+name|mbr_offset
+condition|)
+block|{
+name|sp
+operator|->
+name|ds_offset
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|ds_size
+operator|=
+name|mbr_offset
+expr_stmt|;
+name|sp
+operator|->
+name|ds_type
+operator|=
+name|DOSPTYP_ONTRACK
+expr_stmt|;
+name|sp
+operator|++
+expr_stmt|;
+name|ssp
+operator|->
+name|dss_nslices
+operator|++
+expr_stmt|;
+block|}
 for|for
 control|(
 name|dospart
@@ -1392,12 +1532,19 @@ operator|++
 operator|,
 name|sp
 operator|++
+operator|,
+name|ssp
+operator|->
+name|dss_nslices
+operator|++
 control|)
 block|{
 name|sp
 operator|->
 name|ds_offset
 operator|=
+name|mbr_offset
+operator|+
 name|dp
 operator|->
 name|dp_start
@@ -1425,14 +1572,6 @@ block|lp->d_subtype |= (lp->d_subtype& 3) | dospart 				 | DSTYPE_INDOSPART;
 endif|#
 directive|endif
 block|}
-name|ssp
-operator|->
-name|dss_nslices
-operator|=
-name|BASE_SLICE
-operator|+
-name|NDOSPART
-expr_stmt|;
 comment|/* Handle extended partitions. */
 name|sp
 operator|-=
@@ -1491,6 +1630,8 @@ argument_list|,
 name|max_nsectors
 argument_list|,
 name|max_ntracks
+argument_list|,
+name|mbr_offset
 argument_list|)
 expr_stmt|;
 name|done
@@ -1549,6 +1690,8 @@ parameter_list|,
 name|nsectors
 parameter_list|,
 name|ntracks
+parameter_list|,
+name|mbr_offset
 parameter_list|)
 name|char
 modifier|*
@@ -1585,6 +1728,9 @@ name|nsectors
 decl_stmt|;
 name|int
 name|ntracks
+decl_stmt|;
+name|u_long
+name|mbr_offset
 decl_stmt|;
 block|{
 name|struct
@@ -1935,6 +2081,8 @@ argument_list|,
 name|nsectors
 argument_list|,
 name|ntracks
+argument_list|,
+name|mbr_offset
 argument_list|)
 expr_stmt|;
 name|ext_offsets
@@ -1989,6 +2137,8 @@ argument_list|,
 name|nsectors
 argument_list|,
 name|ntracks
+argument_list|,
+name|mbr_offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -2099,6 +2249,8 @@ argument_list|,
 name|nsectors
 argument_list|,
 name|ntracks
+argument_list|,
+name|mbr_offset
 argument_list|)
 expr_stmt|;
 name|done
