@@ -5579,6 +5579,8 @@ operator||
 name|LOGIN_SETRESOURCES
 operator||
 name|LOGIN_SETUMASK
+operator||
+name|LOGIN_SETMAC
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6775,6 +6777,8 @@ operator||
 name|LOGIN_SETRESOURCES
 operator||
 name|LOGIN_SETUMASK
+operator||
+name|LOGIN_SETMAC
 argument_list|)
 expr_stmt|;
 else|#
