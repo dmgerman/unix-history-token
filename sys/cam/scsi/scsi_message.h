@@ -497,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|MSG_IDENTIFY_LUNMASK
-value|0x03F
+value|0x3F
 end_define
 
 begin_comment
