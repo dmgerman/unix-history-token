@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.19	82/03/28	*/
+comment|/*	uipc_proto.c	4.20	82/04/24	*/
 end_comment
 
 begin_include
@@ -78,19 +78,9 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|icmp_input
-argument_list|()
-decl_stmt|,
-name|icmp_ctlinput
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
-name|icmp_drain
+name|icmp_input
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -235,6 +225,9 @@ name|raw_usrreq
 argument_list|()
 decl_stmt|,
 name|raw_input
+argument_list|()
+decl_stmt|,
+name|raw_ctlinput
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -395,7 +388,7 @@ block|,
 block|{
 literal|0
 block|,
-literal|0
+name|PF_INET
 block|,
 name|IPPROTO_ICMP
 block|,
@@ -405,8 +398,6 @@ name|icmp_input
 block|,
 literal|0
 block|,
-name|icmp_ctlinput
-block|,
 literal|0
 block|,
 literal|0
@@ -417,7 +408,9 @@ literal|0
 block|,
 literal|0
 block|,
-name|icmp_drain
+literal|0
+block|,
+literal|0
 block|, }
 block|,
 block|{
@@ -493,7 +486,7 @@ name|raw_input
 block|,
 literal|0
 block|,
-literal|0
+name|raw_ctlinput
 block|,
 literal|0
 block|,
@@ -857,6 +850,74 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|pfctlinput
+argument_list|(
+argument|cmd
+argument_list|,
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|protosw
+modifier|*
+name|pr
+decl_stmt|;
+name|COUNT
+argument_list|(
+name|PFCTLINPUT
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pr
+operator|=
+name|protosw
+init|;
+name|pr
+operator|<=
+name|protoswLAST
+condition|;
+name|pr
+operator|++
+control|)
+if|if
+condition|(
+name|pr
+operator|->
+name|pr_ctlinput
+condition|)
+call|(
+modifier|*
+name|pr
+operator|->
+name|pr_ctlinput
+call|)
+argument_list|(
+name|cmd
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Slow timeout on all protocols.  */
