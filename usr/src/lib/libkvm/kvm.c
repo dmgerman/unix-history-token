@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm.c	5.21 (Berkeley) %G%"
+literal|"@(#)kvm.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,11 +406,6 @@ name|Syssize
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -419,6 +414,18 @@ decl_stmt|,
 name|dmmax
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nswap
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -442,13 +449,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|argaddr1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nswap
 decl_stmt|;
 end_decl_stmt
 
@@ -591,6 +591,9 @@ name|nl
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 block|{
 literal|"_nswap"
 block|}
@@ -615,6 +618,14 @@ define|#
 directive|define
 name|X_DMMAX
 value|X_DMMIN+1
+else|#
+directive|else
+define|#
+directive|define
+name|X_DMMAX
+value|-1
+endif|#
+directive|endif
 comment|/* 	 * everything here and down, only if a dead kernel 	 */
 block|{
 literal|"_Sysmap"
@@ -5212,6 +5223,12 @@ directive|endif
 block|}
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
+
 begin_if
 if|if
 condition|(
@@ -5346,6 +5363,11 @@ operator|)
 return|;
 block|}
 end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_return
 return|return
