@@ -553,6 +553,15 @@ block|}
 end_function
 
 begin_function
+name|void
+name|db_print_backtrace
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
 name|int
 name|db_md_set_watchpoint
 parameter_list|(

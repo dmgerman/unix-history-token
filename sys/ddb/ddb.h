@@ -606,6 +606,19 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Scare the user with backtrace of curthread to console. */
+end_comment
+
+begin_function_decl
+name|void
+name|db_print_backtrace
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Command table.  */
 end_comment
 

@@ -1862,6 +1862,12 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|frame
+operator|=
+name|frame
+operator|->
+name|f_frame
+expr_stmt|;
 block|}
 name|first
 operator|=
@@ -2355,6 +2361,32 @@ argument_list|(
 argument|dr7
 argument_list|)
 end_macro
+
+begin_function
+name|void
+name|db_print_backtrace
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|register_t
+name|ebp
+decl_stmt|;
+asm|__asm __volatile("mov %%ebp,%0\n" : "=r" (ebp));
+name|db_stack_trace_cmd
+argument_list|(
+name|ebp
+argument_list|,
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
