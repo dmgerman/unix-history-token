@@ -3577,13 +3577,40 @@ modifier|*
 name|mpc
 parameter_list|)
 block|{
+comment|/* 	 * If we fail the load, we may get a request to unload.  Check 	 * to see if we did the run-time registration, and if not, 	 * silently succeed. 	 */
+name|MAC_POLICY_LIST_LOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mpc
+operator|->
+name|mpc_runtime_flags
+operator|&
+name|MPC_RUNTIME_FLAG_REGISTERED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|MAC_POLICY_LIST_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|#
 directive|if
 literal|0
 comment|/* 	 * Don't allow unloading modules with private data. 	 */
-block|if (mpc->mpc_field_off != NULL) 		return (EBUSY);
+block|if (mpc->mpc_field_off != NULL) { 		MAC_POLICY_LIST_UNLOCK(); 		return (EBUSY); 	}
 endif|#
 directive|endif
+comment|/* 	 * Only allow the unload to proceed if the module is unloadable 	 * by its own definition. 	 */
 if|if
 condition|(
 operator|(
@@ -3596,14 +3623,17 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|MAC_POLICY_LIST_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-name|MAC_POLICY_LIST_LOCK
-argument_list|()
-expr_stmt|;
+block|}
+comment|/* 	 * Right now, we EBUSY if the list is in use.  In the future, 	 * for reliability reasons, we might want to sleep and wakeup 	 * later to try again. 	 */
 if|if
 condition|(
 name|mac_policy_list_busy
