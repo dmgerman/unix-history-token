@@ -31,6 +31,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"rlstdc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"chardefs.h"
 end_include
 
@@ -38,6 +44,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<readline/rlstdc.h>
+end_include
 
 begin_include
 include|#
@@ -209,81 +221,125 @@ begin_comment
 comment|/* Return a new, empty keymap.    Free it with free() when you are done. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|Keymap
 name|rl_make_bare_keymap
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Return a new keymap which is a copy of MAP. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|Keymap
 name|rl_copy_keymap
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Return a new keymap with the printing characters bound to rl_insert,    the lowercase Meta characters bound to run their equivalents, and    the Meta digits bound to produce numeric arguments. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|Keymap
 name|rl_make_keymap
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/* Free the storage associated with a keymap. */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|rl_discard_keymap
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* Return the keymap corresponding to a given name.  Names look like    `emacs' or `emacs-meta' or `vi-insert'. */
+comment|/* These functions actually appear in bind.c */
 end_comment
 
-begin_function_decl
+begin_comment
+comment|/* Return the keymap corresponding to a given name.  Names look like    `emacs' or `emacs-meta' or `vi-insert'.  */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|Keymap
 name|rl_get_keymap_by_name
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Return the current keymap. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|Keymap
 name|rl_get_keymap
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Set the current keymap to MAP. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|rl_set_keymap
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

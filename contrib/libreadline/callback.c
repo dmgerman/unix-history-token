@@ -79,7 +79,7 @@ end_include
 begin_function_decl
 specifier|extern
 name|void
-name|readline_internal_startup
+name|readline_internal_setup
 parameter_list|()
 function_decl|;
 end_function_decl

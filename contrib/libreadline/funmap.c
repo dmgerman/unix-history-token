@@ -286,6 +286,12 @@ name|rl_delete
 block|}
 block|,
 block|{
+literal|"delete-char-or-list"
+block|,
+name|rl_delete_or_show_completions
+block|}
+block|,
+block|{
 literal|"delete-horizontal-space"
 block|,
 name|rl_delete_horizontal_space
@@ -355,6 +361,12 @@ block|{
 literal|"exchange-point-and-mark"
 block|,
 name|rl_exchange_point_and_mark
+block|}
+block|,
+block|{
+literal|"forward-backward-delete-char"
+block|,
+name|rl_rubout_or_delete
 block|}
 block|,
 block|{

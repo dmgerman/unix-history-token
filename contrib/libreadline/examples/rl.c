@@ -160,12 +160,11 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -179,7 +178,7 @@ name|progname
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|main
@@ -209,8 +208,6 @@ name|stat
 name|sb
 decl_stmt|;
 name|int
-name|done
-decl_stmt|,
 name|opt
 decl_stmt|,
 name|fd

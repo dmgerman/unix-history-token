@@ -977,8 +977,7 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-name|char
-modifier|*
+name|histdata_t
 name|data
 decl_stmt|;
 block|{
