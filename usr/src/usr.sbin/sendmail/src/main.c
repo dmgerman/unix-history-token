@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.17 (Berkeley) %G%"
+literal|"@(#)main.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1608,7 +1608,9 @@ condition|)
 block|{
 comment|/* initialize some macros, etc. */
 name|initmacros
-argument_list|()
+argument_list|(
+name|CurEnv
+argument_list|)
 expr_stmt|;
 comment|/* version */
 name|define
@@ -4954,10 +4956,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|initmacros
-argument_list|()
-end_macro
+argument_list|(
+name|e
+argument_list|)
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -5020,7 +5029,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -5068,10 +5077,56 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* set defaults for some macros sendmail will use later */
+name|define
+argument_list|(
+literal|'e'
+argument_list|,
+literal|"\201j Sendmail \201v ready at \201b"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'l'
+argument_list|,
+literal|"From \201g  \201d"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'n'
+argument_list|,
+literal|"MAILER-DAEMON"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'o'
+argument_list|,
+literal|".:@[]"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'q'
+argument_list|,
+literal|"<\201g>"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
