@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, and Kazumasa Utashiro of  * Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, and Kazumasa Utashiro of  * Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -139,7 +139,7 @@ name|bcd_to_int
 parameter_list|(
 name|BCD
 parameter_list|)
-value|(i = BCD, (((i)>> 4)& 0xf) * 10 + (i)& 0xf)
+value|(i = BCD, (((i)>> 4)& 0xf) * 10 + ((i)& 0xf))
 end_define
 
 begin_define
@@ -224,7 +224,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
@@ -372,7 +372,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: preposterous clock chip time"
+literal|"WARNING: preposterous clock chip time\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Believe the time in the file system for lack of 		 * anything better, resetting the TODR. 		 */
