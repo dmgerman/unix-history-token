@@ -457,6 +457,13 @@ begin_comment
 comment|/*   8: Resource unavailabe */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|STATUS_RES_UNAVAIL
+value|8
+end_define
+
 begin_comment
 comment|/*   9: Function Rejected */
 end_comment
