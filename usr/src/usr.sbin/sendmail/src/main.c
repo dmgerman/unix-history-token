@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.28	%G%"
+literal|"@(#)main.c	3.29	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* if set, read recipient addresses from msg */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|DontSend
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mark recipients as QDONTSEND */
 end_comment
 
 begin_decl_stmt
@@ -1685,6 +1695,14 @@ name|argv
 argument_list|)
 expr_stmt|;
 comment|/* 	** Scan argv and deliver the message to everyone. 	*/
+if|if
+condition|(
+name|GrabTo
+condition|)
+name|DontSend
+operator|=
+name|TRUE
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1925,6 +1943,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	**  Read the input mail. 	*/
+name|DontSend
+operator|=
+name|FALSE
+expr_stmt|;
 name|collect
 argument_list|()
 expr_stmt|;

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.8	%G%"
+literal|"@(#)recipient.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,6 +466,16 @@ operator|->
 name|q_next
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|DontSend
+condition|)
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
 expr_stmt|;
 comment|/* 	**  Alias the name and handle :include: specs. 	*/
 if|if
