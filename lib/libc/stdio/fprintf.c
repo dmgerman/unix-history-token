@@ -69,11 +69,13 @@ name|fprintf
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 name|fp
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|fmt
 parameter_list|,
 modifier|...
