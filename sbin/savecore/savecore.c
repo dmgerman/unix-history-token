@@ -1856,18 +1856,6 @@ decl_stmt|;
 name|mode_t
 name|oumask
 decl_stmt|;
-name|bounds
-operator|=
-name|ifd
-operator|=
-name|nr
-operator|=
-name|nw
-operator|=
-name|ofd
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Get the current number and update the bounds file.  Do the update 	 * now, because may fail later and don't want to overwrite anything. 	 */
 operator|(
 name|void
@@ -2099,6 +2087,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|ofd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Not actually used. */
 block|}
 else|else
 name|ofd
@@ -2959,9 +2953,6 @@ name|s
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|name
@@ -3455,18 +3446,26 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"no dump, not enough free space on device (%ld available, need %ld"
+literal|"no dump, not enough free space on device (%lld available, need %lld)"
 argument_list|,
-operator|(
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|minfree
 operator|>
 literal|0
-operator|)
 condition|?
 name|spacefree
 else|:
 name|totfree
+argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|needed
 argument_list|)
 expr_stmt|;
