@@ -627,6 +627,9 @@ operator|-
 literal|1
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -680,12 +683,15 @@ operator|-
 literal|1
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Unable to find the configuration file `%s' - do you want to\n"
-literal|"try again?"
+literal|"Unable to find the configuration file: %s\n"
+literal|"Do you want to try again?"
 argument_list|,
 name|buf
 argument_list|)

@@ -109,6 +109,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

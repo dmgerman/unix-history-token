@@ -997,6 +997,9 @@ name|DIST_BIN
 operator|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -1201,6 +1204,9 @@ name|NULL
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -1255,6 +1261,10 @@ argument_list|(
 literal|"chflags noschg /mnt/kernel&& mv /mnt/kernel /mnt/kernel.205"
 argument_list|)
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1267,6 +1277,7 @@ condition|)
 return|return
 name|RET_FAIL
 return|;
+block|}
 block|}
 block|}
 name|msgNotify
