@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.8	(Berkeley)	%G%"
+literal|"@(#)main.c	2.9	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4331,24 +4331,6 @@ block|}
 name|ckfini
 argument_list|()
 expr_stmt|;
-name|sync
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|dfile
-operator|.
-name|mod
-operator|&&
-name|preen
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"\n***** FILE SYSTEM WAS MODIFIED *****\n"
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|blockmap
@@ -4368,6 +4350,41 @@ name|free
 argument_list|(
 name|lncntp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dfile
+operator|.
+name|mod
+condition|)
+if|if
+condition|(
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|"\n***** FILE SYSTEM WAS MODIFIED *****\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|hotroot
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n***** BOOT UNIX (NO SYNC!) *****\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+name|sync
+argument_list|()
 expr_stmt|;
 block|}
 end_block
