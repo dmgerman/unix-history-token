@@ -790,6 +790,11 @@ argument_list|,
 literal|"failed to set up interrupt\n"
 argument_list|)
 expr_stmt|;
+name|gem_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail_ires
 goto|;
