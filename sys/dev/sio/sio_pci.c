@@ -248,6 +248,14 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x7101135e
+block|,
+literal|"SeaLevel Ultra 530.PCI Single Port Serial"
+block|,
+literal|0x18
+block|}
+block|,
+block|{
 literal|0x0000151f
 block|,
 literal|"SmartLink 5634PCV SurfRider"
