@@ -495,8 +495,18 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We allow unloading if we have no geoms, or a class 	 * method we can use to get rid of them. 	 */
 if|if
 condition|(
+operator|!
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|geom
+argument_list|)
+operator|&&
 name|mp
 operator|->
 name|destroy_geom
