@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)raw_usrreq.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)raw_usrreq.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,6 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|sockproto
 modifier|*
@@ -169,6 +170,12 @@ modifier|*
 name|m
 init|=
 name|m0
+decl_stmt|;
+specifier|register
+name|int
+name|sockets
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|socket
@@ -333,11 +340,16 @@ name|n
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|sorwakeup
 argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
+name|sockets
+operator|++
+expr_stmt|;
+block|}
 block|}
 block|}
 name|last
@@ -381,11 +393,16 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|sorwakeup
 argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
+name|sockets
+operator|++
+expr_stmt|;
+block|}
 block|}
 else|else
 name|m_freem
@@ -393,6 +410,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|sockets
+operator|)
+return|;
 block|}
 end_block
 
