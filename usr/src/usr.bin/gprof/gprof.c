@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gprof.c	5.7 (Berkeley) %G%"
+literal|"@(#)gprof.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1801,6 +1801,17 @@ operator|->
 name|raw_selfpc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|parentp
+operator|==
+literal|0
+operator|||
+name|childp
+operator|==
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|kflag
