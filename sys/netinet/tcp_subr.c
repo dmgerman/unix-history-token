@@ -786,6 +786,24 @@ begin_comment
 comment|/*  * TCP bandwidth limiting sysctls.  Note that the default lower bound of   * 1024 exists only for debugging.  A good production default would be   * something like 6100.  */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|inflight
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"TCP inflight data limiting"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -798,11 +816,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp
+name|_net_inet_tcp_inflight
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|inflight_enable
+name|enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -828,11 +846,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp
+name|_net_inet_tcp_inflight
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|inflight_debug
+name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -858,11 +876,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp
+name|_net_inet_tcp_inflight
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|inflight_min
+name|min
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -890,11 +908,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp
+name|_net_inet_tcp_inflight
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|inflight_max
+name|max
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -920,11 +938,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp
+name|_net_inet_tcp_inflight
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|inflight_stab
+name|stab
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
