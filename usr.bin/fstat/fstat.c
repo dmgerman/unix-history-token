@@ -187,6 +187,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/quota.h>
 end_include
 
@@ -200,12 +206,6 @@ begin_include
 include|#
 directive|include
 file|<fs/devfs/devfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_undef
