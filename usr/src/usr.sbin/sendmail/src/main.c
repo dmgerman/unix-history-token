@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.137
+literal|3.138
 operator|%
 name|G
 operator|%
@@ -1191,7 +1191,9 @@ name|MD_FREEZE
 operator|||
 operator|!
 name|thaw
-argument_list|()
+argument_list|(
+name|FreezeFile
+argument_list|)
 condition|)
 name|readcf
 argument_list|(
@@ -1217,7 +1219,9 @@ case|case
 name|MD_FREEZE
 case|:
 name|freeze
-argument_list|()
+argument_list|(
+name|FreezeFile
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -4350,6 +4354,26 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+comment|/* these must go in initialized data space for freeze/thaw in smtp */
+specifier|static
+name|int
+name|pid
+init|=
+operator|-
+literal|1
+decl_stmt|;
+specifier|static
+name|char
+name|c1
+init|=
+literal|'A'
+decl_stmt|;
+specifier|static
+name|char
+name|c2
+init|=
+literal|'A'
+decl_stmt|;
 if|if
 condition|(
 name|e
@@ -4359,13 +4383,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-name|counter
-init|=
-literal|'A'
-operator|-
-literal|1
-decl_stmt|;
 name|char
 name|qf
 index|[
@@ -4385,6 +4402,31 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* find a unique id */
+if|if
+condition|(
+name|pid
+operator|!=
+name|getpid
+argument_list|()
+condition|)
+block|{
+comment|/* new process -- start back at "AA" */
+name|pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+name|c1
+operator|=
+literal|'A'
+expr_stmt|;
+name|c2
+operator|=
+literal|'A'
+operator|-
+literal|1
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -4392,10 +4434,9 @@ name|sprintf
 argument_list|(
 name|qf
 argument_list|,
-literal|"qf_%05d"
+literal|"qfAA%05d"
 argument_list|,
-name|getpid
-argument_list|()
+name|pid
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -4428,14 +4469,35 @@ literal|'n'
 expr_stmt|;
 while|while
 condition|(
-name|counter
+name|c1
 operator|<
 literal|'~'
+operator|||
+name|c2
+operator|<
+literal|'Z'
 condition|)
 block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|c2
+operator|>=
+literal|'Z'
+condition|)
+block|{
+name|c1
+operator|++
+expr_stmt|;
+name|c2
+operator|=
+literal|'A'
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|qf
 index|[
 literal|2
@@ -4451,8 +4513,25 @@ index|[
 literal|2
 index|]
 operator|=
+name|c1
+expr_stmt|;
+name|qf
+index|[
+literal|3
+index|]
+operator|=
+name|lf
+index|[
+literal|3
+index|]
+operator|=
+name|nf
+index|[
+literal|3
+index|]
+operator|=
 operator|++
-name|counter
+name|c2
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4583,9 +4662,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|counter
+name|c1
 operator|>=
 literal|'~'
+operator|&&
+name|c2
+operator|>=
+literal|'Z'
 condition|)
 block|{
 name|syserr
@@ -4721,7 +4804,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FREEZE -- freeze BSS& allocated memory ** **	This will be used to efficiently load the configuration file. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Writes BSS and malloc'ed memory to FreezeFile */
+comment|/* **  FREEZE -- freeze BSS& allocated memory ** **	This will be used to efficiently load the configuration file. ** **	Parameters: **		freezefile -- the name of the file to freeze to. ** **	Returns: **		none. ** **	Side Effects: **		Writes BSS and malloc'ed memory to freezefile */
 end_comment
 
 begin_struct
@@ -4750,8 +4833,17 @@ end_struct
 
 begin_macro
 name|freeze
-argument_list|()
+argument_list|(
+argument|freezefile
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|freezefile
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4774,7 +4866,7 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
-name|FreezeFile
+name|freezefile
 operator|==
 name|NULL
 condition|)
@@ -4782,11 +4874,11 @@ return|return;
 comment|/* try to open the freeze file */
 name|f
 operator|=
-name|open
+name|creat
 argument_list|(
-name|FreezeFile
+name|freezefile
 argument_list|,
-literal|1
+name|FileMode
 argument_list|)
 expr_stmt|;
 if|if
@@ -4895,13 +4987,22 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  THAW -- read in the frozen configuration file. ** **	Parameters: **		none. ** **	Returns: **		TRUE if it successfully read the freeze file. **		FALSE otherwise. ** **	Side Effects: **		reads FreezeFile in to BSS area. */
+comment|/* **  THAW -- read in the frozen configuration file. ** **	Parameters: **		freezefile -- the name of the file to thaw from. ** **	Returns: **		TRUE if it successfully read the freeze file. **		FALSE otherwise. ** **	Side Effects: **		reads freezefile in to BSS area. */
 end_comment
 
 begin_macro
 name|thaw
-argument_list|()
+argument_list|(
+argument|freezefile
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|freezefile
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4918,7 +5019,7 @@ name|edata
 decl_stmt|;
 if|if
 condition|(
-name|FreezeFile
+name|freezefile
 operator|==
 name|NULL
 condition|)
@@ -4932,7 +5033,7 @@ name|f
 operator|=
 name|open
 argument_list|(
-name|FreezeFile
+name|freezefile
 argument_list|,
 literal|0
 argument_list|)

@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.99		%G%"
+literal|"@(#)sendmail.h	3.100		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -534,6 +534,17 @@ end_define
 
 begin_comment
 comment|/* must run full SMTP, inc. limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_INTERNAL
+value|001000000L
+end_define
+
+begin_comment
+comment|/* SMTP to another sendmail site */
 end_comment
 
 begin_define

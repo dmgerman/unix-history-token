@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -1818,6 +1818,10 @@ block|,
 literal|'C'
 block|,
 name|M_CANONICAL
+block|,
+literal|'I'
+block|,
+name|M_INTERNAL
 block|,
 literal|'\0'
 block|,

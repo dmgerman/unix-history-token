@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -269,6 +269,17 @@ begin_comment
 comment|/* wiz -- become a wizard */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CMDONEX
+value|17
+end_define
+
+begin_comment
+comment|/* onex -- sending one transaction only */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -333,6 +344,10 @@ block|,
 literal|"verb"
 block|,
 name|CMDVERB
+block|,
+literal|"onex"
+block|,
+name|CMDONEX
 block|,
 literal|"hops"
 block|,
@@ -715,6 +730,11 @@ case|case
 name|CMDMAIL
 case|:
 comment|/* mail -- designate sender */
+name|firsttime
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* check for validity of this command */
 if|if
 condition|(
 name|hasmail
@@ -1176,6 +1196,22 @@ argument_list|(
 literal|"200"
 argument_list|,
 literal|"Verbose mode"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMDONEX
+case|:
+comment|/* doing one transaction only */
+name|onexact
+operator|=
+name|TRUE
+expr_stmt|;
+name|message
+argument_list|(
+literal|"200"
+argument_list|,
+literal|"Only one transaction"
 argument_list|)
 expr_stmt|;
 break|break;
