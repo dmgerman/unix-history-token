@@ -243,7 +243,7 @@ begin_define
 define|#
 directive|define
 name|PSL_USERCHANGE
-value|(PSL_C | PSL_PF | PSL_AF | PSL_Z | PSL_N | PSL_T \ 			| PSL_D | PSL_V | PSL_NT | PSL_AC)
+value|(PSL_C | PSL_PF | PSL_AF | PSL_Z | PSL_N | PSL_T \ 			| PSL_D | PSL_V | PSL_NT | PSL_AC | PSL_ID)
 end_define
 
 begin_endif
