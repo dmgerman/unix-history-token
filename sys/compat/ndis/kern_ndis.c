@@ -2787,8 +2787,13 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* 		 * Either the driver already handed the packet to 		 * ndis_txeof() due to a failure, or it wants to keep 		 * it and release it asynchronously later. Skip to the 		 * next one. 		 */
 if|if
 condition|(
+name|p
+operator|==
+name|NULL
+operator|||
 name|p
 operator|->
 name|np_oob
