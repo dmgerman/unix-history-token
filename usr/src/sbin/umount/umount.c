@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)umount.c	4.4 (Berkeley) %G%"
+literal|"@(#)umount.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,7 +423,7 @@ name|mf
 decl_stmt|;
 if|if
 condition|(
-name|umount
+name|unmount
 argument_list|(
 name|name
 argument_list|)
