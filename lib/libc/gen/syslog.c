@@ -166,9 +166,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|connected
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1228,8 +1225,7 @@ expr_stmt|;
 block|}
 name|connected
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 comment|/* retry connect */
 block|}
@@ -1293,10 +1289,8 @@ operator|!=
 operator|-
 literal|1
 operator|&&
+operator|!
 name|connected
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 name|SyslogAddr
@@ -1356,10 +1350,8 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|connected
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 comment|/* 			 * Try the old "/dev/log" path, for backward 			 * compatibility. 			 */
@@ -1406,10 +1398,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
 name|connected
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 operator|(
@@ -1522,8 +1512,7 @@ literal|1
 expr_stmt|;
 name|connected
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 block|}
 end_function
