@@ -55,6 +55,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_MBOX_REGS2300_OFF
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|SBUS_MBOX_REGS_OFF
 value|0x80
 end_define
@@ -294,6 +301,211 @@ end_define
 
 begin_comment
 comment|/* RW : Bus NVRAM */
+end_comment
+
+begin_comment
+comment|/*  * These are specific to the 2300.  *  * They *claim* you can read BIU_R2HSTSLO with a full 32 bit access  * and get both registers, but I'm a bit dubious about that. But the  * point here is that the top 16 bits are firmware defined bits that  * the RISC processor uses to inform the host about something- usually  * something which was nominally in a mailbox register.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_REQINP
+value|(BIU_BLOCK+0x10)
+end_define
+
+begin_comment
+comment|/* Request Queue In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_REQOUTP
+value|(BIU_BLOCK+0x12)
+end_define
+
+begin_comment
+comment|/* Request Queue Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_RSPINP
+value|(BIU_BLOCK+0x14)
+end_define
+
+begin_comment
+comment|/* Response Queue In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_RSPOUTP
+value|(BIU_BLOCK+0x16)
+end_define
+
+begin_comment
+comment|/* Response Queue Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_R2HSTSLO
+value|(BIU_BLOCK+0x18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU_R2HSTSHI
+value|(BIU_BLOCK+0x1A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU_R2HST_INTR
+value|(1<< 15)
+end_define
+
+begin_comment
+comment|/* RISC to Host Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_R2HST_PAUSED
+value|(1<<  8)
+end_define
+
+begin_comment
+comment|/* RISC paused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_R2HST_ISTAT_MASK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* intr information&& status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_ROM_MBX_OK
+value|0x1
+end_define
+
+begin_comment
+comment|/* ROM mailbox cmd done ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_ROM_MBX_FAIL
+value|0x2
+end_define
+
+begin_comment
+comment|/* ROM mailbox cmd done fail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_MBX_OK
+value|0x10
+end_define
+
+begin_comment
+comment|/* mailbox cmd done ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_MBX_FAIL
+value|0x11
+end_define
+
+begin_comment
+comment|/* mailbox cmd done fail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_ASYNC_EVENT
+value|0x12
+end_define
+
+begin_comment
+comment|/* Async Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_RSPQ_UPDATE
+value|0x13
+end_define
+
+begin_comment
+comment|/* Response Queue Update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_RQST_UPDATE
+value|0x14
+end_define
+
+begin_comment
+comment|/* Resquest Queue Update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_RIO_16
+value|0x15
+end_define
+
+begin_comment
+comment|/* RIO 1-16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_FPOST
+value|0x16
+end_define
+
+begin_comment
+comment|/* Low 16 bits fast post */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_FPOST_CTIO
+value|0x17
+end_define
+
+begin_comment
+comment|/* Low 16 bits fast post ctio */
 end_comment
 
 begin_define
