@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.63 1997/10/26 04:53:53 nate Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.64 1997/10/26 21:08:40 nate Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -5878,7 +5878,7 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-comment|/* Now this driver has no support for programmable 	     * multicast filters. If some day it will gain this 	     * support this part of code must be extended. 	     */
+comment|/* 	     * The Etherlink III has no programmable multicast 	     * filter.  We always initialize the card to be 	     * promiscuous to multicast, since we're always a 	     * member of the ALL-SYSTEMS group, so there's no 	     * need to process SIOC*MULTI requests. 	     */
 name|error
 operator|=
 literal|0
