@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.31 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,12 +170,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|connected
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr_in
 name|myctladdr
@@ -208,6 +202,8 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|int
+name|connected
+decl_stmt|,
 name|errno
 decl_stmt|;
 end_decl_stmt
@@ -829,6 +825,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_OOBINLINE
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|on
 argument_list|,
@@ -1253,7 +1253,7 @@ block|}
 end_block
 
 begin_function
-name|sig_t
+name|void
 name|cmdabort
 parameter_list|()
 block|{
@@ -1319,15 +1319,12 @@ name|int
 name|r
 decl_stmt|;
 name|sig_t
-argument_list|(
-operator|*
 name|oldintr
-argument_list|)
-argument_list|()
-decl_stmt|,
-name|cmdabort
-argument_list|()
 decl_stmt|;
+name|void
+name|cmdabort
+parameter_list|()
+function_decl|;
 name|abrtflag
 operator|=
 literal|0
@@ -1588,14 +1585,7 @@ init|=
 literal|0
 decl_stmt|;
 name|sig_t
-argument_list|(
-operator|*
 name|oldintr
-argument_list|)
-argument_list|()
-decl_stmt|,
-name|cmdabort
-argument_list|()
 decl_stmt|;
 name|int
 name|pflag
@@ -1608,6 +1598,10 @@ name|pt
 init|=
 name|pasv
 decl_stmt|;
+name|void
+name|cmdabort
+parameter_list|()
+function_decl|;
 name|oldintr
 operator|=
 name|signal
@@ -2218,12 +2212,10 @@ name|sendabort
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|abortsend
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|mflag
 operator|=
@@ -2254,7 +2246,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2297,6 +2289,22 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
+name|struct
+name|timeval
+name|start
+decl_stmt|,
+name|stop
+decl_stmt|;
+specifier|register
+name|int
+name|c
+decl_stmt|,
+name|d
+decl_stmt|;
 name|FILE
 modifier|*
 name|fin
@@ -2323,23 +2331,6 @@ decl_stmt|,
 name|fclose
 argument_list|()
 decl_stmt|;
-name|sig_t
-argument_list|(
-operator|*
-name|oldintr
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|oldintp
-argument_list|)
-argument_list|()
-decl_stmt|;
-name|int
-name|abortsend
-parameter_list|()
-function_decl|;
 name|char
 name|buf
 index|[
@@ -2358,26 +2349,22 @@ name|hashbytes
 init|=
 name|HASHBYTES
 decl_stmt|;
-specifier|register
-name|int
-name|c
-decl_stmt|,
-name|d
-decl_stmt|;
-name|struct
-name|stat
-name|st
-decl_stmt|;
-name|struct
-name|timeval
-name|start
-decl_stmt|,
-name|stop
-decl_stmt|;
 name|char
 modifier|*
-name|mode
+name|lmode
+decl_stmt|,
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|,
+modifier|*
+name|bufp
 decl_stmt|;
+name|void
+name|abortsend
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|verbose
@@ -2454,7 +2441,7 @@ name|oldintp
 operator|=
 name|NULL
 expr_stmt|;
-name|mode
+name|lmode
 operator|=
 literal|"w"
 expr_stmt|;
@@ -2924,7 +2911,7 @@ name|dout
 operator|=
 name|dataconn
 argument_list|(
-name|mode
+name|lmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -3636,7 +3623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|sig_t
+name|void
 name|abortrecv
 parameter_list|()
 block|{
@@ -3680,7 +3667,7 @@ argument|local
 argument_list|,
 argument|remote
 argument_list|,
-argument|mode
+argument|lmode
 argument_list|,
 argument|printnames
 argument_list|)
@@ -3698,7 +3685,7 @@ modifier|*
 name|remote
 decl_stmt|,
 modifier|*
-name|mode
+name|lmode
 decl_stmt|;
 end_decl_stmt
 
@@ -3766,7 +3753,14 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-specifier|extern
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
+name|void
+name|abortrecv
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|malloc
@@ -4452,7 +4446,7 @@ name|fopen
 argument_list|(
 name|local
 argument_list|,
-name|mode
+name|lmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -5359,50 +5353,42 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/*  * Need to start a listen on the data channel  * before we send the command, otherwise the  * server's connect may fail.  */
+comment|/*  * Need to start a listen on the data channel before we send the command,  * otherwise the server's connect may fail.  */
 end_comment
 
 begin_expr_stmt
-unit|int
-name|sendport
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
-name|initconn
-argument_list|()
-end_macro
-
-begin_block
+unit|initconn
+operator|(
+operator|)
 block|{
 specifier|register
 name|char
-modifier|*
+operator|*
 name|p
-decl_stmt|,
-modifier|*
+block|,
+operator|*
 name|a
-decl_stmt|;
+block|;
 name|int
 name|result
-decl_stmt|,
+block|,
 name|len
-decl_stmt|,
+block|,
 name|tmpno
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 name|int
 name|on
-init|=
+operator|=
 literal|1
-decl_stmt|;
+block|;
 name|noport
-label|:
+operator|:
 name|data_addr
 operator|=
 name|myctladdr
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|sendport
@@ -5413,7 +5399,13 @@ name|sin_port
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* let system pick one */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|data
@@ -5429,6 +5421,9 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|data
 operator|=
 name|socket
@@ -5440,6 +5435,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|data
@@ -5466,6 +5464,9 @@ literal|1
 operator|)
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -5506,6 +5507,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|bind
@@ -5538,6 +5542,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|options
@@ -5572,6 +5579,9 @@ argument_list|(
 literal|"ftp: setsockopt (ignored)"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|len
 operator|=
 sizeof|sizeof
@@ -5579,6 +5589,9 @@ argument_list|(
 name|data_addr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|getsockname
@@ -5609,6 +5622,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|listen
@@ -5625,6 +5641,9 @@ argument_list|(
 literal|"ftp: listen"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|sendport
@@ -5746,6 +5765,9 @@ name|COMPLETE
 operator|)
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|tmpno
@@ -5754,13 +5776,22 @@ name|sendport
 operator|=
 literal|1
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+end_return
+
+begin_label
 name|bad
 label|:
+end_label
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -5774,6 +5805,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|tmpno
@@ -5782,25 +5816,30 @@ name|sendport
 operator|=
 literal|1
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_block
+end_return
 
-begin_function
-name|FILE
-modifier|*
+begin_expr_stmt
+unit|}  FILE
+operator|*
 name|dataconn
-parameter_list|(
-name|mode
-parameter_list|)
+argument_list|(
+argument|lmode
+argument_list|)
 name|char
-modifier|*
-name|mode
-decl_stmt|;
+operator|*
+name|lmode
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 name|struct
 name|sockaddr_in
@@ -5883,12 +5922,12 @@ name|fdopen
 argument_list|(
 name|data
 argument_list|,
-name|mode
+name|lmode
 argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_macro
 name|ptransfer
@@ -6080,7 +6119,7 @@ block|}
 end_block
 
 begin_function
-name|sig_t
+name|void
 name|psabort
 parameter_list|()
 block|{
@@ -6116,12 +6155,8 @@ decl_stmt|,
 name|abrtflag
 decl_stmt|;
 name|sig_t
-function_decl|(
-modifier|*
 name|oldintr
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 specifier|static
 struct|struct
 name|comvars
@@ -6699,7 +6734,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|sig_t
+name|void
 name|abortpt
 parameter_list|()
 block|{
@@ -6764,14 +6799,7 @@ end_decl_stmt
 begin_block
 block|{
 name|sig_t
-argument_list|(
-operator|*
 name|oldintr
-argument_list|)
-argument_list|()
-decl_stmt|,
-name|abortpt
-argument_list|()
 decl_stmt|;
 name|int
 name|secndflag
@@ -6794,6 +6822,10 @@ name|struct
 name|fd_set
 name|mask
 decl_stmt|;
+name|void
+name|abortpt
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|strcmp
