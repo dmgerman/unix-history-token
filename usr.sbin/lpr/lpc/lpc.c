@@ -569,7 +569,9 @@ specifier|static
 name|char
 modifier|*
 name|lpc_prompt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
