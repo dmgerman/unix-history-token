@@ -1358,13 +1358,11 @@ argument_list|,
 name|tie_to
 argument_list|)
 block|; }
-specifier|inline
 name|virtual
 operator|~
 name|ios
 argument_list|()
 block|;
-specifier|inline
 name|void
 name|init
 argument_list|(
