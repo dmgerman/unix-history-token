@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.8 (Berkeley) %G%"
+literal|"@(#)map.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1630,6 +1630,8 @@ name|map
 operator|->
 name|map_file
 argument_list|,
+literal|".dir"
+argument_list|,
 name|LOCK_SH
 argument_list|)
 expr_stmt|;
@@ -1755,6 +1757,8 @@ argument_list|,
 name|map
 operator|->
 name|map_file
+argument_list|,
+literal|".dir"
 argument_list|,
 name|LOCK_UN
 argument_list|)
@@ -2397,6 +2401,8 @@ name|map
 operator|->
 name|map_file
 argument_list|,
+literal|".db"
+argument_list|,
 name|LOCK_EX
 argument_list|)
 expr_stmt|;
@@ -2423,6 +2429,8 @@ argument_list|,
 name|map
 operator|->
 name|map_file
+argument_list|,
+literal|".db"
 argument_list|,
 name|LOCK_UN
 argument_list|)
@@ -2767,6 +2775,8 @@ name|map
 operator|->
 name|map_file
 argument_list|,
+literal|".db"
+argument_list|,
 name|LOCK_EX
 argument_list|)
 expr_stmt|;
@@ -2793,6 +2803,8 @@ argument_list|,
 name|map
 operator|->
 name|map_file
+argument_list|,
+literal|".db"
 argument_list|,
 name|LOCK_UN
 argument_list|)
@@ -3055,6 +3067,8 @@ name|map
 operator|->
 name|map_file
 argument_list|,
+literal|".db"
+argument_list|,
 name|LOCK_SH
 argument_list|)
 expr_stmt|;
@@ -3181,6 +3195,8 @@ argument_list|,
 name|map
 operator|->
 name|map_file
+argument_list|,
+literal|".db"
 argument_list|,
 name|LOCK_UN
 argument_list|)

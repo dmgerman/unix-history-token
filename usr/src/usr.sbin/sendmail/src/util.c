@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.7 (Berkeley) %G%"
+literal|"@(#)util.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2105,6 +2105,8 @@ argument_list|(
 name|fd
 argument_list|,
 name|filename
+argument_list|,
+name|NULL
 argument_list|,
 name|locktype
 argument_list|)

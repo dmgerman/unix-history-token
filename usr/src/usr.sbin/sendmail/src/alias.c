@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.11 (Berkeley) %G%"
+literal|"@(#)alias.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1432,6 +1432,8 @@ name|map
 operator|->
 name|map_file
 argument_list|,
+name|NULL
+argument_list|,
 name|LOCK_EX
 operator||
 name|LOCK_NB
@@ -1469,6 +1471,8 @@ argument_list|,
 name|map
 operator|->
 name|map_file
+argument_list|,
+name|NULL
 argument_list|,
 name|LOCK_EX
 argument_list|)

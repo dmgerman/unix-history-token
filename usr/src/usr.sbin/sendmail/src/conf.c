@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.25 (Berkeley) %G%"
+literal|"@(#)conf.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5483,7 +5483,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
+comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). **		ext -- the filename extension. **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
 end_comment
 
 begin_function
@@ -5494,6 +5494,8 @@ name|fd
 parameter_list|,
 name|filename
 parameter_list|,
+name|ext
+parameter_list|,
 name|type
 parameter_list|)
 name|int
@@ -5502,6 +5504,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|filename
+decl_stmt|;
+name|char
+modifier|*
+name|ext
 decl_stmt|;
 name|int
 name|type
@@ -5517,6 +5523,16 @@ name|struct
 name|flock
 name|lfd
 decl_stmt|;
+if|if
+condition|(
+name|ext
+operator|==
+name|NULL
+condition|)
+name|ext
+operator|=
+literal|""
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -5593,9 +5609,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"lockfile(%s, action=%d, type=%d): "
+literal|"lockfile(%s%s, action=%d, type=%d): "
 argument_list|,
 name|filename
+argument_list|,
+name|ext
 argument_list|,
 name|action
 argument_list|,
@@ -5704,15 +5722,27 @@ operator|)
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot lockf(%s, %o)"
+literal|"cannot lockf(%s%s, %o)"
 argument_list|,
 name|filename
+argument_list|,
+name|ext
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+name|ext
+operator|==
+name|NULL
+condition|)
+name|ext
+operator|=
+literal|""
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -5724,9 +5754,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"lockfile(%s, type=%o): "
+literal|"lockfile(%s%s, type=%o): "
 argument_list|,
 name|filename
+argument_list|,
+name|ext
 argument_list|,
 name|type
 argument_list|)
@@ -5796,9 +5828,11 @@ name|EWOULDBLOCK
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot flock(%s, %o)"
+literal|"cannot flock(%s%s, %o)"
 argument_list|,
 name|filename
+argument_list|,
+name|ext
 argument_list|,
 name|type
 argument_list|)
