@@ -10358,7 +10358,7 @@ index|[
 name|PARAM_BUFSIZE
 index|]
 decl_stmt|;
-name|u_int32_t
+name|vm_offset_t
 name|segment
 decl_stmt|;
 name|int
@@ -10755,7 +10755,7 @@ index|[
 name|PARAM_BUFSIZE
 index|]
 decl_stmt|;
-name|u_int32_t
+name|vm_offset_t
 name|segment
 decl_stmt|;
 name|int
