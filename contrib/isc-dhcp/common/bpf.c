@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: bpf.c,v 1.19.2.6 1999/02/09 04:46:59 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: bpf.c,v 1.19.2.8 1999/02/23 22:09:56 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -457,7 +457,7 @@ name|quiet_interface_discovery
 condition|)
 name|note
 argument_list|(
-literal|"Sending on   BPF/%s/%s/%s"
+literal|"Sending on   BPF/%s/%s%s%s"
 argument_list|,
 name|info
 operator|->
@@ -489,13 +489,23 @@ name|info
 operator|->
 name|shared_network
 condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
 name|info
 operator|->
 name|shared_network
 operator|->
 name|name
 else|:
-literal|"unattached"
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1013,7 +1023,7 @@ name|quiet_interface_discovery
 condition|)
 name|note
 argument_list|(
-literal|"Listening on BPF/%s/%s/%s"
+literal|"Listening on BPF/%s/%s%s%s"
 argument_list|,
 name|info
 operator|->
@@ -1045,13 +1055,23 @@ name|info
 operator|->
 name|shared_network
 condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
 name|info
 operator|->
 name|shared_network
 operator|->
 name|name
 else|:
-literal|"unattached"
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1142,6 +1162,9 @@ name|iov
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|int
+name|result
 decl_stmt|;
 if|if
 condition|(
@@ -1264,7 +1287,8 @@ name|iov_len
 operator|=
 name|len
 expr_stmt|;
-return|return
+name|result
+operator|=
 name|writev
 argument_list|(
 name|interface
@@ -1275,6 +1299,20 @@ name|iov
 argument_list|,
 literal|2
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|<
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"send_packet: %m"
+argument_list|)
+expr_stmt|;
+return|return
+name|result
 return|;
 block|}
 end_function

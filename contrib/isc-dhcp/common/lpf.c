@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: lpf.c,v 1.1.2.4 1999/02/09 04:51:05 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: lpf.c,v 1.1.2.6 1999/02/23 22:09:55 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,7 +408,7 @@ name|quiet_interface_discovery
 condition|)
 name|note
 argument_list|(
-literal|"Sending on   LPF/%s/%s/%s"
+literal|"Sending on   LPF/%s/%s%s%s"
 argument_list|,
 name|info
 operator|->
@@ -440,13 +440,23 @@ name|info
 operator|->
 name|shared_network
 condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
 name|info
 operator|->
 name|shared_network
 operator|->
 name|name
 else|:
-literal|"unattached"
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;
@@ -606,7 +616,7 @@ name|quiet_interface_discovery
 condition|)
 name|note
 argument_list|(
-literal|"Listening on LPF/%s/%s/%s"
+literal|"Listening on LPF/%s/%s%s%s"
 argument_list|,
 name|info
 operator|->
@@ -638,13 +648,23 @@ name|info
 operator|->
 name|shared_network
 condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
 name|info
 operator|->
 name|shared_network
 operator|->
 name|name
 else|:
-literal|"unattached"
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;
@@ -732,6 +752,9 @@ decl_stmt|;
 name|struct
 name|sockaddr
 name|sa
+decl_stmt|;
+name|int
+name|result
 decl_stmt|;
 if|if
 condition|(
@@ -859,7 +882,8 @@ operator|.
 name|sa_data
 argument_list|)
 expr_stmt|;
-return|return
+name|result
+operator|=
 name|sendto
 argument_list|(
 name|interface
@@ -880,6 +904,20 @@ argument_list|,
 sizeof|sizeof
 name|sa
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|<
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"send_packet: %m"
+argument_list|)
+expr_stmt|;
+return|return
+name|result
 return|;
 block|}
 end_function

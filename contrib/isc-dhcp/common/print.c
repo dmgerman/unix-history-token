@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: print.c,v 1.16.2.2 1998/11/24 22:39:35 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: print.c,v 1.16.2.3 1999/02/13 19:19:03 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +205,7 @@ argument_list|,
 sizeof|sizeof
 name|tbuf
 argument_list|,
-literal|"%D %H:%M:%S"
+literal|"%Y/%m/%d %H:%M:%S"
 argument_list|,
 name|t
 argument_list|)
@@ -234,7 +234,7 @@ argument_list|,
 sizeof|sizeof
 name|tbuf
 argument_list|,
-literal|"%D %H:%M:%S"
+literal|"%Y/%m/%d %H:%M:%S"
 argument_list|,
 name|t
 argument_list|)
@@ -263,7 +263,7 @@ argument_list|,
 sizeof|sizeof
 name|tbuf
 argument_list|,
-literal|"%D %H:%M:%S"
+literal|"%Y/%m/%d %H:%M:%S"
 argument_list|,
 name|t
 argument_list|)

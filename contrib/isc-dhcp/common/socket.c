@@ -23,7 +23,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: socket.c,v 1.26.2.6 1999/02/03 19:46:04 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: socket.c,v 1.26.2.10 1999/02/23 22:09:55 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,7 +208,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|SO_BINDTODEVICE
+name|HAVE_SO_BINDTODEVICE
 argument_list|)
 operator|&&
 operator|!
@@ -386,7 +386,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SO_BINDTODEVICE
+name|HAVE_SO_BINDTODEVICE
 argument_list|)
 comment|/* Bind this socket to this interface. */
 if|if
@@ -427,7 +427,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"setting SO_BINDTODEVICE"
+literal|"setsockopt: SO_BINDTODEVICE: %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -497,11 +497,21 @@ name|quiet_interface_discovery
 condition|)
 name|note
 argument_list|(
-literal|"Sending on   Socket/%s/%s"
+literal|"Sending on   Socket/%s%s%s"
 argument_list|,
 name|info
 operator|->
 name|name
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
 argument_list|,
 operator|(
 name|info
@@ -514,7 +524,7 @@ name|shared_network
 operator|->
 name|name
 else|:
-literal|"unattached"
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;
@@ -565,11 +575,21 @@ name|quiet_interface_discovery
 condition|)
 name|note
 argument_list|(
-literal|"Listening on Socket/%s/%s"
+literal|"Listening on Socket/%s%s%s"
 argument_list|,
 name|info
 operator|->
 name|name
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
 argument_list|,
 operator|(
 name|info
@@ -582,7 +602,7 @@ name|shared_network
 operator|->
 name|name
 else|:
-literal|"unattached"
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;
@@ -739,6 +759,32 @@ condition|)
 do|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|result
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"send_packet: %m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENETUNREACH
+condition|)
+name|warn
+argument_list|(
+literal|"send_packet: please consult README file %s"
+argument_list|,
+literal|"regarding broadcast address."
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|result
 return|;
