@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.1 (Berkeley) %G%"
+literal|"@(#)main.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -552,14 +552,7 @@ block|}
 block|}
 name|im_on
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+literal|"/dev/tty"
 expr_stmt|;
 if|if
 condition|(
