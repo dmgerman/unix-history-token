@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2013,7 +2013,7 @@ return|return;
 block|}
 ifdef|#
 directive|ifdef
-name|WDDEBUGx
+name|WDDEBUG
 name|dprintf
 argument_list|(
 name|DDSK
@@ -2649,7 +2649,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/*dprintf(DDSK,"wdopen %x\n",unit);*/
 if|if
 condition|(
 name|unit
@@ -2755,6 +2754,8 @@ operator|->
 name|b_dev
 operator|=
 name|dev
+operator|&
+literal|0xff00
 expr_stmt|;
 name|bp
 operator|->
@@ -3154,10 +3155,6 @@ name|bootdev
 decl_stmt|,
 name|cyloffset
 decl_stmt|;
-name|cyloffset
-operator|=
-literal|0
-expr_stmt|;
 name|du
 operator|=
 operator|&
