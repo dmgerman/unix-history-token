@@ -3,6 +3,20 @@ begin_comment
 comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Thu Oct 12 15:53:50 MSK 1995  * $FreeBSD$  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|atapi_attach
+value|wdc_atapi_attach
+end_define
+
+begin_define
+define|#
+directive|define
+name|acdattach
+value|wdc_acdattach
+end_define
+
 begin_comment
 comment|/*  * Disk Controller ATAPI register definitions.  */
 end_comment

@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/atapi-cd.h>
+file|<i386/isa/wd_cd.h>
 end_include
 
 begin_decl_stmt
