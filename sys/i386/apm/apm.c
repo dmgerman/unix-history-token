@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id$  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.53 1997/02/22 09:29:49 peter Exp $  */
 end_comment
 
 begin_include
@@ -687,7 +687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Tell APM-BIOS that WE will do 1.1 and see what they say... */
+comment|/* Tell APM-BIOS that WE will do 1.2 and see what they say... */
 end_comment
 
 begin_function
@@ -719,7 +719,33 @@ name|ebx
 operator|=
 literal|0x0
 expr_stmt|;
-comment|/* XXX - The APM 1.1 specification is only supported for now */
+comment|/* First try APM 1.2 */
+name|ecx
+operator|=
+literal|0x0102
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|apm_int
+argument_list|(
+operator|&
+name|eax
+argument_list|,
+operator|&
+name|ebx
+argument_list|,
+operator|&
+name|ecx
+argument_list|)
+condition|)
+name|apm_version
+operator|=
+name|eax
+operator|&
+literal|0xffff
+expr_stmt|;
+comment|/* Then try APM 1.1 */
 name|ecx
 operator|=
 literal|0x0101
