@@ -147,10 +147,10 @@ comment|/* X_fmt */
 literal|"%H:%M:%S"
 block|,
 comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, using locale's date format," anything goes. 	** Using just numbers (as here) makes Quakers happier; 	** it's also compatible with SVR4. 	*/
-literal|"%m/%d/%Y"
+literal|"%m/%d/%y"
 block|,
-comment|/* 	** c_fmt (ctime-compatible) 	*/
-literal|"%a %b %e %T %Y"
+comment|/* 	** c_fmt 	*/
+literal|"%a %b %e %H:%M:%S %Y"
 block|,
 comment|/* am */
 literal|"AM"
@@ -159,7 +159,7 @@ comment|/* pm */
 literal|"PM"
 block|,
 comment|/* date_fmt */
-literal|"%a %b %e %X %Z %Y"
+literal|"%a %b %e %H:%M:%S %Z %Y"
 block|,
 comment|/* alt_month 	** Standalone months forms for %OB 	*/
 block|{
