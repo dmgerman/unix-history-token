@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dvar.c	1.13	84/09/28  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dvar.c	1.14	85/04/29  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -148,6 +148,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BITDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -158,6 +164,11 @@ end_define
 begin_comment
 comment|/* default place to look for font rasters */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -195,7 +206,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dvar.c	1.13	84/09/28"
+literal|"dvar.c	1.14	85/04/29"
 decl_stmt|;
 end_decl_stmt
 
