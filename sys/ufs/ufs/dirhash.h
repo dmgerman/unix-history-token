@@ -259,6 +259,11 @@ parameter_list|,
 name|doff_t
 modifier|*
 parameter_list|,
+name|struct
+name|buf
+modifier|*
+modifier|*
+parameter_list|,
 name|doff_t
 modifier|*
 parameter_list|)

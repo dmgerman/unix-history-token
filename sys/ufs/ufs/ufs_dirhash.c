@@ -1679,7 +1679,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the offset of the specified name within the given inode.  * Returns 0 on success, ENOENT if the entry does not exist, or  * EJUSTRETURN if the caller should revert to a linear search.  *  * If successful, the directory offset is stored in *offp. If  * prevoffp is non-NULL, the offset of the previous entry within  * the DIRBLKSIZ-sized block is stored in *prevoffp (if the entry  * is the first in a block, the start of the block is used).  */
+comment|/*  * Find the offset of the specified name within the given inode.  * Returns 0 on success, ENOENT if the entry does not exist, or  * EJUSTRETURN if the caller should revert to a linear search.  *  * If successful, the directory offset is stored in *offp, and a  * pointer to a struct buf containing the entry is stored in *bpp. If  * prevoffp is non-NULL, the offset of the previous entry within  * the DIRBLKSIZ-sized block is stored in *prevoffp (if the entry  * is the first in a block, the start of the block is used).  */
 end_comment
 
 begin_function
@@ -1701,6 +1701,12 @@ parameter_list|,
 name|doff_t
 modifier|*
 name|offp
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+modifier|*
+name|bpp
 parameter_list|,
 name|doff_t
 modifier|*
@@ -2315,10 +2321,10 @@ argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
-name|brelse
-argument_list|(
+operator|*
+name|bpp
+operator|=
 name|bp
-argument_list|)
 expr_stmt|;
 operator|*
 name|offp
