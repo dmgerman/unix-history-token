@@ -2799,6 +2799,7 @@ name|uio_resid
 operator|!=
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|ENXIO
@@ -2806,6 +2807,7 @@ expr_stmt|;
 goto|goto
 name|vopunlock_exit
 goto|;
+block|}
 comment|/* 	 * Write out user data 	 */
 name|uio
 operator|->
@@ -2846,6 +2848,14 @@ name|uio_offset
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|attribute
+operator|->
+name|uele_backing_vnode
+operator|!=
+name|vp
+condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|attribute
