@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.5 2000/04/22 01:54:55 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.3 2000/10/03 18:31:47 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -340,6 +340,20 @@ define|#
 directive|define
 name|MII_STR_AMD_79c973phy
 value|"Am79c973 internal PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_AMD_79c978
+value|0x0039
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_AMD_79c978
+value|"Am79c978 HomePNA PHY"
 end_define
 
 begin_comment
