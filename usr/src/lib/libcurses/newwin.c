@@ -622,8 +622,10 @@ operator|(
 name|WINDOW
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|WINDOW
