@@ -1489,20 +1489,6 @@ parameter_list|)
 value|callout_stop(&(h))
 end_define
 
-begin_define
-define|#
-directive|define
-name|usb_uncallout_drain
-parameter_list|(
-name|h
-parameter_list|,
-name|f
-parameter_list|,
-name|d
-parameter_list|)
-value|callout_drain(&(h))
-end_define
-
 begin_else
 else|#
 directive|else
