@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.9 1996/01/30 02:56:08 mpp Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.10 1996/02/01 16:16:11 ache Exp $  */
 end_comment
 
 begin_comment
@@ -22,6 +22,39 @@ define|#
 directive|define
 name|_SYS_CDIO_H_
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|>=
+literal|2
+end_if
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_union
 union|union
@@ -856,6 +889,39 @@ end_define
 begin_comment
 comment|/*<2>*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|>=
+literal|2
+end_if
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|4
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
