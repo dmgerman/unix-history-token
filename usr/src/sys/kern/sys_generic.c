@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.13	82/09/06	*/
+comment|/*	sys_generic.c	5.14	82/09/08	*/
 end_comment
 
 begin_include
@@ -804,9 +804,10 @@ operator|)
 operator|&&
 name|setjmp
 argument_list|(
+operator|&
 name|u
 operator|.
-name|u_qsav
+name|u_qsave
 argument_list|)
 condition|)
 block|{
@@ -3028,9 +3029,10 @@ operator|)
 operator|&&
 name|setjmp
 argument_list|(
+operator|&
 name|u
 operator|.
-name|u_qsav
+name|u_qsave
 argument_list|)
 condition|)
 block|{
