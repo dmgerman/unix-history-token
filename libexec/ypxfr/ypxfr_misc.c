@@ -111,7 +111,7 @@ name|YPXFR_SUCC
 case|:
 return|return
 operator|(
-literal|"Map successfully transfered"
+literal|"Map successfully transferred"
 operator|)
 return|;
 break|break;
