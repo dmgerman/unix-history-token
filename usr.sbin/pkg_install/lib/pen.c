@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.16 1995/08/26 10:15:18 jkh Exp $"
+literal|"$Id: pen.c,v 1.17 1995/08/26 18:36:27 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,24 +390,8 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|sz
 condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Free temp space: %d bytes in %s\n"
-argument_list|,
-name|min_free
-argument_list|(
-name|Pen
-argument_list|)
-argument_list|,
-name|Pen
-argument_list|)
-expr_stmt|;
-else|else
 name|fprintf
 argument_list|(
 name|stderr
