@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.18 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -761,21 +761,6 @@ expr_stmt|;
 if|if
 condition|(
 name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"dumplo = %d (%d * 512)\n"
-argument_list|,
-name|dumplo
-argument_list|,
-name|dumplo
-operator|/
-literal|512
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Verbose
 operator|&&
 name|word
 operator|!=
@@ -1361,6 +1346,23 @@ sizeof|sizeof
 argument_list|(
 name|dumplo
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"dumplo = %d (%d * %d)\n"
+argument_list|,
+name|dumplo
+argument_list|,
+name|dumplo
+operator|/
+name|DEV_BSIZE
+argument_list|,
+name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
 name|Lseek
@@ -2171,8 +2173,8 @@ end_block
 begin_define
 define|#
 directive|define
-name|BUFPAGES
-value|(256*1024/NBPG)
+name|BUFSIZE
+value|(256*1024)
 end_define
 
 begin_comment
@@ -2216,9 +2218,7 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
-name|BUFPAGES
-operator|*
-name|NBPG
+name|BUFSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2268,9 +2268,7 @@ name|ifd
 argument_list|,
 name|cp
 argument_list|,
-name|BUFPAGES
-operator|*
-name|NBPG
+name|BUFSIZE
 argument_list|)
 operator|)
 operator|>
@@ -2334,7 +2332,7 @@ expr_stmt|;
 block|}
 name|Lseek
 argument_list|(
-name|ifd
+name|dumpfd
 argument_list|,
 call|(
 name|off_t
@@ -2358,7 +2356,7 @@ argument_list|)
 expr_stmt|;
 name|Read
 argument_list|(
-name|ifd
+name|dumpfd
 argument_list|,
 operator|(
 name|char
@@ -2409,14 +2407,16 @@ argument_list|,
 name|L_SET
 argument_list|)
 expr_stmt|;
+name|dumpsize
+operator|*=
+name|NBPG
+expr_stmt|;
 name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"Saving %d bytes of image in vmcore.%d\n"
 argument_list|,
-name|NBPG
-operator|*
 name|dumpsize
 argument_list|,
 name|bounds
@@ -2431,37 +2431,49 @@ condition|)
 block|{
 name|n
 operator|=
-name|Read
+name|read
 argument_list|(
 name|ifd
 argument_list|,
 name|cp
 argument_list|,
-operator|(
 name|dumpsize
 operator|>
-name|BUFPAGES
+name|BUFSIZE
 condition|?
-name|BUFPAGES
+name|BUFSIZE
 else|:
 name|dumpsize
-operator|)
-operator|*
-name|NBPG
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|n
 operator|==
 literal|0
 condition|)
-block|{
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"WARNING: vmcore may be incomplete\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|Perror
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"read: %m"
+argument_list|,
+literal|"read"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2478,8 +2490,6 @@ expr_stmt|;
 name|dumpsize
 operator|-=
 name|n
-operator|/
-name|NBPG
 expr_stmt|;
 block|}
 name|close
