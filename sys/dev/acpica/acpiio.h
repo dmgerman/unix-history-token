@@ -98,13 +98,13 @@ name|dcap
 decl_stmt|;
 comment|/* Design Capacity */
 name|u_int32_t
-name|btech
-decl_stmt|;
-comment|/* Battery Technorogy */
-name|u_int32_t
 name|lfcap
 decl_stmt|;
 comment|/* Last Full capacity */
+name|u_int32_t
+name|btech
+decl_stmt|;
+comment|/* Battery Technorogy */
 name|u_int32_t
 name|dvol
 decl_stmt|;
