@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fpe.c	1.1	86/01/03	*/
+comment|/*	fpe.c	1.2	89/05/05	*/
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
