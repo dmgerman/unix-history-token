@@ -2133,7 +2133,7 @@ name|sc
 operator|->
 name|acpi_sleep_delay
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|sc
 operator|->
