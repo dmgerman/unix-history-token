@@ -526,7 +526,6 @@ argument_list|,
 name|__getattr_bm
 argument_list|)
 expr_stmt|;
-comment|/*        FA4_SET(FA4_TIME_CREATE, __getattr_bm);*/
 name|FA4_SET
 argument_list|(
 name|FA4_TYPE
@@ -544,6 +543,13 @@ expr_stmt|;
 name|FA4_SET
 argument_list|(
 name|FA4_FILEID
+argument_list|,
+name|__readdir_bm
+argument_list|)
+expr_stmt|;
+name|FA4_SET
+argument_list|(
+name|FA4_RDATTR_ERROR
 argument_list|,
 name|__readdir_bm
 argument_list|)
@@ -6369,6 +6375,30 @@ operator|->
 name|fa4_valid
 operator||=
 name|FA4V_LEASE_TIME
+expr_stmt|;
+name|len
+operator|+=
+name|NFSX_UNSIGNED
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|FA4_ISSET
+argument_list|(
+name|FA4_RDATTR_ERROR
+argument_list|,
+name|bmval
+argument_list|)
+condition|)
+block|{
+comment|/* ignore for now; we only ask for it so the compound won't fail */
+name|NFSM_DISSECT
+argument_list|(
+name|NFSX_UNSIGNED
+argument_list|)
+expr_stmt|;
+name|tl
+operator|++
 expr_stmt|;
 name|len
 operator|+=
