@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.20 2002/07/05 11:07:24 benno Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.22 2003/01/12 21:03:37 obrien Exp   */
 end_comment
 
 begin_comment
@@ -378,6 +378,20 @@ define|#
 directive|define
 name|MII_STR_xxALTIMA_AC101
 value|"AC101 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_xxALTIMA_AC101L
+value|0x0012
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_xxALTIMA_AC101L
+value|"AC101L 10/100 media interface"
 end_define
 
 begin_comment
