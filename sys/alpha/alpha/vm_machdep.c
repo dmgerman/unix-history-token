@@ -253,15 +253,6 @@ name|sf_buf_alloc_want
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufspeak
-decl_stmt|,
-name|nsfbufsused
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
@@ -1540,7 +1531,7 @@ operator|++
 expr_stmt|;
 name|nsfbufspeak
 operator|=
-name|max
+name|imax
 argument_list|(
 name|nsfbufspeak
 argument_list|,

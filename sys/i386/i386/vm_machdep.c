@@ -397,15 +397,6 @@ name|sf_buf_alloc_want
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufspeak
-decl_stmt|,
-name|nsfbufsused
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * A lock used to synchronize access to the hash table and free list  */
 end_comment
@@ -2287,7 +2278,7 @@ operator|++
 expr_stmt|;
 name|nsfbufspeak
 operator|=
-name|max
+name|imax
 argument_list|(
 name|nsfbufspeak
 argument_list|,
@@ -2400,7 +2391,7 @@ operator|++
 expr_stmt|;
 name|nsfbufspeak
 operator|=
-name|max
+name|imax
 argument_list|(
 name|nsfbufspeak
 argument_list|,

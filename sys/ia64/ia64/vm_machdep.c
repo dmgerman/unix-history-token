@@ -227,15 +227,6 @@ name|sf_buf_alloc_want
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufspeak
-decl_stmt|,
-name|nsfbufsused
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|cpu_thread_exit
@@ -1643,7 +1634,7 @@ operator|++
 expr_stmt|;
 name|nsfbufspeak
 operator|=
-name|max
+name|imax
 argument_list|(
 name|nsfbufspeak
 argument_list|,
