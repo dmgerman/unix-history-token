@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.15	82/01/24	*/
+comment|/*	ioctl.h	4.16	82/02/08	*/
 end_comment
 
 begin_comment
@@ -327,6 +327,123 @@ end_define
 
 begin_comment
 comment|/* counting width of tab; leave LFLUSHO alone */
+end_comment
+
+begin_comment
+comment|/* modem control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLE
+value|0001
+end_define
+
+begin_comment
+comment|/* line enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDTR
+value|0002
+end_define
+
+begin_comment
+comment|/* data terminal ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRTS
+value|0004
+end_define
+
+begin_comment
+comment|/* request to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MST
+value|0010
+end_define
+
+begin_comment
+comment|/* secondary transmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR
+value|0020
+end_define
+
+begin_comment
+comment|/* secondary receive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCTS
+value|0040
+end_define
+
+begin_comment
+comment|/* clear to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAR
+value|0100
+end_define
+
+begin_comment
+comment|/* carrier detect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCD
+value|MCAR
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRNG
+value|0200
+end_define
+
+begin_comment
+comment|/* ring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRI
+value|MRNG
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDSR
+value|0400
+end_define
+
+begin_comment
+comment|/* data set ready */
 end_comment
 
 begin_comment
@@ -752,6 +869,50 @@ end_define
 
 begin_comment
 comment|/* start output, like ^Q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMSET
+value|(('t'<<8)|109)
+end_define
+
+begin_comment
+comment|/* set all modem bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMBIS
+value|(('t'<<8)|108)
+end_define
+
+begin_comment
+comment|/* bis modem bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMBIC
+value|(('t'<<8)|107)
+end_define
+
+begin_comment
+comment|/* bic modem bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMGET
+value|(('t'<<8)|106)
+end_define
+
+begin_comment
+comment|/* get all modem bits */
 end_comment
 
 begin_define
