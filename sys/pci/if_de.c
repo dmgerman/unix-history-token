@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_de.c,v 1.69 1998/06/08 06:55:55 thorpej Exp $	*/
+comment|/*	$NetBSD: if_de.c,v 1.72 1998/07/05 06:49:14 jonathan Exp $	*/
 end_comment
 
 begin_comment
@@ -16,6 +16,29 @@ define|#
 directive|define
 name|TULIP_HDR_DATA
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_ns.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -23131,49 +23154,13 @@ name|tulip_intrmask
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|tulip_flags
-operator|&
-name|TULIP_PROMISC
-operator|)
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|tulip_intrmask
-operator|&
-name|TULIP_STS_TXINTR
-condition|)
-block|{
-name|sc
-operator|->
-name|tulip_intrmask
-operator|&=
-operator|~
-name|TULIP_STS_TXINTR
-expr_stmt|;
-name|TULIP_CSR_WRITE
-argument_list|(
-name|sc
-argument_list|,
-name|csr_intr
-argument_list|,
-name|sc
-operator|->
-name|tulip_intrmask
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* this isn't working right yet */
+block|} else if ((sc->tulip_flags& TULIP_PROMISC) == 0) { 	if (sc->tulip_intrmask& TULIP_STS_TXINTR) { 	    sc->tulip_intrmask&= ~TULIP_STS_TXINTR; 	    TULIP_CSR_WRITE(sc, csr_intr, sc->tulip_intrmask); 	}
+endif|#
+directive|endif
 block|}
 name|TULIP_PERFEND
 argument_list|(
