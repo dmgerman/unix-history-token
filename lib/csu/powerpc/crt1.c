@@ -6,6 +6,12 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|lint
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__GNUC__
 end_ifndef
 
@@ -19,6 +25,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_include
 include|#
@@ -50,13 +65,6 @@ name|ps_strings
 struct_decl|;
 end_struct_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|_DYNAMIC
-end_pragma
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -64,10 +72,17 @@ name|_DYNAMIC
 decl_stmt|;
 end_decl_stmt
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_DYNAMIC
+end_pragma
+
 begin_function_decl
 specifier|extern
 name|void
-name|_init
+name|_fini
 parameter_list|(
 name|void
 parameter_list|)
@@ -77,7 +92,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|_fini
+name|_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -97,6 +112,41 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|_start
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|,
+name|struct
+name|ps_strings
 modifier|*
 parameter_list|)
 function_decl|;
@@ -178,56 +228,41 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The entry function.  *  * First 5 arguments are specified by the PowerPC SVR4 ABI.  * The last argument, ps_strings, is a BSD extension.  */
+comment|/* The entry function. */
 end_comment
 
-begin_decl_stmt
+begin_comment
+comment|/*  * First 5 arguments are specified by the PowerPC SVR4 ABI.  * The last argument, ps_strings, is a BSD extension.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
 name|void
 name|_start
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|envp
-argument_list|,
-name|obj
-argument_list|,
-name|cleanup
-argument_list|,
-name|ps_strings
-argument_list|)
+parameter_list|(
 name|int
 name|argc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 modifier|*
-name|envp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|env
+parameter_list|,
 specifier|const
 name|struct
 name|Struct_Obj_Entry
 modifier|*
 name|obj
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from shared loader */
-end_comment
-
-begin_function_decl
+name|__unused
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -236,31 +271,13 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* from shared loader */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|struct
 name|ps_strings
 modifier|*
 name|ps_strings
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* BSD extension */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
-name|char
-modifier|*
-name|namep
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -268,7 +285,7 @@ name|s
 decl_stmt|;
 name|environ
 operator|=
-name|envp
+name|env
 expr_stmt|;
 if|if
 condition|(
@@ -386,12 +403,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|envp
+name|env
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#

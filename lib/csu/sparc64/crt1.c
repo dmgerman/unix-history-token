@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 2001 David E. O'Brien  * All rights reserved.  * Copyright (c) 1995, 1998 Berkeley Software Design, Inc.  * All rights reserved.  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright 2001 David E. O'Brien.  * All rights reserved.  * Copyright (c) 1995, 1998 Berkeley Software Design, Inc.  * All rights reserved.  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -19,6 +25,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_include
 include|#
@@ -50,13 +65,6 @@ name|ps_strings
 struct_decl|;
 end_struct_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|_DYNAMIC
-end_pragma
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -64,10 +72,30 @@ name|_DYNAMIC
 decl_stmt|;
 end_decl_stmt
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_DYNAMIC
+end_pragma
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|fptr
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function_decl
 specifier|extern
 name|void
-name|_init
+name|_fini
 parameter_list|(
 name|void
 parameter_list|)
@@ -77,7 +105,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|_fini
+name|_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -105,7 +133,35 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__sparc64_sigtramp_setup
+name|_start
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|,
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+parameter_list|,
+name|struct
+name|ps_strings
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|__sparc_sigtramp_setup
 parameter_list|(
 name|void
 parameter_list|)
@@ -115,7 +171,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__sparc64_utrap_setup
+name|__sparc_utrap_setup
 parameter_list|(
 name|void
 parameter_list|)
@@ -190,11 +246,64 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Grab %g1 before it gets used for anything by the compiler.  * Sparc ELF psABI specifies a termination routine (if any) will be in  * %g1  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|fptr
+name|get_term
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fptr
+name|retval
+decl_stmt|;
+if|#
+directive|if
+literal|0
+ifdef|#
+directive|ifdef
+name|__GNUC__
+block|__asm__ volatile("mov %%g1,%0" : "=r"(retval));
+else|#
+directive|else
+block|retval = (fptr)0;
+comment|/* XXXX Fix this for other compilers */
+endif|#
+directive|endif
+else|#
+directive|else
+name|retval
+operator|=
+operator|(
+name|fptr
+operator|)
+literal|0
+expr_stmt|;
+comment|/* XXXX temporary */
+endif|#
+directive|endif
+return|return
+operator|(
+name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* The entry function. */
 end_comment
 
 begin_comment
-comment|/*  *  * %o0 holds ps_strings pointer.  For Solaris compat and/or shared  * libraries, if %g1 is not 0, it is a routine to pass to atexit().  * (By passing the pointer in the usual argument register, we avoid  * having to do any inline assembly, except to recover %g1.)  *  * Note: kernel may (is not set in stone yet) pass ELF aux vector in %o1,  * but for now we do not use it here.  */
+comment|/*  * %o0 holds ps_strings pointer.  For Solaris compat and/or shared  * libraries, if %g1 is not 0, it is a routine to pass to atexit().  * (By passing the pointer in the usual argument register, we avoid  * having to do any inline assembly, except to recover %g1.)  *  * Note: kernel may (is not set in stone yet) pass ELF aux vector in %o1,  * but for now we do not use it here.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -215,19 +324,28 @@ parameter_list|(
 name|void
 parameter_list|)
 parameter_list|,
-comment|/* from shared loader */
 name|struct
 name|Struct_Obj_Entry
 modifier|*
 name|obj
+name|__unused
 parameter_list|,
-comment|/* from shared loader */
 name|struct
 name|ps_strings
 modifier|*
 name|ps_strings
+name|__unused
 parameter_list|)
 block|{
+name|void
+function_decl|(
+modifier|*
+name|term
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 name|int
 name|argc
 decl_stmt|;
@@ -246,20 +364,20 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|void (*term)(void);
-comment|/* Grab %g1 before it gets used for anything by the compiler. */
-comment|/* Sparc ELF psABI specifies a termination routine (if any) will be in 	   %g1 */
-block|__asm__ volatile("mov %%g1,%0" : "=r"(term));
-endif|#
-directive|endif
+name|term
+operator|=
+name|get_term
+argument_list|()
+expr_stmt|;
 name|argc
 operator|=
 operator|*
 operator|(
 name|long
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|ap
@@ -337,13 +455,16 @@ expr_stmt|;
 name|__sparc_utrap_setup
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* 	 * If the kernel or a shared library wants us to call 	 * a termination function, arrange to do so. 	 */
-block|if (term) 		atexit(term);
-endif|#
-directive|endif
+if|if
+condition|(
+name|term
+condition|)
+name|atexit
+argument_list|(
+name|term
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|&

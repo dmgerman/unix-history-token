@@ -6,6 +6,12 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|lint
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__GNUC__
 end_ifndef
 
@@ -19,6 +25,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_include
 include|#
@@ -67,7 +82,7 @@ end_decl_stmt
 begin_function_decl
 specifier|extern
 name|void
-name|_init
+name|_fini
 parameter_list|(
 name|void
 parameter_list|)
@@ -77,7 +92,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|_fini
+name|_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -98,6 +113,30 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|_start
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|ps_strings
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -169,8 +208,31 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|fix_gp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
+comment|/* Calculate gp */
+asm|__asm __volatile(" \ 		movl gp=@gprel(1f) ; \ 		;; ; \ 	     1: mov r14=ip ; \ 		;; ; \ 		sub gp=r14,gp ; \ 		;; ");
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_comment
 comment|/* The entry function. */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -186,6 +248,7 @@ name|struct
 name|ps_strings
 modifier|*
 name|ps_strings
+name|__unused
 parameter_list|,
 name|void
 function_decl|(
@@ -215,13 +278,18 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-comment|/* Calculate gp */
-asm|__asm __volatile(" \ 		movl gp=@gprel(1f) ; \ 		;; ; \ 	     1: mov r14=ip ; \ 		;; ; \ 		sub gp=r14,gp ; \ 		;; ");
+name|fix_gp
+argument_list|()
+expr_stmt|;
 name|argc
 operator|=
 operator|*
 operator|(
 name|long
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|ap
