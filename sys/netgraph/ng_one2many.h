@@ -155,7 +155,7 @@ name|NG_ONE2MANY_CONFIG_TYPE_INFO
 parameter_list|(
 name|atype
 parameter_list|)
-value|{		\ 	{							\ 	  { "xmitAlg",&ng_parse_uint64_type	},	\ 	  { "failAlg",&ng_parse_uint64_type	},	\ 	  { "enabledLinks",	(atype)			},	\ 	  { NULL }						\ 	}							\ }
+value|{		\ 	{							\ 	  { "xmitAlg",&ng_parse_uint32_type	},	\ 	  { "failAlg",&ng_parse_uint32_type	},	\ 	  { "enabledLinks",	(atype)			},	\ 	  { NULL }						\ 	}							\ }
 end_define
 
 begin_comment
