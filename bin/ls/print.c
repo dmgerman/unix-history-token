@@ -2826,13 +2826,11 @@ operator|!
 name|legacy_warn
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"warn: LSCOLORS should use "
+literal|"LSCOLORS should use "
 literal|"characters a-h instead of 0-9 ("
-literal|"see the manual page)\n"
+literal|"see the manual page)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2952,12 +2950,10 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"error: invalid character '%c' in LSCOLORS"
-literal|" env var\n"
+literal|"invalid character '%c' in LSCOLORS"
+literal|" env var"
 argument_list|,
 name|c
 index|[

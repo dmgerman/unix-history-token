@@ -1431,14 +1431,9 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Color support not compiled in.\n"
+literal|"color support not compiled in"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3023,20 +3018,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|cur
 operator|->
 name|fts_name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3123,8 +3111,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|cur
 operator|->
 name|fts_name
@@ -3157,20 +3147,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|cur
 operator|->
 name|fts_name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|mac_free
