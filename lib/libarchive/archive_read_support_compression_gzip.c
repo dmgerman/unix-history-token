@@ -9,16 +9,6 @@ directive|include
 file|"archive_platform.h"
 end_include
 
-begin_comment
-comment|/* Don't compile this if we don't have zlib. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|HAVE_ZLIB_H
-end_if
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -51,21 +41,22 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ZLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<zlib.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_comment
-comment|/* zlib.h is borked, so must precede err.h */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -78,6 +69,12 @@ include|#
 directive|include
 file|"archive_private.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ZLIB_H
+end_ifdef
 
 begin_struct
 struct|struct
@@ -116,43 +113,11 @@ end_struct
 begin_function_decl
 specifier|static
 name|int
-name|bid
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|finish
 parameter_list|(
 name|struct
 name|archive
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|init
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -203,6 +168,47 @@ parameter_list|,
 name|struct
 name|private_data
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* These two functions are defined even if we lack zlib.  See below. */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|bid
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|init
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -410,6 +416,76 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ZLIB_H
+end_ifndef
+
+begin_comment
+comment|/*  * If we don't have zlib on this system, we can't actually do the  * decompression.  We can, however, still detect gzip-compressed  * archives and emit a useful message.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|init
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|buff
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|buff
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|n
+expr_stmt|;
+comment|/* UNUSED */
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"This version of libarchive was compiled without gzip support"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/*  * Setup the callbacks.  */
@@ -1044,16 +1120,12 @@ name|stream
 operator|.
 name|next_out
 condition|)
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Internal error: Request to consume too many "
-literal|"bytes from %s decompressor.\n"
-argument_list|,
-name|a
-operator|->
-name|compression_name
+literal|"Request to consume too many "
+literal|"bytes from gzip decompressor"
 argument_list|)
 expr_stmt|;
 return|return

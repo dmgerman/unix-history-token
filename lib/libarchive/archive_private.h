@@ -728,6 +728,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|__archive_errx
+parameter_list|(
+name|int
+name|retvalue
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

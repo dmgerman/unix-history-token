@@ -7836,12 +7836,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|wch
-operator|<
-name|WCHAR_MAX
-condition|)
+comment|/* Assign the value to the output; out-of-range values 		 * just get truncated. */
 operator|*
 name|pwc
 operator|=
@@ -7850,12 +7845,23 @@ name|wchar_t
 operator|)
 name|wch
 expr_stmt|;
-else|else
+ifdef|#
+directive|ifdef
+name|WCHAR_MAX
+comment|/* 		 * If platform has WCHAR_MAX, we can do something 		 * more sensible with out-of-range values. 		 */
+if|if
+condition|(
+name|wch
+operator|>=
+name|WCHAR_MAX
+condition|)
 operator|*
 name|pwc
 operator|=
 literal|'?'
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(

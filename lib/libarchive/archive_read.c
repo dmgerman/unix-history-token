@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -301,11 +295,11 @@ name|reader
 operator|==
 name|NULL
 condition|)
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Fatal: No reader function provided to archive_read_open"
+literal|"No reader function provided to archive_read_open"
 argument_list|)
 expr_stmt|;
 name|a
@@ -621,11 +615,11 @@ name|best_bid_slot
 operator|<
 literal|0
 condition|)
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Fatal: No decompressors were registered; you "
+literal|"No decompressors were registered; you "
 literal|"must call at least one "
 literal|"archive_read_support_compression_XXX function in order "
 literal|"to successfully read an archive."
@@ -1089,11 +1083,11 @@ name|best_bid_slot
 operator|<
 literal|0
 condition|)
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Fatal: No formats were registered; you must "
+literal|"No formats were registered; you must "
 literal|"invoke at least one archive_read_support_format_XXX "
 literal|"function in order to successfully read an archive."
 argument_list|)
@@ -2037,13 +2031,19 @@ operator|)
 return|;
 block|}
 block|}
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Fatal: Not enough slots for format registration"
+literal|"Not enough slots for format registration"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+comment|/* Never actually called. */
 block|}
 end_function
 
@@ -2200,13 +2200,19 @@ operator|)
 return|;
 block|}
 block|}
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Fatal: Not enough slots for compression registration"
+literal|"Not enough slots for compression registration"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+comment|/* Never actually executed. */
 block|}
 end_function
 

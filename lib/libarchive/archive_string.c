@@ -24,12 +24,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"archive_private.h"
 end_include
 
 begin_include
@@ -237,6 +237,7 @@ operator|->
 name|buffer_length
 argument_list|)
 expr_stmt|;
+comment|/* TODO: Return null instead and fix up all of our callers to 	 * handle this correctly. */
 if|if
 condition|(
 name|as
@@ -245,7 +246,7 @@ name|s
 operator|==
 name|NULL
 condition|)
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,

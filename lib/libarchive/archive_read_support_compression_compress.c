@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -1131,16 +1125,12 @@ name|state
 operator|->
 name|next_out
 condition|)
-name|errx
+name|__archive_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Internal error: Request to consume too many "
-literal|"bytes from %s decompressor.\n"
-argument_list|,
-name|a
-operator|->
-name|compression_name
+literal|"Request to consume too many "
+literal|"bytes from compress decompressor"
 argument_list|)
 expr_stmt|;
 return|return
