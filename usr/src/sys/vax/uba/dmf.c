@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	6.3	84/08/30	*/
+comment|/*	dmf.c	6.4	84/12/20	*/
 end_comment
 
 begin_include
@@ -1770,6 +1770,18 @@ operator|||
 name|cmd
 operator|==
 name|TIOCSETN
+operator|||
+name|cmd
+operator|==
+name|TIOCLBIS
+operator|||
+name|cmd
+operator|==
+name|TIOCLBIC
+operator|||
+name|cmd
+operator|==
+name|TIOCLSET
 condition|)
 name|dmfparam
 argument_list|(
