@@ -1376,12 +1376,6 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-name|bp
-operator|->
-name|bio_flags
-operator||=
-name|BIO_ONQUEUE
-expr_stmt|;
 comment|/* 	 * XXX: next two doesn't belong here 	 */
 name|bp
 operator|->
@@ -1494,6 +1488,12 @@ name|bp
 argument_list|,
 name|bio_queue
 argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|bio_flags
+operator||=
+name|BIO_ONQUEUE
 expr_stmt|;
 name|g_bio_run_up
 operator|.
