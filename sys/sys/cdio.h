@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.5 1994/01/29 10:31:20 rgrimes Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.6 1994/02/05 09:14:24 swallace Exp $  */
+end_comment
+
+begin_comment
+comment|/*<1>	Fixed a conflict with ioctl usage.  There were two different 	functions using code #25.  Made file formatting consistent. 	Added two new ioctl codes: door closing and audio pitch playback. 	Added a STEREO union called STEREO. 	5-Mar-95  Frank Durda IV	bsdmail@nemesis.lonestar.org<2>	Added a new ioctl that allows you to find out what capabilities 	a drive has and what commands it will accept.  This allows a 	user application to only offer controls (buttons, sliders, etc) 	for functions that drive can actually do.   Things it can't do 	can disappear or be greyed-out (like some other system). 	If the driver doesn't respond to this call, well, handle it the 	way you used to do it. 	2-Apr-95  Frank Durda IV	bsdmail@nemesis.lonestar.org */
 end_comment
 
 begin_comment
@@ -503,6 +507,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CDIOCSETSTEREO
+value|_IO('c',13)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CDIOCSETMUTE
 value|_IO('c',14)
 end_define
@@ -577,20 +588,6 @@ name|CDIOCEJECT
 value|_IO('c',24)
 end_define
 
-begin_define
-define|#
-directive|define
-name|CDIOCALLOW
-value|_IO('c',25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDIOCPREVENT
-value|_IO('c',26)
-end_define
-
 begin_struct
 struct|struct
 name|ioc_play_msf
@@ -623,6 +620,241 @@ directive|define
 name|CDIOCPLAYMSF
 value|_IOW('c',25,struct ioc_play_msf)
 end_define
+
+begin_define
+define|#
+directive|define
+name|CDIOCALLOW
+value|_IO('c',26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDIOCPREVENT
+value|_IO('c',27)
+end_define
+
+begin_comment
+comment|/*<1>For drives that support it, this*/
+end_comment
+
+begin_comment
+comment|/*<1>causes the drive to close its door*/
+end_comment
+
+begin_comment
+comment|/*<1>and make the media (if any) ready*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDIOCCLOSE
+value|_IO('c',28)
+end_define
+
+begin_comment
+comment|/*<1>*/
+end_comment
+
+begin_struct
+struct|struct
+name|ioc_pitch
+comment|/*<1>For drives that support it, this*/
+block|{
+comment|/*<1>call instructs the drive to play the*/
+name|short
+name|speed
+decl_stmt|;
+comment|/*<1>audio at a faster or slower-than-normal*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*<1>rate. -32767 to -1 is slower, 0==normal,*/
+end_comment
+
+begin_comment
+comment|/*<1>and 1 to 32767 is faster.  LSB bits are*/
+end_comment
+
+begin_comment
+comment|/*<1>discarded first by drives with less res.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDIOCPITCH
+value|_IOW('c',29,struct ioc_pitch)
+end_define
+
+begin_comment
+comment|/*<1>*/
+end_comment
+
+begin_struct
+struct|struct
+name|ioc_capability
+block|{
+comment|/*<2>*/
+name|u_long
+name|play_function
+decl_stmt|;
+comment|/*<2>*/
+define|#
+directive|define
+name|CDDOPLAYTRK
+value|0x00000001
+comment|/*<2>Can Play tracks/index*/
+define|#
+directive|define
+name|CDDOPLAYMSF
+value|0x00000002
+comment|/*<2>Can Play msf to msf*/
+define|#
+directive|define
+name|CDDOPLAYBLOCKS
+value|0x00000004
+comment|/*<2>Can Play range of blocks*/
+define|#
+directive|define
+name|CDDOPAUSE
+value|0x00000100
+comment|/*<2>Output can be paused*/
+define|#
+directive|define
+name|CDDORESUME
+value|0x00000200
+comment|/*<2>Output can be resumed*/
+define|#
+directive|define
+name|CDDORESET
+value|0x00000400
+comment|/*<2>Drive can be completely reset*/
+define|#
+directive|define
+name|CDDOSTART
+value|0x00000800
+comment|/*<2>Audio can be started*/
+define|#
+directive|define
+name|CDDOSTOP
+value|0x00001000
+comment|/*<2>Audio can be stopped*/
+define|#
+directive|define
+name|CDDOPITCH
+value|0x00002000
+comment|/*<2>Audio pitch */
+name|u_long
+name|routing_function
+decl_stmt|;
+comment|/*<2>*/
+define|#
+directive|define
+name|CDREADVOLUME
+value|0x00000001
+comment|/*<2>Volume settings can be read*/
+define|#
+directive|define
+name|CDSETVOLUME
+value|0x00000002
+comment|/*<2>Volume settings can be set*/
+define|#
+directive|define
+name|CDSETMONO
+value|0x00000100
+comment|/*<2>Output can be set to mono*/
+define|#
+directive|define
+name|CDSETSTEREO
+value|0x00000200
+comment|/*<2>Output can be set to stereo (def)*/
+define|#
+directive|define
+name|CDSETLEFT
+value|0x00000400
+comment|/*<2>Output can be set to left only*/
+define|#
+directive|define
+name|CDSETRIGHT
+value|0x00000800
+comment|/*<2>Output can be set to right only*/
+define|#
+directive|define
+name|CDSETMUTE
+value|0x00001000
+comment|/*<2>Output can be muted*/
+define|#
+directive|define
+name|CDSETPATCH
+value|0x00008000
+comment|/*<2>Direct routing countrol allowed*/
+name|u_long
+name|special_function
+decl_stmt|;
+comment|/*<2>*/
+define|#
+directive|define
+name|CDDOEJECT
+value|0x00000001
+comment|/*<2>The tray can be opened*/
+define|#
+directive|define
+name|CDDOCLOSE
+value|0x00000002
+comment|/*<2>The tray can be closed*/
+define|#
+directive|define
+name|CDDOLOCK
+value|0x00000004
+comment|/*<2>The tray can be locked*/
+define|#
+directive|define
+name|CDREADHEADER
+value|0x00000100
+comment|/*<2>Can read Table of Contents*/
+define|#
+directive|define
+name|CDREADENTRIES
+value|0x00000200
+comment|/*<2>Can read TOC Entries*/
+define|#
+directive|define
+name|CDREADSUBQ
+value|0x00000200
+comment|/*<2>Can read Subchannel info*/
+define|#
+directive|define
+name|CDREADRW
+value|0x00000400
+comment|/*<2>Can read subcodes R-W*/
+define|#
+directive|define
+name|CDHASDEBUG
+value|0x00004000
+comment|/*<2>The tray has dynamic debugging*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*<2>*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDIOCCAPABILITY
+value|_IOR('c',30,struct ioc_capability)
+end_define
+
+begin_comment
+comment|/*<2>*/
+end_comment
 
 begin_endif
 endif|#
