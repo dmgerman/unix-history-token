@@ -1180,7 +1180,7 @@ operator|*
 name|p
 operator|++
 operator|=
-name|toupper
+name|tolower
 argument_list|(
 operator|(
 name|unsigned
@@ -1211,7 +1211,7 @@ operator|*
 name|p
 operator|++
 operator|=
-name|toupper
+name|tolower
 argument_list|(
 operator|(
 name|unsigned
