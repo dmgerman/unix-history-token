@@ -3064,8 +3064,6 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|k
-decl_stmt|,
-name|l
 decl_stmt|;
 name|int
 name|t
