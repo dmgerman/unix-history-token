@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 19 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 24 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -33,14 +33,14 @@ value|ACPI_RESOURCES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"rsirq"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - Pointer to where the number of bytes  *                                        consumed the ByteStreamBuffer is  *                                        returned  *              OutputBuffer            - Pointer to the return data buffer  *              StructureSize           - Pointer to where the number of bytes  *                                        in the return data struct is returned  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -51,7 +51,7 @@ name|UINT8
 modifier|*
 name|ByteStreamBuffer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|BytesConsumed
 parameter_list|,
@@ -60,7 +60,7 @@ modifier|*
 modifier|*
 name|OutputBuffer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|StructureSize
 parameter_list|)
@@ -98,15 +98,15 @@ decl_stmt|;
 name|UINT8
 name|i
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|StructSize
 init|=
-name|SIZEOF_RESOURCE
+name|ACPI_SIZEOF_RESOURCE
 argument_list|(
 name|ACPI_RESOURCE_IRQ
 argument_list|)
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsIrqResource"
 argument_list|)
@@ -139,7 +139,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -266,7 +266,7 @@ name|Irq
 operator|.
 name|EdgeLevel
 operator|=
-name|EDGE_SENSITIVE
+name|ACPI_EDGE_SENSITIVE
 expr_stmt|;
 name|OutputStruct
 operator|->
@@ -276,7 +276,7 @@ name|Irq
 operator|.
 name|ActiveHighLow
 operator|=
-name|ACTIVE_HIGH
+name|ACPI_ACTIVE_HIGH
 expr_stmt|;
 block|}
 else|else
@@ -296,7 +296,7 @@ name|Irq
 operator|.
 name|EdgeLevel
 operator|=
-name|LEVEL_SENSITIVE
+name|ACPI_LEVEL_SENSITIVE
 expr_stmt|;
 name|OutputStruct
 operator|->
@@ -306,7 +306,7 @@ name|Irq
 operator|.
 name|ActiveHighLow
 operator|=
-name|ACTIVE_LOW
+name|ACPI_ACTIVE_LOW
 expr_stmt|;
 block|}
 else|else
@@ -348,7 +348,7 @@ name|Irq
 operator|.
 name|EdgeLevel
 operator|=
-name|EDGE_SENSITIVE
+name|ACPI_EDGE_SENSITIVE
 expr_stmt|;
 name|OutputStruct
 operator|->
@@ -358,7 +358,7 @@ name|Irq
 operator|.
 name|ActiveHighLow
 operator|=
-name|ACTIVE_HIGH
+name|ACPI_ACTIVE_HIGH
 expr_stmt|;
 name|OutputStruct
 operator|->
@@ -368,7 +368,7 @@ name|Irq
 operator|.
 name|SharedExclusive
 operator|=
-name|EXCLUSIVE
+name|ACPI_EXCLUSIVE
 expr_stmt|;
 block|}
 comment|/*      * Set the Length parameter      */
@@ -393,7 +393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - Pointer to where the number of bytes  *                                        used in the OutputBuffer is returned  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -409,7 +409,7 @@ modifier|*
 modifier|*
 name|OutputBuffer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|BytesConsumed
 parameter_list|)
@@ -437,7 +437,7 @@ decl_stmt|;
 name|BOOLEAN
 name|IRQInfoByteNeeded
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsIrqStream"
 argument_list|)
@@ -445,7 +445,7 @@ expr_stmt|;
 comment|/*      * The descriptor field is set based upon whether a third byte is      * needed to contain the IRQ Information.      */
 if|if
 condition|(
-name|EDGE_SENSITIVE
+name|ACPI_EDGE_SENSITIVE
 operator|==
 name|LinkedList
 operator|->
@@ -455,7 +455,7 @@ name|Irq
 operator|.
 name|EdgeLevel
 operator|&&
-name|ACTIVE_HIGH
+name|ACPI_ACTIVE_HIGH
 operator|==
 name|LinkedList
 operator|->
@@ -465,7 +465,7 @@ name|Irq
 operator|.
 name|ActiveHighLow
 operator|&&
-name|EXCLUSIVE
+name|ACPI_EXCLUSIVE
 operator|==
 name|LinkedList
 operator|->
@@ -550,7 +550,7 @@ operator|<<
 name|Temp8
 expr_stmt|;
 block|}
-name|MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -595,7 +595,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LEVEL_SENSITIVE
+name|ACPI_LEVEL_SENSITIVE
 operator|==
 name|LinkedList
 operator|->
@@ -605,7 +605,7 @@ name|Irq
 operator|.
 name|EdgeLevel
 operator|&&
-name|ACTIVE_LOW
+name|ACPI_ACTIVE_LOW
 operator|==
 name|LinkedList
 operator|->
@@ -642,7 +642,7 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-name|POINTER_DIFF
+name|ACPI_PTR_DIFF
 argument_list|(
 name|Buffer
 argument_list|,
@@ -659,7 +659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - Pointer to where the number of bytes  *                                        consumed the ByteStreamBuffer is  *                                        returned  *              OutputBuffer            - Pointer to the return data buffer  *              StructureSize           - Pointer to where the number of bytes  *                                        in the return data struct is returned  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -670,7 +670,7 @@ name|UINT8
 modifier|*
 name|ByteStreamBuffer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|BytesConsumed
 parameter_list|,
@@ -679,7 +679,7 @@ modifier|*
 modifier|*
 name|OutputBuffer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|StructureSize
 parameter_list|)
@@ -718,15 +718,15 @@ decl_stmt|;
 name|UINT8
 name|Index
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|StructSize
 init|=
-name|SIZEOF_RESOURCE
+name|ACPI_SIZEOF_RESOURCE
 argument_list|(
 name|ACPI_RESOURCE_EXT_IRQ
 argument_list|)
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsExtendedIrqResource"
 argument_list|)
@@ -736,7 +736,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -779,14 +779,7 @@ name|Temp8
 operator|&
 literal|0x01
 expr_stmt|;
-comment|/*      * Check for HE, LL or HL      */
-if|if
-condition|(
-name|Temp8
-operator|&
-literal|0x02
-condition|)
-block|{
+comment|/*      * Check for Interrupt Mode      *      * The definition of an Extended IRQ changed between ACPI spec v1.0b      * and ACPI spec 2.0 (section 6.4.3.6 in both).      *      * - Edge/Level are defined opposite in the table vs the headers      */
 name|OutputStruct
 operator|->
 name|Data
@@ -795,38 +788,17 @@ name|ExtendedIrq
 operator|.
 name|EdgeLevel
 operator|=
-name|EDGE_SENSITIVE
-expr_stmt|;
-name|OutputStruct
-operator|->
-name|Data
-operator|.
-name|ExtendedIrq
-operator|.
-name|ActiveHighLow
-operator|=
-name|ACTIVE_HIGH
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
+operator|(
 name|Temp8
 operator|&
-literal|0x4
-condition|)
-block|{
-name|OutputStruct
-operator|->
-name|Data
-operator|.
-name|ExtendedIrq
-operator|.
-name|EdgeLevel
-operator|=
-name|LEVEL_SENSITIVE
+literal|0x2
+operator|)
+condition|?
+name|ACPI_EDGE_SENSITIVE
+else|:
+name|ACPI_LEVEL_SENSITIVE
 expr_stmt|;
+comment|/*      * Check Interrupt Polarity      */
 name|OutputStruct
 operator|->
 name|Data
@@ -835,19 +807,14 @@ name|ExtendedIrq
 operator|.
 name|ActiveHighLow
 operator|=
-name|ACTIVE_LOW
+operator|(
+name|Temp8
+operator|>>
+literal|2
+operator|)
+operator|&
+literal|0x1
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*              * Only _LL and _HE polarity/trigger interrupts              * are allowed (ACPI spec v1.0b ection 6.4.2.1),              * so an error will occur if we reach this point              */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_DATA
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/*      * Check for sharable      */
 name|OutputStruct
 operator|->
@@ -1088,7 +1055,7 @@ argument_list|)
 expr_stmt|;
 name|StructSize
 operator|+=
-name|ROUND_UP_TO_32BITS
+name|ACPI_ROUND_UP_TO_32BITS
 argument_list|(
 name|Temp8
 argument_list|)
@@ -1155,7 +1122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - Pointer to where the number of bytes  *                                        used in the OutputBuffer is returned  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1171,7 +1138,7 @@ modifier|*
 modifier|*
 name|OutputBuffer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|BytesConsumed
 parameter_list|)
@@ -1201,7 +1168,7 @@ name|TempPointer
 init|=
 name|NULL
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsExtendedIrqStream"
 argument_list|)
@@ -1265,9 +1232,10 @@ operator|<<
 literal|3
 operator|)
 expr_stmt|;
+comment|/*      * Set the Interrupt Mode      *      * The definition of an Extended IRQ changed between ACPI spec v1.0b      * and ACPI spec 2.0 (section 6.4.3.6 in both).  This code does not      * implement the more restrictive definition of 1.0b      *      * - Edge/Level are defined opposite in the table vs the headers      */
 if|if
 condition|(
-name|LEVEL_SENSITIVE
+name|ACPI_EDGE_SENSITIVE
 operator|==
 name|LinkedList
 operator|->
@@ -1276,9 +1244,18 @@ operator|.
 name|ExtendedIrq
 operator|.
 name|EdgeLevel
-operator|&&
-name|ACTIVE_LOW
-operator|==
+condition|)
+block|{
+name|Temp8
+operator||=
+literal|0x2
+expr_stmt|;
+block|}
+comment|/*      * Set the Interrupt Polarity      */
+name|Temp8
+operator||=
+operator|(
+operator|(
 name|LinkedList
 operator|->
 name|Data
@@ -1286,20 +1263,13 @@ operator|.
 name|ExtendedIrq
 operator|.
 name|ActiveHighLow
-condition|)
-block|{
-name|Temp8
-operator||=
-literal|0x04
+operator|&
+literal|0x1
+operator|)
+operator|<<
+literal|2
+operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|Temp8
-operator||=
-literal|0x02
-expr_stmt|;
-block|}
 operator|*
 name|Buffer
 operator|=
@@ -1352,7 +1322,7 @@ name|Index
 operator|++
 control|)
 block|{
-name|MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1419,7 +1389,7 @@ operator|)
 name|Buffer
 expr_stmt|;
 comment|/*          * Copy the string          */
-name|STRCPY
+name|ACPI_STRCPY
 argument_list|(
 name|TempPointer
 argument_list|,
@@ -1438,7 +1408,7 @@ comment|/*          * Buffer needs to be set to the length of the sting + one fo
 name|Buffer
 operator|+=
 operator|(
-name|STRLEN
+name|ACPI_STRLEN
 argument_list|(
 name|LinkedList
 operator|->
@@ -1459,7 +1429,7 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-name|POINTER_DIFF
+name|ACPI_PTR_DIFF
 argument_list|(
 name|Buffer
 argument_list|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 36 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -22,19 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actbl.h"
 end_include
 
 begin_define
@@ -45,7 +33,7 @@ value|ACPI_TABLES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"tbconvrt"
 argument_list|)
@@ -71,7 +59,7 @@ block|{
 name|UINT32
 name|PointerSize
 decl_stmt|;
-name|FUNCTION_ENTRY
+name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
 ifndef|#
@@ -153,9 +141,10 @@ name|XSDT_DESCRIPTOR
 modifier|*
 name|NewTable
 decl_stmt|;
-name|FUNCTION_ENTRY
+name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
+comment|/* Get the number of tables defined in the RSDT or XSDT */
 operator|*
 name|NumberOfTables
 operator|=
@@ -207,7 +196,7 @@ operator|)
 return|;
 block|}
 comment|/* Copy the header and set the length */
-name|MEMCPY
+name|ACPI_MEMCPY
 argument_list|(
 name|NewTable
 argument_list|,
@@ -254,33 +243,6 @@ operator|<
 literal|2
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|_IA64
-name|NewTable
-operator|->
-name|TableOffsetEntry
-index|[
-name|i
-index|]
-operator|=
-operator|(
-operator|(
-name|RSDT_DESCRIPTOR_REV071
-operator|*
-operator|)
-name|TableInfo
-operator|->
-name|Pointer
-operator|)
-operator|->
-name|TableOffsetEntry
-index|[
-name|i
-index|]
-expr_stmt|;
-else|#
-directive|else
 name|ACPI_STORE_ADDRESS
 argument_list|(
 name|NewTable
@@ -306,8 +268,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -383,7 +343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertTableFadt  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *    Converts BIOS supplied 1.0 and 0.71 ACPI FADT to an intermediate  *    ACPI 2.0 FADT. If the BIOS supplied a 2.0 FADT then it is simply  *    copied to the intermediate FADT.  The ACPI CA software uses this  *    intermediate FADT. Thus a significant amount of special #ifdef  *    type codeing is saved. This intermediate FADT will need to be  *    freed at some point.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertTableFadt  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION:  *    Converts a BIOS supplied ACPI 1.0 FADT to an intermediate  *    ACPI 2.0 FADT. If the BIOS supplied a 2.0 FADT then it is simply  *    copied to the intermediate FADT.  The ACPI CA software uses this  *    intermediate FADT. Thus a significant amount of special #ifdef  *    type codeing is saved. This intermediate FADT will need to be  *    freed at some point.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -393,36 +353,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|_IA64
-name|FADT_DESCRIPTOR_REV071
-modifier|*
-name|FADT71
-decl_stmt|;
-name|UINT8
-name|Pm1AddressSpace
-decl_stmt|;
-name|UINT8
-name|Pm2AddressSpace
-decl_stmt|;
-name|UINT8
-name|PmTimerAddressSpace
-decl_stmt|;
-name|UINT8
-name|Gpe0AddressSpace
-decl_stmt|;
-name|UINT8
-name|Gpe1AddressSpace
-decl_stmt|;
-else|#
-directive|else
 name|FADT_DESCRIPTOR_REV1
 modifier|*
 name|FADT1
 decl_stmt|;
-endif|#
-directive|endif
 name|FADT_DESCRIPTOR_REV2
 modifier|*
 name|FADT2
@@ -431,13 +365,12 @@ name|ACPI_TABLE_DESC
 modifier|*
 name|TableDesc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"TbConvertTableFadt"
 argument_list|)
 expr_stmt|;
-comment|/* AcpiGbl_FADT is valid */
-comment|/* Allocate and zero the 2.0 buffer */
+comment|/*      * AcpiGbl_FADT is valid      * Allocate and zero the 2.0 FADT buffer      */
 name|FADT2
 operator|=
 name|ACPI_MEM_CALLOCATE
@@ -461,13 +394,12 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The ACPI FADT revision number is FADT2_REVISION_ID=3 */
-comment|/* So, if the current table revision is less than 3 it is type 1.0 or 0.71 */
+comment|/*      * The ACPI FADT revision number is FADT2_REVISION_ID=3      * So, if the current table revision is less than 3 it is type 1.0      */
 if|if
 condition|(
 name|AcpiGbl_FADT
 operator|->
-name|header
+name|Header
 operator|.
 name|Revision
 operator|>=
@@ -490,548 +422,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|_IA64
-comment|/*          * For the 64-bit case only, a revision ID less than V2.0 means the          * tables are the 0.71 extensions          */
-comment|/* The BIOS stored FADT should agree with Revision 0.71 */
-name|FADT71
-operator|=
-operator|(
-name|FADT_DESCRIPTOR_REV071
-operator|*
-operator|)
-name|AcpiGbl_FADT
-expr_stmt|;
-comment|/* Copy the table header*/
-name|FADT2
-operator|->
-name|header
-operator|=
-name|FADT71
-operator|->
-name|header
-expr_stmt|;
-comment|/* Copy the common fields */
-name|FADT2
-operator|->
-name|SciInt
-operator|=
-name|FADT71
-operator|->
-name|SciInt
-expr_stmt|;
-name|FADT2
-operator|->
-name|AcpiEnable
-operator|=
-name|FADT71
-operator|->
-name|AcpiEnable
-expr_stmt|;
-name|FADT2
-operator|->
-name|AcpiDisable
-operator|=
-name|FADT71
-operator|->
-name|AcpiDisable
-expr_stmt|;
-name|FADT2
-operator|->
-name|S4BiosReq
-operator|=
-name|FADT71
-operator|->
-name|S4BiosReq
-expr_stmt|;
-name|FADT2
-operator|->
-name|Plvl2Lat
-operator|=
-name|FADT71
-operator|->
-name|Plvl2Lat
-expr_stmt|;
-name|FADT2
-operator|->
-name|Plvl3Lat
-operator|=
-name|FADT71
-operator|->
-name|Plvl3Lat
-expr_stmt|;
-name|FADT2
-operator|->
-name|DayAlrm
-operator|=
-name|FADT71
-operator|->
-name|DayAlrm
-expr_stmt|;
-name|FADT2
-operator|->
-name|MonAlrm
-operator|=
-name|FADT71
-operator|->
-name|MonAlrm
-expr_stmt|;
-name|FADT2
-operator|->
-name|Century
-operator|=
-name|FADT71
-operator|->
-name|Century
-expr_stmt|;
-name|FADT2
-operator|->
-name|Gpe1Base
-operator|=
-name|FADT71
-operator|->
-name|Gpe1Base
-expr_stmt|;
-comment|/*          * We still use the block length registers even though          * the GAS structure should obsolete them.  This is because          * these registers are byte lengths versus the GAS which          * contains a bit width          */
-name|FADT2
-operator|->
-name|Pm1EvtLen
-operator|=
-name|FADT71
-operator|->
-name|Pm1EvtLen
-expr_stmt|;
-name|FADT2
-operator|->
-name|Pm1CntLen
-operator|=
-name|FADT71
-operator|->
-name|Pm1CntLen
-expr_stmt|;
-name|FADT2
-operator|->
-name|Pm2CntLen
-operator|=
-name|FADT71
-operator|->
-name|Pm2CntLen
-expr_stmt|;
-name|FADT2
-operator|->
-name|PmTmLen
-operator|=
-name|FADT71
-operator|->
-name|PmTmLen
-expr_stmt|;
-name|FADT2
-operator|->
-name|Gpe0BlkLen
-operator|=
-name|FADT71
-operator|->
-name|Gpe0BlkLen
-expr_stmt|;
-name|FADT2
-operator|->
-name|Gpe1BlkLen
-operator|=
-name|FADT71
-operator|->
-name|Gpe1BlkLen
-expr_stmt|;
-name|FADT2
-operator|->
-name|Gpe1Base
-operator|=
-name|FADT71
-operator|->
-name|Gpe1Base
-expr_stmt|;
-comment|/* Copy the existing 0.71 flags to 2.0. The other bits are zero.*/
-name|FADT2
-operator|->
-name|WbInvd
-operator|=
-name|FADT71
-operator|->
-name|FlushCash
-expr_stmt|;
-name|FADT2
-operator|->
-name|ProcC1
-operator|=
-name|FADT71
-operator|->
-name|ProcC1
-expr_stmt|;
-name|FADT2
-operator|->
-name|Plvl2Up
-operator|=
-name|FADT71
-operator|->
-name|Plvl2Up
-expr_stmt|;
-name|FADT2
-operator|->
-name|PwrButton
-operator|=
-name|FADT71
-operator|->
-name|PwrButton
-expr_stmt|;
-name|FADT2
-operator|->
-name|SleepButton
-operator|=
-name|FADT71
-operator|->
-name|SleepButton
-expr_stmt|;
-name|FADT2
-operator|->
-name|FixedRTC
-operator|=
-name|FADT71
-operator|->
-name|FixedRTC
-expr_stmt|;
-name|FADT2
-operator|->
-name|Rtcs4
-operator|=
-name|FADT71
-operator|->
-name|Rtcs4
-expr_stmt|;
-name|FADT2
-operator|->
-name|TmrValExt
-operator|=
-name|FADT71
-operator|->
-name|TmrValExt
-expr_stmt|;
-name|FADT2
-operator|->
-name|DockCap
-operator|=
-name|FADT71
-operator|->
-name|DockCap
-expr_stmt|;
-comment|/* We should not use these next two addresses */
-comment|/* Since our buffer is pre-zeroed nothing to do for */
-comment|/* the next three data items in the structure */
-comment|/* FADT2->FirmwareCtrl = 0; */
-comment|/* FADT2->Dsdt = 0; */
-comment|/* System Interrupt Model isn't used in ACPI 2.0*/
-comment|/* FADT2->Reserved1 = 0; */
-comment|/* This field is set by the OEM to convey the preferred */
-comment|/* power management profile to OSPM. It doesn't have any*/
-comment|/* 0.71 equivalence.  Since we don't know what kind of  */
-comment|/* 64-bit system this is, we will pick unspecified.     */
-name|FADT2
-operator|->
-name|Prefer_PM_Profile
-operator|=
-name|PM_UNSPECIFIED
-expr_stmt|;
-comment|/* Port address of SMI command port */
-comment|/* We shouldn't use this port because IA64 doesn't */
-comment|/* have or use SMI.  It has PMI. */
-name|FADT2
-operator|->
-name|SmiCmd
-operator|=
-call|(
-name|UINT32
-call|)
-argument_list|(
-name|FADT71
-operator|->
-name|SmiCmd
-operator|&
-literal|0xFFFFFFFF
-argument_list|)
-expr_stmt|;
-comment|/* processor performance state control*/
-comment|/* The value OSPM writes to the SMI_CMD register to assume */
-comment|/* processor performance state control responsibility. */
-comment|/* There isn't any equivalence in 0.71 */
-comment|/* Again this should be meaningless for IA64 */
-comment|/* FADT2->PstateCnt = 0; */
-comment|/* The 32-bit Power management and GPE registers are */
-comment|/* not valid in IA-64 and we are not going to use them */
-comment|/* so leaving them pre-zeroed. */
-comment|/* Support for the _CST object and C States change notification.*/
-comment|/* This data item hasn't any 0.71 equivalence so leaving it zero.*/
-comment|/* FADT2->CstCnt = 0; */
-comment|/* number of flush strides that need to be read */
-comment|/* No 0.71 equivalence. Leave pre-zeroed. */
-comment|/* FADT2->FlushSize = 0; */
-comment|/* Processor's memory cache line width, in bytes */
-comment|/* No 0.71 equivalence. Leave pre-zeroed. */
-comment|/* FADT2->FlushStride = 0; */
-comment|/* Processor's duty cycle index in processor's P_CNT reg*/
-comment|/* No 0.71 equivalence. Leave pre-zeroed. */
-comment|/* FADT2->DutyOffset = 0; */
-comment|/* Processor's duty cycle value bit width in P_CNT register.*/
-comment|/* No 0.71 equivalence. Leave pre-zeroed. */
-comment|/* FADT2->DutyWidth = 0; */
-comment|/* Since there isn't any equivalence in 0.71 */
-comment|/* and since BigSur had to support legacy  */
-name|FADT2
-operator|->
-name|IapcBootArch
-operator|=
-name|BAF_LEGACY_DEVICES
-expr_stmt|;
-comment|/* Copy to ACPI 2.0 64-BIT Extended Addresses */
-name|FADT2
-operator|->
-name|XFirmwareCtrl
-operator|=
-name|FADT71
-operator|->
-name|FirmwareCtrl
-expr_stmt|;
-name|FADT2
-operator|->
-name|XDsdt
-operator|=
-name|FADT71
-operator|->
-name|Dsdt
-expr_stmt|;
-comment|/* Extract the address space IDs */
-name|Pm1AddressSpace
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|FADT71
-operator|->
-name|AddressSpace
-operator|&
-name|PM1_BLK_ADDRESS_SPACE
-operator|)
-operator|>>
-literal|1
-argument_list|)
-expr_stmt|;
-name|Pm2AddressSpace
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|FADT71
-operator|->
-name|AddressSpace
-operator|&
-name|PM2_CNT_BLK_ADDRESS_SPACE
-operator|)
-operator|>>
-literal|2
-argument_list|)
-expr_stmt|;
-name|PmTimerAddressSpace
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|FADT71
-operator|->
-name|AddressSpace
-operator|&
-name|PM_TMR_BLK_ADDRESS_SPACE
-operator|)
-operator|>>
-literal|3
-argument_list|)
-expr_stmt|;
-name|Gpe0AddressSpace
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|FADT71
-operator|->
-name|AddressSpace
-operator|&
-name|GPE0_BLK_ADDRESS_SPACE
-operator|)
-operator|>>
-literal|4
-argument_list|)
-expr_stmt|;
-name|Gpe1AddressSpace
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|FADT71
-operator|->
-name|AddressSpace
-operator|&
-name|GPE1_BLK_ADDRESS_SPACE
-operator|)
-operator|>>
-literal|5
-argument_list|)
-expr_stmt|;
-comment|/*          * Convert the 0.71 (non-GAS style) Block addresses to V2.0 GAS structures,          * in this order:          *          * PM 1A Events          * PM 1B Events          * PM 1A Control          * PM 1B Control          * PM 2 Control          * PM Timer Control          * GPE Block 0          * GPE Block 1          */
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XPm1aEvtBlk
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1EvtLen
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1aEvtBlk
-argument_list|,
-name|Pm1AddressSpace
-argument_list|)
-expr_stmt|;
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XPm1bEvtBlk
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1EvtLen
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1bEvtBlk
-argument_list|,
-name|Pm1AddressSpace
-argument_list|)
-expr_stmt|;
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XPm1aCntBlk
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1CntLen
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1aCntBlk
-argument_list|,
-name|Pm1AddressSpace
-argument_list|)
-expr_stmt|;
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XPm1bCntBlk
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1CntLen
-argument_list|,
-name|FADT71
-operator|->
-name|Pm1bCntBlk
-argument_list|,
-name|Pm1AddressSpace
-argument_list|)
-expr_stmt|;
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XPm2CntBlk
-argument_list|,
-name|FADT71
-operator|->
-name|Pm2CntLen
-argument_list|,
-name|FADT71
-operator|->
-name|Pm2CntBlk
-argument_list|,
-name|Pm2AddressSpace
-argument_list|)
-expr_stmt|;
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XPmTmrBlk
-argument_list|,
-name|FADT71
-operator|->
-name|PmTmLen
-argument_list|,
-name|FADT71
-operator|->
-name|PmTmrBlk
-argument_list|,
-name|PmTimerAddressSpace
-argument_list|)
-expr_stmt|;
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XGpe0Blk
-argument_list|,
-name|FADT71
-operator|->
-name|Gpe0BlkLen
-argument_list|,
-name|FADT71
-operator|->
-name|Gpe0Blk
-argument_list|,
-name|Gpe0AddressSpace
-argument_list|)
-expr_stmt|;
-name|ASL_BUILD_GAS_FROM_ENTRY
-argument_list|(
-name|FADT2
-operator|->
-name|XGpe1Blk
-argument_list|,
-name|FADT71
-operator|->
-name|Gpe1BlkLen
-argument_list|,
-name|FADT71
-operator|->
-name|Gpe1Blk
-argument_list|,
-name|Gpe1AddressSpace
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* ACPI 1.0 FACS */
 comment|/* The BIOS stored FADT should agree with Revision 1.0 */
 name|FADT1
@@ -1042,8 +432,8 @@ operator|*
 operator|)
 name|AcpiGbl_FADT
 expr_stmt|;
-comment|/*          * Copy the table header and the common part of the tables          * The 2.0 table is an extension of the 1.0 table, so the          * entire 1.0 table can be copied first, then expand some          * fields to 64 bits.          */
-name|MEMCPY
+comment|/*          * Copy the table header and the common part of the tables.          *          * The 2.0 table is an extension of the 1.0 table, so the entire 1.0          * table can be copied first, then expand some fields to 64 bits.          */
+name|ACPI_MEMCPY
 argument_list|(
 name|FADT2
 argument_list|,
@@ -1078,45 +468,36 @@ operator|->
 name|Dsdt
 argument_list|)
 expr_stmt|;
-comment|/* System Interrupt Model isn't used in ACPI 2.0*/
-comment|/* FADT2->Reserved1 = 0; */
-comment|/* This field is set by the OEM to convey the preferred */
-comment|/* power management profile to OSPM. It doesn't have any*/
-comment|/* 1.0 equivalence.  Since we don't know what kind of   */
-comment|/* 32-bit system this is, we will pick unspecified.     */
+comment|/*          * System Interrupt Model isn't used in ACPI 2.0 (FADT2->Reserved1 = 0;)          */
+comment|/*          * This field is set by the OEM to convey the preferred power management          * profile to OSPM. It doesn't have any 1.0 equivalence.  Since we don't          * know what kind of 32-bit system this is, we will use "unspecified".          */
 name|FADT2
 operator|->
 name|Prefer_PM_Profile
 operator|=
 name|PM_UNSPECIFIED
 expr_stmt|;
-comment|/* Processor Performance State Control. This is the value  */
-comment|/* OSPM writes to the SMI_CMD register to assume processor */
-comment|/* performance state control responsibility. There isn't   */
-comment|/* any equivalence in 1.0.  So leave it zeroed.            */
+comment|/*          * Processor Performance State Control. This is the value OSPM writes to          * the SMI_CMD register to assume processor performance state control          * responsibility. There isn't any equivalence in 1.0, leave it zeroed.          */
 name|FADT2
 operator|->
 name|PstateCnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Support for the _CST object and C States change notification.*/
-comment|/* This data item hasn't any 1.0 equivalence so leaving it zero.*/
+comment|/*          * Support for the _CST object and C States change notification.          * This data item hasn't any 1.0 equivalence so leave it zero.          */
 name|FADT2
 operator|->
 name|CstCnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Since there isn't any equivalence in 1.0 and since it   */
-comment|/* is highly likely that a 1.0 system has legacy  support. */
+comment|/*          * Since there isn't any equivalence in 1.0 and since it highly likely          * that a 1.0 system has legacy support.          */
 name|FADT2
 operator|->
 name|IapcBootArch
 operator|=
 name|BAF_LEGACY_DEVICES
 expr_stmt|;
-comment|/*          * Convert the V1.0 Block addresses to V2.0 GAS structures          * in this order:          *          * PM 1A Events          * PM 1B Events          * PM 1A Control          * PM 1B Control          * PM 2 Control          * PM Timer Control          * GPE Block 0          * GPE Block 1          */
+comment|/*          * Convert the V1.0 block addresses to V2.0 GAS structures          * in this order:          *          * PM 1A Events          * PM 1B Events          * PM 1A Control          * PM 1B Control          * PM 2 Control          * PM Timer Control          * GPE Block 0          * GPE Block 1          */
 name|ASL_BUILD_GAS_FROM_V1_ENTRY
 argument_list|(
 name|FADT2
@@ -1237,8 +618,6 @@ operator|->
 name|Gpe1Blk
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/*      * Global FADT pointer will point to the common V2.0 FADT      */
 name|AcpiGbl_FADT
@@ -1247,7 +626,7 @@ name|FADT2
 expr_stmt|;
 name|AcpiGbl_FADT
 operator|->
-name|header
+name|Header
 operator|.
 name|Length
 operator|=
@@ -1312,19 +691,19 @@ literal|"Hex dump of common internal FADT, size %d (%X)\n"
 operator|,
 name|AcpiGbl_FADT
 operator|->
-name|header
+name|Header
 operator|.
 name|Length
 operator|,
 name|AcpiGbl_FADT
 operator|->
-name|header
+name|Header
 operator|.
 name|Length
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_BUFFER
+name|ACPI_DUMP_BUFFER
 argument_list|(
 operator|(
 name|UINT8
@@ -1336,7 +715,7 @@ operator|)
 argument_list|,
 name|AcpiGbl_FADT
 operator|->
-name|header
+name|Header
 operator|.
 name|Length
 argument_list|)
@@ -1350,7 +729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertTableFacs  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertTableFacs  *  * PARAMETERS:  TableInfo       - Info for currently installad FACS  *  * RETURN:      Status  *  * DESCRIPTION: Convert ACPI 1.0 and ACPI 2.0 FACS to a common internal  *              table format.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1362,57 +741,19 @@ modifier|*
 name|TableInfo
 parameter_list|)
 block|{
-name|ACPI_COMMON_FACS
-modifier|*
-name|CommonFacs
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_IA64
-name|FACS_DESCRIPTOR_REV071
-modifier|*
-name|FACS71
-decl_stmt|;
-else|#
-directive|else
 name|FACS_DESCRIPTOR_REV1
 modifier|*
 name|FACS1
 decl_stmt|;
-endif|#
-directive|endif
 name|FACS_DESCRIPTOR_REV2
 modifier|*
 name|FACS2
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"TbBuildCommonFacs"
 argument_list|)
 expr_stmt|;
-comment|/* Allocate a common FACS */
-name|CommonFacs
-operator|=
-name|ACPI_MEM_CALLOCATE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_COMMON_FACS
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|CommonFacs
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Copy fields to the new FACS */
 if|if
 condition|(
@@ -1423,50 +764,6 @@ operator|<
 literal|2
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|_IA64
-comment|/* 0.71 FACS */
-name|FACS71
-operator|=
-operator|(
-name|FACS_DESCRIPTOR_REV071
-operator|*
-operator|)
-name|AcpiGbl_FACS
-expr_stmt|;
-name|CommonFacs
-operator|->
-name|GlobalLock
-operator|=
-operator|(
-name|UINT32
-operator|*
-operator|)
-operator|&
-operator|(
-name|FACS71
-operator|->
-name|GlobalLock
-operator|)
-expr_stmt|;
-name|CommonFacs
-operator|->
-name|FirmwareWakingVector
-operator|=
-operator|&
-name|FACS71
-operator|->
-name|FirmwareWakingVector
-expr_stmt|;
-name|CommonFacs
-operator|->
-name|VectorWidth
-operator|=
-literal|64
-expr_stmt|;
-else|#
-directive|else
 comment|/* ACPI 1.0 FACS */
 name|FACS1
 operator|=
@@ -1476,8 +773,8 @@ operator|*
 operator|)
 name|AcpiGbl_FACS
 expr_stmt|;
-name|CommonFacs
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|GlobalLock
 operator|=
 operator|&
@@ -1487,8 +784,8 @@ operator|->
 name|GlobalLock
 operator|)
 expr_stmt|;
-name|CommonFacs
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|FirmwareWakingVector
 operator|=
 operator|(
@@ -1500,14 +797,12 @@ name|FACS1
 operator|->
 name|FirmwareWakingVector
 expr_stmt|;
-name|CommonFacs
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|VectorWidth
 operator|=
 literal|32
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -1520,8 +815,8 @@ operator|*
 operator|)
 name|AcpiGbl_FACS
 expr_stmt|;
-name|CommonFacs
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|GlobalLock
 operator|=
 operator|&
@@ -1531,8 +826,8 @@ operator|->
 name|GlobalLock
 operator|)
 expr_stmt|;
-name|CommonFacs
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|FirmwareWakingVector
 operator|=
 operator|&
@@ -1540,18 +835,13 @@ name|FACS2
 operator|->
 name|XFirmwareWakingVector
 expr_stmt|;
-name|CommonFacs
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|VectorWidth
 operator|=
 literal|64
 expr_stmt|;
 block|}
-comment|/* Set the global FACS pointer to point to the common FACS */
-name|AcpiGbl_FACS
-operator|=
-name|CommonFacs
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

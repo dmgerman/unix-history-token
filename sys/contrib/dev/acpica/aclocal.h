@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 145 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 159 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -421,28 +421,28 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|OWNER_TYPE_TABLE
+name|ACPI_OWNER_TYPE_TABLE
 value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|OWNER_TYPE_METHOD
+name|ACPI_OWNER_TYPE_METHOD
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIRST_METHOD_ID
+name|ACPI_FIRST_METHOD_ID
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIRST_TABLE_ID
+name|ACPI_FIRST_TABLE_ID
 value|0x8000
 end_define
 
@@ -501,19 +501,19 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|IMODE_LOAD_PASS1
+name|ACPI_IMODE_LOAD_PASS1
 init|=
 literal|0x01
 block|,
-name|IMODE_LOAD_PASS2
+name|ACPI_IMODE_LOAD_PASS2
 init|=
 literal|0x02
 block|,
-name|IMODE_EXECUTE
+name|ACPI_IMODE_EXECUTE
 init|=
 literal|0x0E
 block|}
-name|OPERATING_MODE
+name|ACPI_INTERPRETER_MODE
 typedef|;
 end_typedef
 
@@ -527,8 +527,9 @@ struct|struct
 name|acpi_node
 block|{
 name|UINT8
-name|DataType
+name|Descriptor
 decl_stmt|;
+comment|/* Used to differentiate object descriptor types */
 name|UINT8
 name|Type
 decl_stmt|;
@@ -573,7 +574,7 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|ENTRY_NOT_FOUND
+name|ACPI_ENTRY_NOT_FOUND
 value|NULL
 end_define
 
@@ -723,7 +724,7 @@ modifier|*
 name|Count
 decl_stmt|;
 block|}
-name|FIND_CONTEXT
+name|ACPI_FIND_CONTEXT
 typedef|;
 end_typedef
 
@@ -736,7 +737,7 @@ modifier|*
 name|Node
 decl_stmt|;
 block|}
-name|NS_SEARCH_DATA
+name|ACPI_NS_SEARCH_DATA
 typedef|;
 end_typedef
 
@@ -752,7 +753,7 @@ name|NATIVE_CHAR
 modifier|*
 name|Name
 decl_stmt|;
-name|ACPI_OBJECT_TYPE8
+name|UINT8
 name|Type
 decl_stmt|;
 name|NATIVE_CHAR
@@ -760,7 +761,7 @@ modifier|*
 name|Val
 decl_stmt|;
 block|}
-name|PREDEFINED_NAMES
+name|ACPI_PREDEFINED_NAMES
 typedef|;
 end_typedef
 
@@ -872,92 +873,29 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Status bits. */
+comment|/* Information about each GPE register block */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_STATUS_PMTIMER
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STATUS_BUSMASTER
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STATUS_GLOBAL
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STATUS_POWER_BUTTON
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STATUS_SLEEP_BUTTON
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STATUS_RTC_ALARM
-value|0x0400
-end_define
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT16
+name|RegisterCount
+decl_stmt|;
+name|UINT16
+name|BlockAddress
+decl_stmt|;
+name|UINT8
+name|BlockBaseNumber
+decl_stmt|;
+block|}
+name|ACPI_GPE_BLOCK_INFO
+typedef|;
+end_typedef
 
 begin_comment
-comment|/* Enable bits. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_ENABLE_PMTIMER
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ENABLE_GLOBAL
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ENABLE_POWER_BUTTON
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ENABLE_SLEEP_BUTTON
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ENABLE_RTC_ALARM
-value|0x0400
-end_define
-
-begin_comment
-comment|/* Values and addresses of the GPE registers (both banks) */
+comment|/* Information about a particular GPE register pair */
 end_comment
 
 begin_typedef
@@ -985,11 +923,11 @@ name|WakeEnable
 decl_stmt|;
 comment|/* Mask of bits to keep enabled when sleeping */
 name|UINT8
-name|GpeBase
+name|BaseGpeNumber
 decl_stmt|;
-comment|/* Base GPE number */
+comment|/* Base GPE number for this register */
 block|}
-name|ACPI_GPE_REGISTERS
+name|ACPI_GPE_REGISTER_INFO
 typedef|;
 end_typedef
 
@@ -1015,10 +953,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UINT8
-name|Type
-decl_stmt|;
-comment|/* Level or Edge */
 name|ACPI_HANDLE
 name|MethodHandle
 decl_stmt|;
@@ -1032,8 +966,27 @@ modifier|*
 name|Context
 decl_stmt|;
 comment|/* Context to be passed to handler */
+name|UINT8
+name|Type
+decl_stmt|;
+comment|/* Level or Edge */
+name|UINT8
+name|BitMask
+decl_stmt|;
 block|}
-name|ACPI_GPE_LEVEL_INFO
+name|ACPI_GPE_NUMBER_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT8
+name|NumberIndex
+decl_stmt|;
+block|}
+name|ACPI_GPE_INDEX_INFO
 typedef|;
 end_typedef
 
@@ -1054,6 +1007,27 @@ modifier|*
 name|Context
 decl_stmt|;
 comment|/* Context to be passed to handler */
+block|}
+name|ACPI_FIXED_EVENT_HANDLER
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT8
+name|StatusRegisterId
+decl_stmt|;
+name|UINT8
+name|EnableRegisterId
+decl_stmt|;
+name|UINT16
+name|StatusBitMask
+decl_stmt|;
+name|UINT16
+name|EnableBitMask
+decl_stmt|;
 block|}
 name|ACPI_FIXED_EVENT_INFO
 typedef|;
@@ -1088,35 +1062,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CONTROL_NORMAL
+name|ACPI_CONTROL_NORMAL
 value|0xC0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONTROL_CONDITIONAL_EXECUTING
+name|ACPI_CONTROL_CONDITIONAL_EXECUTING
 value|0xC1
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONTROL_PREDICATE_EXECUTING
+name|ACPI_CONTROL_PREDICATE_EXECUTING
 value|0xC2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONTROL_PREDICATE_FALSE
+name|ACPI_CONTROL_PREDICATE_FALSE
 value|0xC3
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONTROL_PREDICATE_TRUE
+name|ACPI_CONTROL_PREDICATE_TRUE
 value|0xC4
 end_define
 
@@ -1244,6 +1218,14 @@ modifier|*
 name|AmlPredicateStart
 decl_stmt|;
 comment|/* Start of if/while predicate */
+name|UINT8
+modifier|*
+name|PackageEnd
+decl_stmt|;
+comment|/* End of if/while block */
+name|UINT16
+name|Opcode
+decl_stmt|;
 block|}
 name|ACPI_CONTROL_STATE
 typedef|;
@@ -1304,7 +1286,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Thread state - one per thread across multiple walk states.  Multiple walk   * states are created when there are nested control methods executing.  */
+comment|/*  * Thread state - one per thread across multiple walk states.  Multiple walk  * states are created when there are nested control methods executing.  */
 end_comment
 
 begin_typedef
@@ -1614,7 +1596,7 @@ value|\     struct acpi_parse_obj   *Parent;
 comment|/* parent op */
 value|\     struct acpi_parse_obj   *Next;
 comment|/* next op */
-value|\     DEBUG_ONLY_MEMBERS (\     NATIVE_CHAR             OpName[16])
+value|\     ACPI_DEBUG_ONLY_MEMBERS (\     NATIVE_CHAR             OpName[16])
 comment|/* op name (debug only) */
 value|\
 comment|/* NON-DEBUG members below: */
@@ -1736,11 +1718,46 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*****************************************************************************  *  * Hardware and PNP  *  ****************************************************************************/
+comment|/* Parse object flags */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_GENERIC
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_NAMED
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_DEFERRED
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_BYTELIST
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_IN_CACHE
+value|0x80
+end_define
+
 begin_comment
-comment|/* PCI */
+comment|/*****************************************************************************  *  * Hardware (ACPI registers) and PNP  *  ****************************************************************************/
 end_comment
 
 begin_define
@@ -1750,563 +1767,514 @@ name|PCI_ROOT_HID_STRING
 value|"PNP0A03"
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT8
+name|ParentRegister
+decl_stmt|;
+name|UINT8
+name|BitPosition
+decl_stmt|;
+name|UINT16
+name|AccessBitMask
+decl_stmt|;
+block|}
+name|ACPI_BIT_REGISTER_INFO
+typedef|;
+end_typedef
+
 begin_comment
-comment|/*  * The #define's and enum below establish an abstract way of identifying what  * register block and register is to be accessed.  Do not change any of the  * values as they are used in switch statements and offset calculations.  */
+comment|/*  * Register IDs  * These are the full ACPI registers  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REGISTER_BLOCK_MASK
-value|0xFF00
-end_define
-
-begin_comment
-comment|/* Register Block Id    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIT_IN_REGISTER_MASK
-value|0x00FF
-end_define
-
-begin_comment
-comment|/* Bit Id in the Register Block Id    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BYTE_IN_REGISTER_MASK
-value|0x00FF
-end_define
-
-begin_comment
-comment|/* Register Offset in the Register Block    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGISTER_BLOCK_ID
-parameter_list|(
-name|RegId
-parameter_list|)
-value|(RegId& REGISTER_BLOCK_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|REGISTER_BIT_ID
-parameter_list|(
-name|RegId
-parameter_list|)
-value|(RegId& BIT_IN_REGISTER_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|REGISTER_OFFSET
-parameter_list|(
-name|RegId
-parameter_list|)
-value|(RegId& BYTE_IN_REGISTER_MASK)
-end_define
-
-begin_comment
-comment|/*  * Access Rule  *  To access a Register Bit:  *  -> Use Bit Name (= Register Block Id | Bit Id) defined in the enum.  *  *  To access a Register:  *  -> Use Register Id (= Register Block Id | Register Offset)  */
-end_comment
-
-begin_comment
-comment|/*  * Register Block Id  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PM1_STS
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PM1_EN
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PM1_CONTROL
-value|0x0300
-end_define
-
-begin_define
-define|#
-directive|define
-name|PM1A_CONTROL
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|PM1B_CONTROL
-value|0x0500
-end_define
-
-begin_define
-define|#
-directive|define
-name|PM2_CONTROL
-value|0x0600
-end_define
-
-begin_define
-define|#
-directive|define
-name|PM_TIMER
-value|0x0700
-end_define
-
-begin_define
-define|#
-directive|define
-name|PROCESSOR_BLOCK
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE0_STS_BLOCK
-value|0x0900
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE0_EN_BLOCK
-value|0x0A00
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE1_STS_BLOCK
-value|0x0B00
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE1_EN_BLOCK
-value|0x0C00
-end_define
-
-begin_define
-define|#
-directive|define
-name|SMI_CMD_BLOCK
-value|0x0D00
-end_define
-
-begin_comment
-comment|/*  * Address space bitmasks for mmio or io spaces  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMI_CMD_ADDRESS_SPACE
+name|ACPI_REGISTER_PM1_STATUS
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|PM1_BLK_ADDRESS_SPACE
+name|ACPI_REGISTER_PM1_ENABLE
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|PM2_CNT_BLK_ADDRESS_SPACE
+name|ACPI_REGISTER_PM1_CONTROL
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REGISTER_PM1A_CONTROL
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PM_TMR_BLK_ADDRESS_SPACE
+name|ACPI_REGISTER_PM1B_CONTROL
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REGISTER_PM2_CONTROL
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REGISTER_PM_TIMER
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REGISTER_PROCESSOR_BLOCK
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE0_BLK_ADDRESS_SPACE
+name|ACPI_REGISTER_SMI_COMMAND_BLOCK
+value|0x09
+end_define
+
+begin_comment
+comment|/*  * BitRegister IDs  * These are bitfields defined within the full ACPI registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_TIMER_STATUS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_BUS_MASTER_STATUS
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_GLOBAL_LOCK_STATUS
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_POWER_BUTTON_STATUS
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_BUTTON_STATUS
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_RT_CLOCK_STATUS
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_WAKE_STATUS
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_TIMER_ENABLE
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_GLOBAL_LOCK_ENABLE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_POWER_BUTTON_ENABLE
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_BUTTON_ENABLE
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_RT_CLOCK_ENABLE
+value|0x0B
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_WAKE_ENABLE
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SCI_ENABLE
+value|0x0D
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_BUS_MASTER_RLD
+value|0x0E
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_TYPE_A
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE1_BLK_ADDRESS_SPACE
-value|0x20
+name|ACPI_BITREG_SLEEP_TYPE_B
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_ENABLE
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_ARB_DISABLE
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_MAX
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_BITREG
+value|ACPI_BITREG_MAX + 1
 end_define
 
 begin_comment
-comment|/*  * Control bit definitions  */
+comment|/* Masks used to access the BitRegisters */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TMR_STS
-value|(PM1_STS | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_STS
-value|(PM1_STS | 0x02)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GBL_STS
-value|(PM1_STS | 0x03)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWRBTN_STS
-value|(PM1_STS | 0x04)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLPBTN_STS
-value|(PM1_STS | 0x05)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RTC_STS
-value|(PM1_STS | 0x06)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WAK_STS
-value|(PM1_STS | 0x07)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMR_EN
-value|(PM1_EN | 0x01)
-end_define
-
-begin_comment
-comment|/* no BM_EN */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GBL_EN
-value|(PM1_EN | 0x03)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWRBTN_EN
-value|(PM1_EN | 0x04)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLPBTN_EN
-value|(PM1_EN | 0x05)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RTC_EN
-value|(PM1_EN | 0x06)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WAK_EN
-value|(PM1_EN | 0x07)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCI_EN
-value|(PM1_CONTROL | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_RLD
-value|(PM1_CONTROL | 0x02)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GBL_RLS
-value|(PM1_CONTROL | 0x03)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLP_TYPE_A
-value|(PM1_CONTROL | 0x04)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLP_TYPE_B
-value|(PM1_CONTROL | 0x05)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLP_EN
-value|(PM1_CONTROL | 0x06)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARB_DIS
-value|(PM2_CONTROL | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMR_VAL
-value|(PM_TIMER | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE0_STS
-value|(GPE0_STS_BLOCK | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE0_EN
-value|(GPE0_EN_BLOCK  | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE1_STS
-value|(GPE1_STS_BLOCK | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPE1_EN
-value|(GPE1_EN_BLOCK  | 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMR_STS_MASK
+name|ACPI_BITMASK_TIMER_STATUS
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|BM_STS_MASK
+name|ACPI_BITMASK_BUS_MASTER_STATUS
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|GBL_STS_MASK
+name|ACPI_BITMASK_GLOBAL_LOCK_STATUS
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PWRBTN_STS_MASK
+name|ACPI_BITMASK_POWER_BUTTON_STATUS
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|SLPBTN_STS_MASK
+name|ACPI_BITMASK_SLEEP_BUTTON_STATUS
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTC_STS_MASK
+name|ACPI_BITMASK_RT_CLOCK_STATUS
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|WAK_STS_MASK
+name|ACPI_BITMASK_WAKE_STATUS
 value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALL_FIXED_STS_BITS
-value|(TMR_STS_MASK   | BM_STS_MASK  | GBL_STS_MASK \                                         | PWRBTN_STS_MASK | SLPBTN_STS_MASK \                                         | RTC_STS_MASK | WAK_STS_MASK)
+name|ACPI_BITMASK_ALL_FIXED_STATUS
+value|(ACPI_BITMASK_TIMER_STATUS          | \                                                  ACPI_BITMASK_BUS_MASTER_STATUS     | \                                                  ACPI_BITMASK_GLOBAL_LOCK_STATUS    | \                                                  ACPI_BITMASK_POWER_BUTTON_STATUS   | \                                                  ACPI_BITMASK_SLEEP_BUTTON_STATUS   | \                                                  ACPI_BITMASK_RT_CLOCK_STATUS       | \                                                  ACPI_BITMASK_WAKE_STATUS)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TMR_EN_MASK
+name|ACPI_BITMASK_TIMER_ENABLE
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|GBL_EN_MASK
+name|ACPI_BITMASK_GLOBAL_LOCK_ENABLE
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PWRBTN_EN_MASK
+name|ACPI_BITMASK_POWER_BUTTON_ENABLE
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|SLPBTN_EN_MASK
+name|ACPI_BITMASK_SLEEP_BUTTON_ENABLE
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTC_EN_MASK
+name|ACPI_BITMASK_RT_CLOCK_ENABLE
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCI_EN_MASK
+name|ACPI_BITMASK_SCI_ENABLE
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|BM_RLD_MASK
+name|ACPI_BITMASK_BUS_MASTER_RLD
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|GBL_RLS_MASK
+name|ACPI_BITMASK_GLOBAL_LOCK_RELEASE
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|SLP_TYPE_X_MASK
+name|ACPI_BITMASK_SLEEP_TYPE_X
 value|0x1C00
 end_define
 
 begin_define
 define|#
 directive|define
-name|SLP_EN_MASK
+name|ACPI_BITMASK_SLEEP_ENABLE
 value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARB_DIS_MASK
+name|ACPI_BITMASK_ARB_DISABLE
 value|0x0001
 end_define
 
+begin_comment
+comment|/* Raw bit position of each BitRegister */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TMR_VAL_MASK
-value|0xFFFFFFFF
+name|ACPI_BITPOSITION_TIMER_STATUS
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE0_STS_MASK
+name|ACPI_BITPOSITION_BUS_MASTER_STATUS
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE0_EN_MASK
+name|ACPI_BITPOSITION_GLOBAL_LOCK_STATUS
+value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE1_STS_MASK
+name|ACPI_BITPOSITION_POWER_BUTTON_STATUS
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|GPE1_EN_MASK
+name|ACPI_BITPOSITION_SLEEP_BUTTON_STATUS
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_RT_CLOCK_STATUS
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_WAKE_STATUS
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_TIMER_ENABLE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_GLOBAL_LOCK_ENABLE
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_POWER_BUTTON_ENABLE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_SLEEP_BUTTON_ENABLE
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_RT_CLOCK_ENABLE
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_SCI_ENABLE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_BUS_MASTER_RLD
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_GLOBAL_LOCK_RELEASE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_SLEEP_TYPE_X
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_SLEEP_ENABLE
+value|0x0D
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITPOSITION_ARB_DISABLE
+value|0x00
 end_define
 
 begin_comment
@@ -2320,21 +2288,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESOURCE_TYPE_MEMORY_RANGE
+name|ACPI_RESOURCE_TYPE_MEMORY_RANGE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_TYPE_IO_RANGE
+name|ACPI_RESOURCE_TYPE_IO_RANGE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_TYPE_BUS_NUMBER_RANGE
+name|ACPI_RESOURCE_TYPE_BUS_NUMBER_RANGE
 value|2
 end_define
 
@@ -2345,28 +2313,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_TYPE_LARGE
+name|ACPI_RDESC_TYPE_LARGE
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_TYPE_SMALL
+name|ACPI_RDESC_TYPE_SMALL
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_TYPE_MASK
+name|ACPI_RDESC_TYPE_MASK
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_SMALL_MASK
+name|ACPI_RDESC_SMALL_MASK
 value|0x78
 end_define
 
@@ -2381,56 +2349,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_IRQ_FORMAT
+name|ACPI_RDESC_TYPE_IRQ_FORMAT
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_DMA_FORMAT
+name|ACPI_RDESC_TYPE_DMA_FORMAT
 value|0x28
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_START_DEPENDENT
+name|ACPI_RDESC_TYPE_START_DEPENDENT
 value|0x30
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_END_DEPENDENT
+name|ACPI_RDESC_TYPE_END_DEPENDENT
 value|0x38
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_IO_PORT
+name|ACPI_RDESC_TYPE_IO_PORT
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_FIXED_IO_PORT
+name|ACPI_RDESC_TYPE_FIXED_IO_PORT
 value|0x48
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_SMALL_VENDOR
+name|ACPI_RDESC_TYPE_SMALL_VENDOR
 value|0x70
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_END_TAG
+name|ACPI_RDESC_TYPE_END_TAG
 value|0x78
 end_define
 
@@ -2441,63 +2409,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_MEMORY_24
+name|ACPI_RDESC_TYPE_MEMORY_24
 value|0x81
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_GENERAL_REGISTER
+name|ACPI_RDESC_TYPE_GENERAL_REGISTER
 value|0x82
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_LARGE_VENDOR
+name|ACPI_RDESC_TYPE_LARGE_VENDOR
 value|0x84
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_MEMORY_32
+name|ACPI_RDESC_TYPE_MEMORY_32
 value|0x85
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_FIXED_MEMORY_32
+name|ACPI_RDESC_TYPE_FIXED_MEMORY_32
 value|0x86
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_DWORD_ADDRESS_SPACE
+name|ACPI_RDESC_TYPE_DWORD_ADDRESS_SPACE
 value|0x87
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_WORD_ADDRESS_SPACE
+name|ACPI_RDESC_TYPE_WORD_ADDRESS_SPACE
 value|0x88
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_EXTENDED_XRUPT
+name|ACPI_RDESC_TYPE_EXTENDED_XRUPT
 value|0x89
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_DESC_QWORD_ADDRESS_SPACE
+name|ACPI_RDESC_TYPE_QWORD_ADDRESS_SPACE
 value|0x8A
 end_define
 
@@ -2534,7 +2502,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASCII_ZERO
+name|ACPI_ASCII_ZERO
 value|0x30
 end_define
 
@@ -2572,9 +2540,30 @@ literal|128
 index|]
 decl_stmt|;
 block|}
-name|DB_METHOD_INFO
+name|ACPI_DB_METHOD_INFO
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DB_REDIRECTABLE_OUTPUT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DB_CONSOLE_OUTPUT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DB_DUPLICATE_OUTPUT
+value|0x03
+end_define
 
 begin_comment
 comment|/*****************************************************************************  *  * Debug  *  ****************************************************************************/
@@ -2607,21 +2596,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MEM_MALLOC
+name|ACPI_MEM_MALLOC
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEM_CALLOC
+name|ACPI_MEM_CALLOC
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_MODULE_NAME
+name|ACPI_MAX_MODULE_NAME
 value|16
 end_define
 
@@ -2630,7 +2619,7 @@ define|#
 directive|define
 name|ACPI_COMMON_DEBUG_MEM_HEADER
 define|\
-value|struct AcpiDebugMemBlock    *Previous; \     struct AcpiDebugMemBlock    *Next; \     UINT32                      Size; \     UINT32                      Component; \     UINT32                      Line; \     NATIVE_CHAR                 Module[MAX_MODULE_NAME]; \     UINT8                       AllocType;
+value|struct AcpiDebugMemBlock    *Previous; \     struct AcpiDebugMemBlock    *Next; \     UINT32                      Size; \     UINT32                      Component; \     UINT32                      Line; \     NATIVE_CHAR                 Module[ACPI_MAX_MODULE_NAME]; \     UINT8                       AllocType;
 end_define
 
 begin_typedef

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 136 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 153 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -57,7 +57,7 @@ value|ACPI_UTILITIES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"utglobal"
 argument_list|)
@@ -395,7 +395,7 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|PREDEFINED_NAMES
+name|ACPI_PREDEFINED_NAMES
 name|AcpiGbl_PreDefinedNames
 index|[]
 init|=
@@ -475,129 +475,129 @@ name|AcpiGbl_NsProperties
 index|[]
 init|=
 block|{
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 00 Any              */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 01 Number           */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 02 String           */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 03 Buffer           */
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 04 Package          */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 05 FieldUnit        */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 operator||
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 06 Device           */
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 07 AcpiEvent        */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 operator||
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 08 Method           */
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 09 Mutex            */
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 10 Region           */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 operator||
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 11 Power            */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 operator||
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 12 Processor        */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 operator||
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 13 Thermal          */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 14 BufferField      */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 15 DdbHandle        */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 16 Debug Object     */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 17 DefField         */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 18 BankField        */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 19 IndexField       */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 20 Reference        */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 21 Alias            */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 22 Notify           */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 23 Address Handler  */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 operator||
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 24 Resource Desc    */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 operator||
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 25 Resource Field   */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 26 DefFieldDefn     */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 27 BankFieldDefn    */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 28 IndexFieldDefn   */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 29 If               */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 30 Else             */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 31 While            */
-name|NSP_NEWSCOPE
+name|ACPI_NS_NEWSCOPE
 block|,
 comment|/* 32 Scope            */
-name|NSP_LOCAL
+name|ACPI_NS_LOCAL
 block|,
 comment|/* 33 DefAny           */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 34 Extra            */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 35 Data             */
-name|NSP_NORMAL
+name|ACPI_NS_NORMAL
 comment|/* 36 Invalid          */
 block|}
 decl_stmt|;
@@ -682,7 +682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * Table globals  *  * NOTE: This table includes ONLY the ACPI tables that the subsystem consumes.  * it is NOT an exhaustive list of all possible ACPI tables.  All ACPI tables  * that are not used by the subsystem are simply ignored.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * Table name globals  *  * NOTE: This table includes ONLY the ACPI tables that the subsystem consumes.  * it is NOT an exhaustive list of all possible ACPI tables.  All ACPI tables  * that are not used by the subsystem are simply ignored.  *  * Do NOT add any table to this list that is not consumed directly by this  * subsystem.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -702,12 +702,14 @@ name|NUM_ACPI_TABLES
 index|]
 init|=
 block|{
-comment|/***********    Name,    Signature,  Signature size,    How many allowed?,   Supported?  Global typed pointer */
+comment|/***********    Name,   Signature, Global typed pointer     Signature size,      How many allowed?,    Contains valid AML? */
 comment|/* RSDP 0 */
 block|{
 name|RSDP_NAME
 block|,
 name|RSDP_SIG
+block|,
+name|NULL
 block|,
 sizeof|sizeof
 argument_list|(
@@ -717,10 +719,6 @@ operator|-
 literal|1
 block|,
 name|ACPI_TABLE_SINGLE
-block|,
-name|AE_OK
-block|,
-name|NULL
 block|}
 block|,
 comment|/* DSDT 1 */
@@ -729,6 +727,14 @@ name|DSDT_SIG
 block|,
 name|DSDT_SIG
 block|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|AcpiGbl_DSDT
+block|,
 sizeof|sizeof
 argument_list|(
 name|DSDT_SIG
@@ -737,16 +743,8 @@ operator|-
 literal|1
 block|,
 name|ACPI_TABLE_SINGLE
-block|,
-name|AE_OK
-block|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|AcpiGbl_DSDT
+operator||
+name|ACPI_TABLE_EXECUTABLE
 block|}
 block|,
 comment|/* FADT 2 */
@@ -755,6 +753,14 @@ name|FADT_SIG
 block|,
 name|FADT_SIG
 block|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|AcpiGbl_FADT
+block|,
 sizeof|sizeof
 argument_list|(
 name|FADT_SIG
@@ -763,16 +769,6 @@ operator|-
 literal|1
 block|,
 name|ACPI_TABLE_SINGLE
-block|,
-name|AE_OK
-block|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|AcpiGbl_FADT
 block|}
 block|,
 comment|/* FACS 3 */
@@ -780,6 +776,14 @@ block|{
 name|FACS_SIG
 block|,
 name|FACS_SIG
+block|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|AcpiGbl_FACS
 block|,
 sizeof|sizeof
 argument_list|(
@@ -789,16 +793,6 @@ operator|-
 literal|1
 block|,
 name|ACPI_TABLE_SINGLE
-block|,
-name|AE_OK
-block|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|AcpiGbl_FACS
 block|}
 block|,
 comment|/* PSDT 4 */
@@ -807,6 +801,8 @@ name|PSDT_SIG
 block|,
 name|PSDT_SIG
 block|,
+name|NULL
+block|,
 sizeof|sizeof
 argument_list|(
 name|PSDT_SIG
@@ -815,10 +811,8 @@ operator|-
 literal|1
 block|,
 name|ACPI_TABLE_MULTIPLE
-block|,
-name|AE_OK
-block|,
-name|NULL
+operator||
+name|ACPI_TABLE_EXECUTABLE
 block|}
 block|,
 comment|/* SSDT 5 */
@@ -826,6 +820,8 @@ block|{
 name|SSDT_SIG
 block|,
 name|SSDT_SIG
+block|,
+name|NULL
 block|,
 sizeof|sizeof
 argument_list|(
@@ -835,10 +831,8 @@ operator|-
 literal|1
 block|,
 name|ACPI_TABLE_MULTIPLE
-block|,
-name|AE_OK
-block|,
-name|NULL
+operator||
+name|ACPI_TABLE_EXECUTABLE
 block|}
 block|,
 comment|/* XSDT 6 */
@@ -846,6 +840,8 @@ block|{
 name|XSDT_SIG
 block|,
 name|XSDT_SIG
+block|,
+name|NULL
 block|,
 sizeof|sizeof
 argument_list|(
@@ -855,14 +851,428 @@ operator|-
 literal|1
 block|,
 name|ACPI_TABLE_SINGLE
-block|,
-name|AE_OK
-block|,
-name|NULL
 block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/******************************************************************************  *  * Event and Hardware globals  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_BIT_REGISTER_INFO
+name|AcpiGbl_BitRegisterInfo
+index|[
+name|ACPI_NUM_BITREG
+index|]
+init|=
+block|{
+comment|/* Name                                     Parent Register             Register Bit Position                   Register Bit Mask       */
+comment|/* ACPI_BITREG_TIMER_STATUS         */
+block|{
+name|ACPI_REGISTER_PM1_STATUS
+block|,
+name|ACPI_BITPOSITION_TIMER_STATUS
+block|,
+name|ACPI_BITMASK_TIMER_STATUS
+block|}
+block|,
+comment|/* ACPI_BITREG_BUS_MASTER_STATUS    */
+block|{
+name|ACPI_REGISTER_PM1_STATUS
+block|,
+name|ACPI_BITPOSITION_BUS_MASTER_STATUS
+block|,
+name|ACPI_BITMASK_BUS_MASTER_STATUS
+block|}
+block|,
+comment|/* ACPI_BITREG_GLOBAL_LOCK_STATUS   */
+block|{
+name|ACPI_REGISTER_PM1_STATUS
+block|,
+name|ACPI_BITPOSITION_GLOBAL_LOCK_STATUS
+block|,
+name|ACPI_BITMASK_GLOBAL_LOCK_STATUS
+block|}
+block|,
+comment|/* ACPI_BITREG_POWER_BUTTON_STATUS  */
+block|{
+name|ACPI_REGISTER_PM1_STATUS
+block|,
+name|ACPI_BITPOSITION_POWER_BUTTON_STATUS
+block|,
+name|ACPI_BITMASK_POWER_BUTTON_STATUS
+block|}
+block|,
+comment|/* ACPI_BITREG_SLEEP_BUTTON_STATUS  */
+block|{
+name|ACPI_REGISTER_PM1_STATUS
+block|,
+name|ACPI_BITPOSITION_SLEEP_BUTTON_STATUS
+block|,
+name|ACPI_BITMASK_SLEEP_BUTTON_STATUS
+block|}
+block|,
+comment|/* ACPI_BITREG_RT_CLOCK_STATUS      */
+block|{
+name|ACPI_REGISTER_PM1_STATUS
+block|,
+name|ACPI_BITPOSITION_RT_CLOCK_STATUS
+block|,
+name|ACPI_BITMASK_RT_CLOCK_STATUS
+block|}
+block|,
+comment|/* ACPI_BITREG_WAKE_STATUS          */
+block|{
+name|ACPI_REGISTER_PM1_STATUS
+block|,
+name|ACPI_BITPOSITION_WAKE_STATUS
+block|,
+name|ACPI_BITMASK_WAKE_STATUS
+block|}
+block|,
+comment|/* ACPI_BITREG_TIMER_ENABLE         */
+block|{
+name|ACPI_REGISTER_PM1_ENABLE
+block|,
+name|ACPI_BITPOSITION_TIMER_ENABLE
+block|,
+name|ACPI_BITMASK_TIMER_ENABLE
+block|}
+block|,
+comment|/* ACPI_BITREG_GLOBAL_LOCK_ENABLE   */
+block|{
+name|ACPI_REGISTER_PM1_ENABLE
+block|,
+name|ACPI_BITPOSITION_GLOBAL_LOCK_ENABLE
+block|,
+name|ACPI_BITMASK_GLOBAL_LOCK_ENABLE
+block|}
+block|,
+comment|/* ACPI_BITREG_POWER_BUTTON_ENABLE  */
+block|{
+name|ACPI_REGISTER_PM1_ENABLE
+block|,
+name|ACPI_BITPOSITION_POWER_BUTTON_ENABLE
+block|,
+name|ACPI_BITMASK_POWER_BUTTON_ENABLE
+block|}
+block|,
+comment|/* ACPI_BITREG_SLEEP_BUTTON_ENABLE  */
+block|{
+name|ACPI_REGISTER_PM1_ENABLE
+block|,
+name|ACPI_BITPOSITION_SLEEP_BUTTON_ENABLE
+block|,
+name|ACPI_BITMASK_SLEEP_BUTTON_ENABLE
+block|}
+block|,
+comment|/* ACPI_BITREG_RT_CLOCK_ENABLE      */
+block|{
+name|ACPI_REGISTER_PM1_ENABLE
+block|,
+name|ACPI_BITPOSITION_RT_CLOCK_ENABLE
+block|,
+name|ACPI_BITMASK_RT_CLOCK_ENABLE
+block|}
+block|,
+comment|/* ACPI_BITREG_WAKE_ENABLE          */
+block|{
+name|ACPI_REGISTER_PM1_ENABLE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* ACPI_BITREG_SCI_ENABLE           */
+block|{
+name|ACPI_REGISTER_PM1_CONTROL
+block|,
+name|ACPI_BITPOSITION_SCI_ENABLE
+block|,
+name|ACPI_BITMASK_SCI_ENABLE
+block|}
+block|,
+comment|/* ACPI_BITREG_BUS_MASTER_RLD       */
+block|{
+name|ACPI_REGISTER_PM1_CONTROL
+block|,
+name|ACPI_BITPOSITION_BUS_MASTER_RLD
+block|,
+name|ACPI_BITMASK_BUS_MASTER_RLD
+block|}
+block|,
+comment|/* ACPI_BITREG_GLOBAL_LOCK_RELEASE  */
+block|{
+name|ACPI_REGISTER_PM1_CONTROL
+block|,
+name|ACPI_BITPOSITION_GLOBAL_LOCK_RELEASE
+block|,
+name|ACPI_BITMASK_GLOBAL_LOCK_RELEASE
+block|}
+block|,
+comment|/* ACPI_BITREG_SLEEP_TYPE_A         */
+block|{
+name|ACPI_REGISTER_PM1_CONTROL
+block|,
+name|ACPI_BITPOSITION_SLEEP_TYPE_X
+block|,
+name|ACPI_BITMASK_SLEEP_TYPE_X
+block|}
+block|,
+comment|/* ACPI_BITREG_SLEEP_TYPE_B         */
+block|{
+name|ACPI_REGISTER_PM1_CONTROL
+block|,
+name|ACPI_BITPOSITION_SLEEP_TYPE_X
+block|,
+name|ACPI_BITMASK_SLEEP_TYPE_X
+block|}
+block|,
+comment|/* ACPI_BITREG_SLEEP_ENABLE         */
+block|{
+name|ACPI_REGISTER_PM1_CONTROL
+block|,
+name|ACPI_BITPOSITION_SLEEP_ENABLE
+block|,
+name|ACPI_BITMASK_SLEEP_ENABLE
+block|}
+block|,
+comment|/* ACPI_BITREG_ARB_DIS              */
+block|{
+name|ACPI_REGISTER_PM2_CONTROL
+block|,
+name|ACPI_BITPOSITION_ARB_DISABLE
+block|,
+name|ACPI_BITMASK_ARB_DISABLE
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_FIXED_EVENT_INFO
+name|AcpiGbl_FixedEventInfo
+index|[
+name|ACPI_NUM_FIXED_EVENTS
+index|]
+init|=
+block|{
+comment|/* ACPI_EVENT_PMTIMER       */
+block|{
+name|ACPI_BITREG_TIMER_STATUS
+block|,
+name|ACPI_BITREG_TIMER_ENABLE
+block|,
+name|ACPI_BITMASK_TIMER_STATUS
+block|,
+name|ACPI_BITMASK_TIMER_ENABLE
+block|}
+block|,
+comment|/* ACPI_EVENT_GLOBAL        */
+block|{
+name|ACPI_BITREG_GLOBAL_LOCK_STATUS
+block|,
+name|ACPI_BITREG_GLOBAL_LOCK_ENABLE
+block|,
+name|ACPI_BITMASK_GLOBAL_LOCK_STATUS
+block|,
+name|ACPI_BITMASK_GLOBAL_LOCK_ENABLE
+block|}
+block|,
+comment|/* ACPI_EVENT_POWER_BUTTON  */
+block|{
+name|ACPI_BITREG_POWER_BUTTON_STATUS
+block|,
+name|ACPI_BITREG_POWER_BUTTON_ENABLE
+block|,
+name|ACPI_BITMASK_POWER_BUTTON_STATUS
+block|,
+name|ACPI_BITMASK_POWER_BUTTON_ENABLE
+block|}
+block|,
+comment|/* ACPI_EVENT_SLEEP_BUTTON  */
+block|{
+name|ACPI_BITREG_SLEEP_BUTTON_STATUS
+block|,
+name|ACPI_BITREG_SLEEP_BUTTON_ENABLE
+block|,
+name|ACPI_BITMASK_SLEEP_BUTTON_STATUS
+block|,
+name|ACPI_BITMASK_SLEEP_BUTTON_ENABLE
+block|}
+block|,
+comment|/* ACPI_EVENT_RTC           */
+block|{
+name|ACPI_BITREG_RT_CLOCK_STATUS
+block|,
+name|ACPI_BITREG_RT_CLOCK_ENABLE
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetRegionName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Space ID into a name string (Debug only)  *  ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Region type decoding */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_RegionTypes
+index|[
+name|ACPI_NUM_PREDEFINED_REGIONS
+index|]
+init|=
+block|{
+literal|"SystemMemory"
+block|,
+literal|"SystemIO"
+block|,
+literal|"PCIConfig"
+block|,
+literal|"EmbeddedControl"
+block|,
+literal|"SMBus"
+block|,
+literal|"CMOS"
+block|,
+literal|"PCIBarTarget"
+block|,
+literal|"DataTable"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|NATIVE_CHAR
+modifier|*
+name|AcpiUtGetRegionName
+parameter_list|(
+name|UINT8
+name|SpaceId
+parameter_list|)
+block|{
+if|if
+condition|(
+name|SpaceId
+operator|>=
+name|ACPI_USER_REGION_BEGIN
+condition|)
+block|{
+return|return
+operator|(
+literal|"UserDefinedRegion"
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|SpaceId
+operator|>=
+name|ACPI_NUM_PREDEFINED_REGIONS
+condition|)
+block|{
+return|return
+operator|(
+literal|"InvalidSpaceID"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+operator|(
+name|NATIVE_CHAR
+operator|*
+operator|)
+name|AcpiGbl_RegionTypes
+index|[
+name|SpaceId
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetEventName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Event ID into a name string (Debug only)  *  ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Event type decoding */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_EventTypes
+index|[
+name|ACPI_NUM_FIXED_EVENTS
+index|]
+init|=
+block|{
+literal|"PM_Timer"
+block|,
+literal|"GlobalLock"
+block|,
+literal|"PowerButton"
+block|,
+literal|"SleepButton"
+block|,
+literal|"RealTimeClock"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|NATIVE_CHAR
+modifier|*
+name|AcpiUtGetEventName
+parameter_list|(
+name|UINT32
+name|EventId
+parameter_list|)
+block|{
+if|if
+condition|(
+name|EventId
+operator|>
+name|ACPI_EVENT_MAX
+condition|)
+block|{
+return|return
+operator|(
+literal|"InvalidEventID"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+operator|(
+name|NATIVE_CHAR
+operator|*
+operator|)
+name|AcpiGbl_EventTypes
+index|[
+name|EventId
+index|]
+operator|)
+return|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -910,6 +1320,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetTypeName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Type ID into a name string (Debug only)  *  ****************************************************************************/
+end_comment
 
 begin_comment
 comment|/*  * Elements of AcpiGbl_NsTypeNames below must match  * one-to-one with values of ACPI_OBJECT_TYPE  *  * The type ACPI_TYPE_ANY (Untyped) is used as a "don't care" when searching; when  * stored in a table it really means that we have thus far seen no evidence to  * indicatewhat type is actually going to be stored for this entry.  */
@@ -1061,16 +1475,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetTypeName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Type ID into a name string (Debug only)  *  ****************************************************************************/
-end_comment
-
 begin_function
 name|NATIVE_CHAR
 modifier|*
 name|AcpiUtGetTypeName
 parameter_list|(
-name|UINT32
+name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)
 block|{
@@ -1100,92 +1510,6 @@ operator|)
 name|AcpiGbl_NsTypeNames
 index|[
 name|Type
-index|]
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Region type decoding */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_RegionTypes
-index|[
-name|ACPI_NUM_PREDEFINED_REGIONS
-index|]
-init|=
-block|{
-literal|"SystemMemory"
-block|,
-literal|"SystemIO"
-block|,
-literal|"PCIConfig"
-block|,
-literal|"EmbeddedControl"
-block|,
-literal|"SMBus"
-block|,
-literal|"CMOS"
-block|,
-literal|"PCIBarTarget"
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetRegionName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Space ID into a name string (Debug only)  *  ****************************************************************************/
-end_comment
-
-begin_function
-name|NATIVE_CHAR
-modifier|*
-name|AcpiUtGetRegionName
-parameter_list|(
-name|UINT8
-name|SpaceId
-parameter_list|)
-block|{
-if|if
-condition|(
-name|SpaceId
-operator|>=
-name|ACPI_USER_REGION_BEGIN
-condition|)
-block|{
-return|return
-operator|(
-literal|"UserDefinedRegion"
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|SpaceId
-operator|>=
-name|ACPI_NUM_PREDEFINED_REGIONS
-condition|)
-block|{
-return|return
-operator|(
-literal|"InvalidSpaceID"
-operator|)
-return|;
-block|}
-return|return
-operator|(
-operator|(
-name|NATIVE_CHAR
-operator|*
-operator|)
-name|AcpiGbl_RegionTypes
-index|[
-name|SpaceId
 index|]
 operator|)
 return|;
@@ -1309,7 +1633,7 @@ begin_function
 name|BOOLEAN
 name|AcpiUtValidObjectType
 parameter_list|(
-name|UINT32
+name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)
 block|{
@@ -1367,23 +1691,35 @@ name|OwnerId
 init|=
 literal|0xFFFF
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"UtAllocateOwnerId"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
-expr_stmt|;
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|IdType
 condition|)
 block|{
 case|case
-name|OWNER_TYPE_TABLE
+name|ACPI_OWNER_TYPE_TABLE
 case|:
 name|OwnerId
 operator|=
@@ -1396,17 +1732,17 @@ if|if
 condition|(
 name|AcpiGbl_NextTableOwnerId
 operator|==
-name|FIRST_METHOD_ID
+name|ACPI_FIRST_METHOD_ID
 condition|)
 block|{
 name|AcpiGbl_NextTableOwnerId
 operator|=
-name|FIRST_TABLE_ID
+name|ACPI_FIRST_TABLE_ID
 expr_stmt|;
 block|}
 break|break;
 case|case
-name|OWNER_TYPE_METHOD
+name|ACPI_OWNER_TYPE_METHOD
 case|:
 name|OwnerId
 operator|=
@@ -1419,16 +1755,19 @@ if|if
 condition|(
 name|AcpiGbl_NextMethodOwnerId
 operator|==
-name|FIRST_TABLE_ID
+name|ACPI_FIRST_TABLE_ID
 condition|)
 block|{
 name|AcpiGbl_NextMethodOwnerId
 operator|=
-name|FIRST_METHOD_ID
+name|ACPI_FIRST_METHOD_ID
 expr_stmt|;
 block|}
 break|break;
 block|}
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
@@ -1456,13 +1795,13 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"UtInitGlobals"
 argument_list|)
 expr_stmt|;
 comment|/* Memory allocation and cache lists */
-name|MEMSET
+name|ACPI_MEMSET
 argument_list|(
 name|AcpiGbl_MemoryLists
 argument_list|,
@@ -1483,12 +1822,11 @@ index|]
 operator|.
 name|LinkOffset
 operator|=
-call|(
+operator|(
 name|UINT16
-call|)
+operator|)
+name|ACPI_PTR_DIFF
 argument_list|(
-name|NATIVE_UINT
-argument_list|)
 operator|&
 operator|(
 operator|(
@@ -1503,6 +1841,9 @@ name|Common
 operator|.
 name|Next
 operator|)
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|AcpiGbl_MemoryLists
 index|[
@@ -1511,12 +1852,11 @@ index|]
 operator|.
 name|LinkOffset
 operator|=
-call|(
+operator|(
 name|UINT16
-call|)
+operator|)
+name|ACPI_PTR_DIFF
 argument_list|(
-name|NATIVE_UINT
-argument_list|)
 operator|&
 operator|(
 operator|(
@@ -1529,6 +1869,9 @@ operator|)
 operator|->
 name|Next
 operator|)
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|AcpiGbl_MemoryLists
 index|[
@@ -1537,12 +1880,11 @@ index|]
 operator|.
 name|LinkOffset
 operator|=
-call|(
+operator|(
 name|UINT16
-call|)
+operator|)
+name|ACPI_PTR_DIFF
 argument_list|(
-name|NATIVE_UINT
-argument_list|)
 operator|&
 operator|(
 operator|(
@@ -1555,6 +1897,9 @@ operator|)
 operator|->
 name|Next
 operator|)
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|AcpiGbl_MemoryLists
 index|[
@@ -1563,12 +1908,11 @@ index|]
 operator|.
 name|LinkOffset
 operator|=
-call|(
+operator|(
 name|UINT16
-call|)
+operator|)
+name|ACPI_PTR_DIFF
 argument_list|(
-name|NATIVE_UINT
-argument_list|)
 operator|&
 operator|(
 operator|(
@@ -1583,6 +1927,9 @@ name|Cache
 operator|.
 name|Next
 operator|)
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|AcpiGbl_MemoryLists
 index|[
@@ -1591,12 +1938,11 @@ index|]
 operator|.
 name|LinkOffset
 operator|=
-call|(
+operator|(
 name|UINT16
-call|)
+operator|)
+name|ACPI_PTR_DIFF
 argument_list|(
-name|NATIVE_UINT
-argument_list|)
 operator|&
 operator|(
 operator|(
@@ -1609,6 +1955,9 @@ operator|)
 operator|->
 name|Next
 operator|)
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|AcpiGbl_MemoryLists
 index|[
@@ -1975,6 +2324,10 @@ name|AcpiGbl_GlobalLockThreadCount
 operator|=
 literal|0
 expr_stmt|;
+name|AcpiGbl_GlobalLockHandle
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Miscellaneous variables */
 name|AcpiGbl_RsdpOriginalLocation
 operator|=
@@ -2006,35 +2359,26 @@ name|TRUE
 expr_stmt|;
 name|AcpiGbl_NextTableOwnerId
 operator|=
-name|FIRST_TABLE_ID
+name|ACPI_FIRST_TABLE_ID
 expr_stmt|;
 name|AcpiGbl_NextMethodOwnerId
 operator|=
-name|FIRST_METHOD_ID
+name|ACPI_FIRST_METHOD_ID
 expr_stmt|;
 name|AcpiGbl_DebuggerConfiguration
 operator|=
 name|DEBUGGER_THREADING
 expr_stmt|;
+name|AcpiGbl_DbOutputFlags
+operator|=
+name|ACPI_DB_CONSOLE_OUTPUT
+expr_stmt|;
 comment|/* Hardware oriented */
-name|AcpiGbl_Gpe0EnableRegisterSave
+name|AcpiGbl_GpeRegisterInfo
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_Gpe1EnableRegisterSave
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_OriginalMode
-operator|=
-name|SYS_MODE_UNKNOWN
-expr_stmt|;
-comment|/*  original ACPI/legacy mode   */
-name|AcpiGbl_GpeRegisters
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_GpeInfo
+name|AcpiGbl_GpeNumberInfo
 operator|=
 name|NULL
 expr_stmt|;
@@ -2051,7 +2395,7 @@ name|ACPI_ROOT_NAME
 expr_stmt|;
 name|AcpiGbl_RootNodeStruct
 operator|.
-name|DataType
+name|Descriptor
 operator|=
 name|ACPI_DESC_TYPE_NAMED
 expr_stmt|;
