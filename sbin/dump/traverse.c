@@ -386,7 +386,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|((dp)->di_mtime.ts_sec>= (t) || (dp)->di_ctime.ts_sec>= (t))
+value|((dp)->di_mtime.tv_sec>= (t) || (dp)->di_ctime.tv_sec>= (t))
 end_define
 
 begin_else

@@ -1818,7 +1818,7 @@ name|dip
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 argument_list|,
 literal|"mtime "
@@ -1830,7 +1830,7 @@ name|dip
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 argument_list|,
 literal|"ctime "
@@ -1842,7 +1842,7 @@ name|dip
 operator|->
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
