@@ -424,7 +424,7 @@ name|iov_len
 operator|=
 sizeof|sizeof
 argument_list|(
-literal|"fstype"
+literal|"fspath"
 argument_list|)
 expr_stmt|;
 name|iov
