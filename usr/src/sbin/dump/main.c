@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.14 (Berkeley) %G%"
+literal|"@(#)main.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,9 +1121,6 @@ operator|)
 comment|/* IRG's / block */
 operator|*
 name|tenthsperirg
-comment|/* 0.1" / IRG */
-operator|*
-literal|7
 comment|/* 0.1" / IRG */
 operator|)
 operator|*
