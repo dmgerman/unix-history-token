@@ -18,6 +18,12 @@ name|CONFIG_MIDI
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
 begin_comment
 comment|/*  * Don't make MAX_QUEUE_SIZE larger than 4000  */
 end_comment

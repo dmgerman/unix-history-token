@@ -32,6 +32,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/select.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/sound/midi_ctrl.h>
 end_include
 

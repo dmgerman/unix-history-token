@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * PC-9801-86 PCM driver for FreeBSD(98).  *  * Copyright (c) 1995  NAGAO Tadaaki (ABTK)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pcm86.c,v 1.5 1998/12/04 22:54:50 archie Exp $  */
+comment|/*  * PC-9801-86 PCM driver for FreeBSD(98).  *  * Copyright (c) 1995  NAGAO Tadaaki (ABTK)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pcm86.c,v 1.7 1999/01/01 08:18:06 peter Exp $  */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_PCM86
+name|EXCLUDE_NSS
 argument_list|)
 operator|&&
 operator|!
@@ -134,13 +134,13 @@ comment|/*  * Switches for debugging and experiments  */
 end_comment
 
 begin_comment
-comment|/* #define PCM86_DEBUG */
+comment|/* #define NSS_DEBUG */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
+name|NSS_DEBUG
 end_ifdef
 
 begin_ifdef
@@ -300,6 +300,10 @@ decl_stmt|;
 name|int
 name|last_r
 decl_stmt|;
+name|sound_os_info
+modifier|*
+name|osp
+decl_stmt|;
 block|}
 name|pcm_s
 struct|;
@@ -335,7 +339,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|pcm_initialized
+name|nss_initialized
 init|=
 name|NO
 decl_stmt|;
@@ -1459,7 +1463,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|pcm86_detect
+name|nss_detect
 parameter_list|(
 name|struct
 name|address_info
@@ -1471,7 +1475,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pcm86_open
+name|nss_open
 parameter_list|(
 name|int
 parameter_list|,
@@ -1483,7 +1487,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcm86_close
+name|nss_close
 parameter_list|(
 name|int
 parameter_list|)
@@ -1493,7 +1497,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcm86_output_block
+name|nss_output_block
 parameter_list|(
 name|int
 parameter_list|,
@@ -1512,7 +1516,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcm86_start_input
+name|nss_start_input
 parameter_list|(
 name|int
 parameter_list|,
@@ -1531,14 +1535,26 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pcm86_ioctl
+name|nss_ioctl
 parameter_list|(
 name|int
 parameter_list|,
-name|unsigned
+name|u_int
+parameter_list|,
+name|ioctl_arg
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|nss_prepare_for_input
+parameter_list|(
 name|int
 parameter_list|,
-name|unsigned
 name|int
 parameter_list|,
 name|int
@@ -1549,21 +1565,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pcm86_prepare_for_input
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pcm86_prepare_for_output
+name|nss_prepare_for_output
 parameter_list|(
 name|int
 parameter_list|,
@@ -1577,7 +1579,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcm86_reset
+name|nss_reset
 parameter_list|(
 name|int
 parameter_list|)
@@ -1587,7 +1589,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcm86_halt_xfer
+name|nss_halt_xfer
 parameter_list|(
 name|int
 parameter_list|)
@@ -2039,7 +2041,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcm_stop
+name|nss_stop
 parameter_list|(
 name|void
 parameter_list|)
@@ -2049,7 +2051,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcm_init
+name|nss_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -2064,13 +2066,13 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|audio_operations
-name|pcm86_operations
+name|nss_operations
 init|=
 block|{
 literal|"PC-9801-86 SoundBoard"
 block|,
 comment|/* filled in properly by auto configuration */
-name|NOTHING_SPECIAL
+name|DMA_DISABLE
 block|,
 operator|(
 name|AFMT_MU_LAW
@@ -2090,23 +2092,23 @@ operator|)
 block|,
 name|NULL
 block|,
-name|pcm86_open
+name|nss_open
 block|,
-name|pcm86_close
+name|nss_close
 block|,
-name|pcm86_output_block
+name|nss_output_block
 block|,
-name|pcm86_start_input
+name|nss_start_input
 block|,
-name|pcm86_ioctl
+name|nss_ioctl
 block|,
-name|pcm86_prepare_for_input
+name|nss_prepare_for_input
 block|,
-name|pcm86_prepare_for_output
+name|nss_prepare_for_output
 block|,
-name|pcm86_reset
+name|nss_reset
 block|,
-name|pcm86_halt_xfer
+name|nss_halt_xfer
 block|,
 name|NULL
 block|,
@@ -3114,9 +3116,9 @@ block|}
 else|else
 block|{
 comment|/* ??? something wrong... */
-name|printk
+name|printf
 argument_list|(
-literal|"pcm0: chunkcount overrun\n"
+literal|"nss0: chunkcount overrun\n"
 argument_list|)
 expr_stmt|;
 name|chunksize
@@ -3135,7 +3137,7 @@ index|[
 name|my_dev
 index|]
 operator|->
-name|dmap
+name|dmap_out
 operator|->
 name|qlen
 operator|<
@@ -3383,8 +3385,8 @@ literal|2
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
 literal|"fifo_send(): %d bytes sent\n"
 argument_list|,
@@ -3444,8 +3446,8 @@ name|YES
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
 literal|"fifo_sendtrailer(): %d bytes sent\n"
 argument_list|,
@@ -6919,9 +6921,9 @@ expr_stmt|;
 block|}
 else|else
 comment|/* ??? something wrong... */
-name|printk
+name|printf
 argument_list|(
-literal|"pcm0: chunkcount overrun\n"
+literal|"nss0: chunkcount overrun\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7080,8 +7082,8 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
 literal|"fifo_recv(): %d bytes received\n"
 argument_list|,
@@ -11826,7 +11828,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcm_stop
+name|nss_stop
 parameter_list|(
 name|void
 parameter_list|)
@@ -11878,9 +11880,9 @@ literal|0
 expr_stmt|;
 name|DEB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
-literal|"pcm_stop\n"
+literal|"nss_stop\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11890,13 +11892,13 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcm_init
+name|nss_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 comment|/* Initialize registers on the board. */
-name|pcm_stop
+name|nss_stop
 argument_list|()
 expr_stmt|;
 if|if
@@ -11923,7 +11925,7 @@ name|opened
 operator|=
 name|NO
 expr_stmt|;
-name|pcm_initialized
+name|nss_initialized
 operator|=
 name|YES
 expr_stmt|;
@@ -11936,7 +11938,7 @@ end_comment
 
 begin_function
 name|int
-name|probe_pcm86
+name|probe_nss
 parameter_list|(
 name|struct
 name|address_info
@@ -11945,7 +11947,7 @@ name|hw_config
 parameter_list|)
 block|{
 return|return
-name|pcm86_detect
+name|nss_detect
 argument_list|(
 name|hw_config
 argument_list|)
@@ -11954,12 +11956,9 @@ block|}
 end_function
 
 begin_function
-name|long
-name|attach_pcm86
+name|void
+name|attach_nss
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
@@ -11974,20 +11973,18 @@ name|board_type
 operator|==
 name|NO_SUPPORTED_BOARD
 condition|)
-return|return
-name|mem_start
-return|;
+return|return ;
 comment|/* Initialize the board. */
-name|pcm_init
+name|nss_init
 argument_list|()
 expr_stmt|;
-name|printk
+name|conf_printf
 argument_list|(
-literal|"pcm0:<%s>"
-argument_list|,
-name|pcm86_operations
+name|nss_operations
 operator|.
 name|name
+argument_list|,
+name|hw_config
 argument_list|)
 expr_stmt|;
 if|if
@@ -12008,17 +12005,9 @@ name|my_dev
 index|]
 operator|=
 operator|&
-name|pcm86_operations
+name|nss_operations
 expr_stmt|;
-name|audio_devs
-index|[
-name|my_dev
-index|]
-operator|->
-name|buffcount
-operator|=
-name|DSP_BUFFCOUNT
-expr_stmt|;
+comment|/*	audio_devs[my_dev]->buffcount = DSP_BUFFCOUNT; */
 name|audio_devs
 index|[
 name|my_dev
@@ -12030,8 +12019,8 @@ name|DSP_BUFFSIZE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
 literal|"\nbuffsize = %d"
 argument_list|,
@@ -12042,21 +12031,19 @@ endif|#
 directive|endif
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
-literal|"pcm0: Too many PCM devices available"
+literal|"nss0: Too many PCM devices available"
 argument_list|)
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return ;
 block|}
 end_function
 
 begin_function
 specifier|static
 name|int
-name|pcm86_detect
+name|nss_detect
 parameter_list|(
 name|struct
 name|address_info
@@ -12091,7 +12078,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pcm0: iobase not specified. Assume default port(0x%x)\n"
+literal|"nss0: iobase not specified. Assume default port(0x%x)\n"
 argument_list|,
 name|PCM86_IOBASE
 argument_list|)
@@ -12112,6 +12099,52 @@ operator|->
 name|io_base
 expr_stmt|;
 comment|/* auto configuration */
+name|tmp
+operator|=
+operator|(
+name|inb
+argument_list|(
+name|pcm_s
+operator|.
+name|iobase
+argument_list|)
+operator|&
+literal|0xf0
+operator|)
+operator|>>
+literal|4
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+literal|0x07
+condition|)
+block|{
+comment|/*         * Remap MATE-X PCM Sound ID register (0xA460 -> 0xB460)        * to avoid corrision with 86 Sound System.        */
+comment|/*       printf("nss0: Found MATE-X PCM Sound ID\n");       printf("nss0: Remaped 0xa460 to 0xb460\n");        */
+name|outb
+argument_list|(
+literal|0xc24
+argument_list|,
+literal|0xe1
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0xc2b
+argument_list|,
+literal|0x60
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0xc2d
+argument_list|,
+literal|0xb4
+argument_list|)
+expr_stmt|;
+block|}
 name|tmp
 operator|=
 name|inb
@@ -12492,13 +12525,13 @@ expr_stmt|;
 comment|/* Ok.  Detection finished. */
 name|snprintf
 argument_list|(
-name|pcm86_operations
+name|nss_operations
 operator|.
 name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pcm86_operations
+name|nss_operations
 operator|.
 name|name
 argument_list|)
@@ -12513,7 +12546,7 @@ name|board_type
 index|]
 argument_list|)
 expr_stmt|;
-name|pcm_initialized
+name|nss_initialized
 operator|=
 name|NO
 expr_stmt|;
@@ -12543,7 +12576,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"pcm0: change irq %d -> %d\n"
+literal|"nss0: change irq %d -> %d\n"
 argument_list|,
 name|hw_config
 operator|->
@@ -12558,6 +12591,14 @@ name|irq
 operator|=
 name|irq
 expr_stmt|;
+name|pcm_s
+operator|.
+name|osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 return|return
 name|YES
 return|;
@@ -12567,7 +12608,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pcm86_open
+name|nss_open
 parameter_list|(
 name|int
 name|dev
@@ -12582,13 +12623,13 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|pcm_initialized
+name|nss_initialized
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|ENXIO
-argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -12601,10 +12642,10 @@ operator|.
 name|opened
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -12617,9 +12658,11 @@ name|pcm_s
 operator|.
 name|irq
 argument_list|,
-name|pcmintr
+name|nssintr
 argument_list|,
-literal|"PC-9801-73/86"
+name|pcm_s
+operator|.
+name|osp
 argument_list|)
 operator|)
 operator|<
@@ -12628,7 +12671,7 @@ condition|)
 return|return
 name|err
 return|;
-name|pcm_stop
+name|nss_stop
 argument_list|()
 expr_stmt|;
 name|tmpbuf
@@ -12658,19 +12701,13 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcm86_close
+name|nss_close
 parameter_list|(
 name|int
 name|dev
 parameter_list|)
 block|{
-name|snd_release_irq
-argument_list|(
-name|pcm_s
-operator|.
-name|irq
-argument_list|)
-expr_stmt|;
+comment|/* snd_release_irq(pcm_s.irq); */
 name|pcm_s
 operator|.
 name|opened
@@ -12683,7 +12720,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcm86_output_block
+name|nss_output_block
 parameter_list|(
 name|int
 name|dev
@@ -12713,10 +12750,10 @@ name|maxchunksize
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
-literal|"pcm86_output_block():"
+literal|"nss_output_block():"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12726,13 +12763,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_out
 operator|->
 name|flags
 operator|&
 name|DMA_BUSY
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_BUSY"
 argument_list|)
@@ -12744,13 +12781,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_out
 operator|->
 name|flags
 operator|&
 name|DMA_RESTART
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_RESTART"
 argument_list|)
@@ -12762,13 +12799,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_out
 operator|->
 name|flags
 operator|&
 name|DMA_ACTIVE
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_ACTIVE"
 argument_list|)
@@ -12780,13 +12817,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_out
 operator|->
 name|flags
 operator|&
 name|DMA_STARTED
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_STARTED"
 argument_list|)
@@ -12798,18 +12835,18 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_out
 operator|->
 name|flags
 operator|&
 name|DMA_ALLOC_DONE
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_ALLOC_DONE"
 argument_list|)
 expr_stmt|;
-name|printk
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -12824,10 +12861,10 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
-literal|"pcm86_output_block(): count = %d, intrsize= %d\n"
+literal|"nss_output_block(): count = %d, intrsize= %d\n"
 argument_list|,
 name|count
 argument_list|,
@@ -12964,7 +13001,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcm86_start_input
+name|nss_start_input
 parameter_list|(
 name|int
 name|dev
@@ -12994,10 +13031,10 @@ name|maxchunksize
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
-literal|"pcm86_start_input():"
+literal|"nss_start_input():"
 argument_list|)
 expr_stmt|;
 if|if
@@ -13007,13 +13044,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_in
 operator|->
 name|flags
 operator|&
 name|DMA_BUSY
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_BUSY"
 argument_list|)
@@ -13025,13 +13062,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_in
 operator|->
 name|flags
 operator|&
 name|DMA_RESTART
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_RESTART"
 argument_list|)
@@ -13043,13 +13080,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_in
 operator|->
 name|flags
 operator|&
 name|DMA_ACTIVE
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_ACTIVE"
 argument_list|)
@@ -13061,13 +13098,13 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_in
 operator|->
 name|flags
 operator|&
 name|DMA_STARTED
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_STARTED"
 argument_list|)
@@ -13079,18 +13116,18 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmap
+name|dmap_in
 operator|->
 name|flags
 operator|&
 name|DMA_ALLOC_DONE
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|" DMA_ALLOC_DONE"
 argument_list|)
 expr_stmt|;
-name|printk
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -13111,10 +13148,10 @@ name|PCM86_INTRSIZE_IN
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|PCM86_DEBUG
-name|printk
+name|NSS_DEBUG
+name|printf
 argument_list|(
-literal|"pcm86_start_input(): count = %d, intrsize= %d\n"
+literal|"nss_start_input(): count = %d, intrsize= %d\n"
 argument_list|,
 name|count
 argument_list|,
@@ -13235,17 +13272,15 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pcm86_ioctl
+name|nss_ioctl
 parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
-name|int
+name|ioctl_arg
 name|arg
 parameter_list|,
 name|int
@@ -13267,21 +13302,30 @@ condition|)
 return|return
 name|set_speed
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 argument_list|)
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|set_speed
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -13297,14 +13341,16 @@ operator|.
 name|speed
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|pcm_s
 operator|.
 name|speed
-argument_list|)
 return|;
 case|case
 name|SNDCTL_DSP_STEREO
@@ -13316,21 +13362,30 @@ condition|)
 return|return
 name|set_stereo
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 argument_list|)
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|set_stereo
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -13343,6 +13398,9 @@ condition|)
 return|return
 name|set_stereo
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 operator|-
 literal|1
@@ -13351,22 +13409,28 @@ operator|+
 literal|1
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|set_stereo
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
+operator|)
 operator|-
 literal|1
 argument_list|)
 operator|+
 literal|1
-argument_list|)
 return|;
 case|case
 name|SOUND_PCM_READ_CHANNELS
@@ -13383,16 +13447,18 @@ operator|+
 literal|1
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|pcm_s
 operator|.
 name|stereo
 operator|+
 literal|1
-argument_list|)
 return|;
 case|case
 name|SNDCTL_DSP_SETFMT
@@ -13404,21 +13470,30 @@ condition|)
 return|return
 name|set_format
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 argument_list|)
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|set_format
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 case|case
@@ -13436,24 +13511,26 @@ operator|*
 literal|8
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|pcm_s
 operator|.
 name|bytes
 operator|*
 literal|8
-argument_list|)
 return|;
 block|}
 comment|/* Invalid ioctl request */
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -13461,7 +13538,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pcm86_prepare_for_input
+name|nss_prepare_for_input
 parameter_list|(
 name|int
 name|dev
@@ -13505,9 +13582,9 @@ literal|0
 expr_stmt|;
 name|DEB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
-literal|"pcm86_prepare_for_input\n"
+literal|"nss_prepare_for_input\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13520,7 +13597,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pcm86_prepare_for_output
+name|nss_prepare_for_output
 parameter_list|(
 name|int
 name|dev
@@ -13564,9 +13641,9 @@ literal|0
 expr_stmt|;
 name|DEB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
-literal|"pcm86_prepare_for_output\n"
+literal|"nss_prepare_for_output\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13579,13 +13656,13 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcm86_reset
+name|nss_reset
 parameter_list|(
 name|int
 name|dev
 parameter_list|)
 block|{
-name|pcm_stop
+name|nss_stop
 argument_list|()
 expr_stmt|;
 block|}
@@ -13594,20 +13671,20 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcm86_halt_xfer
+name|nss_halt_xfer
 parameter_list|(
 name|int
 name|dev
 parameter_list|)
 block|{
-name|pcm_stop
+name|nss_stop
 argument_list|()
 expr_stmt|;
 name|DEB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
-literal|"pcm86_halt_xfer\n"
+literal|"nss_halt_xfer\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13616,7 +13693,7 @@ end_function
 
 begin_function
 name|void
-name|pcmintr
+name|nssintr
 parameter_list|(
 name|int
 name|unit
@@ -13664,9 +13741,9 @@ condition|)
 block|{
 name|DEB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
-literal|"pcmintr(): fifo_reset\n"
+literal|"nssintr(): fifo_reset\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13805,12 +13882,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|pcm_stop
+name|nss_stop
 argument_list|()
 expr_stmt|;
-name|printk
+name|printf
 argument_list|(
-literal|"pcm0: unexpected interrupt\n"
+literal|"nss0: unexpected interrupt\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -13823,7 +13900,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EXCLUDE_PCM86, EXCLUDE_AUDIO */
+comment|/* EXCLUDE_NSS, EXCLUDE_AUDIO */
 end_comment
 
 begin_endif

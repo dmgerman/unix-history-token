@@ -1666,15 +1666,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|ointhand2_t
 name|mpuintr
-parameter_list|(
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*	From uart6850.c */
@@ -2585,6 +2581,40 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*	From pcm86.c */
+end_comment
+
+begin_function_decl
+name|void
+name|attach_nss
+parameter_list|(
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|probe_nss
+parameter_list|(
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|ointhand2_t
+name|nssintr
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
