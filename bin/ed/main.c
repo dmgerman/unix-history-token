@@ -776,12 +776,29 @@ name|argv
 operator|!=
 literal|'!'
 condition|)
-name|strcpy
+if|if
+condition|(
+name|strlcpy
 argument_list|(
 name|old_filename
 argument_list|,
 operator|*
 name|argv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|old_filename
+argument_list|)
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|old_filename
+argument_list|)
+condition|)
+name|quit
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -6513,9 +6530,15 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* assert: no trailing escape */
 while|while
 condition|(
+name|i
+operator|<
+name|filesz
+operator|-
+literal|1
+comment|/* Worry about a possible trailing escape */
+operator|&&
 operator|(
 name|file
 index|[
