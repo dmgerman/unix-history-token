@@ -3,6 +3,20 @@ begin_comment
 comment|/*-  * Copyright (c) 1980, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -25,36 +39,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)w.c	8.4 (Berkeley) 4/16/94";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)w.c	8.4 (Berkeley) 4/16/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,10 +60,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*  * w - print system status (who and what)  *  * This program is similar to the systat command on Tenex/Tops 10/20  *  */
@@ -146,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -249,18 +255,6 @@ begin_include
 include|#
 directive|include
 file|<vis.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/nameser.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<resolv.h>
 end_include
 
 begin_include
@@ -607,11 +601,6 @@ modifier|*
 name|dkp
 decl_stmt|;
 name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
-name|struct
 name|stat
 modifier|*
 name|stp
@@ -619,9 +608,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|ut
-decl_stmt|;
-name|u_long
-name|l
 decl_stmt|;
 name|time_t
 name|touched
@@ -641,6 +627,7 @@ name|longidle
 decl_stmt|,
 name|dropgid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|memf
@@ -650,7 +637,8 @@ name|nlistf
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|x_suffix
 decl_stmt|;
@@ -1646,7 +1634,10 @@ name|ep
 operator|->
 name|args
 operator|=
+name|strdup
+argument_list|(
 literal|"-"
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -1828,7 +1819,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|lsin
 init|=
 operator|(
 expr|struct
@@ -1841,7 +1832,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
-name|sin6
+name|lsin6
 init|=
 operator|(
 expr|struct
@@ -1970,7 +1961,7 @@ argument_list|,
 name|p
 argument_list|,
 operator|&
-name|sin6
+name|lsin6
 operator|->
 name|sin6_addr
 argument_list|)
@@ -1978,17 +1969,17 @@ operator|==
 literal|1
 condition|)
 block|{
-name|sin6
+name|lsin6
 operator|->
 name|sin6_len
 operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin6
+name|lsin6
 argument_list|)
 expr_stmt|;
-name|sin6
+name|lsin6
 operator|->
 name|sin6_family
 operator|=
@@ -2009,7 +2000,7 @@ argument_list|,
 name|p
 argument_list|,
 operator|&
-name|sin
+name|lsin
 operator|->
 name|sin_addr
 argument_list|)
@@ -2017,17 +2008,17 @@ operator|==
 literal|1
 condition|)
 block|{
-name|sin
+name|lsin
 operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|lsin
 argument_list|)
 expr_stmt|;
-name|sin
+name|lsin
 operator|->
 name|sin_family
 operator|=
@@ -2119,6 +2110,7 @@ name|dkp
 argument_list|)
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|ptr
@@ -2321,7 +2313,7 @@ literal|3
 index|]
 decl_stmt|;
 name|time_t
-name|uptime
+name|luptime
 decl_stmt|;
 name|int
 name|days
@@ -2449,7 +2441,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|uptime
+name|luptime
 operator|=
 name|now
 operator|-
@@ -2459,43 +2451,43 @@ name|tv_sec
 expr_stmt|;
 if|if
 condition|(
-name|uptime
+name|luptime
 operator|>
 literal|60
 condition|)
-name|uptime
+name|luptime
 operator|+=
 literal|30
 expr_stmt|;
 name|days
 operator|=
-name|uptime
+name|luptime
 operator|/
 literal|86400
 expr_stmt|;
-name|uptime
+name|luptime
 operator|%=
 literal|86400
 expr_stmt|;
 name|hrs
 operator|=
-name|uptime
+name|luptime
 operator|/
 literal|3600
 expr_stmt|;
-name|uptime
+name|luptime
 operator|%=
 literal|3600
 expr_stmt|;
 name|mins
 operator|=
-name|uptime
+name|luptime
 operator|/
 literal|60
 expr_stmt|;
 name|secs
 operator|=
-name|uptime
+name|luptime
 operator|%
 literal|60
 expr_stmt|;
@@ -2692,7 +2684,10 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|avenrun
@@ -2705,7 +2700,7 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|)
+argument_list|)
 condition|;
 name|i
 operator|++
