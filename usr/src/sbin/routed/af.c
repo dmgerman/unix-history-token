@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.10 (Berkeley) %G%"
+literal|"@(#)af.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,6 +452,11 @@ name|size
 argument_list|,
 name|flags
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 sizeof|sizeof

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.11 (Berkeley) %G%"
+literal|"@(#)query.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,19 +79,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<protocols/routed.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -103,7 +109,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<protocols/routed.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -137,11 +167,15 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|timedout
-decl_stmt|,
-name|timeout
-argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|timeout
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
@@ -149,13 +183,6 @@ name|packet
 index|[
 name|MAXPACKETSIZE
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -408,12 +435,16 @@ name|select
 argument_list|(
 literal|20
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 operator|&
 name|bits
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|shorttime
@@ -747,6 +778,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|router
 argument_list|,
@@ -873,6 +909,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|from
 operator|->
@@ -1180,6 +1220,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sin
 operator|->
@@ -1327,19 +1371,17 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|timeout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|timedout
 operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the possible subnetwork number from an internet address.  * SHOULD FIND OUT WHETHER THIS IS A LOCAL NETWORK BEFORE LOOKING  * INSIDE OF THE HOST PART.  We can only believe this if we have other  * information (e.g., we can find a name for this number).  */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timer.c	5.9 (Berkeley) %G%"
+literal|"@(#)timer.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,12 +48,10 @@ begin_comment
 comment|/*  * Timer routine.  Performs routing information supply  * duties and manages timers on routing table entries.  * Management of the RTS_CHANGED bit assumes that we broadcast  * each time called.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|timer
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -324,7 +322,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * On hangup, let everyone know we're going away.  */

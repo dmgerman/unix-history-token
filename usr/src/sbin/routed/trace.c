@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.10 (Berkeley) %G%"
+literal|"@(#)trace.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,12 +47,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -60,6 +54,18 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -138,6 +144,11 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|static
+name|int
+name|iftraceinit
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|iftraceinit
@@ -548,20 +559,15 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|sigtrace
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|int
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -591,7 +597,7 @@ name|bumploglevel
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Move to next higher level of tracing when -t option processed or  * SIGUSR1 is received.  Successive levels are:  *	traceactions  *	traceactions + tracepackets  *	traceactions + tracehistory (packets and contents after change)  *	traceactions + tracepackets + tracecontents  */

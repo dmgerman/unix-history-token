@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.21 (Berkeley) %G%"
+literal|"@(#)main.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,7 +167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|hup
 argument_list|()
 decl_stmt|,
@@ -175,6 +175,9 @@ name|rtdeleteall
 argument_list|()
 decl_stmt|,
 name|sigtrace
+argument_list|()
+decl_stmt|,
+name|timer
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -657,7 +660,7 @@ argument_list|)
 expr_stmt|;
 name|toall
 argument_list|(
-name|sendmsg
+name|sndmsg
 argument_list|)
 expr_stmt|;
 name|signal
@@ -1518,6 +1521,11 @@ name|bind
 argument_list|(
 name|sock
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 sizeof|sizeof
@@ -1525,8 +1533,6 @@ argument_list|(
 operator|*
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
