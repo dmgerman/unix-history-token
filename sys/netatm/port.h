@@ -19,56 +19,6 @@ directive|define
 name|_NETATM_PORT_H
 end_define
 
-begin_comment
-comment|/*  * User-space memory management  *  * UM_ALLOC(size)	Returns an allocated kernel memory chunk of size bytes.  * UM_FREE(addr)	Free a kernel memory chunk of size bytes.  * UM_COPY(from, to, len)  *			Copies len bytes of data from from to to.  * UM_ZERO(addr, len)	Zeros len bytes of data from addr.  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UM_ALLOC
-parameter_list|(
-name|size
-parameter_list|)
-value|malloc((size_t)(size))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UM_FREE
-parameter_list|(
-name|addr
-parameter_list|)
-value|free((void *)(addr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UM_COPY
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|len
-parameter_list|)
-value|bcopy((void *)(from), (void *)(to),\ 						(size_t)(len))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UM_ZERO
-parameter_list|(
-name|addr
-parameter_list|,
-name|len
-parameter_list|)
-value|bzero((void *)(addr), (size_t)(len))
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -484,7 +434,7 @@ parameter_list|,
 name|n
 parameter_list|)
 value|{				\
-comment|/* n = M_LEADINGSPACE(bfr) XXX */
+comment|/* N = m_leadingspace(BFR) XXX */
 value|\ 	(n) = ((bfr)->m_flags& M_EXT ? (bfr)->m_data - (bfr)->m_ext.ext_buf : \ 		(bfr)->m_flags& M_PKTHDR ? (bfr)->m_data - (bfr)->m_pktdat : \ 			(bfr)->m_data - (bfr)->m_dat);	\ }
 end_define
 
