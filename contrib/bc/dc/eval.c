@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * evaluate the dc language, from a FILE* or a string  *  * Copyright (C) 1994, 1997 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*   * evaluate the dc language, from a FILE* or a string  *  * Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -108,6 +108,18 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|DC_FALSE
+block|,
+name|DC_TRUE
+block|}
+name|dc_boolean
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|DC_OKAY
 init|=
 name|DC_SUCCESS
@@ -132,6 +144,9 @@ comment|/* caller needs to run a system() on next input line */
 name|DC_COMMENT
 block|,
 comment|/* caller needs to skip to the next input line */
+name|DC_NEGCMP
+block|,
+comment|/* caller needs to re-call dc_func() with `negcmp' set */
 name|DC_EOF_ERROR
 comment|/* unexpected end of input; abort current eval */
 block|}
@@ -387,7 +402,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* dc_func does the grunt work of figuring out what each input  * character means; used by both dc_evalstr and dc_evalfile  *  * c -> the "current" input character under consideration  * peekc -> the lookahead input character  */
+comment|/* dc_func does the grunt work of figuring out what each input  * character means; used by both dc_evalstr and dc_evalfile  *  * c -> the "current" input character under consideration  * peekc -> the lookahead input character  * negcmp -> negate comparison test (for<,=,> commands)  */
 end_comment
 
 begin_decl_stmt
@@ -400,6 +415,8 @@ operator|(
 name|c
 operator|,
 name|peekc
+operator|,
+name|negcmp
 operator|)
 argument_list|)
 name|int
@@ -407,6 +424,9 @@ name|c
 name|DC_DECLSEP
 name|int
 name|peekc
+name|DC_DECLSEP
+name|int
+name|negcmp
 name|DC_DECLEND
 block|{
 comment|/* we occasionally need these for temporary data */
@@ -601,10 +621,15 @@ name|DC_EOF_ERROR
 return|;
 if|if
 condition|(
+operator|(
 name|dc_cmpop
 argument_list|()
 operator|<
 literal|0
+operator|)
+operator|==
+operator|!
+name|negcmp
 condition|)
 if|if
 condition|(
@@ -648,10 +673,15 @@ name|DC_EOF_ERROR
 return|;
 if|if
 condition|(
+operator|(
 name|dc_cmpop
 argument_list|()
 operator|==
 literal|0
+operator|)
+operator|==
+operator|!
+name|negcmp
 condition|)
 if|if
 condition|(
@@ -695,10 +725,15 @@ name|DC_EOF_ERROR
 return|;
 if|if
 condition|(
+operator|(
 name|dc_cmpop
 argument_list|()
 operator|>
 literal|0
+operator|)
+operator|==
+operator|!
+name|negcmp
 condition|)
 if|if
 condition|(
@@ -783,6 +818,23 @@ case|case
 literal|'!'
 case|:
 comment|/* read to newline and call system() on resulting string */
+if|if
+condition|(
+name|peekc
+operator|==
+literal|'<'
+operator|||
+name|peekc
+operator|==
+literal|'='
+operator|||
+name|peekc
+operator|==
+literal|'>'
+condition|)
+return|return
+name|DC_NEGCMP
+return|;
 return|return
 name|DC_SYSTEM
 return|;
@@ -833,17 +885,7 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
-argument_list|)
-expr_stmt|;
-name|dc_free_num
-argument_list|(
-operator|&
-name|datum
-operator|.
-name|v
-operator|.
-name|number
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 block|}
@@ -982,7 +1024,7 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1054,7 +1096,7 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1116,6 +1158,32 @@ return|return
 name|DC_EATONE
 return|;
 case|case
+literal|'n'
+case|:
+comment|/* print the value popped off of top-of-stack; 				 * do not add a trailing newline 				 */
+if|if
+condition|(
+name|dc_pop
+argument_list|(
+operator|&
+name|datum
+argument_list|)
+operator|==
+name|DC_SUCCESS
+condition|)
+name|dc_print
+argument_list|(
+name|datum
+argument_list|,
+name|dc_obase
+argument_list|,
+name|DC_NONL
+argument_list|,
+name|DC_TOSS
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 comment|/* set output base to value on top of stack */
@@ -1152,7 +1220,7 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1183,7 +1251,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-comment|/* print the datum on the top of stack */
+comment|/* print the datum on the top of stack, 				 * with a trailing newline 				 */
 if|if
 condition|(
 name|dc_top_of_stack
@@ -1199,6 +1267,10 @@ argument_list|(
 name|datum
 argument_list|,
 name|dc_obase
+argument_list|,
+name|DC_WITHNL
+argument_list|,
+name|DC_KEEP
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1208,8 +1280,9 @@ case|:
 comment|/* quit two levels of evaluation, posibly exiting program */
 name|unwind_depth
 operator|=
-literal|2
+literal|1
 expr_stmt|;
+comment|/* the return below is the first level of returns */
 name|unwind_noexit
 operator|=
 name|DC_FALSE
@@ -1535,7 +1608,7 @@ break|break;
 case|case
 literal|'P'
 case|:
-comment|/* print the value popped off of top-of-stack; 				 * do not add a trailing newline 				 */
+comment|/* Pop the value off the top of a stack.  If it is 		 * a number, dump out the integer portion of its 		 * absolute value as a "base UCHAR_MAX+1" byte stream; 		 * if it is a string, just print it. 		 * In either case, do not append a trailing newline. 		 */
 if|if
 condition|(
 name|dc_pop
@@ -1553,6 +1626,26 @@ name|datum
 operator|.
 name|dc_type
 operator|==
+name|DC_NUMBER
+condition|)
+name|dc_dump_num
+argument_list|(
+name|datum
+operator|.
+name|v
+operator|.
+name|number
+argument_list|,
+name|DC_TOSS
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|datum
+operator|.
+name|dc_type
+operator|==
 name|DC_STRING
 condition|)
 name|dc_out_str
@@ -1563,33 +1656,9 @@ name|v
 operator|.
 name|string
 argument_list|,
-name|DC_FALSE
+name|DC_NONL
 argument_list|,
-name|DC_TRUE
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|datum
-operator|.
-name|dc_type
-operator|==
-name|DC_NUMBER
-condition|)
-name|dc_out_num
-argument_list|(
-name|datum
-operator|.
-name|v
-operator|.
-name|number
-argument_list|,
-name|dc_obase
-argument_list|,
-name|DC_FALSE
-argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 else|else
@@ -1644,18 +1713,24 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|unwind_depth
+operator|--
 operator|>
 literal|0
 condition|)
 return|return
 name|DC_QUIT
 return|;
+name|unwind_depth
+operator|=
+literal|0
+expr_stmt|;
+comment|/* paranoia */
 name|fprintf
 argument_list|(
 name|stderr
@@ -1672,7 +1747,7 @@ directive|if
 literal|0
 block|case 'R':
 comment|/* pop a value off of the evaluation stack,; 				 * rotate the top 				 remaining stack elements that many 				 * places forward (negative numbers mean rotate 				 * backward). 				 */
-block|if (dc_pop(&datum) == DC_SUCCESS){ 			tmpint = 0; 			if (datum.dc_type == DC_NUMBER) 				tmpint = dc_num2int(datum.v.number, DC_TRUE); 			dc_stack_rotate(tmpint); 		} 		break;
+block|if (dc_pop(&datum) == DC_SUCCESS){ 			tmpint = 0; 			if (datum.dc_type == DC_NUMBER) 				tmpint = dc_num2int(datum.v.number, DC_TOSS); 			dc_stack_rotate(tmpint); 		} 		break;
 endif|#
 directive|endif
 case|case
@@ -1745,7 +1820,7 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 name|dc_push
@@ -1780,7 +1855,7 @@ name|dc_tell_length
 argument_list|(
 name|datum
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 argument_list|)
 argument_list|)
@@ -1833,7 +1908,7 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1924,7 +1999,7 @@ name|v
 operator|.
 name|number
 argument_list|,
-name|DC_TRUE
+name|DC_TOSS
 argument_list|)
 expr_stmt|;
 if|if
@@ -2032,6 +2107,14 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+name|int
+name|negcmp
+decl_stmt|;
+name|int
+name|next_negcmp
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|string
@@ -2118,6 +2201,14 @@ operator|*
 operator|)
 name|s
 expr_stmt|;
+name|negcmp
+operator|=
+name|next_negcmp
+expr_stmt|;
+name|next_negcmp
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|dc_func
@@ -2125,6 +2216,8 @@ argument_list|(
 name|c
 argument_list|,
 name|peekc
+argument_list|,
+name|negcmp
 argument_list|)
 condition|)
 block|{
@@ -2315,6 +2408,14 @@ name|s
 expr_stmt|;
 break|break;
 case|case
+name|DC_NEGCMP
+case|:
+name|next_negcmp
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|DC_EOF_ERROR
 case|:
 name|fprintf
@@ -2364,6 +2465,14 @@ decl_stmt|;
 name|int
 name|peekc
 decl_stmt|;
+name|int
+name|negcmp
+decl_stmt|;
+name|int
+name|next_negcmp
+init|=
+literal|0
+decl_stmt|;
 name|dc_data
 name|datum
 decl_stmt|;
@@ -2407,6 +2516,14 @@ name|stdin_lookahead
 operator|=
 name|peekc
 expr_stmt|;
+name|negcmp
+operator|=
+name|next_negcmp
+expr_stmt|;
+name|next_negcmp
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|dc_func
@@ -2414,6 +2531,8 @@ argument_list|(
 name|c
 argument_list|,
 name|peekc
+argument_list|,
+name|negcmp
 argument_list|)
 condition|)
 block|{
@@ -2640,6 +2759,14 @@ name|getc
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DC_NEGCMP
+case|:
+name|next_negcmp
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * prototypes of all externally visible dc functions  *   * Copyright (C) 1994, 1997 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*  * prototypes of all externally visible dc functions  *   * Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_decl_stmt
@@ -51,6 +51,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|dc_array
+modifier|*
+name|dc_get_stacked_array
+name|DC_PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|dc_array_set
 name|DC_PROTO
@@ -61,6 +76,21 @@ operator|,
 name|int
 operator|,
 name|dc_data
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dc_array_free
+name|DC_PROTO
+argument_list|(
+operator|(
+expr|struct
+name|dc_array
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -181,6 +211,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|dc_dump_num
+parameter_list|(
+name|dc_num
+parameter_list|,
+name|dc_discard
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -263,9 +305,9 @@ name|dc_num
 operator|,
 name|int
 operator|,
-name|dc_boolean
+name|dc_newline
 operator|,
-name|dc_boolean
+name|dc_discard
 operator|)
 argument_list|)
 decl_stmt|;
@@ -280,9 +322,9 @@ argument_list|(
 operator|(
 name|dc_str
 operator|,
-name|dc_boolean
+name|dc_newline
 operator|,
-name|dc_boolean
+name|dc_discard
 operator|)
 argument_list|)
 decl_stmt|;
@@ -298,6 +340,10 @@ operator|(
 name|dc_data
 operator|,
 name|int
+operator|,
+name|dc_newline
+operator|,
+name|dc_discard
 operator|)
 argument_list|)
 decl_stmt|;
@@ -367,6 +413,23 @@ operator|(
 name|int
 operator|,
 name|dc_data
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dc_set_stacked_array
+name|DC_PROTO
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|dc_array
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -469,7 +532,7 @@ argument_list|(
 operator|(
 name|dc_num
 operator|,
-name|dc_boolean
+name|dc_discard
 operator|)
 argument_list|)
 decl_stmt|;
@@ -543,7 +606,7 @@ argument_list|(
 operator|(
 name|dc_data
 operator|,
-name|dc_boolean
+name|dc_discard
 operator|)
 argument_list|)
 decl_stmt|;
@@ -558,7 +621,7 @@ argument_list|(
 operator|(
 name|dc_num
 operator|,
-name|dc_boolean
+name|dc_discard
 operator|)
 argument_list|)
 decl_stmt|;

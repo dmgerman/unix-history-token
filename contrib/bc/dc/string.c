@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * implement string functions for dc  *  * Copyright (C) 1994, 1997 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*   * implement string functions for dc  *  * Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -303,10 +303,10 @@ argument_list|)
 name|dc_str
 name|value
 name|DC_DECLSEP
-name|dc_boolean
+name|dc_newline
 name|newline
 name|DC_DECLSEP
-name|dc_boolean
+name|dc_discard
 name|discard_flag
 name|DC_DECLEND
 block|{
@@ -333,18 +333,18 @@ if|if
 condition|(
 name|newline
 operator|==
-name|DC_TRUE
+name|DC_WITHNL
 condition|)
-name|printf
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|discard_flag
 operator|==
-name|DC_TRUE
+name|DC_TOSS
 condition|)
 name|dc_free_str
 argument_list|(

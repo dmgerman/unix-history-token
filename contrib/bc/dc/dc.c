@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * implement the "dc" Desk Calculator language.  *  * Copyright (C) 1994, 1997 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*   * implement the "dc" Desk Calculator language.  *  * Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\ Usage: %s [OPTION] [file ...]\n\   -e, --expression=EXPR    evaluate expression\n\   -f, --file=FILE          evaluate contents of file\n\   -h, --help               display this help and exit\n\   -V, --version            output version information and exit\n\ \n\ Report bugs to @\n\ "
+literal|"\ Usage: %s [OPTION] [file ...]\n\   -e, --expression=EXPR    evaluate expression\n\   -f, --file=FILE          evaluate contents of file\n\   -h, --help               display this help and exit\n\   -V, --version            output version information and exit\n\ \n\ Report bugs to bug-gnu-utils@prep.ai.mit.edu\n\ Be sure to include the word ``dc'' somewhere in the ``Subject:'' field.\n\ "
 argument_list|,
 name|progname
 argument_list|)
@@ -286,6 +286,24 @@ name|input
 decl_stmt|;
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|input
+operator|=
+name|stdin
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|!
 operator|(
 name|input
@@ -329,6 +347,12 @@ argument_list|(
 name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|input
+operator|!=
+name|stdin
+condition|)
 name|fclose
 argument_list|(
 name|input
@@ -437,6 +461,26 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SETVBUF
+comment|/* attempt to simplify interaction with applications such as emacs */
+operator|(
+name|void
+operator|)
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|dc_math_init
 argument_list|()
 expr_stmt|;
@@ -460,7 +504,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hVe:"
+literal|"hVe:f:"
 argument_list|,
 name|long_opts
 argument_list|,
@@ -578,34 +622,6 @@ operator|++
 name|optind
 control|)
 block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|optind
-index|]
-argument_list|,
-literal|"-"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|dc_evalfile
-argument_list|(
-name|stdin
-argument_list|)
-condition|)
-return|return
-name|EXIT_FAILURE
-return|;
-block|}
-else|else
-block|{
 name|try_file
 argument_list|(
 name|argv
@@ -614,7 +630,6 @@ name|optind
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|did_eval
 operator|=
 literal|1
