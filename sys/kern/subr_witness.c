@@ -6307,6 +6307,21 @@ name|nheld
 decl_stmt|;
 name|KASSERT
 argument_list|(
+operator|!
+name|witness_cold
+argument_list|,
+operator|(
+literal|"%s: witness_cold"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|KASSERT
+argument_list|(
 name|p
 operator|==
 name|curproc
@@ -6315,18 +6330,6 @@ name|db_active
 argument_list|,
 operator|(
 literal|"%s: p != curproc and we aren't in the debugger"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-name|witness_cold
-argument_list|,
-operator|(
-literal|"%s: witness_cold"
 operator|,
 name|__func__
 operator|)
@@ -6344,6 +6347,32 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+name|KASSERT
+argument_list|(
+name|p
+operator|==
+name|curproc
+argument_list|,
+operator|(
+literal|"%s: p != curproc"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|witness_dead
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 name|nheld
 operator|=
 name|witness_list_locks
