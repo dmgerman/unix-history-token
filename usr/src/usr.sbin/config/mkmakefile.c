@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.37 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -763,13 +763,35 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d\n"
+literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d"
 argument_list|,
 name|zone
 argument_list|,
 name|dst
 argument_list|,
 name|maxusers
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hz
+operator|>
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|" -DHZ=%d"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 for|for
