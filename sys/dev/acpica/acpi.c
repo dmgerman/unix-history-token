@@ -93,18 +93,6 @@ directive|include
 file|<dev/acpica/acpiio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pcib_if.h"
-end_include
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
