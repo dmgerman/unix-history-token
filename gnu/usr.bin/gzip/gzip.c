@@ -60,7 +60,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gzip.c,v 1.6 1997/02/22 15:45:57 peter Exp $"
+literal|"$Id: gzip.c,v 1.7 1997/03/15 22:43:58 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5106,6 +5106,38 @@ decl_stmt|;
 comment|/* pointer to ifname extension, or NULL */
 endif|#
 directive|endif
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|iname
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|ifname
+argument_list|)
+operator|-
+literal|3
+condition|)
+block|{
+name|errno
+operator|=
+name|ENAMETOOLONG
+expr_stmt|;
+name|perror
+argument_list|(
+name|iname
+argument_list|)
+expr_stmt|;
+name|exit_code
+operator|=
+name|ERROR
+expr_stmt|;
+return|return
+name|ERROR
+return|;
+block|}
 name|strcpy
 argument_list|(
 name|ifname
