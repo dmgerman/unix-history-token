@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.34	81/03/22	*/
+comment|/*	hp.c	4.35	81/04/02	*/
 end_comment
 
 begin_decl_stmt
@@ -24,7 +24,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	check RM80 skip sector handling, esp when ECC's occur later  *	check offset recovery handling  *	see if DCLR and/or RELEASE set attention status  */
+comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	check RM80 skip sector handling, esp when ECC's occur later  *	check offset recovery handling  */
 end_comment
 
 begin_include
@@ -196,9 +196,9 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 822 */
-literal|2720
+literal|0
 block|,
-literal|291
+literal|0
 block|,
 literal|0
 block|,
