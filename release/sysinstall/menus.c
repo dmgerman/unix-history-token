@@ -1995,12 +1995,16 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select a protocol type for your mouse"
 block|,
-literal|"If you are not sure, choose \"Auto\".  It should always work for bus\n"
-literal|"and PS/2 style mice.  It may not work for the serial mouse if the mouse\n"
-literal|"does not support the PnP standard.  But, it won't hurt.  Many 2-button\n"
-literal|"serial mice are compatible with \"Microsoft\" or \"MouseMan\".  3-button\n"
-literal|"serial mice may be compatible with \"MouseSystems\" or \"MouseMan\".  If\n"
-literal|"the mouse has a wheel, it may be compatible with \"IntelliMouse\"."
+literal|"If your mouse is attached to the PS/2 mouse port or the bus mouse port,\n"
+literal|"you should always choose \"Auto\", regardless of the model and the brand\n"
+literal|"of the mouse.  All other protocol types are for serial mice and should\n"
+literal|"not be used with the PS/2 port mouse or the bus mouse.  If you have\n"
+literal|"a serial mouse and are not sure about its protocol, you should also try\n"
+literal|"\"Auto\".  It may not work for the serial mouse if the mouse does not\n"
+literal|"support the PnP standard.  But, it won't hurt.  Many 2-button serial mice\n"
+literal|"are compatible with \"Microsoft\" or \"MouseMan\".  3-button serial mice\n"
+literal|"may be compatible with \"MouseSystems\" or \"MouseMan\".  If the serial\n"
+literal|"mouse has a wheel, it may be compatible with \"IntelliMouse\"."
 block|,
 name|NULL
 block|,
