@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.71	83/01/22	*/
+comment|/*	uipc_socket.c	4.72	83/03/15	*/
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
 end_include
 
 begin_comment
@@ -3730,6 +3736,65 @@ expr|struct
 name|rtentry
 operator|*
 operator|)
+name|data
+argument_list|)
+operator|)
+return|;
+comment|/* interface parameter requests */
+case|case
+name|SIOCSIFADDR
+case|:
+case|case
+name|SIOCSIFFLAGS
+case|:
+if|if
+condition|(
+operator|!
+name|suser
+argument_list|()
+condition|)
+return|return
+operator|(
+name|u
+operator|.
+name|u_error
+operator|)
+return|;
+return|return
+operator|(
+name|ifrequest
+argument_list|(
+name|cmd
+argument_list|,
+name|data
+argument_list|)
+operator|)
+return|;
+case|case
+name|SIOCGIFADDR
+case|:
+case|case
+name|SIOCGIFFLAGS
+case|:
+return|return
+operator|(
+name|ifrequest
+argument_list|(
+name|cmd
+argument_list|,
+name|data
+argument_list|)
+operator|)
+return|;
+case|case
+name|SIOCGIFCONF
+case|:
+return|return
+operator|(
+name|ifconf
+argument_list|(
+name|cmd
+argument_list|,
 name|data
 argument_list|)
 operator|)

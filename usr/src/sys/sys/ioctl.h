@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.26	82/12/17	*/
+comment|/*	ioctl.h	4.27	83/03/15	*/
 end_comment
 
 begin_comment
@@ -1609,83 +1609,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCDONE
-value|_IOW(s, 0, int)
-end_define
-
-begin_comment
-comment|/* shutdown read/write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCSKEEP
-value|_IOW(s, 1, int)
-end_define
-
-begin_comment
-comment|/* set keep alive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGKEEP
-value|_IOR(s, 2, int)
-end_define
-
-begin_comment
-comment|/* inspect keep alive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCSLINGER
-value|_IOW(s, 3, int)
-end_define
-
-begin_comment
-comment|/* set linger time */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGLINGER
-value|_IOR(s, 4, int)
-end_define
-
-begin_comment
-comment|/* get linger time */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCSENDOOB
-value|_IOW(s, 5, char)
-end_define
-
-begin_comment
-comment|/* send oob data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCRCVOOB
-value|_IOR(s, 6, char)
-end_define
-
-begin_comment
-comment|/* recv oob data */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SIOCATMARK
 value|_IOR(s, 7, int)
 end_define
@@ -1736,6 +1659,83 @@ end_define
 
 begin_comment
 comment|/* delete route */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFADDR
+value|_IOW(s,12, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set interface address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFADDR
+value|_IOR(s,13, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get interface address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFDSTADDR
+value|_IOW(s,14, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set point-point address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFDSTADDR
+value|_IOR(s,15, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get point-point address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFFLAGS
+value|_IOW(s,16, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set interface flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFFLAGS
+value|_IOR(s,17, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get interface flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFCONF
+value|_IOR(s,20, struct ifconf)
+end_define
+
+begin_comment
+comment|/* get interface list */
 end_comment
 
 begin_endif
