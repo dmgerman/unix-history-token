@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_VJC_COOKIE
-value|868219208
+value|868219209
 end_define
 
 begin_comment
@@ -116,9 +116,9 @@ name|enableDecomp
 decl_stmt|;
 comment|/* Enable decompression */
 name|u_char
-name|numChannels
+name|maxChannel
 decl_stmt|;
-comment|/* Number of compression channels */
+comment|/* Number of compression channels - 1 */
 name|u_char
 name|compressCID
 decl_stmt|;
