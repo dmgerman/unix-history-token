@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: map_object.c,v 1.1.1.1 1998/03/07 19:24:35 jdp Exp $  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: map_object.c,v 1.3 1999/07/18 00:02:19 jdp Exp $  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
 end_include
 
 begin_include
@@ -66,7 +60,7 @@ comment|/* Elf flags -> mmap protection */
 end_comment
 
 begin_comment
-comment|/*  * Map a shared object into memory.  The argument is a file descriptor,  * which must be open on the object and positioned at its beginning.  *  * The return value is a pointer to a newly-allocated Obj_Entry structure  * for the shared object.  Returns NULL on failure.  */
+comment|/*  * Map a shared object into memory.  The "fd" argument is a file descriptor,  * which must be open on the object and positioned at its beginning.  * The "path" argument is a pathname that is used only for error messages.  *  * The return value is a pointer to a newly-allocated Obj_Entry structure  * for the shared object.  Returns NULL on failure.  */
 end_comment
 
 begin_function
@@ -76,6 +70,11 @@ name|map_object
 parameter_list|(
 name|int
 name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
 parameter_list|)
 block|{
 name|Obj_Entry
@@ -196,7 +195,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Read error: %s"
+literal|"%s: read error: %s"
+argument_list|,
+name|path
 argument_list|,
 name|strerror
 argument_list|(
@@ -265,7 +266,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Invalid file format"
+literal|"%s: invalid file format"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 return|return
@@ -299,7 +302,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Unsupported file layout"
+literal|"%s: unsupported file layout"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 return|return
@@ -330,7 +335,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Unsupported file version"
+literal|"%s: unsupported file version"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 return|return
@@ -358,7 +365,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Unsupported file type"
+literal|"%s: unsupported file type"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 return|return
@@ -378,7 +387,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Unsupported machine"
+literal|"%s: unsupported machine"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 return|return
@@ -386,22 +397,33 @@ name|NULL
 return|;
 block|}
 comment|/*      * We rely on the program header being in the first page.  This is      * not strictly required by the ABI specification, but it seems to      * always true in practice.  And, it simplifies things considerably.      */
-name|assert
-argument_list|(
+if|if
+condition|(
 name|u
 operator|.
 name|hdr
 operator|.
 name|e_phentsize
-operator|==
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|Elf_Phdr
 argument_list|)
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"%s: invalid shared object: e_phentsize != sizeof(Elf_Phdr)"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|u
 operator|.
 name|hdr
@@ -418,32 +440,21 @@ sizeof|sizeof
 argument_list|(
 name|Elf_Phdr
 argument_list|)
-operator|<=
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|u
-operator|.
-name|hdr
-operator|.
-name|e_phoff
-operator|+
-name|u
-operator|.
-name|hdr
-operator|.
-name|e_phnum
-operator|*
-sizeof|sizeof
-argument_list|(
-name|Elf_Phdr
-argument_list|)
-operator|<=
+operator|>
 name|nbytes
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"%s: program header too large"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/*      * Scan the program header entries, and save key information.      *      * We rely on there being exactly two load segments, text and data,      * in that order.      */
 name|phdr
 operator|=
@@ -502,13 +513,24 @@ block|{
 case|case
 name|PT_LOAD
 case|:
-name|assert
-argument_list|(
+if|if
+condition|(
 name|nsegs
-operator|<
+operator|>=
 literal|2
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"%s: too many PT_LOAD segments"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|segs
 index|[
 name|nsegs
@@ -550,44 +572,65 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Object is not dynamically-linked"
+literal|"%s: object is not dynamically-linked"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
-name|assert
-argument_list|(
+if|if
+condition|(
 name|nsegs
-operator|==
+operator|<
 literal|2
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"%s: too few PT_LOAD segments"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|segs
 index|[
 literal|0
 index|]
 operator|->
 name|p_align
-operator|>=
+operator|<
 name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
+operator|||
 name|segs
 index|[
 literal|1
 index|]
 operator|->
 name|p_align
-operator|>=
+operator|<
 name|PAGE_SIZE
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"%s: PT_LOAD segments not page-aligned"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/*      * Map the entire address space of the object, to stake out our      * contiguous region, and to establish the base address for relocation.      */
 name|base_offset
 operator|=
@@ -693,7 +736,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"mmap of entire address space failed: %s"
+literal|"%s: mmap of entire address space failed: %s"
+argument_list|,
+name|path
 argument_list|,
 name|strerror
 argument_list|(
@@ -718,7 +763,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"mmap returned wrong address: wanted %p, got %p"
+literal|"%s: mmap returned wrong address: wanted %p, got %p"
+argument_list|,
+name|path
 argument_list|,
 name|base_addr
 argument_list|,
@@ -828,7 +875,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"mmap of data failed: %s"
+literal|"%s: mmap of data failed: %s"
+argument_list|,
+name|path
 argument_list|,
 name|strerror
 argument_list|(
@@ -971,7 +1020,9 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"mmap of bss failed: %s"
+literal|"%s: mmap of bss failed: %s"
+argument_list|,
+name|path
 argument_list|,
 name|strerror
 argument_list|(
