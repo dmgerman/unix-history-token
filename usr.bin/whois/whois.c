@@ -151,6 +151,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|ABUSEHOST
+value|"whois.abuse.net"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NICHOST
 value|"whois.crsnic.net"
 end_define
@@ -479,7 +486,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAc:dgh:iIlmp:QrR6"
+literal|"aAbc:dgh:iIlmp:QrR6"
 argument_list|)
 operator|)
 operator|!=
@@ -506,6 +513,14 @@ case|:
 name|host
 operator|=
 name|PNICHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|host
+operator|=
+name|ABUSEHOST
 expr_stmt|;
 break|break;
 case|case
