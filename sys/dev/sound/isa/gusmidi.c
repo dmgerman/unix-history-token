@@ -735,7 +735,7 @@ name|scp
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+name|INTR_TYPE_AV
 argument_list|,
 name|gusmidi_intr
 argument_list|,

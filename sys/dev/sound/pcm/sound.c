@@ -315,13 +315,13 @@ name|INTR_MPSAFE
 expr_stmt|;
 name|flags
 operator||=
-name|INTR_TYPE_TTY
+name|INTR_TYPE_AV
 expr_stmt|;
 else|#
 directive|else
 name|flags
 operator|=
-name|INTR_TYPE_TTY
+name|INTR_TYPE_AV
 expr_stmt|;
 endif|#
 directive|endif
