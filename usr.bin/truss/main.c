@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.9 1998/07/06 21:01:47 bde Exp $"
+literal|"$Id: main.c,v 1.10 1998/08/24 10:17:20 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,6 +241,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * WARNING! "FreeBSD a.out" must be first, or set_etype will not  * work correctly.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ex_types
@@ -435,6 +439,29 @@ name|progtype
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+name|funcs
+operator|==
+name|NULL
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Execution type %s is not supported -- using FreeBSD a.out\n"
+argument_list|,
+name|progtype
+argument_list|)
+expr_stmt|;
+name|funcs
+operator|=
+operator|&
+name|ex_types
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
 return|return
 name|funcs
 return|;
