@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_subr.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_subr.c	7.6 (Berkeley) %G% */
+comment|/*	@(#)clnp_subr.c	7.7 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -786,6 +786,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_cantforward
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -940,6 +945,11 @@ parameter_list|,
 name|ADDR_DESTUNREACH
 parameter_list|)
 function_decl|;
+name|INCSTAT
+argument_list|(
+name|cns_cantforward
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -1077,6 +1087,16 @@ name|m
 argument_list|,
 name|ADDR_DESTUNREACH
 argument_list|)
+expr_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_cantforward
+argument_list|)
+expr_stmt|;
+name|clnp_stat
+operator|.
+name|cns_forward
+operator|--
 expr_stmt|;
 goto|goto
 name|done
