@@ -343,6 +343,17 @@ value|7
 end_define
 
 begin_comment
+comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_DROP
+value|0x8000
+end_define
+
+begin_comment
 comment|/*  * kernel trace points (in p_traceflag)  */
 end_comment
 
@@ -426,6 +437,17 @@ end_define
 
 begin_comment
 comment|/* pass trace flags to children */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_DROP
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* last event was dropped */
 end_comment
 
 begin_ifdef
