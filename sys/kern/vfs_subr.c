@@ -3739,6 +3739,18 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mp
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"NULL mp in getnewvnode()\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|delmntque
