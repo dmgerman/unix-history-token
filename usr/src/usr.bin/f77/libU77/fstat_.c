@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fstat[] = "@(#)fstat_.c	1.2";  *  * get file status  *  * calling sequence:  *	integer fstat, statb(11)  *	call fstat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
+comment|/* char id_fstat[] = "@(#)fstat_.c	1.3";  *  * get file status  *  * calling sequence:  *	integer fstat, statb(12)  *	call fstat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
 end_comment
 
 begin_include
@@ -214,6 +214,14 @@ operator|=
 name|statb
 operator|.
 name|st_ctime
+expr_stmt|;
+operator|*
+name|stbuf
+operator|++
+operator|=
+name|statb
+operator|.
+name|st_blksize
 expr_stmt|;
 return|return
 operator|(
