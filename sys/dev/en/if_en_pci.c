@@ -2288,7 +2288,7 @@ name|en_driver
 argument_list|,
 name|en_devclass
 argument_list|,
-literal|0
+name|en_modevent
 argument_list|,
 literal|0
 argument_list|)

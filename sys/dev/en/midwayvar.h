@@ -312,11 +312,6 @@ begin_struct
 struct|struct
 name|en_rxslot
 block|{
-name|void
-modifier|*
-name|rxhand
-decl_stmt|;
-comment|/* recv. handle for direct delivery */
 name|uint32_t
 name|mode
 decl_stmt|;
@@ -333,22 +328,12 @@ name|uint32_t
 name|cur
 decl_stmt|;
 comment|/* where I am at in the buffer */
-name|uint16_t
-name|atm_vci
+name|struct
+name|en_vcc
+modifier|*
+name|vcc
 decl_stmt|;
 comment|/* backpointer to VCI */
-name|uint8_t
-name|atm_flags
-decl_stmt|;
-comment|/* copy of atm_flags from atm_ph */
-name|uint8_t
-name|oth_flags
-decl_stmt|;
-comment|/* other flags */
-name|uint32_t
-name|raw_threshold
-decl_stmt|;
-comment|/* for raw mode */
 name|struct
 name|ifqueue
 name|q
@@ -362,6 +347,75 @@ comment|/* mbufs being dma'd now */
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|en_vcc
+block|{
+name|struct
+name|atmio_vcc
+name|vcc
+decl_stmt|;
+comment|/* required by common code */
+name|void
+modifier|*
+name|rxhand
+decl_stmt|;
+name|uint
+name|vflags
+decl_stmt|;
+name|uint32_t
+name|ipackets
+decl_stmt|;
+name|uint32_t
+name|opackets
+decl_stmt|;
+name|uint32_t
+name|ibytes
+decl_stmt|;
+name|uint32_t
+name|obytes
+decl_stmt|;
+name|uint8_t
+name|txspeed
+decl_stmt|;
+name|struct
+name|en_txslot
+modifier|*
+name|txslot
+decl_stmt|;
+comment|/* transmit slot */
+name|struct
+name|en_rxslot
+modifier|*
+name|rxslot
+decl_stmt|;
+comment|/* receive slot */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VCC_DRAIN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* closed, but draining rx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCC_SWSL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* on rx software service list */
+end_comment
 
 begin_comment
 comment|/*  * softc  */
@@ -487,32 +541,6 @@ index|[
 name|MID_NTX_CH
 index|]
 decl_stmt|;
-comment|/* xmit vc ctrl. (per vc) */
-name|uint8_t
-name|txspeed
-index|[
-name|MID_N_VC
-index|]
-decl_stmt|;
-comment|/* speed of tx on a VC */
-name|uint8_t
-name|txvc2slot
-index|[
-name|MID_N_VC
-index|]
-decl_stmt|;
-comment|/* map VC to slot */
-comment|/* recv vc ctrl. (per vc).   maps VC number to recv slot */
-name|uint16_t
-name|rxvc2slot
-index|[
-name|MID_N_VC
-index|]
-decl_stmt|;
-name|int
-name|en_nrx
-decl_stmt|;
-comment|/* # of active rx slots */
 comment|/* recv buf ctrl. (per recv slot) */
 name|struct
 name|en_rxslot
@@ -520,6 +548,20 @@ name|rxslot
 index|[
 name|EN_MAXNRX
 index|]
+decl_stmt|;
+name|int
+name|en_nrx
+decl_stmt|;
+comment|/* # of active rx slots */
+comment|/* vccs */
+name|struct
+name|en_vcc
+modifier|*
+modifier|*
+name|vccs
+decl_stmt|;
+name|u_int
+name|vccs_open
 decl_stmt|;
 comment|/* stats */
 name|struct
@@ -649,6 +691,21 @@ parameter_list|(
 name|struct
 name|en_softc
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|en_modevent
+parameter_list|(
+name|module_t
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
