@@ -206,7 +206,11 @@ end_typedef
 begin_struct
 struct|struct
 name|osigcontext
-block|{}
+block|{
+name|int
+name|_not_used
+decl_stmt|;
+block|}
 struct|;
 end_struct
 
