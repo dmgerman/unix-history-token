@@ -4093,7 +4093,7 @@ name|FREE
 argument_list|(
 name|priv
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BRIDGE
 argument_list|)
 expr_stmt|;
 name|NG_NODE_SET_PRIVATE
