@@ -25,6 +25,21 @@ define|\
 value|"-D__sparc64__ -D__sparc_v9__ -D__sparcv9 -D__sparc__ -D__arch64__"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       builtin_define ("__LP64__");		\     }						\   while (0)
+end_define
+
 begin_comment
 comment|/* Because we include sparc/sysv4.h.  */
 end_comment

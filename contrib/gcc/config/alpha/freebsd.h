@@ -23,7 +23,7 @@ directive|define
 name|FBSD_TARGET_CPU_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\       if (flag_pic)				\ 	{					\ 	  builtin_define ("__PIC__");		\ 	  builtin_define ("__pic__");		\ 	}					\     }						\   while (0)
+value|do						\     {						\       builtin_define ("__LP64__");		\       if (flag_pic)				\ 	{					\ 	  builtin_define ("__PIC__");		\ 	  builtin_define ("__pic__");		\ 	}					\     }						\   while (0)
 end_define
 
 begin_undef

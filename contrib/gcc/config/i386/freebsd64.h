@@ -20,6 +20,21 @@ name|TARGET_VERSION
 value|fprintf (stderr, " (FreeBSD/x86-64 ELF)");
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       builtin_define ("__LP64__");		\     }						\   while (0)
+end_define
+
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for the FreeBSD/x86-64 ELF target.    This is a copy of LINK_SPEC from<i386/freebsd.h> tweaked for    the x86-64 target.  */
 end_comment
