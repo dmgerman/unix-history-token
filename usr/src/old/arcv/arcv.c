@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arcv.c 4.1 %G%"
+literal|"@(#)arcv.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,8 +77,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|tmp
+index|[]
+init|=
+literal|"/usr/tmp/arcXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,13 +148,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|tmp
-operator|=
-name|mktemp
-argument_list|(
-literal|"/usr/tmp/arcXXXXXX"
-argument_list|)
-expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
@@ -161,11 +156,18 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
+name|strcpy
+argument_list|(
 name|tmp
-operator|=
+argument_list|,
+literal|"/tmp/arcXXXXXX"
+argument_list|)
+expr_stmt|;
+block|}
 name|mktemp
 argument_list|(
-literal|"/tmp/arcXXXXXX"
+name|tmp
 argument_list|)
 expr_stmt|;
 for|for
