@@ -2671,6 +2671,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|device_suspend
+argument_list|,
+name|ata_suspend
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|device_resume
 argument_list|,
 name|ata_resume
