@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prvar.c 4.2 %G%"
+literal|"@(#)prvar.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_char
 name|class
 decl_stmt|;
 end_decl_stmt
@@ -1166,16 +1166,16 @@ argument|); 		printf(
 literal|"\n"
 argument|); 	} }
 comment|/*  * display addr in data space using format desc or class s  *  type == 1 => use addr for value to print  */
-argument|dispf(addr, desc, class, type, size, subflag, space) char *desc; short type; ADDR addr; { 	dispx(addr, desc, class, type, size, subflag, DSP); 	printf(
+argument|dispf(addr, desc, class, type, size, subflag, space) u_char class; char *desc; short type; ADDR addr; { 	dispx(addr, desc, class, type, size, subflag, DSP); 	printf(
 literal|"\n"
 argument|); }
 comment|/* display addr in instruction space using format desc or class s */
 comment|/*  returns -1 if bad address */
-argument|dispi(addr, desc, class, type, size, subflag, space) char *desc; short type; ADDR addr; { 	register i; 	i = dispx(addr, desc, class, type, size, subflag, ISP); 	printf(
+argument|dispi(addr, desc, class, type, size, subflag, space) u_char class; char *desc; short type; ADDR addr; { 	register i; 	i = dispx(addr, desc, class, type, size, subflag, ISP); 	printf(
 literal|"\n"
 argument|); 	return(i); }  char	pd[
 literal|3
-argument|]; dispx(addr, desc, class, type, size, subflag, space) char *desc; short type; ADDR addr; { 	int i
+argument|]; dispx(addr, desc, class, type, size, subflag, space) u_char class; char *desc; short type; ADDR addr; { 	int i
 argument_list|,
 argument|sflag; 	char *p; 	char dlen
 argument_list|,
@@ -1323,7 +1323,7 @@ argument|; 		word.w = value; 		printf(pd, word.f); 		return(
 literal|1
 argument|);  	case
 literal|'g'
-argument|: 		dbl.ww.w1 = value; 		dbl.ww.w2 = (class == (char) N_RSYM) ? 			*(ADDR *)(((ADDR)&u)+R0+(WORDSIZE)*(addr+
+argument|: 		dbl.ww.w1 = value; 		dbl.ww.w2 = (class == N_RSYM) ? 			*(ADDR *)(((ADDR)&u)+R0+(WORDSIZE)*(addr+
 literal|1
 argument|)) : 			getval(addr+WORDSIZE,
 literal|'d'
@@ -1381,7 +1381,7 @@ argument|); 		} 		printins(dfmt, space, value); 		break;  	} 	return(
 literal|1
 argument|); }
 comment|/* print variable as in prvar */
-argument|printit(metaflag, prvar, addr, desc, class, type, size, subflag, space)  char *desc; short type; ADDR addr; { 	if (prvar ==
+argument|printit(metaflag, prvar, addr, desc, class, type, size, subflag, space)  u_char class; char *desc; short type; ADDR addr; { 	if (prvar ==
 literal|0
 argument|) 		return; 	if (metaflag) { 		if (prvar ==
 literal|1

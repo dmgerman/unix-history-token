@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c 4.2 %G%"
+literal|"@(#)display.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,8 +327,7 @@ name|class
 parameter_list|,
 name|addr
 parameter_list|)
-specifier|register
-name|char
+name|u_char
 name|class
 decl_stmt|;
 name|ADDR
@@ -1899,7 +1898,6 @@ name|yesflg
 decl_stmt|,
 name|cnt
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -2164,8 +2162,7 @@ decl_stmt|;
 name|long
 name|offset
 decl_stmt|;
-specifier|register
-name|char
+name|u_char
 name|class
 decl_stmt|;
 specifier|register

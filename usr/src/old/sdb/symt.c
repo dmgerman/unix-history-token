@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symt.c 4.2 %G%"
+literal|"@(#)symt.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,7 +328,7 @@ name|gflag
 init|=
 literal|0
 decl_stmt|;
-name|char
+name|u_char
 name|class
 decl_stmt|;
 specifier|register
@@ -1028,10 +1028,6 @@ operator|&
 name|STABMASK
 operator|)
 operator|!=
-operator|(
-name|unsigned
-name|char
-operator|)
 name|class
 condition|)
 name|error
@@ -1854,10 +1850,11 @@ name|long
 name|offset
 decl_stmt|;
 name|char
-name|class
-decl_stmt|,
 modifier|*
 name|q
+decl_stmt|;
+name|u_char
+name|class
 decl_stmt|;
 name|struct
 name|nlist
@@ -2473,9 +2470,10 @@ name|nlist
 name|stentry
 decl_stmt|;
 name|int
-name|class
-decl_stmt|,
 name|clevel
+decl_stmt|;
+name|u_char
+name|class
 decl_stmt|;
 if|if
 condition|(
@@ -4148,8 +4146,7 @@ name|STABMASK
 operator|)
 operator|!=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|N_SOL
 condition|)
@@ -4960,7 +4957,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|u_char
 name|class
 decl_stmt|;
 end_decl_stmt

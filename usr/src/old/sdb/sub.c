@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub.c 4.1 %G%"
+literal|"@(#)sub.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1068,6 +1068,9 @@ argument|addr
 argument_list|,
 argument|type
 argument_list|)
+name|u_char
+name|class
+decl_stmt|;
 name|ADDR
 name|addr
 decl_stmt|;

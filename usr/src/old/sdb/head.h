@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* "@(#)head.h 4.2 %G%" */
+comment|/* "@(#)head.h 4.3 %G%" */
 end_comment
 
 begin_include
@@ -346,7 +346,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|char
+name|u_char
 name|sl_class
 decl_stmt|;
 end_decl_stmt
@@ -541,7 +541,7 @@ comment|/* type of last displayed variable */
 end_comment
 
 begin_decl_stmt
-name|char
+name|u_char
 name|oclass
 decl_stmt|;
 end_decl_stmt
