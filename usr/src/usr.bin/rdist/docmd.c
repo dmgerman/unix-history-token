@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.14 (Berkeley) 84/02/16"
+literal|"@(#)docmd.c	4.15 (Berkeley) 84/02/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,7 +233,7 @@ name|doarrow
 argument_list|(
 argument|files
 argument_list|,
-argument|host
+argument|rhost
 argument_list|,
 argument|cmds
 argument_list|)
@@ -250,7 +250,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|host
+name|rhost
 decl_stmt|;
 end_decl_stmt
 
@@ -291,7 +291,7 @@ literal|"doarrow(%x, %s, %x)\n"
 argument_list|,
 name|files
 argument_list|,
-name|host
+name|rhost
 argument_list|,
 name|cmds
 argument_list|)
@@ -362,7 +362,7 @@ condition|(
 operator|!
 name|makeconn
 argument_list|(
-name|host
+name|rhost
 argument_list|)
 condition|)
 return|return;
@@ -612,7 +612,7 @@ name|notify
 argument_list|(
 name|tmpfile
 argument_list|,
-name|host
+name|rhost
 argument_list|,
 name|sc
 operator|->
@@ -706,7 +706,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|closeconn
 argument_list|()
 expr_stmt|;
@@ -986,6 +990,15 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"closeconn()\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rem
