@@ -290,6 +290,14 @@ operator|(
 literal|"spare"
 operator|)
 return|;
+case|case
+name|efi
+case|:
+return|return
+operator|(
+literal|"efi"
+operator|)
+return|;
 default|default:
 return|return
 operator|(
@@ -378,7 +386,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|fat
+name|efi
 operator|)
 return|;
 if|if
@@ -3704,6 +3712,12 @@ name|part
 case|:
 return|return
 literal|"part"
+return|;
+case|case
+name|efi
+case|:
+return|return
+literal|"efi"
 return|;
 case|case
 name|unused
