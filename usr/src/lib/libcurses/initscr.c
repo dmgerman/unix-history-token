@@ -11,12 +11,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
 begin_function_decl
 specifier|extern
 name|char
@@ -27,7 +21,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	This routine initializes the current and standard screen.  *  * @(#)initscr.c	1.4 (Berkeley) %G%  */
+comment|/*  *	This routine initializes the current and standard screen.  *  * @(#)initscr.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_function
@@ -45,6 +39,9 @@ name|int
 name|tstp
 parameter_list|()
 function_decl|;
+name|int
+name|nfd
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -81,6 +78,11 @@ literal|2
 expr_stmt|;
 else|else
 block|{
+name|nfd
+operator|=
+name|getdtablesize
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|_tty_ch
@@ -89,7 +91,7 @@ literal|0
 init|;
 name|_tty_ch
 operator|<
-name|NOFILE
+name|nfd
 condition|;
 name|_tty_ch
 operator|++
