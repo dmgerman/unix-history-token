@@ -469,7 +469,7 @@ name|char
 name|header
 index|[]
 init|=
-literal|"  PID X                PRI NICE SIZE   RES STATE C   TIME   WCPU    CPU COMMAND"
+literal|"  PID X        PRI NICE SIZE   RES STATE C   TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,7 +489,7 @@ define|#
 directive|define
 name|Proc_format
 define|\
-value|"%5d %-16.16s%3d%3d%7s %6s %-6.6s%1x%7s %5.2f%% %5.2f%% %.6s"
+value|"%5d %-8.8s%3d%3d%7s %6s %-6.6s%1x%7s %5.2f%% %5.2f%% %.14s"
 end_define
 
 begin_else
@@ -507,7 +507,7 @@ name|char
 name|header
 index|[]
 init|=
-literal|"  PID X                PRI NICE SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"  PID X        PRI NICE SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,7 +527,7 @@ define|#
 directive|define
 name|Proc_format
 define|\
-value|"%5d %-16.16s%3d %3d%7s %6s %-6.6s%7s %5.2f%% %5.2f%% %.6s"
+value|"%5d %-8.8s%3d %3d%7s %6s %-6.6s%7s %5.2f%% %5.2f%% %.14s"
 end_define
 
 begin_endif
