@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22 1996/10/12 16:20:32 jkh Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.23 1996/12/03 21:38:48 nate Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"modem.h"
 end_include
 
@@ -139,6 +151,12 @@ begin_include
 include|#
 directive|include
 file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"alias.h"
 end_include
 
 begin_define
@@ -911,7 +929,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ppp [-auto | -direct | -dedicated | -ddial ] [system]\n"
+literal|"Usage: ppp [-auto | -direct | -dedicated | -ddial ] [ -alias ] [system]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1031,6 +1049,28 @@ name|MODE_DDIAL
 operator||
 name|MODE_AUTO
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"alias"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|mode
+operator||=
+name|MODE_ALIAS
+expr_stmt|;
+name|optc
+operator|--
+expr_stmt|;
+comment|/* this option isn't exclusive */
+block|}
 else|else
 name|Usage
 argument_list|()
@@ -1168,6 +1208,9 @@ name|GetUid
 argument_list|()
 expr_stmt|;
 name|IpcpDefAddress
+argument_list|()
+expr_stmt|;
+name|InitAlias
 argument_list|()
 expr_stmt|;
 if|if
@@ -3650,6 +3693,35 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_ALIAS
+condition|)
+block|{
+name|PacketAliasOut
+argument_list|(
+name|rbuff
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|ntohs
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|rbuff
+operator|)
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+block|}
 name|IpEnqueue
 argument_list|(
 name|pri
@@ -3684,6 +3756,36 @@ name|pri
 operator|>=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_ALIAS
+condition|)
+block|{
+name|PacketAliasOut
+argument_list|(
+name|rbuff
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|ntohs
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|rbuff
+operator|)
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+block|}
 name|IpEnqueue
 argument_list|(
 name|pri
@@ -3693,6 +3795,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|logprintf
