@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: version.h,v 1.31 2003/06/15 13:49:46 lukem Exp $	*/
+comment|/*	$NetBSD: version.h,v 1.33 2003/07/31 07:13:01 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|FTP_VERSION
-value|"20030615"
+value|"20030731b"
 end_define
 
 begin_endif

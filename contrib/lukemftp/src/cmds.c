@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmds.c,v 1.100 2002/11/30 03:10:55 lukem Exp $	*/
+comment|/*	$NetBSD: cmds.c,v 1.102 2003/08/07 11:13:52 agc Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1996-2002 The NetBSD Foundation, Inc.  * All rights
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -42,7 +42,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cmds.c,v 1.100 2002/11/30 03:10:55 lukem Exp $"
+literal|"$NetBSD: cmds.c,v 1.102 2003/08/07 11:13:52 agc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5301,9 +5301,8 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|command
 argument_list|(
 literal|"DELE %s"
@@ -5313,6 +5312,12 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -5467,15 +5472,20 @@ name|cp
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|command
 argument_list|(
 literal|"DELE %s"
 argument_list|,
 name|cp
 argument_list|)
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -5634,10 +5644,7 @@ index|]
 argument_list|)
 operator|==
 name|CONTINUE
-condition|)
-operator|(
-name|void
-operator|)
+operator|&&
 name|command
 argument_list|(
 literal|"RNTO %s"
@@ -5647,6 +5654,12 @@ index|[
 literal|2
 index|]
 argument_list|)
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -7210,6 +7223,9 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -7258,8 +7274,8 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"MKD %s"
@@ -7269,6 +7285,10 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|==
 name|ERROR
 operator|&&
@@ -7288,9 +7308,8 @@ argument_list|,
 name|ttyout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"XMKD %s"
@@ -7302,6 +7321,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|r
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -7322,6 +7351,9 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -7370,8 +7402,8 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"RMD %s"
@@ -7381,6 +7413,10 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|==
 name|ERROR
 operator|&&
@@ -7400,9 +7436,8 @@ argument_list|,
 name|ttyout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|r
+operator|=
 name|command
 argument_list|(
 literal|"XRMD %s"
@@ -7414,6 +7449,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|r
+operator|==
+name|COMPLETE
+condition|)
+name|dirchange
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -7691,6 +7736,10 @@ name|PRELIM
 condition|)
 continue|continue;
 block|}
+name|dirchange
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 

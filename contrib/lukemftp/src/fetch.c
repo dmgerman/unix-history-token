@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fetch.c,v 1.141 2003/05/14 14:31:00 wiz Exp $	*/
+comment|/*	$NetBSD: fetch.c,v 1.144 2003/07/31 05:23:59 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: fetch.c,v 1.141 2003/05/14 14:31:00 wiz Exp $"
+literal|"$NetBSD: fetch.c,v 1.144 2003/07/31 05:23:59 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2253,6 +2253,9 @@ name|puser
 decl_stmt|,
 modifier|*
 name|ppass
+decl_stmt|,
+modifier|*
+name|useragent
 decl_stmt|;
 name|off_t
 name|hashbytes
@@ -3460,7 +3463,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|hbuf
 argument_list|,
@@ -3865,6 +3868,32 @@ literal|"Cache-Control: no-cache\r\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|useragent
+operator|=
+name|getenv
+argument_list|(
+literal|"FTPUSERAGENT"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fin
+argument_list|,
+literal|"User-Agent: %s\r\n"
+argument_list|,
+name|useragent
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|fin
@@ -3876,6 +3905,7 @@ argument_list|,
 name|FTP_VERSION
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|wwwauth
@@ -7690,11 +7720,20 @@ literal|"ftp"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcasecmp
+argument_list|(
+name|url
+argument_list|,
+literal|"tnftp"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"This version of ftp has been enhanced by Luke Mewburn<lukem@netbsd.org>\n"
+literal|"This version of ftp has been enhanced by Luke Mewburn<lukem@NetBSD.org>\n"
 literal|"for the NetBSD project.  Execute `man ftp' for more details.\n"
 argument_list|,
 name|ttyout
@@ -7717,7 +7756,7 @@ block|{
 name|fputs
 argument_list|(
 literal|"Luke Mewburn is the author of most of the enhancements in this ftp client.\n"
-literal|"Please email feedback to<lukem@netbsd.org>.\n"
+literal|"Please email feedback to<lukem@NetBSD.org>.\n"
 argument_list|,
 name|ttyout
 argument_list|)
@@ -7739,7 +7778,7 @@ block|{
 name|fputs
 argument_list|(
 literal|"NetBSD is a freely available and redistributable UNIX-like operating system.\n"
-literal|"For more information, see http://www.netbsd.org/index.html\n"
+literal|"For more information, see http://www.NetBSD.org/\n"
 argument_list|,
 name|ttyout
 argument_list|)
