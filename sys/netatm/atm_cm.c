@@ -8444,29 +8444,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 		 * Locate packet's connection 		 */
-name|cop
-operator|=
-name|cvp
-operator|->
-name|cvc_conn
-expr_stmt|;
-switch|switch
-condition|(
-name|cop
-operator|->
-name|co_mpx
-condition|)
-block|{
-case|case
-name|ATM_ENC_NULL
-case|:
-comment|/* 			 * We're already there... 			 */
-break|break;
-case|case
-name|ATM_ENC_LLC
-case|:
-comment|/* 			 * Send the packet to the interface's bpf if this 			 * vc has one. 			 */
+comment|/* 		 * Send the packet to the interface's bpf if this 		 * vc has one. 		 */
 if|if
 condition|(
 name|cvp
@@ -8508,6 +8486,28 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Locate packet's connection 		 */
+name|cop
+operator|=
+name|cvp
+operator|->
+name|cvc_conn
+expr_stmt|;
+switch|switch
+condition|(
+name|cop
+operator|->
+name|co_mpx
+condition|)
+block|{
+case|case
+name|ATM_ENC_NULL
+case|:
+comment|/* 			 * We're already there... 			 */
+break|break;
+case|case
+name|ATM_ENC_LLC
+case|:
 comment|/* 			 * Find connection with matching LLC header 			 */
 if|if
 condition|(
