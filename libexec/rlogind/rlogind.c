@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arpa/inet.h>
 end_include
 
@@ -284,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|ARGSTR
-value|"alnkvx"
+value|"Dalnkvx"
 end_define
 
 begin_else
@@ -296,7 +302,7 @@ begin_define
 define|#
 directive|define
 name|ARGSTR
-value|"aln"
+value|"Daln"
 end_define
 
 begin_endif
@@ -379,6 +385,12 @@ name|int
 name|check_all
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|no_delay
 decl_stmt|;
 end_decl_stmt
 
@@ -633,6 +645,14 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'D'
+case|:
+name|no_delay
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'a'
 case|:
 name|check_all
@@ -809,6 +829,36 @@ argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"setsockopt (SO_KEEPALIVE): %m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|no_delay
+operator|&&
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|IPPROTO_TCP
+argument_list|,
+name|TCP_NODELAY
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (TCP_NODELAY): %m"
 argument_list|)
 expr_stmt|;
 name|on
@@ -3667,7 +3717,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: rlogind [-aln] [-k | -v]"
+literal|"usage: rlogind [-Daln] [-k | -v]"
 argument_list|)
 expr_stmt|;
 else|#
@@ -3676,7 +3726,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: rlogind [-aln]"
+literal|"usage: rlogind [-Daln]"
 argument_list|)
 expr_stmt|;
 endif|#
