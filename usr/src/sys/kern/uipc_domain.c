@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_domain.c	5.7	82/12/30	*/
+comment|/*	uipc_domain.c	5.8	83/02/10	*/
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|"../h/time.h"
 end_include
 
 begin_include

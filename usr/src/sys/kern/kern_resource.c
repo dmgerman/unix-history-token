@@ -63,6 +63,12 @@ directive|include
 file|"../h/vm.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
 begin_comment
 comment|/*  * Resource controls and accounting.  */
 end_comment
