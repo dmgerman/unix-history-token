@@ -868,7 +868,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NRCD
+name|NRC
 operator|>
 literal|0
 block|{
