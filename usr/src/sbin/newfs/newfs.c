@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.5 %G%"
+literal|"@(#)newfs.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,17 @@ include|#
 directive|include
 file|<disktab.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|BOOTDIR
+value|"/usr/mdec"
+end_define
+
+begin_comment
+comment|/* directory for boot blocks */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1614,7 +1625,9 @@ name|sprintf
 argument_list|(
 name|bootblock
 argument_list|,
-literal|"/sys/mdec/%sboot"
+literal|"%s/%sboot"
+argument_list|,
+name|BOOTDIR
 argument_list|,
 name|type
 argument_list|)
@@ -1623,7 +1636,9 @@ name|sprintf
 argument_list|(
 name|standalonecode
 argument_list|,
-literal|"/sys/stand/boot%s"
+literal|"%s/boot%s"
+argument_list|,
+name|BOOTDIR
 argument_list|,
 name|type
 argument_list|)
