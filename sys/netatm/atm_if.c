@@ -2711,6 +2711,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Remove from system interface list (ie. if_detach()) 	 */
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2720,6 +2723,9 @@ name|ifp
 argument_list|,
 name|if_link
 argument_list|)
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Remove from physical interface list 	 */
 name|UNLINK

@@ -10356,6 +10356,9 @@ name|ethno
 operator|=
 literal|0
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifscan
@@ -10371,6 +10374,10 @@ name|ifscan
 operator|==
 name|ifp
 condition|)
+block|{
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|snprintf
@@ -10385,6 +10392,7 @@ name|ethno
 argument_list|)
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|IFP_IS_ETH
@@ -10396,6 +10404,9 @@ name|ethno
 operator|++
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10550,6 +10561,9 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -10607,6 +10621,9 @@ operator|++
 condition|)
 break|break;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -10781,6 +10798,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Return all AF_INET addresses of all interfaces */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+comment|/* could sleep XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -10939,6 +10960,10 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -10947,6 +10972,10 @@ return|;
 block|}
 block|}
 block|}
+block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|ifc
 operator|.
 name|ifc_len

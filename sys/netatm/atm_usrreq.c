@@ -1089,6 +1089,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Make sure prefix name is unique 			 */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp2
@@ -1147,6 +1150,9 @@ condition|(
 name|nip
 condition|)
 continue|continue;
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|ATM_RETERR
 argument_list|(
 name|EEXIST
@@ -1154,6 +1160,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 			 * Let interface handle it from here 			 */
 name|err
 operator|=

@@ -1125,6 +1125,9 @@ operator|!=
 literal|2
 condition|)
 block|{
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -1224,6 +1227,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -1286,6 +1292,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -1294,6 +1303,9 @@ directive|endif
 comment|/* INET6 */
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Statistics */
 name|ipipstat

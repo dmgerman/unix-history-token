@@ -1833,6 +1833,9 @@ operator|->
 name|data
 expr_stmt|;
 comment|/* Could use ifindex2ifnet[if_index] except that we have no 	 * way of verifying if_index is valid since if_indexlim is 	 * local to if_attach() 	 */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -1852,6 +1855,9 @@ name|if_index
 condition|)
 break|break;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ifp

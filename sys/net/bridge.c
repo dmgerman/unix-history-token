@@ -927,6 +927,9 @@ argument|printf(
 literal|"bridge_off: n_clusters %d\n"
 argument|, n_clusters);
 argument_list|)
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -1039,6 +1042,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* flush_tables */
 name|s
 operator|=
@@ -1133,6 +1139,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -1266,6 +1275,9 @@ name|IFF_MUTE
 expr_stmt|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1480,6 +1492,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* 	 * now search in interface list for a matching name 	 */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+comment|/* could sleep XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -1655,6 +1671,9 @@ expr_stmt|;
 break|break ;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3204,67 +3223,14 @@ operator|||
 name|dst
 operator|==
 name|BDG_MCAST
-operator|||
-name|dst
-operator|==
-name|BDG_UNKNOWN
 condition|)
 block|{
-name|ifp
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ifnet
-argument_list|)
-expr_stmt|;
-comment|/* scan all ports */
-name|once
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|dst
-operator|!=
-name|BDG_UNKNOWN
-condition|)
 comment|/* need a copy for the local stack */
 name|shared
 operator|=
 literal|1
 expr_stmt|;
 block|}
-else|else
-block|{
-name|ifp
-operator|=
-name|dst
-expr_stmt|;
-name|once
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-call|(
-name|uintptr_t
-call|)
-argument_list|(
-name|ifp
-argument_list|)
-operator|<=
-operator|(
-name|u_int
-operator|)
-name|BDG_FORWARD
-condition|)
-name|panic
-argument_list|(
-literal|"bdg_forward: bad dst"
-argument_list|)
-expr_stmt|;
 comment|/*      * Do filtering in a very similar way to what is done in ip_output.      * Only if firewall is loaded, enabled, and the packet is not      * from ether_output() (src==NULL, or we would filter it twice).      * Additional restrictions may apply e.g. non-IP, short packets,      * and pkts already gone through a pipe.      */
 if|if
 condition|(
@@ -3869,6 +3835,68 @@ name|last
 operator|=
 name|NULL
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|dst
+operator|==
+name|BDG_BCAST
+operator|||
+name|dst
+operator|==
+name|BDG_MCAST
+operator|||
+name|dst
+operator|==
+name|BDG_UNKNOWN
+condition|)
+block|{
+name|ifp
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ifnet
+argument_list|)
+expr_stmt|;
+comment|/* scan all ports */
+name|once
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ifp
+operator|=
+name|dst
+expr_stmt|;
+name|once
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
+name|ifp
+argument_list|)
+operator|<=
+operator|(
+name|u_int
+operator|)
+name|BDG_FORWARD
+condition|)
+name|panic
+argument_list|(
+literal|"bdg_forward: bad dst"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3924,6 +3952,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"bdg_forward: sorry, m_copypacket failed!\n"
@@ -4062,6 +4093,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|DEB
 argument_list|(
 argument|bdg_fw_ticks += (u_long)(rdtsc() - ticks) ; bdg_fw_count++ ; 	if (bdg_fw_count !=

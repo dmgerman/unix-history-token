@@ -254,6 +254,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 			 * This does not return the number of physical 			 * interfaces (if_index), but the number of interfaces 			 * + addresses like ifconf() does, because this number 			 * is used by code that will call SVR4_SIOCGIFCONF to 			 * find the space needed for SVR4_SIOCGIFCONF. So we 			 * count the number of ifreq entries that the next 			 * SVR4_SIOCGIFCONF will return. Maybe a more correct 			 * fix is to make SVR4_SIOCGIFCONF return only one 			 * entry per physical interface? 			 */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -288,6 +291,9 @@ argument|ifa_link
 argument_list|)
 name|ifnum
 operator|++
+expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
 expr_stmt|;
 name|DPRINTF
 argument_list|(

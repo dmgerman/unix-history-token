@@ -8370,6 +8370,9 @@ operator|)
 return|;
 block|}
 comment|/* 	 * We search for all addresses on all interfaces from the beginning. 	 * Comparing an interface with the outgoing interface will be done 	 * only at the final stage of tiebreaking. 	 */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -8914,6 +8917,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* count statistics for future improvements */
 if|if
 condition|(
@@ -9624,6 +9630,9 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -9681,6 +9690,9 @@ operator|.
 name|linkmtu
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|maxmtu

@@ -7442,6 +7442,9 @@ operator|)
 return|;
 block|}
 block|}
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -7650,6 +7653,9 @@ name|ifpp
 operator|=
 name|ifp
 expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|addrsofif
@@ -7661,6 +7667,9 @@ operator|+=
 name|addrsofif
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|addrs
@@ -7792,6 +7801,9 @@ literal|0
 operator|)
 return|;
 comment|/* needless to copy */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|again
 label|:
 for|for
@@ -8031,6 +8043,9 @@ name|ni_flags
 operator||=
 name|NI_NODEADDR_FLAG_TRUNCATE
 expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|copied
@@ -8220,6 +8235,9 @@ goto|goto
 name|again
 goto|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|copied

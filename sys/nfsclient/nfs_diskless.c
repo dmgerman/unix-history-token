@@ -337,6 +337,9 @@ name|ifa
 operator|=
 name|NULL
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -429,12 +432,20 @@ operator|->
 name|sdl_alen
 argument_list|)
 condition|)
+block|{
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|match_done
 goto|;
 block|}
 block|}
 block|}
+block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"nfs_diskless: no interface\n"

@@ -3221,6 +3221,9 @@ argument_list|,
 literal|"bytes    packets errs drop fifo frame compressed"
 argument_list|)
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -3296,6 +3299,9 @@ literal|0UL
 argument_list|)
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0

@@ -2093,15 +2093,16 @@ case|case
 name|RTM_CHANGE
 case|:
 comment|/* new gateway could require new ifaddr, ifp; 			   flags may also be different; ifp may be specified 			   by ll sockaddr when protocol address is ambiguous */
+comment|/* compare two sockaddr structures */
 define|#
 directive|define
-name|equal
+name|sa_equal
 parameter_list|(
 name|a1
 parameter_list|,
 name|a2
 parameter_list|)
-value|(bcmp((caddr_t)(a1), (caddr_t)(a2), (a1)->sa_len) == 0)
+value|(bcmp((a1), (a2), (a1)->sa_len) == 0)
 if|if
 condition|(
 operator|(
@@ -2126,7 +2127,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|!
-name|equal
+name|sa_equal
 argument_list|(
 name|ifaaddr
 argument_list|,
@@ -4928,6 +4929,8 @@ name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* IFNET_RLOCK(); */
+comment|/* could sleep XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -5252,6 +5255,8 @@ expr_stmt|;
 block|}
 name|done
 label|:
+comment|/* IFNET_RUNLOCK(); */
+comment|/* XXX */
 return|return
 operator|(
 name|error

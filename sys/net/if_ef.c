@@ -830,6 +830,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -839,6 +842,9 @@ name|ifp
 argument_list|,
 name|if_link
 argument_list|)
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
@@ -2370,6 +2376,9 @@ literal|0
 decl_stmt|,
 name|d
 decl_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -2532,6 +2541,9 @@ name|el_next
 argument_list|)
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|error

@@ -1641,6 +1641,9 @@ name|success
 goto|;
 block|}
 comment|/* next, try to get it from some other hardware interface */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -1707,11 +1710,17 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|success
 goto|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* last resort: get from random number source */
 if|if
 condition|(
@@ -3037,6 +3046,9 @@ operator|!=
 literal|0
 condition|)
 return|return;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -3134,6 +3146,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3214,6 +3229,9 @@ operator|!=
 literal|0
 condition|)
 return|return;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -3270,6 +3288,9 @@ name|in6m
 argument_list|)
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

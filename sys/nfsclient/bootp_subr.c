@@ -1896,6 +1896,10 @@ argument_list|(
 literal|"Interface list:\n"
 argument_list|)
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+comment|/* could sleep, but okay for debugging XXX */
 for|for
 control|(
 name|ifp
@@ -1963,6 +1967,9 @@ name|ifa
 argument_list|)
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -8580,6 +8587,9 @@ name|ireq
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -8720,6 +8730,9 @@ name|gctx
 argument_list|)
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|ifctx

@@ -223,7 +223,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* XXX: lock ifnet. */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -286,12 +288,16 @@ argument_list|,
 name|UUID_NODE_LEN
 argument_list|)
 expr_stmt|;
-comment|/* XXX: unlock ifnet. */
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
 block|}
-comment|/* XXX: unlock ifnet. */
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i

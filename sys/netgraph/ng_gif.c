@@ -1983,6 +1983,9 @@ operator|=
 name|ng_gif_input_orphan
 expr_stmt|;
 comment|/* Create nodes for any already-existing gif interfaces */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -2006,6 +2009,9 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD

@@ -472,6 +472,13 @@ comment|/* depend on static init XXX */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|mtx
+name|ifnet_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|if_cloners_count
 decl_stmt|;
@@ -1185,6 +1192,9 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
+name|IFNET_LOCK_INIT
+argument_list|()
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1339,6 +1349,10 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+comment|/* could sleep on rare error; mostly okay XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -1426,6 +1440,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1791,6 +1808,9 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1800,6 +1820,9 @@ name|ifp
 argument_list|,
 name|if_link
 argument_list|)
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * XXX - 	 * The old code would work if the interface passed a pre-existing 	 * chain of ifaddrs to this code.  We don't trust our callers to 	 * properly initialize the tailq, however, so we no longer allow 	 * this unlikely case. 	 */
 name|TAILQ_INIT
@@ -2604,6 +2627,9 @@ argument_list|,
 name|NOTE_EXIT
 argument_list|)
 expr_stmt|;
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2613,6 +2639,9 @@ name|ifp
 argument_list|,
 name|if_link
 argument_list|)
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|mtx_destroy
 argument_list|(
@@ -3945,6 +3974,9 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -4031,6 +4063,9 @@ name|NULL
 expr_stmt|;
 name|done
 label|:
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ifa
@@ -4071,6 +4106,9 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -4141,6 +4179,9 @@ name|NULL
 expr_stmt|;
 name|done
 label|:
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ifa
@@ -4254,6 +4295,9 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Scan though each interface, looking for ones that have 	 * addresses in this address family. 	 */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -4469,6 +4513,9 @@ name|ifa_maybe
 expr_stmt|;
 name|done
 label|:
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ifa
@@ -5247,6 +5294,9 @@ init|=
 name|splimp
 argument_list|()
 decl_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -5287,6 +5337,9 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -5359,6 +5412,9 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -5403,6 +5459,9 @@ argument_list|)
 condition|)
 break|break;
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ifp
@@ -7304,6 +7363,10 @@ name|ifc
 operator|->
 name|ifc_req
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+comment|/* could sleep XXX */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -7740,6 +7803,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|ifc
 operator|->
 name|ifc_len
