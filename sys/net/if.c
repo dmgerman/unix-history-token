@@ -7955,6 +7955,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retifma
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|retifma
 operator|=
