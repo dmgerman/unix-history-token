@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * @(#)setterm.c	1.16 (Berkeley) %G%  */
+comment|/*  * Terminal initialization routines.  *  * @(#)setterm.c	1.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -67,6 +67,9 @@ name|XN
 block|,
 operator|&
 name|XT
+block|,
+operator|&
+name|XS
 block|,
 operator|&
 name|XX
@@ -913,7 +916,7 @@ parameter_list|()
 function_decl|;
 name|namp
 operator|=
-literal|"ambsdadbeohchzinmimsncnsosulxbxnxtxx"
+literal|"ambsdadbeohchzinmimsncnsosulxbxnxtxsxx"
 expr_stmt|;
 name|fp
 operator|=
@@ -1084,6 +1087,18 @@ condition|)
 do|;
 if|if
 condition|(
+name|XS
+condition|)
+name|SO
+operator|=
+name|SE
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|tgetnum
 argument_list|(
 literal|"sg"
@@ -1124,6 +1139,7 @@ name|SE
 operator|=
 name|UE
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
