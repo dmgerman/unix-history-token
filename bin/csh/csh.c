@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: csh.c,v 1.3 1995/05/30 00:06:30 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: csh.c,v 1.4 1995/07/07 22:45:26 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -1144,40 +1144,6 @@ name|tcp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Re-initialize path if set in environment      */
-if|if
-condition|(
-operator|(
-name|tcp
-operator|=
-name|getenv
-argument_list|(
-literal|"PATH"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|set1
-argument_list|(
-name|STRpath
-argument_list|,
-name|defaultpath
-argument_list|()
-argument_list|,
-operator|&
-name|shvhed
-argument_list|)
-expr_stmt|;
-else|else
-name|importpath
-argument_list|(
-name|SAVE
-argument_list|(
-name|tcp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|set
 argument_list|(
 name|STRshell
@@ -1779,6 +1745,40 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*      * Re-initialize path if set in environment      * importpath uses intty and intact      */
+if|if
+condition|(
+operator|(
+name|tcp
+operator|=
+name|getenv
+argument_list|(
+literal|"PATH"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|set1
+argument_list|(
+name|STRpath
+argument_list|,
+name|defaultpath
+argument_list|()
+argument_list|,
+operator|&
+name|shvhed
+argument_list|)
+expr_stmt|;
+else|else
+name|importpath
+argument_list|(
+name|SAVE
+argument_list|(
+name|tcp
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*      * Decide whether we should play with signals or not. If we are explicitly      * told (via -i, or -) or we are a login shell (arg0 starts with -) or the      * input and output are both the ttys("csh", or "csh</dev/ttyx>/dev/ttyx")      * Note that in only the login shell is it likely that parent may have set      * signals to be ignored      */
 if|if
 condition|(
@@ -2653,17 +2653,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|*
 name|cp
 operator|!=
 literal|'/'
-operator|||
-operator|*
-name|cp
-operator|==
-literal|'\0'
-operator|)
 operator|&&
 operator|(
 name|euid
