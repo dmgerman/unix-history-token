@@ -7808,37 +7808,6 @@ decl_stmt|;
 name|u_int16_t
 name|fhdwell
 decl_stmt|;
-if|if
-condition|(
-name|subtype
-operator|==
-name|IEEE80211_FC0_SUBTYPE_BEACON
-condition|)
-block|{
-comment|/* 			 * Count beacon frames specially, some drivers 			 * use this info to do things like update LED's. 			 */
-name|ic
-operator|->
-name|ic_stats
-operator|.
-name|is_rx_beacon
-operator|++
-expr_stmt|;
-name|IEEE80211_NODE_STAT
-argument_list|(
-name|ni
-argument_list|,
-name|rx_beacons
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|IEEE80211_NODE_STAT
-argument_list|(
-name|ni
-argument_list|,
-name|rx_proberesp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * We process beacon/probe response frames: 		 *    o when scanning, or 		 *    o station mode when associated (to collect state 		 *      updates such as 802.11g slot time), or 		 *    o adhoc mode (to discover neighbors) 		 * Frames otherwise received are discarded. 		 */
 if|if
 condition|(
@@ -8350,6 +8319,38 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * Count frame now that we know it's to be processed. 		 */
+if|if
+condition|(
+name|subtype
+operator|==
+name|IEEE80211_FC0_SUBTYPE_BEACON
+condition|)
+block|{
+name|ic
+operator|->
+name|ic_stats
+operator|.
+name|is_rx_beacon
+operator|++
+expr_stmt|;
+comment|/* XXX remove */
+name|IEEE80211_NODE_STAT
+argument_list|(
+name|ni
+argument_list|,
+name|rx_beacons
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|IEEE80211_NODE_STAT
+argument_list|(
+name|ni
+argument_list|,
+name|rx_proberesp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * When operating in station mode, check for state updates. 		 * Be careful to ignore beacons received while doing a 		 * background scan.  We consider only 11g/WMM stuff right now. 		 */
 if|if
 condition|(
