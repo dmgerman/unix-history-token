@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lock.c	4.1 (Berkeley) %G%"
+literal|"@(#)lock.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -96,28 +96,24 @@ name|struct
 name|stat
 name|statb
 decl_stmt|;
-for|for
-control|(
-name|t
-operator|=
-literal|1
-init|;
-name|t
-operator|<=
-literal|16
-condition|;
-name|t
-operator|++
-control|)
-if|if
-condition|(
-name|t
-operator|!=
-name|SIGHUP
-condition|)
-name|signal
+comment|/* 	 *	Ignore signals generated from tty keyboard.  These signals 	 *	are for xBSD only.  This program should be compiled with 	 *	the jobs library (cc ... -ljobs). 	 */
+name|sigset
 argument_list|(
-name|t
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|sigset
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|sigset
+argument_list|(
+name|SIGTSTP
 argument_list|,
 name|SIG_IGN
 argument_list|)
