@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.4 (Berkeley) %G%"
+literal|"@(#)scan.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -589,10 +589,11 @@ name|fdef
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
 name|char
 modifier|*
 name|release
+init|=
+literal|"PCC/364r1 vax uts3.0"
 decl_stmt|;
 name|offsz
 operator|=
@@ -1811,25 +1812,6 @@ name|lineno
 expr_stmt|;
 continue|continue;
 default|default:
-if|if
-condition|(
-name|hflag
-condition|)
-name|uerror
-argument_list|(
-literal|"superfluous backslash in string/character constant"
-argument_list|)
-expr_stmt|;
-comment|/*FALLTHROUGH*/
-case|case
-literal|'\\'
-case|:
-case|case
-literal|'\"'
-case|:
-case|case
-literal|'\''
-case|:
 name|val
 operator|=
 name|c
@@ -2788,7 +2770,11 @@ argument|) goto onechar; 			yylval.intval = GE; 			return( RELOP );  		case A_EQ
 comment|/* = */
 argument|switch( lxchar = getchar() ){  			case
 literal|'='
-argument|: 				yylval.intval = EQ; 				return( EQUOP );  			case
+argument|: 				yylval.intval = EQ; 				return( EQUOP );
+ifdef|#
+directive|ifdef
+name|old_assignment_ops
+argument|case
 literal|'+'
 argument|: 				yylval.intval = ASG PLUS; 				break;  			case
 literal|'-'
@@ -2820,7 +2806,11 @@ argument|: 				if( (lxchar=getchar()) !=
 literal|'>'
 argument|){ 					uerror(
 literal|"=>%c illegal"
-argument|, lxchar ); 					} 				yylval.intval = ASG RS; 				break;  			default: 				goto onechar;  				}  			return( ASOP );  		default: 			cerror(
+argument|, lxchar ); 					} 				yylval.intval = ASG RS; 				break;
+endif|#
+directive|endif
+endif|old_assignment_ops
+argument|default: 				goto onechar;  				}  			return( ASOP );  		default: 			cerror(
 literal|"yylex error, character %03o (octal)"
 argument|, lxchar );  			}
 comment|/* ordinarily, repeat here... */
@@ -3108,7 +3098,7 @@ argument|switch( p->lxract ){  			case AR_TY:
 comment|/* type word */
 argument|stwart = instruct; 				yylval.nodep = mkty( (TWORD)p->lxrval,
 literal|0
-argument|, p->lxrval ); 				return( TYPE );  			case AR_RW: 				{ 					extern int	nsizeof;  					if (p->lxrval == SIZEOF) 						++nsizeof; 				}
+argument|, p->lxrval ); 				return( TYPE );  			case AR_RW:
 comment|/* ordinary reserved word */
 argument|return( yylval.intval = p->lxrval );  			case AR_CL:
 comment|/* class word */
