@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// std::messages implementation details, GNU version -*- C++ -*-
+comment|// Locale internal implementation header -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -96,137 +96,8 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|//
+comment|// The generic locale code doesn't need to do anything here (yet)
 end_comment
-
-begin_comment
-comment|// ISO C++ 14882: 22.2.7.1.2  messages virtual functions
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Written by Benjamin Kosnik<bkoz@redhat.com>
-end_comment
-
-begin_comment
-comment|// Non-virtual member functions.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|>
-name|typename
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|catalog
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|open
-argument_list|(
-argument|const basic_string<char>& __s
-argument_list|,
-argument|const locale& __loc
-argument_list|,
-argument|const char* __dir
-argument_list|)
-specifier|const
-block|{
-name|bindtextdomain
-argument_list|(
-name|__s
-operator|.
-name|c_str
-argument_list|()
-argument_list|,
-name|__dir
-argument_list|)
-block|;
-return|return
-name|this
-operator|->
-name|do_open
-argument_list|(
-name|__s
-argument_list|,
-name|__loc
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|>
-name|typename
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|catalog
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|do_open
-argument_list|(
-argument|const basic_string<char>& __s
-argument_list|,
-argument|const locale&
-argument_list|)
-specifier|const
-block|{
-comment|// No error checking is done, assume the catalog exists and can
-comment|// be used.
-name|textdomain
-argument_list|(
-name|__s
-operator|.
-name|c_str
-argument_list|()
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|>
-name|void
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|do_close
-argument_list|(
-argument|catalog
-argument_list|)
-specifier|const
-block|{ }
-end_expr_stmt
 
 end_unit
 
