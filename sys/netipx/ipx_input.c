@@ -333,12 +333,6 @@ comment|/*  * IPX protocol control block (pcb) lists.  */
 end_comment
 
 begin_decl_stmt
-name|u_short
-name|ipxpcb_lport_cache
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ipxpcbhead
 name|ipxpcb_list

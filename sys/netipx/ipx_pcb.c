@@ -91,6 +91,13 @@ name|zeroipx_addr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_short
+name|ipxpcb_lport_cache
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|ipx_pcballoc
