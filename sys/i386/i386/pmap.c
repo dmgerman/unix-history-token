@@ -1679,6 +1679,19 @@ directive|ifdef
 name|PAE
 end_ifdef
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_PMAPPDPT
+argument_list|,
+literal|"pmap"
+argument_list|,
+literal|"pmap pdpt"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1710,7 +1723,7 @@ name|contigmalloc
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
-name|NULL
+name|M_PMAPPDPT
 argument_list|,
 literal|0
 argument_list|,
