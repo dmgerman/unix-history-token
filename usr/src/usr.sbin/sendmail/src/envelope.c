@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.5 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1792,12 +1792,16 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|newstr
-argument_list|(
 name|arpadate
 argument_list|(
 name|dbuf
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|newstr
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if

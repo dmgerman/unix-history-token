@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.4 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1176,15 +1176,8 @@ case|case
 literal|'D'
 case|:
 comment|/* macro definition */
-name|define
-argument_list|(
-name|bp
-index|[
-literal|1
-index|]
-argument_list|,
-name|newstr
-argument_list|(
+name|p
+operator|=
 name|munchstring
 argument_list|(
 operator|&
@@ -1195,6 +1188,17 @@ index|]
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+name|bp
+index|[
+literal|1
+index|]
+argument_list|,
+name|newstr
+argument_list|(
+name|p
 argument_list|)
 argument_list|,
 name|e

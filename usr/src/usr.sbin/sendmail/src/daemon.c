@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.5 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.6 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.5 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.6 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1927,15 +1927,19 @@ return|return
 name|hbuf
 return|;
 block|}
-name|RealHostName
+name|p
 operator|=
-name|newstr
-argument_list|(
 name|hostnamebyanyaddr
 argument_list|(
 operator|&
 name|fa
 argument_list|)
+expr_stmt|;
+name|RealHostName
+operator|=
+name|newstr
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|RealHostAddr
