@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.28 1998/02/28 15:14:00 jraynard Exp $"
+literal|"$Id: syslogd.c,v 1.29 1998/04/22 06:28:18 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -980,7 +980,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* when true, speak only unix domain socks */
+comment|/* when true, receive only unix domain socks */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Vogons
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* packets arriving in SecureMode */
 end_comment
 
 begin_decl_stmt
@@ -1892,12 +1904,6 @@ name|inetm
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|SecureMode
-condition|)
-block|{
 name|finet
 operator|=
 name|socket
@@ -2026,7 +2032,6 @@ argument_list|(
 name|finet
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -2445,6 +2450,56 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SecureMode
+condition|)
+block|{
+name|Vogons
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|Vogons
+operator|&
+operator|(
+name|Vogons
+operator|+
+literal|1
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
+name|line
+argument_list|,
+literal|"syslogd: discarded %d unwanted packets in secure mode"
+argument_list|,
+name|Vogons
+argument_list|)
+expr_stmt|;
+name|logmsg
+argument_list|(
+name|LOG_SYSLOG
+operator||
+name|LOG_AUTH
+argument_list|,
+name|line
+argument_list|,
+name|LocalHostName
+argument_list|,
+name|ADDDATE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
 if|if
 condition|(
 name|i
