@@ -1295,6 +1295,16 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
+literal|" Media, HTTP"
+block|,
+literal|"Select FTP via HTTP proxy installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetHTTP
+block|}
+block|,
+block|{
 literal|" Network Interfaces"
 block|,
 literal|"Configure network interfaces"
@@ -4367,6 +4377,16 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
+literal|"3b HTTP"
+block|,
+literal|"Install from an FTP server through a http proxy"
+block|,
+name|NULL
+block|,
+name|mediaSetHTTP
+block|}
+block|,
+block|{
 literal|"4 DOS"
 block|,
 literal|"Install from a DOS partition"
@@ -6151,52 +6171,6 @@ block|}
 block|,
 endif|#
 directive|endif
-block|{
-literal|" sources"
-block|,
-literal|"XFree86 3.3.5 standard sources"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SRC
-block|}
-block|,
-block|{
-literal|" csources"
-block|,
-literal|"XFree86 3.3.5 contrib sources"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_CSRC
-block|}
-block|,
 block|{
 name|NULL
 block|}
