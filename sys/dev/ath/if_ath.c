@@ -1003,9 +1003,11 @@ directive|define
 name|IFF_DUMPPKTS
 parameter_list|(
 name|_ifp
+parameter_list|,
+name|_m
 parameter_list|)
 define|\
-value|(ath_debug || \ 	    ((_ifp)->if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
+value|((ath_debug& _m) || \ 	    ((_ifp)->if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
 end_define
 
 begin_function_decl
@@ -1038,24 +1040,96 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_enum
+enum|enum
+block|{
+name|ATH_DEBUG_XMIT
+init|=
+literal|0x00000001
+block|,
+comment|/* basic xmit operation */
+name|ATH_DEBUG_XMIT_DESC
+init|=
+literal|0x00000002
+block|,
+comment|/* xmit descriptors */
+name|ATH_DEBUG_RECV
+init|=
+literal|0x00000004
+block|,
+comment|/* basic recv operation */
+name|ATH_DEBUG_RECV_DESC
+init|=
+literal|0x00000008
+block|,
+comment|/* recv descriptors */
+name|ATH_DEBUG_RATE
+init|=
+literal|0x00000010
+block|,
+comment|/* rate control */
+name|ATH_DEBUG_RESET
+init|=
+literal|0x00000020
+block|,
+comment|/* reset processing */
+name|ATH_DEBUG_MODE
+init|=
+literal|0x00000040
+block|,
+comment|/* mode init/setup */
+name|ATH_DEBUG_BEACON
+init|=
+literal|0x00000080
+block|,
+comment|/* beacon handling */
+name|ATH_DEBUG_WATCHDOG
+init|=
+literal|0x00000100
+block|,
+comment|/* watchdog timeout */
+name|ATH_DEBUG_INTR
+init|=
+literal|0x00001000
+block|,
+comment|/* ISR */
+name|ATH_DEBUG_TX_PROC
+init|=
+literal|0x00002000
+block|,
+comment|/* tx ISR proc */
+name|ATH_DEBUG_RX_PROC
+init|=
+literal|0x00004000
+block|,
+comment|/* rx ISR proc */
+name|ATH_DEBUG_BEACON_PROC
+init|=
+literal|0x00008000
+block|,
+comment|/* beacon ISR proc */
+name|ATH_DEBUG_CALIBRATE
+init|=
+literal|0x00010000
+block|,
+comment|/* periodic calibration */
+name|ATH_DEBUG_ANY
+init|=
+literal|0xffffffff
+block|}
+enum|;
+end_enum
+
 begin_define
 define|#
 directive|define
 name|DPRINTF
 parameter_list|(
+name|_m
+parameter_list|,
 name|X
 parameter_list|)
-value|if (ath_debug) printf X
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPRINTF2
-parameter_list|(
-name|X
-parameter_list|)
-value|if (ath_debug> 1) printf X
+value|if (ath_debug& _m) printf X
 end_define
 
 begin_else
@@ -1069,6 +1143,8 @@ directive|define
 name|IFF_DUMPPKTS
 parameter_list|(
 name|_ifp
+parameter_list|,
+name|_m
 parameter_list|)
 define|\
 value|(((_ifp)->if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
@@ -1079,15 +1155,8 @@ define|#
 directive|define
 name|DPRINTF
 parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPRINTF2
-parameter_list|(
+name|_m
+parameter_list|,
 name|X
 parameter_list|)
 end_define
@@ -1145,8 +1214,12 @@ literal|0
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_attach: devid 0x%x\n"
+literal|"%s: devid 0x%x\n"
+operator|,
+name|__func__
 operator|,
 name|devid
 operator|)
@@ -1920,8 +1993,12 @@ name|ic_if
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_detach: if_flags %x\n"
+literal|"%s: if_flags %x\n"
+operator|,
+name|__func__
 operator|,
 name|ifp
 operator|->
@@ -1996,8 +2073,12 @@ name|ic_if
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_suspend: if_flags %x\n"
+literal|"%s: if_flags %x\n"
+operator|,
+name|__func__
 operator|,
 name|ifp
 operator|->
@@ -2037,8 +2118,12 @@ name|ic_if
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_resume: if_flags %x\n"
+literal|"%s: if_flags %x\n"
+operator|,
+name|__func__
 operator|,
 name|ifp
 operator|->
@@ -2101,8 +2186,12 @@ name|ic_if
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_shutdown: if_flags %x\n"
+literal|"%s: if_flags %x\n"
+operator|,
+name|__func__
 operator|,
 name|ifp
 operator|->
@@ -2176,8 +2265,12 @@ block|{
 comment|/* 		 * The hardware is not ready/present, don't touch anything. 		 * Note this can happen early on if the IRQ is shared. 		 */
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_intr: invalid; ignored\n"
+literal|"%s: invalid; ignored\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2206,8 +2299,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_intr: if_flags 0x%x\n"
+literal|"%s: if_flags 0x%x\n"
+operator|,
+name|__func__
 operator|,
 name|ifp
 operator|->
@@ -2243,10 +2340,14 @@ name|status
 argument_list|)
 expr_stmt|;
 comment|/* NB: clears ISR too */
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_INTR
+argument_list|,
 operator|(
-literal|"ath_intr: status 0x%x\n"
+literal|"%s: status 0x%x\n"
+operator|,
+name|__func__
 operator|,
 name|status
 operator|)
@@ -2594,8 +2695,12 @@ name|sc_ic
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_bmiss_proc: pending %u\n"
+literal|"%s: pending %u\n"
+operator|,
+name|__func__
 operator|,
 name|pending
 operator|)
@@ -2763,8 +2868,12 @@ name|hchan
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_init: if_flags 0x%x\n"
+literal|"%s: if_flags 0x%x\n"
+operator|,
+name|__func__
 operator|,
 name|ifp
 operator|->
@@ -3037,8 +3146,12 @@ name|sc_ah
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_stop: invalid %u if_flags 0x%x\n"
+literal|"%s: invalid %u if_flags 0x%x\n"
+operator|,
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -3478,8 +3591,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_start: out of xmit buffers\n"
+literal|"%s: out of xmit buffers\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3528,9 +3645,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_start: ignore data packet, "
-literal|"state %u\n"
+literal|"%s: ignore data packet, state %u\n"
+operator|,
+name|__func__
 operator|,
 name|ic
 operator|->
@@ -3644,8 +3764,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_start: encapsulation failure\n"
+literal|"%s: encapsulation failure\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4031,6 +4155,8 @@ name|AR_DEBUG
 if|if
 condition|(
 name|ath_debug
+operator|&
+name|ATH_DEBUG_WATCHDOG
 condition|)
 name|ath_hal_dumpstate
 argument_list|(
@@ -4902,8 +5028,12 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_MODE
+argument_list|,
 operator|(
-literal|"ath_mode_init: RX filter 0x%x, MC filter %08x:%08x\n"
+literal|"%s: RX filter 0x%x, MC filter %08x:%08x\n"
+operator|,
+name|__func__
 operator|,
 name|rfilt
 operator|,
@@ -5220,8 +5350,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_BEACON
+argument_list|,
 operator|(
-literal|"ath_beacon_alloc: cannot get mbuf/cluster; size %u\n"
+literal|"%s: cannot get mbuf/cluster; size %u\n"
+operator|,
+name|__func__
 operator|,
 name|pktlen
 operator|)
@@ -5654,10 +5788,14 @@ name|pktlen
 operator|)
 argument_list|)
 expr_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_BEACON
+argument_list|,
 operator|(
-literal|"ath_beacon_alloc: m %p len %u\n"
+literal|"%s: m %p len %u\n"
+operator|,
+name|__func__
 operator|,
 name|m
 operator|,
@@ -5713,7 +5851,9 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"ath_beacon_alloc: multi-segment packet; nseg %u"
+literal|"%s: multi-segment packet; nseg %u"
+operator|,
+name|__func__
 operator|,
 name|bf
 operator|->
@@ -5948,8 +6088,10 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_BEACON_PROC
+argument_list|,
 operator|(
 literal|"%s: pending %u\n"
 operator|,
@@ -5980,6 +6122,8 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
 literal|"%s: ic_flags=%x bf=%p bf_m=%p\n"
 operator|,
@@ -6019,8 +6163,10 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"%s: beacon queue %u did not stop?"
+literal|"%s: beacon queue %u did not stop?\n"
 operator|,
 name|__func__
 operator|,
@@ -6068,8 +6214,10 @@ operator|->
 name|sc_bhalq
 argument_list|)
 expr_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_BEACON_PROC
+argument_list|,
 operator|(
 literal|"%s: TXDP%u = %p (%p)\n"
 operator|,
@@ -6232,6 +6380,8 @@ operator|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_BEACON
+argument_list|,
 operator|(
 literal|"%s: nexttbtt=%u\n"
 operator|,
@@ -6406,6 +6556,8 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_BEACON
+argument_list|,
 operator|(
 literal|"%s: intval %u nexttbtt %u dtim %u nextdtim %u bmiss %u sleep %u\n"
 operator|,
@@ -6485,6 +6637,8 @@ else|else
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_BEACON
+argument_list|,
 operator|(
 literal|"%s: intval %u nexttbtt %u\n"
 operator|,
@@ -6744,8 +6898,12 @@ name|sc_desc
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_desc_alloc: DMA map: %p (%d) -> %p (%lu)\n"
+literal|"%s: DMA map: %p (%d) -> %p (%lu)\n"
+operator|,
+name|__func__
 operator|,
 name|ds
 operator|,
@@ -7793,8 +7951,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_rxbuf_init: no mbuf/cluster\n"
+literal|"%s: no mbuf/cluster\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7861,9 +8023,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_rxbuf_init: bus_dmamap_load_mbuf failed;"
-literal|" error %d\n"
+literal|"%s: bus_dmamap_load_mbuf failed; error %d\n"
+operator|,
+name|__func__
 operator|,
 name|error
 operator|)
@@ -8091,10 +8256,14 @@ decl_stmt|;
 name|HAL_STATUS
 name|status
 decl_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_RX_PROC
+argument_list|,
 operator|(
-literal|"ath_rx_proc: pending %u\n"
+literal|"%s: pending %u\n"
+operator|,
+name|__func__
 operator|,
 name|npending
 operator|)
@@ -8202,8 +8371,8 @@ name|AR_DEBUG
 if|if
 condition|(
 name|ath_debug
-operator|>
-literal|1
+operator|&
+name|ATH_DEBUG_RECV_DESC
 condition|)
 name|ath_printrxbuf
 argument_list|(
@@ -8366,8 +8535,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_RECV
+argument_list|,
 operator|(
-literal|"ath_rx_proc: short packet %d\n"
+literal|"%s: short packet %d\n"
+operator|,
+name|__func__
 operator|,
 name|len
 operator|)
@@ -9468,10 +9641,14 @@ return|return
 name|EIO
 return|;
 block|}
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_XMIT
+argument_list|,
 operator|(
-literal|"ath_tx_start: m %p len %u\n"
+literal|"%s: m %p len %u\n"
+operator|,
+name|__func__
 operator|,
 name|m0
 operator|,
@@ -10338,10 +10515,14 @@ literal|1
 comment|/* last segment */
 argument_list|)
 expr_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_XMIT
+argument_list|,
 operator|(
-literal|"ath_tx_start: %d: %08x %08x %08x %08x %08x %08x\n"
+literal|"%s: %d: %08x %08x %08x %08x %08x %08x\n"
+operator|,
+name|__func__
 operator|,
 name|i
 operator|,
@@ -10418,10 +10599,14 @@ operator|->
 name|bf_daddr
 argument_list|)
 expr_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_XMIT
+argument_list|,
 operator|(
-literal|"ath_tx_start: TXDP0 = %p (%p)\n"
+literal|"%s: TXDP0 = %p (%p)\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|caddr_t
@@ -10448,10 +10633,14 @@ name|bf
 operator|->
 name|bf_daddr
 expr_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_XMIT
+argument_list|,
 operator|(
-literal|"ath_tx_start: link(%p)=%p (%p)\n"
+literal|"%s: link(%p)=%p (%p)\n"
+operator|,
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -10586,10 +10775,14 @@ decl_stmt|;
 name|HAL_STATUS
 name|status
 decl_stmt|;
-name|DPRINTF2
+name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_TX_PROC
+argument_list|,
 operator|(
-literal|"ath_tx_proc: pending %u tx queue %p, link %p\n"
+literal|"%s: pending %u tx queue %p, link %p\n"
+operator|,
+name|__func__
 operator|,
 name|npending
 operator|,
@@ -10684,8 +10877,8 @@ name|AR_DEBUG
 if|if
 condition|(
 name|ath_debug
-operator|>
-literal|1
+operator|&
+name|ATH_DEBUG_XMIT_DESC
 condition|)
 name|ath_printtxbuf
 argument_list|(
@@ -11061,8 +11254,12 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_RESET
+argument_list|,
 operator|(
-literal|"ath_draintxq: tx queue %p, link %p\n"
+literal|"%s: tx queue %p, link %p\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|caddr_t
@@ -11096,8 +11293,12 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_RESET
+argument_list|,
 operator|(
-literal|"ath_draintxq: beacon queue %p\n"
+literal|"%s: beacon queue %p\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|caddr_t
@@ -11178,6 +11379,8 @@ name|AR_DEBUG
 if|if
 condition|(
 name|ath_debug
+operator|&
+name|ATH_DEBUG_RESET
 condition|)
 name|ath_printtxbuf
 argument_list|(
@@ -11333,6 +11536,8 @@ name|AR_DEBUG
 if|if
 condition|(
 name|ath_debug
+operator|&
+name|ATH_DEBUG_RESET
 condition|)
 block|{
 name|struct
@@ -11340,11 +11545,12 @@ name|ath_buf
 modifier|*
 name|bf
 decl_stmt|;
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
-literal|"ath_stoprecv: rx queue %p, link %p\n"
-operator|,
+literal|"%s: rx queue %p, link %p\n"
+argument_list|,
+name|__func__
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -11352,11 +11558,10 @@ name|ath_hal_getrxbuf
 argument_list|(
 name|ah
 argument_list|)
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_rxlink
-operator|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -11488,8 +11693,12 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_RECV
+argument_list|,
 operator|(
-literal|"ath_startrecv: ath_rxbuf_init failed %d\n"
+literal|"%s: ath_rxbuf_init failed %d\n"
+operator|,
+name|__func__
 operator|,
 name|error
 operator|)
@@ -11584,8 +11793,12 @@ name|sc_ic
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
-literal|"ath_chan_set: %u (%u MHz) -> %u (%u MHz)\n"
+literal|"%s: %u (%u MHz) -> %u (%u MHz)\n"
+operator|,
+name|__func__
 operator|,
 name|ieee80211_chan2ieee
 argument_list|(
@@ -11970,6 +12183,8 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_CALIBRATE
+argument_list|,
 operator|(
 literal|"%s: channel %u/%x\n"
 operator|,
@@ -12023,6 +12238,8 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
 literal|"%s: calibration of channel %u failed\n"
 operator|,
@@ -12151,6 +12368,8 @@ block|}
 decl_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
 literal|"%s: %s -> %s\n"
 operator|,
@@ -12333,6 +12552,8 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
 literal|"%s: RX filter 0x%x bssid %s\n"
 operator|,
@@ -12430,6 +12651,8 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
 literal|"%s(RUN): ic_flags=0x%08x iv=%d bssid=%s "
 literal|"capinfo=0x%04x chan=%d\n"
@@ -13093,6 +13316,8 @@ break|break;
 default|default:
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
 literal|"%s: invalid mode %u\n"
 operator|,
@@ -13135,6 +13360,8 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_ANY
+argument_list|,
 operator|(
 literal|"%s: rate table too small (%u> %u)\n"
 operator|,
@@ -13810,6 +14037,8 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
+name|ATH_DEBUG_RATE
+argument_list|,
 operator|(
 literal|"%s: %dM -> %dM (%d ok, %d err, %d retr)\n"
 operator|,
