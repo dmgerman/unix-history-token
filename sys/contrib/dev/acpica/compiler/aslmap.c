@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslmap - parser to AML opcode mapping table  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslmap - parser to AML opcode mapping table  *              $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -295,6 +295,24 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_ALC"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_ALI"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_ALN"
 block|,
 literal|0
@@ -302,6 +320,33 @@ block|,
 name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
+block|{
+literal|"_ALP"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_ALR"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_ALT"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_ASI"
 block|,
@@ -367,6 +412,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_BLT"
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_BM_"
 block|,
 literal|0
@@ -374,6 +428,33 @@ block|,
 name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
+block|{
+literal|"_BMC"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_BMD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_BQC"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_BST"
 block|,
@@ -383,6 +464,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_BTM"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_BTP"
 block|,
 literal|1
@@ -390,6 +480,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_CBA"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_CID"
 block|,
@@ -414,6 +513,15 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_CSD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_CST"
 block|,
@@ -503,6 +611,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_DSM"
+block|,
+literal|4
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_DSS"
 block|,
 literal|1
@@ -510,6 +627,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_DSW"
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_EC_"
 block|,
@@ -570,6 +696,14 @@ block|{
 literal|"_EJD"
 block|,
 literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+block|{
+literal|"_ERR"
+block|,
+literal|2
 block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
@@ -647,6 +781,15 @@ name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
 block|{
+literal|"_GSB"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_GTF"
 block|,
 literal|0
@@ -702,6 +845,24 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_HPX"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_IFT"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_INI"
 block|,
@@ -807,6 +968,15 @@ name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
 block|{
+literal|"_MLS"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_MSG"
 block|,
 literal|1
@@ -839,6 +1009,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_OSC"
+block|,
+literal|4
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_OSI"
 block|,
 literal|1
@@ -846,6 +1025,15 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_OST"
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_PCL"
 block|,
@@ -879,6 +1067,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_PLD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_PPC"
 block|,
 literal|0
@@ -886,6 +1083,15 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_PPE"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_PR0"
 block|,
@@ -974,6 +1180,15 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_PSD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_PSL"
 block|,
@@ -1095,6 +1310,24 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_RT_"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RESOURCE_NAME
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_RTV"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_RW_"
 block|,
 literal|0
@@ -1183,6 +1416,51 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_S0W"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_S1W"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_S2W"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_S3W"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_S4W"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_SB_"
 block|,
 literal|0
@@ -1206,6 +1484,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_SDD"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_SEG"
 block|,
@@ -1239,6 +1526,15 @@ name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
 block|{
+literal|"_SLI"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_SPD"
 block|,
 literal|1
@@ -1254,6 +1550,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_SRV"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_SST"
 block|,
@@ -1295,6 +1600,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_SWS"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_TC1"
 block|,
 literal|0
@@ -1319,6 +1633,24 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_TPC"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_TPT"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_TRA"
 block|,
 literal|0
@@ -1335,6 +1667,33 @@ name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
 block|{
+literal|"_TRT"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_TSD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_TSF"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RESOURCE_NAME
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_TSP"
 block|,
 literal|0
@@ -1343,6 +1702,24 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_TSS"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_TST"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_TTP"
 block|,
 literal|0
@@ -1350,6 +1727,15 @@ block|,
 name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
+block|{
+literal|"_TTS"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_TYP"
 block|,
@@ -1375,6 +1761,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_TZM"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
 literal|"_TZP"
 block|,
 literal|0
@@ -1390,6 +1785,33 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_UPC"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_UPD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
+block|{
+literal|"_UPP"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 3.0 */
 block|{
 literal|"_VPO"
 block|,
@@ -2381,6 +2803,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* DWORDSPACE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* EISAID */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -2451,6 +2885,42 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+block|,
+comment|/* EXTENDEDIO */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* EXTENDEDMEMORY */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* EXTENDEDSPACE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_QWORD
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|ACPI_BTYPE_INTEGER
 argument_list|)
 block|,
 comment|/* EXTERNAL */
@@ -2535,6 +3005,18 @@ argument_list|,
 literal|0
 argument_list|,
 name|ACPI_BTYPE_INTEGER
+argument_list|)
+block|,
+comment|/* FUNCTION */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_METHOD_OP
+argument_list|,
+literal|0
+argument_list|,
+name|NODE_AML_PACKAGE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* IF */
@@ -3739,6 +4221,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* QWORDSPACE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* RANGE_TYPE_ENTIRE */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -4231,6 +4725,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* TIMER */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_TIMER_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|ACPI_BTYPE_INTEGER
+argument_list|)
+block|,
 comment|/* TOBCD */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -4301,6 +4807,18 @@ argument_list|,
 literal|0
 argument_list|,
 name|ACPI_BTYPE_STRING
+argument_list|)
+block|,
+comment|/* TOUUID */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DWORD_OP
+argument_list|,
+literal|0
+argument_list|,
+name|NODE_AML_PACKAGE
+argument_list|,
+name|ACPI_BTYPE_INTEGER
 argument_list|)
 block|,
 comment|/* TRANSLATIONTYPE_DENSE */
@@ -4496,6 +5014,18 @@ name|ACPI_BTYPE_INTEGER
 argument_list|)
 block|,
 comment|/* WORDIO */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* WORDSPACE */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP

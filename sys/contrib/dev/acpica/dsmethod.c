@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 97 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 101 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsParseMethod  *  * PARAMETERS:  ObjHandle       - Node of the method  *              Level           - Current nesting level  *              Context         - Points to a method counter  *              ReturnValue     - Not used  *  * RETURN:      Status  *  * DESCRIPTION: Call the parser and parse the AML that is  *              associated with the method.  *  * MUTEX:       Assumes parser is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsParseMethod  *  * PARAMETERS:  ObjHandle       - Method node  *  * RETURN:      Status  *  * DESCRIPTION: Call the parser and parse the AML that is associated with the  *              method.  *  * MUTEX:       Assumes parser is locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -405,7 +405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode          - Node of the method  *              ObjDesc             - The method object  *              CallingMethodNode   - Caller of this method (if non-null)  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution.  Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  * MUTEX:       Locks/unlocks parser.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode          - Node of the method  *              ObjDesc             - The method object  *              CallingMethodNode   - Caller of this method (if non-null)  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution.  Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -521,7 +521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCallControlMethod  *  * PARAMETERS:  WalkState           - Current state of the walk  *              Op                  - Current Op to be walked  *  * RETURN:      Status  *  * DESCRIPTION: Transfer execution to a called control method  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCallControlMethod  *  * PARAMETERS:  Thread              - Info for this thread  *              ThisWalkState       - Current walk state  *              Op                  - Current Op to be walked  *  * RETURN:      Status  *  * DESCRIPTION: Transfer execution to a called control method  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1022,7 +1022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsRestartControlMethod  *  * PARAMETERS:  WalkState           - State of the method when it was preempted  *              Op                  - Pointer to new current op  *  * RETURN:      Status  *  * DESCRIPTION: Restart a method that was preempted  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsRestartControlMethod  *  * PARAMETERS:  WalkState           - State for preempted method (caller)  *              ReturnDesc          - Return value from the called method  *  * RETURN:      Status  *  * DESCRIPTION: Restart a method that was preempted by another (nested) method  *              invocation.  Handle the return value (if any) from the callee.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1048,11 +1048,58 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"****Restart [%4.4s] Op %p ReturnValueFromCallee %p\n"
+operator|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|WalkState
+operator|->
+name|MethodNode
+operator|->
+name|Name
+operator|,
+name|WalkState
+operator|->
+name|MethodCallOp
+operator|,
+name|ReturnDesc
+operator|)
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"    ReturnFromThisMethodUsed?=%X ResStack %p Walk %p\n"
+operator|,
+name|WalkState
+operator|->
+name|ReturnUsed
+operator|,
+name|WalkState
+operator|->
+name|Results
+operator|,
+name|WalkState
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Did the called method return a value? */
 if|if
 condition|(
 name|ReturnDesc
 condition|)
 block|{
+comment|/* Are we actually going to use the return value? */
 if|if
 condition|(
 name|WalkState
@@ -1060,7 +1107,7 @@ operator|->
 name|ReturnUsed
 condition|)
 block|{
-comment|/*              * Get the return value (if any) from the previous method.              * NULL if no return value              */
+comment|/* Save the return value from the previous method */
 name|Status
 operator|=
 name|AcpiDsResultPush
@@ -1089,6 +1136,13 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*              * Save as THIS method's return value in case it is returned              * immediately to yet another method              */
+name|WalkState
+operator|->
+name|ReturnDesc
+operator|=
+name|ReturnDesc
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1100,31 +1154,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_DISPATCH
-operator|,
-literal|"Method=%p Return=%p ReturnUsed?=%X ResStack=%p State=%p\n"
-operator|,
-name|WalkState
-operator|->
-name|MethodCallOp
-operator|,
-name|ReturnDesc
-operator|,
-name|WalkState
-operator|->
-name|ReturnUsed
-operator|,
-name|WalkState
-operator|->
-name|Results
-operator|,
-name|WalkState
-operator|)
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

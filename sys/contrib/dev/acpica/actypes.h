@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 270 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 274 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -971,6 +971,10 @@ name|ACPI_MAX_DECIMAL_DIGITS
 value|10
 end_define
 
+begin_comment
+comment|/* 2^32 = 4,294,967,296 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1015,8 +1019,12 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_DECIMAL_DIGITS
-value|19
+value|20
 end_define
+
+begin_comment
+comment|/* 2^64 = 18,446,744,073,709,551,616 */
+end_comment
 
 begin_if
 if|#
@@ -1045,6 +1053,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX64_DECIMAL_DIGITS
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX32_DECIMAL_DIGITS
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX16_DECIMAL_DIGITS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX8_DECIMAL_DIGITS
+value|3
+end_define
 
 begin_comment
 comment|/*  * Constants with special meanings  */
@@ -2892,7 +2928,7 @@ name|UINT32
 function_decl|(
 name|ACPI_SYSTEM_XFACE
 modifier|*
-name|OSD_HANDLER
+name|ACPI_OSD_HANDLER
 function_decl|)
 parameter_list|(
 name|void
@@ -2908,7 +2944,7 @@ name|void
 function_decl|(
 name|ACPI_SYSTEM_XFACE
 modifier|*
-name|OSD_EXECUTION_CALLBACK
+name|ACPI_OSD_EXEC_CALLBACK
 function_decl|)
 parameter_list|(
 name|void
@@ -3002,6 +3038,33 @@ directive|define
 name|ACPI_INIT_DEVICE_INI
 value|1
 end_define
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_EXCEPTION_HANDLER
+function_decl|)
+parameter_list|(
+name|ACPI_STATUS
+name|AmlStatus
+parameter_list|,
+name|ACPI_NAME
+name|Name
+parameter_list|,
+name|UINT16
+name|Opcode
+parameter_list|,
+name|UINT32
+name|AmlOffset
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_comment
 comment|/* Address Spaces (For Operation Regions) */

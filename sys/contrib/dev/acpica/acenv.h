@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 107 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -347,7 +347,7 @@ value|unsigned long long
 end_define
 
 begin_comment
-comment|/*   * This macro is used to tag functions as "printf-like" because  * some compilers can catch printf format string problems. MSVC  * doesn't, so this is proprocessed away.  */
+comment|/*  * This macro is used to tag functions as "printf-like" because  * some compilers can catch printf format string problems. MSVC  * doesn't, so this is proprocessed away.  */
 end_comment
 
 begin_define
@@ -645,6 +645,20 @@ parameter_list|,
 name|n
 parameter_list|)
 value|strtoul((d), (s), (ACPI_SIZE)(n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEMCMP
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|,
+name|n
+parameter_list|)
+value|memcmp((s1), (s2), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -985,6 +999,20 @@ parameter_list|,
 name|n
 parameter_list|)
 value|AcpiUtStrtoul ((d), (s), (ACPI_SIZE)(n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEMCMP
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|,
+name|n
+parameter_list|)
+value|AcpiUtMemcmp((s1), (s2), (ACPI_SIZE)(n))
 end_define
 
 begin_define

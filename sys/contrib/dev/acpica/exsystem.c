@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -229,7 +229,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiExSystemDoSuspend
 parameter_list|(
-name|UINT32
+name|ACPI_INTEGER
 name|HowLong
 parameter_list|)
 block|{
@@ -245,29 +245,7 @@ argument_list|()
 expr_stmt|;
 name|AcpiOsSleep
 argument_list|(
-call|(
-name|UINT16
-call|)
-argument_list|(
 name|HowLong
-operator|/
-operator|(
-name|UINT32
-operator|)
-literal|1000
-argument_list|)
-argument_list|,
-call|(
-name|UINT16
-call|)
-argument_list|(
-name|HowLong
-operator|%
-operator|(
-name|UINT32
-operator|)
-literal|1000
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* And now we must get the interpreter again */

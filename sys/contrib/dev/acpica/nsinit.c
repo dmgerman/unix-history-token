@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 60 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -557,7 +557,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*      * Each of these types can contain executable AML code within      * the declaration.      */
+comment|/*      * Each of these types can contain executable AML code within the      * declaration.      */
 switch|switch
 condition|(
 name|Type
@@ -673,7 +673,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Print a dot for each object unless we are going to print the entire pathname */
+comment|/*      * Print a dot for each object unless we are going to print the entire      * pathname      */
 if|if
 condition|(
 operator|!
@@ -694,7 +694,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * We ignore errors from above, and always return OK, since      * we don't want to abort the walk on any single error.      */
+comment|/*      * We ignore errors from above, and always return OK, since we don't want      * to abort the walk on any single error.      */
 name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 125 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 126 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -192,6 +192,10 @@ block|}
 name|ACPI_OBJECT_INTEGER
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * Note: The String and Buffer object must be identical through the Pointer  * element.  There is code that depends on this.  */
+end_comment
 
 begin_typedef
 typedef|typedef

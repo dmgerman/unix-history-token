@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 78 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 80 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -714,7 +714,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"obj %p op %X, ref count = %d [%s]\n"
+literal|"NewObj %p Opcode %X, Refs=%d [%s]\n"
 operator|,
 name|Object
 operator|,
@@ -992,6 +992,48 @@ name|Object
 condition|)
 block|{
 comment|/*          * Index points to uninitialized object.          * This means that either 1) The expected argument was          * not passed to the method, or 2) A local variable          * was referenced by the method (via the ASL)          * before it was initialized.  Either case is an error.          */
+comment|/* If slack enabled, init the LocalX/ArgX to an Integer of value zero */
+if|if
+condition|(
+name|AcpiGbl_EnableInterpreterSlack
+condition|)
+block|{
+name|Object
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_INTEGER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Object
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+name|Object
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+literal|0
+expr_stmt|;
+name|Node
+operator|->
+name|Object
+operator|=
+name|Object
+expr_stmt|;
+block|}
+comment|/* Otherwise, return the error */
+else|else
 switch|switch
 condition|(
 name|Opcode
@@ -1227,7 +1269,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Opcode=%d Idx=%d Obj=%p\n"
+literal|"Opcode=%X Index=%d Obj=%p\n"
 operator|,
 name|Opcode
 operator|,

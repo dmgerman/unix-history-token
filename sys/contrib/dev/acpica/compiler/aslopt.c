@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslopt- Compiler optimizations  *              $Revision: 13 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslopt- Compiler optimizations  *              $Revision: 16 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -229,6 +229,19 @@ argument_list|,
 name|Path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_STRNCMP
+argument_list|(
+operator|*
+name|NewPath
+argument_list|,
+literal|"_T_"
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+block|{
 name|AslError
 argument_list|(
 name|ASL_OPTIMIZATION
@@ -241,6 +254,7 @@ operator|*
 name|NewPath
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_OK
@@ -598,6 +612,38 @@ name|Index
 operator|-=
 name|ACPI_PATH_SEGMENT_LENGTH
 expr_stmt|;
+comment|/* Special handling for Scope() operator */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_SCOPE_OP
+condition|)
+block|{
+name|NewPathExternal
+index|[
+name|i
+index|]
+operator|=
+literal|'^'
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_OPTIMIZATIONS
+operator|,
+literal|"(EXTRA ^)"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|ACPI_STRCPY
 argument_list|(
@@ -1203,6 +1249,9 @@ name|TargetNode
 operator|||
 operator|!
 name|WalkState
+operator|||
+operator|!
+name|AmlNameString
 operator|||
 operator|!
 name|Op

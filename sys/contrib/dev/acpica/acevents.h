@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -158,6 +158,9 @@ name|AcpiEvWalkGpeList
 parameter_list|(
 name|ACPI_GPE_CALLBACK
 name|GpeWalkCallback
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

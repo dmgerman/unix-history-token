@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 100 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 101 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -746,22 +746,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoul64  *  * PARAMETERS:  String          - Null terminated string  *              Terminater      - Where a pointer to the terminating byte is returned  *              Base            - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoul64  *  * PARAMETERS:  String          - Null terminated string  *              Base            - Radix of the string: 10, 16, or ACPI_ANY_BASE  *              RetInteger      - Where the converted integer is returned  *  * RETURN:      Status and Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *              NOTE: Does not support Octal strings, not needed.  *  ******************************************************************************/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NEGATIVE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSITIVE
-value|0
-end_define
 
 begin_function
 name|ACPI_STATUS
@@ -780,28 +766,20 @@ name|RetInteger
 parameter_list|)
 block|{
 name|UINT32
-name|Index
+name|ThisDigit
 decl_stmt|;
 name|ACPI_INTEGER
 name|ReturnValue
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_STATUS
-name|Status
-init|=
-name|AE_OK
-decl_stmt|;
-name|ACPI_INTEGER
-name|Dividend
-decl_stmt|;
 name|ACPI_INTEGER
 name|Quotient
 decl_stmt|;
-operator|*
-name|RetInteger
-operator|=
-literal|0
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"UtStroul64"
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -809,10 +787,7 @@ name|Base
 condition|)
 block|{
 case|case
-literal|0
-case|:
-case|case
-literal|8
+name|ACPI_ANY_BASE
 case|:
 case|case
 literal|10
@@ -822,14 +797,14 @@ literal|16
 case|:
 break|break;
 default|default:
-comment|/*          * The specified Base parameter is not in the domain of          * this function:          */
-return|return
-operator|(
+comment|/* Invalid Base */
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
-comment|/*      * skip over any white space in the buffer:      */
+comment|/* Skip over any white space in the buffer */
 while|while
 condition|(
 name|ACPI_IS_SPACE
@@ -848,7 +823,7 @@ operator|++
 name|String
 expr_stmt|;
 block|}
-comment|/*      * If the input parameter Base is zero, then we need to      * determine if it is octal, decimal, or hexadecimal:      */
+comment|/*      * If the input parameter Base is zero, then we need to      * determine if it is decimal or hexadecimal:      */
 if|if
 condition|(
 name|Base
@@ -858,14 +833,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|String
 operator|==
 literal|'0'
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|ACPI_TOLOWER
 argument_list|(
 operator|*
@@ -876,6 +851,7 @@ operator|)
 argument_list|)
 operator|==
 literal|'x'
+operator|)
 condition|)
 block|{
 name|Base
@@ -885,14 +861,6 @@ expr_stmt|;
 operator|++
 name|String
 expr_stmt|;
-block|}
-else|else
-block|{
-name|Base
-operator|=
-literal|8
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -902,23 +870,7 @@ literal|10
 expr_stmt|;
 block|}
 block|}
-comment|/*      * For octal and hexadecimal bases, skip over the leading      * 0 or 0x, if they are present.      */
-if|if
-condition|(
-name|Base
-operator|==
-literal|8
-operator|&&
-operator|*
-name|String
-operator|==
-literal|'0'
-condition|)
-block|{
-name|String
-operator|++
-expr_stmt|;
-block|}
+comment|/*      * For hexadecimal base, skip over the leading      * 0 or 0x, if they are present.      */
 if|if
 condition|(
 name|Base
@@ -946,7 +898,7 @@ name|String
 operator|++
 expr_stmt|;
 block|}
-comment|/* Main loop: convert the string to an unsigned long */
+comment|/* Main loop: convert the string to a 64-bit integer */
 while|while
 condition|(
 operator|*
@@ -962,7 +914,8 @@ name|String
 argument_list|)
 condition|)
 block|{
-name|Index
+comment|/* Convert ASCII 0-9 to Decimal value */
+name|ThisDigit
 operator|=
 operator|(
 operator|(
@@ -977,7 +930,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|Index
+name|ThisDigit
 operator|=
 operator|(
 name|UINT8
@@ -995,13 +948,14 @@ argument_list|(
 operator|(
 name|char
 operator|)
-name|Index
+name|ThisDigit
 argument_list|)
 condition|)
 block|{
-name|Index
+comment|/* Convert ASCII Hex char to value */
+name|ThisDigit
 operator|=
-name|Index
+name|ThisDigit
 operator|-
 literal|'A'
 operator|+
@@ -1015,9 +969,10 @@ name|ErrorExit
 goto|;
 block|}
 block|}
+comment|/* Check to see if digit is out of range */
 if|if
 condition|(
-name|Index
+name|ThisDigit
 operator|>=
 name|Base
 condition|)
@@ -1026,23 +981,20 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-comment|/* Check to see if value is out of range: */
-name|Dividend
-operator|=
-name|ACPI_INTEGER_MAX
-operator|-
-operator|(
-name|ACPI_INTEGER
-operator|)
-name|Index
-expr_stmt|;
+comment|/* Divide the digit into the correct position */
 operator|(
 name|void
 operator|)
 name|AcpiUtShortDivide
 argument_list|(
-operator|&
-name|Dividend
+operator|(
+name|ACPI_INTEGER_MAX
+operator|-
+operator|(
+name|ACPI_INTEGER
+operator|)
+name|ThisDigit
+operator|)
 argument_list|,
 name|Base
 argument_list|,
@@ -1069,7 +1021,7 @@ name|Base
 expr_stmt|;
 name|ReturnValue
 operator|+=
-name|Index
+name|ThisDigit
 expr_stmt|;
 operator|++
 name|String
@@ -1080,51 +1032,35 @@ name|RetInteger
 operator|=
 name|ReturnValue
 expr_stmt|;
-return|return
-operator|(
-name|Status
-operator|)
-return|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
 name|ErrorExit
 label|:
-switch|switch
+comment|/* Base was set/validated above */
+if|if
 condition|(
 name|Base
+operator|==
+literal|10
 condition|)
 block|{
-case|case
-literal|8
-case|:
-name|Status
-operator|=
-name|AE_BAD_OCTAL_CONSTANT
-expr_stmt|;
-break|break;
-case|case
-literal|10
-case|:
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_DECIMAL_CONSTANT
+argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|16
-case|:
-name|Status
-operator|=
-name|AE_BAD_HEX_CONSTANT
-expr_stmt|;
-break|break;
-default|default:
-comment|/* Base validated above */
-break|break;
 block|}
-return|return
-operator|(
-name|Status
-operator|)
-return|;
+else|else
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_HEX_CONSTANT
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

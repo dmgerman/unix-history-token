@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 102 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 107 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ name|ACPI_NO_METHOD_EXECUTION
 end_ifndef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsIsResultUsed  *  * PARAMETERS:  Op  *              ResultObj  *              WalkState  *  * RETURN:      Status  *  * DESCRIPTION: Check if a result object will be used by the parent  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsIsResultUsed  *  * PARAMETERS:  Op                  - Current Op  *              WalkState           - Current State  *  * RETURN:      TRUE if result is used, FALSE otherwise  *  * DESCRIPTION: Check if a result object will be used by the parent  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -126,7 +126,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If there is no parent, the result can't possibly be used!      * (An executing method typically has no parent, since each      * method is parsed separately)  However, a method that is      * invoked from another method has a parent.      */
+comment|/*      * If there is no parent, we are executing at the method level.      * An executing method typically has no parent, since each method      * is parsed separately.      */
 if|if
 condition|(
 operator|!
@@ -137,13 +137,76 @@ operator|.
 name|Parent
 condition|)
 block|{
+comment|/*          * If this is the last statement in the method, we know it is not a          * Return() operator (would not come here.) The following code is the          * optional support for a so-called "implicit return". Some AML code          * assumes that the last value of the method is "implicitly" returned          * to the caller. Just save the last result as the return value.          * NOTE: this is optional because the ASL language does not actually          * support this behavior.          */
+if|if
+condition|(
+operator|(
+name|AcpiGbl_EnableInterpreterSlack
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|Aml
+operator|>=
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|AmlEnd
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"Result of [%s] will be implicitly returned\n"
+operator|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Use the top of the result stack as the implicit return value */
+name|WalkState
+operator|->
+name|ReturnDesc
+operator|=
+name|WalkState
+operator|->
+name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* No parent, the return value cannot possibly be used */
 name|return_VALUE
 argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Get info on the parent.  The root Op is AML_SCOPE      */
+comment|/* Get info on the parent. The RootOp is AML_SCOPE */
 name|ParentInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -458,7 +521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDeleteResultIfNotUsed  *  * PARAMETERS:  Op  *              ResultObj  *              WalkState  *  * RETURN:      Status  *  * DESCRIPTION: Used after interpretation of an opcode.  If there is an internal  *              result descriptor, check if the parent opcode will actually use  *              this result.  If not, delete the result now so that it will  *              not become orphaned.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDeleteResultIfNotUsed  *  * PARAMETERS:  Op              - Current parse Op  *              ResultObj       - Result of the operation  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Used after interpretation of an opcode.  If there is an internal  *              result descriptor, check if the parent opcode will actually use  *              this result.  If not, delete the result now so that it will  *              not become orphaned.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -658,7 +721,7 @@ name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiDsClearOperands"
+literal|"DsClearOperands"
 argument_list|,
 name|WalkState
 argument_list|)
@@ -718,7 +781,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateOperand  *  * PARAMETERS:  WalkState  *              Arg  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parse tree object that is an argument to an AML  *              opcode to the equivalent interpreter object.  This may include  *              looking up a name or entering a new name into the internal  *              namespace.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateOperand  *  * PARAMETERS:  WalkState       - Current walk state  *              Arg             - Parse object for the argument  *              ArgIndex        - Which argument (zero based)  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parse tree object that is an argument to an AML  *              opcode to the equivalent interpreter object.  This may include  *              looking up a name or entering a new name into the internal  *              namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function

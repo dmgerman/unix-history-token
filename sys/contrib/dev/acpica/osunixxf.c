@@ -144,11 +144,20 @@ modifier|*
 name|Address
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+comment|/* The supporting code for this is not yet available.      * Return to the old situation for now.      */
+block|return (AeLocalGetRootPointer(Flags, Address));
+else|#
+directive|else
 return|return
 operator|(
 name|AE_OK
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -231,17 +240,49 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/* TODO: Add table-getting code here */
 operator|*
 name|NewTable
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_ACPI_EXEC_APP
+comment|/* This code exercises the table override mechanism in the core */
+if|if
+condition|(
+operator|!
+name|ACPI_STRNCMP
+argument_list|(
+name|ExistingTable
+operator|->
+name|Signature
+argument_list|,
+name|DSDT_SIG
+argument_list|,
+name|ACPI_NAME_SIZE
+argument_list|)
+condition|)
+block|{
+comment|/* override DSDT with itself */
+operator|*
+name|NewTable
+operator|=
+name|AcpiGbl_DbTablePtr
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|AE_NO_ACPI_TABLES
+name|AE_OK
 operator|)
 return|;
+else|#
+directive|else
+return|return
+name|AE_NO_ACPI_TABLES
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -831,7 +872,7 @@ parameter_list|(
 name|UINT32
 name|InterruptNumber
 parameter_list|,
-name|OSD_HANDLER
+name|ACPI_OSD_HANDLER
 name|ServiceRoutine
 parameter_list|,
 name|void
@@ -856,7 +897,7 @@ parameter_list|(
 name|UINT32
 name|InterruptNumber
 parameter_list|,
-name|OSD_HANDLER
+name|ACPI_OSD_HANDLER
 name|ServiceRoutine
 parameter_list|)
 block|{
@@ -877,7 +918,7 @@ parameter_list|(
 name|UINT32
 name|Priority
 parameter_list|,
-name|OSD_EXECUTION_CALLBACK
+name|ACPI_OSD_EXEC_CALLBACK
 name|Function
 parameter_list|,
 name|void
@@ -934,7 +975,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSleepUsec  *  * PARAMETERS:  microseconds        To sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at microsecond granularity  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsStall  *  * PARAMETERS:  microseconds        To sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at microsecond granularity  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -961,29 +1002,22 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSleep  *  * PARAMETERS:  seconds             To sleep  *              milliseconds        To sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at second/millisecond granularity  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSleep  *  * PARAMETERS:  milliseconds        To sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at millisecond granularity  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiOsSleep
 parameter_list|(
-name|UINT32
-name|seconds
-parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 name|milliseconds
 parameter_list|)
 block|{
 name|sleep
 argument_list|(
-name|seconds
-operator|+
-operator|(
 name|milliseconds
 operator|/
 literal|1000
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Sleep for whole seconds */
@@ -1005,11 +1039,11 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetTimer  *  * PARAMETERS:  None  *  * RETURN:      Current time in milliseconds  *  * DESCRIPTION: Get the current system time (in milliseconds).  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetTimer  *  * PARAMETERS:  None  *  * RETURN:      Current time in 100 nanosecond units  *  * DESCRIPTION: Get the current system time  *  *****************************************************************************/
 end_comment
 
 begin_function
-name|UINT32
+name|UINT64
 name|AcpiOsGetTimer
 parameter_list|(
 name|void
@@ -1027,22 +1061,29 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Seconds * 10^7 = 100ns(10^-7), Microseconds(10^-6) * 10^1 = 100ns */
 return|return
 operator|(
 operator|(
+operator|(
+name|UINT64
+operator|)
 name|time
 operator|.
 name|tv_sec
-operator|/
-literal|1000
+operator|*
+literal|10000000
 operator|)
 operator|+
 operator|(
+operator|(
+name|UINT64
+operator|)
 name|time
 operator|.
 name|tv_usec
 operator|*
-literal|1000
+literal|10
 operator|)
 operator|)
 return|;

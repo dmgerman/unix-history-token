@@ -667,6 +667,20 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiInstallExceptionHandler
+parameter_list|(
+name|ACPI_EXCEPTION_HANDLER
+name|Handler
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Event interfaces  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiAcquireGlobalLock
 parameter_list|(
 name|UINT16

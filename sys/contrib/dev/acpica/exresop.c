@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 70 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -284,7 +284,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Opcode %X [%s] OperandTypes=%X \n"
+literal|"Opcode %X [%s] RequiredOperandTypes=%8.8X \n"
 operator|,
 name|Opcode
 operator|,
@@ -471,9 +471,18 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Reference Opcode: %s\n"
+literal|"Operand is a Reference, RefOpcode [%s]\n"
 operator|,
-name|OpInfo
+operator|(
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+argument_list|)
+operator|)
 operator|->
 name|Name
 operator|)
@@ -487,7 +496,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown Reference Opcode %X [%s]\n"
+literal|"Operand is a Reference, Unknown Reference Opcode %X [%s]\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -837,7 +846,7 @@ name|ObjDesc
 argument_list|,
 name|StackPtr
 argument_list|,
-name|WalkState
+literal|16
 argument_list|)
 expr_stmt|;
 if|if
@@ -897,8 +906,6 @@ argument_list|(
 name|ObjDesc
 argument_list|,
 name|StackPtr
-argument_list|,
-name|WalkState
 argument_list|)
 expr_stmt|;
 if|if
@@ -959,11 +966,7 @@ name|ObjDesc
 argument_list|,
 name|StackPtr
 argument_list|,
-literal|16
-argument_list|,
-name|ACPI_UINT32_MAX
-argument_list|,
-name|WalkState
+name|ACPI_IMPLICIT_CONVERT_HEX
 argument_list|)
 expr_stmt|;
 if|if
@@ -1092,8 +1095,6 @@ argument_list|(
 name|ObjDesc
 argument_list|,
 name|StackPtr
-argument_list|,
-name|WalkState
 argument_list|)
 expr_stmt|;
 if|if

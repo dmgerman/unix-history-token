@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 151 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 152 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -287,7 +287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvExecuteRegMethod  *  * PARAMETERS:  RegionObj           - Object structure  *              Function            - On (1) or Off (0)  *  * RETURN:      Status  *  * DESCRIPTION: Execute _REG method for a region  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvExecuteRegMethod  *  * PARAMETERS:  RegionObj           - Object structure  *              Function            - Passed to _REG:  On (1) or Off (0)  *  * RETURN:      Status  *  * DESCRIPTION: Execute _REG method for a region  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -413,7 +413,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Set up the parameter objects */
+comment|/* Setup the parameter objects */
 name|Params
 index|[
 literal|0
@@ -519,7 +519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - Internal region object  *              SpaceId             - ID of the address space (0-255)  *              Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, 32, or 64)  *              Value               - Pointer to in or out value  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - Internal region object  *              Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, 32, or 64)  *              Value               - Pointer to in or out value  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -996,7 +996,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDetachRegion  *  * PARAMETERS:  RegionObj       - Region Object  *              AcpiNsIsLocked  - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Break the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDetachRegion  *  * PARAMETERS:  RegionObj           - Region Object  *              AcpiNsIsLocked      - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Break the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1367,7 +1367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAttachRegion  *  * PARAMETERS:  HandlerObj      - Handler Object  *              RegionObj       - Region Object  *              AcpiNsIsLocked  - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Create the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAttachRegion  *  * PARAMETERS:  HandlerObj          - Handler Object  *              RegionObj           - Region Object  *              AcpiNsIsLocked      - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Create the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2308,7 +2308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvExecuteRegMethods  *  * PARAMETERS:  Node            - Namespace node for the device  *              SpaceId         - The address space ID  *  * RETURN:      Status  *  * DESCRIPTION: Run _REG methods for the Space ID;  *              Note: assumes namespace is locked, or system init time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvExecuteRegMethods  *  * PARAMETERS:  Node            - Namespace node for the device  *              SpaceId         - The address space ID  *  * RETURN:      Status  *  * DESCRIPTION: Run all _REG methods for the input Space ID;  *              Note: assumes namespace is locked, or system init time.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -240,7 +240,7 @@ argument_list|,
 name|BufferSize
 argument_list|)
 expr_stmt|;
-comment|/*      * Create a new Buffer object      */
+comment|/* Create a new Buffer object */
 name|BufferDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -338,6 +338,122 @@ comment|/* Return the new buffer descriptor */
 name|return_PTR
 argument_list|(
 name|BufferDesc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateStringObject  *  * PARAMETERS:  StringSize             - Size of string to be created.  Does not  *                                       include NULL terminator, this is added  *                                       automatically.  *  * RETURN:      Pointer to a new String object  *  * DESCRIPTION: Create a fully initialized string object  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiUtCreateStringObject
+parameter_list|(
+name|ACPI_SIZE
+name|StringSize
+parameter_list|)
+block|{
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|StringDesc
+decl_stmt|;
+name|char
+modifier|*
+name|String
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE_U32
+argument_list|(
+literal|"UtCreateStringObject"
+argument_list|,
+name|StringSize
+argument_list|)
+expr_stmt|;
+comment|/* Create a new String object */
+name|StringDesc
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_STRING
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|StringDesc
+condition|)
+block|{
+name|return_PTR
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Allocate the actual string buffer -- (Size + 1) for NULL terminator.      * NOTE: Zero-length strings are NULL terminated      */
+name|String
+operator|=
+name|ACPI_MEM_CALLOCATE
+argument_list|(
+name|StringSize
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|String
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"CreateString: could not allocate size %X\n"
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|StringSize
+operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|StringDesc
+argument_list|)
+expr_stmt|;
+name|return_PTR
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Complete string object initialization */
+name|StringDesc
+operator|->
+name|String
+operator|.
+name|Pointer
+operator|=
+name|String
+expr_stmt|;
+name|StringDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|StringSize
+expr_stmt|;
+comment|/* Return the new string descriptor */
+name|return_PTR
+argument_list|(
+name|StringDesc
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 151 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 154 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1550,92 +1550,6 @@ value|(((char)(d)>= '0')&& ((char)(d)<= '7'))
 end_define
 
 begin_comment
-comment|/* Macros for GAS addressing */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|!=
-literal|16
-end_if
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_DEVICE
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT16) ((ACPI_HIDWORD ((a)))& 0x0000FFFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_FUNCTION
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT16) ((ACPI_LODWORD ((a)))>> 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_REGISTER
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT16) ((ACPI_LODWORD ((a)))& 0x0000FFFF)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* No support for GAS and PCI IDs in 16-bit mode  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_FUNCTION
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT16) ((a)& 0xFFFF0000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_DEVICE
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT16) ((a)& 0x0000FFFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_REGISTER
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT16) ((a)& 0x0000FFFF)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Bitfields within ACPI registers */
 end_comment
 
@@ -2330,7 +2244,7 @@ name|ACPI_FUNCTION_NAME
 parameter_list|(
 name|a
 parameter_list|)
-value|ACPI_DEBUG_PRINT_INFO _Dbg; \                                                 _Dbg.ComponentId = _COMPONENT; \                                                 _Dbg.ProcName    = a; \                                                 _Dbg.ModuleName  = _THIS_MODULE;
+value|ACPI_DEBUG_PRINT_INFO _DebugInfo; \                                                 _DebugInfo.ComponentId = _COMPONENT; \                                                 _DebugInfo.ProcName    = a; \                                                 _DebugInfo.ModuleName  = _THIS_MODULE;
 end_define
 
 begin_define
@@ -2340,7 +2254,7 @@ name|ACPI_FUNCTION_TRACE
 parameter_list|(
 name|a
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTrace(__LINE__,&_Dbg)
+value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTrace(__LINE__,&_DebugInfo)
 end_define
 
 begin_define
@@ -2352,7 +2266,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTracePtr(__LINE__,&_Dbg,(void *)b)
+value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTracePtr(__LINE__,&_DebugInfo,(void *)b)
 end_define
 
 begin_define
@@ -2364,7 +2278,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceU32(__LINE__,&_Dbg,(UINT32)b)
+value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceU32(__LINE__,&_DebugInfo,(UINT32)b)
 end_define
 
 begin_define
@@ -2376,7 +2290,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceStr(__LINE__,&_Dbg,(char *)b)
+value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceStr(__LINE__,&_DebugInfo,(char *)b)
 end_define
 
 begin_define
@@ -2431,7 +2345,7 @@ begin_define
 define|#
 directive|define
 name|return_VOID
-value|ACPI_DO_WHILE0 ({AcpiUtExit(__LINE__,&_Dbg);return;})
+value|ACPI_DO_WHILE0 ({AcpiUtExit(__LINE__,&_DebugInfo);return;})
 end_define
 
 begin_define
@@ -2441,7 +2355,7 @@ name|return_ACPI_STATUS
 parameter_list|(
 name|s
 parameter_list|)
-value|ACPI_DO_WHILE0 ({AcpiUtStatusExit(__LINE__,&_Dbg,(s));return((s));})
+value|ACPI_DO_WHILE0 ({AcpiUtStatusExit(__LINE__,&_DebugInfo,(s));return((s));})
 end_define
 
 begin_define
@@ -2451,7 +2365,7 @@ name|return_VALUE
 parameter_list|(
 name|s
 parameter_list|)
-value|ACPI_DO_WHILE0 ({AcpiUtValueExit(__LINE__,&_Dbg,(ACPI_INTEGER)(s));return((s));})
+value|ACPI_DO_WHILE0 ({AcpiUtValueExit(__LINE__,&_DebugInfo,(ACPI_INTEGER)(s));return((s));})
 end_define
 
 begin_define
@@ -2461,7 +2375,7 @@ name|return_PTR
 parameter_list|(
 name|s
 parameter_list|)
-value|ACPI_DO_WHILE0 ({AcpiUtPtrExit(__LINE__,&_Dbg,(UINT8 *)(s));return((s));})
+value|ACPI_DO_WHILE0 ({AcpiUtPtrExit(__LINE__,&_DebugInfo,(UINT8 *)(s));return((s));})
 end_define
 
 begin_comment
@@ -2524,7 +2438,7 @@ name|ACPI_DUMP_STACK_ENTRY
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiExDumpOperand(a)
+value|AcpiExDumpOperand((a),0)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 158 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 160 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1518,7 +1518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpObjects  *  * PARAMETERS:  Type                - Object type to be dumped  *              MaxDepth            - Maximum depth of dump.  Use ACPI_UINT32_MAX  *                                    for an effectively unlimited depth.  *              OwnerId             - Dump only objects owned by this ID.  Use  *                                    ACPI_UINT32_MAX to match all owners.  *              StartHandle         - Where in namespace to start/end search  *  * DESCRIPTION: Dump typed objects within the loaded namespace.  *              Uses AcpiNsWalkNamespace in conjunction with AcpiNsDumpOneObject.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpObjects  *  * PARAMETERS:  Type                - Object type to be dumped  *              MaxDepth            - Maximum depth of dump. Use ACPI_UINT32_MAX  *                                    for an effectively unlimited depth.  *              OwnerId             - Dump only objects owned by this ID.  Use  *                                    ACPI_UINT32_MAX to match all owners.  *              StartHandle         - Where in namespace to start/end search  *  * DESCRIPTION: Dump typed objects within the loaded namespace.  *              Uses AcpiNsWalkNamespace in conjunction with AcpiNsDumpOneObject.  *  ******************************************************************************/
 end_comment
 
 begin_function

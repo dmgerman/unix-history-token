@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2060,6 +2060,13 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiUtReleaseToCache
+argument_list|(
+name|ACPI_MEM_LIST_WALK
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 name|return_PTR
 argument_list|(
 name|NULL

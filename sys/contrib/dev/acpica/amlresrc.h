@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amlresrc.h - AML resource descriptors  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amlresrc.h - AML resource descriptors  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -335,7 +335,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Resource descriptors defined in the ACPI specification.  *  * Alignment must be BYTE because these descriptors  * are used to overlay the AML byte stream.  */
+comment|/*  * Resource descriptors defined in the ACPI specification.  *  * Packing/alignment must be BYTE because these descriptors  * are used to overlay the AML byte stream.  */
 end_comment
 
 begin_pragma
@@ -849,7 +849,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/* Union of all resource descriptors, sow we can allocate the worst case */
+comment|/* Union of all resource descriptors, so we can allocate the worst case */
 end_comment
 
 begin_typedef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSystemMemoryRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling, a nop for now  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSystemMemoryRegionSetup  *  * PARAMETERS:  Handle              - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling, a nop for now  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -179,7 +179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvIoSpaceRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvIoSpaceRegionSetup  *  * PARAMETERS:  Handle              - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -237,7 +237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciConfigRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciConfigRegionSetup  *  * PARAMETERS:  Handle             - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -706,7 +706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciBarRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciBarRegionSetup  *  * PARAMETERS:  Handle              - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -743,7 +743,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvCmosRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvCmosRegionSetup  *  * PARAMETERS:  Handle              - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -780,7 +780,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDefaultRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDefaultRegionSetup  *  * PARAMETERS:  Handle              - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
 end_comment
 
 begin_function

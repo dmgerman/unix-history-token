@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -523,7 +523,7 @@ name|Flags
 argument_list|)
 condition|)
 block|{
-comment|/*          * Only one table allowed, and a table has alread been installed          *  at this location, so return an error.          */
+comment|/*          * Only one table allowed, and a table has alread been installed          * at this location, so return an error.          */
 if|if
 condition|(
 name|ListHead
@@ -531,6 +531,11 @@ operator|->
 name|Next
 condition|)
 block|{
+name|ACPI_MEM_FREE
+argument_list|(
+name|TableDesc
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_ALREADY_EXISTS

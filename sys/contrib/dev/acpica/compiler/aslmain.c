@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslmain - compiler main and utilities  *              $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslmain - compiler main and utilities  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAML Output:\n"
+literal|"\nAML Output Files:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -190,7 +190,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAML Optimization:\n"
+literal|"\nAML Code Generation:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -211,6 +211,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -on            Disable named reference string optimization\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -r<Revision>   Override table header Revision (1-255)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -566,7 +571,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:cd^efgh^i^l^o:p:rs:t:v:x:"
+literal|"ab:cd^efgh^i^l^o:p:r:s:t:v:x:"
 argument_list|)
 operator|)
 operator|!=
@@ -577,6 +582,14 @@ condition|(
 name|j
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|AslToFile
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
 case|case
 literal|'b'
 case|:
@@ -964,9 +977,19 @@ break|break;
 case|case
 literal|'r'
 case|:
-name|AslToFile
+name|Gbl_RevisionOverride
 operator|=
-name|FALSE
+operator|(
+name|UINT8
+operator|)
+name|strtoul
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

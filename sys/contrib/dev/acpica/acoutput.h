@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -437,7 +437,7 @@ name|ACPI_DEBUG_LEVEL
 parameter_list|(
 name|dl
 parameter_list|)
-value|(UINT32) dl,__LINE__,&_Dbg
+value|(UINT32) dl,__LINE__,&_DebugInfo
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 121 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 129 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -368,7 +368,6 @@ name|Status
 operator|=
 name|AcpiUtDivide
 argument_list|(
-operator|&
 name|Operand
 index|[
 literal|0
@@ -378,7 +377,6 @@ name|Integer
 operator|.
 name|Value
 argument_list|,
-operator|&
 name|Operand
 index|[
 literal|1
@@ -559,12 +557,6 @@ name|ReturnDesc
 init|=
 name|NULL
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|TempDesc
-init|=
-name|NULL
-decl_stmt|;
 name|UINT32
 name|Index
 decl_stmt|;
@@ -694,7 +686,6 @@ name|Status
 operator|=
 name|AcpiUtDivide
 argument_list|(
-operator|&
 name|Operand
 index|[
 literal|0
@@ -704,7 +695,6 @@ name|Integer
 operator|.
 name|Value
 argument_list|,
-operator|&
 name|Operand
 index|[
 literal|1
@@ -729,113 +719,6 @@ case|case
 name|AML_CONCAT_OP
 case|:
 comment|/* Concatenate (Data1, Data2, Result) */
-comment|/*          * Convert the second operand if necessary.  The first operand          * determines the type of the second operand, (See the Data Types          * section of the ACPI specification.)  Both object types are          * guaranteed to be either Integer/String/Buffer by the operand          * resolution mechanism above.          */
-switch|switch
-condition|(
-name|ACPI_GET_OBJECT_TYPE
-argument_list|(
-name|Operand
-index|[
-literal|0
-index|]
-argument_list|)
-condition|)
-block|{
-case|case
-name|ACPI_TYPE_INTEGER
-case|:
-name|Status
-operator|=
-name|AcpiExConvertToInteger
-argument_list|(
-name|Operand
-index|[
-literal|1
-index|]
-argument_list|,
-operator|&
-name|TempDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_STRING
-case|:
-name|Status
-operator|=
-name|AcpiExConvertToString
-argument_list|(
-name|Operand
-index|[
-literal|1
-index|]
-argument_list|,
-operator|&
-name|TempDesc
-argument_list|,
-literal|16
-argument_list|,
-name|ACPI_UINT32_MAX
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_BUFFER
-case|:
-name|Status
-operator|=
-name|AcpiExConvertToBuffer
-argument_list|(
-name|Operand
-index|[
-literal|1
-index|]
-argument_list|,
-operator|&
-name|TempDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Concat - invalid obj type: %X\n"
-operator|,
-name|ACPI_GET_OBJECT_TYPE
-argument_list|(
-name|Operand
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_AML_INTERNAL
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|Cleanup
-goto|;
-block|}
-comment|/*          * Both operands are now known to be the same object type          * (Both are Integer, String, or Buffer), and we can now perform the          * concatenation.          */
 name|Status
 operator|=
 name|AcpiExDoConcatenate
@@ -845,7 +728,10 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|TempDesc
+name|Operand
+index|[
+literal|1
+index|]
 argument_list|,
 operator|&
 name|ReturnDesc
@@ -853,60 +739,17 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|TempDesc
-operator|!=
-name|Operand
-index|[
-literal|1
-index|]
-condition|)
-block|{
-name|AcpiUtRemoveReference
-argument_list|(
-name|TempDesc
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|AML_TO_STRING_OP
 case|:
 comment|/* ToString (Buffer, Length, Result) (ACPI 2.0) */
 comment|/*          * Input object is guaranteed to be a buffer at this point (it may have          * been converted.)  Copy the raw buffer data to a new object of type String.          */
-comment|/* Get the length of the new string */
+comment|/*          * Get the length of the new string. It is the smallest of:          * 1) Length of the input buffer          * 2) Max length as specified in the ToString operator          * 3) Length of input buffer up to a zero byte (null terminator)          *          * NOTE: A length of zero is ok, and will create a zero-length, null          *       terminated string.          */
 name|Length
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|Operand
-index|[
-literal|1
-index|]
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Handle optional length value */
-name|Operand
-index|[
-literal|1
-index|]
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|ACPI_INTEGER_MAX
-expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(
@@ -953,7 +796,6 @@ block|{
 name|Length
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|Length
@@ -969,50 +811,19 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Create the internal return object */
-name|ReturnDesc
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|ACPI_TYPE_STRING
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ReturnDesc
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 block|}
-comment|/* Allocate a new string buffer (Length + 1 for null terminator) */
+comment|/* Allocate a new string object */
 name|ReturnDesc
-operator|->
-name|String
-operator|.
-name|Pointer
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|AcpiUtCreateStringObject
 argument_list|(
 name|Length
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|ReturnDesc
-operator|->
-name|String
-operator|.
-name|Pointer
 condition|)
 block|{
 name|Status
@@ -1023,7 +834,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Copy the raw buffer data with no transform */
+comment|/* Copy the raw buffer data with no transform. NULL terminated already. */
 name|ACPI_MEMCPY
 argument_list|(
 name|ReturnDesc
@@ -1043,18 +854,6 @@ name|Pointer
 argument_list|,
 name|Length
 argument_list|)
-expr_stmt|;
-comment|/* Set the string length */
-name|ReturnDesc
-operator|->
-name|String
-operator|.
-name|Length
-operator|=
-operator|(
-name|UINT32
-operator|)
-name|Length
 expr_stmt|;
 break|break;
 case|case
@@ -1122,7 +921,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-comment|/*          * At this point, the Source operand is either a Package or a Buffer          */
+comment|/*          * At this point, the Source operand is a Package, Buffer, or String          */
 if|if
 condition|(
 name|ACPI_GET_OBJECT_TYPE
@@ -1220,7 +1019,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Object to be indexed is a Buffer */
+comment|/* Object to be indexed is a Buffer/String */
 if|if
 condition|(
 name|Index
@@ -1506,13 +1305,13 @@ name|OpInfo
 operator|->
 name|Flags
 operator|&
-name|AML_LOGICAL
+name|AML_LOGICAL_NUMERIC
 condition|)
 comment|/* LogicalOp  (Operand0, Operand1) */
 block|{
-name|LogicalResult
+name|Status
 operator|=
-name|AcpiExDoLogicalOp
+name|AcpiExDoLogicalNumericOp
 argument_list|(
 name|WalkState
 operator|->
@@ -1535,6 +1334,48 @@ operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|,
+operator|&
+name|LogicalResult
+argument_list|)
+expr_stmt|;
+goto|goto
+name|StoreLogicalResult
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|WalkState
+operator|->
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_LOGICAL
+condition|)
+comment|/* LogicalOp  (Operand0, Operand1) */
+block|{
+name|Status
+operator|=
+name|AcpiExDoLogicalOp
+argument_list|(
+name|WalkState
+operator|->
+name|Opcode
+argument_list|,
+name|Operand
+index|[
+literal|0
+index|]
+argument_list|,
+name|Operand
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|LogicalResult
 argument_list|)
 expr_stmt|;
 goto|goto

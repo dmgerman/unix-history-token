@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 87 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -172,9 +172,7 @@ name|AcpiUtShortDivide
 argument_list|(
 operator|(
 name|ACPI_INTEGER
-operator|*
 operator|)
-operator|&
 name|Address
 argument_list|,
 name|Length

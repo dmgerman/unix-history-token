@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 26 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTimerResolution  *  * PARAMETERS:  none  *  * RETURN:      Number of bits of resolution in the PM Timer (24 or 32).  *  * DESCRIPTION: Obtains resolution of the ACPI PM Timer.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTimerResolution  *  * PARAMETERS:  Resolution          - Where the resolution is returned  *  * RETURN:      Status and timer resolution  *  * DESCRIPTION: Obtains resolution of the ACPI PM Timer (24 or 32 bits).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -89,7 +89,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTimer  *  * PARAMETERS:  none  *  * RETURN:      Current value of the ACPI PM Timer (in ticks).  *  * DESCRIPTION: Obtains current value of ACPI PM Timer.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTimer  *  * PARAMETERS:  Ticks               - Where the timer value is returned  *  * RETURN:      Status and current ticks  *  * DESCRIPTION: Obtains current value of ACPI PM Timer (in ticks).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -144,7 +144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTimerDuration  *  * PARAMETERS:  StartTicks  *              EndTicks  *              TimeElapsed  *  * RETURN:      TimeElapsed  *  * DESCRIPTION: Computes the time elapsed (in microseconds) between two  *              PM Timer time stamps, taking into account the possibility of  *              rollovers, the timer resolution, and timer frequency.  *  *              The PM Timer's clock ticks at roughly 3.6 times per  *              _microsecond_, and its clock continues through Cx state  *              transitions (unlike many CPU timestamp counters) -- making it  *              a versatile and accurate timer.  *  *              Note that this function accommodates only a single timer  *              rollover.  Thus for 24-bit timers, this function should only  *              be used for calculating durations less than ~4.6 seconds  *              (~20 minutes for 32-bit timers) -- calculations below  *  *              2**24 Ticks / 3,600,000 Ticks/Sec = 4.66 sec  *              2**32 Ticks / 3,600,000 Ticks/Sec = 1193 sec or 19.88 minutes  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetTimerDuration  *  * PARAMETERS:  StartTicks          - Starting timestamp  *              EndTicks            - End timestamp  *              TimeElapsed         - Where the elapsed time is returned  *  * RETURN:      Status and TimeElapsed  *  * DESCRIPTION: Computes the time elapsed (in microseconds) between two  *              PM Timer time stamps, taking into account the possibility of  *              rollovers, the timer resolution, and timer frequency.  *  *              The PM Timer's clock ticks at roughly 3.6 times per  *              _microsecond_, and its clock continues through Cx state  *              transitions (unlike many CPU timestamp counters) -- making it  *              a versatile and accurate timer.  *  *              Note that this function accommodates only a single timer  *              rollover.  Thus for 24-bit timers, this function should only  *              be used for calculating durations less than ~4.6 seconds  *              (~20 minutes for 32-bit timers) -- calculations below:  *  *              2**24 Ticks / 3,600,000 Ticks/Sec = 4.66 sec  *              2**32 Ticks / 3,600,000 Ticks/Sec = 1193 sec or 19.88 minutes  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -162,19 +162,14 @@ modifier|*
 name|TimeElapsed
 parameter_list|)
 block|{
-name|UINT32
-name|DeltaTicks
-init|=
-literal|0
-decl_stmt|;
-name|UINT64_OVERLAY
-name|NormalizedTicks
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|UINT32
+name|DeltaTicks
+decl_stmt|;
 name|ACPI_INTEGER
-name|OutQuotient
+name|Quotient
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -193,7 +188,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Compute Tick Delta:      * -------------------      * Handle (max one) timer rollovers on 24- versus 32-bit timers.      */
+comment|/*      * Compute Tick Delta:      * Handle (max one) timer rollovers on 24-bit versus 32-bit timers.      */
 if|if
 condition|(
 name|StartTicks
@@ -259,6 +254,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
+comment|/* StartTicks == EndTicks */
 block|{
 operator|*
 name|TimeElapsed
@@ -271,11 +267,11 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Compute Duration:      * -----------------      *      * Requires a 64-bit divide:      *      * TimeElapsed = (DeltaTicks * 1000000) / PM_TIMER_FREQUENCY;      */
-name|NormalizedTicks
-operator|.
-name|Full
+comment|/*      * Compute Duration (Requires a 64-bit multiply and divide):      *      * TimeElapsed = (DeltaTicks * 1000000) / PM_TIMER_FREQUENCY;      */
+name|Status
 operator|=
+name|AcpiUtShortDivide
+argument_list|(
 operator|(
 operator|(
 name|UINT64
@@ -284,20 +280,11 @@ name|DeltaTicks
 operator|)
 operator|*
 literal|1000000
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiUtShortDivide
-argument_list|(
-operator|&
-name|NormalizedTicks
-operator|.
-name|Full
 argument_list|,
 name|PM_TIMER_FREQUENCY
 argument_list|,
 operator|&
-name|OutQuotient
+name|Quotient
 argument_list|,
 name|NULL
 argument_list|)
@@ -308,7 +295,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|OutQuotient
+name|Quotient
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 127 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 128 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1241,6 +1241,11 @@ argument_list|(
 operator|(
 literal|"Null Index Object during field prep\n"
 operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiUtDeleteObjectDesc
+argument_list|(
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
