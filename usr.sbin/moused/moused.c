@@ -3051,9 +3051,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|printf
+name|debug
 argument_list|(
-literal|"optind: %d, optarg: '%s'\n"
+literal|"optind: %d, optarg: '%s'"
 argument_list|,
 name|optind
 argument_list|,
