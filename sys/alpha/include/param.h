@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.7 1998/09/09 01:21:25 jdp Exp $ */
+comment|/* $Id: param.h,v 1.8 1999/02/19 19:34:47 luoqi Exp $ */
 end_comment
 
 begin_comment
@@ -15,12 +15,29 @@ begin_comment
 comment|/*  * Machine dependent constants for the Alpha.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_MACHINE
 value|alpha
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE
+end_ifndef
 
 begin_define
 define|#
@@ -29,6 +46,17 @@ name|MACHINE
 value|"alpha"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_ARCH
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -36,12 +64,28 @@ name|_MACHINE_ARCH
 value|alpha
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_ARCH
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
 value|"alpha"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
