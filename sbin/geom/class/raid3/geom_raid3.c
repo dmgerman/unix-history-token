@@ -181,6 +181,8 @@ block|,
 name|raid3_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] prov ..."
 block|}
 block|,
 block|{
@@ -273,6 +275,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-adhnrRvwW] name"
 block|}
 block|,
 block|{
@@ -283,6 +287,8 @@ block|,
 name|raid3_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"prov ..."
 block|}
 block|,
 block|{
@@ -315,6 +321,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-hv]<-n number> name prov"
 block|}
 block|,
 block|{
@@ -367,6 +375,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-hnrvw] name prov prov prov ..."
 block|}
 block|,
 block|{
@@ -377,6 +387,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] name prov"
 block|}
 block|,
 block|{
@@ -399,6 +411,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-v]<-n number> name"
 block|}
 block|,
 block|{
@@ -421,6 +435,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-fv] name ..."
 block|}
 block|,
 name|G_CMD_SENTINEL
@@ -436,60 +452,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|comm
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s label [-hnrvw] name prov prov prov ...\n"
-literal|"       %s clear [-v] prov ...\n"
-literal|"       %s dump prov ...\n"
-literal|"       %s configure [-adhnrRvwW] name\n"
-literal|"       %s rebuild [-v] name prov\n"
-literal|"       %s insert [-hv]<-n number> name prov\n"
-literal|"       %s remove [-v]<-n number> name\n"
-literal|"       %s stop [-fv] name ...\n"
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static

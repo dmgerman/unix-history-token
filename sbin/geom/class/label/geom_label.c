@@ -169,6 +169,8 @@ block|,
 name|label_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] dev ..."
 block|}
 block|,
 block|{
@@ -181,6 +183,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] name dev"
 block|}
 block|,
 block|{
@@ -203,6 +207,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-fv] name ..."
 block|}
 block|,
 block|{
@@ -213,6 +219,8 @@ block|,
 name|label_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"dev ..."
 block|}
 block|,
 block|{
@@ -225,6 +233,8 @@ block|,
 name|label_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] name dev"
 block|}
 block|,
 block|{
@@ -247,6 +257,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-fv] name ..."
 block|}
 block|,
 name|G_CMD_SENTINEL
@@ -262,85 +274,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s create [-v] name dev\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s destroy [-fv] name ...\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s label [-v] name dev\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s stop [-fv] name ...\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s clear [-v] dev ...\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s dump dev ...\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static

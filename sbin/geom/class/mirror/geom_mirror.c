@@ -232,6 +232,8 @@ block|,
 name|mirror_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] name prov ..."
 block|}
 block|,
 block|{
@@ -242,6 +244,8 @@ block|,
 name|mirror_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] prov ..."
 block|}
 block|,
 block|{
@@ -315,6 +319,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-adhnv] [-b balance] [-s slice] name"
 block|}
 block|,
 block|{
@@ -325,6 +331,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] name prov ..."
 block|}
 block|,
 block|{
@@ -335,6 +343,8 @@ block|,
 name|mirror_main
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"prov ..."
 block|}
 block|,
 block|{
@@ -345,6 +355,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"name ..."
 block|}
 block|,
 block|{
@@ -398,6 +410,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-hnv] [-b balance] [-s slice] name prov ..."
 block|}
 block|,
 block|{
@@ -441,6 +455,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-hiv] [-p priority] name prov ..."
 block|}
 block|,
 block|{
@@ -451,6 +467,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] name prov ..."
 block|}
 block|,
 block|{
@@ -461,6 +479,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+literal|"[-v] name prov ..."
 block|}
 block|,
 block|{
@@ -483,6 +503,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-fv] name ..."
 block|}
 block|,
 name|G_CMD_SENTINEL
@@ -498,69 +520,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|comm
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s label [-hnv] [-b balance] [-s slice] name prov ...\n"
-literal|"       %s clear [-v] prov ...\n"
-literal|"       %s dump prov ...\n"
-literal|"       %s configure [-adhnv] [-b balance] [-s slice] name\n"
-literal|"       %s rebuild [-v] name prov ...\n"
-literal|"       %s insert [-hiv] [-p priority] name prov ...\n"
-literal|"       %s remove [-v] name prov ...\n"
-literal|"       %s activate [-v] name prov ...\n"
-literal|"       %s deactivate [-v] name prov ...\n"
-literal|"       %s forget name ...\n"
-literal|"       %s stop [-fv] name ...\n"
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|,
-name|comm
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
