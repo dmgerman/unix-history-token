@@ -1523,6 +1523,8 @@ name|irqrid
 operator|=
 literal|0
 expr_stmt|;
+name|r
+operator|=
 name|cfe
 operator|->
 name|irqres
