@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)wizard.c	8.1 (Berkeley) 6/2/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)wizard.c	8.1 (Berkeley) 6/2/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,24 +81,32 @@ directive|include
 file|"hdr.h"
 end_include
 
-begin_macro
-name|datime
-argument_list|(
-argument|d
-argument_list|,
-argument|t
-argument_list|)
-end_macro
+begin_function_decl
+specifier|static
+name|int
+name|wizard
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function
+name|void
+name|datime
+parameter_list|(
+name|d
+parameter_list|,
+name|t
+parameter_list|)
 name|int
 modifier|*
 name|d
 decl_stmt|,
-modifier|*
+decl|*
 name|t
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -111,9 +132,11 @@ operator|&
 name|tvec
 argument_list|)
 expr_stmt|;
+comment|/* day since 1977 */
 operator|*
 name|d
 operator|=
+operator|(
 name|tptr
 operator|->
 name|tm_yday
@@ -127,8 +150,41 @@ name|tm_year
 operator|-
 literal|77
 operator|)
+operator|+
+operator|(
+name|tptr
+operator|->
+name|tm_year
+operator|-
+literal|77
+operator|)
+operator|/
+literal|4
+operator|-
+operator|(
+name|tptr
+operator|->
+name|tm_year
+operator|-
+literal|1
+operator|)
+operator|/
+literal|100
+operator|+
+operator|(
+name|tptr
+operator|->
+name|tm_year
+operator|+
+literal|299
+operator|)
+operator|/
+literal|400
+operator|)
 expr_stmt|;
-comment|/* day since 1977  (mod leap)   */
+comment|/* bug: this will overflow in the year 2066 AD (with 16 bit int) */
+comment|/* it will be attributed to Wm the C's millenial celebration    */
+comment|/* and minutes since midnite */
 operator|*
 name|t
 operator|=
@@ -142,13 +198,8 @@ name|tptr
 operator|->
 name|tm_min
 expr_stmt|;
-comment|/* and minutes since midnite    */
 block|}
 end_block
-
-begin_comment
-comment|/* pretty painless              */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -159,12 +210,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|poof
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|strcpy
 argument_list|(
@@ -189,16 +238,12 @@ operator|=
 literal|45
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|Start
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|d
@@ -320,23 +365,15 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|wizard
-argument_list|()
-end_macro
-
-begin_comment
-comment|/* not as complex as advent/10 (for now)        */
-end_comment
-
-begin_block
-block|{
-specifier|register
+begin_function
+specifier|static
 name|int
-name|wiz
-decl_stmt|;
+name|wizard
+parameter_list|()
+comment|/* not as complex as advent/10 (for now)        */
+block|{
 name|char
 modifier|*
 name|word
@@ -377,12 +414,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
 name|magic
+argument_list|,
+literal|5
 argument_list|)
 condition|)
 block|{
@@ -408,78 +446,73 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ciao
-argument_list|(
-argument|cmdfile
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cmdfile
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|c
-decl_stmt|;
-specifier|register
-name|int
-name|outfd
-decl_stmt|,
-name|size
 decl_stmt|;
 name|char
 name|fname
 index|[
 literal|80
 index|]
-decl_stmt|,
-name|buf
-index|[
-literal|512
-index|]
-decl_stmt|;
-specifier|extern
-name|unsigned
-name|filesize
 decl_stmt|;
 name|printf
 argument_list|(
 literal|"What would you like to call the saved version?\n"
 argument_list|)
 expr_stmt|;
+comment|/* XXX - should use fgetln to avoid arbitrary limit */
 for|for
 control|(
 name|c
 operator|=
 name|fname
 init|;
+name|c
+operator|<
+name|fname
+operator|+
+sizeof|sizeof
+name|fname
+operator|-
+literal|1
 condition|;
 name|c
 operator|++
 control|)
-if|if
-condition|(
-operator|(
-operator|*
-name|c
+block|{
+name|int
+name|ch
+decl_stmt|;
+name|ch
 operator|=
 name|getchar
 argument_list|()
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ch
 operator|==
 literal|'\n'
+operator|||
+name|ch
+operator|==
+name|EOF
 condition|)
 break|break;
+operator|*
+name|c
+operator|=
+name|ch
+expr_stmt|;
+block|}
 operator|*
 name|c
 operator|=
@@ -514,22 +547,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ran
-argument_list|(
-argument|range
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|range
+parameter_list|)
 name|int
 name|range
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -547,7 +575,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

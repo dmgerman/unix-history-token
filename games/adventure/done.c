@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)done.c	8.1 (Berkeley) 5/31/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)done.c	8.1 (Berkeley) 5/31/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,18 +57,12 @@ directive|include
 file|"hdr.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|score
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* sort of like 20000   */
-end_comment
-
-begin_block
 block|{
-specifier|register
 name|int
 name|scor
 decl_stmt|,
@@ -325,40 +332,22 @@ name|scor
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|done
-argument_list|(
-argument|entry
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|entry
+parameter_list|)
 comment|/* entry=1 means goto 13000 */
-end_comment
-
-begin_comment
 comment|/* game is over         */
-end_comment
-
-begin_decl_stmt
 name|int
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* entry=2 means goto 20000 */
-end_comment
-
-begin_comment
 comment|/* 3=19000 */
-end_comment
-
-begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -526,28 +515,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|die
-argument_list|(
-argument|entry
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|entry
+parameter_list|)
 comment|/* label 90             */
-end_comment
-
-begin_decl_stmt
 name|int
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -705,13 +685,8 @@ name|oldloc
 operator|=
 name|loc
 expr_stmt|;
-return|return
-operator|(
-literal|2000
-operator|)
-return|;
 block|}
-end_block
+end_function
 
 end_unit
 

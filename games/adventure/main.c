@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/2/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/2/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -78,10 +98,23 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -97,11 +130,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -115,45 +143,24 @@ name|text
 modifier|*
 name|kk
 decl_stmt|;
-extern|extern trapdel(
-block|)
-function|;
-end_function
-
-begin_comment
 comment|/* revoke */
-end_comment
-
-begin_expr_stmt
 name|setgid
 argument_list|(
 name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Initialize everything */
-end_comment
-
-begin_expr_stmt
 name|signal
 argument_list|(
-literal|2
+name|SIGINT
 argument_list|,
 name|trapdel
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|argc
@@ -186,9 +193,7 @@ comment|/* The restore worked fine */
 name|yea
 operator|=
 name|Start
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|k
 operator|=
@@ -213,7 +218,7 @@ case|:
 comment|/* Couldn't open it */
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* So give up */
@@ -229,26 +234,17 @@ expr_stmt|;
 comment|/* You dissolve */
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* File could be non-adventure */
 block|}
 comment|/* So don't unlink it. */
 block|}
-end_if
-
-begin_expr_stmt
 name|startup
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* prepare for a user           */
-end_comment
-
-begin_for
 for|for
 control|(
 init|;
@@ -369,9 +365,7 @@ name|loc
 argument_list|)
 operator|&&
 name|dark
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 condition|)
 block|{
 if|if
@@ -402,8 +396,6 @@ literal|16
 index|]
 expr_stmt|;
 block|}
-name|l2001
-label|:
 if|if
 condition|(
 name|toting
@@ -459,9 +451,7 @@ if|if
 condition|(
 operator|!
 name|dark
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 condition|)
 block|{
 name|abb
@@ -727,9 +717,7 @@ block|}
 name|wzdark
 operator|=
 name|dark
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 2605                 */
 if|if
@@ -766,11 +754,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset counter        */
-name|copystr
+name|strcpy
 argument_list|(
-literal|"quit"
-argument_list|,
 name|wd1
+argument_list|,
+literal|"quit"
 argument_list|)
 expr_stmt|;
 comment|/* pretend he's quitting*/
@@ -1111,26 +1099,35 @@ literal|70
 expr_stmt|;
 if|if
 condition|(
-name|weq
+operator|!
+name|strncmp
 argument_list|(
 name|wd1
 argument_list|,
 literal|"enter"
+argument_list|,
+literal|5
 argument_list|)
 operator|&&
 operator|(
-name|weq
+operator|!
+name|strncmp
 argument_list|(
 name|wd2
 argument_list|,
 literal|"strea"
+argument_list|,
+literal|5
 argument_list|)
 operator|||
-name|weq
+operator|!
+name|strncmp
 argument_list|(
 name|wd2
 argument_list|,
 literal|"water"
+argument_list|,
+literal|5
 argument_list|)
 operator|)
 condition|)
@@ -1139,11 +1136,14 @@ name|l2010
 goto|;
 if|if
 condition|(
-name|weq
+operator|!
+name|strncmp
 argument_list|(
 name|wd1
 argument_list|,
 literal|"enter"
+argument_list|,
+literal|5
 argument_list|)
 operator|&&
 operator|*
@@ -1157,38 +1157,42 @@ goto|;
 if|if
 condition|(
 operator|(
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|wd1
 argument_list|,
 literal|"water"
+argument_list|,
+literal|5
 argument_list|)
 operator|&&
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|wd1
 argument_list|,
 literal|"oil"
+argument_list|,
+literal|3
 argument_list|)
 operator|)
 operator|||
 operator|(
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|wd2
 argument_list|,
 literal|"plant"
+argument_list|,
+literal|5
 argument_list|)
 operator|&&
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|wd2
 argument_list|,
 literal|"door"
+argument_list|,
+literal|4
 argument_list|)
 operator|)
 condition|)
@@ -1204,25 +1208,30 @@ argument_list|(
 name|wd2
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 condition|)
-name|copystr
+name|strcpy
 argument_list|(
-literal|"pour"
-argument_list|,
 name|wd2
+argument_list|,
+literal|"pour"
 argument_list|)
 expr_stmt|;
 name|l2610
 label|:
 if|if
 condition|(
-name|weq
+operator|!
+name|strncmp
 argument_list|(
 name|wd1
 argument_list|,
 literal|"west"
+argument_list|,
+literal|4
 argument_list|)
 condition|)
 if|if
@@ -1247,6 +1256,8 @@ name|wd1
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1337,14 +1348,9 @@ goto|goto
 name|l2010
 goto|;
 default|default:
-name|printf
+name|bug
 argument_list|(
-literal|"Error 22\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
+literal|22
 argument_list|)
 expr_stmt|;
 block|}
@@ -1364,27 +1370,14 @@ comment|/* i.e. goto l2         */
 case|case
 literal|99
 case|:
-switch|switch
-condition|(
 name|die
 argument_list|(
 literal|99
 argument_list|)
-condition|)
-block|{
-case|case
-literal|2000
-case|:
+expr_stmt|;
 goto|goto
 name|l2000
 goto|;
-default|default:
-name|bug
-argument_list|(
-literal|111
-argument_list|)
-expr_stmt|;
-block|}
 default|default:
 name|bug
 argument_list|(
@@ -1394,11 +1387,11 @@ expr_stmt|;
 block|}
 name|l2800
 label|:
-name|copystr
+name|strcpy
 argument_list|(
-name|wd2
-argument_list|,
 name|wd1
+argument_list|,
+name|wd2
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1456,8 +1449,6 @@ condition|)
 goto|goto
 name|l4090
 goto|;
-name|l4080
-label|:
 switch|switch
 condition|(
 name|verb
@@ -1937,6 +1928,8 @@ argument_list|(
 name|wd1
 argument_list|,
 literal|3
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|spk
@@ -2181,9 +2174,7 @@ operator|==
 literal|0
 operator|||
 name|dark
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 condition|)
 goto|goto
 name|l8000
@@ -2253,12 +2244,7 @@ name|savet
 argument_list|)
 expr_stmt|;
 name|ciao
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Do we quit? */
 continue|continue;
@@ -2376,8 +2362,6 @@ literal|105
 argument_list|)
 expr_stmt|;
 block|}
-name|l9030
-label|:
 case|case
 literal|3
 case|:
@@ -2531,9 +2515,7 @@ expr_stmt|;
 if|if
 condition|(
 name|dark
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 condition|)
 name|rspeak
 argument_list|(
@@ -2723,9 +2705,7 @@ condition|)
 name|obj
 operator|=
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2977,9 +2957,7 @@ name|water
 operator|&&
 operator|(
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|!=
 name|water
 operator|||
@@ -3014,9 +2992,7 @@ operator|==
 literal|110
 operator|||
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|!=
 name|water
 operator|||
@@ -3130,9 +3106,7 @@ argument_list|)
 operator|||
 operator|(
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|==
 name|obj
 operator|&&
@@ -3336,9 +3310,7 @@ comment|/* read                 */
 if|if
 condition|(
 name|dark
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 condition|)
 goto|goto
 name|l5190
@@ -3433,8 +3405,6 @@ expr_stmt|;
 goto|goto
 name|l2012
 goto|;
-name|l9280
-label|:
 case|case
 literal|28
 case|:
@@ -3522,8 +3492,6 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-name|l9290
-label|:
 case|case
 literal|29
 case|:
@@ -3710,9 +3678,7 @@ if|if
 condition|(
 operator|(
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|==
 name|k
 operator|&&
@@ -3845,8 +3811,8 @@ goto|goto
 name|l2012
 goto|;
 block|}
-end_for
+block|}
+end_function
 
-unit|}
 end_unit
 

@@ -9,23 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)crc.c	8.1 (Berkeley) 5/31/93"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)crc.c	8.1 (Berkeley) 5/31/93"; static char ORIGINAL_sccsid[] = "@(#)crc.c	5.2 (Berkeley) 4/4/91";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|ORIGINAL_sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)crc.c	5.2 (Berkeley) 4/4/91"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,15 +41,20 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|u_long
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hdr.h"
+end_include
 
 begin_decl_stmt
+specifier|const
 name|u_long
 name|crctab
 index|[]
@@ -578,17 +586,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|step
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|crc_start
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|crcval
 operator|=
@@ -597,7 +603,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|u_long
@@ -608,6 +614,7 @@ parameter_list|,
 name|nr
 parameter_list|)
 comment|/* Process nr bytes at a time; ptr points to them */
+specifier|const
 name|char
 modifier|*
 name|ptr
@@ -616,11 +623,10 @@ name|int
 name|nr
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p

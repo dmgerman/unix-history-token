@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)setup.c	8.1 (Berkeley) 5/31/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)setup.c	8.1 (Berkeley) 5/31/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
@@ -97,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: setup file> data.c (file is typically glorkz)\n"
+value|"Usage: setup file> data.c (file is typically glorkz)"
 end_define
 
 begin_define
@@ -114,13 +134,6 @@ name|NO
 value|0
 end_define
 
-begin_function_decl
-name|void
-name|fatal
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -133,6 +146,7 @@ comment|/* How many values do we get on a line? */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -165,8 +179,10 @@ name|argc
 operator|!=
 literal|2
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 name|USAGE
 argument_list|)
 expr_stmt|;
@@ -188,9 +204,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|err
 argument_list|(
-literal|"Can't read file %s.\n"
+literal|1
+argument_list|,
+literal|"Can't read file %s"
 argument_list|,
 name|argv
 index|[
@@ -378,36 +396,6 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|fatal
-parameter_list|(
-name|format
-parameter_list|,
-name|arg
-parameter_list|)
-name|char
-modifier|*
-name|format
-decl_stmt|;
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
