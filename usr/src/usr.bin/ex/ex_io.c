@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	5.4 %G%"
+literal|"@(#)ex_io.c	5.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1440,6 +1440,16 @@ decl_stmt|;
 name|short
 name|magic
 decl_stmt|;
+specifier|static
+name|int
+name|ovro
+decl_stmt|;
+comment|/* old value(READONLY) */
+specifier|static
+name|int
+name|denied
+decl_stmt|;
+comment|/* 1 if READONLY was set due to file permissions */
 name|io
 operator|=
 name|open
@@ -1643,6 +1653,32 @@ block|}
 block|}
 if|if
 condition|(
+name|value
+argument_list|(
+name|READONLY
+argument_list|)
+operator|&&
+name|denied
+condition|)
+block|{
+name|value
+argument_list|(
+name|READONLY
+argument_list|)
+operator|=
+name|ovro
+expr_stmt|;
+name|denied
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|c
+operator|!=
+literal|'r'
+operator|&&
 operator|(
 name|stbuf
 operator|.
@@ -1662,6 +1698,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|ovro
+operator|=
+name|value
+argument_list|(
+name|READONLY
+argument_list|)
+expr_stmt|;
+name|denied
+operator|=
+literal|1
+expr_stmt|;
 name|value
 argument_list|(
 name|READONLY
@@ -1669,6 +1717,7 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|value
