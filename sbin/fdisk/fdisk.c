@@ -6497,7 +6497,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-literal|"^(/dev/.*)(\\d+(s\\d+)?[a-h])?$"
+literal|"^(/dev/[a-z]+[0-9]+)([sp][0-9]+)?[a-h]?$"
 argument_list|,
 name|REG_EXTENDED
 argument_list|)
