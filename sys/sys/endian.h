@@ -680,7 +680,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|be32dec
+name|le32dec
 argument_list|(
 name|p
 operator|+
@@ -690,7 +690,7 @@ operator|<<
 literal|32
 operator|)
 operator||
-name|be32dec
+name|le32dec
 argument_list|(
 name|p
 argument_list|)
@@ -1000,7 +1000,7 @@ name|p
 init|=
 name|pp
 decl_stmt|;
-name|be32enc
+name|le32enc
 argument_list|(
 name|p
 argument_list|,
@@ -1009,7 +1009,7 @@ operator|&
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-name|be32enc
+name|le32enc
 argument_list|(
 name|p
 operator|+
