@@ -1769,17 +1769,25 @@ operator|+
 name|xfersize
 argument_list|)
 expr_stmt|;
-comment|/*       		 * Avoid a data-consistency race between write() and mmap() 		 * by ensuring that newly allocated blocks are zerod.  The 		 * race can occur even in the case where the write covers 		 * the entire block. 		 */
+comment|/*       		 * We must perform a read-before-write if the transfer 		 * size does not cover the entire buffer. 		 */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_bsize
+operator|>
+name|xfersize
+condition|)
 name|flags
 operator||=
 name|B_CLRBUF
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (fs->fs_bsize> xfersize) 			flags |= B_CLRBUF; 		else 			flags&= ~B_CLRBUF;
-endif|#
-directive|endif
+else|else
+name|flags
+operator|&=
+operator|~
+name|B_CLRBUF
+expr_stmt|;
 comment|/* XXX is uio->uio_offset the right thing here? */
 name|error
 operator|=
@@ -1810,6 +1818,30 @@ operator|!=
 literal|0
 condition|)
 break|break;
+comment|/* 		 * If the buffer is not valid and we did not clear garbage 		 * out above, we have to do so here even though the write 		 * covers the entire buffer in order to avoid a mmap()/write 		 * race where another process may see the garbage prior to 		 * the uiomove() for a write replacing it. 		 */
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_CACHE
+operator|)
+operator|==
+literal|0
+operator|&&
+name|fs
+operator|->
+name|fs_bsize
+operator|<=
+name|xfersize
+condition|)
+name|vfs_bio_clrbuf
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ioflag
