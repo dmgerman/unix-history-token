@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.73	83/03/19	*/
+comment|/*	uipc_socket.c	4.74	83/05/18	*/
 end_comment
 
 begin_include
@@ -556,6 +556,11 @@ operator|->
 name|so_options
 operator||=
 name|SO_NEWFDONCONN
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
