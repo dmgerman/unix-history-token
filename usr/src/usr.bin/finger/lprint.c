@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprint.c	5.10 (Berkeley) %G%"
+literal|"@(#)lprint.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,6 +245,11 @@ name|len
 decl_stmt|,
 name|maxlen
 decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tp
+decl_stmt|;
 name|int
 name|oddfield
 decl_stmt|;
@@ -257,8 +262,7 @@ modifier|*
 name|t
 decl_stmt|,
 modifier|*
-name|ctime
-argument_list|()
+name|tzn
 decl_stmt|,
 modifier|*
 name|prphone
@@ -577,19 +581,38 @@ block|{
 case|case
 name|LOGGEDIN
 case|:
-name|cpr
+name|tp
 operator|=
-name|printf
-argument_list|(
-literal|"On since %16.16s on %s"
-argument_list|,
-name|ctime
+name|localtime
 argument_list|(
 operator|&
 name|w
 operator|->
 name|loginat
 argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|asctime
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+name|tzn
+operator|=
+name|tp
+operator|->
+name|tm_zone
+expr_stmt|;
+name|cpr
+operator|=
+name|printf
+argument_list|(
+literal|"On since %16.16s (%s) on %s"
+argument_list|,
+name|t
+argument_list|,
+name|tzn
 argument_list|,
 name|w
 operator|->
@@ -743,15 +766,28 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|t
+name|tp
 operator|=
-name|ctime
+name|localtime
 argument_list|(
 operator|&
 name|w
 operator|->
 name|loginat
 argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|asctime
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+name|tzn
+operator|=
+name|tp
+operator|->
+name|tm_zone
 expr_stmt|;
 if|if
 condition|(
@@ -771,13 +807,15 @@ name|cpr
 operator|=
 name|printf
 argument_list|(
-literal|"Last login %10.10s, %4.4s on %s"
+literal|"Last login %10.10s (%s), %4.4s on %s"
 argument_list|,
 name|t
 argument_list|,
 name|t
 operator|+
 literal|20
+argument_list|,
+name|tzn
 argument_list|,
 name|w
 operator|->
@@ -789,9 +827,11 @@ name|cpr
 operator|=
 name|printf
 argument_list|(
-literal|"Last login %16.16s on %s"
+literal|"Last login %16.16s (%s) on %s"
 argument_list|,
 name|t
+argument_list|,
+name|tzn
 argument_list|,
 name|w
 operator|->
