@@ -10634,6 +10634,10 @@ case|case
 name|SSD_KEY_EQUAL
 case|:
 comment|/* These should be filtered by the peripheral drivers */
+name|print_sense
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 name|SSD_KEY_MISCOMPARE
