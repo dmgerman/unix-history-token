@@ -279,7 +279,7 @@ name|fpsetmask
 parameter_list|(
 name|m
 parameter_list|)
-value|((fp_except_t)					\ 	(__fpsetreg(~(m), FP_MSKS_REG, FP_MSKS_FLD, FP_MSKS_OFF)))
+value|((fp_except_t)					\ 	(~__fpsetreg(~(m), FP_MSKS_REG, FP_MSKS_FLD, FP_MSKS_OFF))&	\ 	    (FP_MSKS_FLD>> FP_MSKS_OFF))
 end_define
 
 begin_define
