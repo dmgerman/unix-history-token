@@ -34,24 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ktr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/pcpu.h>
 end_include
 
@@ -110,24 +92,6 @@ begin_include
 include|#
 directive|include
 file|<ddb/ddb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/db_access.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/db_sym.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/db_variables.h>
 end_include
 
 begin_include
@@ -1092,9 +1056,6 @@ specifier|volatile
 name|u_int
 name|in_Debugger
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 comment|/* 	 * XXX 	 * Do nothing if the console is in graphics mode.  This is 	 * OK if the call is for the debugger hotkey but not if the call 	 * is a weak form of panicing. 	 */
 if|if
 condition|(
@@ -1121,11 +1082,6 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|savecrit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"Debugger(\"%s\")\n"
@@ -1135,11 +1091,6 @@ argument_list|)
 expr_stmt|;
 name|breakpoint
 argument_list|()
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
 expr_stmt|;
 name|atomic_store_rel_int
 argument_list|(
