@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.15 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5240,6 +5240,10 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|long
+name|rmalloc
+parameter_list|()
+function_decl|;
 name|nproc
 operator|=
 name|getword
