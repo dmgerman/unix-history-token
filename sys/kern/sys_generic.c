@@ -2616,7 +2616,7 @@ specifier|register
 struct|struct
 name|args
 block|{
-name|int
+name|u_int
 name|nd
 decl_stmt|;
 name|fd_set
@@ -2669,13 +2669,14 @@ name|s
 decl_stmt|,
 name|ncoll
 decl_stmt|,
-name|ni
-decl_stmt|,
 name|error
 init|=
 literal|0
 decl_stmt|,
 name|timo
+decl_stmt|;
+name|u_int
+name|ni
 decl_stmt|;
 name|bzero
 argument_list|(
