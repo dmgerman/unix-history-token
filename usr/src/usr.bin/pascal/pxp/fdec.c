@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fdec.c	1.2 (Berkeley) %G%"
+literal|"@(#)fdec.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,11 +1073,17 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|profile
+condition|)
+block|{
 name|error
 argument_list|(
 literal|"Missing program statement and program body"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
