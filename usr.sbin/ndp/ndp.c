@@ -4399,7 +4399,7 @@ name|RTF_HOST
 expr_stmt|;
 name|rtm
 operator|->
-name|rtm_flags
+name|rtm_addrs
 operator||=
 name|RTA_NETMASK
 expr_stmt|;
