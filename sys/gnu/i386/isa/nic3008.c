@@ -5,12 +5,12 @@ name|char
 name|nic38_id
 index|[]
 init|=
-literal|"@(#)$Id: nic3008.c,v 1.6 1995/05/30 07:57:57 rgrimes Exp $"
+literal|"@(#)$Id: nic3008.c,v 1.7 1995/09/08 11:06:46 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.6 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.6  1995/05/30  07:57:57  rgrimes  * Remove trailing whitespace.  *  * Revision 1.5  1995/05/11  19:25:55  rgrimes  * Fix -Wformat warnings from LINT kernel.  *  * Revision 1.4  1995/03/28  07:54:31  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.3  1995/03/19  14:28:35  davidg  * Removed redundant newlines that were in some panic strings.  *  * Revision 1.2  1995/02/15  11:59:40  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.7 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.7  1995/09/08  11:06:46  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.6  1995/05/30  07:57:57  rgrimes  * Remove trailing whitespace.  *  * Revision 1.5  1995/05/11  19:25:55  rgrimes  * Fix -Wformat warnings from LINT kernel.  *  * Revision 1.4  1995/03/28  07:54:31  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.3  1995/03/19  14:28:35  davidg  * Removed redundant newlines that were in some panic strings.  *  * Revision 1.2  1995/02/15  11:59:40  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1803,6 +1803,9 @@ name|subadr_mask
 parameter_list|,
 name|int
 name|si_mask
+parameter_list|,
+name|int
+name|spv
 parameter_list|)
 block|{
 name|u_short
@@ -3202,8 +3205,6 @@ expr_stmt|;
 name|s_intr
 argument_list|(
 name|sc
-argument_list|,
-name|dpr
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4216,8 +4217,6 @@ condition|)
 name|s_intr
 argument_list|(
 name|sc
-argument_list|,
-name|dpr
 argument_list|)
 expr_stmt|;
 name|splx
