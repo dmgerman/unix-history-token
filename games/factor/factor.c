@@ -502,7 +502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pr_fact - print the factors of a number  *  * If the number is 0 or 1, then print the number and return.  * If the number is< 0, print -1, negate the number and continue  * processing.  *  * Print the factors of the number, from the lowest to the highest.  * A factor will be printed numtiple times if it divides the value  * multiple times.  *  * Factors are printed with leading tabs.  */
+comment|/*  * pr_fact - print the factors of a number  *  * If the number is 0 or 1, then print the number and return.  * If the number is< 0, print -1, negate the number and continue  * processing.  *  * Print the factors of the number, from the lowest to the highest.  * A factor will be printed multiple times if it divides the value  * multiple times.  *  * Factors are printed with leading tabs.  */
 end_comment
 
 begin_function
