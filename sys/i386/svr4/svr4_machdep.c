@@ -1317,6 +1317,11 @@ name|p_sigmask
 operator|=
 name|mask
 expr_stmt|;
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(

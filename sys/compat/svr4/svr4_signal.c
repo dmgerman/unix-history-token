@@ -2770,6 +2770,13 @@ argument_list|,
 name|bss
 argument_list|)
 expr_stmt|;
+name|signotify
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SVR4_SIG_SETMASK
@@ -2789,6 +2796,13 @@ operator|->
 name|td_proc
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|signotify
+argument_list|(
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 break|break;

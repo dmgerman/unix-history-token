@@ -1553,6 +1553,11 @@ argument_list|,
 name|signum
 argument_list|)
 expr_stmt|;
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
@@ -2028,6 +2033,11 @@ argument_list|,
 name|bss
 argument_list|)
 expr_stmt|;
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|IBCS2_SIG_SETMASK
@@ -2043,6 +2053,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|signotify
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 break|break;

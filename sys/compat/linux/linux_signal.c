@@ -1269,6 +1269,11 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|LINUX_SIG_SETMASK
@@ -1284,6 +1289,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|signotify
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1914,6 +1924,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|signotify
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK

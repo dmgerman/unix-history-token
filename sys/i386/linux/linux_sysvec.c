@@ -3094,6 +3094,11 @@ operator|->
 name|p_sigmask
 argument_list|)
 expr_stmt|;
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -3493,6 +3498,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|signotify
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK

@@ -1619,6 +1619,17 @@ begin_comment
 comment|/* Process is being swapped. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PS_NEEDSIGCHK
+value|0x02000
+end_define
+
+begin_comment
+comment|/* Process may need signal delivery. */
+end_comment
+
 begin_comment
 comment|/* flags kept in td_flags */
 end_comment
@@ -2039,20 +2050,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|signotify
-parameter_list|(
-name|ke
-parameter_list|)
-value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(ke)->ke_flags |= KEF_ASTPENDING;				\ } while (0)
-end_define
 
 begin_comment
 comment|/* Handy macro to determine if p1 can mangle p2. */

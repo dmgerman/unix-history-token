@@ -848,6 +848,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|signotify
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|trapsignal
 parameter_list|(
 name|struct

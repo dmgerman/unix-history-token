@@ -2622,6 +2622,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|PROC_UNLOCK
 argument_list|(
 name|p
