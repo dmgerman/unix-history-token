@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.7 %G%"
+literal|"@(#)main.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -778,11 +778,32 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|edit
+condition|)
+name|perror
+argument_list|(
+name|mailname
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No mail for %s\n"
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
