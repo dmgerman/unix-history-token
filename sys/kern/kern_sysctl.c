@@ -108,39 +108,39 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Locking and stats  */
+comment|/*  * Locking - this locks the sysctl tree in memory.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
 name|sx
-name|memlock
+name|sysctllock
 decl_stmt|;
 end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|MEMLOCK_LOCK
+name|SYSCTL_LOCK
 parameter_list|()
-value|sx_xlock(&memlock)
+value|sx_xlock(&sysctllock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEMLOCK_UNLOCK
+name|SYSCTL_UNLOCK
 parameter_list|()
-value|sx_xunlock(&memlock)
+value|sx_xunlock(&sysctllock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEMLOCK_INIT
+name|SYSCTL_INIT
 parameter_list|()
-value|sx_init(&memlock, "sysctl memlock")
+value|sx_init(&sysctllock, "sysctl sysctllock")
 end_define
 
 begin_function_decl
@@ -1572,7 +1572,7 @@ modifier|*
 modifier|*
 name|oidp
 decl_stmt|;
-name|MEMLOCK_INIT
+name|SYSCTL_INIT
 argument_list|()
 expr_stmt|;
 name|SET_FOREACH
@@ -3942,7 +3942,7 @@ name|lock
 operator|=
 literal|1
 expr_stmt|;
-name|MEMLOCK_LOCK
+name|SYSCTL_LOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -3978,7 +3978,7 @@ operator|.
 name|oldlen
 argument_list|)
 expr_stmt|;
-name|MEMLOCK_UNLOCK
+name|SYSCTL_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -5357,7 +5357,7 @@ name|lock
 operator|=
 literal|1
 expr_stmt|;
-name|MEMLOCK_LOCK
+name|SYSCTL_LOCK
 argument_list|()
 expr_stmt|;
 do|do
@@ -5411,7 +5411,7 @@ operator|.
 name|oldlen
 argument_list|)
 expr_stmt|;
-name|MEMLOCK_UNLOCK
+name|SYSCTL_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
