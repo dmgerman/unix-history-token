@@ -183,62 +183,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* features */
-end_comment
-
-begin_comment
-comment|/* #define PSM_HOOKAPM	   	   hook the APM resume event */
-end_comment
-
-begin_comment
-comment|/* #define PSM_RESETAFTERSUSPEND   reset the device at the resume event */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|NAPM
-operator|<=
-literal|0
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|PSM_HOOKAPM
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NAPM */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PSM_HOOKAPM
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|PSM_RESETAFTERSUSPEND
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PSM_HOOKAPM */
-end_comment
-
-begin_comment
 comment|/* end of driver specific options */
 end_comment
 
@@ -530,6 +474,15 @@ name|int
 name|yold
 decl_stmt|;
 comment|/* previous absolute Y position */
+name|int
+name|watchdog
+decl_stmt|;
+comment|/* watchdog timer flag */
+name|struct
+name|callout_handle
+name|callout
+decl_stmt|;
+comment|/* watchdog timer call out */
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -543,9 +496,11 @@ name|b_devfs_token
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
 name|struct
 name|apmhook
 name|resumehook
@@ -678,8 +633,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSM_CONFIG_HOOKRESUME
+value|0x2000
+end_define
+
+begin_comment
+comment|/* hook the system resume event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_CONFIG_INITAFTERSUSPEND
+value|0x4000
+end_define
+
+begin_comment
+comment|/* init the device at the resume event */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSM_CONFIG_FLAGS
-value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC	\ 				    | PSM_CONFIG_NOIDPROBE	\ 				    | PSM_CONFIG_NORESET	\ 				    | PSM_CONFIG_FORCETAP	\ 				    | PSM_CONFIG_IGNPORTERROR)
+value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC	\ 				    | PSM_CONFIG_NOIDPROBE	\ 				    | PSM_CONFIG_NORESET	\ 				    | PSM_CONFIG_FORCETAP	\ 				    | PSM_CONFIG_IGNPORTERROR	\ 				    | PSM_CONFIG_HOOKRESUME	\ 				    | PSM_CONFIG_INITAFTERSUSPEND)
 end_define
 
 begin_comment
@@ -841,11 +818,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1005,11 +984,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_RESETAFTERSUSPEND
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1028,10 +1009,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* PSM_RESETAFTERSUSPEND */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1087,11 +1064,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_RESETAFTERSUSPEND
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1129,21 +1108,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|model_name
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|ointhand2_t
 name|psmintr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|psmtimeout
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1213,7 +1209,28 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|probefunc_t
+name|enable_msexplorer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|probefunc_t
 name|enable_msintelli
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|probefunc_t
+name|enable_4dmouse
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|probefunc_t
+name|enable_4dplus
 decl_stmt|;
 end_decl_stmt
 
@@ -1276,13 +1293,14 @@ name|vendortype
 index|[]
 init|=
 block|{
+comment|/*      * WARNING: the order of probe is very important.  Don't mess it      * unless you know what you are doing.      */
 block|{
 name|MOUSE_MODEL_NET
 block|,
 comment|/* Genius NetMouse */
-literal|0xc8
+literal|0x08
 block|,
-name|MOUSE_INTELLI_PACKETSIZE
+name|MOUSE_PS2INTELLI_PACKETSIZE
 block|,
 name|enable_gmouse
 block|, }
@@ -1299,17 +1317,6 @@ name|enable_groller
 block|, }
 block|,
 block|{
-name|MOUSE_MODEL_GLIDEPOINT
-block|,
-comment|/* ALPS GlidePoint */
-literal|0xc0
-block|,
-name|MOUSE_PS2_PACKETSIZE
-block|,
-name|enable_aglide
-block|, }
-block|,
-block|{
 name|MOUSE_MODEL_MOUSEMANPLUS
 block|,
 comment|/* Logitech MouseMan+ */
@@ -1321,6 +1328,61 @@ name|enable_mmanplus
 block|, }
 block|,
 block|{
+name|MOUSE_MODEL_EXPLORER
+block|,
+comment|/* Microsoft IntelliMouse Explorer */
+literal|0x08
+block|,
+name|MOUSE_PS2INTELLI_PACKETSIZE
+block|,
+name|enable_msexplorer
+block|, }
+block|,
+block|{
+name|MOUSE_MODEL_4D
+block|,
+comment|/* A4 Tech 4D Mouse */
+literal|0x08
+block|,
+name|MOUSE_4D_PACKETSIZE
+block|,
+name|enable_4dmouse
+block|, }
+block|,
+block|{
+name|MOUSE_MODEL_4DPLUS
+block|,
+comment|/* A4 Tech 4D+ Mouse */
+literal|0xc8
+block|,
+name|MOUSE_4DPLUS_PACKETSIZE
+block|,
+name|enable_4dplus
+block|, }
+block|,
+block|{
+name|MOUSE_MODEL_INTELLI
+block|,
+comment|/* Microsoft IntelliMouse */
+literal|0x08
+block|,
+name|MOUSE_PS2INTELLI_PACKETSIZE
+block|,
+name|enable_msintelli
+block|, }
+block|,
+block|{
+name|MOUSE_MODEL_GLIDEPOINT
+block|,
+comment|/* ALPS GlidePoint */
+literal|0xc0
+block|,
+name|MOUSE_PS2_PACKETSIZE
+block|,
+name|enable_aglide
+block|, }
+block|,
+block|{
 name|MOUSE_MODEL_THINK
 block|,
 comment|/* Kensignton ThinkingMouse */
@@ -1329,17 +1391,6 @@ block|,
 name|MOUSE_PS2_PACKETSIZE
 block|,
 name|enable_kmouse
-block|, }
-block|,
-block|{
-name|MOUSE_MODEL_INTELLI
-block|,
-comment|/* Microsoft IntelliMouse */
-literal|0xc8
-block|,
-name|MOUSE_INTELLI_PACKETSIZE
-block|,
-name|enable_msintelli
 block|, }
 block|,
 block|{
@@ -2028,11 +2079,13 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_RESETAFTERSUSPEND
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * NOTE: once `set_mouse_mode()' is called, the mouse device must be  * re-enabled by calling `enable_aux_dev()'  */
@@ -2090,7 +2143,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PSM_RESETAFTERSUSPEND */
+comment|/* NAPM> 0 */
 end_comment
 
 begin_function
@@ -2216,6 +2269,8 @@ block|PSM_BALLPOINT_ID,
 comment|/* ballpoint device */
 block|PSM_INTELLI_ID,
 comment|/* Intellimouse */
+block|PSM_EXPLORER_ID,
+comment|/* Intellimouse Explorer */
 block|-1
 comment|/* end of table */
 block|};     int i;      for (i = 0; valid_ids[i]>= 0; ++i)         if (valid_ids[i] == id)             return TRUE;     return FALSE;
@@ -2257,13 +2312,13 @@ block|{
 block|{
 name|MOUSE_MODEL_NETSCROLL
 block|,
-literal|"NetScroll Mouse"
+literal|"NetScroll"
 block|}
 block|,
 block|{
 name|MOUSE_MODEL_NET
 block|,
-literal|"NetMouse"
+literal|"NetMouse/NetScroll Optical"
 block|}
 block|,
 block|{
@@ -2294,6 +2349,24 @@ block|{
 name|MOUSE_MODEL_VERSAPAD
 block|,
 literal|"VersaPad"
+block|}
+block|,
+block|{
+name|MOUSE_MODEL_EXPLORER
+block|,
+literal|"IntelliMouse Explorer"
+block|}
+block|,
+block|{
+name|MOUSE_MODEL_4D
+block|,
+literal|"4D Mouse"
+block|}
+block|,
+block|{
+name|MOUSE_MODEL_4DPLUS
+block|,
+literal|"4D+ Mouse"
 block|}
 block|,
 block|{
@@ -2465,12 +2538,26 @@ literal|"psm: failed to restore the keyboard controller "
 literal|"command byte.\n"
 argument_list|)
 expr_stmt|;
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
 block|}
 else|else
 block|{
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -2478,11 +2565,13 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_RESETAFTERSUSPEND
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*   * Re-initialize the aux port and device. The aux port must be enabled  * and its interrupt must be disabled before calling this routine.   * The aux device will be disabled before returning.  * The keyboard controller must be locked via `kbdc_lock()' before  * calling this routine.  */
@@ -2970,7 +3059,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PSM_RESETAFTERSUSPEND */
+comment|/* NAPM> 0 */
 end_comment
 
 begin_function
@@ -3151,6 +3240,32 @@ name|EIO
 operator|)
 return|;
 block|}
+comment|/* start the watchdog timer */
+name|sc
+operator|->
+name|watchdog
+operator|=
+name|FALSE
+expr_stmt|;
+name|sc
+operator|->
+name|callout
+operator|=
+name|timeout
+argument_list|(
+name|psmtimeout
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|unit
+argument_list|,
+name|hz
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3298,6 +3413,33 @@ name|id_flags
 operator|&
 name|PSM_CONFIG_FLAGS
 expr_stmt|;
+comment|/* XXX: for backward compatibility */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PSM_HOOKAPM
+argument_list|)
+name|sc
+operator|->
+name|config
+operator||=
+ifdef|#
+directive|ifdef
+name|PSM_RESETAFTERSUSPEND
+name|PSM_CONFIG_HOOKRESUME
+operator||
+name|PSM_CONFIG_INITAFTERSUSPEND
+expr_stmt|;
+else|#
+directive|else
+name|PSM_CONFIG_HOOKRESUME
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* PSM_HOOKAPM */
 name|sc
 operator|->
 name|flags
@@ -3861,6 +4003,15 @@ name|PSM_MOUSE_ID
 case|:
 case|case
 name|PSM_INTELLI_ID
+case|:
+case|case
+name|PSM_EXPLORER_ID
+case|:
+case|case
+name|PSM_4DMOUSE_ID
+case|:
+case|case
+name|PSM_4DPLUS_ID
 case|:
 name|sc
 operator|->
@@ -4520,6 +4671,14 @@ name|state
 operator|=
 name|PSM_VALID
 expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|callout
+argument_list|)
+expr_stmt|;
 comment|/* Done */
 ifdef|#
 directive|ifdef
@@ -4585,9 +4744,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEVFS */
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
 name|sc
 operator|->
 name|resumehook
@@ -4647,7 +4808,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* PSM_HOOKAPM */
+comment|/* NAPM> 0 */
 if|if
 condition|(
 operator|!
@@ -4921,6 +5082,12 @@ operator|->
 name|dflt_mode
 operator|.
 name|protocol
+expr_stmt|;
+name|sc
+operator|->
+name|watchdog
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* flush the event queue */
 name|sc
@@ -5315,6 +5482,33 @@ block|}
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+comment|/* stop the watchdog timer */
+name|untimeout
+argument_list|(
+name|psmtimeout
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|PSM_UNIT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|callout
+argument_list|)
+expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|callout
 argument_list|)
 expr_stmt|;
 comment|/* remove anything left in the output buffer */
@@ -8340,6 +8534,92 @@ end_function
 begin_function
 specifier|static
 name|void
+name|psmtimeout
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|psm_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+name|unit
+operator|=
+operator|(
+name|int
+operator|)
+name|arg
+expr_stmt|;
+name|sc
+operator|=
+name|psm_softc
+index|[
+name|unit
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|watchdog
+condition|)
+block|{
+if|if
+condition|(
+name|verbose
+operator|>=
+literal|4
+condition|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: lost interrupt?\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|psmintr
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+name|sc
+operator|->
+name|watchdog
+operator|=
+name|TRUE
+expr_stmt|;
+name|sc
+operator|->
+name|callout
+operator|=
+name|timeout
+argument_list|(
+name|psmtimeout
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|unit
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|psmintr
 parameter_list|(
 name|int
@@ -8580,7 +8860,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/*  	 * A kludge for Kensington device!  	 * The MSB of the horizontal count appears to be stored in  	 * a strange place. This kludge doesn't affect other mice  	 * because the bit is the overflow bit which is, in most cases,  	 * expected to be zero when we reach here. XXX  	 */
+comment|/*  	 * A kludge for Kensington device!  	 * The MSB of the horizontal count appears to be stored in  	 * a strange place. 	 */
 if|if
 condition|(
 name|sc
@@ -8588,8 +8868,8 @@ operator|->
 name|hw
 operator|.
 name|model
-operator|!=
-name|MOUSE_MODEL_VERSAPAD
+operator|==
+name|MOUSE_MODEL_THINK
 condition|)
 name|sc
 operator|->
@@ -8716,6 +8996,86 @@ name|model
 condition|)
 block|{
 case|case
+name|MOUSE_MODEL_EXPLORER
+case|:
+comment|/* 	     *          b7 b6 b5 b4 b3 b2 b1 b0 	     * byte 1:  oy ox sy sx 1  M  R  L 	     * byte 2:  x  x  x  x  x  x  x  x 	     * byte 3:  y  y  y  y  y  y  y  y 	     * byte 4:  *  *  S2 S1 s  d2 d1 d0 	     * 	     * L, M, R, S1, S2: left, middle, right and side buttons 	     * s: wheel data sign bit 	     * d2-d0: wheel data 	     */
+name|z
+operator|=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+operator|&
+name|MOUSE_EXPLORER_ZNEG
+operator|)
+condition|?
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+operator|&
+literal|0x0f
+operator|)
+operator|-
+literal|16
+else|:
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+operator|&
+literal|0x0f
+operator|)
+expr_stmt|;
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+operator|&
+name|MOUSE_EXPLORER_BUTTON4DOWN
+operator|)
+condition|?
+name|MOUSE_BUTTON4DOWN
+else|:
+literal|0
+expr_stmt|;
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+operator|&
+name|MOUSE_EXPLORER_BUTTON5DOWN
+operator|)
+condition|?
+name|MOUSE_BUTTON5DOWN
+else|:
+literal|0
+expr_stmt|;
+break|break;
+case|case
 name|MOUSE_MODEL_INTELLI
 case|:
 case|case
@@ -8733,6 +9093,55 @@ name|ipacket
 index|[
 literal|3
 index|]
+expr_stmt|;
+comment|/* some mice may send 7 when there is no Z movement?! XXX */
+if|if
+condition|(
+operator|(
+name|z
+operator|>=
+literal|7
+operator|)
+operator|||
+operator|(
+name|z
+operator|<=
+operator|-
+literal|7
+operator|)
+condition|)
+name|z
+operator|=
+literal|0
+expr_stmt|;
+comment|/* some compatible mice have additional buttons */
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+name|c
+operator|&
+name|MOUSE_PS2INTELLI_BUTTON4DOWN
+operator|)
+condition|?
+name|MOUSE_BUTTON4DOWN
+else|:
+literal|0
+expr_stmt|;
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+name|c
+operator|&
+name|MOUSE_PS2INTELLI_BUTTON5DOWN
+operator|)
+condition|?
+name|MOUSE_BUTTON5DOWN
+else|:
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -8886,8 +9295,84 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* this packet type is reserved, and currently ignored */
-comment|/* FALL THROUGH */
+comment|/* this packet type is reserved by Logitech... */
+comment|/* 		     * IBM ScrollPoint Mouse uses this packet type to 		     * encode both vertical and horizontal scroll movement. 		     */
+name|x
+operator|=
+name|y
+operator|=
+literal|0
+expr_stmt|;
+comment|/* horizontal count */
+if|if
+condition|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+literal|0x0f
+condition|)
+name|z
+operator|=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+name|MOUSE_SPOINT_WNEG
+operator|)
+condition|?
+operator|-
+literal|2
+else|:
+literal|2
+expr_stmt|;
+comment|/* vertical count */
+if|if
+condition|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+literal|0xf0
+condition|)
+name|z
+operator|=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+name|MOUSE_SPOINT_ZNEG
+operator|)
+condition|?
+operator|-
+literal|1
+else|:
+literal|1
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* vertical count */
+block|z = (sc->ipacket[2]& MOUSE_SPOINT_ZNEG) 			? ((sc->ipacket[2]>> 4)& 0x0f) - 16 			: ((sc->ipacket[2]>> 4)& 0x0f);
+comment|/* horizontal count */
+block|w = (sc->ipacket[2]& MOUSE_SPOINT_WNEG) 			? (sc->ipacket[2]& 0x0f) - 16 			: (sc->ipacket[2]& 0x0f);
+endif|#
+directive|endif
+break|break;
 case|case
 literal|0
 case|:
@@ -8908,6 +9393,10 @@ name|ms
 operator|.
 name|obutton
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -8986,7 +9475,7 @@ break|break;
 case|case
 name|MOUSE_MODEL_NETSCROLL
 case|:
-comment|/* three addtional bytes encode button and wheel events */
+comment|/* three addtional bytes encode buttons and wheel events */
 name|ms
 operator|.
 name|button
@@ -9003,6 +9492,25 @@ name|MOUSE_PS2_BUTTON3DOWN
 operator|)
 condition|?
 name|MOUSE_BUTTON4DOWN
+else|:
+literal|0
+expr_stmt|;
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+operator|&
+name|MOUSE_PS2_BUTTON1DOWN
+operator|)
+condition|?
+name|MOUSE_BUTTON5DOWN
 else|:
 literal|0
 expr_stmt|;
@@ -9290,6 +9798,214 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
+name|MOUSE_MODEL_4D
+case|:
+comment|/* 	     *          b7 b6 b5 b4 b3 b2 b1 b0 	     * byte 1:  s2 d2 s1 d1 1  M  R  L 	     * byte 2:  sx x  x  x  x  x  x  x 	     * byte 3:  sy y  y  y  y  y  y  y 	     * 	     * s1: wheel 1 direction 	     * d1: wheel 1 data 	     * s2: wheel 2 direction 	     * d2: wheel 2 data 	     */
+name|x
+operator|=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|1
+index|]
+operator|&
+literal|0x80
+operator|)
+condition|?
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|1
+index|]
+operator|-
+literal|256
+else|:
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|y
+operator|=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+literal|0x80
+operator|)
+condition|?
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|-
+literal|256
+else|:
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+expr_stmt|;
+switch|switch
+condition|(
+name|c
+operator|&
+name|MOUSE_4D_WHEELBITS
+condition|)
+block|{
+case|case
+literal|0x10
+case|:
+name|z
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|0x30
+case|:
+name|z
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|0x40
+case|:
+comment|/* 2nd wheel turning right XXX */
+name|z
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|0xc0
+case|:
+comment|/* 2nd wheel turning left XXX */
+name|z
+operator|=
+operator|-
+literal|2
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|MOUSE_MODEL_4DPLUS
+case|:
+if|if
+condition|(
+operator|(
+name|x
+operator|<
+literal|16
+operator|-
+literal|256
+operator|)
+operator|&&
+operator|(
+name|y
+operator|<
+literal|16
+operator|-
+literal|256
+operator|)
+condition|)
+block|{
+comment|/* 		 *          b7 b6 b5 b4 b3 b2 b1 b0 		 * byte 1:  0  0  1  1  1  M  R  L 		 * byte 2:  0  0  0  0  1  0  0  0 		 * byte 3:  0  0  0  0  S  s  d1 d0 		 * 		 * L, M, R, S: left, middle, right and side buttons 		 * s: wheel data sign bit 		 * d1-d0: wheel data 		 */
+name|x
+operator|=
+name|y
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+name|MOUSE_4DPLUS_BUTTON4DOWN
+condition|)
+name|ms
+operator|.
+name|button
+operator||=
+name|MOUSE_BUTTON4DOWN
+expr_stmt|;
+name|z
+operator|=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+name|MOUSE_4DPLUS_ZNEG
+operator|)
+condition|?
+operator|(
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+literal|0x07
+operator|)
+operator|-
+literal|8
+operator|)
+else|:
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+literal|0x07
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* preserve previous button states */
+name|ms
+operator|.
+name|button
+operator||=
+name|ms
+operator|.
+name|obutton
+operator|&
+name|MOUSE_EXTBUTTONS
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|MOUSE_MODEL_GENERIC
 case|:
 default|default:
@@ -9519,6 +10235,12 @@ operator|=
 name|ms
 operator|.
 name|button
+expr_stmt|;
+name|sc
+operator|->
+name|watchdog
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* queue data */
 if|if
@@ -10001,7 +10723,7 @@ comment|/* notyet */
 end_comment
 
 begin_comment
-comment|/* Genius NetScroll Mouse */
+comment|/* Genius NetScroll Mouse, MouseSystems SmartScroll Mouse */
 end_comment
 
 begin_function
@@ -10065,20 +10787,7 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/* FIXME!! */
-name|sc
-operator|->
-name|hw
-operator|.
-name|buttons
-operator|=
-name|get_mouse_buttons
-argument_list|(
-name|sc
-operator|->
-name|kbdc
-argument_list|)
-expr_stmt|;
+comment|/* FIXME: SmartScroll Mouse has 5 buttons! XXX */
 name|sc
 operator|->
 name|hw
@@ -10094,7 +10803,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Genius NetMouse/NetMouse Pro */
+comment|/* Genius NetMouse/NetMouse Pro, ASCII Mie Mouse, NetScroll Optical */
 end_comment
 
 begin_function
@@ -10512,7 +11221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Logitech MouseMan+/FirstMouse+ */
+comment|/* Logitech MouseMan+/FirstMouse+, IBM ScrollPoint Mouse */
 end_comment
 
 begin_function
@@ -10572,6 +11281,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* the special sequence to enable the fourth button and the roller. */
+comment|/*      * NOTE: for ScrollPoint to respond correctly, the SET_RESOLUTION      * must be called exactly three times since the last RESET command      * before this sequence. XXX      */
 for|for
 control|(
 name|i
@@ -10663,7 +11373,7 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/*      * PS2++ protocl, packet type 0      *      *          b7 b6 b5 b4 b3 b2 b1 b0      * byte 1:  *  1  p3 p2 1  *  *  *      * byte 2:  1  1  p1 p0 m1 m0 1  0      * byte 3:  m7 m6 m5 m4 m3 m2 m1 m0      *      * p3-p0: packet type: 0      * m7-m0: model ID: MouseMan+:0x50, FirstMouse+:0x51,...      */
+comment|/*      * PS2++ protocl, packet type 0      *      *          b7 b6 b5 b4 b3 b2 b1 b0      * byte 1:  *  1  p3 p2 1  *  *  *      * byte 2:  1  1  p1 p0 m1 m0 1  0      * byte 3:  m7 m6 m5 m4 m3 m2 m1 m0      *      * p3-p0: packet type: 0      * m7-m0: model ID: MouseMan+:0x50, FirstMouse+:0x51, ScrollPoint:0x58...      */
 comment|/* check constant bits */
 if|if
 condition|(
@@ -10745,6 +11455,135 @@ literal|8
 expr_stmt|;
 comment|/* save model ID */
 comment|/*      * MouseMan+ (or FirstMouse+) is now in its native mode, in which      * the wheel and the fourth button events are encoded in the      * special data packet. The mouse may be put in the IntelliMouse mode      * if it is initialized by the IntelliMouse's method.      */
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* MS IntelliMouse Explorer */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|enable_msexplorer
+parameter_list|(
+name|struct
+name|psm_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+specifier|static
+name|unsigned
+name|char
+name|rate
+index|[]
+init|=
+block|{
+literal|200
+block|,
+literal|200
+block|,
+literal|80
+block|, }
+decl_stmt|;
+name|KBDC
+name|kbdc
+init|=
+name|sc
+operator|->
+name|kbdc
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* the special sequence to enable the extra buttons and the roller. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|rate
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|rate
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|set_mouse_sampling_rate
+argument_list|(
+name|kbdc
+argument_list|,
+name|rate
+index|[
+name|i
+index|]
+argument_list|)
+operator|!=
+name|rate
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|FALSE
+return|;
+block|}
+comment|/* the device will give the genuine ID only after the above sequence */
+name|id
+operator|=
+name|get_aux_id
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|id
+operator|!=
+name|PSM_EXPLORER_ID
+condition|)
+return|return
+name|FALSE
+return|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
+operator|=
+name|id
+expr_stmt|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|buttons
+operator|=
+literal|5
+expr_stmt|;
+comment|/* IntelliMouse Explorer XXX */
 return|return
 name|TRUE
 return|;
@@ -10881,6 +11720,207 @@ block|}
 end_function
 
 begin_comment
+comment|/* A4 Tech 4D Mouse */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|enable_4dmouse
+parameter_list|(
+name|struct
+name|psm_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/*      * Newer wheel mice from A4 Tech may use the 4D+ protocol.      */
+specifier|static
+name|unsigned
+name|char
+name|rate
+index|[]
+init|=
+block|{
+literal|200
+block|,
+literal|100
+block|,
+literal|80
+block|,
+literal|60
+block|,
+literal|40
+block|,
+literal|20
+block|}
+decl_stmt|;
+name|KBDC
+name|kbdc
+init|=
+name|sc
+operator|->
+name|kbdc
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|rate
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|rate
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|set_mouse_sampling_rate
+argument_list|(
+name|kbdc
+argument_list|,
+name|rate
+index|[
+name|i
+index|]
+argument_list|)
+operator|!=
+name|rate
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|FALSE
+return|;
+block|}
+name|id
+operator|=
+name|get_aux_id
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+comment|/*      * WinEasy 4D, 4 Way Scroll 4D: 6      * Cable-Free 4D: 8 (4DPLUS)      * WinBest 4D+, 4 Way Scroll 4D+: 8 (4DPLUS)      */
+if|if
+condition|(
+name|id
+operator|!=
+name|PSM_4DMOUSE_ID
+condition|)
+return|return
+name|FALSE
+return|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
+operator|=
+name|id
+expr_stmt|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|buttons
+operator|=
+literal|3
+expr_stmt|;
+comment|/* XXX some 4D mice have 4? */
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* A4 Tech 4D+ Mouse */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|enable_4dplus
+parameter_list|(
+name|struct
+name|psm_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/*      * Newer wheel mice from A4 Tech seem to use this protocol.      * Older models are recognized as either 4D Mouse or IntelliMouse.      */
+name|KBDC
+name|kbdc
+init|=
+name|sc
+operator|->
+name|kbdc
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+comment|/*      * enable_4dmouse() already issued the following ID sequence...     static unsigned char rate[] = { 200, 100, 80, 60, 40, 20 };     int i;      for (i = 0; i< sizeof(rate)/sizeof(rate[0]); ++i) {         if (set_mouse_sampling_rate(kbdc, rate[i]) != rate[i]) 	    return FALSE;     }     */
+name|id
+operator|=
+name|get_aux_id
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|id
+operator|!=
+name|PSM_4DPLUS_ID
+condition|)
+return|return
+name|FALSE
+return|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
+operator|=
+name|id
+expr_stmt|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|buttons
+operator|=
+literal|4
+expr_stmt|;
+comment|/* XXX */
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Interlink electronics VersaPad */
 end_comment
 
@@ -11003,6 +12043,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* set scale 1:1 */
+name|sc
+operator|->
+name|config
+operator||=
+name|PSM_CONFIG_HOOKRESUME
+operator||
+name|PSM_CONFIG_INITAFTERSUSPEND
+expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -11066,11 +12114,13 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
 
 begin_function
 specifier|static
@@ -11129,6 +12179,22 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_HOOKRESUME
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* don't let anybody mess with the aux device */
 if|if
 condition|(
@@ -11151,6 +12217,36 @@ name|s
 operator|=
 name|spltty
 argument_list|()
+expr_stmt|;
+comment|/* block our watchdog timer */
+name|sc
+operator|->
+name|watchdog
+operator|=
+name|FALSE
+expr_stmt|;
+name|untimeout
+argument_list|(
+name|psmtimeout
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|unit
+argument_list|,
+name|sc
+operator|->
+name|callout
+argument_list|)
+expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|callout
+argument_list|)
 expr_stmt|;
 comment|/* save the current controller command byte */
 name|empty_both_buffers
@@ -11286,10 +12382,16 @@ name|inputbytes
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PSM_RESETAFTERSUSPEND
 comment|/* try to detect the aux device; are you still there? */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_INITAFTERSUSPEND
+condition|)
+block|{
 if|if
 condition|(
 name|reinitialize
@@ -11344,9 +12446,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PSM_RESETAFTERSUSPEND */
+block|}
 name|splx
 argument_list|(
 name|s
@@ -11519,7 +12619,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PSM_HOOKAPM */
+comment|/* NAPM> 0 */
 end_comment
 
 begin_macro
