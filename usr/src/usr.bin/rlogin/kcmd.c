@@ -513,13 +513,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"socket: All ports in use\n"
+literal|"kcmd(socket): All ports in use\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|perror
 argument_list|(
-literal|"rcmd: socket"
+literal|"kcmd: socket"
 argument_list|)
 expr_stmt|;
 name|sigsetmask
@@ -669,11 +669,7 @@ operator|<=
 literal|4
 condition|)
 block|{
-name|sleep
-argument_list|(
-name|timo
-argument_list|)
-expr_stmt|;
+comment|/* sleep(timo); don't wait at all here */
 name|timo
 operator|*=
 literal|2
@@ -715,7 +711,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"connect to address %s: "
+literal|"kcmd: connect to address %s: "
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -917,7 +913,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"write: setting up stderr"
+literal|"kcmd(write): setting up stderr"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -972,7 +968,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"accept"
+literal|"kcmd:accept"
 argument_list|)
 expr_stmt|;
 name|lport
@@ -1026,7 +1022,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"socket: protocol failure in circuit setup.\n"
+literal|"kcmd(socket): protocol failure in circuit setup.\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1082,7 +1078,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"getsockname"
+literal|"kcmd(getsockname)"
 argument_list|)
 expr_stmt|;
 name|status
@@ -1215,7 +1211,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rcmd: bad connection with remote host\n"
+literal|"kcmd: bad connection with remote host\n"
 argument_list|)
 expr_stmt|;
 block|}
