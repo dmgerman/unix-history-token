@@ -483,7 +483,7 @@ name|rtentry
 operator|*
 operator|,
 expr|struct
-name|sockaddr
+name|rt_addrinfo
 operator|*
 operator|)
 argument_list|)
@@ -2870,7 +2870,7 @@ name|cmd
 parameter_list|,
 name|rt
 parameter_list|,
-name|sa
+name|info
 parameter_list|)
 name|int
 name|cmd
@@ -2881,9 +2881,9 @@ modifier|*
 name|rt
 decl_stmt|;
 name|struct
-name|sockaddr
+name|rt_addrinfo
 modifier|*
-name|sa
+name|info
 decl_stmt|;
 block|{
 if|if

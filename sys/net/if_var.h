@@ -49,6 +49,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|rt_addrinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|socket
 struct_decl|;
 end_struct_decl
@@ -1000,7 +1006,7 @@ name|rtentry
 operator|*
 operator|,
 expr|struct
-name|sockaddr
+name|rt_addrinfo
 operator|*
 operator|)
 argument_list|)
