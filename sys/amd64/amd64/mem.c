@@ -164,6 +164,38 @@ name|mem_range_softc
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|void
+name|mem_range_AP_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|mem_range_softc
+operator|.
+name|mr_op
+operator|&&
+name|mem_range_softc
+operator|.
+name|mr_op
+operator|->
+name|initAP
+condition|)
+name|mem_range_softc
+operator|.
+name|mr_op
+operator|->
+name|initAP
+argument_list|(
+operator|&
+name|mem_range_softc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -501,6 +533,10 @@ begin_comment
 comment|/*  * allow user processes to MMAP some memory sections  * instead of going through read/write  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|memmmap
@@ -519,6 +555,7 @@ name|paddr
 parameter_list|,
 name|int
 name|prot
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -566,6 +603,10 @@ begin_comment
 comment|/*  * Operations for changing memory attributes.  *  * This is basically just an ioctl shim for mem_range_attr_get  * and mem_range_attr_set.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|memioctl
@@ -574,6 +615,7 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+name|__unused
 parameter_list|,
 name|u_long
 name|cmd
@@ -991,51 +1033,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_function
-name|void
-name|mem_range_AP_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|&&
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|->
-name|initAP
-condition|)
-operator|(
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|->
-name|initAP
-argument_list|(
-operator|&
-name|mem_range_softc
-argument_list|)
-operator|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
