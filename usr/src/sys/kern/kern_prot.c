@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -835,11 +835,11 @@ struct|struct
 name|args
 block|{
 name|int
-name|targpid
+name|pid
 decl_stmt|;
 comment|/* target process id */
 name|int
-name|targpgid
+name|pgid
 decl_stmt|;
 comment|/* target pgrp id */
 block|}
@@ -868,18 +868,20 @@ specifier|register
 name|struct
 name|pgrp
 modifier|*
-name|targpgrp
+name|pgrp
 decl_stmt|;
 comment|/* target pgrp */
 if|if
 condition|(
 name|uap
 operator|->
-name|targpid
+name|pid
+operator|!=
+literal|0
 operator|&&
 name|uap
 operator|->
-name|targpid
+name|pid
 operator|!=
 name|curp
 operator|->
@@ -895,7 +897,7 @@ name|pfind
 argument_list|(
 name|uap
 operator|->
-name|targpid
+name|pid
 argument_list|)
 operator|)
 operator|==
@@ -962,15 +964,15 @@ if|if
 condition|(
 name|uap
 operator|->
-name|targpgid
+name|pgid
 operator|==
 literal|0
 condition|)
 name|uap
 operator|->
-name|targpgid
+name|pgid
 operator|=
-name|curp
+name|targp
 operator|->
 name|p_pid
 expr_stmt|;
@@ -979,34 +981,28 @@ if|if
 condition|(
 name|uap
 operator|->
-name|targpgid
+name|pgid
 operator|!=
-name|curp
+name|targp
 operator|->
 name|p_pid
 condition|)
 if|if
 condition|(
 operator|(
-name|targpgrp
+name|pgrp
 operator|=
 name|pgfind
 argument_list|(
 name|uap
 operator|->
-name|targpgid
+name|pgid
 argument_list|)
 operator|)
 operator|==
 literal|0
 operator|||
-name|targpgrp
-operator|->
-name|pg_mem
-operator|==
-name|NULL
-operator|||
-name|targpgrp
+name|pgrp
 operator|->
 name|pg_session
 operator|!=
@@ -1025,7 +1021,7 @@ name|targp
 argument_list|,
 name|uap
 operator|->
-name|targpgid
+name|pgid
 argument_list|,
 literal|0
 argument_list|)
