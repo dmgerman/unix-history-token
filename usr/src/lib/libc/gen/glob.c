@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.2 (Berkeley) %G%"
+literal|"@(#)glob.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,7 +276,7 @@ argument|p
 argument_list|,
 argument|q
 argument_list|)
-name|char
+name|void
 operator|*
 operator|*
 name|p
@@ -294,9 +294,19 @@ operator|(
 name|strcmp
 argument_list|(
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|p
 argument_list|,
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|q
 argument_list|)
 operator|)
