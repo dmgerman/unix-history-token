@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.6 1995/09/09 12:51:55 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.7 1995/09/09 18:10:18 davidg Exp $  */
 end_comment
 
 begin_include
@@ -2534,7 +2534,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bad-tag "
+literal|"bad-tag2 "
 argument_list|)
 expr_stmt|;
 name|Debugger
@@ -2559,7 +2559,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"not locked! "
+literal|"No references! "
 argument_list|)
 expr_stmt|;
 block|}
@@ -2584,7 +2584,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bad-type "
+literal|"bad-type2 "
 argument_list|)
 expr_stmt|;
 return|return

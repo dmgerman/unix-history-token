@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.13 1995/09/19 07:32:01 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.14 1995/10/04 11:05:07 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -122,7 +122,7 @@ comment|/*  * Insert description here  */
 end_comment
 
 begin_comment
-comment|/*  * Convert a component of a pathname into a pointer to a locked devfs_front.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and DNUNLOCK  * instead of two DNUNLOCKs.  *  * Overall outline of devfs_lookup:  *  *	check accessibility of directory  *	null terminate the component (lookup leaves the whole string alone)  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory,  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  devfs_front and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  * On return to lookup, remove the null termination we put in at the start.  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent devfs_front unlocked.  */
+comment|/*  * Convert a component of a pathname into a pointer to a locked node.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and DNUNLOCK  * instead of two DNUNLOCKs.  *  * Overall outline of devfs_lookup:  *  *	check accessibility of directory  *	null terminate the component (lookup leaves the whole string alone)  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory,  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  node and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  * On return to lookup, remove the null termination we put in at the start.  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent node unlocked.  */
 end_comment
 
 begin_function
@@ -243,6 +243,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dir_vnode
+operator|->
+name|v_usecount
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"dir had no refs "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|devfs_vntodn
 argument_list|(
 name|dir_vnode
@@ -345,6 +358,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* got an actual -ve hit */
 name|DBPRINT
 argument_list|(
 operator|(
@@ -353,6 +367,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Claim the next vnode in the path. 		 * See comment below starting `Step through' for 		 * an explaination of the locking protocol. 		 */
+ifdef|#
+directive|ifdef
+name|MAYBE_NOT_NEEDED
 if|if
 condition|(
 name|devfs_vntodn
@@ -384,6 +401,8 @@ name|EINVAL
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|vpid
 operator|=
 operator|(
@@ -395,9 +414,10 @@ name|v_id
 expr_stmt|;
 if|if
 condition|(
-name|dir_node
+name|dir_vnode
 operator|==
-name|new_node
+operator|*
+name|result_vnode
 condition|)
 block|{
 comment|/* is "." */
@@ -526,9 +546,10 @@ condition|(
 name|lockparent
 operator|&&
 operator|(
-name|dir_node
+name|dir_vnode
 operator|!=
-name|new_node
+operator|*
+name|result_vnode
 operator|)
 operator|&&
 operator|(
@@ -542,6 +563,10 @@ argument_list|(
 name|dir_vnode
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* we have an error */
 block|}
 if|if
 condition|(
@@ -618,38 +643,27 @@ name|heldchar
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|new_nodename
 condition|)
 block|{
-name|new_node
-operator|=
-name|new_nodename
-operator|->
-name|dnp
-expr_stmt|;
-name|new_node
-operator|->
-name|last_lookup
-operator|=
-name|new_nodename
-expr_stmt|;
-comment|/* for unlink */
-goto|goto
-name|found
-goto|;
-block|}
+comment|/*******************************************************\ 		* Failed to find it.. (That may be good)		* 		\*******************************************************/
 name|new_node
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* to be safe */
-comment|/***********************************************************************\ * Failed to find it.. (That may be good)				* \***********************************************************************/
-comment|/* notfound: */
-comment|/*XXX*/
-comment|/* possibly release some resources here */
-comment|/* 	 * If creating, and at end of pathname 	 * then can consider 	 * allowing file to be created. 	 * XXX original code (ufs_lookup) checked for . being deleted 	 */
+comment|/* 		 * If creating, and at end of pathname 		 * then can consider 		 * allowing file to be created. 		 */
 if|if
 condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|ISLASTCN
+operator|)
+operator|||
+operator|!
 operator|(
 name|op
 operator|==
@@ -659,14 +673,44 @@ name|op
 operator|==
 name|RENAME
 operator|)
-operator|&&
-operator|(
-name|flags
-operator|&
-name|ISLASTCN
-operator|)
 condition|)
 block|{
+comment|/* 			 * Insert name into cache 			 * (as non-existent) if appropriate. 			 */
+if|if
+condition|(
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|MAKEENTRY
+operator|)
+operator|&&
+name|op
+operator|!=
+name|CREATE
+condition|)
+name|cache_enter
+argument_list|(
+name|dir_vnode
+argument_list|,
+operator|*
+name|result_vnode
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+operator|(
+literal|"NOT\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOENT
+return|;
+block|}
 comment|/* 		 * Access for write is interpreted as allowing 		 * creation of files in the directory. 		 */
 if|if
 condition|(
@@ -701,22 +745,14 @@ name|error
 operator|)
 return|;
 block|}
-name|dir_node
-operator|->
-name|flags
-operator||=
-name|IUPD
-operator||
-name|ICHG
-expr_stmt|;
-comment|/*XXX*/
-comment|/* 		 * We return with the directory locked, so that 		 * the parameters we set up above will still be 		 * valid if we actually decide to do a direnter(). 		 * We return ni_vp == NULL to indicate that the entry 		 * does not currently exist; we leave a pointer to 		 * the (locked) directory devfs_front in namei_data->ni_dvp. 		 * The pathname buffer is saved so that the name 		 * can be obtained later. 		 * 		 * NB - if the directory is unlocked, then this 		 * information cannot be used. 		 */
+comment|/* 		 * We return with the directory locked, so that 		 * the parameters we set up above will still be 		 * valid if we actually decide to add a new entry. 		 * We return ni_vp == NULL to indicate that the entry 		 * does not currently exist; we leave a pointer to 		 * the (locked) directory vnode in namei_data->ni_dvp. 		 * The pathname buffer is saved so that the name 		 * can be obtained later. 		 * 		 * NB - if the directory is unlocked, then this 		 * information cannot be used. 		 */
 name|cnp
 operator|->
 name|cn_flags
 operator||=
 name|SAVENAME
 expr_stmt|;
+comment|/*XXX why? */
 if|if
 condition|(
 operator|!
@@ -727,56 +763,27 @@ argument_list|(
 name|dir_vnode
 argument_list|)
 expr_stmt|;
-comment|/* DON't make a cache entry... status changing */
 return|return
 operator|(
 name|EJUSTRETURN
 operator|)
 return|;
 block|}
-comment|/* 	 * Insert name into cache (as non-existent) if appropriate. 	 */
-if|if
-condition|(
-operator|(
-name|cnp
+comment|/***************************************************************\ 	* Found it.. this is not always a good thing..			* 	\***************************************************************/
+name|new_node
+operator|=
+name|new_nodename
 operator|->
-name|cn_flags
-operator|&
-name|MAKEENTRY
-operator|)
-operator|&&
-name|op
-operator|!=
-name|CREATE
-condition|)
-name|cache_enter
-argument_list|(
-name|dir_vnode
-argument_list|,
-operator|*
-name|result_vnode
-argument_list|,
-name|cnp
-argument_list|)
+name|dnp
 expr_stmt|;
-name|DBPRINT
-argument_list|(
-operator|(
-literal|"NOT\n"
-operator|)
-argument_list|)
+name|new_node
+operator|->
+name|last_lookup
+operator|=
+name|new_nodename
 expr_stmt|;
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
-comment|/***********************************************************************\ * Found it.. this is not always a good thing..				* \***********************************************************************/
-name|found
-label|:
-comment|/*XXX*/
-comment|/* possibly release some resources here */
-comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 * If the wantparent flag isn't set, we return only 	 * the directory (in namei_data->ni_dvp), otherwise we go 	 * on and lock the devfs_front, being careful with ".". 	 */
+comment|/* for unlink */
+comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 * If the wantparent flag isn't set, we return only 	 * the directory (in namei_data->ni_dvp), otherwise we go 	 * on and lock the node, being careful with ".". 	 */
 if|if
 condition|(
 name|op
@@ -815,7 +822,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 */
+comment|/* 		 * we are trying to delete '.'.  What does this mean? XXX 		 */
 if|if
 condition|(
 name|dir_node
@@ -929,7 +936,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * If rewriting (RENAME), return the devfs_front and the 	 * information required to rewrite the present directory 	 * Must get devfs_front of directory entry to verify it's a 	 * regular file, or empty directory. 	 */
+comment|/* 	 * If rewriting (RENAME), return the vnode and the 	 * information required to rewrite the present directory 	 * Must get node of directory entry to verify it's a 	 * regular file, or empty directory. 	 */
 if|if
 condition|(
 name|op
@@ -945,6 +952,7 @@ name|ISLASTCN
 operator|)
 condition|)
 block|{
+comment|/* 		 * Are we allowed to change the holding directory? 		 */
 if|if
 condition|(
 name|error
@@ -969,7 +977,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Careful about locking second devfs_front. 		 * This can only occur if the target is ".". 		 */
+comment|/* 		 * Careful about locking second node. 		 * This can only occur if the target is ".". 		 */
 if|if
 condition|(
 name|dir_node
@@ -994,6 +1002,7 @@ operator|*
 name|result_vnode
 argument_list|)
 expr_stmt|;
+comment|/* hmm save the 'from' name (we need to delete it) */
 name|cnp
 operator|->
 name|cn_flags
@@ -1016,7 +1025,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Step through the translation in the name.  We do not `DNUNLOCK' the 	 * directory because we may need it again if a symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "saved_dir_node" XXX.  We must get the target 	 * devfs_front before unlocking 	 * the directory to insure that the devfs_front will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * devfs_fronts from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the `DNLOCK' for the 	 * devfs_front associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophisticated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
+comment|/* 	 * Step through the translation in the name.  We do not unlock the 	 * directory because we may need it again if a symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "saved_dir_node" XXX.  We must get the target 	 * node before unlocking 	 * the directory to insure that the node will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * nodes from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the lock for the 	 * node associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophisticated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
 if|if
 condition|(
 name|flags
@@ -1029,7 +1038,7 @@ argument_list|(
 name|dir_vnode
 argument_list|)
 expr_stmt|;
-comment|/* race to get the devfs_front */
+comment|/* race to get the node */
 name|devfs_dntovn
 argument_list|(
 name|new_node
