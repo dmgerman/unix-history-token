@@ -3419,7 +3419,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-empty_stmt|;
 return|return;
 comment|/* file seems to be closed on us */
 if|if
