@@ -6299,16 +6299,6 @@ literal|8
 operator|)
 expr_stmt|;
 comment|/* 		 * Seqaddr represents the next instruction to execute,  		 * so we are really executing the instruction just 		 * before it. 		 */
-if|if
-condition|(
-name|seqaddr
-operator|!=
-literal|0
-condition|)
-name|seqaddr
-operator|-=
-literal|1
-expr_stmt|;
 name|cs
 operator|=
 name|ahc
