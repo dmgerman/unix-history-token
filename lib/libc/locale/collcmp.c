@@ -10,7 +10,7 @@ name|ASCII_COMPATIBLE_COLLATE
 end_define
 
 begin_comment
-comment|/* see usr.bin/colldef/data */
+comment|/* see share/colldef */
 end_comment
 
 begin_include
