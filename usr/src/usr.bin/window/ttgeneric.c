@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.36 (Berkeley) %G%"
+literal|"@(#)ttgeneric.c	3.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2432,8 +2432,8 @@ operator|.
 name|tt_hasinsert
 operator|=
 name|gen_IM
-operator|!=
-literal|0
+operator|||
+name|gen_IC
 expr_stmt|;
 name|tt
 operator|.
