@@ -5127,7 +5127,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|SIS_RX_LIST_CNT
+name|SIS_TX_LIST_CNT
 operator|-
 operator|(
 name|sc

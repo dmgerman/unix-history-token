@@ -6328,7 +6328,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|DM_RX_LIST_CNT
+name|DM_TX_LIST_CNT
 operator|-
 operator|(
 name|sc
