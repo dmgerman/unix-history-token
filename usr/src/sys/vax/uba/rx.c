@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.16	83/04/26	*/
+comment|/*	rx.c	4.17	83/04/29	*/
 end_comment
 
 begin_include
@@ -3980,20 +3980,28 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|sc
-operator|->
-name|sc_csbits
-operator||=
+if|if
+condition|(
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-condition|?
+condition|)
+name|sc
+operator|->
+name|sc_csbits
+operator||=
 name|RX_DDEN
-else|:
-name|RX_SDEN
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_csbits
+operator|&=
+operator|~
+name|RX_DDEN
 expr_stmt|;
 return|return
 operator|(
