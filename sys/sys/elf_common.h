@@ -433,6 +433,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ELFOSABI_MODESTO
+value|11
+end_define
+
+begin_comment
+comment|/* Novell Modesto */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_OPENBSD
+value|12
+end_define
+
+begin_comment
+comment|/* OpenBSD */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ELFOSABI_ARM
 value|97
 end_define
@@ -629,7 +651,18 @@ comment|/* MIPS R3000 Big-Endian only */
 end_comment
 
 begin_comment
-comment|/* Extensions */
+comment|/* Extensions.  This list is not complete. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_S370
+value|9
+end_define
+
+begin_comment
+comment|/* IBM System/370 */
 end_comment
 
 begin_define
@@ -643,15 +676,8 @@ begin_comment
 comment|/* MIPS R4000 Big-Endian */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EM_SPARC64
-value|11
-end_define
-
 begin_comment
-comment|/* SPARC v9 64-bit unoffical */
+comment|/* Depreciated */
 end_comment
 
 begin_define
@@ -668,12 +694,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_SPARC32PLUS
+value|18
+end_define
+
+begin_comment
+comment|/* SPARC v8plus */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_PPC
 value|20
 end_define
 
 begin_comment
-comment|/* PowerPC */
+comment|/* PowerPC 32-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PPC64
+value|21
+end_define
+
+begin_comment
+comment|/* PowerPC 64-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ARM
+value|40
+end_define
+
+begin_comment
+comment|/* ARM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_SPARCV9
+value|43
+end_define
+
+begin_comment
+comment|/* SPARC v9 64-bit */
 end_comment
 
 begin_define
@@ -690,12 +760,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_X86_64
+value|62
+end_define
+
+begin_comment
+comment|/* Advanced Micro Devices x86-64 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_ALPHA
 value|0x9026
 end_define
 
 begin_comment
-comment|/* Alpha */
+comment|/* Alpha (written in the absence of an ABI */
 end_comment
 
 begin_comment
