@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.11 (Berkeley) %G%"
+literal|"@(#)slave.c	2.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -298,7 +298,7 @@ endif|#
 directive|endif
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 literal|"THIS MACHINE IS A SUBMASTER"
 argument_list|)
@@ -350,7 +350,7 @@ else|else
 block|{
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 literal|"THIS MACHINE IS A SLAVE"
 argument_list|)
@@ -1671,7 +1671,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
 literal|"DATEREQ from uncontrolled machine"
 argument_list|)
@@ -1680,7 +1680,7 @@ break|break;
 block|}
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_DEBUG
 argument_list|,
 literal|"forwarding date change request for %s"
 argument_list|,
@@ -2055,15 +2055,13 @@ name|answer
 operator|==
 name|NULL
 condition|)
-block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"problem in election\n"
+literal|"no answer from master candidate\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2123,9 +2121,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"election error"
+literal|"election error: no reply to QUIT"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2264,9 +2262,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"error on sending QUIT"
+literal|"conflict error: no reply to QUIT"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.7 (Berkeley) %G%"
+literal|"@(#)master.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,7 +225,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"THIS MACHINE IS MASTER"
+literal|"This machine is master"
 argument_list|)
 expr_stmt|;
 if|if
@@ -578,11 +578,6 @@ name|tsp_time
 operator|.
 name|tv_usec
 expr_stmt|;
-name|time
-operator|.
-name|tv_sec
-operator|++
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -715,7 +710,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
 literal|"DATEREQ from uncontrolled machine"
 argument_list|)
@@ -802,11 +797,6 @@ operator|->
 name|tsp_time
 operator|.
 name|tv_usec
-expr_stmt|;
-name|time
-operator|.
-name|tv_sec
-operator|++
 expr_stmt|;
 operator|(
 name|void
@@ -1286,9 +1276,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"election error"
+literal|"loop breakage: no reply to QUIT"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1909,9 +1899,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"ERROR ON SETTIME machine: %s"
+literal|"no reply to SETTIME from: %s"
 argument_list|,
 name|hp
 index|[
@@ -2117,7 +2107,7 @@ else|else
 block|{
 name|syslog
 argument_list|(
-name|LOG_ALERT
+name|LOG_ERR
 argument_list|,
 literal|"no more slots in host table"
 argument_list|)
@@ -2685,9 +2675,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
-literal|"ERROR ON SETTIME machine: %s"
+literal|"no reply to initial SETTIME from: %s"
 argument_list|,
 name|hp
 index|[
