@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.162 (Berkeley) %G%"
+literal|"@(#)conf.c	8.163 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4131,6 +4131,12 @@ name|LA_TYPE
 operator|==
 name|LA_READKSYM
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/ksym.h>
+end_include
 
 begin_macro
 name|getla

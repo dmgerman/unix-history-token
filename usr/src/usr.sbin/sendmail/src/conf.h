@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.158 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.159 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5663,7 +5663,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Cray Computer Corporation's CSOS ** **	Contributed by Scott Bolte<scott@craycos.com>. */
+comment|/* **  Cray Computer Corporation's CSOS ** **	From Scott Bolte<scott@craycos.com>. */
 end_comment
 
 begin_ifdef
@@ -5772,7 +5772,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Sony NEWS-OS 4.2.1R and 6.0.3 */
+comment|/* **  Sony NEWS-OS 4.2.1R and 6.0.3 ** **	From Motonori NAKAMURA<motonori@cs.ritsumei.ac.jp>. */
 end_comment
 
 begin_ifdef
@@ -6006,8 +6006,12 @@ begin_define
 define|#
 directive|define
 name|LA_TYPE
-value|LA_INT
+value|LA_READKSYM
 end_define
+
+begin_comment
+comment|/* use MIOC_READKSYM ioctl */
+end_comment
 
 begin_define
 define|#
@@ -6105,7 +6109,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Omron LUNA/UNIOS-B 3.0, LUNA2/Mach and LUNA88K Mach */
+comment|/* **  Omron LUNA/UNIOS-B 3.0, LUNA2/Mach and LUNA88K Mach ** **	From Motonori NAKAMURA<motonori@cs.ritsumei.ac.jp>. */
 end_comment
 
 begin_ifdef
@@ -6334,7 +6338,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  NEC EWS-UX/V 4.2 ** **  with /usr/ucb/cc */
+comment|/* **  NEC EWS-UX/V 4.2 (with /usr/ucb/cc) ** **	From Motonori NAKAMURA<motonori@cs.ritsumei.ac.jp>. */
 end_comment
 
 begin_ifdef
@@ -6389,6 +6393,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LA_TYPE
+value|LA_READKSYM
+end_define
+
+begin_comment
+comment|/* use MIOC_READSYM ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SFS_TYPE
 value|SFS_USTAT
 end_define
@@ -6425,16 +6440,6 @@ end_define
 
 begin_comment
 comment|/* mask for nlist() values */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/ksym.h>
-end_include
-
-begin_comment
-comment|/* for MIOC_READKSYM */
 end_comment
 
 begin_endif
