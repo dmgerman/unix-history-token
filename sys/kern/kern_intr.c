@@ -665,7 +665,7 @@ name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
-literal|"%s: updated %s\n"
+literal|"%s: updated %s"
 argument_list|,
 name|__func__
 argument_list|,
