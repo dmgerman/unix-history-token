@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)erase.c	4.1 (Berkeley) %G%"
+literal|"@(#)erase.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,11 +87,6 @@ name|oloy
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
