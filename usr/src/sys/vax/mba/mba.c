@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.12	81/03/03	*/
+comment|/*	mba.c	4.13	81/03/03	*/
 end_comment
 
 begin_include
@@ -265,6 +265,14 @@ operator|=
 name|mi
 expr_stmt|;
 comment|/* 		 * If data path is idle, start transfer now. 		 * In any case the device is ``active'' waiting for the 		 * data to transfer. 		 */
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_active
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|mhp
@@ -277,14 +285,6 @@ name|mbstart
 argument_list|(
 name|mhp
 argument_list|)
-expr_stmt|;
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_active
-operator|=
-literal|1
 expr_stmt|;
 return|return;
 case|case
@@ -467,6 +467,22 @@ operator|=
 name|bp
 operator|->
 name|av_forw
+expr_stmt|;
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_errcnt
+operator|=
+literal|0
+expr_stmt|;
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_active
+operator|=
+literal|0
 expr_stmt|;
 name|bp
 operator|->
@@ -737,28 +753,6 @@ operator|->
 name|mh_active
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|mbastat
-operator|&
-name|MBS_DTCMP
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"mb%d no DTCMP!\n"
-argument_list|,
-name|mbanum
-argument_list|)
-expr_stmt|;
-goto|goto
-name|doattn
-goto|;
-block|}
 comment|/* 		 * Clear attention status for drive whose data 		 * transfer completed, and give the dtint driver 		 * routine a chance to say what is next. 		 */
 name|mi
 operator|=
@@ -886,7 +880,7 @@ break|break;
 case|case
 name|MBD_RESTARTED
 case|:
-comment|/* driver restarted op (ecc, e.g.) 			/* 			 * Note that mp->b_active is still on. 			 */
+comment|/* driver restarted op (ecc, e.g.) 			/* 			 * Note that mhp->mh_active is still on. 			 */
 break|break;
 default|default:
 name|panic
@@ -987,6 +981,12 @@ comment|/* unsolicited */
 comment|/* 			 * If this interrupt wasn't a notification that 			 * a dual ported drive is available, and if the 			 * driver has a handler for non-data transfer 			 * interrupts, give it a chance to tell us that 			 * the operation needs to be redone 			 */
 if|if
 condition|(
+name|mi
+operator|->
+name|mi_driver
+operator|->
+name|md_ndint
+operator|&&
 operator|(
 name|mi
 operator|->
@@ -998,12 +998,6 @@ name|B_BUSY
 operator|)
 operator|==
 literal|0
-operator|&&
-name|mi
-operator|->
-name|mi_driver
-operator|->
-name|md_ndint
 condition|)
 block|{
 name|mi
