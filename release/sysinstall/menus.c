@@ -3405,7 +3405,22 @@ literal|"=ftp://ftp2.pt.freebsd.org"
 block|}
 block|,
 block|{
-literal|"Russia"
+literal|"Romania"
+block|,
+literal|"ftp.ro.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.ro.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Russia"
 block|,
 literal|"ftp.ru.freebsd.org"
 block|,
@@ -3792,6 +3807,51 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp5.uk.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Ukraine"
+block|,
+literal|"ftp.ua.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.ua.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Ukraine #2"
+block|,
+literal|"ftp2.ua.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.ua.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Ukraine #3"
+block|,
+literal|"ftp3.ua.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.ua.freebsd.org"
 block|}
 block|,
 block|{
@@ -7937,6 +7997,34 @@ block|,
 name|NULL
 block|,
 literal|"pccard_ifconfig"
+block|}
+block|,
+block|{
+literal|" usbd"
+block|,
+literal|"Enable USB daemon (detect USB attach / detach)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"usbd_enable=YES"
+block|}
+block|,
+block|{
+literal|" usbd flags"
+block|,
+literal|"Set default flags to usbd (if enabled)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"usbd_flags"
 block|}
 block|,
 block|{
