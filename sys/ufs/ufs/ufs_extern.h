@@ -714,7 +714,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_CLRBUF
+name|BA_CLRBUF
 value|0x01
 end_define
 
@@ -725,7 +725,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_SYNC
+name|BA_SYNC
 value|0x02
 end_define
 
@@ -736,7 +736,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_METAONLY
+name|BA_METAONLY
 value|0x04
 end_define
 
@@ -747,7 +747,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_NOWAIT
+name|BA_NOWAIT
 value|0x08
 end_define
 

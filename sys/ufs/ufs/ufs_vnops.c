@@ -7712,7 +7712,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|B_CLRBUF
+name|BA_CLRBUF
 argument_list|,
 operator|&
 name|bp

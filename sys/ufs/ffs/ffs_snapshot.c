@@ -1224,7 +1224,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_CLRBUF
+name|BA_CLRBUF
 argument_list|,
 operator|&
 name|bp
@@ -1338,7 +1338,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|ibp
@@ -3673,7 +3673,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|ibp
@@ -3777,7 +3777,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|ibp
@@ -4401,7 +4401,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|bp
@@ -5379,7 +5379,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|ibp
@@ -5979,7 +5979,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|bp
@@ -6957,7 +6957,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|ibp
@@ -7672,7 +7672,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|ibp
@@ -8184,7 +8184,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 argument_list|,
 operator|&
 name|ibp
@@ -9560,9 +9560,9 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_METAONLY
+name|BA_METAONLY
 operator||
-name|B_NOWAIT
+name|BA_NOWAIT
 argument_list|,
 operator|&
 name|ibp
@@ -9752,7 +9752,7 @@ name|fs_bsize
 argument_list|,
 name|KERNCRED
 argument_list|,
-name|B_NOWAIT
+name|BA_NOWAIT
 argument_list|,
 operator|&
 name|cbp

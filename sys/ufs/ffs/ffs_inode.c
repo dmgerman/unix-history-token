@@ -1050,7 +1050,7 @@ argument_list|)
 expr_stmt|;
 name|aflags
 operator|=
-name|B_CLRBUF
+name|BA_CLRBUF
 expr_stmt|;
 if|if
 condition|(
@@ -1060,7 +1060,7 @@ name|IO_SYNC
 condition|)
 name|aflags
 operator||=
-name|B_SYNC
+name|BA_SYNC
 expr_stmt|;
 name|error
 operator|=
@@ -1126,7 +1126,7 @@ if|if
 condition|(
 name|aflags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 name|bwrite
 argument_list|(
@@ -1204,7 +1204,7 @@ argument_list|)
 expr_stmt|;
 name|aflags
 operator|=
-name|B_CLRBUF
+name|BA_CLRBUF
 expr_stmt|;
 if|if
 condition|(
@@ -1214,7 +1214,7 @@ name|IO_SYNC
 condition|)
 name|aflags
 operator||=
-name|B_SYNC
+name|BA_SYNC
 expr_stmt|;
 name|error
 operator|=
@@ -1381,7 +1381,7 @@ if|if
 condition|(
 name|aflags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 name|bwrite
 argument_list|(

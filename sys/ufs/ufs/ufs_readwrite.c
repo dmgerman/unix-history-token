@@ -1651,7 +1651,7 @@ argument_list|)
 condition|)
 name|flags
 operator|=
-name|B_SYNC
+name|BA_SYNC
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1789,13 +1789,13 @@ name|xfersize
 condition|)
 name|flags
 operator||=
-name|B_CLRBUF
+name|BA_CLRBUF
 expr_stmt|;
 else|else
 name|flags
 operator|&=
 operator|~
-name|B_CLRBUF
+name|BA_CLRBUF
 expr_stmt|;
 comment|/* XXX is uio->uio_offset the right thing here? */
 name|error

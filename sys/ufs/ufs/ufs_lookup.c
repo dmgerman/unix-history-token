@@ -2904,7 +2904,7 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator|=
-name|B_CLRBUF
+name|BA_CLRBUF
 expr_stmt|;
 if|if
 condition|(
@@ -2922,7 +2922,7 @@ argument_list|)
 condition|)
 name|flags
 operator||=
-name|B_SYNC
+name|BA_SYNC
 expr_stmt|;
 if|if
 condition|(

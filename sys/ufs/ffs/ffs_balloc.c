@@ -457,7 +457,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 name|bwrite
 argument_list|(
@@ -484,11 +484,11 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_METAONLY
+name|BA_METAONLY
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_balloc_ufs1: B_METAONLY for direct block"
+literal|"ffs_balloc_ufs1: BA_METAONLY for direct block"
 argument_list|)
 expr_stmt|;
 name|nb
@@ -856,7 +856,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_CLRBUF
+name|BA_CLRBUF
 condition|)
 name|vfs_bio_clrbuf
 argument_list|(
@@ -1512,7 +1512,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 block|{
 name|bwrite
@@ -1551,7 +1551,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_METAONLY
+name|BA_METAONLY
 condition|)
 block|{
 operator|*
@@ -1674,7 +1674,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_CLRBUF
+name|BA_CLRBUF
 condition|)
 name|vfs_bio_clrbuf
 argument_list|(
@@ -1727,7 +1727,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 block|{
 name|bwrite
@@ -1780,7 +1780,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_CLRBUF
+name|BA_CLRBUF
 condition|)
 block|{
 name|error
@@ -2018,7 +2018,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 block|{
 name|bwrite
@@ -2504,7 +2504,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 name|bwrite
 argument_list|(
@@ -2531,11 +2531,11 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_METAONLY
+name|BA_METAONLY
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_balloc_ufs2: B_METAONLY for direct block"
+literal|"ffs_balloc_ufs2: BA_METAONLY for direct block"
 argument_list|)
 expr_stmt|;
 name|nb
@@ -2903,7 +2903,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_CLRBUF
+name|BA_CLRBUF
 condition|)
 name|vfs_bio_clrbuf
 argument_list|(
@@ -3559,7 +3559,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 block|{
 name|bwrite
@@ -3598,7 +3598,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_METAONLY
+name|BA_METAONLY
 condition|)
 block|{
 operator|*
@@ -3721,7 +3721,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_CLRBUF
+name|BA_CLRBUF
 condition|)
 name|vfs_bio_clrbuf
 argument_list|(
@@ -3774,7 +3774,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 block|{
 name|bwrite
@@ -3827,7 +3827,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_CLRBUF
+name|BA_CLRBUF
 condition|)
 block|{
 name|error
@@ -4065,7 +4065,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_SYNC
+name|BA_SYNC
 condition|)
 block|{
 name|bwrite
