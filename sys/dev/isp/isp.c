@@ -15435,7 +15435,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"timeout initiated SCSI bus reset of bus %d\n"
+literal|"timeout initiated SCSI bus reset of bus %d"
 argument_list|,
 name|bus
 argument_list|)
@@ -23404,7 +23404,7 @@ name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|handle
 decl_stmt|;
 name|isp_reset
