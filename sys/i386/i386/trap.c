@@ -729,7 +729,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Buggy application or kernel code has disabled 		 * interrupts and then trapped.  Enabling interrupts 		 * now is wrong, but it is better than running with 		 * interrupts disabled until they are accidentally 		 * enabled later.  XXX This is really bad if we trap 		 * while holding a spin lock. 		 */
+comment|/* 		 * Buggy application or kernel code has disabled 		 * interrupts and then trapped.  Enabling interrupts 		 * now is wrong, but it is better than running with 		 * interrupts disabled until they are accidentally 		 * enabled later. 		 */
 name|type
 operator|=
 name|frame
@@ -793,7 +793,20 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We should walk p_heldmtx here and see if any are 			 * spin mutexes, and not do this if so. 			 */
+comment|/* 			 * Page faults need interrupts diasabled until later, 			 * and we shouldn't enable interrupts while holding a 			 * spin lock. 			 */
+if|if
+condition|(
+name|type
+operator|!=
+name|T_PAGEFLT
+operator|&&
+name|PCPU_GET
+argument_list|(
+name|spinlocks
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -822,14 +835,32 @@ operator|==
 name|T_PAGEFLT
 condition|)
 block|{
-comment|/* 		 * For some Cyrix CPUs, %cr2 is clobbered by 		 * interrupts.  This problem is worked around by using 		 * an interrupt gate for the pagefault handler.  We 		 * are finally ready to read %cr2 and then must 		 * reenable interrupts. 		 */
+comment|/* 		 * For some Cyrix CPUs, %cr2 is clobbered by 		 * interrupts.  This problem is worked around by using 		 * an interrupt gate for the pagefault handler.  We 		 * are finally ready to read %cr2 and then must 		 * reenable interrupts. 		 * 		 * If we get a page fault while holding a spin lock, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
 name|eva
 operator|=
 name|rcr2
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|PCPU_GET
+argument_list|(
+name|spinlocks
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|enable_intr
 argument_list|()
+expr_stmt|;
+else|else
+name|trap_fatal
+argument_list|(
+operator|&
+name|frame
+argument_list|,
+name|eva
+argument_list|)
 expr_stmt|;
 block|}
 if|if
