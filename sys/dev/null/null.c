@@ -192,7 +192,10 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|, }
+block|,
+comment|/* kqfilter */
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -249,7 +252,10 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_MMAP_ANON
-block|, }
+block|,
+comment|/* kqfilter */
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
