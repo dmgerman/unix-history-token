@@ -1511,10 +1511,12 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|dp
-decl_stmt|,
-modifier|*
 name|vp
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|bo
 decl_stmt|;
 name|struct
 name|buf
@@ -1573,7 +1575,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|dp
+name|bo
 argument_list|,
 literal|0
 argument_list|,
@@ -1771,9 +1773,9 @@ name|b_blkno
 operator|=
 name|fileaddr
 expr_stmt|;
-name|pbgetvp
+name|pbgetbo
 argument_list|(
-name|dp
+name|bo
 argument_list|,
 name|bp
 argument_list|)
@@ -1848,7 +1850,7 @@ operator|=
 name|EIO
 expr_stmt|;
 comment|/* 			 * free the buffer header back to the swap buffer pool 			 */
-name|pbrelvp
+name|pbrelbo
 argument_list|(
 name|bp
 argument_list|)
@@ -2471,9 +2473,9 @@ decl_stmt|,
 name|firstaddr
 decl_stmt|;
 name|struct
-name|vnode
+name|bufobj
 modifier|*
-name|dp
+name|bo
 decl_stmt|;
 name|int
 name|runpg
@@ -2507,6 +2509,25 @@ operator|=
 name|bytecount
 operator|/
 name|PAGE_SIZE
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VBLK
+argument_list|,
+operator|(
+literal|"vnode_pager_generic_getpages does not support devices"
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2553,7 +2574,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|dp
+name|bo
 argument_list|,
 literal|0
 argument_list|,
@@ -3187,26 +3208,14 @@ expr_stmt|;
 comment|/* 	 * round up physical size for real devices. 	 */
 if|if
 condition|(
-name|dp
-operator|->
-name|v_type
-operator|==
-name|VBLK
-operator|||
-name|dp
-operator|->
-name|v_type
-operator|==
-name|VCHR
+literal|1
 condition|)
 block|{
 name|int
 name|secmask
 init|=
-name|dp
+name|bo
 operator|->
-name|v_bufobj
-operator|.
 name|bo_bsize
 operator|-
 literal|1
@@ -3336,9 +3345,9 @@ name|b_blkno
 operator|=
 name|firstaddr
 expr_stmt|;
-name|pbgetvp
+name|pbgetbo
 argument_list|(
-name|dp
+name|bo
 argument_list|,
 name|bp
 argument_list|)
@@ -3461,7 +3470,7 @@ name|count
 argument_list|)
 expr_stmt|;
 comment|/* 	 * free the buffer header back to the swap buffer pool 	 */
-name|pbrelvp
+name|pbrelbo
 argument_list|(
 name|bp
 argument_list|)

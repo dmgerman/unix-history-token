@@ -7451,16 +7451,16 @@ name|a_bn
 decl_stmt|;
 comment|/* fs block number */
 name|struct
-name|vnode
+name|bufobj
 modifier|*
 modifier|*
-name|vpp
+name|bop
 init|=
 name|ap
 operator|->
-name|a_vpp
+name|a_bop
 decl_stmt|;
-comment|/* RETURN vp of device */
+comment|/* RETURN bufobj of device */
 name|daddr_t
 modifier|*
 name|bnp
@@ -7528,7 +7528,7 @@ name|c_ovp
 argument_list|,
 name|bn
 argument_list|,
-name|vpp
+name|bop
 argument_list|,
 name|bnp
 argument_list|,
@@ -7544,7 +7544,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("VOP_BMAP(cp->c_ovp %p, bn %p, vpp %p, bnp %lld, ap->a_runp %p, ap->a_runb %p) = %d\n", 			cp->c_ovp, bn, vpp, bnp, ap->a_runp, ap->a_runb, ret);
+block|printf("VOP_BMAP(cp->c_ovp %p, bn %p, bop %p, bnp %lld, ap->a_runp %p, ap->a_runb %p) = %d\n", 			cp->c_ovp, bn, bop, bnp, ap->a_runp, ap->a_runb, ret);
 endif|#
 directive|endif
 return|return

@@ -822,7 +822,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct bufobj **a_bop; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -856,7 +856,7 @@ name|a_bn
 argument_list|,
 name|ap
 operator|->
-name|a_vpp
+name|a_bop
 argument_list|,
 name|ap
 operator|->

@@ -65,7 +65,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct bufobj **a_bop; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -97,20 +97,23 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_vpp
+name|a_bop
 operator|!=
 name|NULL
 condition|)
 operator|*
 name|ap
 operator|->
-name|a_vpp
+name|a_bop
 operator|=
+operator|&
 name|ip
 operator|->
 name|i_mnt
 operator|->
 name|im_devvp
+operator|->
+name|v_bufobj
 expr_stmt|;
 if|if
 condition|(
