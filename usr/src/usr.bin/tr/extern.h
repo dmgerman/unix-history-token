@@ -1,12 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
+enum|enum
+block|{
+name|STRING1
+block|,
+name|STRING2
+block|}
+name|which
+enum|;
 enum|enum
 block|{
 name|EOS
@@ -20,8 +28,6 @@ block|,
 name|SEQUENCE
 block|,
 name|SET
-block|,
-name|ULSET
 block|}
 name|state
 enum|;
@@ -34,6 +40,13 @@ name|lastch
 decl_stmt|;
 comment|/* last character */
 name|int
+name|equiv
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* equivalence set */
+name|int
 modifier|*
 name|set
 decl_stmt|;
@@ -43,25 +56,6 @@ modifier|*
 name|str
 decl_stmt|;
 comment|/* user's string */
-define|#
-directive|define
-name|T_CLASS
-value|0x01
-comment|/* class != lower/upper */
-define|#
-directive|define
-name|T_SEQ
-value|0x02
-comment|/* sequence */
-define|#
-directive|define
-name|T_UL
-value|0x04
-comment|/* lower/upper classes */
-name|u_int
-name|type
-decl_stmt|;
-comment|/* Permissible string conventions. */
 block|}
 name|STR
 typedef|;

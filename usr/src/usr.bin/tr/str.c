@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.2 (Berkeley) %G%"
+literal|"@(#)str.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,9 +394,6 @@ operator|)
 return|;
 case|case
 name|SET
-case|:
-case|case
-name|ULSET
 case|:
 if|if
 condition|(
@@ -790,9 +787,6 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
-name|u_int
-name|type
-decl_stmt|;
 name|int
 modifier|*
 name|set
@@ -813,96 +807,72 @@ block|{
 literal|"alnum"
 block|,
 name|isalnum
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"alpha"
 block|,
 name|isalpha
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"blank"
 block|,
 name|isblank
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"cntrl"
 block|,
 name|iscntrl
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"digit"
 block|,
 name|isdigit
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"graph"
 block|,
 name|isgraph
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"lower"
 block|,
 name|islower
-block|,
-name|T_UL
-block|, }
+block|,  }
 block|,
 block|{
 literal|"print"
 block|,
 name|isupper
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"punct"
 block|,
 name|ispunct
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"space"
 block|,
 name|isspace
-block|,
-name|T_CLASS
-block|, }
+block|,  }
 block|,
 block|{
 literal|"upper"
 block|,
 name|isupper
-block|,
-name|T_UL
-block|, }
+block|,  }
 block|,
 block|{
 literal|"xdigit"
 block|,
 name|isxdigit
-block|,
-name|T_CLASS
 block|, }
 block|, }
 decl_stmt|;
@@ -1001,24 +971,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|cp
-operator|->
-name|type
-operator||
-name|s
-operator|->
-name|type
-operator|)
-condition|)
-name|err
-argument_list|(
-literal|"class %s illegally used"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|cp
 operator|->
@@ -1057,7 +1009,16 @@ name|bzero
 argument_list|(
 name|p
 argument_list|,
+operator|(
 name|NCHARS
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1109,14 +1070,6 @@ name|s
 operator|->
 name|state
 operator|=
-name|cp
-operator|->
-name|type
-operator|&
-name|T_UL
-condition|?
-name|ULSET
-else|:
 name|SET
 expr_stmt|;
 name|s
@@ -1196,19 +1149,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|val
-index|[
-literal|2
-index|]
-init|=
-block|{
-literal|0
-block|,
-name|OOBCH
-block|}
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1220,7 +1160,9 @@ operator|==
 literal|'\\'
 condition|)
 block|{
-name|val
+name|s
+operator|->
+name|equiv
 index|[
 literal|0
 index|]
@@ -1247,7 +1189,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|val
+name|s
+operator|->
+name|equiv
 index|[
 literal|0
 index|]
@@ -1298,7 +1242,9 @@ name|s
 operator|->
 name|set
 operator|=
-name|val
+name|s
+operator|->
+name|equiv
 expr_stmt|;
 block|}
 end_function
@@ -1418,18 +1364,15 @@ name|ep
 decl_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|s
 operator|->
-name|type
-operator|&
-name|T_SEQ
-operator|)
+name|which
+operator|==
+name|STRING1
 condition|)
 name|err
 argument_list|(
-literal|"sequences only valid in string1"
+literal|"sequences only valid in string2"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1582,7 +1525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Use the #defines here, DON'T use them above. */
+comment|/* Use the #defines isXXX() here, DON'T use them above. */
 end_comment
 
 begin_include
