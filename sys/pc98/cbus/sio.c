@@ -8276,9 +8276,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+name|ENXIO
 return|;
 name|bzero
 argument_list|(
@@ -8815,9 +8813,7 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|ENXIO
 return|;
 block|}
 name|enable_intr
