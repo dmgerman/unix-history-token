@@ -87,9 +87,6 @@ modifier|*
 name|cdce_mbuf
 decl_stmt|;
 name|int
-name|cdce_accum
-decl_stmt|;
-name|int
 name|cdce_idx
 decl_stmt|;
 block|}
