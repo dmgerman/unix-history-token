@@ -976,6 +976,11 @@ argument_list|(
 name|msginfo
 argument_list|)
 argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|msginfo
+argument_list|)
 condition|)
 block|{
 if|if
