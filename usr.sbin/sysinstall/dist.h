@@ -174,17 +174,17 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_DIST_DEVELOPER
+name|_DIST_USER
 define|\
-value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC )
+value|( DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_CRYPTO )
 end_define
 
 begin_define
 define|#
 directive|define
-name|_DIST_USER
+name|_DIST_DEVELOPER
 define|\
-value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT )
+value|( _DIST_USER | DIST_PROFLIBS | DIST_INFO | DIST_SRC )
 end_define
 
 begin_comment
