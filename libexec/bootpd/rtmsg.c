@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1984, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id$  */
+comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.8 1997/02/22 14:21:09 peter Exp $  */
 end_comment
 
 begin_include
@@ -57,16 +57,6 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_comment
-comment|/* needed for if_ether.h XXX */
-end_comment
 
 begin_include
 include|#

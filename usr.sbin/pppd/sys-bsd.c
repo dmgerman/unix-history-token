@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: sys-bsd.c,v 1.11 1997/08/19 17:52:47 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,12 +156,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
 end_include
 
 begin_include

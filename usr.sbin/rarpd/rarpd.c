@@ -42,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rarpd.c,v 1.17 1997/10/13 11:03:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
 end_include
 
 begin_include

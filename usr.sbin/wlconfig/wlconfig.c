@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: wlconfig.c,v 1.6 1997/10/27 12:23:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
 end_include
 
 begin_include
