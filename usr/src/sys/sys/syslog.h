@@ -1,7 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.17 (Berkeley) %G%  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_LOG
+value|"/dev/log"
+end_define
 
 begin_comment
 comment|/*  * priorities/facilities are encoded into a single 32-bit quantity, where the  * bottom 3 bits are the priority (0-7) and the top 28 bits are the facility  * (0-big number).  Both the priorities and the facilities map roughly  * one-to-one to strings in the syslogd(8) source code.  This mapping is  * included in this file.  *  * priorities (these are ordered)  */
@@ -362,6 +369,17 @@ begin_comment
 comment|/* clock daemon */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOG_AUTHPRIV
+value|(10<<3)
+end_define
+
+begin_comment
+comment|/* security/authorization messages (private) */
+end_comment
+
 begin_comment
 comment|/* other codes through 15 reserved for system use */
 end_comment
@@ -505,6 +523,10 @@ block|{
 literal|"auth"
 block|,
 name|LOG_AUTH
+block|,
+literal|"authpriv"
+block|,
+name|LOG_AUTHPRIV
 block|,
 literal|"cron"
 block|,
