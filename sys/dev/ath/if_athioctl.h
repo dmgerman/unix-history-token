@@ -252,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|ATH_RX_RADIOTAP_PRESENT
-value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	0)
+value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL)	| \ 	0)
 end_define
 
 begin_struct
@@ -277,10 +277,10 @@ name|u_int16_t
 name|wr_chan_flags
 decl_stmt|;
 name|u_int8_t
-name|wr_antsignal
+name|wr_antenna
 decl_stmt|;
 name|u_int8_t
-name|wr_antenna
+name|wr_antsignal
 decl_stmt|;
 block|}
 struct|;
@@ -290,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TX_RADIOTAP_PRESENT
-value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	0)
+value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_TX_POWER)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	0)
 end_define
 
 begin_struct
@@ -313,6 +313,12 @@ name|wt_chan_freq
 decl_stmt|;
 name|u_int16_t
 name|wt_chan_flags
+decl_stmt|;
+name|u_int8_t
+name|wt_txpower
+decl_stmt|;
+name|u_int8_t
+name|wt_antenna
 decl_stmt|;
 block|}
 struct|;
