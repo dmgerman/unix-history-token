@@ -13595,7 +13595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Notes on mbuf usage in the transmit queue:  *  *  m_pkthdr.rcvif       Connection pointer (set by idt_queue_put)  *  m_pkthdr.len         Length of PDU  *  m_pkthdr.header      TX queue pointer (06/01/2001)  *  m_pkthdr.csum_flags  Unused, keep zero  *  m_pkthdr.csum_data   Number of SCQ entries needed or used  *  m_pkthdr.aux         Unused, keep NULL  *  *******************************************************************************  *  *  Drop transmit mbuf chain and update counters  *  *  in:  IDT device, mbuf chain  * out:  (nothing)  *  * Date first: 11/08/2000  last: 11/08/2000  */
+comment|/*  Notes on mbuf usage in the transmit queue:  *  *  m_pkthdr.rcvif       Connection pointer (set by idt_queue_put)  *  m_pkthdr.len         Length of PDU  *  m_pkthdr.header      TX queue pointer (06/01/2001)  *  m_pkthdr.csum_flags  Unused, keep zero  *  m_pkthdr.csum_data   Number of SCQ entries needed or used  *  *******************************************************************************  *  *  Drop transmit mbuf chain and update counters  *  *  in:  IDT device, mbuf chain  * out:  (nothing)  *  * Date first: 11/08/2000  last: 11/08/2000  */
 end_comment
 
 begin_function
@@ -15887,44 +15887,6 @@ name|mptr
 operator|->
 name|m_pkthdr
 operator|.
-name|aux
-operator|!=
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|idt
-operator|->
-name|dev
-argument_list|,
-literal|"received pkthdr.aux=%x\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|mptr
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
-argument_list|)
-expr_stmt|;
-name|mptr
-operator|->
-name|m_pkthdr
-operator|.
-name|aux
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|mptr
-operator|->
-name|m_pkthdr
-operator|.
 name|csum_flags
 condition|)
 block|{
@@ -16382,6 +16344,9 @@ specifier|volatile
 name|int
 name|i
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|idt
 operator|=
 operator|(
@@ -16393,6 +16358,11 @@ expr_stmt|;
 name|i
 operator|=
 literal|0
+expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
 expr_stmt|;
 name|config_val
 operator|=
@@ -16785,6 +16755,11 @@ operator|->
 name|reg_stat
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
