@@ -803,21 +803,6 @@ argument_list|,
 literal|"Unknown suffix on -s argument"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mdio
-operator|.
-name|md_size
-operator|<
-literal|192
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Filesystem too small"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|'u'
