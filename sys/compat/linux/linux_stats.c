@@ -1748,7 +1748,7 @@ expr_stmt|;
 comment|/* 	 * XXX - Don't return an error if we can't find a vnode for the 	 * device. Our dev_t is 32-bits whereas Linux only has a 16-bits 	 * dev_t. The dev_t that is used now may as well be a truncated 	 * dev_t returned from previous syscalls. Just return a bzeroed 	 * ustat in that case. 	 */
 name|dev
 operator|=
-name|makebdev
+name|makedev
 argument_list|(
 name|uap
 operator|->
@@ -1769,7 +1769,7 @@ name|vfinddev
 argument_list|(
 name|dev
 argument_list|,
-name|VBLK
+name|VCHR
 argument_list|,
 operator|&
 name|vp
