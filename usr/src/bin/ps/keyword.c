@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.10 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3649,6 +3649,8 @@ sizeof|sizeof
 argument_list|(
 name|VAR
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
