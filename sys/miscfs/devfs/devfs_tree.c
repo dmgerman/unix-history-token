@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.44 1997/10/12 20:24:34 phk Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.45 1997/10/12 22:27:11 julian Exp $  */
 end_comment
 
 begin_include
@@ -280,6 +280,7 @@ argument_list|(
 literal|"DEVFS: ready for devices\n"
 argument_list|)
 expr_stmt|;
+comment|/* part 2 of this is done later */
 block|}
 end_function
 
