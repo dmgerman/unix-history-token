@@ -2462,7 +2462,7 @@ name|eth_bmem
 operator|+
 literal|6
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* src */
@@ -2654,7 +2654,7 @@ name|eth_bmem
 operator|+
 literal|6
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* src */
@@ -3867,8 +3867,6 @@ argument_list|,
 argument|dst
 argument_list|,
 argument|cnt
-argument_list|,
-argument|init
 argument_list|)
 end_macro
 
@@ -3891,12 +3889,6 @@ begin_decl_stmt
 name|unsigned
 name|short
 name|cnt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|init
 decl_stmt|;
 end_decl_stmt
 
@@ -4048,8 +4040,6 @@ argument_list|,
 argument|dst
 argument_list|,
 argument|cnt
-argument_list|,
-argument|init
 argument_list|)
 end_macro
 
@@ -4072,12 +4062,6 @@ begin_decl_stmt
 name|unsigned
 name|short
 name|cnt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|init
 decl_stmt|;
 end_decl_stmt
 
