@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	5.10 (Berkeley) %G%"
+literal|"@(#)system.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<signal.h>
 end_include
 
 begin_include
