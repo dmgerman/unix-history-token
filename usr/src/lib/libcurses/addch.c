@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addch.c	5.7 (Berkeley) %G%"
+literal|"@(#)addch.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,39 @@ name|int
 name|ch
 decl_stmt|;
 block|{
+name|__waddch
+argument_list|(
+name|win
+argument_list|,
+name|ch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|__waddch
+parameter_list|(
+name|win
+parameter_list|,
+name|ch
+parameter_list|,
+name|so
+parameter_list|)
+name|WINDOW
+modifier|*
+name|win
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
+name|int
+name|so
+decl_stmt|;
+block|{
 specifier|static
 name|char
 name|buf
@@ -70,13 +103,15 @@ name|ch
 expr_stmt|;
 return|return
 operator|(
-name|waddbytes
+name|__waddbytes
 argument_list|(
 name|win
 argument_list|,
 name|buf
 argument_list|,
 literal|1
+argument_list|,
+name|so
 argument_list|)
 operator|)
 return|;

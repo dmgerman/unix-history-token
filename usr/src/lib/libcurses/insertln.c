@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insertln.c	5.9 (Berkeley) %G%"
+literal|"@(#)insertln.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,8 @@ block|{
 specifier|register
 name|int
 name|y
+decl_stmt|,
+name|i
 decl_stmt|;
 specifier|register
 name|char
@@ -269,6 +271,31 @@ name|temp
 operator|->
 name|line
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|win
+operator|->
+name|maxx
+condition|;
+name|i
+operator|++
+control|)
+name|temp
+operator|->
+name|standout
+index|[
+name|i
+index|]
+operator|&=
+operator|~
+name|__STANDOUT
 expr_stmt|;
 name|touchline
 argument_list|(

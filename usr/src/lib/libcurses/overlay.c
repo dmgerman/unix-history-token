@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overlay.c	5.8 (Berkeley) %G%"
+literal|"@(#)overlay.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,7 +306,17 @@ operator|*
 name|sp
 argument_list|)
 condition|)
-name|mvwaddch
+block|{
+name|wmove
+argument_list|(
+name|win2
+argument_list|,
+name|y2
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+name|__waddch
 argument_list|(
 name|win2
 argument_list|,
@@ -316,8 +326,20 @@ name|x
 argument_list|,
 operator|*
 name|sp
+argument_list|,
+operator|*
+operator|(
+name|sp
+operator|+
+name|win1
+operator|->
+name|maxx
+operator|)
+operator|&
+name|__STANDOUT
 argument_list|)
 expr_stmt|;
+block|}
 name|x
 operator|++
 expr_stmt|;

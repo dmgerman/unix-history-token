@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrtobot.c	5.7 (Berkeley) %G%"
+literal|"@(#)clrtobot.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,17 @@ operator|*
 name|sp
 operator|!=
 literal|' '
+operator|||
+operator|*
+operator|(
+name|sp
+operator|+
+name|win
+operator|->
+name|maxx
+operator|)
+operator|&
+name|__STANDOUT
 condition|)
 block|{
 name|maxx
@@ -175,6 +186,18 @@ operator|*
 name|sp
 operator|=
 literal|' '
+expr_stmt|;
+operator|*
+operator|(
+name|sp
+operator|+
+name|win
+operator|->
+name|maxx
+operator|)
+operator|&=
+operator|~
+name|__STANDOUT
 expr_stmt|;
 block|}
 if|if

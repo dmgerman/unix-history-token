@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.8 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,11 +288,23 @@ condition|;
 name|sp
 operator|++
 control|)
+block|{
 operator|*
 name|sp
 operator|=
 literal|' '
 expr_stmt|;
+operator|*
+operator|(
+name|sp
+operator|+
+name|nc
+operator|)
+operator|&=
+operator|~
+name|__STANDOUT
+expr_stmt|;
+block|}
 name|lp
 operator|->
 name|hash
@@ -831,6 +843,8 @@ name|wspace
 operator|=
 name|malloc
 argument_list|(
+literal|2
+operator|*
 name|nc
 operator|*
 name|nl
@@ -856,7 +870,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/*   	 * Link up the lines, set up line pointer array and point line pointers 	 * to the line space.          */
+comment|/*   	 * Link up the lines, set up line pointer array and point line pointers 	 * to the line space, and point standout arrays to follow lines.          */
 if|if
 condition|(
 operator|(
@@ -979,8 +993,20 @@ operator|-
 literal|1
 operator|)
 operator|*
+literal|2
+operator|*
 name|nc
 index|]
+expr_stmt|;
+name|cur
+operator|->
+name|standout
+operator|=
+name|cur
+operator|->
+name|line
+operator|+
+name|nc
 expr_stmt|;
 name|win
 operator|->

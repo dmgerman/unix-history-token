@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.16 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -253,22 +253,21 @@ decl_stmt|,
 name|lastch
 decl_stmt|;
 comment|/* First and last changed columns. */
+define|#
+directive|define
+name|__STANDOUT
+value|0x01
+comment|/* Added characters are standout. */
 name|char
 modifier|*
 name|standout
 decl_stmt|;
-comment|/* standout character markers */
-comment|/*   * XXX  * _STANDOUT is the 8th bit, characters themselves are encoded.  */
-define|#
-directive|define
-name|__STANDOUT
-value|0x080
-comment|/* Added characters are standout. */
+comment|/* Standout character markers. 					 * This field is stored as an  					 * extension to the line, i.e.,  					 * lp->standout = lp->line + win->maxx 					 * is an invariant. 					 */
 name|char
 modifier|*
 name|line
 decl_stmt|;
-comment|/* Pointer to line itself. */
+comment|/* Pointer to the line text. */
 block|}
 name|LINE
 typedef|;
