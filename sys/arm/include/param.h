@@ -297,50 +297,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|UAREA_PAGES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|UAREA_PAGES
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !UAREA_PAGES */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USPACE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USPACE
-value|(UAREA_PAGES * PAGE_SIZE)
-end_define
-
-begin_comment
-comment|/* total size of u-area */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|FPCONTEXTSIZE
 end_ifndef
 
@@ -382,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|USPACE_SVC_STACK_TOP
-value|(USPACE)
+value|0
 end_define
 
 begin_define
