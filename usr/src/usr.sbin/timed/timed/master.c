@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.12 (Berkeley) %G%"
+literal|"@(#)master.c	2.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2719,17 +2719,6 @@ block|{
 name|int
 name|f
 decl_stmt|;
-if|if
-condition|(
-name|otime
-operator|.
-name|tv_sec
-operator|==
-name|ntime
-operator|.
-name|tv_sec
-condition|)
-return|return;
 name|wtmp
 index|[
 literal|0
@@ -2740,7 +2729,6 @@ operator|=
 name|otime
 operator|.
 name|tv_sec
-expr_stmt|;
 operator|+
 operator|(
 name|otime
@@ -2762,7 +2750,6 @@ operator|=
 name|ntime
 operator|.
 name|tv_sec
-expr_stmt|;
 operator|+
 operator|(
 name|ntime
@@ -2774,6 +2761,23 @@ operator|)
 operator|/
 literal|1000000
 expr_stmt|;
+if|if
+condition|(
+name|wtmp
+index|[
+literal|0
+index|]
+operator|.
+name|ut_time
+operator|==
+name|wtmp
+index|[
+literal|1
+index|]
+operator|.
+name|ut_time
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
