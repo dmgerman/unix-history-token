@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.25 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.25 (Berkeley) 2/16/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -2505,6 +2505,42 @@ name|bufp
 operator|->
 name|page
 expr_stmt|;
+comment|/* Check if we are dynamically determining the fill factor */
+if|if
+condition|(
+name|hashp
+operator|->
+name|FFACTOR
+operator|==
+name|DEF_FFACTOR
+condition|)
+block|{
+name|hashp
+operator|->
+name|FFACTOR
+operator|=
+name|sp
+index|[
+literal|0
+index|]
+operator|>>
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|hashp
+operator|->
+name|FFACTOR
+operator|<
+name|MIN_FFACTOR
+condition|)
+name|hashp
+operator|->
+name|FFACTOR
+operator|=
+name|MIN_FFACTOR
+expr_stmt|;
+block|}
 name|bufp
 operator|->
 name|flags
