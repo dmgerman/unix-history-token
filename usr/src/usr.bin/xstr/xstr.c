@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xstr.c	5.2 (Berkeley) %G%"
+literal|"@(#)xstr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ name|ignore
 parameter_list|(
 name|a
 parameter_list|)
-value|Ignore((char *) a)
+value|((void) a)
 end_define
 
 begin_function_decl
@@ -1402,6 +1402,9 @@ name|i
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
 name|hp
 operator|=
 operator|(
@@ -1419,7 +1422,22 @@ operator|*
 name|hp
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"xstr"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
 name|hp
 operator|->
 name|hpt
@@ -1705,12 +1723,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ignore
-argument_list|(
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|mesgwrit
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|perror
+argument_list|(
+name|strings
+argument_list|)
+operator|,
+name|exit
+argument_list|(
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -2094,7 +2123,12 @@ specifier|register
 name|char
 modifier|*
 name|dp
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|dp
+operator|=
 operator|(
 name|char
 operator|*
@@ -2110,7 +2144,22 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
-decl_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"xstr"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|strcpy
@@ -2123,51 +2172,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_macro
-name|Ignore
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|a
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|a
-operator|=
-name|a
-expr_stmt|;
-block|}
-end_block
-
-begin_function_decl
-name|ignorf
-function_decl|(
-name|a
-function_decl|)
-name|int
-argument_list|(
-argument|*a
-argument_list|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_block
-block|{
-name|a
-operator|=
-name|a
-expr_stmt|;
-block|}
-end_block
 
 begin_expr_stmt
 name|lastchr
@@ -2280,7 +2284,7 @@ end_macro
 
 begin_block
 block|{
-name|ignorf
+name|ignore
 argument_list|(
 name|signal
 argument_list|(
