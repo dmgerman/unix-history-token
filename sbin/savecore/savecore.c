@@ -112,6 +112,18 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -193,7 +205,7 @@ name|ok
 parameter_list|(
 name|number
 parameter_list|)
-value|((number)&~0xfe000000)
+value|(((number)-KERNBASE))
 end_define
 
 begin_else
