@@ -309,7 +309,7 @@ return|;
 if|#
 directive|if
 literal|0
-comment|/* 	 * XXX: Some sources indicate this is a magic sequence, but appearantly 	 * XXX: it is not universal. Documentation would be wonderful to have. 	 */
+comment|/* 	 * FreeBSD's boot0 IPL uses the name IPL1.  This test initially was 	 * based on that observation.  However, other boot loaders have use 	 * different names.  A likely good test would be to test if the first 	 * 4 bytes are a jump to location 11 (or greater?) as well as the next 	 * 7 bytes being printable or with trailing NUL's. 	 */
 block|if (sec[4] != 'I' || sec[5] != 'P' || sec[6] != 'L' || sec[7] != '1') 		return (EBUSY);
 endif|#
 directive|endif
@@ -1386,8 +1386,10 @@ expr_stmt|;
 if|if
 condition|(
 name|sectorsize
-operator|<
+operator|%
 literal|512
+operator|!=
+literal|0
 condition|)
 break|break;
 if|if
