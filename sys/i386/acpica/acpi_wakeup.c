@@ -430,7 +430,7 @@ name|type
 parameter_list|,
 name|val
 parameter_list|)
-value|do	{		\ 	void	**addr;						\ 	addr = (void **)(sc->acpi_wakeaddr + offset);		\ 	(type *)*addr = val;					\ } while (0)
+value|do	{		\ 	type	*addr;						\ 	addr = (type *)(sc->acpi_wakeaddr + offset);		\ 	*addr = val;						\ } while (0)
 end_define
 
 begin_define
@@ -444,7 +444,7 @@ name|type
 parameter_list|,
 name|val
 parameter_list|)
-value|do	{		\ 	void	**addr;						\ 	addr = (void **)(sc->acpi_wakeaddr + offset);		\ 	bcopy(&(val), addr, sizeof(type));			\ } while (0)
+value|do	{		\ 	void	*addr;						\ 	addr = (void *)(sc->acpi_wakeaddr + offset);		\ 	bcopy(&(val), addr, sizeof(type));			\ } while (0)
 end_define
 
 begin_function
@@ -779,6 +779,7 @@ argument_list|(
 name|where_to_recover
 argument_list|,
 name|void
+operator|*
 argument_list|,
 name|acpi_restorecpu
 argument_list|)
