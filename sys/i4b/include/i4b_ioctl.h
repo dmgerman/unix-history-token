@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Tue Mar 26 14:44:15 2002]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sun Aug 11 12:39:58 2002]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|2
+value|3
 end_define
 
 begin_comment
@@ -956,6 +956,32 @@ comment|/* raw HDLC: flag, data, crc, flag	*/
 end_comment
 
 begin_comment
+comment|/*---------------------------------------------------------------------------*  * special bearer capability settings (i.e. Data over Voice)  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCAP_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* no special bearer capability		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCAP_DOV
+value|1
+end_define
+
+begin_comment
+comment|/* Data over Voice			*/
+end_comment
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  * causes data type  *---------------------------------------------------------------------------*/
 end_comment
 
@@ -1197,6 +1223,10 @@ name|int
 name|bprot
 decl_stmt|;
 comment|/* b channel protocot, see BPROT_XXX	*/
+name|int
+name|bcap
+decl_stmt|;
+comment|/* special bearer capability, see BCAP_XXX */
 name|char
 name|dst_telno
 index|[
@@ -1886,6 +1916,10 @@ name|bprot
 decl_stmt|;
 comment|/* b channel protocol		     */
 name|int
+name|bcap
+decl_stmt|;
+comment|/* special bearer capability	     */
+name|int
 name|driver
 decl_stmt|;
 comment|/* driver to route b channel data to */
@@ -2002,6 +2036,10 @@ name|int
 name|bprot
 decl_stmt|;
 comment|/* B chan protocol			*/
+name|int
+name|bcap
+decl_stmt|;
+comment|/* special bearer capability		*/
 name|int
 name|driver
 decl_stmt|;
