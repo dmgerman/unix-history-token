@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.21 (Berkeley) %G%"
+literal|"@(#)df.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -105,6 +111,16 @@ name|getmntpt
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|ufs_df
+argument_list|()
+decl_stmt|,
+name|prtstat
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -124,6 +140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -489,6 +506,8 @@ condition|(
 name|mkdir
 argument_list|(
 name|mntpt
+argument_list|,
+name|DEFFILEMODE
 argument_list|)
 operator|!=
 literal|0
@@ -674,11 +693,11 @@ name|maxwidth
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -772,28 +791,23 @@ begin_comment
 comment|/*  * Print out status about a filesystem.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|prtstat
-argument_list|(
+parameter_list|(
 name|sfsp
-argument_list|,
+parameter_list|,
 name|maxwidth
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|statfs
-operator|*
+modifier|*
 name|sfsp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|long
 name|maxwidth
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|long
 name|used
@@ -1026,7 +1040,7 @@ name|f_mntonname
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This code constitutes the old df code for extracting  * information from filesystem superblocks.  */
@@ -1082,44 +1096,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|char
-modifier|*
-name|strcpy
+name|int
+name|bread
 parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|void
 name|ufs_df
-argument_list|(
-argument|file
-argument_list|,
-argument|maxwidth
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|,
+name|maxwidth
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|maxwidth
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
 name|errno
-decl_stmt|;
-name|struct
-name|stat
-name|stbuf
 decl_stmt|;
 name|struct
 name|statfs
@@ -1130,11 +1131,6 @@ name|struct
 name|statfs
 modifier|*
 name|sfsp
-decl_stmt|;
-name|struct
-name|fstab
-modifier|*
-name|fsp
 decl_stmt|;
 name|char
 modifier|*
@@ -1442,7 +1438,7 @@ name|fi
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 name|long
@@ -1451,31 +1447,26 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|int
 name|bread
-argument_list|(
-argument|off
-argument_list|,
-argument|buf
-argument_list|,
-argument|cnt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|off
+parameter_list|,
+name|buf
+parameter_list|,
+name|cnt
+parameter_list|)
 name|long
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|cnt
+decl_stmt|;
 block|{
 name|int
 name|n
@@ -1548,7 +1539,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
