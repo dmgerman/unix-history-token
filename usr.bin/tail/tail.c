@@ -650,7 +650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert the obsolete argument form into something that getopt can handle.  * This means that anything of the form [+-][0-9][0-9]*[lbc][fr] that isn't  * the option argument for a -b, -c or -n option gets converted.  */
+comment|/*  * Convert the obsolete argument form into something that getopt can handle.  * This means that anything of the form [+-][0-9][0-9]*[lbc][Ffr] that isn't  * the option argument for a -b, -c or -n option gets converted.  */
 end_comment
 
 begin_function
@@ -814,6 +814,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|t
+operator|==
+literal|'F'
+operator|||
 operator|*
 name|t
 operator|==
@@ -982,6 +987,9 @@ name|argv
 expr_stmt|;
 comment|/* FALLTHROUGH */
 comment|/* Options w/o arguments, continue with the next option. */
+case|case
+literal|'F'
+case|:
 case|case
 literal|'f'
 case|:
