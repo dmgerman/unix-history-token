@@ -232,7 +232,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|sx_slock
+name|sx_xlock
 argument_list|(
 operator|&
 name|g_eventstall
@@ -248,7 +248,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|sx_sunlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|g_eventstall
