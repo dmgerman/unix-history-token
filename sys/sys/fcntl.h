@@ -19,17 +19,84 @@ begin_comment
 comment|/*  * This file includes the definitions for open and fcntl  * described by POSIX for<fcntl.h>; it also includes  * related kernel definitions.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/_types.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MODE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__mode_t
+name|mode_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_MODE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OFF_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__off_t
+name|off_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_OFF_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__pid_t
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_PID_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -92,11 +159,11 @@ begin_comment
 comment|/*  * Kernel encoding of open mode; separate read and write bits that are  * independently testable: 1 greater than the above.  *  * XXX  * FREAD and FWRITE are excluded from the #ifdef _KERNEL so that TIOCFLUSH,  * which was documented to use FREAD/FWRITE, continues to work.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -139,11 +206,11 @@ begin_comment
 comment|/* set append mode */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -188,6 +255,28 @@ end_define
 begin_comment
 comment|/* synchronous writes */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|O_SYNC
+value|0x0080
+end_define
+
+begin_comment
+comment|/* POSIX synonym for O_FSYNC */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -301,6 +390,12 @@ begin_comment
 comment|/* don't assign controlling terminal */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_comment
 comment|/* Attempt to bypass buffer cache */
 end_comment
@@ -311,6 +406,15 @@ directive|define
 name|O_DIRECT
 value|0x00010000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX missing O_DSYNC, O_RSYNC.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -370,14 +474,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The O_* flags used to have only F* names, which were used in the kernel  * and by fcntl.  We retain the F* names for the kernel f_flag field  * and for backward compatibility for fcntl.  */
+comment|/*  * The O_* flags used to have only F* names, which were used in the kernel  * and by fcntl.  We retain the F* names for the kernel f_flag field  * and for backward compatibility for fcntl.  These flags are deprecated.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -454,11 +558,11 @@ begin_comment
 comment|/*  * We are out of bits in f_flag (which is a short).  However,  * the flag bits not set in FMASK are only meaningful in the  * initial open syscall.  Those bits can thus be given a  * different meaning for fcntl(2).  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Set by shm_open(3) to get automatic MAP_ASYNC behavior  * for POSIX shared memory objects (which are otherwise  * implemented as plain files).  */
@@ -539,11 +643,17 @@ begin_comment
 comment|/* set file status flags */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
 
 begin_define
 define|#
@@ -733,11 +843,11 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/* lock operations for flock(2) */
@@ -792,17 +902,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * XXX missing posix_fadvise() and posix_fallocate(), and POSIX_FADV_* macros.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
@@ -846,11 +954,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_function_decl
 name|int
@@ -867,10 +975,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_POSIX_SOURCE */
-end_comment
 
 begin_macro
 name|__END_DECLS
