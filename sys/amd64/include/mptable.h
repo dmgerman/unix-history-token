@@ -2049,6 +2049,8 @@ name|SMP_prvspace
 index|[
 name|myid
 index|]
+operator|.
+name|globaldata
 expr_stmt|;
 for|for
 control|(
