@@ -776,9 +776,13 @@ operator|(
 name|num
 operator|>
 name|MAX_CMDLINE
+operator|-
+literal|1
 operator|)
 condition|?
 name|MAX_CMDLINE
+operator|-
+literal|1
 else|:
 name|num
 expr_stmt|;
@@ -1221,6 +1225,8 @@ operator|&&
 name|n
 operator|<
 name|MAX_MARGV
+operator|-
+literal|1
 condition|;
 name|n
 operator|++
