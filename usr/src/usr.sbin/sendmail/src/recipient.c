@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.13 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,6 +783,50 @@ name|a
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* if this is primary, add it to the original recipient list */
+if|if
+condition|(
+name|a
+operator|->
+name|q_alias
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|e
+operator|->
+name|e_origrcpt
+operator|==
+name|NULL
+condition|)
+name|e
+operator|->
+name|e_origrcpt
+operator|=
+name|a
+operator|->
+name|q_paddr
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|e
+operator|->
+name|e_origrcpt
+operator|!=
+name|a
+operator|->
+name|q_paddr
+condition|)
+name|e
+operator|->
+name|e_origrcpt
+operator|=
+literal|""
 expr_stmt|;
 block|}
 comment|/* break aliasing loops */
