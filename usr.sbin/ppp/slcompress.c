@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.3 1995/05/30 03:50:57 rgrimes Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.3.4.1 1996/02/05 17:03:20 dfr Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ specifier|const
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: slcompress.c,v 1.3.4.1 1996/02/05 17:03:20 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1649,12 +1649,30 @@ name|ip_p
 operator|=
 name|IPPROTO_TCP
 expr_stmt|;
+comment|/* 		 * Calculate the size of the TCP/IP header and make sure that 		 * we don't overflow the space we have available for it. 		*/
 name|hlen
 operator|=
 name|ip
 operator|->
 name|ip_hl
+operator|<<
+literal|2
 expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcphdr
+argument_list|)
+operator|>
+name|len
+condition|)
+goto|goto
+name|bad
+goto|;
 name|th
 operator|=
 operator|(
@@ -1680,11 +1698,18 @@ name|THOFFSET
 argument_list|(
 name|th
 argument_list|)
-expr_stmt|;
-name|hlen
-operator|<<=
+operator|<<
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|>
+name|MAX_HDR
+condition|)
+goto|goto
+name|bad
+goto|;
 name|BCOPY
 argument_list|(
 name|ip
