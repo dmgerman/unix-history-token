@@ -2060,7 +2060,7 @@ block|}
 comment|/* 	 * Clean the pages and interpret the return value. 	 */
 name|rv
 operator|=
-name|vm_map_clean
+name|vm_map_sync
 argument_list|(
 name|map
 argument_list|,
