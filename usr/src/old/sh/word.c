@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	word.c	4.1	82/05/07	*/
+comment|/*	word.c	4.2	83/06/10	*/
 end_comment
 
 begin_empty
@@ -673,6 +673,21 @@ name|REG
 name|INT
 name|len
 decl_stmt|;
+name|IF
+name|setjmp
+argument_list|(
+name|INTbuf
+argument_list|)
+decl|== 0
+name|THEN
+name|trapjmp
+index|[
+name|INTR
+index|]
+init|=
+literal|1
+decl_stmt|;
+name|FI
 name|REP
 name|IF
 name|trapnote
@@ -708,11 +723,18 @@ decl|<0
 name|ANDF
 name|trapnote
 name|DONE
-decl|return
-argument_list|(
-name|len
-argument_list|)
+name|trapjmp
+index|[
+name|INTR
+index|]
+init|=
+literal|0
 decl_stmt|;
+return|return
+operator|(
+name|len
+operator|)
+return|;
 block|}
 end_function
 

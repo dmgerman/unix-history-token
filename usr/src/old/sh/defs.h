@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.1	82/05/07	*/
+comment|/*	defs.h	4.2	83/06/10	*/
 end_comment
 
 begin_empty
@@ -1290,6 +1290,12 @@ name|errshell
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|jmp_buf
+name|INTbuf
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* fault handling */
 end_comment
@@ -1399,6 +1405,13 @@ end_decl_stmt
 begin_decl_stmt
 name|BOOL
 name|trapflg
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|BOOL
+name|trapjmp
 index|[]
 decl_stmt|;
 end_decl_stmt

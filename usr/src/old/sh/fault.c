@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fault.c	4.1	82/05/07	*/
+comment|/*	fault.c	4.2	83/06/10	*/
 end_comment
 
 begin_empty
@@ -35,6 +35,15 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|BOOL
+name|trapjmp
+index|[
+name|MAXTRAP
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ========	fault handling routines	   ======== */
 end_comment
@@ -54,13 +63,6 @@ name|REG
 name|INT
 name|flag
 decl_stmt|;
-name|signal
-argument_list|(
-name|sig
-argument_list|,
-name|fault
-argument_list|)
-expr_stmt|;
 name|IF
 name|sig
 operator|==
@@ -119,6 +121,31 @@ name|sig
 index|]
 operator||=
 name|flag
+expr_stmt|;
+name|FI
+name|IF
+name|trapjmp
+index|[
+name|sig
+index|]
+name|ANDF
+name|sig
+operator|==
+name|INTR
+name|THEN
+name|trapjmp
+index|[
+name|sig
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|INTbuf
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|FI
 block|}

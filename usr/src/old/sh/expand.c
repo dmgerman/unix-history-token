@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	expand.c	4.2	83/03/28	*/
+comment|/*	expand.c	4.3	83/06/10	*/
 end_comment
 
 begin_empty
@@ -283,7 +283,30 @@ operator|*
 name|rs
 operator|++
 name|DONE
+name|IF
+name|setjmp
+argument_list|(
+name|INTbuf
+argument_list|)
+operator|==
+literal|0
+name|THEN
+name|trapjmp
+index|[
+name|INTR
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|FI
 name|WHILE
+argument_list|(
+name|trapnote
+operator|&
+name|SIGSET
+argument_list|)
+decl|== 0
+name|ANDF
 argument_list|(
 name|dp
 operator|=
@@ -292,26 +315,26 @@ argument_list|(
 name|dirf
 argument_list|)
 argument_list|)
-operator|!=
+decl|!=
 name|NULL
-name|ANDF
-argument_list|(
-name|trapnote
-operator|&
-name|SIGSET
-argument_list|)
-operator|==
-literal|0
 name|DO
 name|IF
 argument_list|(
-argument|*dp->d_name==
+operator|*
+name|dp
+operator|->
+name|d_name
+operator|==
 literal|'.'
-argument|ANDF *cs!=
+name|ANDF
+operator|*
+name|cs
+operator|!=
 literal|'.'
 argument_list|)
 name|THEN
-continue|continue;
+decl|continue
+decl_stmt|;
 name|FI
 name|IF
 name|gmatch
@@ -344,6 +367,13 @@ argument_list|(
 name|dirf
 argument_list|)
 decl_stmt|;
+name|trapjmp
+index|[
+name|INTR
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|IF
 name|rescan
 name|THEN
