@@ -534,7 +534,7 @@ begin_decl_stmt
 name|struct
 name|sbni_softc
 modifier|*
-name|headlist
+name|sbni_headlist
 decl_stmt|;
 end_decl_stmt
 
@@ -4298,7 +4298,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|headlist
+name|sbni_headlist
 operator|)
 operator|-
 name|offsetof

@@ -552,9 +552,9 @@ name|sc
 operator|->
 name|link
 operator|=
-name|headlist
+name|sbni_headlist
 expr_stmt|;
-name|headlist
+name|sbni_headlist
 operator|=
 name|sc
 expr_stmt|;
