@@ -5140,7 +5140,7 @@ name|loadstore_address
 label|:
 name|db_printf
 argument_list|(
-literal|"%+#lx(%s)"
+literal|"%#lx(%s)"
 argument_list|,
 name|signed_immediate
 argument_list|,
