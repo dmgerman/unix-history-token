@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: extract.c,v 1.7.6.11 1998/07/04 14:12:19 jkh Exp $"
+literal|"$Id: extract.c,v 1.7.6.12 1998/09/11 07:27:17 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -931,7 +931,7 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unable to make directory '%s'"
+literal|"unable to cwd to '%s'"
 argument_list|,
 name|p
 operator|->

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pen.c,v 1.22.2.4 1998/04/12 16:01:28 jkh Exp $"
+literal|"$Id: pen.c,v 1.22.2.5 1998/09/11 07:27:18 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,7 +499,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mktemp
+name|mkdtemp
 argument_list|(
 name|pen
 argument_list|)
@@ -522,7 +522,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|mkdir
+name|chmod
 argument_list|(
 name|pen
 argument_list|,

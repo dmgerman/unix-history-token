@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: plist.c,v 1.17.2.7 1998/09/01 07:00:20 jkh Exp $"
+literal|"$Id: plist.c,v 1.17.2.8 1998/09/11 07:27:18 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1713,11 +1713,16 @@ name|isdir
 argument_list|(
 name|tmp
 argument_list|)
+operator|&&
+name|fexists
+argument_list|(
+name|tmp
+argument_list|)
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"attempting to delete directory `%s' as a file\n"
+literal|"cannot delete specified file `%s' - it is a directory!\n"
 literal|"this packing list is incorrect - ignoring delete request"
 argument_list|,
 name|tmp
