@@ -72,14 +72,21 @@ decl_stmt|;
 name|size_t
 name|null_length
 decl_stmt|;
-comment|/* 	 * Used to limit reads of entry data.   Eventually, each reader 	 * will be able to register it's own read_data routine and these 	 * will move into the per-format data for the formats that use them. 	 */
-name|off_t
-name|entry_bytes_remaining
+comment|/* 	 * Used by archive_read_data() to track blocks and copy 	 * data to client buffers, filling gaps with zero bytes. 	 */
+specifier|const
+name|char
+modifier|*
+name|read_data_block
 decl_stmt|;
 name|off_t
-name|entry_padding
+name|read_data_offset
 decl_stmt|;
-comment|/* Skip this much after entry data. */
+name|off_t
+name|read_data_output_offset
+decl_stmt|;
+name|size_t
+name|read_data_remaining
+decl_stmt|;
 name|uid_t
 name|user_uid
 decl_stmt|;
@@ -302,6 +309,28 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|read_data
+function_decl|)
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|off_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
 name|cleanup
 function_decl|)
 parameter_list|(
@@ -339,7 +368,7 @@ modifier|*
 name|format_data
 decl_stmt|;
 comment|/* Used by writers. */
-comment|/* 	 * Pointers to format-specific functions.  On read, these are 	 * initialized in the bid process.  On write, they're initialized by 	 * archive_write_set_format_XXX() calls. 	 */
+comment|/* 	 * Pointers to format-specific functions for writing.  They're 	 * initialized by archive_write_set_format_XXX() calls. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -612,6 +641,28 @@ modifier|*
 parameter_list|,
 name|struct
 name|archive_entry
+modifier|*
+parameter_list|)
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|read_data
+function_decl|)
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|off_t
 modifier|*
 parameter_list|)
 parameter_list|,

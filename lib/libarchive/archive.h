@@ -596,6 +596,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * A zero-copy version of archive_read_data that also exposes the file offset  * of each returned block.  Note that the client has no way to specify  * the desired size of the block.  The API does gaurantee that offsets will  * be strictly increasing and that returned blocks will not overlap.  */
+end_comment
+
+begin_function_decl
+name|int
+name|archive_read_data_block
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+modifier|*
+name|buff
+parameter_list|,
+name|size_t
+modifier|*
+name|size
+parameter_list|,
+name|off_t
+modifier|*
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*-  * Some convenience functions that are built on archive_read_data:  *  'skip': skips entire entry  *  'into_buffer': writes data into memory buffer that you provide  *  'into_file': writes data to specified filedes  */
 end_comment
 
