@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)hexdump.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)hexdump.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -21,48 +21,53 @@ value|0x001
 comment|/* print offset */
 define|#
 directive|define
-name|F_C
+name|F_BPAD
 value|0x002
+comment|/* blank pad */
+define|#
+directive|define
+name|F_C
+value|0x004
 comment|/* %_c */
 define|#
 directive|define
 name|F_CHAR
-value|0x004
+value|0x008
 comment|/* %c */
 define|#
 directive|define
 name|F_DBL
-value|0x008
+value|0x010
 comment|/* %[EefGf] */
 define|#
 directive|define
 name|F_INT
-value|0x010
+value|0x020
 comment|/* %[di] */
 define|#
 directive|define
 name|F_P
-value|0x020
+value|0x040
 comment|/* %_p */
 define|#
 directive|define
 name|F_STR
-value|0x040
+value|0x080
 comment|/* %s */
 define|#
 directive|define
 name|F_U
-value|0x080
+value|0x100
 comment|/* %_u */
 define|#
 directive|define
 name|F_UINT
-value|0x100
+value|0x200
 comment|/* %[ouXx] */
 define|#
 directive|define
 name|F_TEXT
-value|0x200
+value|0x400
 comment|/* no conversions */
 name|u_int
 name|flags
