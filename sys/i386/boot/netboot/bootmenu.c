@@ -67,12 +67,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|cmd_netmask
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|cmd_swapsize
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -217,7 +220,7 @@ literal|"hostname"
 block|,
 name|cmd_hostname
 block|,
-literal|"          set hostname"
+literal|"<name>    set hostname"
 block|}
 block|,
 block|{
@@ -233,7 +236,7 @@ literal|"rootfs"
 block|,
 name|cmd_rootfs
 block|,
-literal|"            set root filesystem"
+literal|"ip:/fs      set root filesystem"
 block|}
 block|,
 block|{
@@ -241,7 +244,15 @@ literal|"swapfs"
 block|,
 name|cmd_swapfs
 block|,
-literal|"            set swap filesystem"
+literal|"ip:/fs      set swap filesystem"
+block|}
+block|,
+block|{
+literal|"swapsize"
+block|,
+name|cmd_swapsize
+block|,
+literal|"<nblks>   set swap size"
 block|}
 block|,
 block|{
@@ -383,6 +394,10 @@ name|ipaddr
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|default_netmask
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
@@ -524,6 +539,60 @@ operator|=
 name|htonl
 argument_list|(
 name|netmask
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/************************************************************************** CMD_SWAPSIZE - Set number of blocks for swap **************************************************************************/
+end_comment
+
+begin_macro
+name|cmd_swapsize
+argument_list|(
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|blks
+init|=
+name|getdec
+argument_list|(
+operator|&
+name|p
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|blks
+operator|>
+literal|0
+condition|)
+name|nfsdiskless
+operator|.
+name|swap_nblks
+operator|=
+name|blks
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Swap size is: %d blocks\r\n"
+argument_list|,
+name|nfsdiskless
+operator|.
+name|swap_nblks
 argument_list|)
 expr_stmt|;
 block|}
