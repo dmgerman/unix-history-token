@@ -33,7 +33,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.20
+literal|3.21
 operator|%
 name|G
 operator|%
@@ -148,7 +148,11 @@ name|Xscript
 argument_list|,
 literal|"%s\n"
 argument_list|,
+operator|&
 name|errbuf
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* output error message to output channel if appropriate */
@@ -426,7 +430,11 @@ name|Xscript
 argument_list|,
 literal|"%s\n"
 argument_list|,
+operator|&
 name|errbuf
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* output to channel if appropriate */
