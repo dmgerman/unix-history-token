@@ -503,6 +503,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_INIT_REQ_QUEUE_A64
+value|0x0052
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_INIT_RES_QUEUE_A64
+value|0x0053
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_ENABLE_TARGET_MODE
 value|0x0055
 end_define
@@ -1710,6 +1724,24 @@ block|}
 name|ispreq_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ispreq64_t
+value|ispreqt3_t
+end_define
+
+begin_comment
+comment|/* same as.... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_RQDSEG_A64
+value|2
+end_define
 
 begin_comment
 comment|/*  * A request packet can also be a marker packet.  */
@@ -3081,6 +3113,13 @@ define|#
 directive|define
 name|ICBXOPT_RIO_32BIT_IOCB
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBXOPT_ZIO
+value|5
 end_define
 
 begin_define
