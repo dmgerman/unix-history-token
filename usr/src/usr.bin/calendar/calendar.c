@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calendar.c	4.10 (Berkeley) %G%"
+literal|"@(#)calendar.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,7 +694,7 @@ name|tp
 operator|->
 name|tm_wday
 operator|==
-literal|6
+literal|5
 condition|?
 literal|3
 else|:
