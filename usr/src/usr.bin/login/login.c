@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.42 (Berkeley) %G%"
+literal|"@(#)login.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1136,7 +1136,7 @@ control|)
 block|{
 name|ioctlval
 operator|=
-literal|0
+name|TTYDISC
 expr_stmt|;
 operator|(
 name|void
@@ -2220,39 +2220,6 @@ name|pw_shell
 operator|=
 name|_PATH_BSHELL
 expr_stmt|;
-comment|/* turn on new line discipline for the csh */
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|pwd
-operator|->
-name|pw_shell
-argument_list|,
-name|_PATH_CSHELL
-argument_list|)
-condition|)
-block|{
-name|ioctlval
-operator|=
-name|NTTYDISC
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCSETD
-argument_list|,
-operator|&
-name|ioctlval
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* destroy environment unless user has requested preservation */
 if|if
 condition|(
