@@ -858,17 +858,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|D_CANFREE
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* can free blocks */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|D_TRACKCLOSE
 value|0x00080000
 end_define
