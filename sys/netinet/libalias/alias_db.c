@@ -3465,6 +3465,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|alias_link
 modifier|*
@@ -5301,7 +5302,14 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
+
 begin_function
+specifier|static
 name|u_short
 name|GetDestPort
 parameter_list|(
@@ -5320,6 +5328,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
