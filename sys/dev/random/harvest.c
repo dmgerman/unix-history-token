@@ -379,7 +379,7 @@ condition|;
 name|i
 operator|+=
 operator|(
-name|size_t
+name|int
 operator|)
 sizeof|sizeof
 argument_list|(
