@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.24 (Berkeley) %G%"
+literal|"@(#)ps.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -762,7 +762,7 @@ name|pgtok
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)*CLBYTES/1024)
+value|((a)/(1024/NBPG))
 end_define
 
 begin_function
