@@ -1032,9 +1032,9 @@ name|size
 operator|!=
 name|T_ATM_ABSENT
 condition|)
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+operator|!
 name|sbreserve
 argument_list|(
 operator|&
@@ -1043,8 +1043,21 @@ operator|->
 name|so_snd
 argument_list|,
 name|size
+argument_list|,
+name|so
+argument_list|,
+name|p
 argument_list|)
+condition|)
+block|{
+name|err
+operator|=
+name|ENOBUFS
 expr_stmt|;
+name|ATM_OUTRO
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Now get the socket connected 	 */
 name|err
