@@ -301,6 +301,18 @@ comment|/* enable soft updates for file system */
 end_comment
 
 begin_decl_stmt
+name|int
+name|Eflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* exit in middle of newfs for testing */
+end_comment
+
+begin_decl_stmt
 name|quad_t
 name|fssize
 decl_stmt|;
@@ -605,7 +617,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"L:NO:RS:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
+literal|"EL:NO:RS:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -617,6 +629,13 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'E'
+case|:
+name|Eflag
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'L'
 case|:
