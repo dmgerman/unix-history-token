@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -1935,54 +1929,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|SYSCTL_OPAQUE
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|intrcnt
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-name|intrcnt
-argument_list|,
-literal|4
-operator|*
-name|NR_INTRNAMES
-argument_list|,
-literal|"LU"
-argument_list|,
-literal|"Interrupt counts"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_OPAQUE
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|intrnames
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-name|intrnames
-argument_list|,
-literal|16
-operator|*
-name|NR_INTRNAMES
-argument_list|,
-literal|"S"
-argument_list|,
-literal|"Interrupt names"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Update intrnames array with the specified name.  This is used by  * vmstat(8) and the like.  */
