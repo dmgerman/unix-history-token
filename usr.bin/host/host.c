@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.7 1995/08/22 05:01:49 vixie Exp $"
+literal|"$Id: host.c,v 8.8 1995/12/06 20:34:52 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4197,6 +4197,9 @@ condition|(
 name|type
 operator|==
 name|T_MX
+operator|&&
+operator|!
+name|verbose
 condition|)
 name|fprintf
 argument_list|(

@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dig.c,v 8.4 1995/06/19 08:35:06 vixie Exp $"
+literal|"$Id: dig.c,v 8.6 1995/12/29 21:08:13 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,6 +783,16 @@ expr_stmt|;
 name|qtypeSet
 operator|=
 literal|0
+expr_stmt|;
+name|bzero
+argument_list|(
+name|domain
+argument_list|,
+operator|(
+sizeof|sizeof
+name|domain
+operator|)
+argument_list|)
 expr_stmt|;
 name|gethostname
 argument_list|(
@@ -2509,6 +2519,14 @@ name|eecode
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|_res
+operator|.
+name|pfcode
+operator|&
+name|RES_PRF_HEAD1
+condition|)
 name|__fp_resstat
 argument_list|(
 name|NULL
@@ -4297,6 +4315,27 @@ name|_res
 operator|.
 name|pfcode
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RES
+argument_list|)
+operator|&&
+operator|(
+name|__RES
+operator|>=
+literal|19931104
+operator|)
+name|long
+name|ndots
+init|=
+name|_res
+operator|.
+name|ndots
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* this is ugly but putenv() is more portable than setenv() */
 name|buf
 operator|=
@@ -4337,13 +4376,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* keeps the argument, so we won't free it */
-name|_res
-operator|.
-name|options
-operator|&=
-operator|~
-name|RES_INIT
-expr_stmt|;
 name|res_init
 argument_list|()
 expr_stmt|;
@@ -4353,6 +4385,26 @@ name|pfcode
 operator|=
 name|pfcode
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RES
+argument_list|)
+operator|&&
+operator|(
+name|__RES
+operator|>=
+literal|19931104
+operator|)
+name|_res
+operator|.
+name|ndots
+operator|=
+name|ndots
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
