@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.17 (Berkeley) %G%"
+literal|"@(#)w.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1765,20 +1765,24 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * favor the one sleeping in a "short term" sleep 	 */
+comment|/* 	 * favor one sleeping in a non-interruptible sleep 	 */
 if|if
 condition|(
-name|p2
-operator|->
-name|p_pri
-operator|<=
-name|PZERO
-operator|&&
 name|p1
 operator|->
-name|p_pri
-operator|>
-name|PZERO
+name|p_flag
+operator|&
+name|SSINTR
+operator|&&
+operator|(
+name|p2
+operator|->
+name|p_flag
+operator|&
+name|SSINTR
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1787,17 +1791,21 @@ operator|)
 return|;
 if|if
 condition|(
-name|p1
-operator|->
-name|p_pri
-operator|<=
-name|PZERO
-operator|&&
 name|p2
 operator|->
-name|p_pri
-operator|>
-name|PZERO
+name|p_flag
+operator|&
+name|SSINTR
+operator|&&
+operator|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|SSINTR
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
