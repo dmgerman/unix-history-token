@@ -7,12 +7,6 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -22,26 +16,6 @@ name|args
 parameter_list|)
 value|args
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|args
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern

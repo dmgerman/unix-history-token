@@ -7,33 +7,11 @@ begin_comment
 comment|/*  * report() - calls syslog  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -272,12 +250,6 @@ begin_comment
 comment|/*  * Print a log message using syslog(3) and/or stderr.  * The message passed in should not include a newline.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|void
 name|report
@@ -292,28 +264,6 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-comment|/*VARARGS2*/
-function|void report
-parameter_list|(
-name|priority
-parameter_list|,
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|int
-name|priority
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|ap
@@ -347,9 +297,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -357,15 +304,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vsnprintf
 argument_list|(
 name|buf

@@ -20,7 +20,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Generalized hash table ADT  *  * Provides multiple, dynamically-allocated, variable-sized hash tables on  * various data and keys.  *  * This package attempts to follow some of the coding conventions suggested  * by Bob Sidebotham and the AFS Clean Code Committee.  */
+comment|/*  * Generalized hash table ADT  * $FreeBSD$  *  * Provides multiple, dynamically-allocated, variable-sized hash tables on  * various data and keys.  *  * This package attempts to follow some of the coding conventions suggested  * by Bob Sidebotham and the AFS Clean Code Committee.  */
 end_comment
 
 begin_comment
@@ -38,35 +38,12 @@ begin_comment
 comment|/*  * Define "hash_datum" as a universal data type  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|void
 name|hash_datum
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|char
-name|hash_datum
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -155,12 +132,6 @@ begin_comment
 comment|/* ANSI function prototypes or empty arg list? */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -170,26 +141,6 @@ name|args
 parameter_list|)
 value|args
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|args
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
