@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.51 1998/03/31 07:53:13 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.52 1998/04/06 03:38:18 kato Exp $  */
 end_comment
 
 begin_comment
@@ -458,74 +458,12 @@ directive|ifdef
 name|PC98
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AUTO_CLOCK
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98_8M
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|TIMER_FREQ
 value|2457600;
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !PC98_8M */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_FREQ
-value|1996800;
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PC98_8M */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* AUTO_CLOCK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_FREQ
-value|2457600;
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AUTO_CLOCK */
-end_comment
 
 begin_else
 else|#
@@ -1224,45 +1162,6 @@ comment|/* 			 * See microtime.s for this magic. 			 */
 ifdef|#
 directive|ifdef
 name|PC98
-ifndef|#
-directive|ifndef
-name|AUTO_CLOCK
-ifndef|#
-directive|ifndef
-name|PC98_8M
-name|time
-operator|.
-name|tv_usec
-operator|+=
-operator|(
-literal|6667
-operator|*
-name|timer0_prescaler_count
-operator|)
-operator|>>
-literal|14
-expr_stmt|;
-else|#
-directive|else
-comment|/* PC98_8M */
-name|time
-operator|.
-name|tv_usec
-operator|+=
-operator|(
-literal|16411
-operator|*
-name|timer0_prescaler_count
-operator|)
-operator|>>
-literal|15
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PC98_8M */
-else|#
-directive|else
-comment|/* AUTO_CLOCK */
 if|if
 condition|(
 name|pc98_machine_type
@@ -1299,9 +1198,6 @@ operator|>>
 literal|14
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* AUTO_CLOCK */
 else|#
 directive|else
 comment|/* IBM-PC */
@@ -3199,43 +3095,6 @@ name|PC98
 name|findcpuspeed
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|AUTO_CLOCK
-if|if
-condition|(
-name|pc98_machine_type
-operator|&
-name|M_8M
-condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|PC98_8M
-name|printf
-argument_list|(
-literal|"you must reconfig a kernel with \"PC98_8M\" option.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|PC98_8M
-name|printf
-argument_list|(
-literal|"You must reconfig a kernel without \"PC98_8M\" option.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-else|#
-directive|else
-comment|/* AUTO_CLOCK */
 if|if
 condition|(
 name|pc98_machine_type
@@ -3253,9 +3112,6 @@ operator|=
 literal|2457600L
 expr_stmt|;
 comment|/* 2.4576 MHz */
-endif|#
-directive|endif
-comment|/* AUTO_CLOCK */
 endif|#
 directive|endif
 comment|/* PC98 */
