@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_system[] = "@(#)system_.c	1.1";  *  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
+comment|/* char id_system[] = "@(#)system_.c	1.2";  *  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../libI77/fiodefs.h"
+end_include
 
 begin_function
 name|long
@@ -19,6 +25,26 @@ name|long
 name|n
 decl_stmt|;
 block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MXUNIT
+condition|;
+name|flush
+argument_list|(
+name|i
+operator|++
+argument_list|)
+control|)
+empty_stmt|;
 return|return
 operator|(
 operator|(
