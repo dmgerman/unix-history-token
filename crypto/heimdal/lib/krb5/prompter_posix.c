@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: prompter_posix.c,v 1.7 2002/09/16 17:32:11 nectar Exp $"
+literal|"$Id: prompter_posix.c,v 1.6.6.1 2002/10/21 14:47:42 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

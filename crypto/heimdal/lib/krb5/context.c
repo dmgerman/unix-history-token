@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: context.c,v 1.81 2002/09/02 17:03:12 joda Exp $"
+literal|"$Id: context.c,v 1.81.2.1 2002/10/21 14:33:34 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1159,7 +1159,7 @@ if|#
 directive|if
 literal|0
 comment|/* with this enabled and if there are no config files, Kerberos is        considererd disabled */
-block|if(tmp == NULL) 	return ENOENT;
+block|if(tmp == NULL) 	return ENXIO;
 endif|#
 directive|endif
 name|krb5_config_file_free

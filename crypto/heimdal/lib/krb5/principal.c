@@ -58,7 +58,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: principal.c,v 1.81 2002/08/26 13:31:40 assar Exp $"
+literal|"$Id: principal.c,v 1.81.2.1 2002/10/21 16:08:25 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -486,6 +486,29 @@ name|c
 operator|=
 literal|'\0'
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"trailing \\ in principal name"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|KRB5_PARSE_MALFORMED
+expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
 block|}
 elseif|else
 if|if
