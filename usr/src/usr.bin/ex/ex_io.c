@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.17.1.1 (Berkeley) %G%"
+literal|"@(#)ex_io.c	7.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -1286,6 +1292,30 @@ block|{
 name|int
 name|oerrno
 decl_stmt|;
+if|if
+condition|(
+name|genbuf
+condition|)
+block|{
+specifier|register
+name|char
+modifier|*
+name|ccp
+init|=
+name|genbuf
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|ccp
+condition|)
+operator|*
+name|ccp
+operator|++
+operator|&=
+name|TRIM
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 literal|1
@@ -1317,7 +1347,7 @@ name|ignore
 argument_list|(
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|1
 argument_list|)
@@ -1825,7 +1855,7 @@ argument_list|(
 operator|&
 name|stbuf
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 condition|)
 break|break;
@@ -3181,7 +3211,7 @@ argument_list|(
 operator|&
 name|stbuf
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 condition|)
 break|break;
@@ -3192,7 +3222,7 @@ argument_list|(
 operator|&
 name|stbuf
 argument_list|,
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|)
 condition|)
 break|break;
