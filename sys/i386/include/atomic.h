@@ -121,6 +121,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !LOCORE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -133,10 +137,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* LOCORE */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !SMP */
+end_comment
 
 begin_define
 define|#
@@ -148,6 +160,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * The assembly is volatilized to demark potential before-and-after side  * effects if an interrupt or SMP collision were to occur.  */
@@ -424,8 +450,27 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* !defined(LOCORE) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* KLD_MODULE */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
 
 begin_expr_stmt
 unit|ATOMIC_ASM
@@ -1223,6 +1268,15 @@ end_endif
 
 begin_comment
 comment|/* !defined(WANT_FUNCTIONS) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(LOCORE) */
 end_comment
 
 begin_endif

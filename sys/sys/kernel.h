@@ -228,6 +228,18 @@ name|timedelta
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* global data in mp_machdep.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|panic_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

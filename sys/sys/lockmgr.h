@@ -15,12 +15,6 @@ directive|define
 name|_LOCK_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/lock.h>
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|mtx
