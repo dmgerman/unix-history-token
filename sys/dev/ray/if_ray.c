@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.29 2000/05/11 18:55:38 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.39 2000/06/18 21:40:46 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -1882,9 +1882,11 @@ return|;
 comment|/* 	 * Grab the resources I need 	 */
 if|#
 directive|if
+name|RAY_DEBUG
+operator|&
 operator|(
 name|RAY_DBG_CM
-operator|||
+operator||
 name|RAY_DBG_BOOTPARAM
 operator|)
 block|{
@@ -2009,7 +2011,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* (RAY_DBG_CM || RAY_DBG_BOOTPARAM) */
+comment|/* RAY_DEBUG& (RAY_DBG_CM | RAY_DBG_BOOTPARAM) */
 name|error
 operator|=
 name|ray_res_alloc_cm
@@ -3768,7 +3770,27 @@ name|framing
 operator|=
 name|SC_FRAMING_WEBGEAR
 expr_stmt|;
-comment|/* XXX this is a hack whilst I transition the code. The instance  * XXX variables above should be set somewhere else. This is needed for  * XXX start_join /  bcopy(&sc->sc_d,&com->c_desired, sizeof(struct ray_nw_param)); 	     	/* 	 * Download the right firmware defaults 	 */
+comment|/* XXX this is a hack whilst I transition the code. The instance  * XXX variables above should be set somewhere else. This is needed for  * XXX start_join */
+name|bcopy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_d
+argument_list|,
+operator|&
+name|com
+operator|->
+name|c_desired
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ray_nw_param
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Download the right firmware defaults 	 */
 if|if
 condition|(
 name|sc
@@ -5930,7 +5952,7 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"not running"
+literal|"cannot transmit - not running"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5947,7 +5969,7 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"no network"
+literal|"cannot transmit - no network"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5966,7 +5988,7 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"ECF busy, re-scheduling self"
+literal|"cannot transmit - ECF busy"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -6199,14 +6221,33 @@ name|ether_dhost
 argument_list|)
 expr_stmt|;
 else|else
-name|RAY_PANIC
+name|bufp
+operator|=
+name|ray_tx_wrhdr
 argument_list|(
 name|sc
 argument_list|,
-literal|"can't be an AP yet"
+name|bufp
+argument_list|,
+name|IEEE80211_FC0_TYPE_DATA
+argument_list|,
+name|IEEE80211_FC1_AP_TO_STA
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|,
+name|sc
+operator|->
+name|sc_c
+operator|.
+name|np_bss_id
+argument_list|,
+name|eh
+operator|->
+name|ether_shost
 argument_list|)
 expr_stmt|;
-comment|/* XXX_ACTING_AP */
 comment|/* 	 * Translation - capability as described earlier 	 * 	 * Remove/modify/addto the 802.3 and 802.2 headers as needed. 	 * 	 * We've pulled up the mbuf for you. 	 * 	 */
 if|if
 condition|(
@@ -6315,7 +6356,7 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"could not translate mbuf"
+literal|"could not translate packet"
 argument_list|)
 expr_stmt|;
 name|RAY_CCS_FREE
@@ -7184,7 +7225,7 @@ name|i
 decl_stmt|;
 name|u_int8_t
 modifier|*
-name|dst
+name|mp
 decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
@@ -7407,7 +7448,7 @@ name|m_len
 operator|=
 name|pktlen
 expr_stmt|;
-name|dst
+name|mp
 operator|=
 name|mtod
 argument_list|(
@@ -7605,7 +7646,7 @@ name|sc
 argument_list|,
 name|bufp
 argument_list|,
-name|dst
+name|mp
 argument_list|,
 name|fraglen
 argument_list|)
@@ -7618,7 +7659,7 @@ name|sc
 argument_list|,
 name|bufp
 argument_list|,
-name|dst
+name|mp
 argument_list|,
 operator|(
 name|tmplen
@@ -7635,7 +7676,7 @@ name|sc
 argument_list|,
 name|RAY_RX_BASE
 argument_list|,
-name|dst
+name|mp
 operator|+
 name|tmplen
 argument_list|,
@@ -7645,7 +7686,7 @@ name|RAY_RX_END
 argument_list|)
 expr_stmt|;
 block|}
-name|dst
+name|mp
 operator|+=
 name|fraglen
 expr_stmt|;
@@ -7904,7 +7945,16 @@ name|eh
 decl_stmt|;
 name|u_int8_t
 modifier|*
-name|src
+name|sa
+decl_stmt|,
+modifier|*
+name|da
+decl_stmt|,
+modifier|*
+name|ra
+decl_stmt|,
+modifier|*
+name|ta
 decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
@@ -7917,94 +7967,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Obtain the .11 src addresses. 	 */
-switch|switch
-condition|(
-name|header
-operator|->
-name|i_fc
-index|[
-literal|1
-index|]
-operator|&
-name|IEEE80211_FC1_DS_MASK
-condition|)
-block|{
-case|case
-name|IEEE80211_FC1_STA_TO_STA
-case|:
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_RX
-argument_list|,
-literal|"packet from sta %6D"
-argument_list|,
-name|src
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-name|src
-operator|=
-name|header
-operator|->
-name|i_addr2
-expr_stmt|;
-break|break;
-case|case
-name|IEEE80211_FC1_AP_TO_STA
-case|:
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_RX
-argument_list|,
-literal|"packet from ap %6D"
-argument_list|,
-name|src
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-name|src
-operator|=
-name|header
-operator|->
-name|i_addr3
-expr_stmt|;
-break|break;
-default|default:
-name|RAY_RECERR
-argument_list|(
-name|sc
-argument_list|,
-literal|"DATA TODS/FROMDS wrong fc1 0x%x"
-argument_list|,
-name|header
-operator|->
-name|i_fc
-index|[
-literal|1
-index|]
-operator|&
-name|IEEE80211_FC1_DS_MASK
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Check the the data packet subtype, some packets have 	 * nothing in them so we will drop them here. 	 */
 switch|switch
 condition|(
@@ -8097,6 +8059,210 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Obtain the .11 addresses. Packets may come via APs so the 	 * MAC addresses of the source/destination may be different 	 * from the node that actually sent us the packet. 	 * 	 * XXX At present this information is unused, although it is 	 * XXX available for translation routines to use. 	 */
+switch|switch
+condition|(
+name|header
+operator|->
+name|i_fc
+index|[
+literal|1
+index|]
+operator|&
+name|IEEE80211_FC1_DS_MASK
+condition|)
+block|{
+case|case
+name|IEEE80211_FC1_STA_TO_STA
+case|:
+name|da
+operator|=
+name|header
+operator|->
+name|i_addr1
+expr_stmt|;
+name|sa
+operator|=
+name|header
+operator|->
+name|i_addr2
+expr_stmt|;
+name|ra
+operator|=
+name|ta
+operator|=
+name|NULL
+expr_stmt|;
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_RX
+argument_list|,
+literal|"from %6D to %6D"
+argument_list|,
+name|sa
+argument_list|,
+literal|":"
+argument_list|,
+name|da
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_FC1_AP_TO_STA
+case|:
+name|da
+operator|=
+name|header
+operator|->
+name|i_addr1
+expr_stmt|;
+name|ta
+operator|=
+name|header
+operator|->
+name|i_addr2
+expr_stmt|;
+name|sa
+operator|=
+name|header
+operator|->
+name|i_addr3
+expr_stmt|;
+name|ra
+operator|=
+name|NULL
+expr_stmt|;
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_RX
+argument_list|,
+literal|"ap %6D from %6D to %6D"
+argument_list|,
+name|ta
+argument_list|,
+literal|":"
+argument_list|,
+name|sa
+argument_list|,
+literal|":"
+argument_list|,
+name|da
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_FC1_STA_TO_AP
+case|:
+name|ra
+operator|=
+name|header
+operator|->
+name|i_addr1
+expr_stmt|;
+name|sa
+operator|=
+name|header
+operator|->
+name|i_addr2
+expr_stmt|;
+name|da
+operator|=
+name|header
+operator|->
+name|i_addr3
+expr_stmt|;
+name|ta
+operator|=
+name|NULL
+expr_stmt|;
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_RX
+argument_list|,
+literal|"from %6D to %6D ap %6D"
+argument_list|,
+name|sa
+argument_list|,
+literal|":"
+argument_list|,
+name|da
+argument_list|,
+literal|":"
+argument_list|,
+name|ra
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_FC1_AP_TO_AP
+case|:
+name|ra
+operator|=
+name|header
+operator|->
+name|i_addr1
+expr_stmt|;
+name|ta
+operator|=
+name|header
+operator|->
+name|i_addr2
+expr_stmt|;
+name|da
+operator|=
+name|header
+operator|->
+name|i_addr3
+expr_stmt|;
+name|sa
+operator|=
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|header
+operator|+
+literal|1
+expr_stmt|;
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_RX
+argument_list|,
+literal|"from %6D to %6D ap %6D to %6D"
+argument_list|,
+name|sa
+argument_list|,
+literal|":"
+argument_list|,
+name|da
+argument_list|,
+literal|":"
+argument_list|,
+name|ta
+argument_list|,
+literal|":"
+argument_list|,
+name|ra
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* 	 * Translation - capability as described earlier 	 * 	 * Each case must remove the 802.11 header and leave an 802.3 	 * header in the mbuf copy addresses as needed. 	 */
 name|RAY_MBUF_DUMP
 argument_list|(
@@ -8166,7 +8332,9 @@ name|ray_rx_update_cache
 argument_list|(
 name|sc
 argument_list|,
-name|src
+name|header
+operator|->
+name|i_addr2
 argument_list|,
 name|siglev
 argument_list|,
@@ -8648,6 +8816,13 @@ block|{
 case|case
 name|IEEE80211_AUTH_OPENSYSTEM
 case|:
+name|RAY_RECERR
+argument_list|(
+name|sc
+argument_list|,
+literal|"open system authentication request"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|IEEE80211_AUTH_TRANSACTION
@@ -8817,6 +8992,7 @@ operator|==
 literal|2
 condition|)
 block|{
+comment|/* 			 * XXX probably need a lot more than this 			 * XXX like initiating an auth sequence 			 */
 if|if
 condition|(
 name|IEEE80211_AUTH_STATUS
@@ -8838,7 +9014,6 @@ name|auth
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX probably need a lot more than this */
 block|}
 break|break;
 case|case
@@ -8848,7 +9023,7 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"shared key authentication requested"
+literal|"shared key authentication request"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8857,7 +9032,7 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"unknown authentication subtype 0x%04hx"
+literal|"reserved authentication subtype 0x%04hx"
 argument_list|,
 name|IEEE80211_AUTH_ALGORITHM
 argument_list|(
@@ -13131,7 +13306,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX we probably want to call a timeout on ourself here... 	 */
+comment|/* 	 * XXX we probably want to call a timeout on ourself here... 	 * XXX why isn't this processed like the TX case 	 */
 name|i
 operator|=
 literal|0
@@ -14353,7 +14528,7 @@ operator|->
 name|am_res
 condition|)
 block|{
-name|RAY_RECERR
+name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
@@ -14397,7 +14572,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|RAY_RECERR
+name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
@@ -14596,7 +14771,7 @@ operator|->
 name|cm_res
 condition|)
 block|{
-name|RAY_RECERR
+name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
@@ -14643,7 +14818,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|RAY_RECERR
+name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
@@ -14838,7 +15013,7 @@ operator|->
 name|irq_res
 condition|)
 block|{
-name|RAY_RECERR
+name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
