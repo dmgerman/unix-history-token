@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.9 (Berkeley) %G%"
+literal|"@(#)find.c	4.7.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,9 @@ begin_decl_stmt
 name|char
 name|Pathname
 index|[
-literal|200
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1639,6 +1641,12 @@ operator|==
 literal|'l'
 condition|?
 name|S_IFLNK
+else|:
+name|s
+operator|==
+literal|'s'
+condition|?
+name|S_IFSOCK
 else|:
 literal|0
 expr_stmt|;
