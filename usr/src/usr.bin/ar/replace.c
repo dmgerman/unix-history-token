@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	5.1 (Berkeley) %G%"
+literal|"@(#)replace.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,6 +238,7 @@ name|tmp
 argument_list|()
 expr_stmt|;
 comment|/* Files after key file. */
+comment|/* 	 * Break archive into two parts -- entries before and after the key 	 * entry.  If positioning before the key, place the key at the 	 * beginning of the after key entries and if positioning after the 	 * key, place the key at the end of the before key entries.  Put it 	 * all back together at the end. 	 */
 name|mods
 operator|=
 operator|(
@@ -250,7 +251,6 @@ name|AR_B
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 	 * Break archive into two parts -- entries before and after the key 	 * entry.  If positioning before the key, place the key at the 	 * beginning of the after key entries and if positioning after the 	 * key, place the key at the end of the before key entries.  Put it 	 * all back together at the end. 	 */
 for|for
 control|(
 name|err
@@ -655,6 +655,16 @@ name|sfd
 argument_list|,
 name|file
 argument_list|,
+name|options
+operator|&
+operator|(
+name|AR_A
+operator||
+name|AR_B
+operator|)
+condition|?
+name|tfd1
+else|:
 name|tfd2
 argument_list|,
 name|tname
