@@ -6779,7 +6779,7 @@ name|reply
 argument_list|(
 literal|530
 argument_list|,
-literal|"Permission denied.\n"
+literal|"Permission denied."
 argument_list|)
 expr_stmt|;
 name|pw
@@ -6806,7 +6806,7 @@ name|reply
 argument_list|(
 literal|530
 argument_list|,
-literal|"Login not available right now.\n"
+literal|"Login not available right now."
 argument_list|)
 expr_stmt|;
 name|pw
@@ -9514,11 +9514,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror_reply
+name|reply
 argument_list|(
 literal|425
 argument_list|,
-literal|"Can't build data connection"
+literal|"Can't build data connection: %s."
+argument_list|,
+name|strerror
+argument_list|(
+name|conerrno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11438,7 +11443,7 @@ name|reply
 argument_list|(
 literal|451
 argument_list|,
-literal|"Error in server: %s\n"
+literal|"Error in server: %s"
 argument_list|,
 name|s
 argument_list|)
