@@ -3,6 +3,44 @@ begin_comment
 comment|/*  * This is a simple program which demonstrates use of mmapped DMA buffer  * of the sound driver directly from application program.  *  * This sample program works (currently) only with Linux, FreeBSD and BSD/OS  * (FreeBSD and BSD/OS require OSS version 3.8-beta16 or later.  *  * Note! Don't use mmapped DMA buffers (direct audio) unless you have  * very good reasons to do it. Programs using this feature will not  * work with all soundcards. GUS (GF1) is one of them (GUS MAX works).  *  * This program requires version 3.5-beta7 or later of OSS  * (3.8-beta16 or later in FreeBSD and BSD/OS).  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -12,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -46,6 +84,7 @@ file|<sys/time.h>
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
@@ -56,17 +95,7 @@ name|sz
 decl_stmt|,
 name|fsz
 decl_stmt|,
-name|i
-decl_stmt|,
 name|tmp
-decl_stmt|,
-name|n
-decl_stmt|,
-name|l
-decl_stmt|,
-name|have_data
-init|=
-literal|0
 decl_stmt|,
 name|nfrag
 decl_stmt|;
@@ -93,12 +122,6 @@ modifier|*
 name|dp
 init|=
 name|data
-decl_stmt|;
-name|struct
-name|buffmem_desc
-name|imemd
-decl_stmt|,
-name|omemd
 decl_stmt|;
 name|caddr_t
 name|buf
@@ -148,19 +171,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"/dev/dsp"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*  * Then setup sampling parameters. Just sampling rate in this case.  */
 name|tmp
 operator|=
@@ -230,7 +247,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|perror
+name|warn
 argument_list|(
 literal|"smpl"
 argument_list|)
@@ -251,22 +268,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"/dev/dsp"
+literal|"sorry but your sound driver is too old"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sorry but your sound driver is too old\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"/dev/dsp"
 argument_list|)
 expr_stmt|;
 block|}
@@ -289,21 +300,13 @@ operator|&
 name|DSP_CAP_MMAP
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sorry but your soundcard can't do this\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"sorry but your soundcard can't do this"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*  * Select the fragment size. This is propably important only when  * the program uses select(). Fragment size defines how often  * select call returns.  */
 name|ioctl
 argument_list|(
@@ -331,19 +334,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"GETOSPACE"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|sz
 operator|=
 name|info
@@ -392,19 +389,13 @@ operator|)
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"mmap (write)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"mmap (out) returned %08x\n"
@@ -462,10 +453,6 @@ name|count_info
 name|count
 decl_stmt|;
 name|int
-name|p
-decl_stmt|,
-name|l
-decl_stmt|,
 name|extra
 decl_stmt|;
 name|FD_ZERO
@@ -527,19 +514,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"GETOPTR"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|count
