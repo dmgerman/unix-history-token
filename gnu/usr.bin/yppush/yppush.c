@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id$ */
-end_comment
-
-begin_comment
-comment|/*  *	$Author: root $  *	$Log: yppush.c,v $  * Revision 2.0  1994/01/06  16:58:08  root  * Version 2.0  *  * Revision 1.4  1994/01/02  23:00:59  root  * Use -v flag  *  * Revision 1.3  1994/01/02  21:59:08  root  * Strict prototypes  *  * Revision 1.2  1994/01/02  20:10:08  root  * Added GPL notice  *  * Revision 1.1  1994/01/02  18:04:08  root  * Initial revision  *  */
+comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: yppush.c,v 1.1 1995/01/31 09:47:10 wpaul Exp $ */
 end_comment
 
 begin_include
@@ -142,6 +138,24 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_YP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_YP
+value|"/var/yp"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
