@@ -407,12 +407,9 @@ literal|"sbni%d:<Granch SBNI12/ISA adapter> port 0x%x"
 argument_list|,
 name|next_sbni_unit
 argument_list|,
-name|rman_get_start
-argument_list|(
 name|sc
 operator|->
-name|io_res
-argument_list|)
+name|base_addr
 argument_list|)
 expr_stmt|;
 name|sc
