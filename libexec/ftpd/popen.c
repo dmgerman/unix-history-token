@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.4.2.5 1998/05/15 16:09:38 ache Exp $"
+literal|"$Id: popen.c,v 1.14 1998/05/15 16:51:06 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,20 @@ index|[
 name|MAXGLOBARGS
 index|]
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|envtz
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|"TZ="
+block|,
+name|NULL
+block|}
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -350,6 +364,7 @@ name|cp
 operator|=
 name|NULL
 control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -369,6 +384,16 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+block|}
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* glob each piece */
 name|gargv
 index|[
@@ -524,13 +549,37 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pid
 operator|=
+operator|(
+name|strcmp
+argument_list|(
+name|gargv
+index|[
+literal|0
+index|]
+argument_list|,
+name|_PATH_LS
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
 name|fork
 argument_list|()
+else|:
+name|vfork
+argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|pid
+operator|=
+name|vfork
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|pid
@@ -677,16 +726,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* since FTP protocol have no way to tell zone offset */
-name|setenv
-argument_list|(
-literal|"TZ"
-argument_list|,
-literal|""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INTERNAL_LS
@@ -722,6 +761,15 @@ comment|/* Close syslogging to remove pwd.db missing msgs */
 name|closelog
 argument_list|()
 expr_stmt|;
+name|setenv
+argument_list|(
+literal|"TZ"
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|ls_main
@@ -735,7 +783,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|execv
+name|execve
 argument_list|(
 name|gargv
 index|[
@@ -743,6 +791,8 @@ literal|0
 index|]
 argument_list|,
 name|gargv
+argument_list|,
+name|envtz
 argument_list|)
 expr_stmt|;
 name|_exit
