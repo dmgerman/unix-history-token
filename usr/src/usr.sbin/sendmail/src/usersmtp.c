@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.52 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.53 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.52 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.53 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -880,101 +880,40 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|l
-decl_stmt|;
-for|for
-control|(
-name|l
-operator|=
-name|line
-init|;
-operator|(
-name|l
-operator|=
-name|strchr
-argument_list|(
-operator|++
-name|l
-argument_list|,
-literal|'E'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|;
-control|)
-block|{
 if|if
 condition|(
-name|strncmp
+name|strstr
 argument_list|(
-name|l
+name|line
 argument_list|,
 literal|"ESMTP "
-argument_list|,
-literal|6
 argument_list|)
-operator|==
-literal|0
+operator|!=
+name|NULL
 condition|)
-block|{
 name|mci
 operator|->
 name|mci_flags
 operator||=
 name|MCIF_ESMTP
 expr_stmt|;
-break|break;
-block|}
-block|}
-for|for
-control|(
-name|l
-operator|=
-name|line
-init|;
-operator|(
-name|l
-operator|=
-name|strchr
-argument_list|(
-operator|++
-name|l
-argument_list|,
-literal|'8'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|;
-control|)
-block|{
 if|if
 condition|(
-name|strncmp
+name|strstr
 argument_list|(
-name|l
+name|line
 argument_list|,
 literal|"8BIT OK"
-argument_list|,
-literal|7
 argument_list|)
-operator|==
-literal|0
+operator|!=
+name|NULL
 condition|)
-block|{
 name|mci
 operator|->
 name|mci_flags
 operator||=
 name|MCIF_8BITOK
 expr_stmt|;
-break|break;
-block|}
-block|}
 block|}
 end_function
 
