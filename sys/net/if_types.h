@@ -2095,6 +2095,17 @@ begin_comment
 comment|/* Optical Transport */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFT_STF
+value|0xd7
+end_define
+
+begin_comment
+comment|/* 6to4 interface */
+end_comment
+
 begin_comment
 comment|/* not based on IANA assignments */
 end_comment
@@ -2118,13 +2129,6 @@ define|#
 directive|define
 name|IFT_FAITH
 value|0xf2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFT_STF
-value|0xf3
 end_define
 
 begin_endif
