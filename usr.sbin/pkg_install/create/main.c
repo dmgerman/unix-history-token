@@ -415,7 +415,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|strncpy
+name|strlcpy
 argument_list|(
 name|PlayPen
 argument_list|,
