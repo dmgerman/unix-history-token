@@ -5198,6 +5198,11 @@ name|NULL
 condition|)
 break|break;
 comment|/* 		 * we check the backing object first, because it is most likely 		 * not collapsable. 		 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|backing_object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -5257,6 +5262,11 @@ name|OBJ_DEAD
 operator|)
 condition|)
 block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|backing_object
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 if|if
@@ -5277,6 +5287,11 @@ block|{
 name|vm_object_qcollapse
 argument_list|(
 name|object
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|backing_object
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5300,11 +5315,6 @@ name|OBSC_COLLAPSE_WAIT
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Move the pager from backing_object to object. 			 */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|backing_object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -5604,14 +5614,14 @@ operator|==
 literal|0
 condition|)
 block|{
-break|break;
-block|}
-comment|/* 			 * Make the parent shadow the next object in the 			 * chain.  Deallocating backing_object will not remove 			 * it, since its reference count is at least 2. 			 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+comment|/* 			 * Make the parent shadow the next object in the 			 * chain.  Deallocating backing_object will not remove 			 * it, since its reference count is at least 2. 			 */
 name|LIST_REMOVE
 argument_list|(
 name|object
