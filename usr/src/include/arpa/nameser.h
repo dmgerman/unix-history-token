@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -432,6 +432,17 @@ end_define
 
 begin_comment
 comment|/* mailbox information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_MX
+value|15
+end_define
+
+begin_comment
+comment|/* mail routing information */
 end_comment
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.8 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1384,6 +1384,47 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|T_MX
+case|:
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"\tname = "
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|p_cdname
+argument_list|(
+name|cp
+argument_list|,
+name|msg
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|", preference = %ld"
+argument_list|,
+name|getlong
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|T_MINFO
 case|:
 name|fprintf
@@ -1746,6 +1787,15 @@ comment|/* mail group member */
 return|return
 operator|(
 literal|"MG"
+operator|)
+return|;
+case|case
+name|T_MX
+case|:
+comment|/* mail routing info */
+return|return
+operator|(
+literal|"MX"
 operator|)
 return|;
 case|case
