@@ -182,6 +182,22 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|tty
+modifier|*
+name|devtotty
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|struct
