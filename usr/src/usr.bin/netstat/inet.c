@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.9 (Berkeley) %G%"
+literal|"@(#)inet.c	5.9.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1194,6 +1194,27 @@ name|udps_badsum
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+name|printf
+argument_list|(
+literal|"\t%d socket overflow%s\n"
+argument_list|,
+name|udpstat
+operator|.
+name|udps_fullsock
+argument_list|,
+name|plural
+argument_list|(
+name|udpstat
+operator|.
+name|udps_fullsock
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1262,6 +1283,11 @@ name|ipstat
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 name|printf
 argument_list|(
 literal|"%s:\n\t%u total packets received\n"
@@ -1273,6 +1299,8 @@ operator|.
 name|ips_total
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\t%u bad header checksum%s\n"
@@ -1325,6 +1353,11 @@ operator|.
 name|ips_badlen
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 name|printf
 argument_list|(
 literal|"\t%u fragment%s received\n"
@@ -1421,6 +1454,8 @@ name|ips_redirectsent
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
