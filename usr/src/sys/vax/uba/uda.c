@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	7.5 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8826,11 +8826,16 @@ name|disklabel
 modifier|*
 name|dlp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|daddr_t
 name|alt
 decl_stmt|,
 name|end
 decl_stmt|;
+endif|#
+directive|endif
 operator|*
 name|lp
 operator|=
@@ -8952,6 +8957,9 @@ operator|=
 operator|*
 name|lp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|alt
 operator|=
 name|lp
@@ -9039,6 +9047,8 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|bad
 label|:
 name|brelse
