@@ -145,6 +145,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* compare two sockaddr structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sa_equal
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+value|(bcmp((a1), (a2), (a1)->sa_len) == 0)
+end_define
+
+begin_comment
+comment|/*  * Convert a 'struct radix_node *' to a 'struct rtentry *'.  * The operation can be done safely (in this code) because a  * 'struct rtentry' starts with two 'struct radix_node''s, the first  * one representing leaf nodes in the routing tree, which is  * what the code in radix.c passes us as a 'struct radix_node'.  *  * But because there are a lot of assumptions in this conversion,  * do not cast explicitly, but always use the macro below.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNTORT
+parameter_list|(
+name|p
+parameter_list|)
+value|((struct rtentry *)(p))
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -473,12 +503,10 @@ name|newrt
 operator|=
 name|rt
 operator|=
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
+name|RNTORT
+argument_list|(
 name|rn
+argument_list|)
 expr_stmt|;
 name|nflags
 operator|=
@@ -978,22 +1006,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* compare two sockaddr structures */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sa_equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-value|(bcmp((a1), (a2), (a1)->sa_len) == 0)
-end_define
 
 begin_comment
 comment|/*  * Force a routing table entry to the specified  * destination to go through the given gateway.  * Normally called as a result of a routing redirect  * message from the network layer.  */
@@ -2240,12 +2252,10 @@ name|KASSERT
 argument_list|(
 name|rt
 operator|==
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
+name|RNTORT
+argument_list|(
 name|rn
+argument_list|)
 argument_list|,
 operator|(
 literal|"lookup mismatch, rt %p rn %p"
@@ -2308,18 +2318,11 @@ operator|->
 name|rt_gwroute
 condition|)
 block|{
-name|struct
-name|rtentry
-modifier|*
-name|gwrt
-init|=
+name|RTFREE
+argument_list|(
 name|rt
 operator|->
 name|rt_gwroute
-decl_stmt|;
-name|RTFREE
-argument_list|(
-name|gwrt
 argument_list|)
 expr_stmt|;
 name|rt
@@ -2593,12 +2596,10 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
+name|RNTORT
+argument_list|(
 name|rn
+argument_list|)
 expr_stmt|;
 name|RT_LOCK
 argument_list|(
@@ -2661,18 +2662,11 @@ operator|->
 name|rt_gwroute
 condition|)
 block|{
-name|struct
-name|rtentry
-modifier|*
-name|gwrt
-init|=
+name|RTFREE
+argument_list|(
 name|rt
 operator|->
 name|rt_gwroute
-decl_stmt|;
-name|RTFREE
-argument_list|(
-name|gwrt
 argument_list|)
 expr_stmt|;
 name|rt
@@ -2708,7 +2702,7 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-comment|/* 		 * one more rtentry floating around that is not 		 * linked to the routing table. 		 */
+comment|/* 		 * One more rtentry floating around that is not 		 * linked to the routing table. rttrash will be decremented 		 * when RTFREE(rt) is eventually called. 		 */
 name|rttrash
 operator|++
 expr_stmt|;
@@ -3400,18 +3394,15 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-comment|/* The cast is safe because *rt starts with a struct radix_node. */
 name|struct
 name|rtentry
 modifier|*
 name|rt
 init|=
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
+name|RNTORT
+argument_list|(
 name|rn
+argument_list|)
 decl_stmt|;
 name|struct
 name|rtentry
@@ -3492,18 +3483,15 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-comment|/* The cast is safe because *rt starts with a struct radix_node. */
 name|struct
 name|rtentry
 modifier|*
 name|rt
 init|=
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
+name|RNTORT
+argument_list|(
 name|rn
+argument_list|)
 decl_stmt|;
 name|struct
 name|rtfc_arg
@@ -4096,7 +4084,7 @@ name|rt
 operator|->
 name|rt_gwroute
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 name|EDQUOT
@@ -4564,14 +4552,10 @@ operator|&
 name|RNF_ROOT
 operator|)
 operator|||
-operator|(
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
+name|RNTORT
+argument_list|(
 name|rn
-operator|)
+argument_list|)
 operator|->
 name|rt_ifa
 operator|!=
