@@ -4,6 +4,10 @@ comment|/* Expands front end tree to back end RTL for GNU C-Compiler    Copyrigh
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* This file handles the generation of rtl code from tree structure    above the level of expressions, using subroutines in exp*.c and emit-rtl.c.    It also creates the rtl expressions for parameters and auto variables    and has full responsibility for allocating stack slots.     The functions whose names start with `expand_' are called by the    parser to generate RTL instructions for various kinds of constructs.     Some control and binding constructs require calling several such    functions at different times.  For example, a simple if-then    is expanded by calling `expand_start_cond' (with the condition-expression    as argument) before parsing the then-clause and calling `expand_end_cond'    after parsing the then-clause.  */
 end_comment
 
@@ -14359,6 +14363,12 @@ name|expand_eh_region_end
 argument_list|(
 name|cleanup
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|do_pending_stack_adjust
+argument_list|()
 expr_stmt|;
 block|}
 block|}
