@@ -591,6 +591,12 @@ name|_G_wint_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_typedef
 typedef|typedef
 name|char
@@ -598,6 +604,33 @@ modifier|*
 name|_G_va_list
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_G_NEED_STDARG_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|_G_va_list
+value|va_list
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
 
 begin_define
 define|#
