@@ -170,25 +170,6 @@ value|(mtx_unowned((m)) ? NULL \ 	: (struct thread *)((m)->mtx_lock& MTX_FLAGMAS
 end_define
 
 begin_comment
-comment|/* XXXKSE This test will change. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|thread_running
-parameter_list|(
-name|td
-parameter_list|)
-define|\
-value|(td->td_state == TDS_RUNNING)
-end_define
-
-begin_comment
-comment|/* ((td)->td_oncpu != NOCPU) */
-end_comment
-
-begin_comment
 comment|/*  * Lock classes for sleep and spin mutexes.  */
 end_comment
 
@@ -2574,7 +2555,7 @@ operator|!=
 operator|&
 name|Giant
 operator|&&
-name|thread_running
+name|TD_IS_RUNNING
 argument_list|(
 name|owner
 argument_list|)
@@ -2595,7 +2576,7 @@ argument_list|)
 operator|==
 name|owner
 operator|&&
-name|thread_running
+name|TD_IS_RUNNING
 argument_list|(
 name|owner
 argument_list|)
