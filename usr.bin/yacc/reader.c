@@ -8871,8 +8871,6 @@ name|k
 decl_stmt|;
 name|int
 name|spacing
-init|=
-literal|0
 decl_stmt|;
 name|FILE
 modifier|*
