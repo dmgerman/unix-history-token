@@ -1756,6 +1756,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|DDB
+name|printf
+argument_list|(
+literal|"Stack backtrace:\n"
+argument_list|)
+expr_stmt|;
 name|db_print_backtrace
 argument_list|()
 expr_stmt|;
@@ -1993,7 +1998,7 @@ name|newpanic
 operator|&&
 name|trace_on_panic
 condition|)
-name|db_print_backtrace
+name|backtrace
 argument_list|()
 expr_stmt|;
 if|if
