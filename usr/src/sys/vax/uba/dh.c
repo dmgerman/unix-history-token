@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.11	%G%	*/
+comment|/*	dh.c	4.12	%G%	*/
 end_comment
 
 begin_include
@@ -1558,7 +1558,7 @@ condition|(
 operator|(
 name|tp
 operator|->
-name|t_flag
+name|t_flags
 operator|&
 name|RAW
 operator|)
