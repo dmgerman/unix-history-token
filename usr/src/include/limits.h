@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -85,23 +85,12 @@ directive|include
 file|<sys/syslimits.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|LINE_MAX
+name|_BSD_LINE_MAX
 value|2048
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
