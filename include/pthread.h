@@ -103,11 +103,9 @@ directive|define
 name|_POSIX_THREAD_ATTR_STACKSIZE
 end_define
 
-begin_define
-define|#
-directive|define
-name|_POSIX_THREAD_PRIORITY_SCHEDULING
-end_define
+begin_comment
+comment|/* #define _POSIX_THREAD_PRIORITY_SCHEDULING */
+end_comment
 
 begin_comment
 comment|/* #define _POSIX_THREAD_PRIO_INHERIT   */
