@@ -1031,6 +1031,8 @@ index|]
 argument_list|,
 literal|"]"
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|error
 argument_list|(
@@ -1045,6 +1047,17 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* no expression => false */
+if|if
+condition|(
+operator|--
+name|argc
+operator|<=
+literal|0
+condition|)
+return|return
+literal|1
+return|;
 comment|/* XXX work around the absence of an eaccess(2) syscall */
 operator|(
 name|void
@@ -1064,16 +1077,6 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|--
-name|argc
-operator|<=
-literal|0
-condition|)
-return|return
-literal|1
-return|;
 name|t_wp
 operator|=
 operator|&
