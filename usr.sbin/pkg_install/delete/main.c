@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.3 1994/12/06 00:51:40 jkh Exp $"
+literal|"$Id: main.c,v 1.4 1995/05/30 03:49:57 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|"delete.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_decl_stmt
@@ -66,14 +72,6 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|CleanDirs
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Boolean
-name|Force
 init|=
 name|FALSE
 decl_stmt|;

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.27.4.1 1995/10/14 19:11:22 jkh Exp $"
+literal|"$Id: perform.c,v 1.27.4.2 1996/05/27 23:59:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslimits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -714,10 +720,6 @@ name|MTREE_FNAME
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Run through the list again, picking up extra "local" items */
-comment|/* check_list(".",&plist); */
-comment|/* copy_plist(".",&plist); */
-comment|/* mark_plist(&plist); */
 comment|/* Finally, write out the packing list */
 name|fp
 operator|=
@@ -837,10 +839,6 @@ name|p
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
-name|max
-decl_stmt|,
-name|len
 decl_stmt|;
 name|char
 modifier|*

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.34 1996/06/03 04:40:43 jkh Exp $"
+literal|"$Id: perform.c,v 1.26.2.10 1996/06/03 05:12:29 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,16 +228,6 @@ decl_stmt|;
 name|struct
 name|stat
 name|sb
-decl_stmt|;
-name|char
-modifier|*
-name|isTMP
-init|=
-name|NULL
-decl_stmt|;
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 name|int
 name|inPlace
@@ -924,14 +914,11 @@ name|isdir
 argument_list|(
 name|LogDir
 argument_list|)
+operator|&&
+operator|!
+name|Force
 condition|)
 block|{
-name|char
-name|tmp
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
 name|whinge
 argument_list|(
 literal|"Package `%s' already recorded as installed.\n"
@@ -1966,7 +1953,7 @@ argument_list|)
 operator|==
 name|EOF
 condition|)
-name|warn
+name|whinge
 argument_list|(
 literal|"Cannot properly close file %s"
 argument_list|,
@@ -1991,6 +1978,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|find_plist
@@ -2000,6 +1988,9 @@ name|Plist
 argument_list|,
 name|PLIST_DISPLAY
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|FILE
@@ -2073,7 +2064,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|warn
+name|whinge
 argument_list|(
 literal|"Cannot open display file `%s'."
 argument_list|,
@@ -2143,9 +2134,6 @@ modifier|*
 name|pkg
 parameter_list|)
 block|{
-name|PackingList
-name|p
-decl_stmt|;
 name|int
 name|code
 init|=
