@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.19	%G%	*/
+comment|/*	uba.c	4.20	%G%	*/
 end_comment
 
 begin_define
@@ -58,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ubavar.h"
 end_include
 
 begin_include
@@ -134,7 +140,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -144,7 +150,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 init|=
@@ -411,7 +417,7 @@ name|um
 argument_list|)
 specifier|register
 expr|struct
-name|uba_minfo
+name|uba_ctlr
 operator|*
 name|um
 expr_stmt|;
@@ -765,7 +771,7 @@ operator|<<
 literal|21
 operator|)
 operator||
-name|UBA_MRV
+name|UBAMR_MRV
 expr_stmt|;
 name|rp
 operator|=
@@ -797,7 +803,7 @@ operator|)
 condition|)
 name|temp
 operator||=
-name|UBA_BO
+name|UBAMR_BO
 expr_stmt|;
 if|if
 condition|(
@@ -1225,7 +1231,7 @@ index|[
 name|bdp
 index|]
 operator||=
-name|UBA_BNE
+name|UBADPR_BNE
 expr_stmt|;
 break|break;
 endif|#
@@ -1245,11 +1251,11 @@ index|[
 name|bdp
 index|]
 operator||=
-name|UBA_PURGE
+name|UBADPR_PURGE
 operator||
-name|UBA_NXM
+name|UBADPR_NXM
 operator||
-name|UBA_UCE
+name|UBADPR_UCE
 expr_stmt|;
 break|break;
 endif|#
@@ -1388,7 +1394,7 @@ name|um
 argument_list|)
 specifier|register
 expr|struct
-name|uba_minfo
+name|uba_ctlr
 operator|*
 name|um
 expr_stmt|;
@@ -1440,7 +1446,7 @@ index|[
 name|bdp
 index|]
 operator||=
-name|UBA_BNE
+name|UBADPR_BNE
 expr_stmt|;
 break|break;
 endif|#
@@ -1460,11 +1466,11 @@ index|[
 name|bdp
 index|]
 operator||=
-name|UBA_PURGE
+name|UBADPR_PURGE
 operator||
-name|UBA_NXM
+name|UBADPR_NXM
 operator||
-name|UBA_UCE
+name|UBADPR_UCE
 expr_stmt|;
 break|break;
 endif|#
@@ -1586,17 +1592,6 @@ operator|->
 name|uh_mrwant
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|cpu
-condition|)
-block|{
-if|#
-directive|if
-name|VAX780
-case|case
-name|VAX_780
-case|:
 name|printf
 argument_list|(
 literal|"uba%d: reset"
@@ -1611,37 +1606,6 @@ operator|->
 name|uh_uba
 argument_list|)
 expr_stmt|;
-break|break;
-endif|#
-directive|endif
-if|#
-directive|if
-name|VAX750
-case|case
-name|VAX_750
-case|:
-name|printf
-argument_list|(
-literal|"uba0: reset"
-argument_list|)
-expr_stmt|;
-name|mtpr
-argument_list|(
-name|IUR
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* give devices time to recover from power fail */
-name|DELAY
-argument_list|(
-literal|5000000
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-block|}
 for|for
 control|(
 name|cdp
@@ -1678,12 +1642,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
 begin_comment
 comment|/*  * Init a uba.  This is called with a pointer  * rather than a virtual address since it is called  * by code which runs with memory mapping disabled.  * In these cases we really don't need the interrupts  * enabled, but since we run with ipl high, we don't care  * if they are, they will never happen anyways.  */
 end_comment
@@ -1703,23 +1661,34 @@ end_expr_stmt
 
 begin_block
 block|{
+switch|switch
+condition|(
+name|cpu
+condition|)
+block|{
+if|#
+directive|if
+name|VAX780
+case|case
+name|VAX780
+case|:
 name|uba
 operator|->
 name|uba_cr
 operator|=
-name|UBA_ADINIT
+name|UBACR_ADINIT
 expr_stmt|;
 name|uba
 operator|->
 name|uba_cr
 operator|=
-name|UBA_IFS
+name|UBACR_IFS
 operator||
-name|UBA_BRIE
+name|UBACR_BRIE
 operator||
-name|UBA_USEFIE
+name|UBACR_USEFIE
 operator||
-name|UBA_SUEFIE
+name|UBACR_SUEFIE
 expr_stmt|;
 while|while
 condition|(
@@ -1728,14 +1697,46 @@ name|uba
 operator|->
 name|uba_cnfgr
 operator|&
-name|UBA_UBIC
+name|UBACNFGR_UBIC
 operator|)
 operator|==
 literal|0
 condition|)
 empty_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX750
+case|case
+name|VAX750
+case|:
+name|mtpr
+argument_list|(
+name|IUR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* give devices time to recover from power fail */
+name|DELAY
+argument_list|(
+literal|5000000
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+block|}
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
 
 begin_comment
 comment|/*  * Check to make sure the UNIBUS adaptor is not hung,  * with an interrupt in the register to be presented,  * but not presenting it for an extended period (5 seconds).  */
@@ -2079,7 +2080,7 @@ name|sr
 expr_stmt|;
 name|uvec
 operator|&=
-name|UBA_DIV
+name|UBABRRVR_DIV
 expr_stmt|;
 return|return;
 block|}
