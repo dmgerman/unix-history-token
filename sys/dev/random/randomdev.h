@@ -99,10 +99,6 @@ name|random_reseed_func_t
 modifier|*
 name|reseed
 decl_stmt|;
-name|struct
-name|mtx
-name|lock
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -192,6 +192,11 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
+name|d_flags
+operator|=
+name|D_NEEDGIANT
+block|,
+operator|.
 name|d_close
 operator|=
 name|random_close
@@ -320,14 +325,6 @@ literal|0
 operator|)
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|random_systat
@@ -341,14 +338,6 @@ operator|.
 name|seeded
 operator|=
 literal|1
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -388,14 +377,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|)
-expr_stmt|;
 comment|/* Blocking logic */
 while|while
 condition|(
@@ -419,17 +400,20 @@ operator|=
 name|EWOULDBLOCK
 expr_stmt|;
 else|else
+block|{
+comment|/* No complaints please. This is temporary! */
+name|printf
+argument_list|(
+literal|"Entropy device is blocking. "
+literal|"Dance fandango on keyboard to unblock.\n"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
-name|msleep
+name|tsleep
 argument_list|(
 operator|&
 name|random_systat
-argument_list|,
-operator|&
-name|random_systat
-operator|.
-name|lock
 argument_list|,
 name|PUSER
 operator||
@@ -440,6 +424,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* The actual read */
 if|if
@@ -498,14 +483,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -544,14 +521,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|uio
@@ -604,14 +573,6 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -813,20 +774,6 @@ operator|&
 name|random_systat
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|,
-literal|"entropy device lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|random_systat
@@ -887,14 +834,6 @@ argument_list|(
 name|random_buf
 argument_list|,
 name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
 argument_list|)
 expr_stmt|;
 name|destroy_dev
