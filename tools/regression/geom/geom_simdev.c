@@ -80,12 +80,6 @@ name|g_provider
 modifier|*
 name|pp
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-name|__unused
-parameter_list|,
 name|int
 name|insist
 name|__unused
@@ -191,12 +185,6 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -510,8 +498,6 @@ argument_list|(
 name|bp
 operator|->
 name|bio_from
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

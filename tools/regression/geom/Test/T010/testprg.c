@@ -168,12 +168,6 @@ argument_list|(
 literal|"2"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|g_simdisk_stop("ad0"); 	bp = g_new_bio(); 	bp->bio_cmd = BIO_READ; 	bp->bio_offset = 0; 	bp->bio_length = 512; 	bp->bio_data = g_malloc(512, M_WAITOK); 	g_dev_request("ad0s1a", bp); 	rattle(); 	sdumpf("2a"); 	g_simdisk_destroy("ad0"); 	rattle(); 	conff("1"); 	sdumpf("2b"); 	g_simdisk_restart("ad0"); 	rattle(); 	conff("1"); 	sdumpf("2c");
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"Done\n"

@@ -63,6 +63,12 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_int.h>
+end_include
+
 begin_function
 name|void
 name|conff
@@ -297,9 +303,7 @@ literal|100000
 argument_list|)
 expr_stmt|;
 name|g_run_events
-argument_list|(
-name|tp
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|tsleep
 argument_list|(
