@@ -690,10 +690,6 @@ name|fonts_loaded
 decl_stmt|;
 define|#
 directive|define
-name|FONT_NONE
-value|1
-define|#
-directive|define
 name|FONT_8
 value|2
 define|#

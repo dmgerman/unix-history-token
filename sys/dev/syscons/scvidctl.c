@@ -1077,7 +1077,7 @@ name|scp
 operator|->
 name|font_size
 operator|=
-name|FONT_NONE
+literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -1294,17 +1294,9 @@ comment|/* this shouldn't happen */
 comment|/* adjust argument values */
 if|if
 condition|(
-operator|(
 name|fontsize
 operator|<=
 literal|0
-operator|)
-operator|||
-operator|(
-name|fontsize
-operator|==
-name|FONT_NONE
-operator|)
 condition|)
 name|fontsize
 operator|=

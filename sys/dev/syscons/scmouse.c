@@ -4659,9 +4659,9 @@ operator|&&
 operator|(
 name|cur_scp
 operator|->
-name|font_size
+name|font
 operator|!=
-name|FONT_NONE
+name|NULL
 operator|)
 condition|)
 name|sc_load_font

@@ -14942,7 +14942,7 @@ name|scp
 operator|->
 name|font_size
 operator|=
-name|FONT_NONE
+literal|0
 expr_stmt|;
 name|scp
 operator|->
