@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pcic98reg.h  *  * PC9801 original PCMCIA controller code for NS/A,Ne,NX/C,NR/L.  * by Noriyuki Hosobuchi<hoso@ce.mbn.or.jp>  *  * $FreeBSD$  */
+comment|/*  * meciareg.h  *  * PC9801 original PCMCIA controller code for NS/A,Ne,NX/C,NR/L.  * by Noriyuki Hosobuchi<hoso@ce.mbn.or.jp>  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
