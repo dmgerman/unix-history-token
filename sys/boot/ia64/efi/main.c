@@ -675,13 +675,20 @@ name|d_dev
 operator|->
 name|dv_type
 expr_stmt|;
-if|#
-directive|if
+comment|/* 	 * Disable the watchdog timer. By default the boot manager sets 	 * the timer to 5 minutes before invoking a boot option. If we 	 * want to return to the boot manager, we have to disable the 	 * watchdog timer and since we're an interactive program, we don't 	 * want to wait until the user types "quit". The timer may have 	 * fired by then. We don't care if this fails. It does not prevent 	 * normal functioning in any way... 	 */
+name|BS
+operator|->
+name|SetWatchdogTimer
+argument_list|(
 literal|0
-comment|/* Create arc-specific variables */
-block|bootfile = GetEnvironmentVariable(ARCENV_BOOTFILE); 	if (bootfile) 		setenv("bootfile", bootfile, 1);
-endif|#
-directive|endif
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|env_setenv
 argument_list|(
 literal|"currdev"
