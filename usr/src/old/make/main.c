@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.10 (Berkeley) 87/11/15"
+literal|"@(#)main.c	4.11 (Berkeley) 88/09/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -773,9 +773,7 @@ condition|(
 operator|!
 name|descset
 condition|)
-ifdef|#
-directive|ifdef
-name|unix
+block|{
 if|if
 condition|(
 name|rddescf
@@ -788,18 +786,12 @@ argument_list|(
 literal|"Makefile"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|gcos
 name|rddescf
 argument_list|(
-literal|"makefile"
+literal|".depend"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 if|if
 condition|(
 name|doenvlast
