@@ -704,6 +704,10 @@ operator|&
 name|clock_intr_evcnt
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* nothing */
+empty_stmt|;
 endif|#
 directive|endif
 block|}
