@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -185,6 +185,8 @@ block|,
 name|ffs_vptofh
 block|,
 name|mfs_init
+block|,
+name|ffs_sysctl
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1534,7 +1536,11 @@ name|sbp
 operator|->
 name|f_type
 operator|=
-name|MOUNT_MFS
+name|mp
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_typenum
 expr_stmt|;
 return|return
 operator|(
