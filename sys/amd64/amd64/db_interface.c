@@ -202,6 +202,9 @@ modifier|*
 name|regs
 parameter_list|)
 block|{
+name|u_int
+name|ef
+decl_stmt|;
 specifier|volatile
 name|int
 name|ddb_mode
@@ -247,6 +250,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|ef
+operator|=
+name|read_eflags
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -698,6 +709,11 @@ operator|.
 name|tf_ds
 operator|&
 literal|0xffff
+expr_stmt|;
+name|write_eflags
+argument_list|(
+name|ef
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
