@@ -16,7 +16,7 @@ name|_MACIO_MACIOVAR_H_
 end_define
 
 begin_comment
-comment|/*   * Accessors for macio devices  */
+comment|/*  * Accessors for macio devices  */
 end_comment
 
 begin_enum
@@ -122,31 +122,6 @@ directive|define
 name|MACIO_REG_SIZE
 value|0x7ffff
 end_define
-
-begin_comment
-comment|/*  * Macio softc  */
-end_comment
-
-begin_struct
-struct|struct
-name|macio_softc
-block|{
-name|phandle_t
-name|sc_node
-decl_stmt|;
-name|vm_offset_t
-name|sc_base
-decl_stmt|;
-name|vm_offset_t
-name|sc_size
-decl_stmt|;
-name|struct
-name|rman
-name|sc_mem_rman
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Format of a macio reg property entry.  */

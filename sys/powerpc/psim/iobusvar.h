@@ -134,27 +134,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|iobus_softc
-block|{
-name|phandle_t
-name|sc_node
-decl_stmt|;
-name|vm_offset_t
-name|sc_addr
-decl_stmt|;
-name|vm_offset_t
-name|sc_size
-decl_stmt|;
-name|struct
-name|rman
-name|sc_mem_rman
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif
