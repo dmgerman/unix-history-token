@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)renice.c	4.1 (Berkeley) 83/03/19"
+literal|"@(#)renice.c	4.2 (Berkeley) 83/03/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,20 +68,14 @@ name|PRIO_PROCESS
 decl_stmt|;
 name|int
 name|who
-decl_stmt|,
-name|id
+init|=
+literal|0
 decl_stmt|,
 name|prio
-decl_stmt|,
-name|oldprio
 decl_stmt|,
 name|errs
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|argc
 operator|--
@@ -187,8 +181,16 @@ name|argc
 operator|==
 literal|0
 condition|)
-name|usage
-argument_list|()
+name|errs
+operator|+=
+name|donice
+argument_list|(
+name|which
+argument_list|,
+literal|0
+argument_list|,
+name|prio
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -242,7 +244,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|id
+name|who
 operator|=
 name|pwd
 operator|->
@@ -251,7 +253,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|id
+name|who
 operator|=
 name|atoi
 argument_list|(
@@ -261,7 +263,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|id
+name|who
 operator|<
 literal|0
 condition|)
@@ -279,15 +281,65 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+name|errs
+operator|+=
+name|donice
+argument_list|(
+name|which
+argument_list|,
+name|who
+argument_list|,
+name|prio
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+name|errs
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|donice
+argument_list|(
+argument|which
+argument_list|,
+argument|who
+argument_list|,
+argument|prio
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|which
+decl_stmt|,
+name|who
+decl_stmt|,
+name|prio
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
 name|oldprio
-operator|=
+init|=
 name|getpriority
 argument_list|(
 name|which
 argument_list|,
 name|who
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|oldprio
@@ -302,19 +354,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"renice: "
+literal|"renice: %d: "
+argument_list|,
+name|who
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-operator|*
-name|argv
+literal|"getpriority"
 argument_list|)
 expr_stmt|;
-name|errs
-operator|++
-expr_stmt|;
-continue|continue;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -334,42 +388,40 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"renice: "
+literal|"renice: %d: "
+argument_list|,
+name|who
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-operator|*
-name|argv
+literal|"setpriority"
 argument_list|)
 expr_stmt|;
-name|errs
-operator|++
-expr_stmt|;
-continue|continue;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|printf
 argument_list|(
-literal|"%s: old priority %d, new priority %d\n"
+literal|"%d: old priority %d, new priority %d\n"
 argument_list|,
-operator|*
-name|argv
+name|who
 argument_list|,
 name|oldprio
 argument_list|,
 name|prio
 argument_list|)
 expr_stmt|;
-block|}
-name|exit
-argument_list|(
-name|errs
-operator|!=
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 begin_macro
 name|usage
@@ -382,21 +434,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: renice priority pid ....\n"
+literal|"usage: renice priority [ pid .... ]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"or, renice -g priority pgrp ....\n"
+literal|"or, renice -g priority [ pgrp .... ]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"or, renice -u priority user ....\n"
+literal|"or, renice -u priority [ user .... ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
