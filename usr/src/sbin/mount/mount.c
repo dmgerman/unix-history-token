@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.39 (Berkeley) %G%"
+literal|"@(#)mount.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3239,6 +3239,25 @@ operator|->
 name|flags
 operator||=
 name|NFSMNT_SPONGY
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"compress"
+argument_list|)
+condition|)
+block|{
+name|nfsargsp
+operator|->
+name|flags
+operator||=
+name|NFSMNT_COMPRESS
 expr_stmt|;
 block|}
 elseif|else
