@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -20,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getenv.c	5.5 (Berkeley) %G%"
+literal|"@(#)getenv.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
@@ -37,7 +44,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*  * getenv(name) --  *	Returns ptr to value associated with name, if any, else NULL.  */
+comment|/*  * getenv --  *	Returns ptr to value associated with name, if any, else NULL.  */
 end_comment
 
 begin_function
@@ -75,7 +82,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _findenv(name,offset) --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  *  *	This routine *should* be a static; don't use it.  */
+comment|/*  * _findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  *  *	This routine *should* be a static; don't use it.  */
 end_comment
 
 begin_function
