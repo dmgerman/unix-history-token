@@ -2312,7 +2312,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|refused
 argument_list|(
 literal|"Cannot find root directory"
@@ -2493,7 +2492,6 @@ name|pw_change
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
