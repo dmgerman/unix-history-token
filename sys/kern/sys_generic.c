@@ -3566,6 +3566,10 @@ condition|(
 name|atv
 operator|.
 name|tv_sec
+operator|||
+name|atv
+operator|.
+name|tv_usec
 condition|)
 block|{
 name|getmicrouptime
@@ -4379,6 +4383,10 @@ condition|(
 name|atv
 operator|.
 name|tv_sec
+operator|||
+name|atv
+operator|.
+name|tv_usec
 condition|)
 block|{
 name|getmicrouptime
