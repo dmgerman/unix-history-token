@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.20 1998/12/05 02:21:42 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.21 1998/12/07 21:58:46 archie Exp $  */
 end_comment
 
 begin_comment
@@ -191,7 +191,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_tl.c,v 1.20 1998/12/05 02:21:42 wpaul Exp $"
+literal|"$Id: if_tl.c,v 1.21 1998/12/07 21:58:46 archie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -982,7 +982,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -999,7 +999,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
 name|u_int8_t
 operator|*
@@ -1129,9 +1129,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int16_t
+name|int
 operator|,
-name|u_int16_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1180,9 +1180,7 @@ name|tl_calchash
 name|__P
 argument_list|(
 operator|(
-name|unsigned
-name|char
-operator|*
+name|caddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1214,8 +1212,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
-operator|*
+name|caddr_t
 operator|,
 name|int
 operator|)
@@ -1296,7 +1293,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1313,7 +1310,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1330,7 +1327,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1347,9 +1344,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
-name|u_int8_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1366,9 +1363,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
-name|u_int16_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1385,9 +1382,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
-name|u_int32_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1404,9 +1401,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
-name|u_int8_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1423,9 +1420,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
-name|u_int8_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1442,9 +1439,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
-name|u_int16_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1461,9 +1458,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|u_int8_t
+name|int
 operator|,
-name|u_int16_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1483,7 +1480,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
 block|{
@@ -1529,7 +1526,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
 block|{
@@ -1575,7 +1572,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
 block|{
@@ -1623,10 +1620,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int8_t
+name|int
 name|val
 decl_stmt|;
 block|{
@@ -1674,10 +1671,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int16_t
+name|int
 name|val
 decl_stmt|;
 block|{
@@ -1725,10 +1722,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int32_t
+name|int
 name|val
 decl_stmt|;
 block|{
@@ -1776,10 +1773,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int8_t
+name|int
 name|bit
 decl_stmt|;
 block|{
@@ -1849,10 +1846,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int8_t
+name|int
 name|bit
 decl_stmt|;
 block|{
@@ -1923,10 +1920,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int16_t
+name|int
 name|bit
 decl_stmt|;
 block|{
@@ -1996,10 +1993,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int16_t
+name|int
 name|bit
 decl_stmt|;
 block|{
@@ -2072,7 +2069,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|byte
 decl_stmt|;
 block|{
@@ -2234,7 +2231,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|int
 name|addr
 decl_stmt|;
 name|u_int8_t
@@ -3382,10 +3379,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int16_t
+name|int
 name|reg
 decl_stmt|;
-name|u_int16_t
+name|int
 name|data
 decl_stmt|;
 block|{
@@ -4483,9 +4480,7 @@ name|tl_calchash
 parameter_list|(
 name|addr
 parameter_list|)
-name|unsigned
-name|char
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 block|{
@@ -4582,8 +4577,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 name|int
@@ -4728,6 +4722,10 @@ name|tl_setfilt
 argument_list|(
 name|sc
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
 name|dummy
 argument_list|,
 name|i
@@ -8583,6 +8581,10 @@ name|sc
 operator|->
 name|tl_unit
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|CSR_READ_4
 argument_list|(
 name|sc
@@ -10269,6 +10271,10 @@ name|tl_setfilt
 argument_list|(
 name|sc
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
 name|sc
 operator|->
 name|arpcom
