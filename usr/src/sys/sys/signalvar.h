@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -213,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|SA_TTYSTOP
-value|(0x08|SA_STOP)
+value|0x08
 end_define
 
 begin_comment
@@ -341,6 +341,8 @@ comment|/* SIGURG */
 name|SA_STOP
 block|,
 comment|/* SIGSTOP */
+name|SA_STOP
+operator||
 name|SA_TTYSTOP
 block|,
 comment|/* SIGTSTP */
@@ -352,9 +354,13 @@ comment|/* SIGCONT */
 name|SA_IGNORE
 block|,
 comment|/* SIGCHLD */
+name|SA_STOP
+operator||
 name|SA_TTYSTOP
 block|,
 comment|/* SIGTTIN */
+name|SA_STOP
+operator||
 name|SA_TTYSTOP
 block|,
 comment|/* SIGTTOU */
