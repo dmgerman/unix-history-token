@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netsmb/smb.h>
 end_include
 
@@ -614,6 +620,22 @@ argument_list|(
 name|smbfs
 argument_list|,
 name|libiconv
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|smbfs
+argument_list|,
+name|libmchain
 argument_list|,
 literal|1
 argument_list|,
