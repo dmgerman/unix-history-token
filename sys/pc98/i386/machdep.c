@@ -5014,6 +5014,18 @@ name|p_addr
 operator|->
 name|u_pcb
 decl_stmt|;
+comment|/* Reset pc->pcb_gs and %gs before possibly invalidating it. */
+name|pcb
+operator|->
+name|pcb_gs
+operator|=
+name|_udatasel
+expr_stmt|;
+name|load_gs
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USER_LDT
@@ -5102,25 +5114,6 @@ operator|->
 name|tf_ebx
 operator|=
 name|ps_strings
-expr_stmt|;
-comment|/* reset %gs as well */
-if|if
-condition|(
-name|pcb
-operator|==
-name|curpcb
-condition|)
-name|load_gs
-argument_list|(
-name|_udatasel
-argument_list|)
-expr_stmt|;
-else|else
-name|pcb
-operator|->
-name|pcb_gs
-operator|=
-name|_udatasel
 expr_stmt|;
 comment|/*          * Reset the hardware debug registers if they were in use.          * They won't have any meaning for the newly exec'd process.            */
 if|if
