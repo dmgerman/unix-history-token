@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c)  *	1982, 1986, 1990, 1993  The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1390,50 +1390,6 @@ end_define
 
 begin_comment
 comment|/* add/chg IF alias */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCSARP
-value|_IOW('i', 30, struct arpreq)
-end_define
-
-begin_comment
-comment|/* set arp entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OSIOCGARP
-value|_IOWR('i',31, struct arpreq)
-end_define
-
-begin_comment
-comment|/* get arp entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGARP
-value|_IOWR('i',38, struct arpreq)
-end_define
-
-begin_comment
-comment|/* get arp entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCDARP
-value|_IOW('i', 32, struct arpreq)
-end_define
-
-begin_comment
-comment|/* delete arp entry */
 end_comment
 
 begin_define
