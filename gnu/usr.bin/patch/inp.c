@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/inp.c,v 1.4 1997/02/13 21:10:39 jmg Exp $  *  * $Log: inp.c,v $  * Revision 1.4  1997/02/13 21:10:39  jmg  * Fix a problem with patch in that is will always default, even when the  * controlling terminal is closed.  Now the function ask() will return 1 when th  * input is known to come from a file or terminal, or it will return 0 when ther  * was a read error.  *  * Modified the question "Skip patch?" so that on an error from ask it will skip  * the patch instead of looping.  *  * Closes PR#777  *  * 2.2 candidate  *  * Revision 1.3  1995/05/30 05:02:31  rgrimes  * Remove trailing whitespace.  *  * Revision 1.2  1995/01/12  22:09:39  hsu  * Fix bug that created new files even when running in -C check mode.  * Reviewed by: phk  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *  * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *  */
+comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/inp.c,v 1.5 1997/03/17 01:44:40 jmg Exp $  *  * $Log: inp.c,v $  * Revision 1.5  1997/03/17 01:44:40  jmg  * fix compilation warnings in patch... (with slight modification)  *  * also remove -Wall that I acidentally committed last time I was here...  *  * Submitted-by: Philippe Charnier  *  * Closes PR#2998  *  * Revision 1.4  1997/02/13 21:10:39  jmg  * Fix a problem with patch in that is will always default, even when the  * controlling terminal is closed.  Now the function ask() will return 1 when th  * input is known to come from a file or terminal, or it will return 0 when ther  * was a read error.  *  * Modified the question "Skip patch?" so that on an error from ask it will skip  * the patch instead of looping.  *  * Closes PR#777  *  * 2.2 candidate  *  * Revision 1.3  1995/05/30 05:02:31  rgrimes  * Remove trailing whitespace.  *  * Revision 1.2  1995/01/12  22:09:39  hsu  * Fix bug that created new files even when running in -C check mode.  * Reviewed by: phk  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *  * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *  */
 end_comment
 
 begin_include
@@ -1882,6 +1882,10 @@ argument_list|)
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|string
 index|[
 name|patlen
@@ -1908,6 +1912,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -1925,6 +1933,10 @@ argument_list|)
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|s
 index|[
 name|patlen
