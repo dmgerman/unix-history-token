@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	8.5 (Berkeley) %G%"
+literal|"@(#)ls.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,6 +441,16 @@ begin_comment
 comment|/* add type character for non-regular files */
 end_comment
 
+begin_decl_stmt
+name|int
+name|f_whiteout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show whiteout entries */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -586,7 +596,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRTacdfgiloqrstu"
+literal|"1ACFLRTWacdfgiloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -800,6 +810,14 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'W'
+case|:
+name|f_whiteout
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 case|case
 literal|'?'
@@ -854,6 +872,15 @@ condition|)
 name|fts_options
 operator||=
 name|FTS_COMFOLLOW
+expr_stmt|;
+comment|/* 	 * If -W, show whiteout entries 	 */
+if|if
+condition|(
+name|f_whiteout
+condition|)
+name|fts_options
+operator||=
+name|FTS_WHITEOUT
 expr_stmt|;
 comment|/* If -l or -s, figure out block size. */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -104,18 +104,23 @@ value|0x040
 comment|/* don't cross devices */
 define|#
 directive|define
+name|FTS_WHITEOUT
+value|0x080
+comment|/* return whiteout information */
+define|#
+directive|define
 name|FTS_OPTIONMASK
-value|0x07f
+value|0x0ff
 comment|/* valid user option mask */
 define|#
 directive|define
 name|FTS_NAMEONLY
-value|0x080
+value|0x100
 comment|/* (private) child names only */
 define|#
 directive|define
 name|FTS_STOP
-value|0x100
+value|0x200
 comment|/* (private) unrecoverable error */
 name|int
 name|fts_options
@@ -273,6 +278,11 @@ directive|define
 name|FTS_SLNONE
 value|13
 comment|/* symbolic link without target */
+define|#
+directive|define
+name|FTS_W
+value|14
+comment|/* whiteout object */
 name|u_short
 name|fts_info
 decl_stmt|;
@@ -287,6 +297,16 @@ directive|define
 name|FTS_SYMFOLLOW
 value|0x02
 comment|/* followed a symlink to get here */
+define|#
+directive|define
+name|FTS_ISW
+value|0x04
+comment|/* this is a whiteout object */
+define|#
+directive|define
+name|FTS_ISWD
+value|0x08
+comment|/* this is a whiteout dir object */
 name|u_short
 name|fts_flags
 decl_stmt|;

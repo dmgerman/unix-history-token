@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat_flags.c	8.1 (Berkeley) %G%"
+literal|"@(#)stat_flags.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,17 @@ condition|)
 name|SAPPEND
 argument_list|(
 literal|"nodump"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|UF_OPAQUE
+condition|)
+name|SAPPEND
+argument_list|(
+literal|"opaque"
 argument_list|)
 expr_stmt|;
 if|if
@@ -375,6 +386,23 @@ argument_list|,
 literal|"dump"
 argument_list|,
 name|UF_NODUMP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+literal|'o'
+case|:
+name|TEST
+argument_list|(
+name|p
+argument_list|,
+literal|"opaque"
+argument_list|,
+name|UF_OPAQUE
 argument_list|)
 expr_stmt|;
 return|return

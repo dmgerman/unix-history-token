@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -104,6 +104,10 @@ name|long
 name|dd_rewind
 decl_stmt|;
 comment|/* magic cookie for rewinding */
+name|int
+name|dd_flags
+decl_stmt|;
+comment|/* flags for readdir */
 block|}
 name|DIR
 typedef|;
@@ -118,6 +122,54 @@ name|dirp
 parameter_list|)
 value|((dirp)->dd_fd)
 end_define
+
+begin_comment
+comment|/* flags for opendir2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTF_HIDEW
+value|0x0001
+end_define
+
+begin_comment
+comment|/* hide whiteout entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTF_NODUP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* don't return duplicate names */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTF_REWIND
+value|0x0004
+end_define
+
+begin_comment
+comment|/* rewind after reading union stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__DTF_READALL
+value|0x0008
+end_define
+
+begin_comment
+comment|/* everything has been read */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -220,6 +272,23 @@ ifndef|#
 directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
+
+begin_decl_stmt
+name|DIR
+modifier|*
+name|__opendir2
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|long

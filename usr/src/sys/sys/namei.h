@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -379,6 +379,28 @@ end_define
 
 begin_comment
 comment|/* symlink needs interpretation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISWHITEOUT
+value|0x20000
+end_define
+
+begin_comment
+comment|/* found whiteout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOWHITEOUT
+value|0x40000
+end_define
+
+begin_comment
+comment|/* do whiteouts */
 end_comment
 
 begin_define

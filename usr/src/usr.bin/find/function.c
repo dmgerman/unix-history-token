@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	8.6 (Berkeley) %G%"
+literal|"@(#)function.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3129,7 +3129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * -type c functions --  *  *	True if the type of the file is c, where c is b, c, d, p, or f for  *	block special file, character special file, directory, FIFO, or  *	regular file, respectively.  */
+comment|/*  * -type c functions --  *  *	True if the type of the file is c, where c is b, c, d, p, f or w  *	for block special file, character special file, directory, FIFO,  *	regular file or whiteout respectively.  */
 end_comment
 
 begin_function
@@ -3255,6 +3255,18 @@ case|:
 name|mask
 operator|=
 name|S_IFSOCK
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+name|mask
+operator|=
+name|S_IFWHT
+expr_stmt|;
+name|ftsoptions
+operator||=
+name|FTS_WHITEOUT
 expr_stmt|;
 break|break;
 default|default:

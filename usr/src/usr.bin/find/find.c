@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	8.3 (Berkeley) %G%"
+literal|"@(#)find.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +394,10 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
+continue|continue;
+case|case
+name|FTS_W
+case|:
 continue|continue;
 block|}
 define|#
