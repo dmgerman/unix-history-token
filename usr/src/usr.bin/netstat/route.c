@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.4 85/09/18"
+literal|"@(#)route.c	5.5 85/09/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -851,8 +851,6 @@ specifier|register
 name|char
 modifier|*
 name|cp
-init|=
-literal|0
 decl_stmt|;
 specifier|static
 name|char
@@ -938,6 +936,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|cp
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
