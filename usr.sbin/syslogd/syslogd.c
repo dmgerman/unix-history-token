@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.42 1998/11/05 10:51:21 dg Exp $"
+literal|"$Id: syslogd.c,v 1.43 1998/12/04 06:49:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5756,6 +5756,11 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|sigset_t
+name|omask
+decl_stmt|,
+name|nmask
+decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -5792,6 +5797,31 @@ literal|"???"
 operator|)
 return|;
 block|}
+name|sigemptyset
+argument_list|(
+operator|&
+name|nmask
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|nmask
+argument_list|,
+name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_BLOCK
+argument_list|,
+operator|&
+name|nmask
+argument_list|,
+operator|&
+name|omask
+argument_list|)
+expr_stmt|;
 name|hp
 operator|=
 name|gethostbyaddr
@@ -5814,6 +5844,16 @@ argument_list|,
 name|f
 operator|->
 name|sin_family
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|omask
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
