@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.6	82/03/05	*/
+comment|/*	raw_pup.c	4.7	82/03/10	*/
 end_comment
 
 begin_include
@@ -307,7 +307,7 @@ name|spup
 operator|=
 operator|(
 expr|struct
-name|sockadrr_pup
+name|sockaddr_pup
 operator|*
 operator|)
 operator|&
