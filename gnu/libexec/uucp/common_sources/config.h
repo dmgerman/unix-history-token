@@ -8,6 +8,10 @@ comment|/* Configuration header file for Taylor UUCP.  -*- C -*-  */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* If your compiler does not use const correctly, then undefine it    here.  This #undef is commented out by the configure script if it    determines that const is supported.  */
 end_comment
 
@@ -774,6 +778,17 @@ value|0
 end_define
 
 begin_comment
+comment|/* Set HAVE_SOCKADDR_SA_LEN to 1 if struct sockaddr has sa_len member.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SOCKADDR_SA_LEN
+value|1
+end_define
+
+begin_comment
 comment|/* There are now a number of functions to check for.  For each of    these, the macro HAVE_FUNC should be set to 1 if your system has    FUNC.  For example, HAVE_VFPRINTF should be set to 1 if your system    has vfprintf, 0 otherwise.  */
 end_comment
 
@@ -1045,6 +1060,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_RINDEX
+value|1
+end_define
+
+begin_comment
+comment|/* If neither of these functions exists, you should add getaddrinfo.o to    lib/Makefile.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETADDRINFO
 value|1
 end_define
 

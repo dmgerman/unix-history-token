@@ -33,6 +33,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -867,6 +873,34 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+comment|/* I leave with IPv4 only for compatibility reason.  If                  you wish to use IPv6, please try Taylor UUCP                  configuration instead.  If you still wish to use IPv6                  with HDB configuration, re-make with INET6 defined.                  In this case, you cannot specify the protocol family                  in HDB configuration file.  */
+ifdef|#
+directive|ifdef
+name|INET6
+name|qport
+operator|->
+name|uuconf_u
+operator|.
+name|uuconf_stcp
+operator|.
+name|uuconf_zfamily
+operator|=
+name|PF_UNSPEC
+expr_stmt|;
+else|#
+directive|else
+name|qport
+operator|->
+name|uuconf_u
+operator|.
+name|uuconf_stcp
+operator|.
+name|uuconf_zfamily
+operator|=
+name|PF_INET
+expr_stmt|;
+endif|#
+directive|endif
 name|ppzdialer
 operator|=
 operator|&
