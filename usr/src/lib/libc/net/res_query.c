@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_query.c	5.4 (Berkeley) %G%"
+literal|"@(#)res_query.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,26 +682,37 @@ name|anslen
 argument_list|)
 operator|)
 return|;
+comment|/* 	 * We do at least one level of search if 	 *	- there is no dot and RES_DEFNAME is set, or 	 *	- there is at least one dot, there is no trailing dot, 	 *	  and RES_DNSRCH is set. 	 */
 if|if
 condition|(
 operator|(
 name|n
 operator|==
 literal|0
-operator|||
-operator|*
-operator|--
-name|cp
-operator|!=
-literal|'.'
-operator|)
 operator|&&
-operator|(
 name|_res
 operator|.
 name|options
 operator|&
 name|RES_DEFNAMES
+operator|)
+operator|||
+operator|(
+name|n
+operator|!=
+literal|0
+operator|&&
+operator|*
+operator|--
+name|cp
+operator|!=
+literal|'.'
+operator|&&
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DNSRCH
 operator|)
 condition|)
 for|for
@@ -748,7 +759,7 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* 		 * If no server present, give up. 		 * If name isn't found in this domain, 		 * keep trying higher domains in the search list 		 * (if that's enabled). 		 * On a NO_DATA error, keep trying, otherwise 		 * a wildcard entry of another type could keep us 		 * from finding this entry higher in the domain. 		 * If we get some other error (non-authoritative negative 		 * answer or server failure), then stop searching up, 		 * but try the input name below in case it's fully-qualified. 		 */
+comment|/* 		 * If no server present, give up. 		 * If name isn't found in this domain, 		 * keep trying higher domains in the search list 		 * (if that's enabled). 		 * On a NO_DATA error, keep trying, otherwise 		 * a wildcard entry of another type could keep us 		 * from finding this entry higher in the domain. 		 * If we get some other error (negative answer or 		 * server failure), then stop searching up, 		 * but try the input name below in case it's fully-qualified. 		 */
 if|if
 condition|(
 name|errno
@@ -800,13 +811,14 @@ literal|0
 condition|)
 break|break;
 block|}
-comment|/* 	 * If the search/default failed, try the name as fully-qualified, 	 * but only if it contained at least one dot (even trailing). 	 */
+comment|/* 	 * If the search/default failed, try the name as fully-qualified, 	 * but only if it contained at least one dot (even trailing). 	 * This is purely a heuristic; we assume that any reasonable query 	 * about a top-level domain (for servers, SOA, etc) will not use 	 * res_search. 	 */
 if|if
 condition|(
 name|n
-condition|)
-return|return
+operator|&&
 operator|(
+name|ret
+operator|=
 name|res_querydomain
 argument_list|(
 name|name
@@ -825,6 +837,13 @@ name|answer
 argument_list|,
 name|anslen
 argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 if|if
