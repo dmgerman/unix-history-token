@@ -2223,11 +2223,6 @@ condition|(
 name|oifa
 condition|)
 block|{
-name|IFAFREE
-argument_list|(
-name|oifa
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|oifa
@@ -2244,6 +2239,11 @@ name|rt
 argument_list|,
 operator|&
 name|info
+argument_list|)
+expr_stmt|;
+name|IFAFREE
+argument_list|(
+name|oifa
 argument_list|)
 expr_stmt|;
 block|}
