@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: netbsd_getdirentries.c,v 1.1 1998/03/09 07:07:20 jb Exp $ */
 end_comment
 
 begin_comment
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscall.h>
 end_include
 
 begin_include
@@ -48,7 +54,10 @@ end_decl_stmt
 
 begin_function
 name|int
-name|getdirentries
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_sys_getdirentries
 parameter_list|(
 name|fd
 parameter_list|,
@@ -58,6 +67,20 @@ name|nbytes
 parameter_list|,
 name|basep
 parameter_list|)
+else|#
+directive|else
+function|getdirentries
+parameter_list|(
+name|fd
+parameter_list|,
+name|buf
+parameter_list|,
+name|nbytes
+parameter_list|,
+name|basep
+parameter_list|)
+endif|#
+directive|endif
 name|int
 name|fd
 decl_stmt|,
@@ -75,9 +98,16 @@ block|{
 operator|*
 name|basep
 operator|=
-name|lseek
+name|__syscall
 argument_list|(
+operator|(
+name|quad_t
+operator|)
+name|SYS_lseek
+argument_list|,
 name|fd
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
