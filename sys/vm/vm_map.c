@@ -8476,6 +8476,12 @@ name|entry
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|map
+operator|!=
+name|kmem_map
+condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8503,6 +8509,12 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|map
+operator|!=
+name|kmem_map
+condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
