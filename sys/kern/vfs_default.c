@@ -697,35 +697,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-operator|==
-name|ap
-operator|->
-name|a_bp
-operator|->
-name|b_vp
-argument_list|,
-operator|(
-literal|"%s(%p != %p)"
-operator|,
-name|__func__
-operator|,
-name|ap
-operator|->
-name|a_vp
-operator|,
-name|ap
-operator|->
-name|a_bp
-operator|->
-name|b_vp
-operator|)
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"No strategy for buffer at %p\n"
@@ -742,17 +713,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_vp
-argument_list|)
-expr_stmt|;
-name|vprint
-argument_list|(
-literal|"device vnode"
-argument_list|,
-name|ap
-operator|->
-name|a_bp
-operator|->
-name|b_vp
 argument_list|)
 expr_stmt|;
 name|ap
