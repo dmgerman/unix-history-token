@@ -6495,9 +6495,10 @@ operator|->
 name|fifo_image
 argument_list|)
 expr_stmt|;
+comment|/* 				 * XXX the delays are for superstitious 				 * historical reasons.  It must be less than 				 * the character time at the maximum 				 * supported speed (87 usec at 115200 bps 				 * 8N1).  Otherwise we might loop endlessly 				 * if data is streaming in.  We used to use 				 * delays of 100.  That usually worked 				 * because DELAY(100) used to usually delay 				 * for about 85 usec instead of 100. 				 */
 name|DELAY
 argument_list|(
-literal|100
+literal|50
 argument_list|)
 expr_stmt|;
 if|if
@@ -6526,7 +6527,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100
+literal|50
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7186,7 +7187,13 @@ name|com
 operator|->
 name|do_timestamp
 operator|=
-literal|0
+name|FALSE
+expr_stmt|;
+name|com
+operator|->
+name|do_dcd_timestamp
+operator|=
+name|FALSE
 expr_stmt|;
 ifdef|#
 directive|ifdef
