@@ -177,9 +177,9 @@ specifier|static
 name|int
 name|smb_tcpsndbuf
 init|=
-literal|10
-operator|*
-literal|1024
+name|NB_SNDQ
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -188,9 +188,9 @@ specifier|static
 name|int
 name|smb_tcprcvbuf
 init|=
-literal|10
-operator|*
-literal|1024
+name|NB_RCVQ
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -2025,12 +2025,20 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|,
+modifier|*
+name|tm
+decl_stmt|,
+modifier|*
+name|im
 decl_stmt|;
 name|u_int8_t
 name|rpcode
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|resid
 decl_stmt|;
 name|int
 name|error
@@ -2055,16 +2063,17 @@ name|mpp
 operator|=
 name|NULL
 expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-name|m
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* 		 * Poll for a response header. 		 * If we don't have one waiting, return. 		 */
 name|error
 operator|=
 name|nbssn_recvhdr
@@ -2132,6 +2141,7 @@ operator|!=
 name|NBST_SESSION
 condition|)
 break|break;
+comment|/* no data, try again */
 if|if
 condition|(
 name|rpcode
@@ -2139,6 +2149,26 @@ operator|==
 name|NB_SSN_KEEPALIVE
 condition|)
 continue|continue;
+comment|/* 		 * Loop, blocking, for data following the response header. 		 * 		 * Note that we can't simply block here with MSG_WAITALL for the 		 * entire response size, as it may be larger than the TCP 		 * slow-start window that the sender employs.  This will result 		 * in the sender stalling until the delayed ACK is sent, then 		 * resuming slow-start, resulting in very poor performance. 		 * 		 * Instead, we never request more than NB_SORECEIVE_CHUNK 		 * bytes at a time, resulting in an ack being pushed by 		 * the TCP code at the completion of each call. 		 */
+name|resid
+operator|=
+name|len
+expr_stmt|;
+while|while
+condition|(
+name|resid
+operator|>
+literal|0
+condition|)
+block|{
+name|tm
+operator|=
+name|NULL
+expr_stmt|;
+name|rcvflg
+operator|=
+name|MSG_WAITALL
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -2154,7 +2184,12 @@ name|auio
 operator|.
 name|uio_resid
 operator|=
-name|len
+name|min
+argument_list|(
+name|resid
+argument_list|,
+name|NB_SORECEIVE_CHUNK
+argument_list|)
 expr_stmt|;
 name|auio
 operator|.
@@ -2162,6 +2197,13 @@ name|uio_td
 operator|=
 name|td
 expr_stmt|;
+name|resid
+operator|-=
+name|auio
+operator|.
+name|uio_resid
+expr_stmt|;
+comment|/* 			 * Spin until we have collected everything in 			 * this chunk. 			 */
 do|do
 block|{
 name|rcvflg
@@ -2226,7 +2268,10 @@ if|if
 condition|(
 name|error
 condition|)
-break|break;
+goto|goto
+name|out
+goto|;
+comment|/* short return guarantees unhappiness */
 if|if
 condition|(
 name|auio
@@ -2245,8 +2290,54 @@ name|error
 operator|=
 name|EPIPE
 expr_stmt|;
-break|break;
+goto|goto
+name|out
+goto|;
 block|}
+comment|/* append received chunk to previous chunk(s) */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|m
+operator|=
+name|tm
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * Just glue the new chain on the end. 				 * Consumer will pullup as required. 				 */
+for|for
+control|(
+name|im
+operator|=
+name|m
+init|;
+name|im
+operator|->
+name|m_next
+operator|!=
+name|NULL
+condition|;
+name|im
+operator|=
+name|im
+operator|->
+name|m_next
+control|)
+empty_stmt|;
+name|im
+operator|->
+name|m_next
+operator|=
+name|tm
+expr_stmt|;
+block|}
+block|}
+comment|/* got a session/message packet? */
 if|if
 condition|(
 name|nbp
@@ -2260,6 +2351,7 @@ operator|==
 name|NB_SSN_MESSAGE
 condition|)
 break|break;
+comment|/* drop packet and try for another */
 name|NBDEBUG
 argument_list|(
 literal|"non-session packet %x\n"
@@ -2271,12 +2363,20 @@ if|if
 condition|(
 name|m
 condition|)
+block|{
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 block|}
+block|}
+name|out
+label|:
 if|if
 condition|(
 name|error
