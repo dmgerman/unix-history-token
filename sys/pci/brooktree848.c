@@ -12,7 +12,7 @@ comment|/*  * 1. Redistributions of source code must retain the   * Copyright (c
 end_comment
 
 begin_comment
-comment|/*		Change History: 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com 1.27                       Last batch of patches for radio support from                            Flemming Jacobsen<fj@trw.nl>.                            Added B849 PCI ID submitted by:                             Tomi Vainio<tomppa@fidata.fi> */
+comment|/*		Change History: 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com 1.27                       Last batch of patches for radio support from                            Flemming Jacobsen<fj@trw.nl>.                            Added B849 PCI ID submitted by:                             Tomi Vainio<tomppa@fidata.fi> 1.28                       Frank Nobis<fn@Radio-do.de> added tuner support                            for the  German Phillips PAL tuner and                            additional channels for german cable tv. */
 end_comment
 
 begin_define
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|"bktr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_bktr.h"
 end_include
 
 begin_include
@@ -2048,6 +2054,24 @@ value|0xc3
 end_define
 
 begin_comment
+comment|/* PLL on a the Philips FR1216MK2 tuner,    yes, the european version of the tuner is 1216 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_FR1216_PAL_WADDR
+value|0xc2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_FR1216_PAL_RADDR
+value|0xc3
+end_define
+
+begin_comment
 comment|/* guaranteed address for any TSA5522/3 (PLL on all(?) tuners) */
 end_comment
 
@@ -3081,6 +3105,14 @@ case|:
 return|return
 operator|(
 literal|"BrookTree 848"
+operator|)
+return|;
+case|case
+name|BROOKTREE_849_ID
+case|:
+return|return
+operator|(
+literal|"BrookTree 849"
 operator|)
 return|;
 block|}
@@ -17522,6 +17554,13 @@ name|PHILIPS_FR1236_NTSC
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|PHILIPS_FR1216_PAL
+value|10
+end_define
+
 begin_comment
 comment|/* XXX FIXME: this list is incomplete */
 end_comment
@@ -17999,6 +18038,47 @@ block|,
 literal|0x30
 block|,
 literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_FR1216_PAL */
+block|{
+literal|"Philips FR1216 PAL FM"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+name|PHILIPS_FR1216_PAL_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_FCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_FCONTROL
+block|,
+name|TSA552x_FCONTROL
+block|,
+name|TSA552x_RADIO
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0xa4
 block|}
 block|}
 block|,
@@ -19222,7 +19302,7 @@ name|OFFSET
 end_undef
 
 begin_comment
-comment|/*  * Western European broadcast channels:  *  * (there are others that appear to vary between countries - rmt)  *  * here's the table Philips provides:  * caution, some of the offsets don't compute...  *  *  1	 4525	700	N21  *   *  2	 4825	700	E2  *  3	 5525	700	E3  *  4	 6225	700	E4  *   *  5	17525	700	E5  *  6	18225	700	E6  *  7	18925	700	E7  *  8	19625	700	E8  *  9	20325	700	E9  * 10	21025	700	E10  * 11	21725	700	E11  * 12	22425	700	E12  *   * 13	 5375	700	ITA  * 14	 6225	700	ITB  *   * 15	 8225	700	ITC  *   * 16	17525	700	ITD  * 17	18325	700	ITE  *   * 18	19225	700	ITF  * 19	20125	700	ITG  * 20	21025	700	ITH  *   * 21	47125	800	E21  * 22	47925	800	E22  * 23	48725	800	E23  * 24	49525	800	E24  * 25	50325	800	E25  * 26	51125	800	E26  * 27	51925	800	E27  * 28	52725	800	E28  * 29	53525	800	E29  * 30	54325	800	E30  * 31	55125	800	E31  * 32	55925	800	E32  * 33	56725	800	E33  * 34	57525	800	E34  * 35	58325	800	E35  * 36	59125	800	E36  * 37	59925	800	E37  * 38	60725	800	E38  * 39	61525	800	E39  * 40	62325	800	E40  * 41	63125	800	E41  * 42	63925	800	E42  * 43	64725	800	E43  * 44	65525	800	E44  * 45	66325	800	E45  * 46	67125	800	E46  * 47	67925	800	E47  * 48	68725	800	E48  * 49	69525	800	E49  * 50	70325	800	E50  * 51	71125	800	E51  * 52	71925	800	E52  * 53	72725	800	E53  * 54	73525	800	E54  * 55	74325	800	E55  * 56	75125	800	E56  * 57	75925	800	E57  * 58	76725	800	E58  * 59	77525	800	E59  * 60	78325	800	E60  * 61	79125	800	E61  * 62	79925	800	E62  * 63	80725	800	E63  * 64	81525	800	E64  * 65	82325	800	E65  * 66	83125	800	E66  * 67	83925	800	E67  * 68	84725	800	E68  * 69	85525	800	E69  *   * 70	 4575	800	IA  * 71	 5375	800	IB  * 72	 6175	800	IC  *   * 74	 6925	700	S01  * 75	 7625	700	S02  * 76	 8325	700	S03  *   * 80	10525	700	S1  * 81	11225	700	S2  * 82	11925	700	S3  * 83	12625	700	S4  * 84	13325	700	S5  * 85	14025	700	S6  * 86	14725	700	S7  * 87	15425	700	S8  * 88	16125	700	S9  * 89	16825	700	S10  * 90	23125	700	S11  * 91	23825	700	S12  * 92	24525	700	S13  * 93	25225	700	S14  * 94	25925	700	S15  * 95	26625	700	S16  * 96	27325	700	S17  * 97	28025	700	S18  * 98	28725	700	S19  * 99	29425	700	S20  *   * 100	 3890	000	IFFREQ  *   */
+comment|/*  * Western European broadcast channels:  *  * (there are others that appear to vary between countries - rmt)  *  * here's the table Philips provides:  * caution, some of the offsets don't compute...  *  *  1	 4525	700	N21  *   *  2	 4825	700	E2  *  3	 5525	700	E3  *  4	 6225	700	E4  *   *  5	17525	700	E5  *  6	18225	700	E6  *  7	18925	700	E7  *  8	19625	700	E8  *  9	20325	700	E9  * 10	21025	700	E10  * 11	21725	700	E11  * 12	22425	700	E12  *   * 13	 5375	700	ITA  * 14	 6225	700	ITB  *   * 15	 8225	700	ITC  *   * 16	17525	700	ITD  * 17	18325	700	ITE  *   * 18	19225	700	ITF  * 19	20125	700	ITG  * 20	21025	700	ITH  *   * 21	47125	800	E21  * 22	47925	800	E22  * 23	48725	800	E23  * 24	49525	800	E24  * 25	50325	800	E25  * 26	51125	800	E26  * 27	51925	800	E27  * 28	52725	800	E28  * 29	53525	800	E29  * 30	54325	800	E30  * 31	55125	800	E31  * 32	55925	800	E32  * 33	56725	800	E33  * 34	57525	800	E34  * 35	58325	800	E35  * 36	59125	800	E36  * 37	59925	800	E37  * 38	60725	800	E38  * 39	61525	800	E39  * 40	62325	800	E40  * 41	63125	800	E41  * 42	63925	800	E42  * 43	64725	800	E43  * 44	65525	800	E44  * 45	66325	800	E45  * 46	67125	800	E46  * 47	67925	800	E47  * 48	68725	800	E48  * 49	69525	800	E49  * 50	70325	800	E50  * 51	71125	800	E51  * 52	71925	800	E52  * 53	72725	800	E53  * 54	73525	800	E54  * 55	74325	800	E55  * 56	75125	800	E56  * 57	75925	800	E57  * 58	76725	800	E58  * 59	77525	800	E59  * 60	78325	800	E60  * 61	79125	800	E61  * 62	79925	800	E62  * 63	80725	800	E63  * 64	81525	800	E64  * 65	82325	800	E65  * 66	83125	800	E66  * 67	83925	800	E67  * 68	84725	800	E68  * 69	85525	800	E69  *   * 70	 4575	800	IA  * 71	 5375	800	IB  * 72	 6175	800	IC  *   * 74	 6925	700	S01  * 75	 7625	700	S02  * 76	 8325	700	S03  *   * 80	10525	700	S1  * 81	11225	700	S2  * 82	11925	700	S3  * 83	12625	700	S4  * 84	13325	700	S5  * 85	14025	700	S6  * 86	14725	700	S7  * 87	15425	700	S8  * 88	16125	700	S9  * 89	16825	700	S10  * 90	23125	700	S11  * 91	23825	700	S12  * 92	24525	700	S13  * 93	25225	700	S14  * 94	25925	700	S15  * 95	26625	700	S16  * 96	27325	700	S17  * 97	28025	700	S18  * 98	28725	700	S19  * 99	29425	700	S20  *  *  * Channels S21 - S41 are taken from  * http://gemma.apple.com:80/dev/technotes/tn/tn1012.html  *  * 100	30325	800	S21  * 101	31125	800	S22  * 102	31925	800	S23  * 103	32725	800	S24  * 104	33525	800	S25  * 105	34325	800	S26           * 106	35125	800	S27           * 107	35925	800	S28           * 108	36725	800	S29           * 109	37525	800	S30           * 110	38325	800	S31           * 111	39125	800	S32           * 112	39925	800	S33           * 113	40725	800	S34           * 114	41525	800	S35           * 115	42325	800	S36           * 116	43125	800	S37           * 117	43925	800	S38           * 118	44725	800	S39           * 119	45525	800	S40           * 120	46325	800	S41  *   * 121	 3890	000	IFFREQ  *   */
 end_comment
 
 begin_decl_stmt
@@ -19232,7 +19312,7 @@ name|weurope
 index|[]
 init|=
 block|{
-literal|100
+literal|121
 block|,
 call|(
 name|int
@@ -19244,6 +19324,26 @@ name|FREQFACTOR
 argument_list|)
 block|,
 literal|0
+block|,
+literal|100
+block|,
+call|(
+name|int
+call|)
+argument_list|(
+literal|303.25
+operator|*
+name|FREQFACTOR
+argument_list|)
+block|,
+call|(
+name|int
+call|)
+argument_list|(
+literal|8.00
+operator|*
+name|FREQFACTOR
+argument_list|)
 block|,
 literal|90
 block|,
