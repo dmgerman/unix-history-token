@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.1 (Berkeley) %G%"
+literal|"@(#)print.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1114,7 +1114,7 @@ argument_list|(
 name|k
 argument_list|)
 operator|->
-name|p_pri
+name|p_priority
 operator|-
 name|PZERO
 argument_list|)
@@ -2715,7 +2715,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_time
+name|p_swtime
 operator|==
 literal|0
 operator|||
@@ -2768,7 +2768,7 @@ name|exp
 argument_list|(
 name|p
 operator|->
-name|p_time
+name|p_swtime
 operator|*
 name|log
 argument_list|(

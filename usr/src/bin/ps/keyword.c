@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	8.1 (Berkeley) %G%"
+literal|"@(#)keyword.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -494,7 +494,7 @@ literal|3
 block|,
 name|POFF
 argument_list|(
-name|p_cpu
+name|p_estcpu
 argument_list|)
 block|,
 name|ULONG
@@ -1160,7 +1160,7 @@ literal|3
 block|,
 name|POFF
 argument_list|(
-name|p_time
+name|p_swtime
 argument_list|)
 block|,
 name|ULONG
@@ -1329,7 +1329,7 @@ literal|8
 block|,
 name|POFF
 argument_list|(
-name|p_sig
+name|p_siglist
 argument_list|)
 block|,
 name|LONG
@@ -2567,7 +2567,7 @@ literal|3
 block|,
 name|POFF
 argument_list|(
-name|p_time
+name|p_swtime
 argument_list|)
 block|,
 name|ULONG
