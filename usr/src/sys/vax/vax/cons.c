@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.18	82/10/17	*/
+comment|/*	cons.c	4.19	82/12/05	*/
 end_comment
 
 begin_comment
-comment|/*  * Vax console driver and floppy interface  *  * Note:  *	We avoid use the ready bit in txcs because it doesn't  *	work on an 11/750 with an rdm plugged in.  */
+comment|/*  * VAX console driver (and floppy interface)  */
 end_comment
 
 begin_include
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ioctl.h"
 end_include
 
 begin_include
@@ -871,13 +877,11 @@ name|tp
 operator|->
 name|t_flags
 operator|&
+operator|(
 name|RAW
-operator|||
-name|tp
-operator|->
-name|t_local
-operator|&
-name|LLITOUT
+operator||
+name|LITOUT
+operator|)
 condition|)
 name|mtpr
 argument_list|(
