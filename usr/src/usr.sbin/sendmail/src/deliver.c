@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.123
+literal|3.124
 operator|%
 name|G
 operator|%
@@ -1232,6 +1232,9 @@ name|SMTP
 if|if
 condition|(
 name|clever
+operator|&&
+operator|!
+name|notopen
 condition|)
 name|smtpquit
 argument_list|(
