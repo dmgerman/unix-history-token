@@ -205,11 +205,6 @@ name|c_fid
 decl_stmt|;
 comment|/* file handle */
 name|struct
-name|lock
-name|c_lock
-decl_stmt|;
-comment|/* new lock protocol */
-name|struct
 name|vnode
 modifier|*
 name|c_ovp
