@@ -145,10 +145,16 @@ parameter_list|(
 function_decl|(__noreturn__
 end_function_decl
 
-begin_empty_stmt
+begin_expr_stmt
 unit|))
-empty_stmt|;
-end_empty_stmt
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
