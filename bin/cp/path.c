@@ -57,7 +57,7 @@ name|STRIP_TRAILING_SLASH
 parameter_list|(
 name|p
 parameter_list|)
-value|{ \ 	while ((p)->p_end> (p)->p_path&& (p)->p_end[-1] == '/') \ 		*--(p)->p_end = 0; \ }
+value|{ \ 	while ((p)->p_end> ((p)->p_path + 1)&& (p)->p_end[-1] == '/') \ 		*--(p)->p_end = 0; \ }
 end_define
 
 begin_comment
