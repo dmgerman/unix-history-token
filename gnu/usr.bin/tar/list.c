@@ -2054,8 +2054,10 @@ literal|11
 index|]
 decl_stmt|;
 name|char
-modifier|*
 name|timestamp
+index|[
+literal|80
+index|]
 decl_stmt|;
 name|char
 name|uform
@@ -2086,7 +2088,6 @@ comment|/* Holds a formatted long or maj, min */
 name|time_t
 name|longie
 decl_stmt|;
-comment|/* To make ctime() call portable */
 name|int
 name|pad
 decl_stmt|;
@@ -2372,12 +2373,22 @@ name|hstat
 operator|.
 name|st_mtime
 expr_stmt|;
+name|strftime
+argument_list|(
 name|timestamp
-operator|=
-name|ctime
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|timestamp
+argument_list|)
+argument_list|,
+literal|"%c"
+argument_list|,
+name|localtime
 argument_list|(
 operator|&
 name|longie
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|timestamp
