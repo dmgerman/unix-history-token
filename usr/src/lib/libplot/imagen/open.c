@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)open.c	5.1 (Berkeley) %G%"
+literal|"@(#)open.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,14 +36,6 @@ include|#
 directive|include
 file|"imp.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|imPcsize
-init|=
-literal|12
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|openpl
@@ -80,7 +72,7 @@ argument_list|)
 expr_stmt|;
 name|setfont
 argument_list|(
-literal|"cmasc7"
+name|imP_charset
 argument_list|,
 name|imPcsize
 argument_list|)

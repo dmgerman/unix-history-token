@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)space.c	5.1 (Berkeley) %G%"
+literal|"@(#)space.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|PlotRes
+init|=
+name|DEFRES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|scaleflag
 decl_stmt|;
 end_decl_stmt
@@ -90,11 +98,11 @@ begin_block
 block|{
 name|botx
 operator|=
-literal|0.
+literal|2.
 expr_stmt|;
 name|boty
 operator|=
-literal|0.
+literal|2.
 expr_stmt|;
 name|obotx
 operator|=
@@ -111,7 +119,11 @@ condition|)
 return|return;
 name|scalex
 operator|=
-literal|2040.
+operator|(
+literal|8.0
+operator|*
+name|PlotRes
+operator|)
 operator|/
 operator|(
 name|x1
@@ -121,7 +133,11 @@ operator|)
 expr_stmt|;
 name|scaley
 operator|=
-literal|2040.
+operator|(
+literal|8.0
+operator|*
+name|PlotRes
+operator|)
 operator|/
 operator|(
 name|y1

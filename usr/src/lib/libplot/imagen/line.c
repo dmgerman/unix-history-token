@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)line.c	5.1 (Berkeley) %G%"
+literal|"@(#)line.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ begin_decl_stmt
 name|float
 name|botx
 init|=
-literal|0.
+literal|2.
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ begin_decl_stmt
 name|float
 name|boty
 init|=
-literal|0.
+literal|2.
 decl_stmt|;
 end_decl_stmt
 
@@ -126,8 +126,6 @@ operator|*
 name|scalex
 operator|+
 name|botx
-operator|+
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -146,8 +144,6 @@ operator|*
 name|scaley
 operator|+
 name|boty
-operator|+
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -166,8 +162,6 @@ operator|*
 name|scalex
 operator|+
 name|botx
-operator|+
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -186,8 +180,6 @@ operator|*
 name|scaley
 operator|+
 name|boty
-operator|+
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
