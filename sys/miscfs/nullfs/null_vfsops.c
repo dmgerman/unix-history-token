@@ -648,13 +648,9 @@ argument_list|(
 literal|"nullfs_mount: multi null mount?\n"
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|vput
 argument_list|(
 name|lowerrootvp
-argument_list|,
-literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 return|return
