@@ -1535,7 +1535,7 @@ name|rt
 init|=
 name|rtalloc1
 argument_list|(
-name|dst
+name|gateway
 argument_list|,
 literal|0
 argument_list|,
