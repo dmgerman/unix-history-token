@@ -7607,6 +7607,8 @@ argument_list|,
 name|len
 argument_list|,
 name|ATPR_F_READ
+operator||
+name|ATPR_F_QUIET
 argument_list|,
 literal|30
 argument_list|,
@@ -12237,6 +12239,8 @@ name|cap
 operator|.
 name|cur_write_speed
 operator|=
+name|max
+argument_list|(
 name|ntohs
 argument_list|(
 name|cdp
@@ -12244,6 +12248,9 @@ operator|->
 name|cap
 operator|.
 name|cur_write_speed
+argument_list|)
+argument_list|,
+literal|177
 argument_list|)
 expr_stmt|;
 name|cdp
