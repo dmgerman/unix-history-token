@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ffs.h"
+file|"opt_ufs.h"
 end_include
 
 begin_include
@@ -337,7 +337,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 block|{
 operator|&
 name|vop_getextattr_desc
@@ -426,7 +426,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 block|{
 operator|&
 name|vop_getextattr_desc
@@ -504,7 +504,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 block|{
 operator|&
 name|vop_getextattr_desc

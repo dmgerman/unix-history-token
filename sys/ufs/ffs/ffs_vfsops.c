@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ffs.h"
+file|"opt_quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_quota.h"
+file|"opt_ufs.h"
 end_include
 
 begin_include
@@ -270,7 +270,7 @@ name|vfs_stduninit
 block|,
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 name|ufs_extattrctl
 block|,
 else|#
@@ -3259,7 +3259,7 @@ name|NULLVP
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 name|ufs_extattr_uepm_init
 argument_list|(
 operator|&
@@ -3478,10 +3478,10 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR_AUTOSTART
+name|UFS_EXTATTR_AUTOSTART
 comment|/* 	 * 	 * Auto-starting does the following: 	 *	- check for /.attribute in the fs, and extattr_start if so 	 *	- for each file in .attribute, enable that file with 	 * 	  an attribute of the same name. 	 * Not clear how to report errors -- probably eat them. 	 * This would all happen while the file system was busy/not 	 * available, so would effectively be "atomic". 	 */
 operator|(
 name|void
@@ -3495,10 +3495,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !FFS_EXTATTR_AUTOSTART */
+comment|/* !UFS_EXTATTR_AUTOSTART */
 endif|#
 directive|endif
-comment|/* !FFS_EXTATTR */
+comment|/* !UFS_EXTATTR */
 return|return
 operator|(
 literal|0
@@ -3784,7 +3784,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 if|if
 condition|(
 operator|(

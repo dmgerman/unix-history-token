@@ -124,13 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ffs.h"
+file|"opt_ufs.h"
 end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 end_ifdef
 
 begin_define
@@ -884,7 +884,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR_AUTOSTART
+name|UFS_EXTATTR_AUTOSTART
 end_ifdef
 
 begin_comment
@@ -1264,7 +1264,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !FFS_EXTATTR_AUTOSTART */
+comment|/* !UFS_EXTATTR_AUTOSTART */
 end_comment
 
 begin_comment
@@ -1435,7 +1435,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR_AUTOSTART
+name|UFS_EXTATTR_AUTOSTART
 end_ifdef
 
 begin_comment
@@ -2199,7 +2199,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !FFS_EXTATTR_AUTOSTART */
+comment|/* !UFS_EXTATTR_AUTOSTART */
 end_comment
 
 begin_comment
@@ -5271,7 +5271,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !FFS_EXTATTR */
+comment|/* !UFS_EXTATTR */
 end_comment
 
 end_unit

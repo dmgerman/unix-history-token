@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ffs.h"
+file|"opt_quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_quota.h"
+file|"opt_ufs.h"
 end_include
 
 begin_include
@@ -219,7 +219,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|FFS_EXTATTR
+name|UFS_EXTATTR
 name|ufs_extattr_vnode_inactive
 argument_list|(
 name|ap
