@@ -1362,10 +1362,11 @@ name|arg_start
 decl_stmt|,
 name|arg_end
 decl_stmt|;
-name|u_int
+name|pt_entry_t
 modifier|*
 name|pte
-decl_stmt|,
+decl_stmt|;
+name|pd_entry_t
 modifier|*
 name|ptd
 decl_stmt|;
@@ -1594,7 +1595,7 @@ expr_stmt|;
 name|ptd
 operator|=
 operator|(
-name|u_int
+name|pd_entry_t
 operator|*
 operator|)
 name|rcr3
@@ -1611,7 +1612,7 @@ comment|/* 	 * no page table, so create one and install it. 	 */
 name|pte
 operator|=
 operator|(
-name|u_int
+name|pt_entry_t
 operator|*
 operator|)
 name|malloc
@@ -1626,7 +1627,7 @@ expr_stmt|;
 name|ptd
 operator|=
 operator|(
-name|u_int
+name|pd_entry_t
 operator|*
 operator|)
 operator|(
@@ -1656,11 +1657,6 @@ block|{
 comment|/* 	 * this is a user-level page table  	 */
 name|pte
 operator|=
-operator|(
-name|u_int
-operator|*
-operator|)
-operator|&
 name|PTmap
 expr_stmt|;
 block|}
@@ -1935,11 +1931,6 @@ if|if
 condition|(
 name|pte
 operator|==
-operator|(
-name|u_int
-operator|*
-operator|)
-operator|&
 name|PTmap
 condition|)
 block|{

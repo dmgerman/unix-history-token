@@ -563,6 +563,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|pd_entry_t
+modifier|*
 name|IdlePTD
 decl_stmt|;
 end_decl_stmt
