@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.3 (Berkeley) %G%"
+literal|"@(#)output.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,11 @@ index|]
 operator|.
 name|af_sendsubnet
 function_decl|;
+name|int
+name|npackets
+init|=
+literal|0
+decl_stmt|;
 name|msg
 operator|->
 name|rip_cmd
@@ -533,6 +538,9 @@ name|msg
 operator|->
 name|rip_nets
 expr_stmt|;
+name|npackets
+operator|++
+expr_stmt|;
 block|}
 name|n
 operator|->
@@ -603,6 +611,10 @@ operator|!=
 name|msg
 operator|->
 name|rip_nets
+operator|||
+name|npackets
+operator|==
+literal|0
 condition|)
 block|{
 name|size
