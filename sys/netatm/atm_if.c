@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -1797,6 +1803,16 @@ operator|->
 name|if_baudrate
 operator|=
 literal|155000000
+expr_stmt|;
+break|break;
+case|case
+name|MEDIA_UNKNOWN
+case|:
+name|ifp
+operator|->
+name|if_baudrate
+operator|=
+literal|9600
 expr_stmt|;
 break|break;
 block|}

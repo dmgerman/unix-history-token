@@ -344,18 +344,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * Clear the device interrupt 		 */
-switch|switch
+if|if
 condition|(
 name|fup
 operator|->
 name|fu_config
 operator|.
 name|ac_device
-condition|)
-block|{
-case|case
+operator|==
 name|DEV_FORE_PCA200E
-case|:
+condition|)
 name|PCA200E_HCR_SET
 argument_list|(
 operator|*
@@ -366,8 +364,6 @@ argument_list|,
 name|PCA200E_CLR_HBUS_INT
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 name|aap
 operator|->
 name|aali_intr_sent

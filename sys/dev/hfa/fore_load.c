@@ -1390,18 +1390,17 @@ operator|->
 name|fu_ctlreg
 condition|)
 block|{
-switch|switch
+if|if
 condition|(
 name|fup
 operator|->
 name|fu_config
 operator|.
 name|ac_device
+operator|==
+name|DEV_FORE_PCA200E
 condition|)
 block|{
-case|case
-name|DEV_FORE_PCA200E
-case|:
 comment|/* 			 * Reset i960 by setting and clearing RESET 			 */
 name|PCA200E_HCR_INIT
 argument_list|(
@@ -1428,7 +1427,6 @@ argument_list|,
 name|PCA200E_RESET
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 operator|(
