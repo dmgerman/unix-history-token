@@ -875,6 +875,7 @@ comment|/*  * struct cdev * and u_dev_t primitives  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|major
 parameter_list|(
