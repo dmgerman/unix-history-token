@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crtplot.c	4.3 (Berkeley) %G%"
+literal|"@(#)crtplot.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,14 +135,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|char
-name|_putchar
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* This routine just moves the cursor. */
 end_comment
@@ -231,7 +223,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|putchar
+name|_putchar
 argument_list|(
 name|ch
 argument_list|)
@@ -556,7 +548,7 @@ name|CL
 argument_list|,
 name|LINES
 argument_list|,
-name|_putchar
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|mvcur
