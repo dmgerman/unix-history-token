@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)badsect.c	5.11 (Berkeley) %G%"
+literal|"@(#)badsect.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -101,7 +107,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_union
@@ -193,7 +205,39 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|rdfs
+name|__P
+argument_list|(
+operator|(
+name|daddr_t
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|chkuse
+name|__P
+argument_list|(
+operator|(
+name|daddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -227,9 +271,6 @@ decl_stmt|;
 name|DIR
 modifier|*
 name|dirp
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|char
 name|name
@@ -576,28 +617,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|chkuse
-argument_list|(
-argument|blkno
-argument_list|,
-argument|cnt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|blkno
+parameter_list|,
+name|cnt
+parameter_list|)
 name|daddr_t
 name|blkno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cnt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|cg
@@ -826,43 +859,32 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * read a block from the file system  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rdfs
-argument_list|(
-argument|bno
-argument_list|,
-argument|size
-argument_list|,
-argument|bf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|bno
+parameter_list|,
+name|size
+parameter_list|,
+name|bf
+parameter_list|)
 name|daddr_t
 name|bno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|bf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|n
@@ -941,7 +963,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
