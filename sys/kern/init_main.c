@@ -1026,6 +1026,18 @@ name|s_leader
 operator|=
 name|p
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__ELF__
+name|p
+operator|->
+name|p_sysent
+operator|=
+operator|&
+name|elf_freebsd_sysvec
+expr_stmt|;
+else|#
+directive|else
 name|p
 operator|->
 name|p_sysent
@@ -1033,6 +1045,8 @@ operator|=
 operator|&
 name|aout_sysvec
 expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|->
 name|p_flag
