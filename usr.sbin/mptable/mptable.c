@@ -442,6 +442,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|whereStrings
@@ -584,8 +585,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|pap
 decl_stmt|;
 name|u_char
@@ -653,8 +653,7 @@ index|[
 literal|12
 index|]
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|oem_table_pointer
 decl_stmt|;
 name|u_short
@@ -663,8 +662,7 @@ decl_stmt|;
 name|u_short
 name|entry_count
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|apic_address
 decl_stmt|;
 name|u_short
@@ -698,16 +696,16 @@ decl_stmt|;
 name|u_char
 name|cpuFlags
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|cpuSignature
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|featureFlags
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|reserved1
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|reserved2
 decl_stmt|;
 block|}
@@ -754,8 +752,7 @@ decl_stmt|;
 name|u_char
 name|apicFlags
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|apicAddress
 decl_stmt|;
 block|}
@@ -822,6 +819,10 @@ name|u_int64_t
 name|addressLength
 decl_stmt|;
 block|}
+name|__attribute__
+typedef|((
+name|__packed__
+typedef|))
 name|SasEntry
 typedef|;
 end_typedef
@@ -887,7 +888,7 @@ specifier|static
 name|void
 name|apic_probe
 parameter_list|(
-name|vm_offset_t
+name|u_int32_t
 modifier|*
 name|paddr
 parameter_list|,
@@ -914,7 +915,7 @@ specifier|static
 name|void
 name|MPFloatingPointer
 parameter_list|(
-name|vm_offset_t
+name|u_int32_t
 name|paddr
 parameter_list|,
 name|int
@@ -932,8 +933,7 @@ specifier|static
 name|void
 name|MPConfigTableHeader
 parameter_list|(
-name|void
-modifier|*
+name|u_int32_t
 name|pap
 parameter_list|)
 function_decl|;
@@ -954,7 +954,7 @@ specifier|static
 name|void
 name|seekEntry
 parameter_list|(
-name|vm_offset_t
+name|u_int32_t
 name|addr
 parameter_list|)
 function_decl|;
@@ -1184,7 +1184,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|vm_offset_t
+name|u_int32_t
 name|paddr
 decl_stmt|;
 name|int
@@ -1501,7 +1501,7 @@ specifier|static
 name|void
 name|apic_probe
 parameter_list|(
-name|vm_offset_t
+name|u_int32_t
 modifier|*
 name|paddr
 parameter_list|,
@@ -1517,7 +1517,7 @@ decl_stmt|;
 name|u_short
 name|segment
 decl_stmt|;
-name|vm_offset_t
+name|u_int32_t
 name|target
 decl_stmt|;
 name|u_int
@@ -1555,7 +1555,7 @@ expr_stmt|;
 name|seekEntry
 argument_list|(
 operator|(
-name|vm_offset_t
+name|u_int32_t
 operator|)
 name|EBDA_POINTER
 argument_list|)
@@ -1577,7 +1577,7 @@ comment|/* search EBDA */
 name|target
 operator|=
 operator|(
-name|vm_offset_t
+name|u_int32_t
 operator|)
 name|segment
 operator|<<
@@ -1616,6 +1616,9 @@ name|x
 operator|<
 name|ONE_KBYTE
 operator|/
+operator|(
+name|int
+operator|)
 expr|sizeof
 operator|(
 name|unsigned
@@ -1678,7 +1681,7 @@ comment|/* read CMOS for real top of mem */
 name|seekEntry
 argument_list|(
 operator|(
-name|vm_offset_t
+name|u_int32_t
 operator|)
 name|TOPOFMEM_POINTER
 argument_list|)
@@ -1736,6 +1739,9 @@ name|x
 operator|<
 name|ONE_KBYTE
 operator|/
+operator|(
+name|int
+operator|)
 expr|sizeof
 operator|(
 name|unsigned
@@ -1840,6 +1846,9 @@ name|x
 operator|<
 name|ONE_KBYTE
 operator|/
+operator|(
+name|int
+operator|)
 expr|sizeof
 operator|(
 name|unsigned
@@ -1920,6 +1929,9 @@ name|x
 operator|<
 name|BIOS_SIZE
 operator|/
+operator|(
+name|int
+operator|)
 expr|sizeof
 operator|(
 name|unsigned
@@ -1999,6 +2011,9 @@ name|x
 operator|<
 name|BIOS_SIZE
 operator|/
+operator|(
+name|int
+operator|)
 expr|sizeof
 operator|(
 name|unsigned
@@ -2087,6 +2102,9 @@ name|x
 operator|<
 name|GROPE_SIZE
 operator|/
+operator|(
+name|int
+operator|)
 expr|sizeof
 operator|(
 name|unsigned
@@ -2169,6 +2187,9 @@ name|x
 operator|<
 name|GROPE_SIZE
 operator|/
+operator|(
+name|int
+operator|)
 expr|sizeof
 operator|(
 name|unsigned
@@ -2224,7 +2245,7 @@ operator|*
 name|paddr
 operator|=
 operator|(
-name|vm_offset_t
+name|u_int32_t
 operator|)
 literal|0
 expr_stmt|;
@@ -2240,7 +2261,7 @@ specifier|static
 name|void
 name|MPFloatingPointer
 parameter_list|(
-name|vm_offset_t
+name|u_int32_t
 name|paddr
 parameter_list|,
 name|int
@@ -2647,12 +2668,11 @@ specifier|static
 name|void
 name|MPConfigTableHeader
 parameter_list|(
-name|void
-modifier|*
+name|u_int32_t
 name|pap
 parameter_list|)
 block|{
-name|vm_offset_t
+name|u_int32_t
 name|paddr
 decl_stmt|;
 name|mpcth_t
@@ -2698,9 +2718,6 @@ block|}
 comment|/* convert physical address to virtual address */
 name|paddr
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|pap
 expr_stmt|;
 comment|/* read in cth structure */
@@ -3238,7 +3255,7 @@ comment|/* convert OEM table pointer to virtual address */
 name|poemtp
 operator|=
 operator|(
-name|vm_offset_t
+name|u_int32_t
 operator|)
 name|cth
 operator|.
@@ -3450,7 +3467,7 @@ specifier|static
 name|void
 name|seekEntry
 parameter_list|(
-name|vm_offset_t
+name|u_int32_t
 name|addr
 parameter_list|)
 block|{
@@ -3912,6 +3929,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|intTypes
@@ -3930,6 +3948,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|polarityMode
@@ -3948,6 +3967,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|triggerMode
@@ -4250,8 +4270,12 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|" address base: 0x%qx\n"
+literal|" address base: 0x%llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|entry
 operator|.
 name|addressBase
@@ -4259,8 +4283,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" address range: 0x%qx\n"
+literal|" address range: 0x%llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|entry
 operator|.
 name|addressLength
