@@ -374,7 +374,8 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"linux: syscall %s is obsoleted or not implemented (pid=%ld)\n"
+literal|"linux: syscall %s is obsoleted or not implemented pid %ld "
+literal|"(%s)\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -386,6 +387,12 @@ operator|->
 name|td_proc
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
 argument_list|)
 expr_stmt|;
 return|return
