@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.55 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -831,13 +831,8 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|char
-modifier|*
 name|hostname
-decl_stmt|;
-name|char
-name|remotehost
 index|[
 literal|2
 operator|*
