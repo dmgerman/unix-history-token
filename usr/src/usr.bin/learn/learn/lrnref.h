@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lrnref.h	4.3	83/08/11	*/
+comment|/*	lrnref.h	4.4	86/05/15	*/
 end_comment
 
 begin_define
@@ -202,7 +202,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XYZZY
+name|HINT
 value|28
 end_define
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mem.c	4.2	(Berkeley)	%G%"
+literal|"@(#)mem.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,9 +225,9 @@ name|CMP
 block|}
 block|,
 block|{
-literal|"xyzzy"
+literal|"hint"
 block|,
-name|XYZZY
+name|HINT
 block|}
 block|,
 block|{

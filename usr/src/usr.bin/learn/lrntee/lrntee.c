@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lrntee.c	4.2	(Berkeley)	%G%"
+literal|"@(#)lrntee.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,8 @@ parameter_list|()
 block|{
 name|int
 name|f
-decl_stmt|,
+decl_stmt|;
+name|char
 name|c
 decl_stmt|;
 name|f

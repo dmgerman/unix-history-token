@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)selunit.c	4.2	(Berkeley)	%G%"
+literal|"@(#)selunit.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,7 +326,12 @@ name|todo
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+name|wrapup
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)copy.c	4.2	(Berkeley)	%G%"
+literal|"@(#)copy.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,6 +246,11 @@ expr_stmt|;
 name|fflush
 argument_list|(
 name|stderr
+argument_list|)
+expr_stmt|;
+name|clearerr
+argument_list|(
+name|stdin
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -526,7 +531,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|XYZZY
+name|HINT
 case|:
 name|mark
 operator|=
@@ -803,6 +808,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return;
+comment|/* "again previous_lesson" has a hard-to-reproduce bug */
 case|case
 name|AGAIN
 case|:
@@ -1035,6 +1041,7 @@ break|break;
 case|case
 name|LOG
 case|:
+comment|/* logfiles should be created mode 666 */
 if|if
 condition|(
 operator|!

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	4.4	(Berkeley)	%G%"
+literal|"@(#)start.c	4.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,18 +39,22 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DIR
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/dir.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|BSD4_2
-value|1
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|start
@@ -93,8 +97,8 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BSD4_2
 name|DIR
 modifier|*
@@ -114,10 +118,6 @@ parameter_list|(
 name|s
 parameter_list|)
 value|for (s = readdir(dp); s != NULL; s = readdir(dp))
-define|#
-directive|define
-name|PATHSIZE
-value|256
 define|#
 directive|define
 name|EPSTRLEN
@@ -155,12 +155,27 @@ name|CLOSEDIR
 value|close(f)
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
 name|OPENDIR
 argument_list|(
 literal|"."
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 comment|/* clean up play directory */
+name|perror
+argument_list|(
+literal|"Start:  play directory"
+argument_list|)
+expr_stmt|;
+name|wrapup
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|DIRLOOP
 argument_list|(
 argument|ep

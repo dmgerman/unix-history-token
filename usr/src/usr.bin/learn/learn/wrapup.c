@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wrapup.c	4.2	(Berkeley)	%G%"
+literal|"@(#)wrapup.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,14 @@ directive|include
 file|"lrnref.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|learnrc
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|wrapup
 argument_list|(
@@ -54,6 +62,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 comment|/* this routine does not use 'system' because it wants interrupts turned off */
 name|signal
 argument_list|(
@@ -84,7 +96,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|vax
+name|BSD4_2
 if|if
 condition|(
 name|fork
@@ -165,20 +177,64 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|n
+operator|==
+operator|-
+literal|1
+condition|)
+name|unlink
+argument_list|(
+name|learnrc
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|!
 name|n
 operator|&&
 name|todo
 condition|)
-name|printf
+block|{
+if|if
+condition|(
+operator|(
+name|fp
+operator|=
+name|fopen
 argument_list|(
-literal|"To take up where you left off type \"learn %s %s\".\n"
+name|learnrc
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s %s %d\n"
 argument_list|,
 name|sname
 argument_list|,
 name|todo
+argument_list|,
+name|speed
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"Bye.\n"

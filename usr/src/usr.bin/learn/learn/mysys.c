@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mysys.c	4.4	(Berkeley)	%G%"
+literal|"@(#)mysys.c	4.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|vax
+name|BSD4_2
 name|system
 argument_list|(
 literal|"stty old"
@@ -287,7 +287,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|vax
+name|BSD4_2
 elseif|else
 if|if
 condition|(

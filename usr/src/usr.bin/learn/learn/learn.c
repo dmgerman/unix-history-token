@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)learn.c	4.3	(Berkeley)	%G%"
+literal|"@(#)learn.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,14 +216,18 @@ parameter_list|()
 function|;
 end_function
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|getlogin
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|speed
@@ -246,6 +250,43 @@ name|getlogin
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD4_2
+end_ifndef
+
+begin_expr_stmt
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|malloc
+argument_list|(
+name|BUFSIZ
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setbuf
+argument_list|(
+name|stderr
+argument_list|,
+name|malloc
+argument_list|(
+name|BUFSIZ
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|selsub

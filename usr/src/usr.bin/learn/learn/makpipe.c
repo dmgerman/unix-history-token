@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makpipe.c	4.2	(Berkeley)	%G%"
+literal|"@(#)makpipe.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|vax
+name|BSD4_2
 name|execl
 argument_list|(
 literal|"/bin/sh"
