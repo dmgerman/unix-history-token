@@ -2463,6 +2463,12 @@ name|boottime
 operator|.
 name|tv_sec
 expr_stmt|;
+if|if
+condition|(
+name|uptime
+operator|>
+literal|60
+condition|)
 name|uptime
 operator|+=
 literal|30
