@@ -2995,6 +2995,19 @@ return|return
 literal|0
 return|;
 case|case
+literal|0x24c58086
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801DC (ICH4)"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
 name|SIS7012ID
 case|:
 name|device_set_desc
