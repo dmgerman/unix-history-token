@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c 1.2 %G%"
+literal|"@(#)misc.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,6 +417,16 @@ expr_stmt|;
 name|puts
 argument_list|(
 literal|"whatis<name>          - print the declaration of the name"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"list<line>,<line>    - list source lines"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"edit<proc>            - edit file containing<proc>"
 argument_list|)
 expr_stmt|;
 name|puts
