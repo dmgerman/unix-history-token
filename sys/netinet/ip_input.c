@@ -4606,6 +4606,9 @@ name|off
 operator|>
 name|optlen
 operator|-
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4924,6 +4927,9 @@ name|off
 operator|>
 name|optlen
 operator|-
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5082,6 +5088,9 @@ name|ipt
 operator|->
 name|ipt_len
 operator|-
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int32_t
