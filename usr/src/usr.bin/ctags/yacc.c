@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yacc.c	5.1 (Berkeley) %G%"
+literal|"@(#)yacc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,24 +67,6 @@ index|[
 name|MAXTOKEN
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|lbuf
-argument_list|,
-literal|"%%$"
-argument_list|)
-expr_stmt|;
-comment|/* special case, "%%" */
-name|pfnote
-argument_list|(
-literal|"yyparse"
-argument_list|,
-name|lineno
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|GETC
