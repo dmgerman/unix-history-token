@@ -153,6 +153,7 @@ name|struct
 name|sgttyb
 name|argp
 decl_stmt|;
+comment|/* revoke */
 name|setgid
 argument_list|(
 name|getgid
