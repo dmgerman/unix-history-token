@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.21 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,6 +362,9 @@ name|addr
 argument_list|,
 name|delim
 argument_list|,
+name|pvpbuf
+argument_list|,
+sizeof|sizeof
 name|pvpbuf
 argument_list|,
 name|delimptr
@@ -1034,7 +1037,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. **		delimptr -- if non-NULL, set to the location of the **			terminating delimiter. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. */
+comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. **		pvpbsize -- size of pvpbuf. **		delimptr -- if non-NULL, set to the location of the **			terminating delimiter. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. */
 end_comment
 
 begin_comment
@@ -1269,6 +1272,8 @@ name|delim
 parameter_list|,
 name|pvpbuf
 parameter_list|,
+name|pvpbsize
+parameter_list|,
 name|delimptr
 parameter_list|)
 name|char
@@ -1448,7 +1453,7 @@ operator|>=
 operator|&
 name|pvpbuf
 index|[
-name|PSBUFSIZE
+name|pvpbsize
 operator|-
 literal|5
 index|]
@@ -7010,6 +7015,9 @@ literal|'\0'
 argument_list|,
 name|pvpbuf
 argument_list|,
+sizeof|sizeof
+name|pvpbuf
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -7617,6 +7625,9 @@ name|q_user
 argument_list|,
 literal|'\0'
 argument_list|,
+name|pvpbuf
+argument_list|,
+sizeof|sizeof
 name|pvpbuf
 argument_list|,
 operator|&

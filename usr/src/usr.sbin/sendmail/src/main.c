@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.41 (Berkeley) %G%"
+literal|"@(#)main.c	8.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4161,6 +4161,9 @@ name|p
 argument_list|,
 literal|','
 argument_list|,
+name|pvpbuf
+argument_list|,
+sizeof|sizeof
 name|pvpbuf
 argument_list|,
 operator|&

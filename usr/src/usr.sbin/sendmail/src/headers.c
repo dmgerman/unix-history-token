@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.16 (Berkeley) %G%"
+literal|"@(#)headers.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3915,6 +3915,9 @@ literal|' '
 else|:
 literal|','
 argument_list|,
+name|pvpbuf
+argument_list|,
+sizeof|sizeof
 name|pvpbuf
 argument_list|,
 operator|&
