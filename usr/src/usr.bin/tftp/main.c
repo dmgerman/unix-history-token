@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2858,6 +2858,13 @@ continue|continue;
 name|makeargv
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|margc
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|c
 operator|=
 name|getcmd
