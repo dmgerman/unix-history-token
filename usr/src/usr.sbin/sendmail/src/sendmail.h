@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.71		%G%"
+literal|"@(#)sendmail.h	3.71.1.1		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -878,6 +878,11 @@ name|ADDRESS
 name|e_from
 decl_stmt|;
 comment|/* the person it is from */
+name|ADDRESS
+modifier|*
+name|e_returnto
+decl_stmt|;
+comment|/* place to return the message to */
 name|ADDRESS
 modifier|*
 name|e_sendqueue

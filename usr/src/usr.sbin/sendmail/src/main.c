@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.78
+literal|3.78.1.1
 operator|%
 name|G
 operator|%
@@ -2055,6 +2055,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* 	**  Do validation to determine whether this user is allowed 	**  to change the sender name. 	*/
 if|if
 condition|(
 name|from
@@ -2132,6 +2133,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+comment|/* 	**  Parse the sender name. 	**	Arrange to send return messages to the same person. 	**	Set up some environment info. 	*/
 name|SuprErrs
 operator|=
 name|TRUE
@@ -2184,6 +2186,15 @@ else|else
 name|FromFlag
 operator|=
 name|TRUE
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_returnto
+operator|=
+operator|&
+name|CurEnv
+operator|->
+name|e_from
 expr_stmt|;
 name|SuprErrs
 operator|=
