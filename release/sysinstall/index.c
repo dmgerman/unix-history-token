@@ -3546,7 +3546,7 @@ block|{
 name|char
 name|t
 index|[
-literal|1024
+literal|2048
 index|]
 decl_stmt|,
 modifier|*
