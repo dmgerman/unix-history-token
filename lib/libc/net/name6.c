@@ -7967,6 +7967,12 @@ name|errp
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+operator|*
+name|errp
+operator|=
+name|h_errno
+expr_stmt|;
 block|}
 name|free
 argument_list|(
