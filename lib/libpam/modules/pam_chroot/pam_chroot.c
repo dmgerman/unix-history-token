@@ -400,6 +400,17 @@ name|PAM_SESSION_ERR
 operator|)
 return|;
 block|}
+name|pam_setenv
+argument_list|(
+name|pamh
+argument_list|,
+literal|"HOME"
+argument_list|,
+name|cwd
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|PAM_SUCCESS
