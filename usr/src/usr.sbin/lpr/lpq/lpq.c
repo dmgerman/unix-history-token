@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpq.c	4.2	83/05/13	*/
+comment|/*	lpq.c	4.3	83/05/26	*/
 end_comment
 
 begin_comment
@@ -364,6 +364,13 @@ case|case
 literal|'P'
 case|:
 comment|/* printer name */
+if|if
+condition|(
+name|arg
+index|[
+literal|2
+index|]
+condition|)
 name|printer
 operator|=
 operator|&
@@ -372,6 +379,24 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|argc
+operator|--
+expr_stmt|;
+name|printer
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'l'
