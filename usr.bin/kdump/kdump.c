@@ -53,6 +53,31 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|KERNEL
+end_undef
+
 begin_include
 include|#
 directive|include
@@ -94,24 +119,6 @@ include|#
 directive|include
 file|<sys/ptrace.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
 
 begin_include
 include|#
