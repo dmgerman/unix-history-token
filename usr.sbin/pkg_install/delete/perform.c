@@ -1028,13 +1028,7 @@ name|home
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|Fake
-condition|)
-block|{
-comment|/* Some packages aren't packed right, so we need to just ignore delete_package()'s status.  Ugh! :-( */
+comment|/* Some packages aren't packed right, so we need to just ignore        delete_package()'s status.  Ugh! :-( */
 if|if
 condition|(
 name|delete_package
@@ -1055,7 +1049,6 @@ literal|"couldn't entirely delete package (perhaps the packing list is\n"
 literal|"incorrectly specified?)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|chdir
