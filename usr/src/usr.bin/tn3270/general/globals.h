@@ -428,5 +428,34 @@ begin_comment
 comment|/* defined(INCLUDED_OIA) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INCLUDED_ASTOSC
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|astosc
+name|astosc
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(INCLUDED_ASTOSC) */
+end_comment
+
 end_unit
 
