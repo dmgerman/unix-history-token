@@ -1491,7 +1491,6 @@ expr_stmt|;
 goto|goto
 name|opts_check
 goto|;
-break|break;
 case|case
 name|IPPROTO_NONE
 case|:
@@ -1508,7 +1507,6 @@ expr_stmt|;
 goto|goto
 name|opts_check
 goto|;
-break|break;
 case|case
 name|IPPROTO_DSTOPTS
 case|:
@@ -1527,7 +1525,6 @@ default|default:
 goto|goto
 name|opts_check
 goto|;
-break|break;
 block|}
 operator|*
 name|off
