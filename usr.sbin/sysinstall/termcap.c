@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, Paul Richards.  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and sold, in both  * source and binary form provided that the above copyright and these terms  * are retained, verbatim, as the first lines of this file.  Under no  * circumstances is the author responsible for the proper functioning of this  * software, nor does the author assume any responsibility for damages  * incurred with its use.  */
+comment|/*  * Copyright (c) 1994, Paul Richards.  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and sold, in both  * source and binary form provided that the above copyright and these terms  * are retained, verbatim, as the first lines of this file.  Under no  * circumstances is the author responsible for the proper functioning of this  * software, nor does the author assume any responsibility for damages  * incurred with its use.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -104,12 +104,6 @@ name|termcap_vt100
 block|}
 block|,
 block|{
-literal|"cons25w"
-block|,
-name|termcap_cons25w
-block|}
-block|,
-block|{
 literal|"cons25"
 block|,
 name|termcap_cons25
@@ -126,8 +120,15 @@ literal|"xterm"
 block|,
 name|termcap_xterm
 block|}
+block|,
+block|{
+literal|"cons25w"
+block|,
+name|termcap_cons25w
+block|}
 block|}
 struct|;
+comment|/* must be last */
 if|if
 condition|(
 name|RunningAsInit
