@@ -462,6 +462,32 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Used to match a PHY.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mii_phydesc
+block|{
+name|u_int32_t
+name|mpd_oui
+decl_stmt|;
+comment|/* the PHY's OUI */
+name|u_int32_t
+name|mpd_model
+decl_stmt|;
+comment|/* the PHY's model */
+specifier|const
+name|char
+modifier|*
+name|mpd_name
+decl_stmt|;
+comment|/* the PHY's name */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * An array of these structures map MII media types to BMCR/ANAR settings.  */
 end_comment
 
@@ -814,6 +840,28 @@ parameter_list|(
 name|struct
 name|mii_softc
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|struct
+name|mii_phydesc
+modifier|*
+name|mii_phy_match
+parameter_list|(
+specifier|const
+name|struct
+name|mii_attach_args
+modifier|*
+name|ma
+parameter_list|,
+specifier|const
+name|struct
+name|mii_phydesc
+modifier|*
+name|mpd
 parameter_list|)
 function_decl|;
 end_function_decl
