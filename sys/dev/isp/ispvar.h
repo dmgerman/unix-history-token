@@ -309,6 +309,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|const
 name|u_int16_t
 modifier|*
 name|dv_ispfw
@@ -1208,6 +1209,15 @@ decl_stmt|;
 name|ISP_DMA_ADDR_T
 name|isp_scdma
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_FW_CRASH_DUMP
+name|u_int16_t
+modifier|*
+name|isp_dump_data
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|fcparam
 typedef|;
@@ -1741,17 +1751,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_OWNWWN
-value|0x02
-end_define
-
-begin_comment
-comment|/* override NVRAM wwn */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ISP_CFG_PORT_PREF
 value|0x0C
 end_define
@@ -1802,6 +1801,28 @@ end_define
 
 begin_comment
 comment|/* insist on {N/F}L-Port connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_OWNWWPN
+value|0x100
+end_define
+
+begin_comment
+comment|/* override NVRAM wwpn */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_OWNWWNN
+value|0x200
+end_define
+
+begin_comment
+comment|/* override NVRAM wwnn */
 end_comment
 
 begin_comment
@@ -2384,6 +2405,33 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_FW_CRASH_DUMP
+end_ifdef
+
+begin_comment
+comment|/*  * Dump firmware entry point.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isp_fw_dump
+parameter_list|(
+name|struct
+name|ispsoftc
+modifier|*
+name|isp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Internal Interrupt Service Routine  *  * The outer layers do the spade work to get the appropriate status register,  * semaphore register and first mailbox register (if appropriate). This also  * means that most spurious/bogus interrupts not for us can be filtered first.  */
