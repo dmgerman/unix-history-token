@@ -298,8 +298,6 @@ name|char
 name|netobuf
 index|[
 name|BUFSIZ
-operator|+
-name|NETSLOP
 index|]
 decl_stmt|,
 modifier|*
@@ -1197,18 +1195,6 @@ name|wontoption
 name|P
 argument_list|(
 operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|,
-name|writenet
-name|P
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
 name|int
 operator|)
 argument_list|)

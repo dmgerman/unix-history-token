@@ -4986,7 +4986,7 @@ argument_list|(
 name|SE
 argument_list|)
 expr_stmt|;
-name|writenet
+name|output_datalen
 argument_list|(
 name|statusbuf
 argument_list|,
@@ -5099,20 +5099,14 @@ expr_stmt|;
 name|nfrontp
 operator|+=
 operator|(
-operator|(
 name|ret
 operator|<
 name|remaining
-operator|-
-literal|1
 operator|)
 condition|?
 name|ret
 else|:
 name|remaining
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 name|va_end
 argument_list|(
@@ -5171,7 +5165,6 @@ operator|-
 name|netobuf
 operator|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|remaining
@@ -5182,6 +5175,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 name|memmove
 argument_list|(
 name|nfrontp
