@@ -1037,58 +1037,6 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
-name|u_quad_t
-name|m_exthdrget
-decl_stmt|;
-comment|/* # of calls to IP6_EXTHDR_GET */
-name|u_quad_t
-name|m_exthdrget0
-decl_stmt|;
-comment|/* # of calls to IP6_EXTHDR_GET0 */
-name|u_quad_t
-name|m_pulldowns
-decl_stmt|;
-comment|/* # of calls to m_pulldown */
-name|u_quad_t
-name|m_pulldown_copy
-decl_stmt|;
-comment|/* # of mbuf copies in m_pulldown */
-name|u_quad_t
-name|m_pulldown_alloc
-decl_stmt|;
-comment|/* # of mbuf allocs in m_pulldown */
-name|u_quad_t
-name|m_pullups
-decl_stmt|;
-comment|/* # of calls to m_pullup */
-name|u_quad_t
-name|m_pullup_copy
-decl_stmt|;
-comment|/* # of possible m_pullup copies */
-name|u_quad_t
-name|m_pullup_alloc
-decl_stmt|;
-comment|/* # of possible m_pullup mallocs */
-name|u_quad_t
-name|m_pullup_fail
-decl_stmt|;
-comment|/* # of possible m_pullup failures */
-name|u_quad_t
-name|m_pullup2
-decl_stmt|;
-comment|/* # of calls to m_pullup2 */
-name|u_quad_t
-name|m_pullup2_copy
-decl_stmt|;
-comment|/* # of possible m_pullup2 copies */
-name|u_quad_t
-name|m_pullup2_alloc
-decl_stmt|;
-comment|/* # of possible m_pullup2 mallocs */
-name|u_quad_t
-name|m_pullup2_fail
-decl_stmt|;
-comment|/* # of possible m_pullup2 failures */
 block|}
 struct|;
 end_struct
