@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1703,6 +1703,12 @@ operator|&=
 operator|~
 name|NMODIFIED
 expr_stmt|;
+name|np
+operator|->
+name|n_attrstamp
+operator|=
+literal|0
+expr_stmt|;
 name|vinvalbuf
 argument_list|(
 name|vp
@@ -1955,6 +1961,8 @@ argument_list|,
 name|uio
 argument_list|,
 name|cred
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -2212,6 +2220,11 @@ name|NQNFSNONCACHE
 operator|)
 condition|)
 block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|vinvalbuf
 argument_list|(
 name|vp
@@ -2231,6 +2244,9 @@ name|np
 operator|->
 name|n_lrev
 expr_stmt|;
+goto|goto
+name|again
+goto|;
 block|}
 block|}
 if|if

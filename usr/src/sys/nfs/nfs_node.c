@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.42 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.43 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -575,6 +575,12 @@ name|n_size
 operator|=
 literal|0
 expr_stmt|;
+name|np
+operator|->
+name|n_mtime
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|VFSTONFS
@@ -620,13 +626,6 @@ operator|)
 literal|0
 expr_stmt|;
 block|}
-else|else
-name|np
-operator|->
-name|n_mtime
-operator|=
-literal|0
-expr_stmt|;
 operator|*
 name|npp
 operator|=

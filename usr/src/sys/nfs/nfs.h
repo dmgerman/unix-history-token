@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -116,13 +116,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFS_ATTRTIMEO
+name|NFS_MINATTRTIMO
 value|5
 end_define
 
 begin_comment
 comment|/* Attribute cache timeout in sec */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXATTRTIMO
+value|60
+end_define
 
 begin_define
 define|#
@@ -220,6 +227,21 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a) % nfs_asyncdaemons)
+end_define
+
+begin_comment
+comment|/*  * Set the attribute timeout based on how recently the file has been modified.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_ATTRTIMEO
+parameter_list|(
+name|np
+parameter_list|)
+define|\
+value|((((np)->n_flag& NMODIFIED) || \ 	 5 * (time.tv_sec - (np)->n_mtime)< NFS_MINATTRTIMO) ? NFS_MINATTRTIMO : \ 	 (5 * (time.tv_sec - (np)->n_mtime)> NFS_MAXATTRTIMO ? NFS_MAXATTRTIMO : \ 	  5 * (time.tv_sec - (np)->n_mtime)))
 end_define
 
 begin_comment

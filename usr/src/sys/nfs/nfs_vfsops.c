@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -368,6 +368,8 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|isnq
 decl_stmt|;
 name|struct
 name|mbuf
@@ -407,6 +409,16 @@ name|VFSTONFS
 argument_list|(
 name|mp
 argument_list|)
+expr_stmt|;
+name|isnq
+operator|=
+operator|(
+name|nmp
+operator|->
+name|nm_flag
+operator|&
+name|NFSMNT_NQNFS
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -490,6 +502,9 @@ name|nfsv2_statfs
 operator|*
 argument_list|,
 name|NFSX_STATFS
+argument_list|(
+name|isnq
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sbp
@@ -564,6 +579,40 @@ operator|->
 name|sf_bavail
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isnq
+condition|)
+block|{
+name|sbp
+operator|->
+name|f_files
+operator|=
+name|fxdr_unsigned
+argument_list|(
+name|long
+argument_list|,
+name|sfp
+operator|->
+name|sf_files
+argument_list|)
+expr_stmt|;
+name|sbp
+operator|->
+name|f_ffree
+operator|=
+name|fxdr_unsigned
+argument_list|(
+name|long
+argument_list|,
+name|sfp
+operator|->
+name|sf_ffree
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sbp
 operator|->
 name|f_files
@@ -576,6 +625,7 @@ name|f_ffree
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sbp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -96,56 +96,41 @@ name|u_long
 name|n_direofoffset
 decl_stmt|;
 comment|/* Dir. EOF offset cache */
-union|union
-block|{
-struct|struct
-block|{
 name|time_t
-name|un_mtime
+name|n_mtime
 decl_stmt|;
 comment|/* Prev modify time. */
 name|time_t
-name|un_ctime
+name|n_ctime
 decl_stmt|;
 comment|/* Prev create time. */
-block|}
-name|un_nfs
-struct|;
-struct|struct
-block|{
 name|u_quad_t
-name|un_brev
+name|n_brev
 decl_stmt|;
 comment|/* Modify rev when cached */
 name|u_quad_t
-name|un_lrev
+name|n_lrev
 decl_stmt|;
 comment|/* Modify rev for lease */
 name|time_t
-name|un_expiry
+name|n_expiry
 decl_stmt|;
 comment|/* Lease expiry time */
 name|struct
 name|nfsnode
 modifier|*
-name|un_tnext
+name|n_tnext
 decl_stmt|;
 comment|/* Nqnfs timer chain */
 name|struct
 name|nfsnode
 modifier|*
-name|un_tprev
+name|n_tprev
 decl_stmt|;
 name|long
-name|un_spare
+name|spare1
 decl_stmt|;
-comment|/* pad to 8-byte boundary */
-block|}
-name|un_nqnfs
-struct|;
-block|}
-name|n_un
-union|;
+comment|/* To 8 byte boundary */
 name|struct
 name|sillyrename
 name|n_silly
@@ -163,62 +148,13 @@ decl_stmt|;
 name|long
 name|n_spare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 comment|/* Up to a power of 2 */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|n_mtime
-value|n_un.un_nfs.un_mtime
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_ctime
-value|n_un.un_nfs.un_ctime
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_brev
-value|n_un.un_nqnfs.un_brev
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_lrev
-value|n_un.un_nqnfs.un_lrev
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_expiry
-value|n_un.un_nqnfs.un_expiry
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_tnext
-value|n_un.un_nqnfs.un_tnext
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_tprev
-value|n_un.un_nqnfs.un_tprev
-end_define
 
 begin_comment
 comment|/*  * Flags for n_flag  */
