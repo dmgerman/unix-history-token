@@ -77,7 +77,7 @@ value|{sum = (sum& 0xffff) + (sum>> 16); ADDCARRY(sum);}
 end_define
 
 begin_comment
-comment|/*  * Thanks to gcc we don't have to guess  * which registers contain sum& w.  */
+comment|/*  * These asm statements require __volatile because they pass information  * via the condition codes.  GCC does not currently provide a way to specify  * the condition codes as an input or output operand.  *  * The LOAD macro below is effectively a prefetch into cache.  GCC will  * load the value into a register but will not use it.  Since modern CPUs  * reorder operations, this will generally take place in parallel with  * other calculations.  */
 end_comment
 
 begin_define
@@ -87,7 +87,7 @@ name|ADD
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm __volatile \ 		("addl " #n "(%1), %0" : "+r" (sum) : "r" (w))
+value|__asm __volatile \ 		("addl %1, %0" : "+r" (sum) : \ 		"g" (((const u_int32_t *)w)[n / 4]))
 end_define
 
 begin_define
@@ -97,7 +97,7 @@ name|ADDC
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm __volatile \ 		("adcl " #n "(%1), %0" : "+r" (sum) : "r" (w))
+value|__asm __volatile \ 		("adcl %1, %0" : "+r" (sum) : \ 		"g" (((const u_int32_t *)w)[n / 4]))
 end_define
 
 begin_define
@@ -107,7 +107,7 @@ name|LOAD
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm __volatile \ 		("movb " #n "(%1), %0" : "=r" (junk) : "r" (w))
+value|__asm __volatile \ 		("" : : "r" (((const u_int32_t *)w)[n / 4]))
 end_define
 
 begin_define
@@ -541,9 +541,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|u_char
-name|junk
-decl_stmt|;
 comment|/* 			 * Add with carry 16 words and fold in the last 			 * carry by adding a 0 with carry. 			 * 			 * The early ADD(16) and the LOAD(32) are to load 			 * the next 2 cache lines in advance on 486's.  The 			 * 486 has a penalty of 2 clock cycles for loading 			 * a cache line, plus whatever time the external 			 * memory takes to load the first word(s) addressed. 			 * These penalties are unavoidable.  Subsequent 			 * accesses to a cache line being loaded (and to 			 * other external memory?) are delayed until the 			 * whole load finishes.  These penalties are mostly 			 * avoided by not accessing external memory for 			 * 8 cycles after the ADD(16) and 12 cycles after 			 * the LOAD(32).  The loop terminates when mlen 			 * is initially 33 (not 32) to guaranteed that 			 * the LOAD(32) is within bounds. 			 */
 name|ADD
 argument_list|(

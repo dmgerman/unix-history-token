@@ -67,24 +67,25 @@ name|sum
 init|=
 literal|0
 decl_stmt|;
+comment|/* __volatile is necessary here because the condition codes are used. */
 define|#
 directive|define
 name|ADD
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm("addl " #n "(%1), %0" : "+r" (sum) : "r" (ip))
+value|__asm __volatile ("addl %1, %0" : "+r" (sum) : \     "g" (((const u_int32_t *)ip)[n / 4]))
 define|#
 directive|define
 name|ADDC
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm("adcl " #n "(%1), %0" : "+r" (sum) : "r" (ip))
+value|__asm __volatile ("adcl %1, %0" : "+r" (sum) : \     "g" (((const u_int32_t *)ip)[n / 4]))
 define|#
 directive|define
 name|MOP
-value|__asm("adcl         $0, %0" : "+r" (sum))
+value|__asm __volatile ("adcl $0, %0" : "+r" (sum))
 name|ADD
 argument_list|(
 literal|0
@@ -214,8 +215,9 @@ name|u_short
 name|b
 parameter_list|)
 block|{
-asm|__asm("addw %1, %0" : "+r" (sum) : "r" (b));
-asm|__asm("adcw $0, %0" : "+r" (sum));
+comment|/* __volatile is necessary because the condition codes are used. */
+asm|__asm __volatile ("addw %1, %0" : "+r" (sum) : "r" (b));
+asm|__asm __volatile ("adcw $0, %0" : "+r" (sum));
 return|return
 operator|(
 name|sum
@@ -240,9 +242,10 @@ name|u_int
 name|c
 parameter_list|)
 block|{
-asm|__asm("addl %1, %0" : "+r" (sum) : "r" (b));
-asm|__asm("adcl %1, %0" : "+r" (sum) : "r" (c));
-asm|__asm("adcl $0, %0" : "+r" (sum));
+comment|/* __volatile is necessary because the condition codes are used. */
+asm|__asm __volatile ("addl %1, %0" : "+r" (sum) : "g" (b));
+asm|__asm __volatile ("adcl %1, %0" : "+r" (sum) : "g" (c));
+asm|__asm __volatile ("adcl $0, %0" : "+r" (sum));
 name|sum
 operator|=
 operator|(
