@@ -148,7 +148,7 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|__arm32__
+name|__arm__
 argument_list|)
 operator|||
 name|defined
