@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.28 (Berkeley) %G%"
+literal|"@(#)headers.c	8.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4090,29 +4090,27 @@ name|opos
 expr_stmt|;
 name|omax
 operator|=
-literal|78
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_linelimit
+operator|-
+literal|2
 expr_stmt|;
 if|if
 condition|(
-name|mci
-operator|->
-name|mci_mailer
-operator|->
-name|m_linelimit
-operator|-
-literal|2
-operator|<
 name|omax
+operator|<
+literal|0
+operator|||
+name|omax
+operator|>
+literal|78
 condition|)
 name|omax
 operator|=
-name|mci
-operator|->
-name|mci_mailer
-operator|->
-name|m_linelimit
-operator|-
-literal|2
+literal|78
 expr_stmt|;
 comment|/* 	**  Run through the list of values. 	*/
 while|while
