@@ -309,67 +309,8 @@ begin_comment
 comment|/* PC98 */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDC_500KBPS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FDC_500KBPS
-value|0x00
-end_define
-
 begin_comment
-comment|/* 500KBPS MFM drive transfer rate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDC_300KBPS
-value|0x01
-end_define
-
-begin_comment
-comment|/* 300KBPS MFM drive transfer rate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDC_250KBPS
-value|0x02
-end_define
-
-begin_comment
-comment|/* 250KBPS MFM drive transfer rate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDC_125KBPS
-value|0x03
-end_define
-
-begin_comment
-comment|/* 125KBPS FM drive transfer rate */
-end_comment
-
-begin_comment
-comment|/* for some controllers 1MPBS instead */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FDC_500KBPS */
+comment|/*  * The definitions for FDC_500KBPS etc. have been moved out to<sys/fdcio.h>  * since they need to be visible in userland.  They cover the lower two bits  * of FDCTL when used for output.  */
 end_comment
 
 begin_comment
