@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.36	81/07/01	*/
+comment|/*	conf.c	4.37	81/07/05	*/
 end_comment
 
 begin_include
@@ -1482,6 +1482,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|struct
+name|tty
+name|pt_tty
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -1548,6 +1556,13 @@ define|#
 directive|define
 name|ptyioctl
 value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|pt_tty
+value|0
 end_define
 
 begin_endif
@@ -2186,7 +2201,7 @@ name|nodev
 block|,
 name|nodev
 block|,
-literal|0
+name|pt_tty
 block|,
 name|ptcopen
 block|,
@@ -2203,7 +2218,7 @@ name|nodev
 block|,
 name|nodev
 block|,
-literal|0
+name|pt_tty
 block|,
 name|nodev
 block|,
