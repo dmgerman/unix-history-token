@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)qd.c	1.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)qd.c	1.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1321,6 +1321,37 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KADB
+end_ifdef
+
+begin_function_decl
+specifier|extern
+function_decl|(
+modifier|*
+name|v_getc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+function_decl|(
+modifier|*
+name|v_poll
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1339,10 +1370,32 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|qdgetc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|qdpoll
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|qdstart
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|qdpolling
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * LK-201 state storage for input console keyboard conversion to ASCII   */
@@ -1396,21 +1449,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFLAGS
-value|(EVENP|ECHO|XTABS|CRMOD)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|POSIXTTY
-end_ifdef
-
-begin_define
-define|#
-directive|define
 name|IFLAG
-value|(BRKINT|ISTRIP|IXON|IXANY|ICRNL|IEXTEN|IMAXBEL)
+value|(BRKINT|ISTRIP|IXON|IXANY|ICRNL|IMAXBEL)
 end_define
 
 begin_define
@@ -1424,7 +1464,7 @@ begin_define
 define|#
 directive|define
 name|LFLAG
-value|(ISIG|ICANON|ECHO)
+value|(ISIG|ICANON|ECHO|IEXTEN)
 end_define
 
 begin_define
@@ -1433,11 +1473,6 @@ directive|define
 name|CFLAG
 value|(PARENB|CREAD|CS7|CLOCAL)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Init QDSS as console (before probe routine)  */
@@ -2085,6 +2120,39 @@ begin_comment
 comment|/* kernel console output to qdss */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KADB
+end_ifdef
+
+begin_expr_stmt
+name|v_getc
+operator|=
+name|qdgetc
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* kernel console input from qdss */
+end_comment
+
+begin_expr_stmt
+name|v_poll
+operator|=
+name|qdpoll
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* kdb hook to disable char intr */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|consops
 operator|=
@@ -2137,7 +2205,6 @@ name|br
 decl_stmt|,
 name|cvec
 decl_stmt|;
-comment|/* value-result */
 specifier|register
 name|int
 name|unit
@@ -3258,12 +3325,6 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|t_flags
-operator|=
-name|IFLAGS
-expr_stmt|;
-name|tp
-operator|->
 name|t_ispeed
 operator|=
 name|B9600
@@ -3282,9 +3343,6 @@ name|TS_ISOPEN
 operator||
 name|TS_CARR_ON
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|POSIXTTY
 name|tp
 operator|->
 name|t_iflag
@@ -3309,8 +3367,6 @@ name|t_cflag
 operator|=
 name|TTYDEF_CFLAG
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 		* enable intrpts, open line discipline  		*/
 name|dga
@@ -12052,6 +12108,11 @@ block|}
 else|else
 block|{
 comment|/* 		 * if the graphic device is not turned on, this is console input 		 */
+if|if
+condition|(
+name|qdpolling
+condition|)
+return|return;
 name|ui
 operator|=
 name|qdinfo
@@ -12362,6 +12423,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|KADB
+if|if
+condition|(
+operator|!
+name|kdbrintr
+argument_list|(
+name|chr
+operator|&
+literal|0177
+argument_list|,
+name|tp
+argument_list|)
+condition|)
+endif|#
+directive|endif
 operator|(
 operator|*
 name|linesw
@@ -13307,6 +13385,22 @@ end_block
 begin_comment
 comment|/* ldfont */
 end_comment
+
+begin_macro
+name|qdpoll
+argument_list|(
+argument|onoff
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|qdpolling
+operator|=
+name|onoff
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  *  Get a character from the LK201 (polled)  */
