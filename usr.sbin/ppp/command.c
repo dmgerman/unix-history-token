@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.167 1998/10/17 12:28:05 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.168 1998/10/22 02:32:48 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -679,7 +679,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/10/17 12:28:05 $"
+literal|"$Date: 1998/10/22 02:32:48 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8803,7 +8803,7 @@ block|{
 case|case
 name|VAR_AUTHKEY
 case|:
-if|if
+switch|switch
 condition|(
 name|bundle_Phase
 argument_list|(
@@ -8811,10 +8811,14 @@ name|arg
 operator|->
 name|bundle
 argument_list|)
-operator|==
-name|PHASE_DEAD
 condition|)
 block|{
+case|case
+name|PHASE_DEAD
+case|:
+case|case
+name|PHASE_ESTABLISH
+case|:
 name|strncpy
 argument_list|(
 name|arg
@@ -8869,12 +8873,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
 name|err
 operator|=
-literal|"set authkey: Only available at phase DEAD\n"
+literal|"set authkey: Only available at phase DEAD/ESTABLISH\n"
 expr_stmt|;
 name|log_Printf
 argument_list|(
@@ -8883,12 +8886,13 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
 name|VAR_AUTHNAME
 case|:
-if|if
+switch|switch
 condition|(
 name|bundle_Phase
 argument_list|(
@@ -8896,10 +8900,14 @@ name|arg
 operator|->
 name|bundle
 argument_list|)
-operator|==
-name|PHASE_DEAD
 condition|)
 block|{
+case|case
+name|PHASE_DEAD
+case|:
+case|case
+name|PHASE_ESTABLISH
+case|:
 name|strncpy
 argument_list|(
 name|arg
@@ -8954,12 +8962,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
 name|err
 operator|=
-literal|"set authname: Only available at phase DEAD\n"
+literal|"set authname: Only available at phase DEAD/ESTABLISH\n"
 expr_stmt|;
 name|log_Printf
 argument_list|(
@@ -8968,6 +8975,7 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
@@ -9645,7 +9653,7 @@ break|break;
 case|case
 name|VAR_MRRU
 case|:
-if|if
+switch|switch
 condition|(
 name|bundle_Phase
 argument_list|(
@@ -9653,15 +9661,46 @@ name|arg
 operator|->
 name|bundle
 argument_list|)
-operator|!=
+condition|)
+block|{
+case|case
 name|PHASE_DEAD
+case|:
+break|break;
+case|case
+name|PHASE_ESTABLISH
+case|:
+comment|/* Make sure none of our links are DATALINK_LCP or greater */
+if|if
+condition|(
+name|bundle_HighestState
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|)
+operator|>=
+name|DATALINK_LCP
 condition|)
 block|{
 name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"mrru: Only changable at phase DEAD\n"
+literal|"mrru: Only changable before LCP negotiations\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+break|break;
+default|default:
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"mrru: Only changable at phase DEAD/ESTABLISH\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -14365,7 +14404,7 @@ break|break;
 case|case
 name|NEG_SHORTSEQ
 case|:
-if|if
+switch|switch
 condition|(
 name|bundle_Phase
 argument_list|(
@@ -14373,18 +14412,54 @@ name|arg
 operator|->
 name|bundle
 argument_list|)
-operator|!=
-name|PHASE_DEAD
 condition|)
+block|{
+case|case
+name|PHASE_DEAD
+case|:
+break|break;
+case|case
+name|PHASE_ESTABLISH
+case|:
+comment|/* Make sure none of our links are DATALINK_LCP or greater */
+if|if
+condition|(
+name|bundle_HighestState
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|)
+operator|>=
+name|DATALINK_LCP
+condition|)
+block|{
 name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"shortseq: Only changable at phase DEAD\n"
+literal|"shortseq: Only changable before"
+literal|" LCP negotiations\n"
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+return|return
+literal|1
+return|;
+block|}
+break|break;
+default|default:
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"shortseq: Only changable at phase"
+literal|" DEAD/ESTABLISH\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|arg
 operator|->
 name|bundle
@@ -14413,7 +14488,6 @@ name|shortseq
 operator||=
 name|add
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|NEG_VJCOMP
