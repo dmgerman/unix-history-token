@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.182 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.183 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1148,6 +1148,17 @@ directive|define
 name|ARGV_T
 value|char *const *
 end_define
+
+begin_define
+define|#
+directive|define
+name|HASSETRLIMIT
+value|1
+end_define
+
+begin_comment
+comment|/* has setrlimit(2) syscall */
+end_comment
 
 begin_else
 else|#
