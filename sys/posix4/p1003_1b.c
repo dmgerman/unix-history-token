@@ -447,6 +447,11 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|targetp
+decl_stmt|;
 name|int
 name|e
 decl_stmt|;
@@ -491,7 +496,7 @@ operator|->
 name|pid
 argument_list|,
 operator|&
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 if|if
@@ -517,7 +522,7 @@ index|]
 argument_list|,
 name|ksched
 argument_list|,
-name|p
+name|targetp
 argument_list|,
 operator|(
 specifier|const
@@ -559,6 +564,11 @@ name|struct
 name|sched_param
 name|sched_param
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|targetp
+decl_stmt|;
 name|e
 operator|=
 name|p31b_proc
@@ -570,7 +580,7 @@ operator|->
 name|pid
 argument_list|,
 operator|&
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 if|if
@@ -596,7 +606,7 @@ index|]
 argument_list|,
 name|ksched
 argument_list|,
-name|p
+name|targetp
 argument_list|,
 operator|&
 name|sched_param
@@ -658,6 +668,11 @@ name|struct
 name|sched_param
 name|sched_param
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|targetp
+decl_stmt|;
 name|e
 operator|=
 name|copyin
@@ -695,7 +710,7 @@ operator|->
 name|pid
 argument_list|,
 operator|&
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 if|if
@@ -721,7 +736,7 @@ index|]
 argument_list|,
 name|ksched
 argument_list|,
-name|p
+name|targetp
 argument_list|,
 name|uap
 operator|->
@@ -763,6 +778,11 @@ block|{
 name|int
 name|e
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|targetp
+decl_stmt|;
 name|e
 operator|=
 name|p31b_proc
@@ -774,7 +794,7 @@ operator|->
 name|pid
 argument_list|,
 operator|&
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 if|if
@@ -800,7 +820,7 @@ index|]
 argument_list|,
 name|ksched
 argument_list|,
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 return|return
@@ -933,6 +953,11 @@ block|{
 name|int
 name|e
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|targetp
+decl_stmt|;
 name|e
 operator|=
 name|p31b_proc
@@ -944,7 +969,7 @@ operator|->
 name|pid
 argument_list|,
 operator|&
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 if|if
@@ -970,7 +995,7 @@ index|]
 argument_list|,
 name|ksched
 argument_list|,
-name|p
+name|targetp
 argument_list|,
 name|uap
 operator|->
