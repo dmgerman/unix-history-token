@@ -553,18 +553,6 @@ union_decl|;
 end_union_decl
 
 begin_function_decl
-name|long
-name|blockest
-parameter_list|(
-name|union
-name|dinode
-modifier|*
-name|dp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|mapfiles
 parameter_list|(
