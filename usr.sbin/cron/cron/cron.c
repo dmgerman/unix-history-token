@@ -378,16 +378,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-switch|switch
+if|if
 condition|(
-name|fork
-argument_list|()
-condition|)
-block|{
-case|case
+name|daemon
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+operator|==
 operator|-
 literal|1
-case|:
+condition|)
+block|{
 name|log_it
 argument_list|(
 literal|"CRON"
@@ -397,41 +400,10 @@ argument_list|()
 argument_list|,
 literal|"DEATH"
 argument_list|,
-literal|"can't fork"
+literal|"can't become daemon"
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0
-case|:
-comment|/* child process */
-name|log_it
-argument_list|(
-literal|"CRON"
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|,
-literal|"STARTUP"
-argument_list|,
-literal|"fork ok"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setsid
-argument_list|()
-expr_stmt|;
-break|break;
-default|default:
-comment|/* parent process should just die */
-name|_exit
 argument_list|(
 literal|0
 argument_list|)
