@@ -408,6 +408,15 @@ end_function_decl
 
 begin_function_decl
 name|usbd_status
+name|usbd_abort_default_pipe
+parameter_list|(
+name|usbd_device_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usbd_status
 name|usbd_clear_endpoint_stall
 parameter_list|(
 name|usbd_pipe_handle
@@ -659,6 +668,15 @@ begin_function_decl
 name|usb_device_descriptor_t
 modifier|*
 name|usbd_get_device_descriptor
+parameter_list|(
+name|usbd_device_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|usbd_get_speed
 parameter_list|(
 name|usbd_device_handle
 parameter_list|)
