@@ -177,13 +177,6 @@ literal|"RSA-98III"
 block|}
 block|,
 block|{
-literal|0x11802fbf
-block|,
-name|NULL
-block|}
-block|,
-comment|/* OYO8011 - PC-9801-12X */
-block|{
 literal|0x4180a3b8
 block|,
 name|NULL
@@ -191,40 +184,75 @@ block|}
 block|,
 comment|/* NEC8041 - PC-9821CB-B04 */
 block|{
-literal|0x4182a3b8
+literal|0x0181a3b8
 block|,
 name|NULL
 block|}
 block|,
-comment|/* NEC8241 - (Nw150) */
+comment|/* NEC8101 - PC-9821CB2-B04 */
 block|{
 literal|0x5181a3b8
 block|,
 name|NULL
 block|}
 block|,
-comment|/* NEC8151 - PC-9821CB2-B04 */
-block|{
-literal|0x5182a3b8
-block|,
-name|NULL
-block|}
-block|,
-comment|/* NEC8251 - PC-9801-12X */
-block|{
-literal|0x7182a3b8
-block|,
-name|NULL
-block|}
-block|,
-comment|/* NEC8271 - PC-9801-12X */
+comment|/* NEC8151 - Internal FAX/Modem for Cx3, Cb3 */
 block|{
 literal|0x9181a3b8
 block|,
 name|NULL
 block|}
 block|,
-comment|/* NEC8191 - PC-9801-120 */
+comment|/* NEC8191 - NEC PC-9801-120 */
+block|{
+literal|0xe181a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC81E1 - Internal FAX/Modem */
+block|{
+literal|0x1182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8211 - PC-9801-123 */
+block|{
+literal|0x3182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8231 - Internal FAX/Modem(Voice) */
+block|{
+literal|0x4182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8241 - NEC PC-9821NR-B05 */
+block|{
+literal|0x5182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8251 - Internel FAX/Modem */
+block|{
+literal|0x7182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8271 - NEC PC-9801-125 */
+block|{
+literal|0x11802fbf
+block|,
+name|NULL
+block|}
+block|,
+comment|/* OYO8011 - Internal FAX/Modem for ValueStar(Ring) */
 block|{
 literal|0
 block|}
@@ -296,33 +324,49 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0x11802fbf
-case|:
-comment|/* PC-9801-12X */
-case|case
 literal|0x4180a3b8
 case|:
 comment|/* PC-9821CB-B04 */
 case|case
-literal|0x4182a3b8
-case|:
-comment|/* (Nw150) */
-case|case
-literal|0x5181a3b8
+literal|0x0181a3b8
 case|:
 comment|/* PC-9821CB2-B04 */
 case|case
-literal|0x5182a3b8
+literal|0x5181a3b8
 case|:
-comment|/* PC-9801-12X */
-case|case
-literal|0x7182a3b8
-case|:
-comment|/* PC-9801-12X */
+comment|/* for Cx3, Cb3 internal */
 case|case
 literal|0x9181a3b8
 case|:
 comment|/* PC-9801-120 */
+case|case
+literal|0xe181a3b8
+case|:
+comment|/* Internal FAX/Modem */
+case|case
+literal|0x1182a3b8
+case|:
+comment|/* PC-9801-123 */
+case|case
+literal|0x3182a3b8
+case|:
+comment|/* FAX/Voice/Modem internal */
+case|case
+literal|0x4182a3b8
+case|:
+comment|/* PC-9821NR-B05 */
+case|case
+literal|0x5182a3b8
+case|:
+comment|/* FAX/Modem internal */
+case|case
+literal|0x7182a3b8
+case|:
+comment|/* PC-9801-125 */
+case|case
+literal|0x11802fbf
+case|:
+comment|/* for ValueStar internal */
 name|SET_FLAG
 argument_list|(
 name|dev
