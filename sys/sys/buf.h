@@ -1442,6 +1442,18 @@ name|s
 decl_stmt|,
 name|ret
 decl_stmt|;
+comment|/* 	 * When the system is panicing, the lock manager grants all lock 	 * requests whether or not the lock is available. To avoid "unlocked 	 * buffer" panics after a crash, we just claim that all buffers 	 * are locked when cleaning up after a system panic. 	 */
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|s
 operator|=
 name|splbio
