@@ -9899,6 +9899,12 @@ condition|(
 name|isreg
 condition|)
 block|{
+name|char
+modifier|*
+name|msg
+init|=
+literal|"Transfer complete."
+decl_stmt|;
 name|off_t
 name|offset
 decl_stmt|;
@@ -9990,6 +9996,21 @@ goto|goto
 name|data_err
 goto|;
 block|}
+comment|/* 				 * We hit the EOF prematurely. 				 * Perhaps the file was externally truncated. 				 */
+if|if
+condition|(
+name|cnt
+operator|==
+literal|0
+condition|)
+block|{
+name|msg
+operator|=
+literal|"Transfer finished due to "
+literal|"premature end of file."
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|transflag
 operator|=
@@ -9999,7 +10020,7 @@ name|reply
 argument_list|(
 literal|226
 argument_list|,
-literal|"Transfer complete."
+name|msg
 argument_list|)
 expr_stmt|;
 return|return
