@@ -50,6 +50,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|STACKALIGNBYTES
+value|(8 - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STACKALIGN
+parameter_list|(
+name|p
+parameter_list|)
+value|((u_int)(p)& ~STACKALIGNBYTES)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
