@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.26 1997/07/20 06:09:55 bde Exp $"
+literal|"$Id: ping.c,v 1.27 1997/08/07 02:41:15 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4837,9 +4837,12 @@ name|printf
 argument_list|(
 literal|"frag needed and DF set (MTU %d)\n"
 argument_list|,
+name|ntohs
+argument_list|(
 name|icp
 operator|->
 name|icmp_nextmtu
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5028,13 +5031,14 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"(New addr: 0x%08lx)\n"
+literal|"(New addr: %s)\n"
 argument_list|,
+name|inet_ntoa
+argument_list|(
 name|icp
 operator|->
 name|icmp_gwaddr
-operator|.
-name|s_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifndef|#
