@@ -5,18 +5,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	dosig.c	4.1	82/05/12	"
+literal|"@(#)dosig.c	4.2  83/07/31"
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|FBSD
-end_define
-
 begin_comment
-comment|/*	Handle signal trapping from version 6 or version 7 compatability  *	mode programs.  *	Art Wetzel	November 1979  */
+comment|/*  * Handle signal trapping from version 6 or  * version 7 compatability mode programs.  *	Art Wetzel	November 1979  */
 end_comment
 
 begin_ifdef
@@ -64,12 +58,6 @@ begin_comment
 comment|/* actual catch point for all signals */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FBSD
-end_ifdef
-
 begin_macro
 name|sigcatch
 argument_list|(
@@ -77,42 +65,25 @@ argument|signum
 argument_list|,
 argument|faultcode
 argument_list|,
-argument|myaddr
-argument_list|,
-argument|stpc
-argument_list|,
-argument|stps
+argument|scp
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|signum
+decl_stmt|,
+name|faultcode
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|sigcatch
-argument_list|(
-argument|signum
-argument_list|)
-end_macro
 
 begin_decl_stmt
-name|int
-name|signum
+name|struct
+name|sigcontext
+modifier|*
+name|scp
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -164,12 +135,6 @@ begin_comment
 comment|/* figure out the pc */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FBSD
-end_ifdef
-
 begin_expr_stmt
 name|pcptr
 operator|=
@@ -179,40 +144,11 @@ name|short
 operator|*
 operator|)
 operator|&
-name|stpc
+name|scp
+operator|->
+name|sc_pc
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|pcptr
-operator|=
-operator|(
-name|unsigned
-name|short
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|pcptr
-operator|+
-literal|20
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|pc
@@ -231,56 +167,20 @@ begin_comment
 comment|/* get the psl with condition codes */
 end_comment
 
-begin_comment
-comment|/* requires UNIX-32V patch to not clear out condition codes */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FBSD
-end_ifdef
-
 begin_expr_stmt
 name|psl
 operator|=
 literal|0x83c00000
 operator||
 operator|(
-name|stps
+name|scp
+operator|->
+name|sc_ps
 operator|&
 literal|017
 operator|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|psl
-operator|=
-literal|0x83c00000
-operator||
-operator|(
-operator|*
-operator|(
-name|pcptr
-operator|-
-literal|6
-operator|)
-operator|&
-literal|017
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* actually do the thing */
@@ -329,6 +229,16 @@ comment|/* go back to compatability mode and the signal routine there */
 end_comment
 
 begin_expr_stmt
+name|sigsetmask
+argument_list|(
+name|scp
+operator|->
+name|sc_mask
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|incompat
 operator|++
 expr_stmt|;
@@ -352,12 +262,20 @@ name|signum
 operator|,
 name|from
 operator|)
+name|int
+name|signum
+operator|,
+name|from
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 name|unsigned
 name|short
-operator|*
+modifier|*
 name|sp
-block|;
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -382,7 +300,7 @@ operator|-
 literal|1
 operator|)
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* where is the stack */
@@ -397,7 +315,7 @@ name|regs
 index|[
 literal|6
 index|]
-block|;
+expr_stmt|;
 comment|/* stack up psw condition codes so rti works */
 operator|*
 operator|(
@@ -408,7 +326,7 @@ operator|=
 name|psl
 operator|&
 literal|017
-block|;
+expr_stmt|;
 comment|/* stack pc */
 operator|*
 operator|(
@@ -424,7 +342,7 @@ operator|(
 name|int
 operator|)
 name|pc
-block|;
+expr_stmt|;
 comment|/* reset stack pointer */
 name|regs
 index|[
@@ -439,7 +357,7 @@ operator|(
 name|int
 operator|)
 name|sp
-block|;
+expr_stmt|;
 comment|/* reset pc to signal catching routine */
 name|pc
 operator|=
@@ -452,8 +370,16 @@ name|sigvals
 index|[
 name|signum
 index|]
-block|; }
-end_expr_stmt
+expr_stmt|;
+name|signal
+argument_list|(
+name|signum
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

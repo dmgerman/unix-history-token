@@ -5,18 +5,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	runcompat.c	4.1	82/05/12	"
+literal|"@(#)runcompat.c	4.2 83/07/31"
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|FBSD
-end_define
-
 begin_comment
-comment|/*  *	Compatability mode support under UNIX-32V  *	written by Art Wetzel during August 1979  *	at the Interdisciplinary Dept of Information Science  *	Room 711, LIS Bldg  *	University of Pittsburgh  *	Pittsburgh, Pa 15260  *  *	No claims are made on the completeness of the support of any  *	of the systems simulated under this package  */
+comment|/*  *	Compatability mode support  *	written by Art Wetzel during August 1979  *	at the Interdisciplinary Dept of Information Science  *	Room 711, LIS Bldg  *	University of Pittsburgh  *	Pittsburgh, Pa 15260  *  *	No claims are made on the completeness of the support of any  *	of the systems simulated under this package  */
 end_comment
 
 begin_include
@@ -97,8 +91,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|short
+name|u_short
 name|regs
 index|[
 literal|8
@@ -107,15 +100,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|u_long
 name|psl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|short
+name|u_short
 modifier|*
 name|pc
 decl_stmt|;
@@ -572,7 +563,7 @@ block|}
 end_if
 
 begin_comment
-comment|/* if a UNIX-32V file run it */
+comment|/* if a UNIX file run it */
 end_comment
 
 begin_if
@@ -1084,40 +1075,32 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-unit|}
-ifdef|#
-directive|ifdef
-name|FBSD
-end_ifdef
-
 begin_expr_stmt
-unit|illtrap
+unit|}  illtrap
 operator|(
 name|signum
 operator|,
 name|faultcode
 operator|,
-name|myaddr
-operator|,
-name|stpc
-operator|,
-name|stps
+name|scp
 operator|)
 name|int
 name|signum
+operator|,
+name|faultcode
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|struct
+name|sigcontext
+modifier|*
+name|scp
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-else|#
-directive|else
-name|illtrap
-argument_list|()
-block|{
-endif|#
-directive|endif
 name|unsigned
 name|short
 modifier|*
@@ -1132,20 +1115,38 @@ name|i
 decl_stmt|;
 extern|extern getregs(
 block|)
+end_block
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/* record the fact that we are not in compatability mode now */
+end_comment
+
+begin_expr_stmt
 name|incompat
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* get the register values before they get clobbered */
+end_comment
+
+begin_expr_stmt
 name|getregs
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* figure out what the pc was */
-ifdef|#
-directive|ifdef
-name|FBSD
+end_comment
+
+begin_expr_stmt
 name|pcptr
 operator|=
 operator|(
@@ -1154,30 +1155,13 @@ name|short
 operator|*
 operator|)
 operator|&
-name|stpc
+name|scp
+operator|->
+name|sc_pc
 expr_stmt|;
-else|#
-directive|else
-name|pcptr
-operator|=
-operator|(
-name|unsigned
-name|short
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|pcptr
-operator|+
-literal|20
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
+end_expr_stmt
+
+begin_expr_stmt
 name|pc
 operator|=
 operator|(
@@ -1188,17 +1172,35 @@ operator|)
 operator|*
 name|pcptr
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* get the instruction */
+end_comment
+
+begin_expr_stmt
 name|instr
 operator|=
 operator|*
 name|pc
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* incriment the pc over this instruction */
+end_comment
+
+begin_expr_stmt
 name|pc
 operator|++
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* set register 7 as pc synonym */
+end_comment
+
+begin_expr_stmt
 name|regs
 index|[
 literal|7
@@ -1213,41 +1215,46 @@ name|int
 operator|)
 name|pc
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* set up psl with condition codes */
+end_comment
+
+begin_comment
 comment|/* a UNIX-32V monitor patch is required to not clear condition codes */
-ifdef|#
-directive|ifdef
-name|FBSD
+end_comment
+
+begin_expr_stmt
 name|psl
 operator|=
 literal|0x83c00000
 operator||
 operator|(
-name|stps
+name|scp
+operator|->
+name|sc_ps
 operator|&
 literal|017
 operator|)
 expr_stmt|;
-else|#
-directive|else
-name|psl
-operator|=
-literal|0x83c00000
-operator||
-operator|(
-operator|*
-operator|(
-name|pcptr
-operator|-
-literal|6
-operator|)
-operator|&
-literal|017
-operator|)
+end_expr_stmt
+
+begin_expr_stmt
+name|sigsetmask
+argument_list|(
+name|scp
+operator|->
+name|sc_mask
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+end_expr_stmt
+
+begin_comment
 comment|/* pick out the appropriate action for this illegal instruction */
+end_comment
+
+begin_switch
 switch|switch
 condition|(
 name|instr
@@ -1393,7 +1400,7 @@ break|break;
 comment|/* otherwise put out a message and quit */
 name|printf
 argument_list|(
-literal|"illegal instruction, psl 0x%08x, pc 0%04o\n"
+literal|"Illegal instruction, psl 0x%08x, pc 0%04o\n"
 argument_list|,
 name|psl
 argument_list|,
@@ -1453,15 +1460,24 @@ name|compat
 argument_list|()
 expr_stmt|;
 block|}
+end_switch
+
+begin_comment
 comment|/* go back to compatability mode */
+end_comment
+
+begin_expr_stmt
 name|incompat
 operator|++
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|compat
 argument_list|()
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
+unit|}
 end_unit
 
