@@ -963,6 +963,9 @@ block|{
 case|case
 literal|'?'
 case|:
+name|_rl_free_saved_history_line
+argument_list|()
+expr_stmt|;
 name|rl_noninc_forward_search
 argument_list|(
 name|count
@@ -974,6 +977,9 @@ break|break;
 case|case
 literal|'/'
 case|:
+name|_rl_free_saved_history_line
+argument_list|()
+expr_stmt|;
 name|rl_noninc_reverse_search
 argument_list|(
 name|count
@@ -2680,6 +2686,8 @@ index|]
 decl_stmt|;
 name|int
 name|mblen
+decl_stmt|,
+name|p
 decl_stmt|;
 name|mbstate_t
 name|ps
@@ -2788,6 +2796,10 @@ condition|(
 name|wc
 condition|)
 block|{
+name|p
+operator|=
+name|rl_point
+expr_stmt|;
 name|mblen
 operator|=
 name|wcrtomb
@@ -2816,13 +2828,24 @@ expr_stmt|;
 name|rl_begin_undo_group
 argument_list|()
 expr_stmt|;
-name|rl_delete
+name|rl_vi_delete
 argument_list|(
 literal|1
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rl_point
+operator|<
+name|p
+condition|)
+comment|/* Did we retreat at EOL? */
+name|rl_point
+operator|++
+expr_stmt|;
+comment|/* XXX - should we advance more than 1 for mbchar? */
 name|rl_insert_text
 argument_list|(
 name|mb
@@ -5050,6 +5073,17 @@ name|rl_byte_oriented
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|rl_point
+operator|<
+name|p
+condition|)
+comment|/* Did we retreat at EOL? */
+name|rl_point
+operator|++
+expr_stmt|;
 while|while
 condition|(
 name|_rl_insert_char
@@ -5075,6 +5109,7 @@ argument_list|(
 name|RL_STATE_MOREINPUT
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 endif|#
