@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.6";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.7";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -661,14 +661,16 @@ operator|)
 return|;
 while|while
 condition|(
-operator|!
-name|endlinp
-argument_list|(
 name|GETC
 argument_list|(
 name|ch
 argument_list|)
-argument_list|)
+operator|!=
+literal|'\n'
+operator|&&
+name|ch
+operator|!=
+name|EOF
 condition|)
 empty_stmt|;
 return|return
@@ -2091,13 +2093,11 @@ argument_list|(
 name|ch
 argument_list|)
 operator|&&
+operator|!
+name|endlinp
+argument_list|(
 name|ch
-operator|!=
-literal|'\n'
-operator|&&
-name|ch
-operator|!=
-name|EOF
+argument_list|)
 condition|)
 empty_stmt|;
 call|(
@@ -2348,6 +2348,12 @@ argument_list|)
 operator|&&
 operator|!
 name|isblnk
+argument_list|(
+name|ch
+argument_list|)
+operator|&&
+operator|!
+name|endlinp
 argument_list|(
 name|ch
 argument_list|)
