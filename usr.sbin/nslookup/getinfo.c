@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 1.2 1994/09/22 21:50:33 pst Exp $"
+literal|"$Id: getinfo.c,v 1.3 1995/05/30 03:49:14 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2518,6 +2518,11 @@ name|struct
 name|in_addr
 name|ina
 decl_stmt|;
+name|Boolean
+name|tried_as_is
+init|=
+name|FALSE
+decl_stmt|;
 comment|/* Catch explicit addresses */
 if|if
 condition|(
@@ -2739,6 +2744,66 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/*      * If there are dots in the name already, let's just give it a try      * 'as is'.  The threshold can be set with the "ndots" option.      */
+if|if
+condition|(
+name|n
+operator|>=
+operator|(
+name|int
+operator|)
+name|_res
+operator|.
+name|ndots
+condition|)
+block|{
+name|result
+operator|=
+name|GetHostDomain
+argument_list|(
+name|nsAddrPtr
+argument_list|,
+name|queryClass
+argument_list|,
+name|queryType
+argument_list|,
+name|name
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|hostPtr
+argument_list|,
+name|isServer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|SUCCESS
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
+if|if
+condition|(
+name|result
+operator|==
+name|NO_INFO
+condition|)
+name|got_nodata
+operator|++
+expr_stmt|;
+name|tried_as_is
+operator|++
+expr_stmt|;
+block|}
 comment|/*      * We do at least one level of search if      *	- there is no dot and RES_DEFNAME is set, or      *	- there is at least one dot, there is no trailing dot,      *	  and RES_DNSRCH is set.      */
 if|if
 condition|(
@@ -2854,10 +2919,11 @@ literal|0
 condition|)
 break|break;
 block|}
-comment|/*      * If the search/default failed, try the name as fully-qualified,      * but only if it contained at least one dot (even trailing).      * This is purely a heuristic; we assume that any reasonable query      * about a top-level domain (for servers, SOA, etc) will not use      * res_search.      */
+comment|/* if we have not already tried the name "as is", do that now.      * note that we do this regardless of how many dots were in the      * name or whether it ends with a dot.      */
 if|if
 condition|(
-name|n
+operator|!
+name|tried_as_is
 operator|&&
 operator|(
 name|result
@@ -2887,7 +2953,9 @@ operator|==
 name|SUCCESS
 condition|)
 return|return
+operator|(
 name|result
+operator|)
 return|;
 if|if
 condition|(
