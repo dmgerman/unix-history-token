@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.134 2001/03/25 22:52:21 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.135 2001/04/01 14:59:52 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3355,12 +3355,6 @@ name|isdone
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
-block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|xfer
 operator|->
 name|busy_free
@@ -3369,6 +3363,7 @@ name|XFER_BUSY
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 return|return
 operator|(
 name|xfer
