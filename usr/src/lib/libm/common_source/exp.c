@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	4.3 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
+literal|"@(#)exp.c	4.3 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,9 +530,11 @@ operator|-
 operator|(
 name|lo
 operator|-
+operator|(
 name|x
 operator|*
 name|c
+operator|)
 operator|/
 operator|(
 literal|2.0
