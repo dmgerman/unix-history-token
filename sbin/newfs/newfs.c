@@ -754,6 +754,30 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|avgfilesize
+init|=
+name|AVFILESIZ
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected average file size */
+end_comment
+
+begin_decl_stmt
+name|int
+name|avgfilesperdir
+init|=
+name|AFPDIR
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected number of files per directory */
+end_comment
+
+begin_decl_stmt
+name|int
 name|bbsize
 init|=
 name|BBSIZE
@@ -1052,9 +1076,9 @@ name|opstring
 operator|=
 name|mfs
 condition|?
-literal|"NF:T:Ua:b:c:d:e:f:i:m:o:s:"
+literal|"NF:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
 else|:
-literal|"NOS:T:Ua:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:vx:"
+literal|"NOS:T:Ua:b:c:d:e:f:g:h:i:k:l:m:n:o:p:r:s:t:u:vx:"
 expr_stmt|;
 while|while
 condition|(
@@ -1290,6 +1314,54 @@ condition|)
 name|fatal
 argument_list|(
 literal|"%s: bad fragment size"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'g'
+case|:
+if|if
+condition|(
+operator|(
+name|avgfilesize
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad average file size"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+if|if
+condition|(
+operator|(
+name|avgfilesperdir
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad average files per dir"
 argument_list|,
 name|optarg
 argument_list|)
@@ -3785,6 +3857,26 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-f frag size\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-g average file size\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-h average files per directory\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

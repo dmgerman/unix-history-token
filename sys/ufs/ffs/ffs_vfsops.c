@@ -1690,6 +1690,14 @@ name|fs
 operator|->
 name|fs_maxcluster
 expr_stmt|;
+name|newfs
+operator|->
+name|fs_contigdirs
+operator|=
+name|fs
+operator|->
+name|fs_contigdirs
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|newfs
@@ -1736,6 +1744,39 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
+comment|/* An old fsck may have zeroed these fields, so recheck them. */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_avgfilesize
+operator|<=
+literal|0
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_avgfilesize
+operator|=
+name|AVFILESIZ
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_avgfpdir
+operator|<=
+literal|0
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_avgfpdir
+operator|=
+name|AFPDIR
+expr_stmt|;
+comment|/* XXX */
 comment|/* 	 * Step 3: re-read summary information from disk. 	 */
 name|blks
 operator|=
@@ -2882,6 +2923,17 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
+name|size
+operator|+=
+name|fs
+operator|->
+name|fs_ncg
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int8_t
+argument_list|)
+expr_stmt|;
 name|space
 operator|=
 name|malloc
@@ -3066,7 +3118,74 @@ name|fs
 operator|->
 name|fs_contigsumsize
 expr_stmt|;
+name|space
+operator|=
+name|lp
+expr_stmt|;
 block|}
+name|size
+operator|=
+name|fs
+operator|->
+name|fs_ncg
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int8_t
+argument_list|)
+expr_stmt|;
+name|fs
+operator|->
+name|fs_contigdirs
+operator|=
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|space
+expr_stmt|;
+name|bzero
+argument_list|(
+name|fs
+operator|->
+name|fs_contigdirs
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+comment|/* Compatibility for old filesystems 	   XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_avgfilesize
+operator|<=
+literal|0
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_avgfilesize
+operator|=
+name|AVFILESIZ
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_avgfpdir
+operator|<=
+literal|0
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_avgfpdir
+operator|=
+name|AFPDIR
+expr_stmt|;
+comment|/* XXX */
 name|mp
 operator|->
 name|mnt_data

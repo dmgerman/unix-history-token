@@ -88,14 +88,14 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * There is a 128-byte region in the superblock reserved for in-core  * pointers to summary information. Originally this included an array  * of pointers to blocks of struct csum; now there are just two  * pointers and the remaining space is padded with fs_ocsp[].  *  * NOCSPTRS determines the size of this padding. One pointer (fs_csp)  * is taken away to point to a contiguous array of struct csum for  * all cylinder groups; a second (fs_maxcluster) points to an array  * of cluster sizes that is computed as cylinder groups are inspected.  */
+comment|/*  * There is a 128-byte region in the superblock reserved for in-core  * pointers to summary information. Originally this included an array  * of pointers to blocks of struct csum; now there are just three  * pointers and the remaining space is padded with fs_ocsp[].  *  * NOCSPTRS determines the size of this padding. One pointer (fs_csp)  * is taken away to point to a contiguous array of struct csum for  * all cylinder groups; a second (fs_maxcluster) points to an array  * of cluster sizes that is computed as cylinder groups are inspected,  * and the third points to an array that tracks the creation of new  * directories.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NOCSPTRS
-value|((128 / sizeof(void *)) - 2)
+value|((128 / sizeof(void *)) - 3)
 end_define
 
 begin_comment
@@ -125,6 +125,43 @@ define|#
 directive|define
 name|DEFAULTOPT
 value|FS_OPTTIME
+end_define
+
+begin_comment
+comment|/*  * Grigoriy Orlov<gluk@ptci.ru> has done some extensive work to fine  * tune the layout preferences for directories within a filesystem.  * His algorithm can be tuned by adjusting the following parameters  * which tell the system the average file size and the average number  * of files per directory. These defaults are well selected for typical  * filesystems, but may need to be tuned for odd cases like filesystems  * being used for sqiud caches or news spools.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AVFILESIZ
+value|16384
+end_define
+
+begin_comment
+comment|/* expected average file size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFPDIR
+value|64
+end_define
+
+begin_comment
+comment|/* expected number of files per directory */
+end_comment
+
+begin_comment
+comment|/*  * The maximum number of snapshot nodes that can be associated  * with each filesystem. This limit affects only the number of  * snapshot files that can be recorded within the superblock so  * that they can be found when the filesystem is mounted. However,  * maintaining too many will slow the filesystem performance, so  * having this limit is a good idea.  *  * VALUE NOT IMPLEMENTED IN 4.x YET, RESERVED FROM -CURRENT SO SUPERBLOCKS  * REMAIN COMPATIBLE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSMAXSNAP
+value|20
 end_define
 
 begin_comment
@@ -408,6 +445,11 @@ name|NOCSPTRS
 index|]
 decl_stmt|;
 comment|/* padding; was list of fs_cs buffers */
+name|u_int8_t
+modifier|*
+name|fs_contigdirs
+decl_stmt|;
+comment|/* # of contiguously allocated dirs */
 name|struct
 name|csum
 modifier|*
@@ -434,12 +476,35 @@ index|]
 decl_stmt|;
 comment|/* old rotation block list head */
 name|int32_t
+name|fs_snapinum
+index|[
+name|FSMAXSNAP
+index|]
+decl_stmt|;
+comment|/* RESERVED FROM 5.x */
+name|int32_t
+name|fs_avgfilesize
+decl_stmt|;
+comment|/* expected average file size */
+name|int32_t
+name|fs_avgfpdir
+decl_stmt|;
+comment|/* expected # of files per directory */
+name|int32_t
 name|fs_sparecon
 index|[
-literal|50
+literal|26
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
+name|int32_t
+name|fs_pendingblocks
+decl_stmt|;
+comment|/* RESERVED FROM 5.x */
+name|int32_t
+name|fs_pendinginodes
+decl_stmt|;
+comment|/* RESERVED FROM 5.x */
 name|int32_t
 name|fs_contigsumsize
 decl_stmt|;
