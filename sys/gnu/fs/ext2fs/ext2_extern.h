@@ -559,22 +559,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ll_w_block
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|ext2_new_block
 name|__P
 argument_list|(
