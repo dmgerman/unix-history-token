@@ -1413,7 +1413,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_lock(&mbuf_mtx);						\ 	mbtypes[_mm->m_type]--;						\ 	if ((_mm->m_flags& M_PKTHDR) != 0&& _mm->m_pkthdr.aux) {	\ 		m_freem(_mm->m_pkthdr.aux);				\ 		_mm->m_pkthdr.aux = NULL;				\ 	}								\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid,&mmbfree.m_starved);			\ 	mtx_unlock(&mbuf_mtx); 						\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 	struct mbuf *_aux;						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_lock(&mbuf_mtx);						\ 	mbtypes[_mm->m_type]--;						\ 	if ((_mm->m_flags& M_PKTHDR) != 0&& _mm->m_pkthdr.aux) {	\ 		_aux = _mm->m_pkthdr.aux;				\ 		_mm->m_pkthdr.aux = NULL;				\ 	} else {							\ 		_aux = NULL;						\ 	}								\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid,&mmbfree.m_starved);			\ 	mtx_unlock(&mbuf_mtx); 						\ 	if (_aux)							\ 		m_freem(_aux);						\ } while (0)
 end_define
 
 begin_comment
