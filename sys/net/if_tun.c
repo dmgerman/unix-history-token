@@ -236,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|TUNDEBUG
-value|if (tundebug) printf
+value|if (tundebug) if_printf
 end_define
 
 begin_define
@@ -1518,15 +1518,9 @@ name|TUN_OPEN
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: open\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"open\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1741,15 +1735,9 @@ argument_list|)
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: closed\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"closed\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -1816,15 +1804,9 @@ literal|0
 decl_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tuninit\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tuninit\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2081,15 +2063,9 @@ argument_list|)
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: address set, error=%d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"address set, error=%d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2107,15 +2083,9 @@ argument_list|)
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: destination address set, error=%d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"destination address set, error=%d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2134,15 +2104,9 @@ name|ifr_mtu
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: mtu set\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"mtu set\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2224,15 +2188,9 @@ endif|#
 directive|endif
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunoutput\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tunoutput\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2280,15 +2238,9 @@ condition|)
 block|{
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: not ready 0%o\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"not ready 0%o\n"
 argument_list|,
 name|tp
 operator|->
@@ -3294,15 +3246,9 @@ name|s
 decl_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: read\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"read\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3320,15 +3266,9 @@ condition|)
 block|{
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: not ready 0%o\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"not ready 0%o\n"
 argument_list|,
 name|tp
 operator|->
@@ -3513,15 +3453,9 @@ condition|)
 block|{
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: Dropping mbuf\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"Dropping mbuf\n"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -3607,15 +3541,9 @@ name|isr
 decl_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunwrite\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tunwrite\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3666,15 +3594,9 @@ condition|)
 block|{
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: len=%d!\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"len=%d!\n"
 argument_list|,
 name|uio
 operator|->
@@ -4254,15 +4176,9 @@ argument_list|()
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunpoll\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tunpoll\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4289,15 +4205,9 @@ condition|)
 block|{
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunpoll q=%d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tunpoll q=%d\n"
 argument_list|,
 name|ifp
 operator|->
@@ -4321,15 +4231,9 @@ else|else
 block|{
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunpoll waiting\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tunpoll waiting\n"
 argument_list|)
 expr_stmt|;
 name|selrecord
