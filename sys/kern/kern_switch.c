@@ -555,11 +555,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INVARIANT_SUPPORT
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Return true if the specified process is already in the run queue.  */
@@ -569,7 +577,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|runq_find
+name|runq_findproc
 parameter_list|(
 name|struct
 name|runq
@@ -716,9 +724,20 @@ name|p_comm
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
 name|KASSERT
 argument_list|(
-name|runq_find
+name|runq_findproc
 argument_list|(
 name|rq
 argument_list|,
@@ -738,6 +757,8 @@ name|p_comm
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pri
 operator|=
 name|ke
