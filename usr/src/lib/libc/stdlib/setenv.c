@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setenv.c	5.6 (Berkeley) %G%"
+literal|"@(#)setenv.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,24 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__findenv
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * setenv --  *	Set the value of the environmental variable "name" to be  *	"value".  If rewrite is set, replace any current value.  */
@@ -107,18 +125,13 @@ comment|/* if allocated space before */
 specifier|register
 name|char
 modifier|*
-name|C
+name|c
 decl_stmt|;
 name|int
 name|l_value
 decl_stmt|,
 name|offset
 decl_stmt|;
-name|char
-modifier|*
-name|_findenv
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|*
@@ -140,9 +153,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|C
+name|c
 operator|=
-name|_findenv
+name|__findenv
 argument_list|(
 name|name
 argument_list|,
@@ -167,7 +180,7 @@ if|if
 condition|(
 name|strlen
 argument_list|(
-name|C
+name|c
 argument_list|)
 operator|>=
 name|l_value
@@ -177,7 +190,7 @@ comment|/* old larger; copy over */
 while|while
 condition|(
 operator|*
-name|C
+name|c
 operator|++
 operator|=
 operator|*
@@ -203,11 +216,11 @@ specifier|register
 name|char
 modifier|*
 modifier|*
-name|P
+name|p
 decl_stmt|;
 for|for
 control|(
-name|P
+name|p
 operator|=
 name|environ
 operator|,
@@ -216,10 +229,10 @@ operator|=
 literal|0
 init|;
 operator|*
-name|P
+name|p
 condition|;
 operator|++
-name|P
+name|p
 operator|,
 operator|++
 name|cnt
@@ -284,13 +297,8 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* copy old entries into it */
-name|P
+name|p
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 call|(
@@ -314,7 +322,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|P
+name|p
 condition|)
 return|return
 operator|(
@@ -326,7 +334,7 @@ name|bcopy
 argument_list|(
 name|environ
 argument_list|,
-name|P
+name|p
 argument_list|,
 name|cnt
 operator|*
@@ -339,7 +347,7 @@ argument_list|)
 expr_stmt|;
 name|environ
 operator|=
-name|P
+name|p
 expr_stmt|;
 block|}
 name|environ
@@ -358,7 +366,7 @@ expr_stmt|;
 block|}
 for|for
 control|(
-name|C
+name|c
 operator|=
 operator|(
 name|char
@@ -367,15 +375,15 @@ operator|)
 name|name
 init|;
 operator|*
-name|C
+name|c
 operator|&&
 operator|*
-name|C
+name|c
 operator|!=
 literal|'='
 condition|;
 operator|++
-name|C
+name|c
 control|)
 empty_stmt|;
 comment|/* no `=' in name */
@@ -399,7 +407,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|C
+name|c
 operator|-
 name|name
 argument_list|)
@@ -419,7 +427,7 @@ operator|)
 return|;
 for|for
 control|(
-name|C
+name|c
 operator|=
 name|environ
 index|[
@@ -428,7 +436,7 @@ index|]
 init|;
 operator|(
 operator|*
-name|C
+name|c
 operator|=
 operator|*
 name|name
@@ -436,24 +444,24 @@ operator|++
 operator|)
 operator|&&
 operator|*
-name|C
+name|c
 operator|!=
 literal|'='
 condition|;
 operator|++
-name|C
+name|c
 control|)
 empty_stmt|;
 for|for
 control|(
 operator|*
-name|C
+name|c
 operator|++
 operator|=
 literal|'='
 init|;
 operator|*
-name|C
+name|c
 operator|++
 operator|=
 operator|*
@@ -496,14 +504,14 @@ specifier|register
 name|char
 modifier|*
 modifier|*
-name|P
+name|p
 decl_stmt|;
 name|int
 name|offset
 decl_stmt|;
 while|while
 condition|(
-name|_findenv
+name|__findenv
 argument_list|(
 name|name
 argument_list|,
@@ -514,7 +522,7 @@ condition|)
 comment|/* if set multiple times */
 for|for
 control|(
-name|P
+name|p
 operator|=
 operator|&
 name|environ
@@ -524,18 +532,18 @@ index|]
 init|;
 condition|;
 operator|++
-name|P
+name|p
 control|)
 if|if
 condition|(
 operator|!
 operator|(
 operator|*
-name|P
+name|p
 operator|=
 operator|*
 operator|(
-name|P
+name|p
 operator|+
 literal|1
 operator|)
