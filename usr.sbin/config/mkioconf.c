@@ -1293,44 +1293,56 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d, "
+literal|"%s, "
 argument_list|,
+name|id
+argument_list|(
 name|dp
 operator|->
 name|d_unit
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d, "
+literal|"%s, "
 argument_list|,
+name|id
+argument_list|(
 name|dp
 operator|->
 name|d_connunit
 argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"%d, "
-argument_list|,
-name|dp
-operator|->
-name|d_target
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d, "
+literal|"%s, "
 argument_list|,
+name|id
+argument_list|(
+name|dp
+operator|->
+name|d_target
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s, "
+argument_list|,
+name|id
+argument_list|(
 name|dp
 operator|->
 name|d_lun
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
