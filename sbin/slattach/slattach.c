@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.4 1993/08/30 09:51:01 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.5 1993/09/06 23:24:07 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,7 +436,7 @@ name|char
 name|usage_str
 index|[]
 init|=
-literal|"\ usage: %s [-a ][-c ][-d ][-e<command> ][-n ][-s<speed> ]<device>\n\ 	-a	-- autoenable VJ compression\n\ 	-c	-- enable VJ compression\n\ 	-e ECMD	-- execute ECMD before exiting\n\ 	-h	-- turn on cts/rts style flow control\n\ 	-l	-- disable modem control (CLOCAL) and ignore carrier detect\n\ 	-n	-- throw out ICMP packets\n\ 	-r RCMD	-- execute RCMD upon loss of carrier\n\ 	-s #	-- set baud rate (default 9600)\n\ 	-u UCMD	-- execute 'UCMD<old><new>' if slip unit number changes\n\ 	-z	-- execute RCMD upon startup irrespective of carrier\n"
+literal|"\ usage: %s [-achlnz] [-e command] [-r command] [-s speed] [-u command] device\n\ 	-a	-- autoenable VJ compression\n\ 	-c	-- enable VJ compression\n\ 	-e ECMD	-- execute ECMD before exiting\n\ 	-h	-- turn on cts/rts style flow control\n\ 	-l	-- disable modem control (CLOCAL) and ignore carrier detect\n\ 	-n	-- throw out ICMP packets\n\ 	-r RCMD	-- execute RCMD upon loss of carrier\n\ 	-s #	-- set baud rate (default 9600)\n\ 	-u UCMD	-- execute 'UCMD<old><new>' if slip unit number changes\n\ 	-z	-- execute RCMD upon startup irrespective of carrier\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,7 +485,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ace:hnr:s:u:z"
+literal|"ace:hlnr:s:u:z"
 argument_list|)
 operator|)
 operator|!=
@@ -908,7 +908,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|modem_control
+operator|&
+name|CLOCAL
+operator|)
 condition|)
 block|{
 name|ioctl
