@@ -19,12 +19,6 @@ directive|define
 name|_MACHINE_BUS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|"opt_bus.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
