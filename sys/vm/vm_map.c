@@ -9141,12 +9141,12 @@ name|vm_object
 expr_stmt|;
 block|}
 block|}
-name|vm_object_reference
+name|VM_OBJECT_LOCK
 argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|vm_object_reference_locked
 argument_list|(
 name|src_object
 argument_list|)

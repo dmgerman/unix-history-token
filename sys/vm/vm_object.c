@@ -1298,6 +1298,76 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	vm_object_reference_locked:  *  *	Gets another reference to the given object.  *  *	The object must be locked.  */
+end_comment
+
+begin_function
+name|void
+name|vm_object_reference_locked
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|)
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|object
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_object_reference_locked: dead object referenced"
+operator|)
+argument_list|)
+expr_stmt|;
+name|object
+operator|->
+name|ref_count
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_VNODE
+condition|)
+block|{
+name|vp
+operator|=
+name|object
+operator|->
+name|handle
+expr_stmt|;
+name|vref
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * Handle deallocating an object of type OBJT_VNODE.  */
 end_comment
 
@@ -4307,12 +4377,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vm_object_reference
-argument_list|(
-name|source
-argument_list|)
-expr_stmt|;
-comment|/* Referenced by new_object */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|source
@@ -4340,6 +4404,12 @@ operator|->
 name|generation
 operator|++
 expr_stmt|;
+name|vm_object_reference_locked
+argument_list|(
+name|source
+argument_list|)
+expr_stmt|;
+comment|/* for new_object */
 name|vm_object_clear_flag
 argument_list|(
 name|source
@@ -5597,11 +5667,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vm_object_reference
-argument_list|(
-name|new_backing_object
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|new_backing_object
@@ -5628,6 +5693,11 @@ name|new_backing_object
 operator|->
 name|generation
 operator|++
+expr_stmt|;
+name|vm_object_reference_locked
+argument_list|(
+name|new_backing_object
+argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
