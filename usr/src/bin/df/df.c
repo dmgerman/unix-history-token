@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.23 (Berkeley) %G%"
+literal|"@(#)df.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,7 +488,10 @@ name|mntpt
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 literal|"/tmp/df.XXXXXX"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mdev
