@@ -421,19 +421,19 @@ name|argv
 decl_stmt|;
 block|{
 name|int
+name|errs
+decl_stmt|,
 name|f
 decl_stmt|,
 name|funix
 decl_stmt|,
 name|finet
 decl_stmt|,
-name|options
-decl_stmt|,
 name|fromlen
 decl_stmt|,
 name|i
 decl_stmt|,
-name|errs
+name|socket_debug
 decl_stmt|;
 name|fd_set
 name|defreadfds
@@ -476,7 +476,7 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-name|options
+name|socket_debug
 operator|=
 literal|0
 expr_stmt|;
@@ -537,9 +537,8 @@ block|{
 case|case
 literal|'d'
 case|:
-name|options
-operator||=
-name|SO_DEBUG
+name|socket_debug
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -809,7 +808,15 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"restarted"
+literal|"lpd startup: logging=%d%s"
+argument_list|,
+name|lflag
+argument_list|,
+name|socket_debug
+condition|?
+literal|" dbg"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1191,6 +1198,11 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+name|finet
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|pflag
@@ -1255,9 +1267,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|options
-operator|&
-name|SO_DEBUG
+name|socket_debug
 operator|&&
 name|setsockopt
 argument_list|(
@@ -1267,9 +1277,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|&
+name|socket_debug
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|socket_debug
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1393,6 +1407,17 @@ sizeof|sizeof
 argument_list|(
 name|fromunix
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lflag
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"lpd startup: ready to accept requests"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX - should be redone for multi-protocol 	 */
@@ -2543,7 +2568,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"work for %s"
+literal|"lpd startup: work for %s"
 argument_list|,
 name|pp
 operator|->
@@ -2566,7 +2591,11 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"startup: cannot fork"
+literal|"lpd startup: cannot fork for %s"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|)
 expr_stmt|;
 name|mcleanup
@@ -2616,7 +2645,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"printcap for %s has errors, skipping"
+literal|"lpd startup: printcap entry for %s has errors, skipping"
 argument_list|,
 name|pp
 operator|->
