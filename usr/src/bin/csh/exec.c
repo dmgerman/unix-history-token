@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	8.2 (Berkeley) %G%"
+literal|"@(#)exec.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3030,6 +3030,9 @@ name|s1
 decl_stmt|,
 modifier|*
 name|s2
+decl_stmt|,
+modifier|*
+name|cmd
 decl_stmt|;
 name|Char
 name|qc
@@ -3266,6 +3269,21 @@ comment|/* we save and then restore this */
 return|return;
 block|}
 block|}
+name|sp
+operator|->
+name|word
+operator|=
+name|cmd
+operator|=
+name|globone
+argument_list|(
+name|sp
+operator|->
+name|word
+argument_list|,
+name|G_IGNORE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3378,6 +3396,12 @@ name|STRdot
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|slash
+condition|)
+block|{
 name|sp
 operator|->
 name|word
@@ -3408,6 +3432,15 @@ operator|->
 name|word
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|prlex
+argument_list|(
+name|cshout
+argument_list|,
+name|lex
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|word
@@ -3415,6 +3448,14 @@ operator|=
 name|s0
 expr_stmt|;
 comment|/* we save and then restore this */
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|cmd
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|s1
@@ -3504,6 +3545,14 @@ operator|=
 name|s0
 expr_stmt|;
 comment|/* we save and then restore this */
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|cmd
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
