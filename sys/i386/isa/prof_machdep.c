@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: prof_machdep.c,v 1.8 1997/12/26 20:42:08 phk Exp $  */
+comment|/*-  * Copyright (c) 1996 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: prof_machdep.c,v 1.9 1998/04/15 17:45:43 bde Exp $  */
 end_comment
 
 begin_ifdef
@@ -221,7 +221,7 @@ name|__GNUC__
 end_ifdef
 
 begin_asm
-asm|__asm(" GM_STATE	=	0 GMON_PROF_OFF	=	3  	.text 	.align	4,0x90 	.globl	__mcount __mcount: 	# 	# Check that we are profiling.  Do it early for speed. 	# 	cmpl	$GMON_PROF_OFF,__gmonparam+GM_STATE  	je	Lmcount_exit  	#  	# __mcount is the same as mcount except the caller hasn't changed  	# the stack except to call here, so the caller's raddr is above  	# our raddr.  	#  	movl	4(%esp),%edx  	jmp	Lgot_frompc    	.align	4,0x90  	.globl	mcount mcount: 	cmpl	$GMON_PROF_OFF,__gmonparam+GM_STATE 	je	Lmcount_exit 	# 	# The caller's stack frame has already been built, so %ebp is 	# the caller's frame pointer.  The caller's raddr is in the 	# caller's frame following the caller's caller's frame pointer. 	# 	movl	4(%ebp),%edx Lgot_frompc: 	# 	# Our raddr is the caller's pc. 	# 	movl	(%esp),%eax  	pushfl 	pushl	%eax 	pushl	%edx 	cli 	call	_mcount 	addl	$8,%esp 	popfl Lmcount_exit: 	ret ");
+asm|__asm("								\n\ GM_STATE	=	0					\n\ GMON_PROF_OFF	=	3					\n\ 								\n\ 	.text							\n\ 	.align	4,0x90						\n\ 	.globl	__mcount					\n\ __mcount:							\n\ 	#							\n\ 	# Check that we are profiling.  Do it early for speed.	\n\ 	#							\n\ 	cmpl	$GMON_PROF_OFF,__gmonparam+GM_STATE		\n\  	je	Lmcount_exit					\n\  	#							\n\  	# __mcount is the same as mcount except the caller 	\n\  	# hasn't changed the stack except to call here, so the	\n\ 	# caller's raddr is above our raddr.			\n\ 	#							\n\  	movl	4(%esp),%edx					\n\  	jmp	Lgot_frompc					\n\  								\n\  	.align	4,0x90						\n\  	.globl	mcount						\n\ mcount:								\n\ 	cmpl	$GMON_PROF_OFF,__gmonparam+GM_STATE		\n\ 	je	Lmcount_exit					\n\ 	#							\n\ 	# The caller's stack frame has already been built, so	\n\ 	# %ebp is the caller's frame pointer.  The caller's	\n\ 	# raddr is in the caller's frame following the caller's	\n\ 	# caller's frame pointer.				\n\ 	#							\n\ 	movl	4(%ebp),%edx					\n\ Lgot_frompc:							\n\ 	#							\n\ 	# Our raddr is the caller's pc.				\n\ 	#							\n\ 	movl	(%esp),%eax					\n\ 								\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	pushl	%edx						\n\ 	cli							\n\ 	call	_mcount						\n\ 	addl	$8,%esp						\n\ 	popfl							\n\ Lmcount_exit:							\n\ 	ret							\n\ ");
 end_asm
 
 begin_else
@@ -264,7 +264,7 @@ name|__GNUC__
 end_ifdef
 
 begin_asm
-asm|__asm(" 	.text # # Dummy label to be seen when gprof -u hides mexitcount. # 	.align	4,0x90 	.globl	__mexitcount __mexitcount: 	nop  GMON_PROF_HIRES	=	4  	.align	4,0x90 	.globl	mexitcount mexitcount: 	cmpl	$GMON_PROF_HIRES,__gmonparam+GM_STATE 	jne	Lmexitcount_exit 	pushl	%edx 	pushl	%eax 	movl	8(%esp),%eax 	pushfl 	pushl	%eax 	cli 	call	_mexitcount 	addl	$4,%esp 	popfl 	popl	%eax 	popl	%edx Lmexitcount_exit: 	ret ");
+asm|__asm("								\n\ 	.text							\n\ #								\n\ # Dummy label to be seen when gprof -u hides mexitcount.	\n\ #								\n\ 	.align	4,0x90						\n\ 	.globl	__mexitcount					\n\ __mexitcount:							\n\ 	nop							\n\ 								\n\ GMON_PROF_HIRES	=	4					\n\ 								\n\ 	.align	4,0x90						\n\ 	.globl	mexitcount					\n\ mexitcount:							\n\ 	cmpl	$GMON_PROF_HIRES,__gmonparam+GM_STATE		\n\ 	jne	Lmexitcount_exit				\n\ 	pushl	%edx						\n\ 	pushl	%eax						\n\ 	movl	8(%esp),%eax					\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	cli							\n\ 	call	_mexitcount					\n\ 	addl	$4,%esp						\n\ 	popfl							\n\ 	popl	%eax						\n\ 	popl	%edx						\n\ Lmexitcount_exit:						\n\ 	ret							\n\ ");
 end_asm
 
 begin_else
@@ -1031,7 +1031,7 @@ name|__GNUC__
 end_ifdef
 
 begin_asm
-asm|__asm(" 	.text 	.align	4,0x90 	.globl	mexitcount mexitcount: 	ret ");
+asm|__asm("								\n\ 	.text							\n\ 	.align	4,0x90						\n\ 	.globl	mexitcount					\n\ mexitcount:							\n\ 	ret							\n\ ");
 end_asm
 
 begin_else
