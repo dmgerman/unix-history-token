@@ -262,7 +262,8 @@ comment|/* print bridge statistics */
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|slen
 decl_stmt|;
 name|struct
@@ -1819,23 +1820,23 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* interface name */
-name|u_int
+name|u_long
 name|ift_ip
 decl_stmt|;
 comment|/* input packets */
-name|u_int
+name|u_long
 name|ift_ie
 decl_stmt|;
 comment|/* input errors */
-name|u_int
+name|u_long
 name|ift_op
 decl_stmt|;
 comment|/* output packets */
-name|u_int
+name|u_long
 name|ift_oe
 decl_stmt|;
 comment|/* output errors */
-name|u_int
+name|u_long
 name|ift_co
 decl_stmt|;
 comment|/* collisions */
@@ -1843,11 +1844,11 @@ name|u_int
 name|ift_dr
 decl_stmt|;
 comment|/* drops */
-name|u_int
+name|u_long
 name|ift_ib
 decl_stmt|;
 comment|/* input bytes */
-name|u_int
+name|u_long
 name|ift_ob
 decl_stmt|;
 comment|/* output bytes */
@@ -2670,7 +2671,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%10u %5u %10u %10u %5u %10u %5u"
+literal|"%10lu %5lu %10lu %10lu %5lu %10lu %5lu"
 argument_list|,
 name|sum
 operator|->
