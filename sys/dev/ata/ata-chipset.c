@@ -6447,6 +6447,22 @@ literal|"nVidia nForce2"
 block|}
 block|,
 block|{
+name|ATA_NFORCE3
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+operator||
+name|AMDBUG
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce3"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0

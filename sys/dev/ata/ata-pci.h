@@ -525,6 +525,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_NFORCE3
+value|0x00d510de
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_PROMISE_ID
 value|0x105a
 end_define
