@@ -212,6 +212,9 @@ operator|&
 name|debug_cmd
 block|,
 operator|&
+name|dot_cmd
+block|,
+operator|&
 name|help_cmd
 block|,
 operator|&

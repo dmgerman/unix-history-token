@@ -235,6 +235,15 @@ specifier|extern
 specifier|const
 name|struct
 name|ngcmd
+name|dot_cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ngcmd
 name|help_cmd
 decl_stmt|;
 end_decl_stmt
