@@ -1056,7 +1056,8 @@ operator|-
 name|buflen
 argument_list|,
 literal|"%s%s: userland devstat version %d is not "
-literal|"the same as the kernel\n%s: devstat version %d\n"
+literal|"the same as the kernel\n%s: devstat "
+literal|"version %d\n"
 argument_list|,
 name|version
 operator|==
