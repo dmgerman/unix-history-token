@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	6.5	84/11/02	*/
+comment|/*	uipc_socket2.c	6.6	84/11/14	*/
 end_comment
 
 begin_include
@@ -1307,6 +1307,20 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|cc
+operator|>
+name|SB_MAX
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* someday maybe this routine will fail... */
 name|sb
 operator|->
@@ -1319,9 +1333,14 @@ name|sb
 operator|->
 name|sb_mbmax
 operator|=
+name|MAX
+argument_list|(
 name|cc
-operator|<<
-literal|1
+operator|*
+literal|2
+argument_list|,
+name|SB_MAX
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
