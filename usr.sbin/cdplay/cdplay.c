@@ -777,6 +777,15 @@ operator|&
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|standalone
+condition|)
+name|printf
+argument_list|(
+literal|"status track minute second frame\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%d %02d %d %d %d\n"
