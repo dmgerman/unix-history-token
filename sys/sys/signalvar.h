@@ -803,18 +803,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|issignal
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|killproc
 parameter_list|(

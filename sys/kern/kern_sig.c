@@ -280,6 +280,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|issignal
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|sigprop
 parameter_list|(
 name|int
@@ -8485,6 +8498,7 @@ comment|/*  * If the current process has received a signal (should be caught or 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|issignal
 parameter_list|(
