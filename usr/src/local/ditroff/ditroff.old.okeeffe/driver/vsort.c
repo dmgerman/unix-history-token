@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.6	83/10/22  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
+comment|/* vsort.c	1.7	83/11/30  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
 end_comment
 
 begin_include
@@ -122,11 +122,11 @@ begin_define
 define|#
 directive|define
 name|BAND
-value|2
+value|1
 end_define
 
 begin_comment
-comment|/* or defined below.... */
+comment|/* length of each band (or defined below) */
 end_comment
 
 begin_endif
@@ -2133,10 +2133,9 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|unsigned
 name|rad
 init|=
-operator|(
 call|(
 name|int
 call|)
@@ -2159,9 +2158,6 @@ argument_list|)
 operator|+
 literal|0.5
 argument_list|)
-operator|)
-operator|>>
-literal|1
 decl_stmt|;
 specifier|register
 name|int
@@ -2289,11 +2285,11 @@ else|:
 name|vpos
 operator|+
 name|v
-operator|-
+operator|+
 name|rad
 operator|)
 operator|)
-operator|-
+operator|+
 name|thick
 operator|/
 literal|2
