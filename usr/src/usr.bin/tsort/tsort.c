@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tsort.c	4.1 (Berkeley) %G%"
+literal|"@(#)tsort.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -16,7 +16,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<stdio.h>
 end_include
 
 begin_comment
