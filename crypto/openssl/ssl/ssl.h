@@ -1516,11 +1516,20 @@ define|#
 directive|define
 name|SSL_SESS_CACHE_NO_AUTO_CLEAR
 value|0x0080
-comment|/* This one, when set, makes the server session-id lookup not look  * in the cache.  If there is an application get_session callback  * defined, this will still get called. */
+comment|/* enough comments already ... see SSL_CTX_set_session_cache_mode(3) */
 define|#
 directive|define
 name|SSL_SESS_CACHE_NO_INTERNAL_LOOKUP
 value|0x0100
+define|#
+directive|define
+name|SSL_SESS_CACHE_NO_INTERNAL_STORE
+value|0x0200
+define|#
+directive|define
+name|SSL_SESS_CACHE_NO_INTERNAL
+define|\
+value|(SSL_SESS_CACHE_NO_INTERNAL_LOOKUP|SSL_SESS_CACHE_NO_INTERNAL_STORE)
 name|struct
 name|lhash_st
 modifier|*

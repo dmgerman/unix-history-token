@@ -351,7 +351,7 @@ name|value
 operator|.
 name|octet_string
 condition|)
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|a
 operator|->
@@ -362,8 +362,6 @@ operator|.
 name|octet_string
 operator|->
 name|data
-argument_list|,
-literal|0
 argument_list|,
 name|a
 operator|->

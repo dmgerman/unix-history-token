@@ -238,11 +238,9 @@ argument_list|,
 name|inl
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf_in
-argument_list|,
-literal|0
 argument_list|,
 operator|(
 name|unsigned

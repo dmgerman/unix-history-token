@@ -453,11 +453,9 @@ name|seq
 operator|&
 literal|2
 condition|)
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|out
-argument_list|,
-literal|0
 argument_list|,
 name|outlen
 argument_list|)

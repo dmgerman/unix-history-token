@@ -960,7 +960,7 @@ argument_list|,
 name|X509_free
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

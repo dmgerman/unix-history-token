@@ -174,15 +174,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|LHASH
-modifier|*
-name|config
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|default_config_file
@@ -200,6 +191,15 @@ ifdef|#
 directive|ifdef
 name|MONOLITH
 end_ifdef
+
+begin_decl_stmt
+name|LHASH
+modifier|*
+name|config
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|BIO
@@ -832,7 +832,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

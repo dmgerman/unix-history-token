@@ -269,6 +269,16 @@ condition|(
 name|init
 condition|)
 block|{
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|init
+condition|)
+block|{
 name|memcpy
 argument_list|(
 operator|(
@@ -306,6 +316,12 @@ expr_stmt|;
 name|init
 operator|=
 literal|0
+expr_stmt|;
+block|}
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -6239,11 +6255,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|p
-argument_list|,
-literal|0
 argument_list|,
 name|i
 argument_list|)
@@ -6502,11 +6516,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|p
-argument_list|,
-literal|0
 argument_list|,
 name|i
 argument_list|)
@@ -6632,9 +6644,9 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|512
+literal|514
 argument_list|,
-comment|/* 512? */
+comment|/* 514? */
 operator|&
 name|ok
 argument_list|)

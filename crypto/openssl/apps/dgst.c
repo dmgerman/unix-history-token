@@ -1474,11 +1474,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZE
 argument_list|)
@@ -1530,7 +1528,7 @@ argument_list|(
 name|bmd
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|err
 argument_list|)

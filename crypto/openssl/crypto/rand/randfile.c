@@ -31,6 +31,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"openssl/e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -92,12 +98,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"openssl/e_os.h"
-end_include
 
 begin_include
 include|#
@@ -344,11 +344,9 @@ argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZE
 argument_list|)
@@ -628,11 +626,9 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZE
 argument_list|)

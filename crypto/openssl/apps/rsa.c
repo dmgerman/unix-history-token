@@ -1739,7 +1739,7 @@ argument_list|(
 name|passout
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

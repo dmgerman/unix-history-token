@@ -25,6 +25,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1158,7 +1164,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|exit
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

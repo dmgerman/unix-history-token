@@ -187,6 +187,11 @@ define|#
 directive|define
 name|CRYPTO_LOCK_SSL
 value|16
+comment|/* for binary compatibility between 0.9.6 minor versions,  * reuse an existing lock (later version use a new one): */
+define|#
+directive|define
+name|CRYPTO_LOCK_SSL_METHOD
+value|CRYPTO_LOCK_SSL_CTX
 define|#
 directive|define
 name|CRYPTO_LOCK_RAND
@@ -1551,6 +1556,17 @@ name|file
 parameter_list|,
 name|int
 name|line
+parameter_list|)
+function_decl|;
+name|void
+name|OPENSSL_cleanse
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
 name|void

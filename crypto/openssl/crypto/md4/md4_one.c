@@ -25,6 +25,12 @@ directive|include
 file|<openssl/md4.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -181,12 +187,10 @@ operator|&
 name|c
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|&
 name|c
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

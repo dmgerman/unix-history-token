@@ -380,11 +380,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|state
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -400,11 +398,9 @@ name|state_index
 operator|=
 literal|0
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|md
-argument_list|,
-literal|0
 argument_list|,
 name|MD_DIGEST_LENGTH
 argument_list|)

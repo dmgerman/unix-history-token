@@ -394,13 +394,11 @@ name|cipher
 operator|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|a
 operator|->
 name|ptr
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

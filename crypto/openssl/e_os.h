@@ -658,12 +658,6 @@ argument_list|(
 name|WIN16
 argument_list|)
 operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MONOLITH
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|SSLEAY
@@ -679,7 +673,14 @@ name|EXIT
 parameter_list|(
 name|n
 parameter_list|)
-value|{ if (n == 0) _wsetexit(_WINEXITNOPERSIST); return(n); }
+value|_wsetexit(_WINEXITNOPERSIST)
+define|#
+directive|define
+name|OPENSSL_EXIT
+parameter_list|(
+name|n
+parameter_list|)
+value|do { if (n == 0) EXIT(n); return(n); } while(0)
 else|#
 directive|else
 define|#
@@ -688,7 +689,7 @@ name|EXIT
 parameter_list|(
 name|n
 parameter_list|)
-value|return(n);
+value|return(n)
 endif|#
 directive|endif
 define|#
@@ -807,36 +808,13 @@ directive|define
 name|NUL_DEV
 value|"NLA0:"
 comment|/* We need to do this since VMS has the following coding on status codes:       Bits 0-2: status type: 0 = warning, 1 = success, 2 = error, 3 = info ...                The important thing to know is that odd numbers are considered 	       good, while even ones are considered errors.      Bits 3-15: actual status number      Bits 16-27: facility number.  0 is considered "unknown"      Bits 28-31: control bits.  If bit 28 is set, the shell won't try to                  output the message (which, for random codes, just looks ugly)       So, what we do here is to change 0 to 1 to get the default success status,      and everything else is shifted up to fit into the status number field, and      the status is tagged as an error, which I believe is what is wanted here.      -- Richard Levitte   */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MONOLITH
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|OPENSSL_C
-argument_list|)
 define|#
 directive|define
 name|EXIT
 parameter_list|(
 name|n
 parameter_list|)
-value|do { int __VMS_EXIT = n; \                                      if (__VMS_EXIT == 0) \ 				       __VMS_EXIT = 1; \ 				     else \ 				       __VMS_EXIT = (n<< 3) | 2; \                                      __VMS_EXIT |= 0x10000000; \ 				     exit(__VMS_EXIT); \ 				     return(__VMS_EXIT); } while(0)
-else|#
-directive|else
-define|#
-directive|define
-name|EXIT
-parameter_list|(
-name|n
-parameter_list|)
-value|return(n)
-endif|#
-directive|endif
+value|do { int __VMS_EXIT = n; \                                      if (__VMS_EXIT == 0) \ 				       __VMS_EXIT = 1; \ 				     else \ 				       __VMS_EXIT = (n<< 3) | 2; \                                      __VMS_EXIT |= 0x10000000; \ 				     exit(__VMS_EXIT); } while(0)
 define|#
 directive|define
 name|NO_SYS_PARAM_H
@@ -939,27 +917,13 @@ define|#
 directive|define
 name|NUL_DEV
 value|"/dev/null"
-ifndef|#
-directive|ifndef
-name|MONOLITH
 define|#
 directive|define
 name|EXIT
 parameter_list|(
 name|n
 parameter_list|)
-value|exit(n); return(n)
-else|#
-directive|else
-define|#
-directive|define
-name|EXIT
-parameter_list|(
-name|n
-parameter_list|)
-value|return(n)
-endif|#
-directive|endif
+value|exit(n)
 endif|#
 directive|endif
 define|#
@@ -1419,6 +1383,41 @@ name|errnum
 parameter_list|)
 define|\
 value|(((errnum)<0 || (errnum)>=sys_nerr) ? NULL : sys_errlist[errnum])
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_EXIT
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MONOLITH
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_C
+argument_list|)
+define|#
+directive|define
+name|OPENSSL_EXIT
+parameter_list|(
+name|n
+parameter_list|)
+value|return(n)
+else|#
+directive|else
+define|#
+directive|define
+name|OPENSSL_EXIT
+parameter_list|(
+name|n
+parameter_list|)
+value|do { EXIT(n); return(n); } while(0)
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/***********************************************/

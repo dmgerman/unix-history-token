@@ -1765,13 +1765,11 @@ argument_list|,
 name|X509_NAME_free
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|s
 operator|->
 name|s3
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 expr|*
@@ -3337,6 +3335,11 @@ argument_list|(
 name|CRYPTO_LOCK_SSL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|init
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -3365,7 +3368,7 @@ operator|)
 expr_stmt|;
 name|qsort
 argument_list|(
-argument|(char *)sorted
+argument|sorted
 argument_list|,
 argument|SSL3_NUM_CIPHERS
 argument_list|,
@@ -3374,14 +3377,15 @@ argument_list|,
 argument|FP_ICC ssl_cipher_ptr_id_cmp
 argument_list|)
 empty_stmt|;
+name|init
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_SSL
 argument_list|)
-expr_stmt|;
-name|init
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|id

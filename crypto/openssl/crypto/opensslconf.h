@@ -32,6 +32,23 @@ directive|ifdef
 name|OPENSSL_THREAD_DEFINES
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|THREADS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|THREADS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -42,6 +59,40 @@ ifdef|#
 directive|ifdef
 name|OPENSSL_OTHER_DEFINES
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DSO_DLFCN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DSO_DLFCN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_DLFCN_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLFCN_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -56,11 +107,11 @@ begin_comment
 comment|/* Generate 80386 code? */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|I386_ONLY
-end_undef
+end_define
 
 begin_if
 if|#
@@ -339,11 +390,11 @@ directive|define
 name|CONFIG_HEADER_BN_H
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|BN_LLONG
-end_undef
+end_define
 
 begin_comment
 comment|/* Should we define BN_DIV2W here? */
@@ -417,11 +468,11 @@ begin_comment
 comment|/* if this is defined data[i] is used instead of *data, this is a %20  * speedup on x86 */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|RC4_INDEX
-end_undef
+end_define
 
 begin_endif
 endif|#
@@ -501,11 +552,11 @@ directive|ifndef
 name|DES_PTR
 end_ifndef
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|DES_PTR
-end_undef
+end_define
 
 begin_endif
 endif|#
@@ -522,11 +573,11 @@ directive|ifndef
 name|DES_RISC1
 end_ifndef
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|DES_RISC1
-end_undef
+end_define
 
 begin_endif
 endif|#
@@ -596,11 +647,11 @@ directive|ifndef
 name|DES_UNROLL
 end_ifndef
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|DES_UNROLL
-end_undef
+end_define
 
 begin_endif
 endif|#

@@ -319,7 +319,7 @@ argument_list|,
 literal|"-toseq    output NS Sequence file\n"
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -631,7 +631,7 @@ argument_list|(
 name|seq
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

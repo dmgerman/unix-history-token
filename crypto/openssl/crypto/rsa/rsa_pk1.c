@@ -73,7 +73,7 @@ operator|>
 operator|(
 name|tlen
 operator|-
-literal|11
+name|RSA_PKCS1_PADDING_SIZE
 operator|)
 condition|)
 block|{

@@ -764,7 +764,7 @@ parameter_list|()
 function_decl|;
 name|long
 function_decl|(
-name|_fat
+name|_far
 modifier|*
 name|callback_ctrl
 function_decl|)
