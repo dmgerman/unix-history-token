@@ -7372,7 +7372,10 @@ comment|/* 		 * DATA MESSAGE 		 * Delivered to a node via a non-optional hook. 	
 comment|/* Protect nodes from sending NULL pointers 		 * to each other 		 */
 if|if
 condition|(
-name|m
+name|NGI_M
+argument_list|(
+name|item
+argument_list|)
 operator|==
 name|NULL
 condition|)
