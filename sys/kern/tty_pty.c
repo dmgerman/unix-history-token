@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty_pty.c,v 1.1.1.1 1993/06/12 14:57:31 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty_pty.c,v 1.2 1993/08/15 06:11:22 alm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3730,9 +3730,17 @@ begin_if
 if|if
 condition|(
 name|error
-operator|<
+operator|>=
 literal|0
 condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+end_if
+
+begin_expr_stmt
 name|error
 operator|=
 name|ttioctl
@@ -3746,7 +3754,7 @@ argument_list|,
 name|flag
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * Since we use the tty queues internally, 	 * pty's can't be switched to disciplines which overwrite 	 * the queues.  We can't tell anything about the discipline 	 * from here... 	 */

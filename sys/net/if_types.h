@@ -268,5 +268,16 @@ begin_comment
 comment|/* IP over generic TTY */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFT_PPP
+value|0x1d
+end_define
+
+begin_comment
+comment|/* PPP over generic TTY */
+end_comment
+
 end_unit
 

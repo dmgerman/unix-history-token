@@ -971,6 +971,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPPDISC
+value|5
+end_define
+
+begin_comment
+comment|/* PPP discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FIOCLEX
 value|_IO('f', 1)
 end_define
@@ -1410,6 +1421,50 @@ end_define
 
 begin_comment
 comment|/* delete arp entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFMTU
+value|_IOW('i', 127, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set ifnet mtu */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFMTU
+value|_IOWR('i',126, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get ifnet mtu */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFASYNCMAP
+value|_IOW('i', 125, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set ppp asyncmap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFASYNCMAP
+value|_IOWR('i',124, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get ppp asyncmap */
 end_comment
 
 begin_ifndef

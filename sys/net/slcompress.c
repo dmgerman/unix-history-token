@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	Van Jacobson (van@ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00112  * --------------------         -----   ----------------------  *  * 14 Mar 93    David Greenman		Upgrade bpf to match tcpdump 2.2.1  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	Van Jacobson (van@ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  *  * Modified March 14, 1993 by David Greenman, upgraded to slcompress.c  * from tcpdump 2.2.1.  *  * Modified June 1993 by Paul Mackerras, paulus@cs.anu.edu.au,  * so that the entire packet being decompressed doesn't have  * to be in contiguous memory (just the compressed header).  *  *	$Id$  *	From: slcompress.c,v 1.22 92/05/24 11:48:20 van Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /a/cvs/386BSD/src/sys.386bsd/net/slcompress.c,v 1.1.1.1 1993/06/12 14:57:51 rgrimes Exp $ (LBL)"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -1471,6 +1471,60 @@ modifier|*
 name|comp
 decl_stmt|;
 block|{
+return|return
+name|sl_uncompress_tcp_part
+argument_list|(
+name|bufp
+argument_list|,
+name|len
+argument_list|,
+name|len
+argument_list|,
+name|type
+argument_list|,
+name|comp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Uncompress a packet of total length total_len.  The first buflen  * bytes are at *bufp; this must include the entire (compressed or  * uncompressed) TCP/IP header.  In addition, there must be enough  * clear space before *bufp to build a full-length TCP/IP header.  */
+end_comment
+
+begin_function
+name|int
+name|sl_uncompress_tcp_part
+parameter_list|(
+name|bufp
+parameter_list|,
+name|buflen
+parameter_list|,
+name|total_len
+parameter_list|,
+name|type
+parameter_list|,
+name|comp
+parameter_list|)
+name|u_char
+modifier|*
+modifier|*
+name|bufp
+decl_stmt|;
+name|int
+name|buflen
+decl_stmt|,
+name|total_len
+decl_stmt|;
+name|u_int
+name|type
+decl_stmt|;
+name|struct
+name|slcompress
+modifier|*
+name|comp
+decl_stmt|;
+block|{
 specifier|register
 name|u_char
 modifier|*
@@ -1623,7 +1677,7 @@ argument|sls_uncompressedin
 argument_list|)
 return|return
 operator|(
-name|len
+name|total_len
 operator|)
 return|;
 default|default:
@@ -1981,7 +2035,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * At this point, cp points to the first byte of data in the 	 * packet.  If we're not aligned on a 4-byte boundary, copy the 	 * data down so the ip& tcp headers will be aligned.  Then back up 	 * cp by the tcp/ip header length to make room for the reconstructed 	 * header (we assume the packet we were handed has enough space to 	 * prepend 128 bytes of header).  Adjust the length to account for 	 * the new header& fill in the IP total length. 	 */
-name|len
+name|buflen
+operator|-=
+operator|(
+name|cp
+operator|-
+operator|*
+name|bufp
+operator|)
+expr_stmt|;
+name|total_len
 operator|-=
 operator|(
 name|cp
@@ -1992,7 +2055,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|len
+name|buflen
 operator|<
 literal|0
 condition|)
@@ -2012,7 +2075,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|len
+name|buflen
 operator|>
 literal|0
 condition|)
@@ -2036,7 +2099,7 @@ operator|~
 literal|3
 argument_list|)
 argument_list|,
-name|len
+name|buflen
 argument_list|)
 expr_stmt|;
 name|cp
@@ -2062,7 +2125,7 @@ name|cs
 operator|->
 name|cs_hlen
 expr_stmt|;
-name|len
+name|total_len
 operator|+=
 name|cs
 operator|->
@@ -2076,7 +2139,7 @@ name|ip_len
 operator|=
 name|htons
 argument_list|(
-name|len
+name|total_len
 argument_list|)
 expr_stmt|;
 name|BCOPY
@@ -2176,7 +2239,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|len
+name|total_len
 operator|)
 return|;
 name|bad

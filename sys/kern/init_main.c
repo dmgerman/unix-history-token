@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/kern/init_main.c,v 1.1.1.1 1993/06/12 14:57:34 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/init_main.c,v 1.2 1993/08/06 09:53:06 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -764,6 +764,20 @@ name|NSL
 operator|>
 literal|0
 name|slattach
+argument_list|()
+expr_stmt|;
+comment|/* XXX */
+endif|#
+directive|endif
+include|#
+directive|include
+file|"ppp.h"
+if|#
+directive|if
+name|NPPP
+operator|>
+literal|0
+name|pppattach
 argument_list|()
 expr_stmt|;
 comment|/* XXX */
