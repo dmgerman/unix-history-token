@@ -6419,7 +6419,7 @@ argument_list|,
 name|reg54
 operator||
 operator|(
-literal|0x10000
+literal|0x1000
 operator|<<
 name|devno
 operator|)
@@ -6438,7 +6438,7 @@ name|reg54
 operator|&
 operator|~
 operator|(
-literal|0x10000
+literal|0x1000
 operator|<<
 name|devno
 operator|)
