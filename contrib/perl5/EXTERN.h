@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    EXTERN.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    EXTERN.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -125,12 +125,6 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|PERL_OBJECT
 argument_list|)
 end_if
@@ -210,6 +204,52 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|USEIMPORTLIB
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|EXT
+value|extern __declspec(dllimport)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dEXT
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTCONST
+value|extern __declspec(dllimport) const
+end_define
+
+begin_define
+define|#
+directive|define
+name|dEXTCONST
+value|const
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -236,6 +276,11 @@ directive|define
 name|dEXTCONST
 value|const
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    cop.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    cop.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_struct
@@ -13,6 +13,21 @@ modifier|*
 name|cop_label
 decl_stmt|;
 comment|/* label for this construct */
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+name|char
+modifier|*
+name|cop_stashpv
+decl_stmt|;
+comment|/* package line was compiled in */
+name|char
+modifier|*
+name|cop_file
+decl_stmt|;
+comment|/* file name the following line # is from */
+else|#
+directive|else
 name|HV
 modifier|*
 name|cop_stash
@@ -23,6 +38,8 @@ modifier|*
 name|cop_filegv
 decl_stmt|;
 comment|/* file the following line # is from */
+endif|#
+directive|endif
 name|U32
 name|cop_seq
 decl_stmt|;
@@ -35,6 +52,11 @@ name|line_t
 name|cop_line
 decl_stmt|;
 comment|/* line # of this command */
+name|SV
+modifier|*
+name|cop_warnings
+decl_stmt|;
+comment|/* lexical warnings bitmask */
 block|}
 struct|;
 end_struct
@@ -44,6 +66,316 @@ define|#
 directive|define
 name|Nullcop
 value|Null(COP*)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CopFILE
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->cop_file)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILEGV
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopFILE(c) \ 				 ? gv_fetchfile(CopFILE(c)) : Nullgv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILE_set
+parameter_list|(
+name|c
+parameter_list|,
+name|pv
+parameter_list|)
+value|((c)->cop_file = savepv(pv))
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CopFILESV
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopFILE(c) \ 				 ? GvSV(gv_fetchfile(CopFILE(c))) : Nullsv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILEAV
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopFILE(c) \ 				 ? GvAV(gv_fetchfile(CopFILE(c))) : Nullav)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASHPV
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->cop_stashpv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASHPV_set
+parameter_list|(
+name|c
+parameter_list|,
+name|pv
+parameter_list|)
+value|((c)->cop_stashpv = savepv(pv))
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CopSTASH
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopSTASHPV(c) \ 				 ? gv_stashpv(CopSTASHPV(c),GV_ADD) : Nullhv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASH_set
+parameter_list|(
+name|c
+parameter_list|,
+name|hv
+parameter_list|)
+value|CopSTASHPV_set(c, HvNAME(hv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASH_eq
+parameter_list|(
+name|c
+parameter_list|,
+name|hv
+parameter_list|)
+value|(hv 					\&& (CopSTASHPV(c) == HvNAME(hv)	\ 				     || (CopSTASHPV(c)&& HvNAME(hv)	\&& strEQ(CopSTASHPV(c), HvNAME(hv)))))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CopFILEGV
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->cop_filegv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILEGV_set
+parameter_list|(
+name|c
+parameter_list|,
+name|gv
+parameter_list|)
+value|((c)->cop_filegv = gv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILE_set
+parameter_list|(
+name|c
+parameter_list|,
+name|pv
+parameter_list|)
+value|((c)->cop_filegv = gv_fetchfile(pv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILESV
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopFILEGV(c) ? GvSV(CopFILEGV(c)) : Nullsv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILEAV
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopFILEGV(c) ? GvAV(CopFILEGV(c)) : Nullav)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopFILE
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopFILESV(c) ? SvPVX(CopFILESV(c)) : Nullch)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASH
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->cop_stash)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASH_set
+parameter_list|(
+name|c
+parameter_list|,
+name|hv
+parameter_list|)
+value|((c)->cop_stash = hv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASHPV
+parameter_list|(
+name|c
+parameter_list|)
+value|(CopSTASH(c) ? HvNAME(CopSTASH(c)) : Nullch)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASHPV_set
+parameter_list|(
+name|c
+parameter_list|,
+name|pv
+parameter_list|)
+value|CopSTASH_set(c, gv_stashpv(pv,GV_ADD))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopSTASH_eq
+parameter_list|(
+name|c
+parameter_list|,
+name|hv
+parameter_list|)
+value|(CopSTASH(c) == hv)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_ITHREADS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CopSTASH_ne
+parameter_list|(
+name|c
+parameter_list|,
+name|hv
+parameter_list|)
+value|(!CopSTASH_eq(c,hv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopLINE
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->cop_line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopLINE_inc
+parameter_list|(
+name|c
+parameter_list|)
+value|(++CopLINE(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopLINE_dec
+parameter_list|(
+name|c
+parameter_list|)
+value|(--CopLINE(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CopLINE_set
+parameter_list|(
+name|c
+parameter_list|,
+name|l
+parameter_list|)
+value|(CopLINE(c) = (l))
 end_define
 
 begin_comment
@@ -90,6 +422,10 @@ decl_stmt|;
 name|U8
 name|hasargs
 decl_stmt|;
+name|U8
+name|lval
+decl_stmt|;
+comment|/* XXX merge lval and hasargs? */
 block|}
 struct|;
 end_struct
@@ -102,7 +438,7 @@ parameter_list|(
 name|cx
 parameter_list|)
 define|\
-value|cx->blk_sub.cv = cv;						\ 	cx->blk_sub.olddepth = CvDEPTH(cv);				\ 	cx->blk_sub.hasargs = hasargs;
+value|cx->blk_sub.cv = cv;						\ 	cx->blk_sub.olddepth = CvDEPTH(cv);				\ 	cx->blk_sub.hasargs = hasargs;					\ 	cx->blk_sub.lval = PL_op->op_private&                          \ 	                      (OPpLVAL_INTRO|OPpENTERSUB_INARGS);
 end_define
 
 begin_define
@@ -116,32 +452,6 @@ define|\
 value|cx->blk_sub.cv = cv;						\ 	cx->blk_sub.gv = gv;						\ 	cx->blk_sub.hasargs = 0;					\ 	cx->blk_sub.dfoutgv = PL_defoutgv;				\ 	(void)SvREFCNT_inc(cx->blk_sub.dfoutgv)
 end_define
 
-begin_define
-define|#
-directive|define
-name|POPSUB
-parameter_list|(
-name|cx
-parameter_list|)
-define|\
-value|{ struct block_sub cxsub;					\ 	  POPSUB1(cx);							\ 	  POPSUB2(); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|POPSUB1
-parameter_list|(
-name|cx
-parameter_list|)
-define|\
-value|cxsub = cx->blk_sub;
-end_define
-
-begin_comment
-comment|/* because DESTROY may clobber *cx */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -151,7 +461,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|POPSAVEARRAY
+name|POP_SAVEARRAY
 parameter_list|()
 value|NOOP
 end_define
@@ -164,10 +474,10 @@ end_else
 begin_define
 define|#
 directive|define
-name|POPSAVEARRAY
+name|POP_SAVEARRAY
 parameter_list|()
 define|\
-value|STMT_START {							\ 	SvREFCNT_dec(GvAV(PL_defgv));					\ 	GvAV(PL_defgv) = cxsub.savearray;					\     } STMT_END
+value|STMT_START {							\ 	SvREFCNT_dec(GvAV(PL_defgv));					\ 	GvAV(PL_defgv) = cx->blk_sub.savearray;				\     } STMT_END
 end_define
 
 begin_endif
@@ -179,15 +489,70 @@ begin_comment
 comment|/* USE_THREADS */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+end_ifdef
+
+begin_comment
+comment|/* junk in @_ spells trouble when cloning CVs, so don't leave any */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|POPSUB2
+name|CLEAR_ARGARRAY
 parameter_list|()
+value|av_clear(cx->blk_sub.argarray)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CLEAR_ARGARRAY
+parameter_list|()
+value|NOOP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_ITHREADS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POPSUB
+parameter_list|(
+name|cx
+parameter_list|,
+name|sv
+parameter_list|)
 define|\
-value|if (cxsub.hasargs) {						\ 	    POPSAVEARRAY();						\
-comment|/* destroy arg array */
-value|\ 	    av_clear(cxsub.argarray);					\ 	    AvREAL_off(cxsub.argarray);					\ 	}								\ 	if (cxsub.cv) {							\ 	    if (!(CvDEPTH(cxsub.cv) = cxsub.olddepth))			\ 		SvREFCNT_dec(cxsub.cv);					\ 	}
+value|STMT_START {							\ 	if (cx->blk_sub.hasargs) {					\ 	    POP_SAVEARRAY();						\
+comment|/* abandon @_ if it got reified */
+value|\ 	    if (AvREAL(cx->blk_sub.argarray)) {				\ 		SSize_t fill = AvFILLp(cx->blk_sub.argarray);		\ 		SvREFCNT_dec(cx->blk_sub.argarray);			\ 		cx->blk_sub.argarray = newAV();				\ 		av_extend(cx->blk_sub.argarray, fill);			\ 		AvFLAGS(cx->blk_sub.argarray) = AVf_REIFY;		\ 		PL_curpad[0] = (SV*)cx->blk_sub.argarray;		\ 	    }								\ 	    else {							\ 		CLEAR_ARGARRAY();					\ 	    }								\ 	}								\ 	sv = (SV*)cx->blk_sub.cv;					\ 	if (sv&& (CvDEPTH((CV*)sv) = cx->blk_sub.olddepth))		\ 	    sv = Nullsv;						\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAVESUB
+parameter_list|(
+name|sv
+parameter_list|)
+define|\
+value|STMT_START {							\ 	if (sv)								\ 	    SvREFCNT_dec(sv);						\     } STMT_END
 end_define
 
 begin_define
@@ -215,9 +580,9 @@ decl_stmt|;
 name|I32
 name|old_op_type
 decl_stmt|;
-name|char
+name|SV
 modifier|*
-name|old_name
+name|old_namesv
 decl_stmt|;
 name|OP
 modifier|*
@@ -243,7 +608,7 @@ parameter_list|,
 name|fgv
 parameter_list|)
 define|\
-value|cx->blk_eval.old_in_eval = PL_in_eval;				\ 	cx->blk_eval.old_op_type = PL_op->op_type;				\ 	cx->blk_eval.old_name = n;					\ 	cx->blk_eval.old_eval_root = PL_eval_root;				\ 	cx->blk_eval.cur_text = PL_linestr;
+value|STMT_START {							\ 	cx->blk_eval.old_in_eval = PL_in_eval;				\ 	cx->blk_eval.old_op_type = PL_op->op_type;			\ 	cx->blk_eval.old_namesv = (n ? newSVpv(n,0) : Nullsv);		\ 	cx->blk_eval.old_eval_root = PL_eval_root;			\ 	cx->blk_eval.cur_text = PL_linestr;				\     } STMT_END
 end_define
 
 begin_define
@@ -254,7 +619,7 @@ parameter_list|(
 name|cx
 parameter_list|)
 define|\
-value|PL_in_eval = cx->blk_eval.old_in_eval;				\ 	optype = cx->blk_eval.old_op_type;				\ 	PL_eval_root = cx->blk_eval.old_eval_root;
+value|STMT_START {							\ 	PL_in_eval = cx->blk_eval.old_in_eval;				\ 	optype = cx->blk_eval.old_op_type;				\ 	PL_eval_root = cx->blk_eval.old_eval_root;			\ 	if (cx->blk_eval.old_namesv)					\ 	    sv_2mortal(cx->blk_eval.old_namesv);			\     } STMT_END
 end_define
 
 begin_comment
@@ -284,11 +649,27 @@ name|OP
 modifier|*
 name|last_op
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+name|void
+modifier|*
+name|iterdata
+decl_stmt|;
+name|SV
+modifier|*
+modifier|*
+name|oldcurpad
+decl_stmt|;
+else|#
+directive|else
 name|SV
 modifier|*
 modifier|*
 name|itervar
 decl_stmt|;
+endif|#
+directive|endif
 name|SV
 modifier|*
 name|itersave
@@ -311,6 +692,69 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CxITERVAR
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|((c)->blk_loop.iterdata						\ 	 ? (CxPADLOOP(cx) 						\ 	    ?&((c)->blk_loop.oldcurpad)[(PADOFFSET)(c)->blk_loop.iterdata]	\ 	    :&GvSV((GV*)(c)->blk_loop.iterdata))			\ 	 : (SV**)NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CX_ITERDATA_SET
+parameter_list|(
+name|cx
+parameter_list|,
+name|idata
+parameter_list|)
+define|\
+value|cx->blk_loop.oldcurpad = PL_curpad;				\ 	if ((cx->blk_loop.iterdata = (idata)))				\ 	    cx->blk_loop.itersave = SvREFCNT_inc(*CxITERVAR(cx));
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CxITERVAR
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->blk_loop.itervar)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CX_ITERDATA_SET
+parameter_list|(
+name|cx
+parameter_list|,
+name|ivar
+parameter_list|)
+define|\
+value|if ((cx->blk_loop.itervar = (SV**)(ivar)))			\ 	    cx->blk_loop.itersave = SvREFCNT_inc(*CxITERVAR(cx));
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -318,12 +762,12 @@ name|PUSHLOOP
 parameter_list|(
 name|cx
 parameter_list|,
-name|ivar
+name|dat
 parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|cx->blk_loop.label = PL_curcop->cop_label;				\ 	cx->blk_loop.resetsp = s - PL_stack_base;				\ 	cx->blk_loop.redo_op = cLOOP->op_redoop;			\ 	cx->blk_loop.next_op = cLOOP->op_nextop;			\ 	cx->blk_loop.last_op = cLOOP->op_lastop;			\ 	if (cx->blk_loop.itervar = (ivar))				\ 	    cx->blk_loop.itersave = SvREFCNT_inc(*cx->blk_loop.itervar);\ 	cx->blk_loop.iterlval = Nullsv;					\ 	cx->blk_loop.iterary = Nullav;					\ 	cx->blk_loop.iterix = -1;
+value|cx->blk_loop.label = PL_curcop->cop_label;			\ 	cx->blk_loop.resetsp = s - PL_stack_base;			\ 	cx->blk_loop.redo_op = cLOOP->op_redoop;			\ 	cx->blk_loop.next_op = cLOOP->op_nextop;			\ 	cx->blk_loop.last_op = cLOOP->op_lastop;			\ 	cx->blk_loop.iterlval = Nullsv;					\ 	cx->blk_loop.iterary = Nullav;					\ 	cx->blk_loop.iterix = -1;					\ 	CX_ITERDATA_SET(cx,dat);
 end_define
 
 begin_define
@@ -334,29 +778,7 @@ parameter_list|(
 name|cx
 parameter_list|)
 define|\
-value|{ struct block_loop cxloop;					\ 	  POPLOOP1(cx);							\ 	  POPLOOP2(); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|POPLOOP1
-parameter_list|(
-name|cx
-parameter_list|)
-define|\
-value|cxloop = cx->blk_loop;
-comment|/* because DESTROY may clobber *cx */
-value|\ 	newsp = PL_stack_base + cxloop.resetsp;
-end_define
-
-begin_define
-define|#
-directive|define
-name|POPLOOP2
-parameter_list|()
-define|\
-value|SvREFCNT_dec(cxloop.iterlval);					\ 	if (cxloop.itervar) {						\ 	    sv_2mortal(*cxloop.itervar);				\ 	    *cxloop.itervar = cxloop.itersave;				\ 	}								\ 	if (cxloop.iterary&& cxloop.iterary != PL_curstack)		\ 	    SvREFCNT_dec(cxloop.iterary);
+value|SvREFCNT_dec(cx->blk_loop.iterlval);				\ 	if (CxITERVAR(cx)) {						\ 	    SV **s_v_p = CxITERVAR(cx);					\ 	    sv_2mortal(*s_v_p);						\ 	    *s_v_p = cx->blk_loop.itersave;				\ 	}								\ 	if (cx->blk_loop.iterary&& cx->blk_loop.iterary != PL_curstack)\ 	    SvREFCNT_dec(cx->blk_loop.iterary);
 end_define
 
 begin_comment
@@ -503,7 +925,7 @@ name|t
 parameter_list|,
 name|sp
 parameter_list|)
-value|CXINC, cx =&cxstack[cxstack_ix],		\ 	cx->cx_type		= t,					\ 	cx->blk_oldsp		= sp - PL_stack_base,			\ 	cx->blk_oldcop		= PL_curcop,				\ 	cx->blk_oldmarksp	= PL_markstack_ptr - PL_markstack,	\ 	cx->blk_oldscopesp	= PL_scopestack_ix,			\ 	cx->blk_oldretsp	= PL_retstack_ix,			\ 	cx->blk_oldpm		= PL_curpm,				\ 	cx->blk_gimme		= gimme;				\ 	DEBUG_l( PerlIO_printf(PerlIO_stderr(), "Entering block %ld, type %s\n",	\ 		    (long)cxstack_ix, block_type[CxTYPE(cx)]); )
+value|CXINC, cx =&cxstack[cxstack_ix],		\ 	cx->cx_type		= t,					\ 	cx->blk_oldsp		= sp - PL_stack_base,			\ 	cx->blk_oldcop		= PL_curcop,				\ 	cx->blk_oldmarksp	= PL_markstack_ptr - PL_markstack,	\ 	cx->blk_oldscopesp	= PL_scopestack_ix,			\ 	cx->blk_oldretsp	= PL_retstack_ix,			\ 	cx->blk_oldpm		= PL_curpm,				\ 	cx->blk_gimme		= gimme;				\ 	DEBUG_l( PerlIO_printf(Perl_debug_log, "Entering block %ld, type %s\n",	\ 		    (long)cxstack_ix, PL_block_type[CxTYPE(cx)]); )
 end_define
 
 begin_comment
@@ -519,7 +941,7 @@ name|cx
 parameter_list|,
 name|pm
 parameter_list|)
-value|cx =&cxstack[cxstack_ix--],			\ 	newsp		 = PL_stack_base + cx->blk_oldsp,		\ 	PL_curcop	 = cx->blk_oldcop,				\ 	PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp,		\ 	PL_scopestack_ix = cx->blk_oldscopesp,				\ 	PL_retstack_ix	 = cx->blk_oldretsp,				\ 	pm		 = cx->blk_oldpm,				\ 	gimme		 = cx->blk_gimme;				\ 	DEBUG_l( PerlIO_printf(PerlIO_stderr(), "Leaving block %ld, type %s\n",		\ 		    (long)cxstack_ix+1,block_type[CxTYPE(cx)]); )
+value|cx =&cxstack[cxstack_ix--],			\ 	newsp		 = PL_stack_base + cx->blk_oldsp,		\ 	PL_curcop	 = cx->blk_oldcop,				\ 	PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp,		\ 	PL_scopestack_ix = cx->blk_oldscopesp,				\ 	PL_retstack_ix	 = cx->blk_oldretsp,				\ 	pm		 = cx->blk_oldpm,				\ 	gimme		 = cx->blk_gimme;				\ 	DEBUG_l( PerlIO_printf(Perl_debug_log, "Leaving block %ld, type %s\n",		\ 		    (long)cxstack_ix+1,PL_block_type[CxTYPE(cx)]); )
 end_define
 
 begin_comment
@@ -551,7 +973,7 @@ name|I32
 name|sbu_maxiters
 decl_stmt|;
 name|I32
-name|sbu_safebase
+name|sbu_rflags
 decl_stmt|;
 name|I32
 name|sbu_oldsave
@@ -615,8 +1037,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|sb_safebase
-value|cx_u.cx_subst.sbu_safebase
+name|sb_rflags
+value|cx_u.cx_subst.sbu_rflags
 end_define
 
 begin_define
@@ -703,7 +1125,7 @@ name|PUSHSUBST
 parameter_list|(
 name|cx
 parameter_list|)
-value|CXINC, cx =&cxstack[cxstack_ix],			\ 	cx->sb_iters		= iters,				\ 	cx->sb_maxiters		= maxiters,				\ 	cx->sb_safebase		= safebase,				\ 	cx->sb_oldsave		= oldsave,				\ 	cx->sb_once		= once,					\ 	cx->sb_rxtainted	= rxtainted,				\ 	cx->sb_orig		= orig,					\ 	cx->sb_dstr		= dstr,					\ 	cx->sb_targ		= targ,					\ 	cx->sb_s		= s,					\ 	cx->sb_m		= m,					\ 	cx->sb_strend		= strend,				\ 	cx->sb_rxres		= Null(void*),				\ 	cx->sb_rx		= rx,					\ 	cx->cx_type		= CXt_SUBST;				\ 	rxres_save(&cx->sb_rxres, rx)
+value|CXINC, cx =&cxstack[cxstack_ix],			\ 	cx->sb_iters		= iters,				\ 	cx->sb_maxiters		= maxiters,				\ 	cx->sb_rflags		= r_flags,				\ 	cx->sb_oldsave		= oldsave,				\ 	cx->sb_once		= once,					\ 	cx->sb_rxtainted	= rxtainted,				\ 	cx->sb_orig		= orig,					\ 	cx->sb_dstr		= dstr,					\ 	cx->sb_targ		= targ,					\ 	cx->sb_s		= s,					\ 	cx->sb_m		= m,					\ 	cx->sb_strend		= strend,				\ 	cx->sb_rxres		= Null(void*),				\ 	cx->sb_rx		= rx,					\ 	cx->cx_type		= CXt_SUBST;				\ 	rxres_save(&cx->sb_rxres, rx)
 end_define
 
 begin_define
@@ -790,6 +1212,13 @@ name|CXt_BLOCK
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|CXt_FORMAT
+value|6
+end_define
+
 begin_comment
 comment|/* private flags for CXt_EVAL */
 end_comment
@@ -808,6 +1237,53 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CXp_TRYBLOCK
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* eval{}, not eval'' or similar */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+end_ifdef
+
+begin_comment
+comment|/* private flags for CXt_LOOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CXp_PADVAR
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* itervar lives on pad, iterdata 					   has pad offset; if not set, 					   iterdata holds GV* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CxPADLOOP
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)->cx_type& (CXt_LOOP|CXp_PADVAR))		\ 			 == (CXt_LOOP|CXp_PADVAR))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|CxTYPE
 parameter_list|(
 name|c
@@ -822,7 +1298,17 @@ name|CxREALEVAL
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)->cx_type& (CXt_EVAL|CXp_REAL)) == (CXt_EVAL|CXp_REAL))
+value|(((c)->cx_type& (CXt_EVAL|CXp_REAL))		\ 			 == (CXt_EVAL|CXp_REAL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CxTRYBLOCK
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)->cx_type& (CXt_EVAL|CXp_TRYBLOCK))	\ 			 == (CXt_EVAL|CXp_TRYBLOCK))
 end_define
 
 begin_define
@@ -834,6 +1320,10 @@ end_define
 
 begin_comment
 comment|/* "gimme" values */
+end_comment
+
+begin_comment
+comment|/* =for apidoc AmU||G_SCALAR Used to indicate scalar context.  See C<GIMME_V>, C<GIMME>, and L<perlcall>.  =for apidoc AmU||G_ARRAY Used to indicate array context.  See C<GIMME_V>, C<GIMME> and L<perlcall>.  =for apidoc AmU||G_VOID Used to indicate void context.  See C<GIMME_V> and L<perlcall>.  =for apidoc AmU||G_DISCARD Indicates that arguments returned from a callback should be discarded.  See L<perlcall>.  =for apidoc AmU||G_EVAL  Used to force a Perl C<eval> wrapper around a callback.  See L<perlcall>.  =for apidoc AmU||G_NOARGS  Indicates that no arguments are being sent to a callback.  See L<perlcall>.  =cut */
 end_comment
 
 begin_define
@@ -862,7 +1352,7 @@ comment|/* skip this bit when adding flags below */
 end_comment
 
 begin_comment
-comment|/* extra flags for perl_call_* routines */
+comment|/* extra flags for Perl_call_* routines */
 end_comment
 
 begin_define
@@ -918,6 +1408,54 @@ end_define
 
 begin_comment
 comment|/* Disable debugging at toplevel.  */
+end_comment
+
+begin_comment
+comment|/* flag bits for PL_in_eval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVAL_NULL
+value|0
+end_define
+
+begin_comment
+comment|/* not in an eval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVAL_INEVAL
+value|1
+end_define
+
+begin_comment
+comment|/* some enclosing scope is an eval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVAL_WARNONLY
+value|2
+end_define
+
+begin_comment
+comment|/* used by yywarn() when calling yyerror() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVAL_KEEPERR
+value|4
+end_define
+
+begin_comment
+comment|/* set by Perl_call_sv if G_KEEPERR */
 end_comment
 
 begin_comment
@@ -1038,10 +1576,9 @@ modifier|*
 name|si_next
 decl_stmt|;
 name|I32
-modifier|*
-name|si_markbase
+name|si_markoff
 decl_stmt|;
-comment|/* where markstack begins for us. 					 * currently used only with DEBUGGING, 					 * but not #ifdef-ed for bincompat */
+comment|/* offset where markstack begins for us. 					 * currently used only with DEBUGGING, 					 * but not #ifdef-ed for bincompat */
 block|}
 struct|;
 end_struct
@@ -1084,8 +1621,9 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SET_MARKBASE
-value|PL_curstackinfo->si_markbase = PL_markstack_ptr
+name|SET_MARK_OFFSET
+define|\
+value|PL_curstackinfo->si_markoff = PL_markstack_ptr - PL_markstack
 end_define
 
 begin_else
@@ -1096,7 +1634,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|SET_MARKBASE
+name|SET_MARK_OFFSET
 value|NOOP
 end_define
 
@@ -1113,7 +1651,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|STMT_START {							\ 	PERL_SI *next = PL_curstackinfo->si_next;			\ 	if (!next) {							\ 	    next = new_stackinfo(32, 2048/sizeof(PERL_CONTEXT) - 1);	\ 	    next->si_prev = PL_curstackinfo;				\ 	    PL_curstackinfo->si_next = next;				\ 	}								\ 	next->si_type = type;						\ 	next->si_cxix = -1;						\ 	AvFILLp(next->si_stack) = 0;					\ 	SWITCHSTACK(PL_curstack,next->si_stack);			\ 	PL_curstackinfo = next;						\ 	SET_MARKBASE;							\     } STMT_END
+value|STMT_START {							\ 	PERL_SI *next = PL_curstackinfo->si_next;			\ 	if (!next) {							\ 	    next = new_stackinfo(32, 2048/sizeof(PERL_CONTEXT) - 1);	\ 	    next->si_prev = PL_curstackinfo;				\ 	    PL_curstackinfo->si_next = next;				\ 	}								\ 	next->si_type = type;						\ 	next->si_cxix = -1;						\ 	AvFILLp(next->si_stack) = 0;					\ 	SWITCHSTACK(PL_curstack,next->si_stack);			\ 	PL_curstackinfo = next;						\ 	SET_MARK_OFFSET;						\     } STMT_END
 end_define
 
 begin_define
@@ -1123,12 +1661,16 @@ name|PUSHSTACK
 value|PUSHSTACKi(PERLSI_UNKNOWN)
 end_define
 
+begin_comment
+comment|/* POPSTACK works with PL_stack_sp, so it may need to be bracketed by  * PUTBACK/SPAGAIN to flush/refresh any local SP that may be active */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|POPSTACK
 define|\
-value|STMT_START {							\ 	PERL_SI *prev = PL_curstackinfo->si_prev;			\ 	if (!prev) {							\ 	    PerlIO_printf(PerlIO_stderr(), "panic: POPSTACK\n");	\ 	    my_exit(1);							\ 	}								\ 	SWITCHSTACK(PL_curstack,prev->si_stack);			\
+value|STMT_START {							\ 	djSP;								\ 	PERL_SI *prev = PL_curstackinfo->si_prev;			\ 	if (!prev) {							\ 	    PerlIO_printf(Perl_error_log, "panic: POPSTACK\n");		\ 	    my_exit(1);							\ 	}								\ 	SWITCHSTACK(PL_curstack,prev->si_stack);			\
 comment|/* don't free prev here, free them all at the END{} */
 value|\ 	PL_curstackinfo = prev;						\     } STMT_END
 end_define

@@ -9,6 +9,12 @@ directive|include
 file|"EXTERN.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|PERL_IN_TAINT_C
+end_define
+
 begin_include
 include|#
 directive|include
@@ -17,13 +23,15 @@ end_include
 
 begin_function
 name|void
-name|taint_proper
+name|Perl_taint_proper
 parameter_list|(
+name|pTHX_
 specifier|const
 name|char
 modifier|*
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -36,13 +44,20 @@ name|char
 modifier|*
 name|ug
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAS_SETEUID
 name|DEBUG_u
 argument_list|(
 name|PerlIO_printf
 argument_list|(
 name|Perl_debug_log
 argument_list|,
-literal|"%s %d %d %d\n"
+literal|"%s %d %"
+name|Uid_t_f
+literal|" %"
+name|Uid_t_f
+literal|"\n"
 argument_list|,
 name|s
 argument_list|,
@@ -54,6 +69,8 @@ name|PL_euid
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|PL_tainted
@@ -66,7 +83,7 @@ name|f
 condition|)
 name|f
 operator|=
-name|no_security
+name|PL_no_security
 expr_stmt|;
 if|if
 condition|(
@@ -99,38 +116,43 @@ condition|(
 operator|!
 name|PL_unsafe
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
-name|f
+argument|aTHX_ f
 argument_list|,
-name|s
+argument|s
 argument_list|,
-name|ug
+argument|ug
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
-name|PL_dowarn
-condition|)
-name|warn
+name|ckWARN
 argument_list|(
-name|f
-argument_list|,
-name|s
-argument_list|,
-name|ug
+name|WARN_TAINT
 argument_list|)
-expr_stmt|;
+condition|)
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_TAINT
+argument_list|,
+argument|f
+argument_list|,
+argument|s
+argument_list|,
+argument|ug
+argument_list|)
+empty_stmt|;
 block|}
 block|}
 end_function
 
 begin_function
 name|void
-name|taint_env
+name|Perl_taint_env
 parameter_list|(
-name|void
+name|pTHX
 parameter_list|)
 block|{
 name|SV

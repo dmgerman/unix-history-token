@@ -238,9 +238,11 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"\nThis is the AWK to PERL translator, version 5.0, patchlevel %d\n"
+literal|"\nThis is the AWK to PERL translator, revision %d.0, version %d\n"
 argument_list|,
-name|PATCHLEVEL
+name|PERL_REVISION
+argument_list|,
+name|PERL_VERSION
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3923,11 +3925,18 @@ argument_list|,
 literal|"sprintf"
 argument_list|)
 condition|)
+block|{
+comment|/* In old awk, { print sprintf("str%sg"),"in" } prints              * "string"; in new awk, "in" is not considered an argument to              * sprintf, so the statement breaks.  To support both, the              * grammar treats arguments to SPRINTF_OLD like old awk,              * SPRINTF_NEW like new.  Here we return the appropriate one.              */
 name|XTERM
 argument_list|(
-name|SPRINTF
+name|old_awk
+condition|?
+name|SPRINTF_OLD
+else|:
+name|SPRINTF_NEW
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strEQ

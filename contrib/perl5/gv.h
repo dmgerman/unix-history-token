@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    gv.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    gv.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_struct
@@ -51,17 +51,17 @@ name|U32
 name|gp_cvgen
 decl_stmt|;
 comment|/* generational validity of cached gv_cv */
-name|I32
-name|gp_lastexpr
+name|U32
+name|gp_flags
 decl_stmt|;
-comment|/* used by nothing_in_common() */
+comment|/* XXX unused */
 name|line_t
 name|gp_line
 decl_stmt|;
 comment|/* line first declared at (for -w) */
-name|GV
+name|char
 modifier|*
-name|gp_filegv
+name|gp_file
 decl_stmt|;
 comment|/* file first declared in (for -w) */
 block|}
@@ -164,6 +164,10 @@ name|gv
 parameter_list|)
 value|(GvXPVGV(gv)->xgv_flags)
 end_define
+
+begin_comment
+comment|/* =for apidoc Am|SV*|GvSV|GV* gv  Return the SV from the GV.  =cut */
+end_comment
 
 begin_define
 define|#
@@ -376,11 +380,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|GvLASTEXPR
+name|GvGPFLAGS
 parameter_list|(
 name|gv
 parameter_list|)
-value|(GvGP(gv)->gp_lastexpr)
+value|(GvGP(gv)->gp_flags)
 end_define
 
 begin_define
@@ -396,11 +400,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|GvFILE
+parameter_list|(
+name|gv
+parameter_list|)
+value|(GvGP(gv)->gp_file)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GvFILEGV
 parameter_list|(
 name|gv
 parameter_list|)
-value|(GvGP(gv)->gp_filegv)
+value|(gv_fetchfile(GvFILE(gv)))
 end_define
 
 begin_define
@@ -452,6 +466,13 @@ define|#
 directive|define
 name|GVf_ASSUMECV
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|GVf_IN_PAD
+value|0x08
 end_define
 
 begin_define
@@ -732,6 +753,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|GvIN_PAD
+parameter_list|(
+name|gv
+parameter_list|)
+value|(GvFLAGS(gv)& GVf_IN_PAD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GvIN_PAD_on
+parameter_list|(
+name|gv
+parameter_list|)
+value|(GvFLAGS(gv) |= GVf_IN_PAD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GvIN_PAD_off
+parameter_list|(
+name|gv
+parameter_list|)
+value|(GvFLAGS(gv)&= ~GVf_IN_PAD)
+end_define
+
+begin_define
+define|#
+directive|define
 name|Nullgv
 value|Null(GV*)
 end_define
@@ -786,7 +837,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/*  * symbol creation flags, for use in gv_fetchpv() and perl_get_*v()  */
+comment|/*  * symbol creation flags, for use in gv_fetchpv() and get_*v()  */
 end_comment
 
 begin_define

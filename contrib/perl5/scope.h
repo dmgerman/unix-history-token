@@ -195,19 +195,46 @@ name|SAVEt_HINTS
 value|27
 end_define
 
-begin_comment
-comment|/* #define SAVEt_ALLOC		28 */
-end_comment
-
-begin_comment
-comment|/* defined in 5.005_5x */
-end_comment
+begin_define
+define|#
+directive|define
+name|SAVEt_ALLOC
+value|28
+end_define
 
 begin_define
 define|#
 directive|define
 name|SAVEt_GENERIC_SVREF
 value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEt_DESTRUCTOR_X
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEt_VPTR
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEt_I8
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEt_COMPPAD
+value|33
 end_define
 
 begin_define
@@ -273,6 +300,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SSPUSHDXPTR
+parameter_list|(
+name|p
+parameter_list|)
+value|(PL_savestack[PL_savestack_ix++].any_dxptr = (p))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSPOPINT
 value|(PL_savestack[--PL_savestack_ix].any_i32)
 end_define
@@ -308,6 +345,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SSPOPDXPTR
+value|(PL_savestack[--PL_savestack_ix].any_dxptr)
+end_define
+
+begin_comment
+comment|/* =for apidoc Ams||SAVETMPS Opening bracket for temporaries on a callback.  See C<FREETMPS> and L<perlcall>.  =for apidoc Ams||FREETMPS Closing bracket for temporaries on a callback.  See C<SAVETMPS> and L<perlcall>.  =for apidoc Ams||ENTER Opening bracket on a callback.  See C<LEAVE> and L<perlcall>.  =for apidoc Ams||LEAVE Closing bracket on a callback.  See C<ENTER> and L<perlcall>.  =cut */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SAVETMPS
 value|save_int((int*)&PL_tmps_floor), PL_tmps_floor = PL_tmps_ix
 end_define
@@ -330,7 +378,7 @@ define|#
 directive|define
 name|ENTER
 define|\
-value|STMT_START {						\ 	push_scope();						\ 	DEBUG_l(WITH_THR(deb("ENTER scope %ld at %s:%d\n",	\ 		    PL_scopestack_ix, __FILE__, __LINE__)));	\     } STMT_END
+value|STMT_START {						\ 	push_scope();						\ 	DEBUG_l(WITH_THR(Perl_deb(aTHX_ "ENTER scope %ld at %s:%d\n",	\ 		    PL_scopestack_ix, __FILE__, __LINE__)));	\     } STMT_END
 end_define
 
 begin_define
@@ -338,7 +386,7 @@ define|#
 directive|define
 name|LEAVE
 define|\
-value|STMT_START {						\ 	DEBUG_l(WITH_THR(deb("LEAVE scope %ld at %s:%d\n",	\ 		    PL_scopestack_ix, __FILE__, __LINE__)));	\ 	pop_scope();						\     } STMT_END
+value|STMT_START {						\ 	DEBUG_l(WITH_THR(Perl_deb(aTHX_ "LEAVE scope %ld at %s:%d\n",	\ 		    PL_scopestack_ix, __FILE__, __LINE__)));	\ 	pop_scope();						\     } STMT_END
 end_define
 
 begin_else
@@ -378,6 +426,16 @@ end_define
 begin_comment
 comment|/*  * Not using SOFT_CAST on SAVESPTR, SAVEGENERICSV and SAVEFREESV  * because these are used for several kinds of pointer values  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SAVEI8
+parameter_list|(
+name|i
+parameter_list|)
+value|save_I8(SOFT_CAST(I8*)&(i))
+end_define
 
 begin_define
 define|#
@@ -452,6 +510,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SAVEVPTR
+parameter_list|(
+name|s
+parameter_list|)
+value|save_vptr((void*)&(s))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SAVEFREESV
 parameter_list|(
 name|s
@@ -514,19 +582,6 @@ define|\
 value|save_delete(SOFT_CAST(HV*)(h), SOFT_CAST(char*)(k), (I32)(l))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CALLDESTRUCTOR
-value|this->*SSPOPDPTR
-end_define
-
 begin_define
 define|#
 directive|define
@@ -537,38 +592,21 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|save_destructor((DESTRUCTORFUNC)(FUNC_NAME_TO_PTR(f)),	\ 			  SOFT_CAST(void*)(p))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CALLDESTRUCTOR
-value|*SSPOPDPTR
+value|save_destructor((DESTRUCTORFUNC_NOCONTEXT_t)(f), SOFT_CAST(void*)(p))
 end_define
 
 begin_define
 define|#
 directive|define
-name|SAVEDESTRUCTOR
+name|SAVEDESTRUCTOR_X
 parameter_list|(
 name|f
 parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|save_destructor(SOFT_CAST(void(*)_((void*)))(FUNC_NAME_TO_PTR(f)), \ 			  SOFT_CAST(void*)(p))
+value|save_destructor_x((DESTRUCTORFUNC_t)(f), SOFT_CAST(void*)(p))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -596,6 +634,119 @@ define|\
 value|STMT_START {				\ 	if (PL_hints& HINT_LOCALIZE_HH)	\ 	    save_hints();			\ 	else {					\ 	    SSCHECK(2);				\ 	    SSPUSHINT(PL_hints);		\ 	    SSPUSHINT(SAVEt_HINTS);		\ 	}					\     } STMT_END
 end_define
 
+begin_define
+define|#
+directive|define
+name|SAVECOMPPAD
+parameter_list|()
+define|\
+value|STMT_START {						\ 	if (PL_comppad&& PL_curpad == AvARRAY(PL_comppad)) {	\ 	    SSCHECK(2);						\ 	    SSPUSHPTR((SV*)PL_comppad);				\ 	    SSPUSHINT(SAVEt_COMPPAD);				\ 	}							\ 	else {							\ 	    SAVEVPTR(PL_curpad);				\ 	    SAVESPTR(PL_comppad);				\ 	}							\     } STMT_END
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SAVECOPSTASH
+parameter_list|(
+name|cop
+parameter_list|)
+value|SAVEPPTR(CopSTASHPV(cop))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVECOPFILE
+parameter_list|(
+name|cop
+parameter_list|)
+value|SAVEPPTR(CopFILE(cop))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SAVECOPSTASH
+parameter_list|(
+name|cop
+parameter_list|)
+value|SAVESPTR(CopSTASH(cop))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVECOPFILE
+parameter_list|(
+name|cop
+parameter_list|)
+value|SAVESPTR(CopFILEGV(cop))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SAVECOPLINE
+parameter_list|(
+name|cop
+parameter_list|)
+value|SAVEI16(CopLINE(cop))
+end_define
+
+begin_comment
+comment|/* SSNEW() temporarily allocates a specified number of bytes of data on the  * savestack.  It returns an integer index into the savestack, because a  * pointer would get broken if the savestack is moved on reallocation.  * SSNEWa() works like SSNEW(), but also aligns the data to the specified  * number of bytes.  MEM_ALIGNBYTES is perhaps the most useful.  The  * alignment will be preserved therough savestack reallocation *only* if  * realloc returns data aligned to a size divisible by `align'!  *  * SSPTR() converts the index returned by SSNEW/SSNEWa() into a pointer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSNEW
+parameter_list|(
+name|size
+parameter_list|)
+value|save_alloc(size, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSNEWa
+parameter_list|(
+name|size
+parameter_list|,
+name|align
+parameter_list|)
+value|save_alloc(size, \     (align - ((int)((caddr_t)&PL_savestack[PL_savestack_ix]) % align)) % align)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSPTR
+parameter_list|(
+name|off
+parameter_list|,
+name|type
+parameter_list|)
+value|((type) ((char*)PL_savestack + off))
+end_define
+
 begin_comment
 comment|/* A jmpenv packages the state required to perform a proper non-local jump.  * Note that there is a start_env initialized when perl starts, and top_env  * points to this initially, so top_env should always be non-null.  *  * Existence of a non-null top_env->je_prev implies it is valid to call  * longjmp() at that runlevel (we make sure start_env.je_prev is always  * null to ensure this).  *  * je_mustcatch, when set at any runlevel to TRUE, means eval ops must  * establish a local jmpenv to handle exception traps.  Care must be taken  * to restore the previous value of je_mustcatch before exiting the  * stack frame iff JMPENV_PUSH was not called in that stack frame.  * GSAR 97-03-27  */
 end_comment
@@ -612,14 +763,35 @@ decl_stmt|;
 name|Sigjmp_buf
 name|je_buf
 decl_stmt|;
+comment|/* only for use if !je_throw */
 name|int
 name|je_ret
 decl_stmt|;
-comment|/* return value of last setjmp() */
+comment|/* last exception thrown */
 name|bool
 name|je_mustcatch
 decl_stmt|;
-comment|/* longjmp()s must be caught locally */
+comment|/* need to call longjmp()? */
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|void
+function_decl|(
+modifier|*
+name|je_throw
+function_decl|)
+parameter_list|(
+name|int
+name|v
+parameter_list|)
+function_decl|;
+comment|/* last for bincompat */
+name|bool
+name|je_noset
+decl_stmt|;
+comment|/* no need for setjmp() */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -676,6 +848,226 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * How to build the first jmpenv.  *  * top_env needs to be non-zero. It points to an area  * in which longjmp() stuff is stored, as C callstack  * info there at least is thread specific this has to  * be per-thread. Otherwise a 'die' in a thread gives  * that thread the C stack of last thread to do an eval {}!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JMPENV_BOOTSTRAP
+define|\
+value|STMT_START {				\ 	Zero(&PL_start_env, 1, JMPENV);		\ 	PL_start_env.je_ret = -1;		\ 	PL_start_env.je_mustcatch = TRUE;	\ 	PL_top_env =&PL_start_env;		\     } STMT_END
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+end_ifdef
+
+begin_comment
+comment|/*  * These exception-handling macros are split up to  * ease integration with C++ exceptions.  *  * To use C++ try+catch to catch Perl exceptions, an extension author  * needs to first write an extern "C" function to throw an appropriate  * exception object; typically it will be or contain an integer,  * because Perl's internals use integers to track exception types:  *    extern "C" { static void thrower(int i) { throw i; } }  *  * Then (as shown below) the author needs to use, not the simple  * JMPENV_PUSH, but several of its constitutent macros, to arrange for  * the Perl internals to call thrower() rather than longjmp() to  * report exceptions:  *  *    dJMPENV;  *    JMPENV_PUSH_INIT(thrower);  *    try {  *        ... stuff that may throw exceptions ...  *    }  *    catch (int why) {  // or whatever matches thrower()  *        JMPENV_POST_CATCH;  *        EXCEPT_SET(why);  *        switch (why) {  *          ... // handle various Perl exception codes  *        }  *    }  *    JMPENV_POP;  // don't forget this!  */
+end_comment
+
+begin_comment
+comment|/*  * Function that catches/throws, and its callback for the  *  body of protected processing.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+operator|*
+operator|(
+name|CPERLscope
+argument_list|(
+operator|*
+name|protect_body_t
+argument_list|)
+operator|)
+operator|(
+name|pTHX_
+name|va_list
+operator|)
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|*
+operator|(
+name|CPERLscope
+argument_list|(
+operator|*
+name|protect_proc_t
+argument_list|)
+operator|)
+operator|(
+name|pTHX_
+specifier|volatile
+name|JMPENV
+operator|*
+name|pcur_env
+operator|,
+name|int
+operator|*
+operator|,
+name|protect_body_t
+operator|,
+operator|...
+operator|)
+argument_list|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|dJMPENV
+value|JMPENV cur_env;	\ 		volatile JMPENV *pcur_env = ((cur_env.je_noset = 0),&cur_env)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_PUSH_INIT_ENV
+parameter_list|(
+name|ce
+parameter_list|,
+name|THROWFUNC
+parameter_list|)
+define|\
+value|STMT_START {					\ 	(ce).je_throw = (THROWFUNC);			\ 	(ce).je_ret = -1;				\ 	(ce).je_mustcatch = FALSE;			\ 	(ce).je_prev = PL_top_env;			\ 	PL_top_env =&(ce);				\ 	OP_REG_TO_MEM;					\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_PUSH_INIT
+parameter_list|(
+name|THROWFUNC
+parameter_list|)
+value|JMPENV_PUSH_INIT_ENV(*(JMPENV*)pcur_env,THROWFUNC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_POST_CATCH_ENV
+parameter_list|(
+name|ce
+parameter_list|)
+define|\
+value|STMT_START {					\ 	OP_MEM_TO_REG;					\ 	PL_top_env =&(ce);				\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_POST_CATCH
+value|JMPENV_POST_CATCH_ENV(*(JMPENV*)pcur_env)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_PUSH_ENV
+parameter_list|(
+name|ce
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|STMT_START {						\ 	if (!(ce).je_noset) {					\ 	    DEBUG_l(Perl_deb(aTHX_ "Setting up jumplevel %p, was %p\n",	\ 			     ce, PL_top_env));			\ 	    JMPENV_PUSH_INIT_ENV(ce,NULL);			\ 	    EXCEPT_SET_ENV(ce,PerlProc_setjmp((ce).je_buf, 1));\ 	    (ce).je_noset = 1;					\ 	}							\ 	else							\ 	    EXCEPT_SET_ENV(ce,0);				\ 	JMPENV_POST_CATCH_ENV(ce);				\ 	(v) = EXCEPT_GET_ENV(ce);				\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_PUSH
+parameter_list|(
+name|v
+parameter_list|)
+value|JMPENV_PUSH_ENV(*(JMPENV*)pcur_env,v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_POP_ENV
+parameter_list|(
+name|ce
+parameter_list|)
+define|\
+value|STMT_START {						\ 	if (PL_top_env ==&(ce))				\ 	    PL_top_env = (ce).je_prev;				\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_POP
+value|JMPENV_POP_ENV(*(JMPENV*)pcur_env)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JMPENV_JUMP
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|STMT_START {						\ 	OP_REG_TO_MEM;						\ 	if (PL_top_env->je_prev) {				\ 	    if (PL_top_env->je_throw)				\ 		PL_top_env->je_throw(v);			\ 	    else						\ 		PerlProc_longjmp(PL_top_env->je_buf, (v));	\ 	}							\ 	if ((v) == 2)						\ 	    PerlProc_exit(STATUS_NATIVE_EXPORT);		\ 	PerlIO_printf(Perl_error_log, "panic: top_env\n");	\ 	PerlProc_exit(1);					\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEPT_GET_ENV
+parameter_list|(
+name|ce
+parameter_list|)
+value|((ce).je_ret)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEPT_GET
+value|EXCEPT_GET_ENV(*(JMPENV*)pcur_env)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEPT_SET_ENV
+parameter_list|(
+name|ce
+parameter_list|,
+name|v
+parameter_list|)
+value|((ce).je_ret = (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEPT_SET
+parameter_list|(
+name|v
+parameter_list|)
+value|EXCEPT_SET_ENV(*(JMPENV*)pcur_env,v)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !PERL_FLEXIBLE_EXCEPTIONS */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -691,7 +1083,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|STMT_START {					\ 	cur_env.je_prev = PL_top_env;			\ 	OP_REG_TO_MEM;					\ 	cur_env.je_ret = PerlProc_setjmp(cur_env.je_buf, 1);	\ 	OP_MEM_TO_REG;					\ 	PL_top_env =&cur_env;				\ 	cur_env.je_mustcatch = FALSE;			\ 	(v) = cur_env.je_ret;				\     } STMT_END
+value|STMT_START {							\ 	DEBUG_l(Perl_deb(aTHX_ "Setting up jumplevel %p, was %p\n",	\&cur_env, PL_top_env));			\ 	cur_env.je_prev = PL_top_env;					\ 	OP_REG_TO_MEM;							\ 	cur_env.je_ret = PerlProc_setjmp(cur_env.je_buf, 1);		\ 	OP_MEM_TO_REG;							\ 	PL_top_env =&cur_env;						\ 	cur_env.je_mustcatch = FALSE;					\ 	(v) = cur_env.je_ret;						\     } STMT_END
 end_define
 
 begin_define
@@ -710,8 +1102,17 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|STMT_START {						\ 	OP_REG_TO_MEM;						\ 	if (PL_top_env->je_prev)					\ 	    PerlProc_longjmp(PL_top_env->je_buf, (v));			\ 	if ((v) == 2)						\ 	    PerlProc_exit(STATUS_NATIVE_EXPORT);				\ 	PerlIO_printf(PerlIO_stderr(), "panic: top_env\n");	\ 	PerlProc_exit(1);						\     } STMT_END
+value|STMT_START {						\ 	OP_REG_TO_MEM;						\ 	if (PL_top_env->je_prev)				\ 	    PerlProc_longjmp(PL_top_env->je_buf, (v));		\ 	if ((v) == 2)						\ 	    PerlProc_exit(STATUS_NATIVE_EXPORT);		\ 	PerlIO_printf(PerlIO_stderr(), "panic: top_env\n");	\ 	PerlProc_exit(1);					\     } STMT_END
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PERL_FLEXIBLE_EXCEPTIONS */
+end_comment
 
 begin_define
 define|#

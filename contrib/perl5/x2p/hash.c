@@ -440,19 +440,15 @@ begin_function
 name|bool
 name|hdelete
 parameter_list|(
-name|tb
-parameter_list|,
-name|key
-parameter_list|)
 specifier|register
 name|HASH
 modifier|*
 name|tb
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -983,17 +979,12 @@ directive|ifdef
 name|NOTUSED
 end_ifdef
 
-begin_expr_stmt
+begin_macro
 name|hshow
 argument_list|(
-name|tb
+argument|register HASH *tb
 argument_list|)
-specifier|register
-name|HASH
-operator|*
-name|tb
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_block
 block|{

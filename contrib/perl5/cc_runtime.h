@@ -6,7 +6,17 @@ name|DOOP
 parameter_list|(
 name|ppname
 parameter_list|)
-value|PUTBACK; PL_op = ppname(ARGS); SPAGAIN
+value|PUTBACK; PL_op = ppname(aTHX); SPAGAIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCPP
+parameter_list|(
+name|s
+parameter_list|)
+value|OP * s(pTHX)
 end_define
 
 begin_define
@@ -60,7 +70,7 @@ name|ppaddr
 parameter_list|,
 name|nxt
 parameter_list|)
-value|do {		\ 	dJMPENV;				\ 	int ret;				\ 	PUTBACK;				\ 	JMPENV_PUSH(ret);			\ 	switch (ret) {				\ 	case 0:					\ 	    PL_op = ppaddr(ARGS);			\ 	    PL_retstack[PL_retstack_ix - 1] = Nullop;	\ 	    if (PL_op != nxt) CALLRUNOPS();		\ 	    JMPENV_POP;				\ 	    break;				\ 	case 1: JMPENV_POP; JMPENV_JUMP(1);	\ 	case 2: JMPENV_POP; JMPENV_JUMP(2);	\ 	case 3:					\ 	    JMPENV_POP;				\ 	    if (PL_restartop != nxt)		\ 		JMPENV_JUMP(3);			\ 	}					\ 	PL_op = nxt;				\ 	SPAGAIN;				\     } while (0)
+value|do {		\ 	dJMPENV;				\ 	int ret;				\ 	PUTBACK;				\ 	JMPENV_PUSH(ret);			\ 	switch (ret) {				\ 	case 0:					\ 	    PL_op = ppaddr(aTHX);		\ 	    PL_retstack[PL_retstack_ix - 1] = Nullop;	\ 	    if (PL_op != nxt) CALLRUNOPS();		\ 	    JMPENV_POP;				\ 	    break;				\ 	case 1: JMPENV_POP; JMPENV_JUMP(1);	\ 	case 2: JMPENV_POP; JMPENV_JUMP(2);	\ 	case 3:					\ 	    JMPENV_POP;				\ 	    if (PL_restartop&& PL_restartop != nxt)		\ 		JMPENV_JUMP(3);			\ 	}					\ 	PL_op = nxt;				\ 	SPAGAIN;				\     } while (0)
 end_define
 
 begin_define
@@ -72,7 +82,16 @@ name|jmpbuf
 parameter_list|,
 name|label
 parameter_list|)
-value|do {		\ 	dJMPENV;				\ 	int ret;				\ 	JMPENV_PUSH(ret);			\ 	switch (ret) {				\ 	case 1: JMPENV_POP; JMPENV_JUMP(1);	\ 	case 2: JMPENV_POP; JMPENV_JUMP(2);	\ 	case 3: JMPENV_POP; SPAGAIN; goto label;\ 	}					\     } while (0)
+define|\
+value|STMT_START {                    \ 		int ret;		\ 		JMPENV_PUSH_ENV(jmpbuf,ret);			\ 		switch (ret) {				\ 			case 1: JMPENV_POP_ENV(jmpbuf); JMPENV_JUMP(1);\ 			case 2: JMPENV_POP_ENV(jmpbuf); JMPENV_JUMP(2);\ 			case 3: JMPENV_POP_ENV(jmpbuf); SPAGAIN; goto label;\ 		}                                       \ 	} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|PP_LEAVETRY
+define|\
+value|STMT_START{ PL_top_env=PL_top_env->je_prev; }STMT_END
 end_define
 
 end_unit

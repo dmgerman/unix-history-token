@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    mg.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    mg.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_ifdef
@@ -27,9 +27,8 @@ name|int
 argument_list|(
 argument|CPERLscope(*svt_get)
 argument_list|)
-name|_
-argument_list|(
 operator|(
+name|pTHX_
 name|SV
 operator|*
 name|sv
@@ -38,15 +37,13 @@ name|MAGIC
 operator|*
 name|mg
 operator|)
-argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
 argument|CPERLscope(*svt_set)
 argument_list|)
-name|_
-argument_list|(
 operator|(
+name|pTHX_
 name|SV
 operator|*
 name|sv
@@ -55,15 +52,13 @@ name|MAGIC
 operator|*
 name|mg
 operator|)
-argument_list|)
 expr_stmt|;
 name|U32
 argument_list|(
 argument|CPERLscope(*svt_len)
 argument_list|)
-name|_
-argument_list|(
 operator|(
+name|pTHX_
 name|SV
 operator|*
 name|sv
@@ -72,15 +67,13 @@ name|MAGIC
 operator|*
 name|mg
 operator|)
-argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
 argument|CPERLscope(*svt_clear)
 argument_list|)
-name|_
-argument_list|(
 operator|(
+name|pTHX_
 name|SV
 operator|*
 name|sv
@@ -89,15 +82,13 @@ name|MAGIC
 operator|*
 name|mg
 operator|)
-argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
 argument|CPERLscope(*svt_free)
 argument_list|)
-name|_
-argument_list|(
 operator|(
+name|pTHX_
 name|SV
 operator|*
 name|sv
@@ -106,7 +97,6 @@ name|MAGIC
 operator|*
 name|mg
 operator|)
-argument_list|)
 expr_stmt|;
 block|}
 struct|;
@@ -221,7 +211,7 @@ name|mg
 parameter_list|,
 name|lp
 parameter_list|)
-value|(((lp = (mg)->mg_len) == HEf_SVKEY) ?   \ 				 SvPV((SV*)((mg)->mg_ptr),lp) :		\ 				 (mg)->mg_ptr)
+value|((((int)(lp = (mg)->mg_len)) == HEf_SVKEY) ?   \ 				 SvPV((SV*)((mg)->mg_ptr),lp) :		\ 				 (mg)->mg_ptr)
 end_define
 
 begin_define

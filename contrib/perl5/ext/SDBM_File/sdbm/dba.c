@@ -46,15 +46,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
+name|int
 name|argc
 parameter_list|,
-name|argv
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -105,6 +104,16 @@ argument_list|)
 operator|)
 operator|+
 literal|5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|name
+condition|)
+name|oops
+argument_list|(
+literal|"cannot get memory"
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -165,20 +174,13 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|sdump
-argument_list|(
-argument|pagf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|pagf
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|b
@@ -303,23 +305,16 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|pagestat
-argument_list|(
-argument|pag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|pag
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|n
@@ -405,7 +400,7 @@ operator|/
 literal|2
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

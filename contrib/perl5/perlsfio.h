@@ -169,6 +169,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PerlIO_reopen
+parameter_list|(
+name|path
+parameter_list|,
+name|mode
+parameter_list|,
+name|f
+parameter_list|)
+value|sfopen(f,path,mode)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PerlIO_close
 parameter_list|(
 name|f
@@ -330,7 +344,7 @@ name|f
 parameter_list|,
 name|fl
 parameter_list|)
-value|croak("Import from FILE * unimplemeted")
+value|Perl_croak(aTHX_ "Import from FILE * unimplemeted")
 end_define
 
 begin_define
@@ -342,7 +356,7 @@ name|f
 parameter_list|,
 name|fl
 parameter_list|)
-value|croak("Export to FILE * unimplemeted")
+value|Perl_croak(aTHX_ "Export to FILE * unimplemeted")
 end_define
 
 begin_define
@@ -364,7 +378,7 @@ name|p
 parameter_list|,
 name|f
 parameter_list|)
-value|croak("Release of FILE * unimplemeted")
+value|Perl_croak(aTHX_ "Release of FILE * unimplemeted")
 end_define
 
 begin_define
