@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)learn.c	4.2	(Berkeley)	%G%"
+literal|"@(#)learn.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,14 +225,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|speed
 operator|=
@@ -252,32 +244,6 @@ name|pwline
 operator|=
 name|getlogin
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|malloc
-argument_list|(
-name|BUFSIZ
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|setbuf
-argument_list|(
-name|stderr
-argument_list|,
-name|malloc
-argument_list|(
-name|BUFSIZ
-argument_list|)
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
