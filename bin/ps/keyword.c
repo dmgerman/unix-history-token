@@ -2619,6 +2619,10 @@ decl_stmt|,
 modifier|*
 name|tempstr1
 decl_stmt|;
+define|#
+directive|define
+name|FMTSEP
+value|" \t,\n"
 name|tempstr1
 operator|=
 name|tempstr
@@ -2649,7 +2653,22 @@ name|varent
 modifier|*
 name|vent
 decl_stmt|;
-comment|/* 		 * Seperate the format by commas. 		 */
+comment|/* 		 * If an item contains an equals sign, it specifies a column 		 * header, may contain embedded separator characters and 		 * is always the last item.	 		 */
+if|if
+condition|(
+name|tempstr
+index|[
+name|strcspn
+argument_list|(
+name|tempstr
+argument_list|,
+literal|"="
+name|FMTSEP
+argument_list|)
+index|]
+operator|!=
+literal|'='
+condition|)
 while|while
 condition|(
 operator|(
@@ -2660,7 +2679,7 @@ argument_list|(
 operator|&
 name|tempstr
 argument_list|,
-literal|","
+name|FMTSEP
 argument_list|)
 operator|)
 operator|!=
@@ -2673,6 +2692,17 @@ literal|'\0'
 condition|)
 comment|/* void */
 empty_stmt|;
+else|else
+block|{
+name|cp
+operator|=
+name|tempstr
+expr_stmt|;
+name|tempstr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cp
