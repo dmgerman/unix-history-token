@@ -81,7 +81,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.29 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.30 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.29 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.30 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,7 +122,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.29 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.30 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.29 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.30 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2349,6 +2349,23 @@ name|q_user
 expr_stmt|;
 block|}
 comment|/* 		**  Process the RHS. 		**	'al' is the internal form of the LHS address. 		**	'p' points to the text of the RHS. 		**		'p' may begin with a colon (i.e., the 		**		separator was "::") which will use the 		**		first address as the person to send 		**		errors to -- i.e., designates the 		**		list maintainer. 		*/
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|*
