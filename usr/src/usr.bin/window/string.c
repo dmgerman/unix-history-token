@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)string.c	3.4 84/01/09"
+literal|"@(#)string.c	3.5 84/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,21 +324,6 @@ directive|ifdef
 name|STR_DEBUG
 end_ifdef
 
-begin_decl_stmt
-name|struct
-name|string
-name|str_head
-init|=
-block|{
-operator|&
-name|str_head
-block|,
-operator|&
-name|str_head
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|char
 modifier|*
@@ -382,6 +367,25 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|str_head
+operator|.
+name|s_forw
+operator|==
+literal|0
+condition|)
+name|str_head
+operator|.
+name|s_forw
+operator|=
+name|str_head
+operator|.
+name|s_back
+operator|=
+operator|&
+name|str_head
+expr_stmt|;
 name|s
 operator|->
 name|s_forw

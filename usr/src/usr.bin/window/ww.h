@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.26 84/03/03	  */
+comment|/*  *	@(#)ww.h	3.27 84/03/23	  */
 end_comment
 
 begin_include
@@ -796,6 +796,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* termcap fields for the function keys */
+end_comment
+
+begin_decl_stmt
+name|char
+name|wwwintermcap
+index|[
+literal|1024
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* termcap for windows */
 end_comment
 
 begin_comment

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwprintf.c	3.2 84/03/03"
+literal|"@(#)wwprintf.c	3.3 84/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,6 @@ name|struct
 name|_iobuf
 name|_wwbuf
 decl_stmt|;
-specifier|static
 name|char
 name|buf
 index|[

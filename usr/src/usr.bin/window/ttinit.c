@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttinit.c	3.8 84/03/03"
+literal|"@(#)ttinit.c	3.9 84/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,10 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
+name|tt_strp
+operator|=
+name|tt_strings
+expr_stmt|;
 comment|/* 	 * Set output buffer size to about 1 second of output time. 	 */
 name|tt_obp
 operator|=

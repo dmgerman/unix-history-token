@@ -1,6 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)lcmd.h	3.1 83/11/22  */
+comment|/*  *	@(#)lcmd.h	3.2 84/03/23  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCMD_NARG
+value|20
+end_define
+
+begin_comment
+comment|/* maximum number of arguments */
 end_comment
 
 begin_struct
@@ -44,34 +55,9 @@ decl_stmt|;
 name|char
 name|arg_type
 decl_stmt|;
-name|struct
-name|value
-name|arg_val
-decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|arg_num
-value|arg_val.v_num
-end_define
-
-begin_define
-define|#
-directive|define
-name|arg_str
-value|arg_val.v_str
-end_define
-
-begin_define
-define|#
-directive|define
-name|arg_vtype
-value|arg_val.v_type
-end_define
 
 begin_define
 define|#

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.15 84/03/03"
+literal|"@(#)main.c	3.16 84/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,29 +37,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_decl_stmt
-name|int
-name|nbufline
-init|=
-literal|48
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* compatible */
-end_comment
-
-begin_decl_stmt
-name|char
-name|escapec
-init|=
-name|CTRL
-argument_list|(
-name|p
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -230,6 +207,18 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+name|nbufline
+operator|=
+literal|48
+expr_stmt|;
+comment|/* compatible */
+name|escapec
+operator|=
+name|CTRL
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
