@@ -360,7 +360,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__NetBSD__
+name|__FreeBSD__
 end_ifdef
 
 begin_define
