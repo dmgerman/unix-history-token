@@ -5082,6 +5082,12 @@ case|:
 case|case
 name|SO_TIMESTAMP
 case|:
+case|case
+name|SO_DELAYACCEPT
+case|:
+case|case
+name|SO_HTTPACCEPT
+case|:
 name|error
 operator|=
 name|sooptcopyin
@@ -5741,6 +5747,12 @@ name|SO_OOBINLINE
 case|:
 case|case
 name|SO_TIMESTAMP
+case|:
+case|case
+name|SO_DELAYACCEPT
+case|:
+case|case
+name|SO_HTTPACCEPT
 case|:
 name|optval
 operator|=
