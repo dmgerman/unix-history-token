@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.24 1998/02/19 08:12:11 guido Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.25 1998/04/19 07:15:34 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3382,7 +3382,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pwd_mkdb [-c] [-p] [-d<dest dir>] [-u<local username>] file\n"
+literal|"usage: pwd_mkdb [-C] [-p] [-d<dest dir>] [-s<cachesize>] [-u<local username>] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
