@@ -1836,34 +1836,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * No path prefix; try /dev/r%s then /dev/%s. 		 */
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|device
-argument_list|,
-literal|"%sr%s"
-argument_list|,
-name|_PATH_DEV
-argument_list|,
-name|special
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-name|device
-argument_list|,
-operator|&
-name|st
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
+comment|/* 		 * No path prefix; try /dev/%s. 		 */
 operator|(
 name|void
 operator|)
