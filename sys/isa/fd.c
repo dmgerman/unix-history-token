@@ -5456,9 +5456,17 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/*  * XXX I think using __i386__ is wrong here since we actually want to probe  * for the machine type, not the CPU type (so non-PC arch's like the PC98 will  * fail the probe).  However, for whatever reason, testing for _MACHINE_ARCH  * == i386 breaks the test on FreeBSD/Alpha.  */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 if|if
 condition|(
 name|fd
@@ -5557,7 +5565,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* __i386__ */
+comment|/* __i386__ || __amd64__ */
 comment|/* is there a unit? */
 if|if
 condition|(
