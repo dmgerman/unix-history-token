@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	8.1 (Berkeley) %G%  *  * from: $Header: if_lereg.h,v 1.6 92/11/26 02:28:12 torek Exp $  */
+comment|/*-  * Copyright (c) 1982, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	8.2 (Berkeley) %G%  *  * from: $Header: if_lereg.h,v 1.7 93/10/31 04:41:00 leres Locked $  */
 end_comment
 
 begin_define
@@ -368,42 +368,41 @@ comment|/* initialization block */
 name|u_short
 name|ler2_mode
 decl_stmt|;
-comment|/* +0x0000: mode */
+comment|/* mode */
 name|u_char
 name|ler2_padr
 index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* +0x0002: physical address */
-name|u_long
+comment|/* physical address */
+name|u_short
 name|ler2_ladrf
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
-comment|/* +0x0008: logical address filter */
+comment|/* logical address filter */
 name|u_short
 name|ler2_rdra
 decl_stmt|;
-comment|/* +0x0010: receive descriptor addr */
+comment|/* receive descriptor addr */
 name|u_short
 name|ler2_rlen
 decl_stmt|;
-comment|/* +0x0012: rda high and ring size */
+comment|/* rda high and ring size */
 name|u_short
 name|ler2_tdra
 decl_stmt|;
-comment|/* +0x0014: transmit descriptor addr */
+comment|/* transmit descriptor addr */
 name|u_short
 name|ler2_tlen
 decl_stmt|;
-comment|/* +0x0016: tda high and ring size */
+comment|/* tda high and ring size */
 comment|/* receive message descriptors. bits/hadr are byte order dependent. */
 struct|struct
 name|lermd
 block|{
-comment|/* +0x0018 */
 name|u_short
 name|rmd0
 decl_stmt|;
@@ -434,7 +433,6 @@ comment|/* transmit message descriptors */
 struct|struct
 name|letmd
 block|{
-comment|/* +0x0058 */
 name|u_short
 name|tmd0
 decl_stmt|;
@@ -470,7 +468,6 @@ index|[
 name|LEMTU
 index|]
 decl_stmt|;
-comment|/* +0x0060 */
 name|char
 name|ler2_tbuf
 index|[
@@ -480,7 +477,6 @@ index|[
 name|LEMTU
 index|]
 decl_stmt|;
-comment|/* +0x2fd0 */
 block|}
 struct|;
 end_struct
