@@ -98,6 +98,9 @@ decl_stmt|;
 name|intptr_t
 name|owner
 decl_stmt|;
+name|intptr_t
+name|old
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -152,10 +155,7 @@ if|if
 condition|(
 name|owner
 operator|==
-operator|(
-name|intptr_t
-operator|)
-name|td
+name|UMTX_UNOWNED
 condition|)
 block|{
 name|error
@@ -191,7 +191,7 @@ name|UMTX_CONTESTED
 condition|)
 break|break;
 comment|/* 		 * Set the contested bit so that a release in user space 		 * knows to use the system call for unlock.  If this fails 		 * either some one else has acquired the lock or it has been 		 * released. 		 */
-name|owner
+name|old
 operator|=
 name|casuptr
 argument_list|(
@@ -211,18 +211,18 @@ operator||
 name|UMTX_CONTESTED
 argument_list|)
 expr_stmt|;
-comment|/* The contested bit was set. */
+comment|/* We set the contested bit. */
 if|if
 condition|(
+name|old
+operator|==
 name|owner
-operator|&
-name|UMTX_CONTESTED
 condition|)
 break|break;
 comment|/* The address was invalid. */
 if|if
 condition|(
-name|owner
+name|old
 operator|==
 operator|-
 literal|1
@@ -498,6 +498,9 @@ decl_stmt|;
 name|intptr_t
 name|blocked
 decl_stmt|;
+name|intptr_t
+name|old
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -620,7 +623,10 @@ if|if
 condition|(
 name|owner
 operator|!=
-name|UMTX_UNOWNED
+operator|(
+name|intptr_t
+operator|)
+name|td
 condition|)
 name|error
 operator|=
@@ -846,7 +852,7 @@ goto|;
 block|}
 block|}
 comment|/* 	 * Now directly assign this mutex to the first thread that was 	 * blocked on it. 	 */
-name|owner
+name|old
 operator|=
 name|casuptr
 argument_list|(
@@ -867,9 +873,9 @@ expr_stmt|;
 comment|/* 	 * This will only happen if someone modifies the lock without going 	 * through this api. 	 */
 if|if
 condition|(
-name|owner
+name|old
 operator|!=
-name|blocked
+name|owner
 condition|)
 block|{
 name|error
@@ -882,7 +888,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|owner
+name|old
 operator|==
 operator|-
 literal|1
