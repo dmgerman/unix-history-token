@@ -1229,6 +1229,10 @@ condition|(
 name|checkch
 operator|!=
 literal|'y'
+operator|||
+name|checkch
+operator|!=
+literal|'Y'
 condition|)
 block|{
 operator|(
