@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.8 (Berkeley) %G%"
+literal|"@(#)popen.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,14 +484,17 @@ decl_stmt|;
 name|int
 name|omask
 decl_stmt|;
-name|int
-name|stat_loc
+name|union
+name|wait
+name|pstat
 decl_stmt|;
 name|pid_t
+name|pid
+decl_stmt|,
 name|waitpid
-parameter_list|()
-function_decl|;
-comment|/* 	 * pclose returns -1 if stream is not associated with a 	 * `popened' command, or, if already `pclosed'. 	 */
+argument_list|()
+decl_stmt|;
+comment|/* 	 * pclose returns -1 if stream is not associated with a 	 * `popened' command, if already `pclosed', or waitpid 	 * returns an error. 	 */
 if|if
 condition|(
 name|pids
@@ -544,7 +547,7 @@ name|SIGHUP
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|stat_loc
+name|pid
 operator|=
 name|waitpid
 argument_list|(
@@ -554,20 +557,9 @@ name|fdes
 index|]
 argument_list|,
 operator|&
-name|stat_loc
+name|pstat
 argument_list|,
 literal|0
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|?
-operator|-
-literal|1
-else|:
-name|WEXITSTATUS
-argument_list|(
-name|stat_loc
 argument_list|)
 expr_stmt|;
 operator|(
@@ -587,7 +579,17 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|stat_loc
+name|pid
+operator|==
+operator|-
+literal|1
+condition|?
+operator|-
+literal|1
+else|:
+name|pstat
+operator|.
+name|w_status
 operator|)
 return|;
 block|}
