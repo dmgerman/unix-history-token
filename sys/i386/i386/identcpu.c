@@ -80,13 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/segments.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/specialreg.h>
+file|<machine/intr_machdep.h>
 end_include
 
 begin_include
@@ -98,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/icu.h>
+file|<machine/segments.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/intr_machdep.h>
+file|<machine/specialreg.h>
 end_include
 
 begin_define
