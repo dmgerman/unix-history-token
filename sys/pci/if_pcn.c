@@ -2092,6 +2092,7 @@ argument_list|,
 name|PCN_BCR_PCISUBVENID
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Note III: the test for 0x10001000 is a hack to 			 * pacify VMware, who's pseudo-PCnet interface is 			 * broken. Reading the subsystem register from PCI 			 * config space yeilds 0x00000000 while reading the 			 * same value from I/O space yeilds 0x10001000. It's 			 * not supposed to be that way. 			 */
 if|if
 condition|(
 name|chip_id
@@ -2104,6 +2105,10 @@ name|PCIR_SUBVEND_0
 argument_list|,
 literal|4
 argument_list|)
+operator|||
+name|chip_id
+operator|==
+literal|0x10001000
 condition|)
 block|{
 comment|/* We're in 16-bit mode. */
