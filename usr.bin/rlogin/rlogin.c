@@ -3805,6 +3805,17 @@ argument_list|,
 name|oob
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|oob
+argument_list|)
+expr_stmt|;
+comment|/* When propogating SIGURG from parent */
 name|ppid
 operator|=
 name|getppid
@@ -4304,7 +4315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* copy SIGURGs to the child process. */
+comment|/* copy SIGURGs to the child process via SIGUSR1. */
 end_comment
 
 begin_function
@@ -4324,7 +4335,7 @@ name|kill
 argument_list|(
 name|child
 argument_list|,
-name|SIGURG
+name|SIGUSR1
 argument_list|)
 expr_stmt|;
 block|}
