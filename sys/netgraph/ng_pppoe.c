@@ -5446,7 +5446,8 @@ name|private
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* work out how many session hooks there are 		/* Node goes away on last session hook removal */
+comment|/* work out how many session hooks there are */
+comment|/* Node goes away on last session hook removal */
 name|hooks
 operator|=
 name|node
@@ -5468,7 +5469,7 @@ if|if
 condition|(
 name|privp
 operator|->
-name|debug
+name|debug_hook
 condition|)
 name|hooks
 operator|-=
