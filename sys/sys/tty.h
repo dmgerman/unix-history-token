@@ -1787,18 +1787,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ttyregister
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ttysleep
 parameter_list|(
