@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -287,52 +301,57 @@ case|case
 name|EISA_DEVICE_ID_3COM_3C509_TP
 case|:
 return|return
+operator|(
 literal|"3Com 3C509-TP Network Adapter"
+operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_3COM_3C509_BNC
 case|:
 return|return
+operator|(
 literal|"3Com 3C509-BNC Network Adapter"
+operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_3COM_3C579_TP
 case|:
 return|return
+operator|(
 literal|"3Com 3C579-TP EISA Network Adapter"
+operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_3COM_3C579_BNC
 case|:
 return|return
+operator|(
 literal|"3Com 3C579-BNC EISA Network Adapter"
+operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_3COM_3C509_COMBO
 case|:
 return|return
+operator|(
 literal|"3Com 3C509-Combo Network Adapter"
+operator|)
 return|;
-break|break;
 case|case
 name|EISA_DEVICE_ID_3COM_3C509_TPO
 case|:
 return|return
+operator|(
 literal|"3Com 3C509-TPO Network Adapter"
+operator|)
 return|;
-break|break;
 default|default:
-break|break;
-block|}
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -546,7 +565,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 switch|switch
@@ -585,7 +606,9 @@ name|int_trig
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -754,8 +777,6 @@ name|stat
 operator|=
 name|F_ACCESS_32_BITS
 expr_stmt|;
-break|break;
-default|default:
 break|break;
 block|}
 name|ep_get_media

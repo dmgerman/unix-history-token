@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Herb Peyerl.  * 4. The name of Herb Peyerl may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	if_ep.c,v 1.19 1995/01/24 20:53:45 davidg Exp  */
+comment|/*  * Copyright (c) 1994 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Herb Peyerl.  * 4. The name of Herb Peyerl may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -18,6 +18,20 @@ end_comment
 begin_comment
 comment|/*  * MAINTAINER: Matthew N. Dodd<winter@jurai.net>  *<mdodd@FreeBSD.org>  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -124,18 +138,6 @@ name|devclass_t
 name|ep_devclass
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char *	ep_conn_type[] = {"UTP", "AUI", "???", "BNC"}; static int	if_media2ep_media[] = { 0, 0, 0, UTP, BNC, AUI };
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -321,13 +323,11 @@ specifier|static
 name|int
 name|eeprom_rdy
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -350,13 +350,11 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|DELAY
 argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|i
@@ -395,24 +393,18 @@ begin_function
 name|int
 name|get_e
 parameter_list|(
-name|sc
-parameter_list|,
-name|offset
-parameter_list|,
-name|result
-parameter_list|)
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|u_int16_t
 name|offset
-decl_stmt|;
+parameter_list|,
 name|u_int16_t
 modifier|*
 name|result
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -481,19 +473,15 @@ begin_function
 name|int
 name|ep_get_macaddr
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|u_char
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -852,13 +840,11 @@ begin_function
 name|void
 name|ep_get_media
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int16_t
 name|config
@@ -924,7 +910,6 @@ operator|&
 literal|7
 operator|)
 condition|)
-block|{
 if|if
 condition|(
 name|bootverbose
@@ -938,7 +923,6 @@ argument_list|,
 literal|"no connectors!\n"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * This works for most of the cards so we'll do it here. 	 * The cards that require something different can override 	 * this later on. 	 */
 name|sc
 operator|->
@@ -953,7 +937,6 @@ argument_list|)
 operator|>>
 name|ACF_CONNECTOR_BITS
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1032,7 +1015,6 @@ operator|->
 name|irq
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1040,13 +1022,11 @@ begin_function
 name|int
 name|ep_attach
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -1151,7 +1131,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|outw
 argument_list|(
 name|BASE
@@ -1173,7 +1152,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|device_printf
 argument_list|(
 name|sc
@@ -1513,7 +1491,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1617,12 +1597,10 @@ specifier|static
 name|void
 name|ep_if_init
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ep_softc
@@ -1631,7 +1609,6 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -1656,7 +1633,6 @@ operator|->
 name|gone
 condition|)
 return|return;
-comment|/*     if (ifp->if_addrlist == (struct ifaddr *) 0) 	return; 	*/
 name|s
 operator|=
 name|splimp
@@ -1904,13 +1880,11 @@ name|epb
 operator|.
 name|mii_trans
 condition|)
-block|{
 name|ep_ifmedia_upd
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 name|outw
 argument_list|(
 name|BASE
@@ -2024,7 +1998,7 @@ operator||
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*      * Store up a bunch of mbuf's for use later. (MAX_MBS). First we free up      * any that we had in case we're being called from intr or somewhere      * else.      */
+comment|/*          * Store up a bunch of mbuf's for use later. (MAX_MBS). First we free up          * any that we had in case we're being called from intr or somewhere          * else.          */
 name|GO_WINDOW
 argument_list|(
 literal|1
@@ -2048,13 +2022,11 @@ specifier|static
 name|void
 name|ep_if_start
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ep_softc
@@ -2167,7 +2139,7 @@ operator|)
 operator|&
 literal|3
 expr_stmt|;
-comment|/*      * The 3c509 automatically pads short packets to minimum ethernet length,      * but we drop packets that are too large. Perhaps we should truncate      * them instead?      */
+comment|/*          * The 3c509 automatically pads short packets to minimum ethernet length,          * but we drop packets that are too large. Perhaps we should truncate          * them instead?          */
 if|if
 condition|(
 name|len
@@ -2263,7 +2235,6 @@ return|return;
 block|}
 block|}
 else|else
-block|{
 name|outw
 argument_list|(
 name|BASE
@@ -2275,7 +2246,6 @@ operator||
 name|EP_THRESH_DISABLE
 argument_list|)
 expr_stmt|;
-block|}
 name|s
 operator|=
 name|splhigh
@@ -2519,7 +2489,7 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-comment|/*      * Is another packet coming in? We don't want to overflow the tiny RX      * fifo.      */
+comment|/*          * Is another packet coming in? We don't want to overflow the tiny RX          * fifo.          */
 name|readcheck
 label|:
 if|if
@@ -2534,7 +2504,7 @@ operator|&
 name|RX_BYTES_MASK
 condition|)
 block|{
-comment|/* 	 * we check if we have packets left, in that case we prepare to come 	 * back later 	 */
+comment|/* 		 * we check if we have packets left, in that case we prepare to come 		 * back later 		 */
 if|if
 condition|(
 name|ifp
@@ -2566,19 +2536,16 @@ begin_function
 name|void
 name|ep_intr
 parameter_list|(
-name|arg
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ep_softc
 modifier|*
 name|sc
 decl_stmt|;
-specifier|register
 name|int
 name|status
 decl_stmt|;
@@ -2604,7 +2571,7 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-comment|/*      * quick fix: Try to detect an interrupt when the card goes away.      */
+comment|/*          * quick fix: Try to detect an interrupt when the card goes away.          */
 if|if
 condition|(
 name|sc
@@ -2879,7 +2846,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* we  need ACK. we do it at the end */
-comment|/* 	     * We need to read TX_STATUS until we get a 0 status in order to 	     * turn off the interrupt flag. 	     */
+comment|/* 		         * We need to read TX_STATUS until we get a 0 status in order to 		         * turn off the interrupt flag. 		         */
 while|while
 condition|(
 operator|(
@@ -2954,7 +2921,7 @@ name|TXS_JABBER
 condition|)
 empty_stmt|;
 else|else
-comment|/* TXS_MAX_COLLISION - we shouldn't get here */
+comment|/* TXS_MAX_COLLISION - 							 * we shouldn't get here */
 operator|++
 name|ifp
 operator|->
@@ -2975,7 +2942,7 @@ argument_list|,
 name|TX_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* 		     * To have a tx_avail_int but giving the chance to the 		     * Reception 		     */
+comment|/* 				         * To have a tx_avail_int but giving the chance to the 				         * Reception 				         */
 if|if
 condition|(
 name|ifp
@@ -2984,7 +2951,6 @@ name|if_snd
 operator|.
 name|ifq_head
 condition|)
-block|{
 name|outw
 argument_list|(
 name|BASE
@@ -2997,7 +2963,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|outb
 argument_list|(
 name|BASE
@@ -3007,7 +2972,7 @@ argument_list|,
 literal|0x0
 argument_list|)
 expr_stmt|;
-comment|/* pops up the next 							 * status */
+comment|/* pops up the next 									 * status */
 block|}
 comment|/* while */
 name|ifp
@@ -3090,14 +3055,11 @@ specifier|static
 name|void
 name|epread
 parameter_list|(
-name|sc
-parameter_list|)
-specifier|register
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -3123,7 +3085,6 @@ name|rx_fifo2
 decl_stmt|,
 name|status
 decl_stmt|;
-specifier|register
 name|short
 name|rx_fifo
 decl_stmt|;
@@ -3166,7 +3127,7 @@ operator|&
 name|ERR_RX_OVERRUN
 condition|)
 block|{
-comment|/* 	     * we can think the rx latency is actually greather than we 	     * expect 	     */
+comment|/* 		         * we can think the rx latency is actually greather than we 		         * expect 		         */
 ifdef|#
 directive|ifdef
 name|EP_LOCAL_STATS
@@ -3438,7 +3399,7 @@ name|F_ACCESS_32_BITS
 argument_list|)
 condition|)
 block|{
-comment|/* default for EISA configured cards*/
+comment|/* default for EISA 							 * configured cards */
 name|insl
 argument_list|(
 name|BASE
@@ -3583,7 +3544,7 @@ operator|&
 name|ERR_RX_INCOMPLETE
 condition|)
 block|{
-comment|/* we haven't received the complete 					 * packet */
+comment|/* we haven't received the 						 * complete packet */
 name|sc
 operator|->
 name|mcur
@@ -3627,7 +3588,7 @@ name|ERR_RX_INCOMPLETE
 operator|)
 condition|)
 block|{
-comment|/* we see if by now, the packet has completly arrived */
+comment|/* 			 * we see if by now, the packet has completly 			 * arrived 			 */
 goto|goto
 name|read_again
 goto|;
@@ -3811,13 +3772,11 @@ specifier|static
 name|int
 name|ep_ifmedia_upd
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ep_softc
@@ -4023,20 +3982,16 @@ specifier|static
 name|void
 name|ep_ifmedia_sts
 parameter_list|(
-name|ifp
-parameter_list|,
-name|ifmr
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
 name|ifmr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ep_softc
@@ -4057,7 +4012,6 @@ name|ifmedia
 operator|.
 name|ifm_media
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4066,23 +4020,17 @@ specifier|static
 name|int
 name|ep_if_ioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|cmd
-parameter_list|,
-name|data
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ep_softc
@@ -4162,14 +4110,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 comment|/* reinitialize card on any parameter change */
 name|ep_if_init
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 ifdef|#
 directive|ifdef
@@ -4232,7 +4178,6 @@ name|epb
 operator|.
 name|mii_trans
 condition|)
-block|{
 name|error
 operator|=
 name|ifmedia_ioctl
@@ -4249,14 +4194,11 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|error
@@ -4293,13 +4235,11 @@ specifier|static
 name|void
 name|ep_if_watchdog
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ep_softc
@@ -4310,16 +4250,14 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-comment|/*     printf("ep: watchdog\n");      log(LOG_ERR, "ep%d: watchdog\n", ifp->if_unit);     ifp->if_oerrors++;     */
+comment|/*         printf("ep: watchdog\n");  	log(LOG_ERR, "ep%d: watchdog\n", ifp->if_unit); 	ifp->if_oerrors++; */
 if|if
 condition|(
 name|sc
 operator|->
 name|gone
 condition|)
-block|{
 return|return;
-block|}
 name|ifp
 operator|->
 name|if_flags
@@ -4347,13 +4285,11 @@ specifier|static
 name|void
 name|epstop
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4361,9 +4297,7 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
 return|return;
-block|}
 name|outw
 argument_list|(
 name|BASE

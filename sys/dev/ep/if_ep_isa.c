@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Herb Peyerl.  * 4. The name of Herb Peyerl may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1994 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Herb Peyerl.  * 4. The name of Herb Peyerl may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -424,16 +438,12 @@ specifier|static
 name|u_int16_t
 name|get_eeprom_data
 parameter_list|(
+name|int
 name|id_port
 parameter_list|,
+name|int
 name|offset
 parameter_list|)
-name|int
-name|id_port
-decl_stmt|;
-name|int
-name|offset
-decl_stmt|;
 block|{
 name|int
 name|i
@@ -515,18 +525,14 @@ name|char
 modifier|*
 name|ep_isa_match_id
 parameter_list|(
-name|id
-parameter_list|,
-name|isa_devs
-parameter_list|)
 name|u_int32_t
 name|id
-decl_stmt|;
+parameter_list|,
 name|struct
 name|isa_ident
 modifier|*
 name|isa_devs
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|isa_ident
@@ -574,13 +580,11 @@ operator|)
 operator|==
 name|ISA_ID_3C509_XXX
 condition|)
-block|{
 return|return
 operator|(
 literal|"Unknown 3c509; notify maintainer!"
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -711,14 +715,13 @@ argument_list|(
 literal|400
 argument_list|)
 expr_stmt|;
-comment|/* For the first probe, clear all 		 * board's tag registers. 		 * Otherwise kill off already-found 		 * boards. -- linux 3c509.c 		 */
+comment|/* 		 * For the first probe, clear all board's tag registers. 		 * Otherwise kill off already-found boards. -- linux 3c509.c 		 */
 if|if
 condition|(
 name|i
 operator|==
 literal|0
 condition|)
-block|{
 name|outb
 argument_list|(
 name|ELINK_ID_PORT
@@ -726,9 +729,7 @@ argument_list|,
 literal|0xd0
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|outb
 argument_list|(
 name|ELINK_ID_PORT
@@ -736,7 +737,6 @@ argument_list|,
 literal|0xd8
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Get out of loop if we're out of cards. */
 name|data
 operator|=
@@ -753,9 +753,7 @@ name|data
 operator|!=
 name|MFG_ID
 condition|)
-block|{
 break|break;
-block|}
 comment|/* resolve contention using the Ethernet address */
 for|for
 control|(
@@ -770,7 +768,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
 operator|(
 name|void
 operator|)
@@ -781,7 +778,6 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Construct an 'isa_id' in 'EISA' 		 * format. 		 */
 name|data
 operator|=
@@ -839,7 +835,6 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|parent
@@ -849,7 +844,6 @@ argument_list|,
 name|isa_id
 argument_list|)
 expr_stmt|;
-block|}
 continue|continue;
 block|}
 comment|/* Retreive IRQ */
@@ -941,7 +935,7 @@ argument_list|,
 name|ioport
 argument_list|)
 expr_stmt|;
-comment|/* Set the adaptor tag so that the next card can be found. */
+comment|/* 			 * Set the adaptor tag so that the next card can be 			 * found. 			 */
 name|outb
 argument_list|(
 name|ELINK_ID_PORT
@@ -989,7 +983,6 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|parent
@@ -1001,8 +994,7 @@ argument_list|,
 name|ioport
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Set the adaptor tag so that the next card can be found. */
+comment|/* 				 * Set the adaptor tag so that the next card 				 * can be found. 				 */
 name|outb
 argument_list|(
 name|ELINK_ID_PORT
@@ -1130,7 +1122,6 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|parent
@@ -1148,12 +1139,10 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
-block|}
 name|found
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1198,13 +1187,11 @@ name|error
 operator|==
 name|ENXIO
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* If we had some other problem. */
 if|if
 condition|(
@@ -1219,13 +1206,11 @@ operator|==
 name|ENOENT
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* If we have the resources we need then we're good to go. */
 if|if
 condition|(
@@ -1255,13 +1240,11 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|ENXIO
@@ -1456,13 +1439,11 @@ specifier|static
 name|int
 name|ep_eeprom_cksum
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ep_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i

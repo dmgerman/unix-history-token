@@ -39,12 +39,12 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
-comment|/* Ethernet common part	*/
+comment|/* Ethernet common part	 */
 name|struct
 name|ifmedia
 name|ifmedia
 decl_stmt|;
-comment|/* media info		*/
+comment|/* media info		 */
 name|device_t
 name|dev
 decl_stmt|;
@@ -71,7 +71,7 @@ decl_stmt|;
 name|int
 name|ep_io_addr
 decl_stmt|;
-comment|/* i/o bus address	*/
+comment|/* i/o bus address	 */
 name|u_short
 name|ep_connectors
 decl_stmt|;
@@ -79,7 +79,7 @@ comment|/* Connectors on this card. */
 name|u_char
 name|ep_connector
 decl_stmt|;
-comment|/* Configured connector.*/
+comment|/* Configured connector. */
 name|struct
 name|mbuf
 modifier|*

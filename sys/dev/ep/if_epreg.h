@@ -435,7 +435,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* 2:5 (only legal if RAM size == 000b default power-up/reset */
+comment|/* 2:5 (only legal if RAM size == 000b 					 * default power-up/reset */
 end_comment
 
 begin_define
@@ -446,7 +446,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* 1:3 (only legal if RAM size == 000b) */
+comment|/* 1:3 (only legal if RAM size == 					 * 000b) */
 end_comment
 
 begin_define
@@ -457,7 +457,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* 1:1		*/
+comment|/* 1:1		 */
 end_comment
 
 begin_define
@@ -468,7 +468,7 @@ value|0x11
 end_define
 
 begin_comment
-comment|/* Reserved	*/
+comment|/* Reserved	 */
 end_comment
 
 begin_comment
@@ -976,7 +976,7 @@ comment|/****************************************  *  * Register definitions.  *
 end_comment
 
 begin_comment
-comment|/*   * Command parameter that disables threshold interrupts  *   PIO (3c509) cards use 2044.  The fifo word-oriented and 2044--2047 work.  *  "busmastering" cards need 8188.  * The implicit two-bit upshift done by busmastering cards means  * a value of 2047 disables threshold interrupts on both.  */
+comment|/*  * Command parameter that disables threshold interrupts  *   PIO (3c509) cards use 2044.  The fifo word-oriented and 2044--2047 work.  *  "busmastering" cards need 8188.  * The implicit two-bit upshift done by busmastering cards means  * a value of 2047 disables threshold interrupts on both.  */
 end_comment
 
 begin_define
@@ -1586,7 +1586,7 @@ value|0x6d50
 end_define
 
 begin_comment
-comment|/* in EEPROM and W0 ADDR_CONFIG */
+comment|/* in EEPROM and W0 						 * ADDR_CONFIG */
 end_comment
 
 begin_define
