@@ -1079,7 +1079,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_umap [-o options] -u usermap -g groupmap target_fs mount_point\n"
+literal|"usage: mount_umapfs [-o options] -u usermap -g groupmap target_fs mount_point\n"
 argument_list|)
 expr_stmt|;
 name|exit

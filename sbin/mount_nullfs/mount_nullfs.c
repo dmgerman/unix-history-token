@@ -543,7 +543,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_null [-o options] target_fs mount_point\n"
+literal|"usage: mount_nullfs [-o options] target_fs mount_point\n"
 argument_list|)
 expr_stmt|;
 name|exit

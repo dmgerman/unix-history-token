@@ -1098,7 +1098,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_portal [-o options] config mount-point\n"
+literal|"usage: mount_portalfs [-o options] config mount-point\n"
 argument_list|)
 expr_stmt|;
 name|exit
