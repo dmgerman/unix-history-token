@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ni.c	2.2 (CWI) 86/08/15"
+literal|"@(#)ni.c	2.3 (CWI) 89/08/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/local/lib/ditroff/font"
+literal|"/usr/local/lib/font"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +105,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/local/lib/ditroff/font"
+literal|"/usr/local/lib/font"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ index|[
 literal|20
 index|]
 init|=
-literal|"har"
+literal|"psc"
 decl_stmt|;
 end_decl_stmt
 
@@ -333,7 +333,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/local/lib/ditroff/tmac/tmac."
+literal|"/usr/lib/tmac/tmac."
 decl_stmt|;
 end_decl_stmt
 

@@ -106,6 +106,9 @@ name|char
 name|spare1
 decl_stmt|;
 comment|/* unused for now */
+ifdef|#
+directive|ifdef
+name|0
 name|unsigned
 name|char
 name|fonttab
@@ -116,6 +119,8 @@ name|char
 name|slant
 decl_stmt|;
 comment|/* if set, slant font by slant degrees */
+endif|#
+directive|endif
 name|unsigned
 name|char
 name|namefont
