@@ -182,6 +182,8 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
+literal|"%s"
+argument_list|,
 name|err_mess
 argument_list|)
 expr_stmt|;
