@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -837,6 +837,13 @@ begin_comment
 comment|/* need a replacement for getopt(3) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARBPTR_T
+value|char *
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1505,6 +1512,28 @@ end_define
 begin_comment
 comment|/* configuration error */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* type of arbitrary pointer */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARBPTR_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ARBPTR_T
+value|void *
+end_define
 
 begin_endif
 endif|#
