@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	5.13 (Berkeley) %G%"
+literal|"@(#)printjob.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2731,7 +2731,12 @@ name|fo
 argument_list|,
 name|_PATH_VFONT
 argument_list|,
-literal|15
+sizeof|sizeof
+argument_list|(
+name|_PATH_VFONT
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
