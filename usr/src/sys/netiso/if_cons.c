@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"tsleep.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/if.h"
 end_include
 
@@ -5439,7 +5445,7 @@ name|isop_negchanmask
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -5452,6 +5458,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_ISO_CONSOUT
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 name|IFDEBUG
@@ -5761,7 +5771,7 @@ name|co_negchanmask
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -5774,6 +5784,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|2
+argument_list|,
+name|SLP_ISO_CONSCONN
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 name|IFDEBUG
@@ -8958,6 +8972,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|3
+argument_list|,
+name|SLP_ISO_CONS
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 block|}
