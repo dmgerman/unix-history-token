@@ -4,7 +4,7 @@ comment|/*  * The main module for truss.  Suprisingly simple, but, then, the oth
 end_comment
 
 begin_comment
-comment|/*  * $Id: main.c,v 1.1 1997/12/06 05:23:03 sef Exp $  */
+comment|/*  * $Id: main.c,v 1.2 1997/12/06 14:39:30 peter Exp $  */
 end_comment
 
 begin_include
@@ -265,6 +265,14 @@ name|i386_syscall_exit
 block|}
 block|,
 block|{
+literal|"FreeBSD ELF"
+block|,
+name|i386_syscall_entry
+block|,
+name|i386_syscall_exit
+block|}
+block|,
+block|{
 literal|"Linux ELF"
 block|,
 name|i386_linux_syscall_entry
@@ -377,7 +385,7 @@ literal|'\0'
 expr_stmt|;
 name|close
 argument_list|(
-name|etype
+name|fd
 argument_list|)
 expr_stmt|;
 block|}
