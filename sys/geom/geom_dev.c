@@ -792,6 +792,16 @@ expr_stmt|;
 name|g_waitidle
 argument_list|()
 expr_stmt|;
+name|dev
+operator|->
+name|si_bsize_phys
+operator|=
+name|cp
+operator|->
+name|provider
+operator|->
+name|sectorsize
+expr_stmt|;
 return|return
 operator|(
 name|error
