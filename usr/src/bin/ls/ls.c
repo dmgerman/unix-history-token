@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.2 (Berkeley) %G%"
+literal|"@(#)ls.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,6 +215,8 @@ decl_stmt|,
 name|Lflg
 decl_stmt|,
 name|Rflg
+decl_stmt|,
+name|Sflg
 decl_stmt|;
 end_decl_stmt
 
@@ -585,6 +587,13 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+name|Sflg
+operator|++
+expr_stmt|;
+comment|/* fall into... */
+case|case
 literal|'s'
 case|:
 name|sflg
@@ -686,11 +695,7 @@ block|{
 name|aflg
 operator|++
 expr_stmt|;
-name|lflg
-operator|=
-literal|0
-expr_stmt|;
-name|sflg
+name|Sflg
 operator|=
 literal|0
 expr_stmt|;
@@ -698,6 +703,7 @@ name|tflg
 operator|=
 literal|0
 expr_stmt|;
+comment|/* -f: only turn off sort flags */
 block|}
 if|if
 condition|(
@@ -2479,6 +2485,48 @@ operator|>
 name|f1
 operator|->
 name|fmtime
+condition|)
+return|return
+operator|(
+name|rflg
+operator|)
+return|;
+return|return
+operator|(
+operator|-
+name|rflg
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|Sflg
+condition|)
+block|{
+if|if
+condition|(
+name|f2
+operator|->
+name|fsize
+operator|==
+name|f1
+operator|->
+name|fsize
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|f2
+operator|->
+name|fsize
+operator|>
+name|f1
+operator|->
+name|fsize
 condition|)
 return|return
 operator|(
