@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpr.c,v 1.24 1998/04/17 17:25:49 obrien Exp $"
+literal|"$Id: lpr.c,v 1.25 1998/09/11 18:49:33 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,6 +708,9 @@ name|cp
 decl_stmt|,
 modifier|*
 name|printer
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|char
 name|buf
@@ -888,9 +891,26 @@ case|:
 comment|/* n copies */
 name|i
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|optarg
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Bad argument to -#, number expected"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1045,9 +1065,26 @@ operator|++
 expr_stmt|;
 name|indent
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|optarg
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Bad argument to -i, number expected"
 argument_list|)
 expr_stmt|;
 break|break;
