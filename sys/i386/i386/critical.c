@@ -223,7 +223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cpu_critical_fork_exit() - cleanup after fork  *  *	For i386 we do not have to do anything, td_critnest is  *	handled by the fork trampoline code.  */
+comment|/*  * cpu_critical_fork_exit() - cleanup after fork  */
 end_comment
 
 begin_function
@@ -232,23 +232,11 @@ name|cpu_critical_fork_exit
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
-end_function
-
-begin_comment
-comment|/*  * cpu_thread_link() - thread linkup, initialize machine-dependant fields  *  *	There are currently no machine-dependant fields that require   *	initialization.  */
-end_comment
-
-begin_function
-name|void
-name|cpu_thread_link
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{ }
+block|{
+name|enable_intr
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
