@@ -1101,6 +1101,12 @@ name|pc_mid
 operator|=
 name|mid
 expr_stmt|;
+name|pc
+operator|->
+name|pc_node
+operator|=
+name|child
+expr_stmt|;
 name|all_cpus
 operator||=
 literal|1
@@ -1463,7 +1469,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tlb_slot_count
+name|tlb_dtlb_entries
 condition|;
 name|i
 operator|++

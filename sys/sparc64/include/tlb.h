@@ -345,7 +345,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|tlb_slot_count
+name|tlb_dtlb_entries
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tlb_itlb_entries
 decl_stmt|;
 end_decl_stmt
 

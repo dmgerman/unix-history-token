@@ -61,7 +61,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|struct	intr_request pc_irpool[IR_FREE];			\ 	struct	intr_request *pc_irhead;				\ 	struct	intr_request **pc_irtail;				\ 	struct	intr_request *pc_irfree;				\ 	struct	vmspace *pc_vmspace;					\ 	vm_offset_t pc_addr;						\ 	u_int 	pc_mid;							\ 	u_int	pc_tlb_ctx;						\ 	u_int	pc_tlb_ctx_max;						\ 	u_int	pc_tlb_ctx_min;						\ 	u_int	pc_wp_insn;
+value|struct	intr_request pc_irpool[IR_FREE];			\ 	struct	intr_request *pc_irhead;				\ 	struct	intr_request **pc_irtail;				\ 	struct	intr_request *pc_irfree;				\ 	struct	vmspace *pc_vmspace;					\ 	vm_offset_t pc_addr;						\ 	u_int 	pc_mid;							\ 	u_int	pc_node;						\ 	u_int	pc_tlb_ctx;						\ 	u_int	pc_tlb_ctx_max;						\ 	u_int	pc_tlb_ctx_min;						\ 	u_int	pc_wp_insn;
 comment|/* watch point support */
 value|\ 	u_long	pc_wp_pstate;						\ 	u_long	pc_wp_va;						\ 	int	pc_wp_mask
 end_define

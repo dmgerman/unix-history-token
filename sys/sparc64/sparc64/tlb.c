@@ -65,7 +65,13 @@ end_include
 
 begin_decl_stmt
 name|int
-name|tlb_slot_count
+name|tlb_dtlb_entries
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tlb_itlb_entries
 decl_stmt|;
 end_decl_stmt
 
@@ -512,7 +518,7 @@ literal|0
 init|;
 name|slot
 operator|<
-name|tlb_slot_count
+name|tlb_dtlb_entries
 condition|;
 name|slot
 operator|++

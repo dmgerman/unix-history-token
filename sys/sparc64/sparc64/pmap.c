@@ -2434,7 +2434,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tlb_slot_count
+name|tlb_dtlb_entries
 condition|;
 name|i
 operator|++
