@@ -27,6 +27,16 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_comment
 comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  */
 end_comment
@@ -174,6 +184,11 @@ name|u_short
 name|ui_ref
 decl_stmt|;
 comment|/* reference count */
+name|struct
+name|mtx
+name|ui_mtx
+decl_stmt|;
+comment|/* protect counts */
 block|}
 struct|;
 end_struct
@@ -191,7 +206,8 @@ name|uihold
 parameter_list|(
 name|uip
 parameter_list|)
-value|(uip)->ui_ref++
+define|\
+value|do {						\ 		mtx_enter(&(uip)->ui_mtx, MTX_DEF);	\ 		(uip)->ui_ref++;			\ 		mtx_exit(&(uip)->ui_mtx, MTX_DEF);	\ 	} while(0)
 end_define
 
 begin_struct_decl
@@ -402,7 +418,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|uifree
 name|__P
 argument_list|(
