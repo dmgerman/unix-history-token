@@ -44,9 +44,9 @@ name|vmfd
 decl_stmt|;
 comment|/* virtual memory file (-1 if crashdump) */
 name|int
-name|swfd
+name|unused
 decl_stmt|;
-comment|/* swap file (e.g., /dev/drum) */
+comment|/* was: swap file (e.g., /dev/drum) */
 name|int
 name|nlfd
 decl_stmt|;
