@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kldstat.c,v 1.4 1998/01/05 07:09:28 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -411,7 +411,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Id Refs Address  Size     Name\n"
+literal|"Id Refs Address    Size     Name\n"
 argument_list|)
 expr_stmt|;
 if|if
