@@ -657,9 +657,22 @@ endif|#
 directive|endif
 endif|VT100
 comment|/*  *	now make scoreboard if it is not there (don't clear)   */
-comment|/* if (access(scorefile,0) == -1) */
+if|if
+condition|(
+name|access
+argument_list|(
+name|scorefile
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
 comment|/* not there */
-comment|/* makeboard(); */
+name|makeboard
+argument_list|()
+expr_stmt|;
 comment|/*  *	now process the command line arguments   */
 for|for
 control|(
