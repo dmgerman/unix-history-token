@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)dterm.c	1.12	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -m	print margins.  Default action is to cut printing area down  *		to only the part of the page with information on it.  *  *	  -L	put a form feed (^L) at the end of each page  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c, -m and -L to allow  *		for extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
+comment|/* @(#)dterm.c	1.13	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -m	print margins.  Default action is to cut printing area down  *		to only the part of the page with information on it.  *  *	  -a	make the output readable - i.e. print like a "troff -a" with  *		no character overlap, and one space 'tween words  *  *	  -L	put a form feed (^L) at the end of each page  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c, -m and -L to allow  *		for extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
 end_comment
 
 begin_include
@@ -159,7 +159,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)dterm.c	1.12	(Berkeley)	%G%"
+literal|"@(#)dterm.c	1.13	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,6 +262,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Print blank margins? */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ascii
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* make the output "readable"? */
 end_comment
 
 begin_decl_stmt
@@ -606,6 +618,16 @@ name|margin
 operator|=
 operator|!
 name|margin
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* readable mode */
+name|ascii
+operator|=
+operator|!
+name|ascii
 expr_stmt|;
 break|break;
 case|case
@@ -1164,6 +1186,27 @@ case|case
 literal|'9'
 case|:
 comment|/* two motion digits plus a character */
+if|if
+condition|(
+name|ascii
+condition|)
+block|{
+name|hmot
+argument_list|(
+operator|(
+name|int
+operator|)
+name|hscale
+argument_list|)
+expr_stmt|;
+name|getc
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|hmot
 argument_list|(
 operator|(
@@ -1182,6 +1225,7 @@ operator|-
 literal|'0'
 argument_list|)
 expr_stmt|;
+block|}
 name|put1
 argument_list|(
 name|getc
@@ -1599,6 +1643,20 @@ case|case
 literal|'w'
 case|:
 comment|/* word space */
+if|if
+condition|(
+name|ascii
+condition|)
+block|{
+name|hmot
+argument_list|(
+operator|(
+name|int
+operator|)
+name|hscale
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'V'
@@ -3013,7 +3071,10 @@ expr_stmt|;
 block|}
 name|hmot
 argument_list|(
-literal|1
+operator|(
+name|int
+operator|)
+name|hscale
 argument_list|)
 expr_stmt|;
 block|}
@@ -3139,6 +3200,15 @@ condition|)
 block|{
 for|for
 control|(
+name|hmot
+argument_list|(
+operator|(
+name|int
+operator|)
+operator|-
+name|hscale
+argument_list|)
+operator|,
 name|p
 operator|=
 name|spectab
@@ -3154,12 +3224,22 @@ condition|;
 name|p
 operator|++
 control|)
+block|{
+name|hmot
+argument_list|(
+operator|(
+name|int
+operator|)
+name|hscale
+argument_list|)
+expr_stmt|;
 name|store
 argument_list|(
 operator|*
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|prev
