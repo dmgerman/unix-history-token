@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.6 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
