@@ -39,8 +39,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BROOKTREE
-value|849_ID                        0x0351109E
+name|BROOKTREE_849_ID
+value|0x0351109E
 end_define
 
 begin_typedef
