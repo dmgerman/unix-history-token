@@ -245,6 +245,8 @@ name|ad1816mix_init
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 name|ad1816mix_set
 block|,
 name|ad1816mix_setrecsrc

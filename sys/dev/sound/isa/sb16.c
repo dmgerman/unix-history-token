@@ -820,6 +820,8 @@ name|sbmix_init
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 name|sbmix_set
 block|,
 name|sbmix_setrecsrc

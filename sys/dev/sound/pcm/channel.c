@@ -124,18 +124,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
-name|chn_start
-parameter_list|(
-name|pcm_channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|chn_buildfeeder
 parameter_list|(
@@ -1950,6 +1938,8 @@ condition|)
 name|chn_start
 argument_list|(
 name|c
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3024,6 +3014,8 @@ condition|)
 name|chn_start
 argument_list|(
 name|c
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3284,6 +3276,9 @@ parameter_list|(
 name|pcm_channel
 modifier|*
 name|c
+parameter_list|,
+name|int
+name|force
 parameter_list|)
 block|{
 name|u_int32_t
@@ -3323,11 +3318,7 @@ name|c
 operator|->
 name|flags
 operator|&
-operator|(
-name|CHN_F_MAPPED
-operator||
 name|CHN_F_NOTRIGGER
-operator|)
 operator|)
 condition|)
 block|{
@@ -3340,7 +3331,17 @@ operator|==
 name|PCMDIR_PLAY
 condition|)
 block|{
-comment|/* Fill up the DMA buffer. */
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHN_F_MAPPED
+operator|)
+condition|)
 while|while
 condition|(
 name|chn_wrfeed
@@ -3351,8 +3352,12 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+comment|/* Fill up the DMA buffer. */
 if|if
 condition|(
+name|force
+operator|||
+operator|(
 name|b
 operator|->
 name|rl
@@ -3360,6 +3365,7 @@ operator|>=
 name|b
 operator|->
 name|blksz
+operator|)
 condition|)
 name|r
 operator|=
@@ -3368,7 +3374,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Suck up the DMA buffer. */
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHN_F_MAPPED
+operator|)
+condition|)
 while|while
 condition|(
 name|chn_rdfeed
@@ -3379,8 +3395,12 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+comment|/* Suck up the DMA buffer. */
 if|if
 condition|(
+name|force
+operator|||
+operator|(
 name|b
 operator|->
 name|fl
@@ -3388,6 +3408,7 @@ operator|>=
 name|b
 operator|->
 name|blksz
+operator|)
 condition|)
 name|r
 operator|=
@@ -4449,6 +4470,8 @@ condition|)
 name|chn_start
 argument_list|(
 name|c
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4973,6 +4996,21 @@ name|flags
 operator|&=
 name|CHN_F_RESET
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|reset
+condition|)
+name|c
+operator|->
+name|reset
+argument_list|(
+name|c
+operator|->
+name|devinfo
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|chn_setblocksize
@@ -5047,6 +5085,21 @@ block|}
 name|chn_resetbuf
 argument_list|(
 name|c
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|resetdone
+condition|)
+name|c
+operator|->
+name|resetdone
+argument_list|(
+name|c
+operator|->
+name|devinfo
 argument_list|)
 expr_stmt|;
 comment|/* c->flags |= CHN_F_INIT; */

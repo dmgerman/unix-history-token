@@ -47,6 +47,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int32_t
+name|chn_start
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|,
+name|int
+name|force
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|chn_sync
 parameter_list|(

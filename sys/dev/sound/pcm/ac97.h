@@ -385,5 +385,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|u_int16_t
+name|ac97_getextmode
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int16_t
+name|ac97_getextcaps
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

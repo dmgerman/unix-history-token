@@ -532,6 +532,8 @@ name|mssmix_init
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 name|mssmix_set
 block|,
 name|mssmix_setrecsrc
@@ -596,6 +598,8 @@ block|{
 literal|"OPL3-SAx mixer"
 block|,
 name|ymmix_init
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
