@@ -10747,7 +10747,6 @@ operator|=
 name|curthread
 expr_stmt|;
 else|else
-comment|/* XXX XXX should this be proc0? */
 name|td
 operator|=
 name|FIRST_THREAD_IN_PROC
@@ -10755,6 +10754,7 @@ argument_list|(
 name|initproc
 argument_list|)
 expr_stmt|;
+comment|/* XXX XXX proc0? */
 comment|/* 	 * Since this only runs when rebooting, it is not interlocked. 	 */
 while|while
 condition|(
