@@ -3224,22 +3224,6 @@ operator|-
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * An Adaptec chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"sf%d: Ethernet address: %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sf_unit

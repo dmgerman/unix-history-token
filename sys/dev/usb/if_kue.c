@@ -2014,24 +2014,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A KLSI chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"kue%d: Ethernet address: %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|kue_unit
-argument_list|,
-name|sc
-operator|->
-name|kue_desc
-operator|.
-name|kue_macaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|sc

@@ -3125,20 +3125,6 @@ goto|goto
 name|error1
 goto|;
 block|}
-comment|/* RealTek RTL8150 was detected */
-name|printf
-argument_list|(
-literal|"rue%d: Ethernet address: %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|rue_unit
-argument_list|,
-name|eaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|eaddr

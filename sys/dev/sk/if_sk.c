@@ -6358,23 +6358,6 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"sk%d: Ethernet address: %6D\n"
-argument_list|,
-name|sc_if
-operator|->
-name|sk_unit
-argument_list|,
-name|sc_if
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set up RAM buffer addresses. The NIC will have a certain 	 * amount of SRAM on it, somewhere between 512K and 2MB. We 	 * need to divide this up a) between the transmitter and  	 * receiver and b) between the two XMACs, if this is a 	 * dual port NIC. Our algotithm is to divide up the memory 	 * evenly so that everyone gets a fair share. 	 */
 if|if
 condition|(

@@ -1799,21 +1799,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"txp%d: Ethernet address %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|sc
-operator|->
-name|sc_arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_cold

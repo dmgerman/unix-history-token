@@ -10787,22 +10787,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * A Broadcom chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"bge%d: Ethernet address: %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 comment|/* Save ASIC rev. */
 name|sc
 operator|->

@@ -4021,18 +4021,6 @@ operator|>>
 literal|8
 expr_stmt|;
 block|}
-comment|/* 	 * A RealTek chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"rl%d: Ethernet address: %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|eaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|rl_unit

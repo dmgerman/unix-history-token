@@ -3254,25 +3254,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"ethernet address %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

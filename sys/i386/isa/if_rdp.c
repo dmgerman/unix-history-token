@@ -2185,21 +2185,6 @@ else|:
 literal|"fast"
 argument_list|)
 expr_stmt|;
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"address %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 return|return
 literal|1
 return|;

@@ -4412,18 +4412,6 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A Myson chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"my%d: Ethernet address: %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|eaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|my_unit

@@ -2133,20 +2133,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Display ethernet address ,... */
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"address %6D,"
-argument_list|,
-name|sc
-operator|->
-name|sc_macaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 comment|/* board type and ... */
 name|printf
 argument_list|(

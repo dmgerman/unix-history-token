@@ -6893,22 +6893,6 @@ name|ac_enaddr
 argument_list|)
 expr_stmt|;
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
-comment|/* 	 * Print additional info when attached 	 */
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"address %6D, "
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc

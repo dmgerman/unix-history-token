@@ -2152,21 +2152,11 @@ argument_list|,
 name|WAVELAN_ADDR_SIZE
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s: address %6D, NWID 0x%02x%02x"
-argument_list|,
 name|ifp
-operator|->
-name|if_xname
 argument_list|,
-name|sc
-operator|->
-name|wl_ac
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
+literal|"NWID 0x%02x%02x"
 argument_list|,
 name|sc
 operator|->

@@ -2381,20 +2381,6 @@ operator|&
 name|eaddr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A CATC chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"cue%d: Ethernet address: %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|cue_unit
-argument_list|,
-name|eaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|eaddr

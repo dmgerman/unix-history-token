@@ -1012,21 +1012,6 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"802.11 address: %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|owi_get_id
 argument_list|(
 name|sc

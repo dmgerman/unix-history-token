@@ -2098,21 +2098,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"bfe%d: Ethernet address: %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 comment|/* Reset the chip and turn on the PHY */
 name|bfe_chip_reset
 argument_list|(

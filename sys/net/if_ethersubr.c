@@ -3792,6 +3792,18 @@ condition|)
 name|bdgtakeifaces_ptr
 argument_list|()
 expr_stmt|;
+comment|/* Announce Ethernet MAC address. */
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"Ethernet address: %6D\n"
+argument_list|,
+name|llc
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

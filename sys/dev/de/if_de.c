@@ -24673,6 +24673,9 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|printf
 argument_list|(
 literal|"%s: address %6D\n"
@@ -24688,6 +24691,8 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined

@@ -3745,19 +3745,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_xname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -3776,9 +3763,16 @@ name|ic
 operator|==
 name|C_LANCE
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s (%s)"
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"%s (%s)\n"
 argument_list|,
 name|nic_ident
 index|[
@@ -3800,9 +3794,16 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s"
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"%s\n"
 argument_list|,
 name|ic_ident
 index|[
@@ -3812,19 +3813,6 @@ name|nic
 operator|.
 name|ic
 index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" address %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
 argument_list|)
 expr_stmt|;
 return|return

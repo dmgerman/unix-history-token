@@ -730,19 +730,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"address %6D\n"
-argument_list|,
-name|myea
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SNCDEBUG

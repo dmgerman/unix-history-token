@@ -3791,23 +3791,6 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"an%d: Ethernet address: %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|an_unit
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_softc

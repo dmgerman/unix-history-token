@@ -1463,25 +1463,6 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"%s ethernet address %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|le_prodname
-argument_list|,
-name|sc
-operator|->
-name|le_ac
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|ifp

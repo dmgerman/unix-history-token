@@ -1379,22 +1379,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-comment|/* Print out some information for the user */
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"3c501 address %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(

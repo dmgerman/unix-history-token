@@ -4296,22 +4296,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * A Sundance chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"ste%d: Ethernet address: %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|ste_unit

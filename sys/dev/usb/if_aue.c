@@ -3630,20 +3630,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A Pegasus chip was detected. Inform the world. 	 */
-name|printf
-argument_list|(
-literal|"aue%d: Ethernet address: %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|aue_unit
-argument_list|,
-name|eaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|eaddr

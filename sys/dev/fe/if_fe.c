@@ -3279,13 +3279,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"address %6D, type %s%s\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_enaddr
-argument_list|,
-literal|":"
+literal|"type %s%s\n"
 argument_list|,
 name|sc
 operator|->

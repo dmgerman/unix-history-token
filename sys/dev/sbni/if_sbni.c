@@ -1040,19 +1040,11 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"speed %ld, address %6D, rxl "
+literal|"speed %ld, rxl "
 argument_list|,
 name|ifp
 operator|->
 name|if_baudrate
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
 argument_list|)
 expr_stmt|;
 if|if

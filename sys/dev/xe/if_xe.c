@@ -1324,21 +1324,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Ethernet address %6D\n"
-argument_list|,
-name|scp
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 comment|/* Attach the interface */
 name|ether_ifattach
 argument_list|(

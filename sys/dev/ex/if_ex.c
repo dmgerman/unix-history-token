@@ -1360,23 +1360,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"Ethernet address %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

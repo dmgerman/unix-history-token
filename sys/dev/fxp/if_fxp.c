@@ -3974,31 +3974,6 @@ index|]
 operator|>>
 literal|8
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Ethernet address %6D%s\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|,
-name|sc
-operator|->
-name|flags
-operator|&
-name|FXP_FLAG_SERIAL_MEDIA
-condition|?
-literal|", 10Mbps"
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bootverbose
