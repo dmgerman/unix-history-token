@@ -106,9 +106,26 @@ directive|include
 file|"misc-proto.h"
 end_include
 
-begin_extern
-extern|extern encrypt_debug_mode;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|encrypt_debug_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|des_set_random_generator_seed
+parameter_list|(
+name|des_cblock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_define
 define|#

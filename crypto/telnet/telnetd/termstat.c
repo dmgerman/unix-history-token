@@ -239,7 +239,7 @@ condition|(
 name|uselinemode
 condition|)
 block|{
-comment|/* 	 * Check for state of BINARY options. 		 * 		 * We only need to do the binary dance if we are actually going 		 * to use linemode.  As this confuses some telnet clients 		 * that don't support linemode, and doesn't gain us 		 * anything, we don't do it unless we're doing linemode. 		 * -Crh (henrich@msu.edu) 	 */
+comment|/* 		 * Check for state of BINARY options. 		 * 		 * We only need to do the binary dance if we are actually going 		 * to use linemode.  As this confuses some telnet clients 		 * that don't support linemode, and doesn't gain us 		 * anything, we don't do it unless we're doing linemode. 		 * -Crh (henrich@msu.edu) 		 */
 if|if
 condition|(
 name|tty_isbinaryin

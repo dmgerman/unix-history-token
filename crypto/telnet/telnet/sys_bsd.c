@@ -1387,7 +1387,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* USE_TERMIO */
-name|memmove
+name|memcpy
 argument_list|(
 name|new_tc
 operator|.

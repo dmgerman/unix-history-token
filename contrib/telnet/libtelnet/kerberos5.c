@@ -31,7 +31,7 @@ name|char
 name|rcsid_kerberos5_c
 index|[]
 init|=
-literal|"$Id: kerberos5.c,v 1.1 1997/09/04 06:11:15 markm Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -92,43 +93,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<krb5/krb5.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<krb5/asn1.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<krb5/crc-32.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<krb5/los-proto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<krb5/ext-proto.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<com_err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<krb5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<krb5_asn1.h>
 end_include
 
 begin_include
@@ -140,7 +123,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -165,9 +160,12 @@ directive|include
 file|"misc.h"
 end_include
 
-begin_extern
-extern|extern auth_debug_mode;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|auth_debug_mode
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#

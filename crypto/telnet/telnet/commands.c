@@ -137,6 +137,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -186,6 +192,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/telnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -583,7 +595,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SKEY
+name|OPIE
 argument_list|)
 end_if
 
@@ -596,13 +608,13 @@ end_include
 begin_define
 define|#
 directive|define
-name|PATH_SKEY
-value|"/usr/bin/key"
+name|PATH_OPIEKEY
+value|"/usr/bin/opiekey"
 end_define
 
 begin_function
 name|int
-name|skey_calc
+name|opie_calc
 parameter_list|(
 name|argc
 parameter_list|,
@@ -650,7 +662,7 @@ literal|0
 case|:
 name|execv
 argument_list|(
-name|PATH_SKEY
+name|PATH_OPIEKEY
 argument_list|,
 name|argv
 argument_list|)
@@ -6972,12 +6984,6 @@ decl_stmt|,
 modifier|*
 name|shellname
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|strrchr
-parameter_list|()
-function_decl|;
 name|shellp
 operator|=
 name|getenv
@@ -7038,6 +7044,10 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -7048,6 +7058,10 @@ name|shellp
 argument_list|,
 name|shellname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -8363,12 +8377,6 @@ name|env_lst
 modifier|*
 name|ep
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|strchr
-parameter_list|()
-function_decl|;
 for|for
 control|(
 name|epp
@@ -11599,10 +11607,6 @@ modifier|*
 name|srp
 init|=
 literal|0
-decl_stmt|,
-modifier|*
-name|strrchr
-argument_list|()
 decl_stmt|;
 name|int
 name|proto
@@ -12983,9 +12987,8 @@ literal|0
 condition|)
 name|tos
 operator|=
-literal|020
+name|IPTOS_LOWDELAY
 expr_stmt|;
-comment|/* Low Delay bit */
 if|if
 condition|(
 name|tos
@@ -13710,12 +13713,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SKEY
+name|OPIE
 argument_list|)
-name|skeyhelp
+name|opiehelp
 index|[]
 init|=
-literal|"compute response to s/key challenge"
+literal|"compute response to OPIE challenge"
 decl_stmt|,
 endif|#
 directive|endif
@@ -13779,6 +13782,16 @@ block|,
 name|modestring
 block|,
 name|modecmd
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"telnet"
+block|,
+name|openhelp
+block|,
+name|tn
 block|,
 literal|0
 block|}
@@ -13994,14 +14007,14 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SKEY
+name|OPIE
 argument_list|)
 block|{
-literal|"skey"
+literal|"opie"
 block|,
-name|skeyhelp
+name|opiehelp
 block|,
-name|skey_calc
+name|opie_calc
 block|,
 literal|0
 block|}
@@ -14725,6 +14738,9 @@ name|help
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 else|else
 while|while
@@ -14797,9 +14813,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

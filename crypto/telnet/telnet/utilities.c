@@ -91,13 +91,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
 
 begin_include

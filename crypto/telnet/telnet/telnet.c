@@ -420,6 +420,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -430,6 +436,11 @@ end_decl_stmt
 begin_comment
 comment|/* hack around breakage in sra.c :-( !! */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|cc_t
@@ -2368,9 +2379,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|strlen
 argument_list|(
 name|name
@@ -3125,9 +3133,6 @@ condition|(
 name|tname
 operator|&&
 operator|(
-operator|(
-name|int
-operator|)
 name|strlen
 argument_list|(
 name|tname
@@ -9641,7 +9646,7 @@ block|thisitem = netobuf;      while ((next = nextitem(thisitem))<= netobuf.send
 comment|/* Now, thisitem is first before/at boundary. */
 block|good = netobuf;
 comment|/* where the good bytes go */
-block|while (netoring.add> thisitem) { 	if (wewant(thisitem)) { 	    int length;  	    next = thisitem; 	    do { 		next = nextitem(next); 	    } while (wewant(next)&& (nfrontp> next)); 	    length = next-thisitem; 	    memmove(good, thisitem, length); 	    good += length; 	    thisitem = next; 	} else { 	    thisitem = nextitem(thisitem); 	}     }
+block|while (netoring.add> thisitem) { 	if (wewant(thisitem)) { 	    int length;  	    next = thisitem; 	    do { 		next = nextitem(next); 	    } while (wewant(next)&& (nfrontp> next)); 	    length = next-thisitem; 	    memcpy(good, thisitem, length); 	    good += length; 	    thisitem = next; 	} else { 	    thisitem = nextitem(thisitem); 	}     }
 endif|#
 directive|endif
 comment|/* 0 */

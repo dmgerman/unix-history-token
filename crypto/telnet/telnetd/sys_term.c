@@ -2467,18 +2467,18 @@ begin_comment
 comment|/*  * getpty()  *  * Allocate a pty.  As a side effect, the external character  * array "line" contains the name of the slave side.  *  * Returns the file descriptor of the opened pty.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRAY
+end_ifdef
 
 begin_decl_stmt
 name|char
-modifier|*
-name|line
-init|=
-literal|"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+name|myline
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2488,41 +2488,11 @@ directive|else
 end_else
 
 begin_decl_stmt
-specifier|static
 name|char
-name|Xline
-index|[]
-init|=
-literal|"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
 name|line
-init|=
-name|Xline
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CRAY
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|myline
-init|=
-literal|"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2654,7 +2624,17 @@ name|strcpy
 argument_list|(
 name|line
 argument_list|,
-literal|"/dev/ptyXX"
+name|_PATH_DEV
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|line
+argument_list|,
+literal|"ptyXX"
 argument_list|)
 expr_stmt|;
 name|p1
@@ -2948,7 +2928,9 @@ name|sprintf
 argument_list|(
 name|myline
 argument_list|,
-literal|"/dev/pty/%03d"
+literal|"%spty/%03d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 operator|*
 name|ptynum
@@ -2977,7 +2959,9 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"/dev/ttyp%03d"
+literal|"%sp%03d"
+argument_list|,
+name|_PATH_TTY
 argument_list|,
 operator|*
 name|ptynum
@@ -6007,6 +5991,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+name|setpgrp
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UNICOS7x
@@ -6275,7 +6262,7 @@ name|t
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -6639,7 +6626,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -7341,7 +7328,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -8671,7 +8658,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -9860,6 +9847,10 @@ name|user
 argument_list|,
 name|tpath
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -9960,7 +9951,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -10437,7 +10428,7 @@ name|line
 index|[
 name|strlen
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 index|]
 operator|=

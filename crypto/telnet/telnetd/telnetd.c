@@ -124,7 +124,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -3739,15 +3751,6 @@ name|char
 modifier|*
 name|lp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|line
-decl_stmt|,
-modifier|*
-name|getpty
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -3828,7 +3831,9 @@ name|sprintf
 argument_list|(
 name|tty_dev
 argument_list|,
-literal|"/dev/pty/%03d"
+literal|"%spty/%03d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|ptynum
 argument_list|)
@@ -3856,7 +3861,9 @@ name|sprintf
 argument_list|(
 name|slave_dev
 argument_list|,
-literal|"/dev/ttyp%03d"
+literal|"%sp%03d"
+argument_list|,
+name|_PATH_TTY
 argument_list|,
 name|ptynum
 argument_list|)
@@ -3913,7 +3920,7 @@ name|fatal
 argument_list|(
 name|net
 argument_list|,
-literal|"Couldn't resolve your address into a host name.\r\n\ 	 Please contact your net administrator"
+literal|"Couldn't resolve your address into a host name.\r\n\ 	Please contact your net administrator"
 argument_list|)
 expr_stmt|;
 name|remote_hostname

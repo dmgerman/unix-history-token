@@ -46,6 +46,23 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_CGETENT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -58,26 +75,18 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getent
-argument_list|(
-argument|cp
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -134,7 +143,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_ifndef
 ifndef|#
@@ -151,21 +160,15 @@ name|char
 modifier|*
 name|Getstr
 parameter_list|(
-name|id
-parameter_list|,
-name|cpp
-parameter_list|)
 name|char
 modifier|*
 name|id
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 modifier|*
 name|cpp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -205,7 +208,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

@@ -2166,6 +2166,10 @@ operator|!=
 name|REAL_LINEMODE
 condition|)
 break|break;
+name|lmodetype
+operator|=
+name|KLUDGE_LINEMODE
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
@@ -4762,6 +4766,17 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|IAC
+condition|)
+name|ADD
+argument_list|(
+name|IAC
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4779,6 +4794,17 @@ expr_stmt|;
 name|ADD_DATA
 argument_list|(
 name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|IAC
+condition|)
+name|ADD
+argument_list|(
+name|IAC
 argument_list|)
 expr_stmt|;
 block|}

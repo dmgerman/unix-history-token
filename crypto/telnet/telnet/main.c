@@ -76,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ring.h"
 end_include
 
@@ -334,19 +346,9 @@ name|defined
 argument_list|(
 name|unix
 argument_list|)
-ifdef|#
-directive|ifdef
-name|AUTHENTICATION
-literal|"[-noasynch] [-noasynctty]\n\t"
-literal|"[-noasyncnet] [-r] [-s src_addr] [-t transcom] "
-argument_list|,
-else|#
-directive|else
 literal|"[-noasynch] [-noasynctty] [-noasyncnet] [-r]\n\t"
 literal|"[-s src_addr] [-t transcom] "
 argument_list|,
-endif|#
-directive|endif
 else|#
 directive|else
 literal|"[-r] [-s src_addr] [-u] "
@@ -409,25 +411,12 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
 name|char
 modifier|*
 name|user
-decl_stmt|,
-modifier|*
-name|strrchr
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -520,10 +509,22 @@ literal|'~'
 else|:
 name|_POSIX_VDISABLE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUTHENTICATION
 name|autologin
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|autologin
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -735,7 +736,18 @@ break|break;
 case|case
 literal|'a'
 case|:
+ifdef|#
+directive|ifdef
+name|AUTHENTICATION
 comment|/* It's the default now, so ignore */
+else|#
+directive|else
+name|autologin
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'c'
@@ -939,6 +951,18 @@ break|break;
 case|case
 literal|'l'
 case|:
+ifdef|#
+directive|ifdef
+name|AUTHENTICATION
+comment|/* This is the default now, so ignore it */
+else|#
+directive|else
+name|autologin
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|user
 operator|=
 name|optarg
@@ -1128,7 +1152,24 @@ break|break;
 case|case
 literal|'x'
 case|:
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
 comment|/* This is the default now, so ignore it */
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Warning: -x ignored, no ENCRYPT support.\n"
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ENCRYPTION */
 break|break;
 case|case
 literal|'y'
@@ -1144,6 +1185,17 @@ expr_stmt|;
 name|decrypt_auto
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Warning: -y ignored, no ENCRYPT support.\n"
+argument_list|,
+name|prompt
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1220,6 +1272,25 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+if|if
+condition|(
+name|autologin
+operator|==
+operator|-
+literal|1
+condition|)
+name|autologin
+operator|=
+operator|(
+name|rlogin
+operator|==
+name|_POSIX_VDISABLE
+operator|)
+condition|?
+literal|0
+else|:
+literal|1
+expr_stmt|;
 name|argc
 operator|-=
 name|optind

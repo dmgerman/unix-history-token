@@ -53,13 +53,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -1053,7 +1053,7 @@ name|ring
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memmove
+name|memcpy
 argument_list|(
 name|ring
 operator|->
@@ -1136,7 +1136,7 @@ name|ring
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memmove
+name|memcpy
 argument_list|(
 name|buffer
 argument_list|,
