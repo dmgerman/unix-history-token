@@ -277,6 +277,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|spigintr
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -398,6 +405,12 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
+name|devp
+operator|->
+name|id_ointr
+operator|=
+name|spigintr
+expr_stmt|;
 name|ss
 operator|->
 name|maddr
@@ -908,6 +921,7 @@ comment|/*  * Interrupt procedure.  * Just call a user level interrupt routine. 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|spigintr
 parameter_list|(

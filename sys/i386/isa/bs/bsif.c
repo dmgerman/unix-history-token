@@ -219,6 +219,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|inthand2_t
+name|bsintr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|bsprint
 name|__P
@@ -921,6 +928,12 @@ name|scsibus_data
 modifier|*
 name|scbus
 decl_stmt|;
+name|dev
+operator|->
+name|id_ointr
+operator|=
+name|bsintr
+expr_stmt|;
 name|bsc
 operator|->
 name|sc_link
@@ -1077,6 +1090,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|bsintr
 parameter_list|(

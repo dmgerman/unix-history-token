@@ -292,6 +292,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|ointhand2_t
+name|cxintr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|cxtinth
 name|__P
@@ -1231,6 +1238,12 @@ name|sppp
 modifier|*
 name|sp
 decl_stmt|;
+name|id
+operator|->
+name|id_ointr
+operator|=
+name|cxintr
+expr_stmt|;
 comment|/* Initialize the board structure. */
 name|cx_init
 argument_list|(
@@ -3754,6 +3767,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cxintr
 parameter_list|(

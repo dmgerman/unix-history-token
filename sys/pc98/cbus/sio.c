@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.66 1998/08/28 12:44:49 kato Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.67 1998/09/14 11:37:29 kato Exp $  */
 end_comment
 
 begin_include
@@ -50,11 +50,11 @@ comment|/*  * Serial driver, based on 386BSD-0.1 com driver.  * Mostly rewritten
 end_comment
 
 begin_comment
-comment|/*===============================================================  * 386BSD(98),FreeBSD-1.1x(98) com driver.  * -----  * modified for PC9801 by M.Ishii   *			Kyoto University Microcomputer Club (KMC)  * Chou "TEFUTEFU" Hirotomi  *			Kyoto Univ.  the faculty of medicine  *===============================================================  * FreeBSD-2.0.1(98) sio driver.  * -----  * modified for pc98 Internal i8251 and MICRO CORE MC16550II  *			T.Koike(hfc01340@niftyserve.or.jp)  * implement kernel device configuration  *			aizu@orient.center.nitech.ac.jp  *  * Notes.  * -----  *  PC98 localization based on 386BSD(98) com driver. Using its PC98 local  *  functions.  *  This driver is under debugging,has bugs.  *  * 1) config  *  options COM_MULTIPORT  #if using MC16550II  *  device sio0 at nec? port 0x30  tty irq 4 vector siointr #internal  *  device sio1 at nec? port 0xd2  tty irq 5 flags 0x101 vector siointr #mc1  *  device sio2 at nec? port 0x8d2 tty flags 0x101 vector siointr       #mc2  *                         # ~~~~~iobase        ~~multi port flag  *                         #                   ~  master device is sio1  * 2) device  *  cd /dev; MAKEDEV ttyd0 ttyd1 ..  * 3) /etc/rc.serial  *  57600bps is too fast for sio0(internal8251)  *  my ex.  *    #set default speed 9600  *    modem()  *       :  *      stty</dev/ttyid$i crtscts 9600  *       :                 #       ~~~~ default speed(can change after init.)  *    modem 0 1 2  * 4) COMCONSOLE  *  not changed.  * 5) PC9861K,PIO9032B,B98_01  *  not tested.  */
+comment|/*===============================================================  * 386BSD(98),FreeBSD-1.1x(98) com driver.  * -----  * modified for PC9801 by M.Ishii   *			Kyoto University Microcomputer Club (KMC)  * Chou "TEFUTEFU" Hirotomi  *			Kyoto Univ.  the faculty of medicine  *===============================================================  * FreeBSD-2.0.1(98) sio driver.  * -----  * modified for pc98 Internal i8251 and MICRO CORE MC16550II  *			T.Koike(hfc01340@niftyserve.or.jp)  * implement kernel device configuration  *			aizu@orient.center.nitech.ac.jp  *  * Notes.  * -----  *  PC98 localization based on 386BSD(98) com driver. Using its PC98 local  *  functions.  *  This driver is under debugging,has bugs.  *  * 1) config  *  options COM_MULTIPORT  #if using MC16550II  *  device sio0 at nec? port 0x30  tty irq 4             #internal  *  device sio1 at nec? port 0xd2  tty irq 5 flags 0x101 #mc1  *  device sio2 at nec? port 0x8d2 tty flags 0x101       #mc2  *                         # ~~~~~iobase        ~~multi port flag  *                         #                   ~  master device is sio1  * 2) device  *  cd /dev; MAKEDEV ttyd0 ttyd1 ..  * 3) /etc/rc.serial  *  57600bps is too fast for sio0(internal8251)  *  my ex.  *    #set default speed 9600  *    modem()  *       :  *      stty</dev/ttyid$i crtscts 9600  *       :                 #       ~~~~ default speed(can change after init.)  *    modem 0 1 2  * 4) COMCONSOLE  *  not changed.  * 5) PC9861K,PIO9032B,B98_01  *  not tested.  */
 end_comment
 
 begin_comment
-comment|/*  * modified for AIWA B98-01  * by T.Hatanou<hatanou@yasuda.comm.waseda.ac.jp>  last update: 15 Sep.1995   *  * How to configure...  *   # options COM_MULTIPORT         # support for MICROCORE MC16550II  *      ... comment-out this line, which will conflict with B98_01.  *   options "B98_01"                # support for AIWA B98-01  *   device  sio1 at nec? port 0x00d1 tty irq ? vector siointr  *   device  sio2 at nec? port 0x00d5 tty irq ? vector siointr  *      ... you can leave these lines `irq ?', irq will be autodetected.  */
+comment|/*  * modified for AIWA B98-01  * by T.Hatanou<hatanou@yasuda.comm.waseda.ac.jp>  last update: 15 Sep.1995   *  * How to configure...  *   # options COM_MULTIPORT         # support for MICROCORE MC16550II  *      ... comment-out this line, which will conflict with B98_01.  *   options "B98_01"                # support for AIWA B98-01  *   device  sio1 at nec? port 0x00d1 tty irq ?  *   device  sio2 at nec? port 0x00d5 tty irq ?  *      ... you can leave these lines `irq ?', irq will be autodetected.  */
 end_comment
 
 begin_ifdef
@@ -1375,6 +1375,13 @@ operator|*
 name|com
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|siointr
 decl_stmt|;
 end_decl_stmt
 
@@ -5386,6 +5393,12 @@ name|unit
 decl_stmt|;
 name|isdp
 operator|->
+name|id_ointr
+operator|=
+name|siointr
+expr_stmt|;
+name|isdp
+operator|->
 name|id_ri_flags
 operator||=
 name|RI_FAST
@@ -8869,6 +8882,7 @@ name|dtr_wait
 argument_list|)
 expr_stmt|;
 block|}
+specifier|static
 name|void
 name|siointr
 parameter_list|(

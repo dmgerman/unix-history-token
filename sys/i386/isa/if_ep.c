@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.75 1998/06/07 17:10:28 dfr Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.76 1998/06/21 18:02:38 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -379,6 +379,13 @@ name|ep_softc
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|epintr
 decl_stmt|;
 end_decl_stmt
 
@@ -2299,6 +2306,12 @@ decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
+name|is
+operator|->
+name|id_ointr
+operator|=
+name|epintr
+expr_stmt|;
 name|sc
 operator|->
 name|ep_connectors
@@ -3936,6 +3949,7 @@ goto|goto
 name|startagain
 goto|;
 block|}
+specifier|static
 name|void
 name|epintr
 parameter_list|(

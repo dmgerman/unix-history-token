@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa_device.h	7.1 (Berkeley) 5/9/91  *	$Id: isa_device.h,v 1.54 1998/09/15 10:04:08 gibbs Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa_device.h	7.1 (Berkeley) 5/9/91  *	$Id: isa_device.h,v 1.55 1998/10/12 11:32:35 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,17 @@ end_define
 begin_comment
 comment|/*  * ISA Bus Autoconfiguration  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|ointhand2_t
+name|__P
+typedef|((
+name|int
+name|unit
+typedef|));
+end_typedef
 
 begin_comment
 comment|/*  * Per device structure.  *  * XXX Note:  id_conflicts should either become an array of things we're  * specifically allowed to conflict with or be subsumed into some  * more powerful mechanism for detecting and dealing with multiple types  * of non-fatal conflict.  -jkh XXX  */
@@ -56,11 +67,28 @@ name|int
 name|id_msize
 decl_stmt|;
 comment|/* size of i/o memory */
+union|union
+block|{
 name|inthand2_t
 modifier|*
-name|id_intr
+name|id_i
 decl_stmt|;
+name|ointhand2_t
+modifier|*
+name|id_oi
+decl_stmt|;
+block|}
+name|id_iu
+union|;
 comment|/* interrupt interface routine */
+define|#
+directive|define
+name|id_intr
+value|id_iu.id_i
+define|#
+directive|define
+name|id_ointr
+value|id_iu.id_oi
 name|int
 name|id_unit
 decl_stmt|;
@@ -487,74 +515,57 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|void
-name|ointhand2_t
-name|__P
-typedef|((
-name|int
-name|unit
-typedef|));
-end_typedef
-
 begin_comment
-comment|/*  * The "old" interrupt handlers really have type ointhand2_t although they  * appear to be declared as having type inthand2_t.  However, if this  * header is included by ioconf.c, pretend that the handlers really have  * type inthand_t.  Assume that `C' is defined only by ioconf.c.  */
+comment|/* XXX temporary hack for old config files. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|C
-end_ifndef
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|inthand2_t
-value|ointhand2_t
+name|adintr
+value|NULL
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|inthand2_t
-name|adintr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|ahaintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|aicintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|alogintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|arintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|ascintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
 begin_ifdef
 ifdef|#
@@ -562,298 +573,348 @@ directive|ifdef
 name|PC98
 end_ifdef
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|bsintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|csintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|cxintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|cyintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|edintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|egintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|elintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|epintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|exintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|fdintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|feintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|gusintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|ieintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|labpcintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|le_intr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|lncintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|loranintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|lptintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|m6850intr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|mcdintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|mseintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|ncaintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|npxintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|pasintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|pcmintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|pcrint
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|ppcintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|pcfintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|psmintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|rcintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|sbintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|scintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|seaintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|siointr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|sndintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|spigintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|srintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|sscapeintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|stlintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|twintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|uhaintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|wdintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|wdsintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|wlintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|wtintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|zeintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_decl_stmt
-name|inthand2_t
+begin_define
+define|#
+directive|define
 name|zpintr
-decl_stmt|;
-end_decl_stmt
+value|NULL
+end_define
 
-begin_undef
-undef|#
-directive|undef
-name|inthand2_t
-end_undef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* C */
+end_comment
 
 begin_endif
 endif|#

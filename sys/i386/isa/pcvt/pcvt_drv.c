@@ -1254,6 +1254,12 @@ comment|/* PCVT_NETBSD> 100 */
 else|#
 directive|else
 comment|/* PCVT_NETBSD> 9 */
+name|dev
+operator|->
+name|id_ointr
+operator|=
+name|pcrint
+expr_stmt|;
 return|return
 literal|1
 return|;

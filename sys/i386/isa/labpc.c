@@ -1227,6 +1227,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|labpcintr
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -2000,6 +2007,12 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
+name|dev
+operator|->
+name|id_ointr
+operator|=
+name|labpcintr
+expr_stmt|;
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -3080,6 +3093,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|labpcintr
 parameter_list|(

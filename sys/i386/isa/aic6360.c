@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.40 1998/04/15 17:45:12 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.41 1998/06/21 14:53:09 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3592,6 +3592,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|ointhand2_t
+name|aicintr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int32_t
 name|aic_scsi_cmd
 name|__P
@@ -4944,6 +4951,12 @@ operator|(
 literal|"aicattach\n"
 operator|)
 argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|id_ointr
+operator|=
+name|aicintr
 expr_stmt|;
 name|aic
 operator|->
@@ -10141,6 +10154,7 @@ comment|/*  * This is the workhorse routine of the driver.  * Deficiencies (for 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aicintr
 parameter_list|(

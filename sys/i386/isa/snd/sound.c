@@ -806,6 +806,12 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
+name|dev
+operator|->
+name|id_ointr
+operator|=
+name|pcmintr
+expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -839,6 +839,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|wdsintr
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -1885,6 +1892,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|wdsintr
 parameter_list|(
@@ -2741,6 +2749,12 @@ name|scsibus_data
 modifier|*
 name|scbus
 decl_stmt|;
+name|dev
+operator|->
+name|id_ointr
+operator|=
+name|wdsintr
+expr_stmt|;
 name|masunit
 operator|=
 name|dev

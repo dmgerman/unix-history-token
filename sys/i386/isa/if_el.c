@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.36 1998/06/07 17:10:28 dfr Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.37 1998/06/21 15:54:11 bde Exp $  */
 end_comment
 
 begin_comment
@@ -374,6 +374,13 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|elintr
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -753,6 +760,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Get things pointing to the right places. */
+name|idev
+operator|->
+name|id_ointr
+operator|=
+name|elintr
+expr_stmt|;
 name|sc
 operator|=
 operator|&
@@ -2016,6 +2029,7 @@ comment|/* controller interrupt */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|elintr
 parameter_list|(

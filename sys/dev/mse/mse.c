@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.37 1998/01/24 02:54:22 eivind Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.38 1998/06/07 17:10:47 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -253,6 +253,13 @@ block|,
 operator|-
 literal|1
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|mseintr
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,6 +1209,12 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|idp
+operator|->
+name|id_ointr
+operator|=
+name|mseintr
+expr_stmt|;
 name|sc
 operator|->
 name|sc_port
@@ -2708,6 +2721,7 @@ comment|/*  * mseintr: update mouse status. sc_deltax and sc_deltay are accumula
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mseintr
 parameter_list|(

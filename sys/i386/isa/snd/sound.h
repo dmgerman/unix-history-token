@@ -1418,6 +1418,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|ointhand2_t
+name|pcmintr
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *      DMA buffer calls  */
 end_comment

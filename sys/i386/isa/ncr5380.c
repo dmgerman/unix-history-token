@@ -901,6 +901,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|ointhand2_t
+name|ncaintr
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -2775,6 +2782,12 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+name|dev
+operator|->
+name|id_ointr
+operator|=
+name|ncaintr
+expr_stmt|;
 comment|/* fill in the prototype scsi_link */
 name|z
 operator|->
@@ -2894,6 +2907,7 @@ comment|/*  * Catch an interrupt from the adaptor.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ncaintr
 parameter_list|(

@@ -7366,6 +7366,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|ointhand2_t
+name|pcrint
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|pcstart
