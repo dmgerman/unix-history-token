@@ -937,6 +937,7 @@ argument_list|(
 name|lint
 argument_list|)
 operator|&&
+operator|!
 name|defined
 argument_list|(
 name|STRIP_FBSDID
