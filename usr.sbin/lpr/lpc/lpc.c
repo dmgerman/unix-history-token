@@ -867,6 +867,10 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|el
+operator|!=
+name|NULL
+operator|&&
 name|el_parse
 argument_list|(
 name|el
