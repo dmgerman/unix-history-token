@@ -2185,34 +2185,19 @@ index|]
 operator|=
 literal|65536
 expr_stmt|;
-if|if
-condition|(
-name|sound_dsp_dmachan
-index|[
-name|dev
-index|]
-operator|>
-literal|3
-operator|&&
-name|sound_buffsizes
-index|[
-name|dev
-index|]
-operator|>
-literal|65536
-condition|)
-name|dma_pagesize
-operator|=
-literal|131072
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (sound_dsp_dmachan[dev]> 3&& sound_buffsizes[dev]> 65536) 	    dma_pagesize = 131072;
 comment|/* 128k */
-else|else
+block|else 	    dma_pagesize = 65536;
+endif|#
+directive|endif
 name|dma_pagesize
 operator|=
-comment|/* 65536; */
 literal|4096
 expr_stmt|;
-comment|/* Be conservative for now! */
+comment|/* use bounce buffer */
 comment|/* More sanity checks */
 if|if
 condition|(
