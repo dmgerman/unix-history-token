@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/aac/aac_compat.h>
 end_include
 
