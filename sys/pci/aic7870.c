@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7870, and aic7850 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.16 1995/10/26 23:58:59 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7870, and aic7850 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.17 1995/11/04 14:43:20 bde Exp $  */
 end_comment
 
 begin_include
@@ -267,13 +267,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
-name|aic7870_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|u_char
 name|aic3940_count
 decl_stmt|;
@@ -282,7 +275,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pci_device
-name|ahc_device
+name|ahc_pci_driver
 init|=
 block|{
 literal|"ahc"
@@ -292,7 +285,7 @@ block|,
 name|aic7870_attach
 block|,
 operator|&
-name|aic7870_count
+name|ahc_unit
 block|,
 name|NULL
 block|}
@@ -304,7 +297,7 @@ name|DATA_SET
 argument_list|(
 name|pcidevice_set
 argument_list|,
-name|ahc_device
+name|ahc_pci_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -437,6 +430,11 @@ name|ahc_f
 init|=
 name|AHC_FNONE
 decl_stmt|;
+name|struct
+name|ahc_data
+modifier|*
+name|ahc
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -452,10 +450,10 @@ argument_list|)
 operator|)
 condition|)
 return|return;
-comment|/* 	 * Make the offsets the same as for EISA 	 * The first bit of PCI_BASEADR0 is always 	 * set hence we subtract 0xc01 instead of the 	 * 0xc00 that you would expect. 	 */
+comment|/* 	 * The first bit of PCI_BASEADR0 is always 	 * set hence we mask it off. 	 */
 name|io_port
-operator|-=
-literal|0xc01ul
+operator|&=
+literal|0xfffffffe
 expr_stmt|;
 switch|switch
 condition|(
@@ -593,9 +591,18 @@ name|AHC_EXTSCB
 expr_stmt|;
 block|}
 block|}
+name|ahc_reset
+argument_list|(
+name|io_port
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|ahcprobe
+operator|!
+operator|(
+name|ahc
+operator|=
+name|ahc_alloc
 argument_list|(
 name|unit
 argument_list|,
@@ -605,12 +612,10 @@ name|ahc_t
 argument_list|,
 name|ahc_f
 argument_list|)
+operator|)
 condition|)
-block|{
-name|ahc_unit
-operator|++
-expr_stmt|;
-comment|/* 		 * To be compatible with the isa style of 		 * interrupt handler, we pass the unit number 		 * not a pointer to our per device structure. 		 */
+return|return;
+comment|/* XXX PCI code should take return status */
 if|if
 condition|(
 operator|!
@@ -619,13 +624,13 @@ name|pci_map_int
 argument_list|(
 name|config_id
 argument_list|,
-name|ahc_pci_intr
+name|ahcintr
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|unit
+name|ahc
 argument_list|,
 operator|&
 name|bio_imask
@@ -633,30 +638,42 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|free
+name|ahc_free
 argument_list|(
-name|ahcdata
-index|[
-name|unit
-index|]
-argument_list|,
-name|M_TEMP
+name|ahc
 argument_list|)
-expr_stmt|;
-name|ahcdata
-index|[
-name|unit
-index|]
-operator|=
-name|NULL
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * Since ahc_attach will poll, protect ourself 		 * from the registered interrupt handler. 		 */
+comment|/* 	 * Protect ourself from spurrious interrupts during 	 * intialization. 	 */
 name|opri
 operator|=
 name|splbio
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ahc_init
+argument_list|(
+name|unit
+argument_list|)
+condition|)
+block|{
+name|ahc_free
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|opri
+argument_list|)
+expr_stmt|;
+return|return;
+comment|/* XXX PCI code should take return status */
+block|}
+name|ahc_unit
+operator|++
 expr_stmt|;
 name|ahc_attach
 argument_list|(
@@ -668,7 +685,6 @@ argument_list|(
 name|opri
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 end_function
