@@ -1032,6 +1032,9 @@ block|,
 name|installFixitHoloShell
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"Fdisk"
 block|,
@@ -1042,6 +1045,8 @@ block|,
 name|diskPartitionEditor
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"Fixit"
 block|,
@@ -1549,6 +1554,9 @@ operator|&
 name|MenuXF86SelectServer
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"XFree86, PC98 Server"
 block|,
@@ -1564,6 +1572,8 @@ operator|&
 name|MenuXF86SelectPC98Server
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
@@ -2319,6 +2329,14 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select the XFree86 configuration tool you want to use."
 block|,
+ifdef|#
+directive|ifdef
+name|__alpha__
+literal|"Due to problems with the VGA16 server right now, only the\n"
+literal|"text-mode configuration tool (xf86config) is currently supported."
+block|,
+else|#
+directive|else
 literal|"The first tool, XF86Setup, is fully graphical and requires the\n"
 literal|"VGA16 server in order to work (should have been selected by\n"
 literal|"default, but if you de-selected it then you won't be able to\n"
@@ -2327,10 +2345,33 @@ literal|"a more simplistic shell-script based tool and less friendly to\n"
 literal|"new users, but it may work in situations where the fancier one\n"
 literal|"does not."
 block|,
+endif|#
+directive|endif
 name|NULL
 block|,
 name|NULL
 block|,
+ifdef|#
+directive|ifdef
+name|__alpha__
+block|{
+block|{
+literal|"xf86config"
+block|,
+literal|"Shell-script based XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=xf86config"
+block|}
+block|,
+else|#
+directive|else
 block|{
 block|{
 literal|"XF86Setup"
@@ -2377,6 +2418,8 @@ name|VAR_XF86_CONFIG
 literal|"=XF98Setup"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"XDesktop"
 block|,
@@ -2397,13 +2440,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXDesktops
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2519,13 +2559,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaCDROM
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2548,13 +2585,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaFloppy
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2575,13 +2609,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaDOS
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2608,13 +2639,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaFTP
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -3656,6 +3684,24 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|"Slovak Republic"
+block|,
+literal|"ftp.sk.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.sk.freebsd.org"
+argument_list|)
+block|}
+block|,
+block|{
 literal|"South Africa"
 block|,
 literal|"ftp.za.freebsd.org"
@@ -4092,13 +4138,10 @@ name|NULL
 block|}
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaTape
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4123,13 +4166,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNetworkDevice
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4156,17 +4196,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The media selection menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuMedia
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4280,17 +4314,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The distributions menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4457,13 +4485,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSubDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4503,6 +4528,9 @@ block|,
 name|DIST_BIN
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"compat1x"
 block|,
@@ -4623,6 +4651,8 @@ block|,
 name|DIST_COMPAT3X
 block|}
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|{
@@ -4830,6 +4860,29 @@ name|DIST_PORTS
 block|}
 block|,
 block|{
+literal|"local"
+block|,
+literal|"Local additions collection"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_LOCAL
+block|}
+block|,
+block|{
 literal|"XFree86"
 block|,
 literal|"The XFree86 3.3.4 distribution"
@@ -4904,13 +4957,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuDESDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5068,13 +5118,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSrcDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5500,13 +5547,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86Select
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -5610,13 +5654,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectCore
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5747,6 +5788,9 @@ block|,
 name|DIST_XF86_LIB
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"lk98"
 block|,
@@ -5770,6 +5814,8 @@ block|,
 name|DIST_XF86_LKIT98
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"lkit"
 block|,
@@ -5862,6 +5908,9 @@ block|,
 name|DIST_XF86_SET
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"9set"
 block|,
@@ -5885,6 +5934,8 @@ block|,
 name|DIST_XF86_9SET
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"sources"
 block|,
@@ -5996,13 +6047,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectFonts
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6220,13 +6268,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectServer
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6566,6 +6611,9 @@ block|,
 name|DIST_XF86_SERVER_W32
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"PC98"
 block|,
@@ -6589,6 +6637,34 @@ block|,
 literal|0
 block|}
 block|,
+elif|#
+directive|elif
+name|__alpha__
+block|{
+literal|"TGA"
+block|,
+literal|"TGA cards (alpha architecture only)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_TGA
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"All"
 block|,
@@ -6654,13 +6730,13 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|DMenu
 name|MenuXF86SelectPC98Server
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7022,13 +7098,12 @@ name|NULL
 block|}
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
+endif|#
+directive|endif
 name|DMenu
 name|MenuDiskDevices
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7054,13 +7129,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuHTMLDoc
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7120,17 +7192,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The main installation menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuInstallCustom
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7287,17 +7353,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* MBR type menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuMBRType
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -7387,17 +7447,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* Final configuration menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuConfigure
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7458,6 +7512,9 @@ block|,
 name|diskLabelEditor
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"F Fdisk"
 block|,
@@ -7468,6 +7525,8 @@ block|,
 name|diskPartitionEditor
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"1 User Management"
 block|,
@@ -7629,13 +7688,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuStartup
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7919,13 +7975,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNetworking
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -8141,13 +8194,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNTP
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -8417,45 +8467,14 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ncar.ucar.edu"
 block|}
 block|,
 block|{
-literal|"U.S. Pacific"
-block|,
-literal|"chantry.hawaii.net (WWV/H clock)"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=chantry.hawaii.net"
-block|}
-block|,
-block|{
-literal|"U.S. Southwest"
-block|,
-literal|"shorty.chpc.utexas.edu (WWV clock)"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=shorty.chpc.utexas.edu"
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSyscons
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -8561,13 +8580,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsKeymap
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9111,13 +9127,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsKeyrate
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9194,13 +9207,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsSaver
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9383,13 +9393,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsScrnmap
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9461,13 +9468,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsFont
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9607,13 +9611,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuUsermgmt
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -9662,13 +9663,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuFixit
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -9721,7 +9719,7 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
+block|;
 end_decl_stmt
 
 end_unit
