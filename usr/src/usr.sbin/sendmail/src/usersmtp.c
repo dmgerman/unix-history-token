@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.49 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.50 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.49 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.50 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1386,25 +1386,6 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
-operator|||
-operator|(
-name|e
-operator|->
-name|e_bodytype
-operator|!=
-name|NULL
-operator|&&
-name|strcasecmp
-argument_list|(
-name|e
-operator|->
-name|e_bodytype
-argument_list|,
-literal|"7bit"
-argument_list|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 comment|/* just pass it through */

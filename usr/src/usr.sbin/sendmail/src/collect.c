@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.39 (Berkeley) %G%"
+literal|"@(#)collect.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1963,6 +1963,35 @@ literal|"554 Eight bit data not allowed"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+comment|/* if it claimed to be 8 bits, well, it lied.... */
+if|if
+condition|(
+name|e
+operator|->
+name|e_bodytype
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|e
+operator|->
+name|e_bodytype
+argument_list|,
+literal|"8BITMIME"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|e
+operator|->
+name|e_bodytype
+operator|=
+literal|"7BIT"
+expr_stmt|;
 block|}
 if|if
 condition|(

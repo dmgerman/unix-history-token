@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.59 (Berkeley) %G%"
+literal|"@(#)headers.c	8.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2205,12 +2205,24 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|e
 operator|->
 name|e_flags
 operator||=
 name|EF_IS_MIME
 expr_stmt|;
+if|if
+condition|(
+name|HasEightBits
+condition|)
+name|e
+operator|->
+name|e_bodytype
+operator|=
+literal|"8BITMIME"
+expr_stmt|;
+block|}
 comment|/* 	**  From person in antiquated ARPANET mode 	**	required by UK Grey Book e-mail gateways (sigh) 	*/
 if|if
 condition|(
