@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.7 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/ftp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -78,12 +84,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ftp.h"
 end_include
 
 begin_include
@@ -2773,6 +2773,38 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|sendport
+condition|)
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|data
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_REUSEADDR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"ftp: setsockopt (resuse address)"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 if|if
 condition|(
