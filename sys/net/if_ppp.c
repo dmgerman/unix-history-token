@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.41 1997/05/31 10:13:45 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.42 1997/08/19 14:10:45 peter Exp $ */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ operator|>
 literal|0
 end_if
 
+begin_include
+include|#
+directive|include
+file|"opt_ppp.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -40,6 +46,10 @@ define|#
 directive|define
 name|PPP_COMPRESS
 end_define
+
+begin_comment
+comment|/* XXX option to cut size? */
+end_comment
 
 begin_include
 include|#
@@ -578,6 +588,11 @@ block|{
 if|#
 directive|if
 name|DO_BSD_COMPRESS
+operator|&&
+name|defined
+argument_list|(
+name|PPP_BSDCOMP
+argument_list|)
 operator|&
 name|ppp_bsd_compress
 block|,
@@ -586,6 +601,11 @@ directive|endif
 if|#
 directive|if
 name|DO_DEFLATE
+operator|&&
+name|defined
+argument_list|(
+name|PPP_DEFLATE
+argument_list|)
 operator|&
 name|ppp_deflate
 block|,
