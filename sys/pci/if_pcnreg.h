@@ -1029,6 +1029,24 @@ name|PCN_MODE_PROMISC
 value|0x8000
 end_define
 
+begin_comment
+comment|/* Settings for PCN_MODE_PORTSEL when ASEL (BCR2[1] is 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_PORT_AUI
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCN_PORT_10BASET
+value|0x0080
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1162,6 +1180,28 @@ end_define
 
 begin_comment
 comment|/*  * BCR (bus control) registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_BCR_MMRA
+value|0x00
+end_define
+
+begin_comment
+comment|/* Master Mode Read Active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_BCR_MMW
+value|0x01
+end_define
+
+begin_comment
+comment|/* Master Mode Write Active */
 end_comment
 
 begin_define
@@ -1389,6 +1429,98 @@ value|0x31
 end_define
 
 begin_comment
+comment|/*  * Miscellaneous Configuration (BCR2)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_TMAULOOP
+value|1<<14
+end_define
+
+begin_comment
+comment|/* T-MAU Loopback packet enable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_LEDPE
+value|1<<12
+end_define
+
+begin_comment
+comment|/* LED Program Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_APROMWE
+value|1<<8
+end_define
+
+begin_comment
+comment|/* Address PROM Write Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_INTLEVEL
+value|1<<7
+end_define
+
+begin_comment
+comment|/* Interrupt level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_EADISEL
+value|1<<3
+end_define
+
+begin_comment
+comment|/* EADI Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_AWAKE
+value|1<<2
+end_define
+
+begin_comment
+comment|/* Power saving mode select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_ASEL
+value|1<<1
+end_define
+
+begin_comment
+comment|/* Auto Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_MISC_XMAUSEL
+value|1<<0
+end_define
+
+begin_comment
+comment|/* Reserved. */
+end_comment
+
+begin_comment
 comment|/*  * Full duplex control (BCR9)  */
 end_comment
 
@@ -1401,6 +1533,17 @@ end_define
 
 begin_comment
 comment|/* Full-duplex enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_DUPLEX_AUI
+value|0x0002
+end_define
+
+begin_comment
+comment|/* AUI full-duplex */
 end_comment
 
 begin_define
@@ -2537,7 +2680,7 @@ begin_define
 define|#
 directive|define
 name|PCN_PCI_MINLAT
-value|0x0F
+value|0x3F
 end_define
 
 begin_define
