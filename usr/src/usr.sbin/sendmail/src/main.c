@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.87 (Berkeley) %G%"
+literal|"@(#)main.c	8.88 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1624,6 +1624,14 @@ end_comment
 
 begin_expr_stmt
 name|initmacros
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|init_vendor_macros
 argument_list|(
 name|CurEnv
 argument_list|)

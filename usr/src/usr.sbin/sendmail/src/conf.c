@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.89.1.2 (Berkeley) %G%"
+literal|"@(#)conf.c	8.137 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3005,6 +3005,27 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  INIT_VENDOR_MACROS -- vendor-dependent macro initializations ** **	Called once, on startup. ** **	Parameters: **		e -- the global envelope. ** **	Returns: **		none. ** **	Side Effects: **		vendor-dependent. */
+end_comment
+
+begin_function
+name|void
+name|init_vendor_macros
+parameter_list|(
+name|e
+parameter_list|)
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{ }
 end_function
 
 begin_escape
