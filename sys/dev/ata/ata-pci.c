@@ -128,7 +128,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ata_pci_softc
+name|ata_pci_controller
 block|{
 name|struct
 name|resource
@@ -1311,10 +1311,7 @@ literal|"ata"
 argument_list|,
 name|devclass_find_free_unit
 argument_list|(
-name|devclass_find
-argument_list|(
-literal|"ata"
-argument_list|)
+name|ata_devclass
 argument_list|,
 literal|2
 argument_list|)
@@ -1341,9 +1338,9 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|ata_pci_softc
+name|ata_pci_controller
 modifier|*
-name|sc
+name|controller
 init|=
 name|device_get_softc
 argument_list|(
@@ -1442,7 +1439,7 @@ name|rid
 operator|=
 literal|0x20
 expr_stmt|;
-name|sc
+name|controller
 operator|->
 name|bmio
 operator|=
@@ -1468,7 +1465,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|sc
+name|controller
 operator|->
 name|bmio
 condition|)
@@ -1536,7 +1533,7 @@ literal|0x0d30105a
 case|:
 name|ATA_OUTB
 argument_list|(
-name|sc
+name|controller
 operator|->
 name|bmio
 argument_list|,
@@ -1544,7 +1541,7 @@ literal|0x11
 argument_list|,
 name|ATA_INB
 argument_list|(
-name|sc
+name|controller
 operator|->
 name|bmio
 argument_list|,
@@ -1561,7 +1558,7 @@ case|:
 comment|/* Promise (before TX2) need burst mode turned on */
 name|ATA_OUTB
 argument_list|(
-name|sc
+name|controller
 operator|->
 name|bmio
 argument_list|,
@@ -1569,7 +1566,7 @@ literal|0x1f
 argument_list|,
 name|ATA_INB
 argument_list|(
-name|sc
+name|controller
 operator|->
 name|bmio
 argument_list|,
@@ -1922,7 +1919,7 @@ case|case
 literal|0x06401095
 case|:
 comment|/* CMD 640 known bad, no DMA */
-name|sc
+name|controller
 operator|->
 name|bmio
 operator|=
@@ -1938,18 +1935,18 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|sc
+name|controller
 operator|->
 name|bmio
 condition|)
 block|{
-name|sc
+name|controller
 operator|->
 name|bmaddr
 operator|=
 name|rman_get_start
 argument_list|(
-name|sc
+name|controller
 operator|->
 name|bmio
 argument_list|)
@@ -1967,12 +1964,12 @@ name|SYS_RES_IOPORT
 argument_list|,
 name|rid
 argument_list|,
-name|sc
+name|controller
 operator|->
 name|bmio
 argument_list|)
 expr_stmt|;
-name|sc
+name|controller
 operator|->
 name|bmio
 operator|=
@@ -2046,9 +2043,9 @@ name|int
 name|ata_pci_intr
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
-name|scp
+name|ch
 parameter_list|)
 block|{
 name|u_int8_t
@@ -2057,7 +2054,7 @@ decl_stmt|;
 comment|/*       * since we might share the IRQ with another device, and in some      * cases with our twin channel, we only want to process interrupts      * that we know this channel generated.      */
 switch|switch
 condition|(
-name|scp
+name|ch
 operator|->
 name|chiptype
 condition|)
@@ -2074,7 +2071,7 @@ name|dmastat
 operator|=
 name|ata_dmastatus
 argument_list|(
-name|scp
+name|ch
 argument_list|)
 operator|)
 operator|&
@@ -2092,7 +2089,7 @@ literal|1
 return|;
 name|ATA_OUTB
 argument_list|(
-name|scp
+name|ch
 operator|->
 name|r_bmio
 argument_list|,
@@ -2127,7 +2124,7 @@ name|pci_read_config
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|scp
+name|ch
 operator|->
 name|dev
 argument_list|)
@@ -2138,9 +2135,9 @@ literal|1
 argument_list|)
 operator|&
 operator|(
-name|scp
+name|ch
 operator|->
-name|channel
+name|unit
 condition|?
 literal|0x08
 else|:
@@ -2174,14 +2171,14 @@ operator|!
 operator|(
 name|ATA_INL
 argument_list|(
-name|scp
+name|ch
 operator|->
 name|r_bmio
 argument_list|,
 operator|(
-name|scp
+name|ch
 operator|->
-name|channel
+name|unit
 condition|?
 literal|0x14
 else|:
@@ -2190,9 +2187,9 @@ operator|)
 argument_list|)
 operator|&
 operator|(
-name|scp
+name|ch
 operator|->
-name|channel
+name|unit
 condition|?
 literal|0x00004000
 else|:
@@ -2218,7 +2215,7 @@ case|:
 comment|/* Promise TX2 ATA133 */
 name|ATA_OUTB
 argument_list|(
-name|scp
+name|ch
 operator|->
 name|r_bmio
 argument_list|,
@@ -2233,7 +2230,7 @@ operator|!
 operator|(
 name|ATA_INB
 argument_list|(
-name|scp
+name|ch
 operator|->
 name|r_bmio
 argument_list|,
@@ -2250,7 +2247,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|scp
+name|ch
 operator|->
 name|flags
 operator|&
@@ -2266,7 +2263,7 @@ name|dmastat
 operator|=
 name|ata_dmastatus
 argument_list|(
-name|scp
+name|ch
 argument_list|)
 operator|)
 operator|&
@@ -2278,7 +2275,7 @@ literal|1
 return|;
 name|ATA_OUTB
 argument_list|(
-name|scp
+name|ch
 operator|->
 name|r_bmio
 argument_list|,
@@ -2314,9 +2311,9 @@ name|child
 parameter_list|)
 block|{
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
-name|scp
+name|ch
 init|=
 name|device_get_softc
 argument_list|(
@@ -2345,7 +2342,7 @@ literal|": at 0x%lx"
 argument_list|,
 name|rman_get_start
 argument_list|(
-name|scp
+name|ch
 operator|->
 name|r_io
 argument_list|)
@@ -2366,9 +2363,9 @@ literal|" irq %d"
 argument_list|,
 literal|14
 operator|+
-name|scp
+name|ch
 operator|->
-name|channel
+name|unit
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2420,9 +2417,9 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|ata_pci_softc
+name|ata_pci_controller
 modifier|*
-name|sc
+name|controller
 init|=
 name|device_get_softc
 argument_list|(
@@ -2437,12 +2434,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|channel
+name|unit
 init|=
 operator|(
 operator|(
 expr|struct
-name|ata_softc
+name|ata_channel
 operator|*
 operator|)
 name|device_get_softc
@@ -2451,7 +2448,7 @@ name|child
 argument_list|)
 operator|)
 operator|->
-name|channel
+name|unit
 decl_stmt|;
 name|int
 name|myrid
@@ -2487,7 +2484,7 @@ expr_stmt|;
 name|start
 operator|=
 operator|(
-name|channel
+name|unit
 condition|?
 name|ATA_SECONDARY
 else|:
@@ -2540,7 +2537,7 @@ literal|0x10
 operator|+
 literal|8
 operator|*
-name|channel
+name|unit
 expr_stmt|;
 name|res
 operator|=
@@ -2587,7 +2584,7 @@ expr_stmt|;
 name|start
 operator|=
 operator|(
-name|channel
+name|unit
 condition|?
 name|ATA_SECONDARY
 else|:
@@ -2642,7 +2639,7 @@ literal|0x14
 operator|+
 literal|8
 operator|*
-name|channel
+name|unit
 expr_stmt|;
 name|res
 operator|=
@@ -2747,7 +2744,7 @@ name|ATA_BMADDR_RID
 case|:
 if|if
 condition|(
-name|sc
+name|controller
 operator|->
 name|bmaddr
 condition|)
@@ -2759,15 +2756,15 @@ expr_stmt|;
 name|start
 operator|=
 operator|(
-name|channel
+name|unit
 operator|==
 literal|0
 condition|?
-name|sc
+name|controller
 operator|->
 name|bmaddr
 else|:
-name|sc
+name|controller
 operator|->
 name|bmaddr
 operator|+
@@ -2843,7 +2840,7 @@ name|__alpha__
 return|return
 name|alpha_platform_alloc_ide_intr
 argument_list|(
-name|channel
+name|unit
 argument_list|)
 return|;
 else|#
@@ -2852,7 +2849,7 @@ name|int
 name|irq
 init|=
 operator|(
-name|channel
+name|unit
 operator|==
 literal|0
 condition|?
@@ -2893,11 +2890,11 @@ comment|/* primary and secondary channels share interrupt, keep track */
 if|if
 condition|(
 operator|!
-name|sc
+name|controller
 operator|->
 name|irq
 condition|)
-name|sc
+name|controller
 operator|->
 name|irq
 operator|=
@@ -2924,13 +2921,13 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|sc
+name|controller
 operator|->
 name|irqcnt
 operator|++
 expr_stmt|;
 return|return
-name|sc
+name|controller
 operator|->
 name|irq
 return|;
@@ -2966,9 +2963,9 @@ name|r
 parameter_list|)
 block|{
 name|struct
-name|ata_pci_softc
+name|ata_pci_controller
 modifier|*
-name|sc
+name|controller
 init|=
 name|device_get_softc
 argument_list|(
@@ -2976,12 +2973,12 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|int
-name|channel
+name|unit
 init|=
 operator|(
 operator|(
 expr|struct
-name|ata_softc
+name|ata_channel
 operator|*
 operator|)
 name|device_get_softc
@@ -2990,7 +2987,7 @@ name|child
 argument_list|)
 operator|)
 operator|->
-name|channel
+name|unit
 decl_stmt|;
 if|if
 condition|(
@@ -3048,7 +3045,7 @@ literal|0x10
 operator|+
 literal|8
 operator|*
-name|channel
+name|unit
 argument_list|,
 name|r
 argument_list|)
@@ -3098,7 +3095,7 @@ literal|0x14
 operator|+
 literal|8
 operator|*
-name|channel
+name|unit
 argument_list|,
 name|r
 argument_list|)
@@ -3160,7 +3157,7 @@ name|__alpha__
 return|return
 name|alpha_platform_release_ide_intr
 argument_list|(
-name|channel
+name|unit
 argument_list|,
 name|r
 argument_list|)
@@ -3193,14 +3190,14 @@ comment|/* primary and secondary channels share interrupt, keep track */
 if|if
 condition|(
 operator|--
-name|sc
+name|controller
 operator|->
 name|irqcnt
 condition|)
 return|return
 literal|0
 return|;
-name|sc
+name|controller
 operator|->
 name|irq
 operator|=
@@ -3536,7 +3533,7 @@ block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ata_pci_softc
+name|ata_pci_controller
 argument_list|)
 block|, }
 decl_stmt|;
@@ -3577,9 +3574,9 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
-name|scp
+name|ch
 init|=
 name|device_get_softc
 argument_list|(
@@ -3633,9 +3630,9 @@ index|]
 operator|==
 name|dev
 condition|)
-name|scp
+name|ch
 operator|->
-name|channel
+name|unit
 operator|=
 name|i
 expr_stmt|;
@@ -3647,7 +3644,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|scp
+name|ch
 operator|->
 name|chiptype
 operator|=
@@ -3659,7 +3656,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|scp
+name|ch
 operator|->
 name|intr_func
 operator|=
@@ -3732,7 +3729,7 @@ block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ata_softc
+name|ata_channel
 argument_list|)
 block|, }
 decl_stmt|;

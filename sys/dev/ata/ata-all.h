@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999,2000,2001 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998,1999,2000,2001,2002 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -908,20 +908,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_MASTER
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_SLAVE
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATA_IOSIZE
 value|0x08
 end_define
@@ -957,28 +943,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_DEV
-parameter_list|(
-name|device
-parameter_list|)
-value|((device == ATA_MASTER) ? 0 : 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_PARAM
-parameter_list|(
-name|scp
-parameter_list|,
-name|device
-parameter_list|)
-value|(scp->dev_param[ATA_DEV(device)])
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATA_IOADDR_RID
 value|0
 end_define
@@ -1002,6 +966,16 @@ define|#
 directive|define
 name|ATA_IRQ_RID
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_DEV
+parameter_list|(
+name|device
+parameter_list|)
+value|((device == ATA_MASTER) ? 0 : 1)
 end_define
 
 begin_comment
@@ -1139,12 +1113,85 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure describing an ATA device */
+comment|/* structure describing an ATA/ATAPI device */
 end_comment
 
 begin_struct
 struct|struct
-name|ata_softc
+name|ata_device
+block|{
+name|struct
+name|ata_channel
+modifier|*
+name|channel
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+comment|/* unit number */
+define|#
+directive|define
+name|ATA_MASTER
+value|0x00
+define|#
+directive|define
+name|ATA_SLAVE
+value|0x10
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* device name */
+name|struct
+name|ata_params
+modifier|*
+name|param
+decl_stmt|;
+comment|/* ata param structure */
+name|void
+modifier|*
+name|driver
+decl_stmt|;
+comment|/* ptr to driver for device */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ATA_D_USE_CHS
+value|0x0001
+define|#
+directive|define
+name|ATA_D_DETACHING
+value|0x0002
+define|#
+directive|define
+name|ATA_D_MEDIA_CHANGED
+value|0x0004
+name|int
+name|mode
+decl_stmt|;
+comment|/* transfermode */
+name|int
+name|cmd
+decl_stmt|;
+comment|/* last cmd executed */
+name|void
+modifier|*
+name|result
+decl_stmt|;
+comment|/* misc data */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* structure describing an ATA channel */
+end_comment
+
+begin_struct
+struct|struct
+name|ata_channel
 block|{
 name|struct
 name|device
@@ -1153,9 +1200,9 @@ name|dev
 decl_stmt|;
 comment|/* device handle */
 name|int
-name|channel
+name|unit
 decl_stmt|;
-comment|/* channel on this controller */
+comment|/* channel number */
 name|struct
 name|resource
 modifier|*
@@ -1192,7 +1239,7 @@ name|intr_func
 function_decl|)
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1205,38 +1252,6 @@ name|u_int32_t
 name|alignment
 decl_stmt|;
 comment|/* dma engine min alignment */
-name|char
-modifier|*
-name|dev_name
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* name of device */
-name|struct
-name|ata_params
-modifier|*
-name|dev_param
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* ptr to devices params */
-name|void
-modifier|*
-name|dev_softc
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* ptr to devices softc's */
-name|int
-name|mode
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* transfer mode for devices */
 name|int
 name|flags
 decl_stmt|;
@@ -1261,6 +1276,22 @@ define|#
 directive|define
 name|ATA_DMA_ACTIVE
 value|0x10
+name|struct
+name|ata_device
+name|device
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* devices on this channel */
+define|#
+directive|define
+name|MASTER
+value|0x00
+define|#
+directive|define
+name|SLAVE
+value|0x01
 name|int
 name|devices
 decl_stmt|;
@@ -1315,10 +1346,6 @@ name|ATA_WAIT_MASK
 value|0x0007
 define|#
 directive|define
-name|ATA_USE_CHS
-value|0x0008
-define|#
-directive|define
 name|ATA_ACTIVE
 value|0x0010
 define|#
@@ -1357,6 +1384,38 @@ comment|/* currently running request */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* disk bay/drawer related */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_LED_OFF
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_LED_RED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_LED_GREEN
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_LED_ORANGE
+value|0x03
+end_define
 
 begin_comment
 comment|/* externs */
@@ -1414,7 +1473,7 @@ name|void
 name|ata_start
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1425,7 +1484,7 @@ name|void
 name|ata_reset
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1436,7 +1495,7 @@ name|int
 name|ata_reinit
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1447,10 +1506,8 @@ name|int
 name|ata_wait
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_device
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|u_int8_t
 parameter_list|)
@@ -1462,10 +1519,8 @@ name|int
 name|ata_command
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_device
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|u_int8_t
 parameter_list|,
@@ -1481,11 +1536,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ata_drawerleds
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ata_printf
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|,
 name|int
@@ -1509,14 +1577,38 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|int
+name|ata_prtdev
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|void
 name|ata_set_name
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_device
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|char
 modifier|*
@@ -1531,10 +1623,8 @@ name|void
 name|ata_free_name
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_device
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1635,7 +1725,7 @@ modifier|*
 name|ata_dmaalloc
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|,
 name|int
@@ -1648,7 +1738,7 @@ name|void
 name|ata_dmainit
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|,
 name|int
@@ -1667,7 +1757,7 @@ name|int
 name|ata_dmasetup
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|,
 name|int
@@ -1688,7 +1778,7 @@ name|void
 name|ata_dmastart
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|,
 name|int
@@ -1707,7 +1797,7 @@ name|int
 name|ata_dmastatus
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1718,7 +1808,7 @@ name|int
 name|ata_dmadone
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
