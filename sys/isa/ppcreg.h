@@ -107,6 +107,13 @@ name|SMC_37C935
 value|11
 end_define
 
+begin_define
+define|#
+directive|define
+name|NS_PC87303
+value|12
+end_define
+
 begin_comment
 comment|/*  * Parallel Port Chipset Type. SMC versus GENERIC (others)  */
 end_comment
