@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.66.2.1 1999/03/24 18:03:11 brian Exp $  *  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.72 1999/04/11 08:51:04 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -3826,22 +3826,6 @@ name|his_accmap
 operator|=
 name|accmap
 expr_stmt|;
-name|lcp
-operator|->
-name|want_accmap
-operator||=
-name|accmap
-expr_stmt|;
-comment|/* restrict our requested map */
-if|if
-condition|(
-name|lcp
-operator|->
-name|want_accmap
-operator|==
-name|accmap
-condition|)
-block|{
 name|memcpy
 argument_list|(
 name|dec
@@ -3859,46 +3843,6 @@ name|ackend
 operator|+=
 literal|6
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* NAK with what we now want */
-operator|*
-name|dec
-operator|->
-name|nakend
-operator|++
-operator|=
-operator|*
-name|cp
-expr_stmt|;
-operator|*
-name|dec
-operator|->
-name|nakend
-operator|++
-operator|=
-literal|6
-expr_stmt|;
-name|ua_htonl
-argument_list|(
-operator|&
-name|lcp
-operator|->
-name|want_accmap
-argument_list|,
-name|dec
-operator|->
-name|nakend
-argument_list|)
-expr_stmt|;
-name|dec
-operator|->
-name|nakend
-operator|+=
-literal|4
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|MODE_NAK
@@ -3906,27 +3850,13 @@ case|:
 name|lcp
 operator|->
 name|want_accmap
-operator||=
+operator|=
 name|accmap
 expr_stmt|;
 break|break;
 case|case
 name|MODE_REJ
 case|:
-if|if
-condition|(
-name|lcp
-operator|->
-name|want_accmap
-condition|)
-name|log_Printf
-argument_list|(
-name|LogWARN
-argument_list|,
-literal|"Peer is rejecting our ACCMAP.... bad news !\n"
-argument_list|)
-expr_stmt|;
-else|else
 name|lcp
 operator|->
 name|his_reject

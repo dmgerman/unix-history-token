@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.47 1999/02/20 01:12:45 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.48 1999/04/01 11:05:22 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -3118,6 +3118,45 @@ name|lanman
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bundle_Phase
+argument_list|(
+name|p
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|)
+operator|!=
+name|PHASE_NETWORK
+operator|&&
+name|bundle_Phase
+argument_list|(
+name|p
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|)
+operator|!=
+name|PHASE_AUTHENTICATE
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Unexpected chap input - dropped !\n"
+argument_list|)
+expr_stmt|;
+name|mbuf_Free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|(
