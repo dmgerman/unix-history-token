@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.11 85/02/16"
+literal|"@(#)rcp.c	4.12 85/02/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -176,6 +182,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|struct
+name|servent
+modifier|*
+name|sp
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*VARARGS*/
 end_comment
@@ -242,6 +256,35 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"shell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rcp: shell/tcp: unknown service\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|setpwent
 argument_list|()
 expr_stmt|;
@@ -754,7 +797,9 @@ argument_list|(
 operator|&
 name|host
 argument_list|,
-name|IPPORT_CMDSERVER
+name|sp
+operator|->
+name|s_port
 argument_list|,
 name|pwd
 operator|->
@@ -976,7 +1021,9 @@ argument_list|(
 operator|&
 name|host
 argument_list|,
-name|IPPORT_CMDSERVER
+name|sp
+operator|->
+name|s_port
 argument_list|,
 name|pwd
 operator|->
