@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.11	82/06/07	*/
-end_comment
-
-begin_comment
-comment|/* merged into kernel:	@(#)iget.c 2.2 4/8/82 */
+comment|/*	ufs_inode.c	4.12	82/06/10	*/
 end_comment
 
 begin_include
@@ -700,19 +696,6 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|ILOCK
-condition|)
-name|panic
-argument_list|(
-literal|"irele"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ip

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.7	82/06/07	*/
+comment|/*	kern_resource.c	4.8	82/06/10	*/
 end_comment
 
 begin_include
@@ -121,12 +121,7 @@ operator|=
 name|acctp
 condition|)
 block|{
-name|ilock
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-name|iput
+name|irele
 argument_list|(
 name|ip
 argument_list|)

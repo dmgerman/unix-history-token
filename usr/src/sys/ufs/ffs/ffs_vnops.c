@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	4.25	82/06/07	*/
+comment|/*	ffs_vnops.c	4.26	82/06/10	*/
 end_comment
 
 begin_ifdef
@@ -221,20 +221,12 @@ condition|(
 operator|*
 name|ipp
 condition|)
-block|{
-name|ilock
+name|irele
 argument_list|(
 operator|*
 name|ipp
 argument_list|)
 expr_stmt|;
-name|iput
-argument_list|(
-operator|*
-name|ipp
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|ipp
 operator|=
@@ -545,9 +537,14 @@ name|u
 operator|.
 name|u_error
 condition|)
-goto|goto
-name|out
-goto|;
+block|{
+name|iput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|trf
@@ -642,13 +639,7 @@ operator|--
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|ip
-operator|!=
-name|NULL
-condition|)
-name|iput
+name|irele
 argument_list|(
 name|ip
 argument_list|)
@@ -1022,7 +1013,7 @@ expr_stmt|;
 block|}
 name|out1
 label|:
-name|iput
+name|irele
 argument_list|(
 name|ip
 argument_list|)
@@ -1271,6 +1262,11 @@ name|bn
 decl_stmt|,
 name|base
 decl_stmt|;
+name|int
+name|unlinkingdot
+init|=
+literal|0
+decl_stmt|;
 name|pp
 operator|=
 name|namei
@@ -1310,6 +1306,9 @@ expr_stmt|;
 name|ip
 operator|->
 name|i_count
+operator|++
+expr_stmt|;
+name|unlinkingdot
 operator|++
 expr_stmt|;
 block|}
@@ -1589,6 +1588,16 @@ name|ICHG
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|unlinkingdot
+condition|)
+name|irele
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+else|else
 name|iput
 argument_list|(
 name|ip
