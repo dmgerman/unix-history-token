@@ -2295,7 +2295,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: boot0cfg [-Bv] [-b boot0] [-d drive] [-f file] [-m mask]"
 argument_list|,
-literal|"                [-o options] [-t ticks] disk"
+literal|"                [-o options] [-s slice] [-t ticks] disk"
 argument_list|)
 expr_stmt|;
 name|exit
