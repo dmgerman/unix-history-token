@@ -286,10 +286,15 @@ name|struct
 name|vmspace
 name|vmspace
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BAD_JHB_NO_COOKIE
 name|struct
 name|procsig
 name|procsig
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|pstats
 name|pstats
@@ -794,6 +799,9 @@ name|proc
 operator|.
 name|p_vmspace
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BAD_JHB_NO_COOKIE
 if|if
 condition|(
 name|proc
@@ -860,6 +868,8 @@ operator|.
 name|ps_sigcatch
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
