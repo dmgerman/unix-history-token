@@ -2040,6 +2040,7 @@ if|if
 condition|(
 name|SO
 operator|&&
+operator|!
 operator|(
 name|nsp
 operator|->
@@ -2048,6 +2049,7 @@ operator|&
 name|__STANDOUT
 operator|)
 operator|!=
+operator|!
 operator|(
 name|curscr
 operator|->
