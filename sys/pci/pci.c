@@ -3996,7 +3996,7 @@ name|pci_compat_methods
 expr_stmt|;
 name|driver
 operator|->
-name|softc
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(

@@ -197,87 +197,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Compiled device methods.  */
-end_comment
-
-begin_struct
-struct|struct
-name|device_ops
-block|{
-name|int
-name|maxoffset
-decl_stmt|;
-name|devop_t
-name|methods
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Helpers for device method wrappers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVOPDESC
-parameter_list|(
-name|OP
-parameter_list|)
-value|(&OP##_##desc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVOPS
-parameter_list|(
-name|DEV
-parameter_list|)
-value|(DEV->ops)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVOPMETH
-parameter_list|(
-name|DEV
-parameter_list|,
-name|OP
-parameter_list|)
-define|\
-value|((DEVOPDESC(OP)->offset>= DEVOPS(DEV)->maxoffset)	\ 	 ? DEVOPDESC(OP)->deflt					\ 	 : DEVOPS(DEV)->methods[DEVOPDESC(OP)->offset])
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRVOPS
-parameter_list|(
-name|DRV
-parameter_list|)
-value|((struct device_ops *)DRV->ops)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRVOPMETH
-parameter_list|(
-name|DRV
-parameter_list|,
-name|OP
-parameter_list|)
-define|\
-value|((DEVOPDESC(OP)->offset>= DRVOPS(DRV)->maxoffset)	\ 	 ? DEVOPDESC(OP)->deflt					\ 	 : DRVOPS(DRV)->methods[DEVOPDESC(OP)->offset])
-end_define
-
-begin_comment
 comment|/*  * Implementation of device.  */
 end_comment
 
@@ -285,6 +204,9 @@ begin_struct
 struct|struct
 name|device
 block|{
+comment|/*      * A device is a kernel object. The first field must be the      * current ops table for the object.      */
+name|KOBJ_FIELDS
+expr_stmt|;
 comment|/*      * Device hierarchy.      */
 name|TAILQ_ENTRY
 argument_list|(
@@ -301,9 +223,6 @@ name|children
 decl_stmt|;
 comment|/* list of subordinate devices */
 comment|/*      * Details of this device.      */
-name|device_ops_t
-name|ops
-decl_stmt|;
 name|driver_t
 modifier|*
 name|driver

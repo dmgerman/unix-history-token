@@ -27,6 +27,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/kobj.h>
+end_include
+
 begin_comment
 comment|/*  * Forward declarations  */
 end_comment
@@ -51,37 +57,18 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|device_method
-name|device_method_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
 name|devclass
 modifier|*
 name|devclass_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|struct
-name|device_ops
-modifier|*
-name|device_ops_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|device_op_desc
-modifier|*
-name|device_op_desc_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|device_method_t
+value|kobj_method_t
+end_define
 
 begin_typedef
 typedef|typedef
@@ -144,46 +131,15 @@ end_typedef
 
 begin_struct
 struct|struct
-name|device_method
-block|{
-name|device_op_desc_t
-name|desc
-decl_stmt|;
-name|devop_t
-name|func
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|driver
 block|{
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* driver name */
-name|device_method_t
-modifier|*
-name|methods
-decl_stmt|;
-comment|/* method table */
-name|size_t
-name|softc
-decl_stmt|;
-comment|/* size of device softc struct */
+name|KOBJ_CLASS_FIELDS
+expr_stmt|;
 name|void
 modifier|*
 name|priv
 decl_stmt|;
 comment|/* driver private data */
-name|device_ops_t
-name|ops
-decl_stmt|;
-comment|/* compiled method table */
 name|int
 name|refs
 decl_stmt|;
@@ -1879,12 +1835,7 @@ begin_define
 define|#
 directive|define
 name|DEVMETHOD
-parameter_list|(
-name|NAME
-parameter_list|,
-name|FUNC
-parameter_list|)
-value|{&NAME##_desc, (devop_t) FUNC }
+value|KOBJMETHOD
 end_define
 
 begin_comment
