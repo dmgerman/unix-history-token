@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.27 2002/05/22 04:06:57 marka Exp $"
+literal|"$Id: getinfo.c,v 8.29.8.2 2003/06/02 09:24:39 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,9 +262,7 @@ decl_stmt|;
 name|u_char
 name|qb2
 index|[
-literal|64
-operator|*
-literal|1024
+name|NS_MAXMSG
 index|]
 decl_stmt|;
 block|}
@@ -363,6 +361,9 @@ name|eom
 decl_stmt|,
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 name|char
 modifier|*
@@ -398,8 +399,6 @@ decl_stmt|,
 name|arcount
 decl_stmt|,
 name|nscount
-decl_stmt|,
-name|buflen
 decl_stmt|;
 name|int
 name|origClass
@@ -639,8 +638,10 @@ name|bp
 operator|=
 name|hostbuf
 expr_stmt|;
-name|buflen
+name|ep
 operator|=
+name|hostbuf
+operator|+
 sizeof|sizeof
 argument_list|(
 name|hostbuf
@@ -862,7 +863,9 @@ operator|*
 operator|)
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1000,10 +1003,6 @@ name|bp
 operator|+=
 name|s
 expr_stmt|;
-name|buflen
-operator|-=
-name|s
-expr_stmt|;
 continue|continue;
 block|}
 elseif|else
@@ -1033,7 +1032,9 @@ operator|*
 operator|)
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1220,7 +1221,7 @@ operator|+=
 operator|(
 operator|(
 operator|(
-name|u_long
+name|size_t
 operator|)
 name|bp
 operator|)
@@ -2073,7 +2074,9 @@ operator|*
 operator|)
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2216,7 +2219,9 @@ operator|*
 operator|)
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2525,7 +2530,9 @@ operator|*
 operator|)
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -5034,7 +5041,7 @@ argument_list|,
 operator|(
 name|p
 index|[
-literal|4
+literal|6
 index|]
 operator|>>
 literal|4
@@ -5334,7 +5341,7 @@ argument_list|,
 operator|(
 name|p
 index|[
-literal|4
+literal|6
 index|]
 operator|>>
 literal|4
@@ -5923,7 +5930,6 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|AddrInfo
-operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
