@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rm.c,v 1.17 1997/08/07 15:37:47 steve Exp $"
+literal|"$Id: rm.c,v 1.18 1997/08/07 21:37:39 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,9 +398,18 @@ name|argc
 operator|<
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|fflag
+condition|)
+return|return
+literal|0
+return|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 name|checkdot
 argument_list|(
 name|argv
