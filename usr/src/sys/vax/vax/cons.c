@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.3	%G%	*/
+comment|/*	cons.c	4.4	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Vax console driver and floppy interface  */
+comment|/*  * Vax console driver and floppy interface  *  * WE AVOID USE THE READY BIT IN TXCS BECAUSE IT DOESN'T  * WORK ON AN 11/750 WITH AN RDM PLUGGED IN.  */
 end_comment
 
 begin_include
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mx.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/cpu.h"
 end_include
 
 begin_comment
@@ -483,9 +489,13 @@ condition|)
 block|{
 if|#
 directive|if
-name|VAX
+name|VAX780
+if|if
+condition|(
+name|cpu
 operator|==
-literal|780
+name|VAX_780
+condition|)
 name|cnrfl
 argument_list|(
 name|c
@@ -614,14 +624,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|750
-end_if
-
 begin_decl_stmt
 name|int
 name|consdone
@@ -629,11 +631,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Got a level-20 transmission interrupt -  * the LSI wants another character.  First,  * see if we can send something to the typewriter.  * If not, try the floppy.  */
@@ -664,16 +661,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-if|#
-directive|if
-name|VAX
-operator|==
-literal|750
 name|consdone
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 name|tp
 operator|=
 operator|&
@@ -715,11 +705,13 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 if|if
 condition|(
+name|vax
+operator|==
+name|VAX_780
+operator|&&
 operator|(
 name|tp
 operator|->
@@ -855,11 +847,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-if|#
-directive|if
-name|VAX
-operator|==
-literal|750
 if|if
 condition|(
 name|consdone
@@ -867,24 +854,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|mfpr
-argument_list|(
-name|TXCS
-argument_list|)
-operator|&
-name|TXCS_RDY
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -902,17 +871,10 @@ operator|>=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|VAX
-operator|==
-literal|750
 name|consdone
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|tp
