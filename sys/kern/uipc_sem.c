@@ -4669,6 +4669,9 @@ index|]
 operator|=
 name|ks
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -4714,6 +4717,9 @@ index|]
 operator|=
 name|ks
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -4727,8 +4733,6 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|i
-operator|+
-literal|1
 operator|==
 name|count
 argument_list|,
