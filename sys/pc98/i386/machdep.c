@@ -2111,18 +2111,6 @@ argument_list|,
 name|gd_allcpu
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-literal|"sched lock"
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2204,6 +2192,11 @@ decl_stmt|;
 name|p
 operator|=
 name|curproc
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|psp
 operator|=
@@ -2315,6 +2308,11 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * grow_stack() will return 0 if *fp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
 if|if
 condition|(
@@ -2349,6 +2347,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SIGACTION
 argument_list|(
 name|p
@@ -2383,6 +2386,11 @@ operator|->
 name|p_sigmask
 argument_list|,
 name|SIGILL
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|psignal
@@ -2445,6 +2453,11 @@ operator|->
 name|sf_siginfo
 operator|.
 name|si_sc
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2528,6 +2541,11 @@ operator|=
 name|catcher
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Save most if not all of trap frame. */
 name|sf
 operator|.
@@ -3075,6 +3093,11 @@ name|p
 operator|=
 name|curproc
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|psp
 operator|=
 name|p
@@ -3093,6 +3116,11 @@ name|sig
 argument_list|)
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|osendsig
 argument_list|(
 name|catcher
@@ -3318,6 +3346,11 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * grow_stack() will return 0 if *sfp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
 if|if
 condition|(
@@ -3366,6 +3399,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SIGACTION
 argument_list|(
 name|p
@@ -3400,6 +3438,11 @@ operator|->
 name|p_sigmask
 argument_list|,
 name|SIGILL
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|psignal
@@ -3460,6 +3503,11 @@ operator|&
 name|sfp
 operator|->
 name|sf_uc
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3558,6 +3606,11 @@ operator|=
 name|catcher
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we're a vm86 process, we want to save the segment registers. 	 * We also change eflags to be our emulated eflags, not the actual 	 * eflags. 	 */
 if|if
 condition|(
@@ -4229,6 +4282,11 @@ name|scp
 operator|->
 name|sc_isp
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -4284,6 +4342,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|regs
@@ -4779,6 +4842,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -4833,6 +4901,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -9256,6 +9329,71 @@ operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|proc0
+operator|.
+name|p_heldmtx
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|proc0
+operator|.
+name|p_contested
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+literal|"sched lock"
+argument_list|,
+name|MTX_SPIN
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 	 * Interrupts can happen very early, so initialize imen_mtx here, rather 	 * than in init_locks(). 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|imen_mtx
+argument_list|,
+literal|"imen"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Giant is used early for at least debugger traps and unexpected traps. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+literal|"Giant"
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* make ldt memory segments */
 comment|/* 	 * The data segment limit must not cover the user area because we 	 * don't want the user area to be writable in copyout() etc. (page 	 * level protection is lost in kernel mode on 386's).  Also, we 	 * don't want the user area to be writable directly (page level 	 * protection of the user area is not available on 486's with 	 * CR0_WP set, because there is no user-read/kernel-write mode). 	 * 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
 define|#
@@ -9886,19 +10024,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Giant is used early for at least debugger traps and unexpected traps. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-literal|"Giant"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -11760,11 +11885,10 @@ expr_stmt|;
 comment|/* 	 * Don't let a process set a breakpoint that is not within the 	 * process's address space.  If a process could do this, it 	 * could halt the system by setting a breakpoint in the kernel 	 * (if ddb was enabled).  Thus, we need to check to make sure 	 * that no breakpoints are being enabled for addresses outside 	 * process's address space, unless, perhaps, we were called by 	 * uid 0. 	 * 	 * XXX - what about when the watched area of the user's 	 * address space is written into from within the kernel 	 * ... wouldn't that still cause a breakpoint to be generated 	 * from within kernel mode? 	 */
 if|if
 condition|(
+name|suser
+argument_list|(
 name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
+argument_list|)
 operator|!=
 literal|0
 condition|)
