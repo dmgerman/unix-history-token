@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jobs.c	5.1 (Berkeley) %G%"
+literal|"@(#)jobs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -581,6 +581,11 @@ argument_list|(
 name|SIGTTOU
 argument_list|)
 expr_stmt|;
+name|setsignal
+argument_list|(
+name|SIGTTIN
+argument_list|)
+expr_stmt|;
 name|setpgrp
 argument_list|(
 literal|0
@@ -635,6 +640,11 @@ expr_stmt|;
 name|setsignal
 argument_list|(
 name|SIGTTOU
+argument_list|)
+expr_stmt|;
+name|setsignal
+argument_list|(
+name|SIGTTIN
 argument_list|)
 expr_stmt|;
 block|}
