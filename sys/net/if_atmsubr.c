@@ -1074,9 +1074,14 @@ init|=
 name|ETHERTYPE_IP
 decl_stmt|;
 comment|/* default */
+ifdef|#
+directive|ifdef
+name|NATM
 name|int
 name|s
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
