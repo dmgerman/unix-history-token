@@ -4,30 +4,8 @@ comment|/*-  * Copyright (c) 2000 Mark R V Murray  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/* #define ENTROPYSOURCE nn	   entropy sources (actually classes)  *					This is properly defined in  *					an enum in sys/random.h  */
+comment|/* This contains Yarrow-specific declarations.  * See http://www.counterpane.com/yarrow.html  */
 end_comment
-
-begin_comment
-comment|/* The ring size _MUST_ be a power of 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HARVEST_RING_SIZE
-value|1024
-end_define
-
-begin_comment
-comment|/* harvest ring buffer size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HARVEST_RING_MASK
-value|(HARVEST_RING_SIZE - 1)
-end_define
 
 begin_define
 define|#
@@ -38,17 +16,6 @@ end_define
 
 begin_comment
 comment|/* max value for Pt/t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HARVESTSIZE
-value|16
-end_define
-
-begin_comment
-comment|/* max size of each harvested entropy unit */
 end_comment
 
 begin_define
@@ -65,116 +32,8 @@ name|SLOW
 value|1
 end_define
 
-begin_function_decl
-name|int
-name|random_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|random_deinit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|random_init_harvester
-parameter_list|(
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|u_int64_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|,
-name|enum
-name|esource
-parameter_list|)
-parameter_list|,
-name|u_int
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|random_deinit_harvester
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|random_set_wakeup_exit
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|random_reseed
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int
-name|read_random_real
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|write_random
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/* This is the beastie that needs protecting. It contains all of the  * state that we are excited about.  */
+comment|/* This is the beastie that needs protecting. It contains all of the  * state that we are excited about.  * Exactly one will be instantiated.  */
 end_comment
 
 begin_struct
@@ -183,22 +42,25 @@ name|random_state
 block|{
 name|u_int64_t
 name|counter
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* C */
+comment|/* C - 256 bits */
 name|struct
 name|yarrowkey
 name|key
 decl_stmt|;
 comment|/* K */
-name|int
+name|u_int
 name|gengateinterval
 decl_stmt|;
 comment|/* Pg */
-name|int
+name|u_int
 name|bins
 decl_stmt|;
 comment|/* Pt/t */
-name|int
+name|u_int
 name|outputblocks
 decl_stmt|;
 comment|/* count output blocks for gates */
@@ -242,26 +104,10 @@ literal|2
 index|]
 struct|;
 comment|/* pool[0] is fast, pool[1] is slow */
-name|int
+name|u_int
 name|which
 decl_stmt|;
-comment|/* toggle - shows the current insertion pool */
-name|int
-name|seeded
-decl_stmt|;
-comment|/* 0 causes blocking 1 allows normal output */
-name|struct
-name|selinfo
-name|rsel
-decl_stmt|;
-comment|/* For poll(2) */
-name|u_char
-name|raw
-index|[
-name|HARVESTSIZE
-index|]
-decl_stmt|;
-comment|/* Raw buffer for checking */
+comment|/* toggle - sets the current insertion pool */
 block|}
 struct|;
 end_struct

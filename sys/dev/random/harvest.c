@@ -66,19 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<crypto/blowfish/blowfish.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/hash.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/yarrow.h>
+file|<dev/random/randomdev.h>
 end_include
 
 begin_function_decl
