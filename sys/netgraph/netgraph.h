@@ -617,7 +617,7 @@ block|{
 name|u_int32_t
 name|version
 decl_stmt|;
-comment|/* must equal NG_VERSION */
+comment|/* must equal NG_API_VERSION */
 specifier|const
 name|char
 modifier|*
@@ -690,6 +690,17 @@ comment|/* number of instances */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * This defines the in-kernel binary interface version.  * It is possible to change this but leave the external message  * API the same. Each type also has it's own cookies for versioning as well.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_ABI_VERSION
+value|5
+end_define
 
 begin_comment
 comment|/* Send data packet with meta-data */

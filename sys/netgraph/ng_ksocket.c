@@ -2083,7 +2083,7 @@ name|ng_type
 name|ng_ksocket_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_KSOCKET_NODE_TYPE
 block|,

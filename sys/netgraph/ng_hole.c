@@ -74,7 +74,7 @@ name|ng_type
 name|typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_HOLE_NODE_TYPE
 block|,

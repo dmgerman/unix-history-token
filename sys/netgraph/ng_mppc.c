@@ -555,7 +555,7 @@ name|ng_type
 name|ng_mppc_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_MPPC_NODE_TYPE
 block|,

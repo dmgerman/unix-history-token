@@ -309,7 +309,7 @@ name|ng_type
 name|ng_tee_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_TEE_NODE_TYPE
 block|,

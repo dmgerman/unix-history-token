@@ -909,7 +909,7 @@ name|ng_type
 name|ng_pptpgre_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_PPTPGRE_NODE_TYPE
 block|,
@@ -1471,6 +1471,8 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|done
+label|:
 if|if
 condition|(
 name|rptr
@@ -1492,8 +1494,6 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 name|FREE
 argument_list|(
 name|msg

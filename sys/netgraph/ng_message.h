@@ -100,7 +100,7 @@ block|{
 name|u_char
 name|version
 decl_stmt|;
-comment|/* must == NG_VERSION */
+comment|/*  == NGM_VERSION */
 name|u_char
 name|spare
 decl_stmt|;
@@ -163,7 +163,7 @@ value|{			\ 	{							\ 	  { "version",&ng_parse_uint8_type	},	\ 	  { "spare",&ng
 end_define
 
 begin_comment
-comment|/* Negraph type binary compatibility field */
+comment|/*  * Netgraph message header compatibility field  * Interfaces within the kernel are defined by a different   * value (see NG_ABI_VERSION in netgraph.g)  */
 end_comment
 
 begin_define

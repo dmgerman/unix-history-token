@@ -1095,7 +1095,7 @@ name|ng_type
 name|mntypestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_MN_NODE_TYPE
 block|,
@@ -1430,7 +1430,7 @@ name|struct
 name|ng_mesg
 modifier|*
 modifier|*
-name|resp
+name|rptr
 parameter_list|,
 name|hook_p
 name|lasthook
@@ -1440,6 +1440,13 @@ name|struct
 name|softc
 modifier|*
 name|sc
+decl_stmt|;
+name|struct
+name|ng_mesg
+modifier|*
+name|resp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|schan
@@ -1471,6 +1478,11 @@ name|typecookie
 operator|!=
 name|NGM_GENERIC_COOKIE
 operator|||
+name|rptr
+operator|==
+name|NULL
+operator|||
+comment|/* temporary */
 name|msg
 operator|->
 name|header
@@ -1482,10 +1494,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|resp
+name|rptr
 condition|)
 operator|*
-name|resp
+name|rptr
 operator|=
 name|NULL
 expr_stmt|;
@@ -1504,7 +1516,6 @@ return|;
 block|}
 name|NG_MKRESPONSE
 argument_list|(
-operator|*
 name|resp
 argument_list|,
 name|msg
@@ -1522,7 +1533,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|resp
 operator|==
 name|NULL
@@ -1547,10 +1557,7 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|(
-operator|*
 name|resp
-operator|)
 operator|->
 name|data
 expr_stmt|;
@@ -1994,10 +2001,7 @@ name|tx_pending
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-operator|*
 name|resp
-operator|)
 operator|->
 name|header
 operator|.
@@ -2007,6 +2011,29 @@ name|pos
 operator|+
 literal|1
 expr_stmt|;
+comment|/* Take care of synchronous response, if any */
+if|if
+condition|(
+name|rptr
+condition|)
+operator|*
+name|rptr
+operator|=
+name|resp
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|resp
+condition|)
+name|FREE
+argument_list|(
+name|resp
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+comment|/* Will eventually send the hard way */
 name|FREE
 argument_list|(
 name|msg

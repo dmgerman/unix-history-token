@@ -879,7 +879,7 @@ name|ng_type
 name|ng_bridge_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_BRIDGE_NODE_TYPE
 block|,

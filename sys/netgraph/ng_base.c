@@ -3078,19 +3078,25 @@ decl_stmt|;
 comment|/* Check version and type name fields */
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
 name|version
 operator|!=
-name|NG_VERSION
+name|NG_ABI_VERSION
+operator|)
 operator|||
+operator|(
 name|namelen
 operator|==
 literal|0
+operator|)
 operator|||
+operator|(
 name|namelen
 operator|>
 name|NG_TYPELEN
+operator|)
 condition|)
 block|{
 name|TRAP_ERROR
@@ -5914,6 +5920,20 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+comment|/* Check response pointer */
+if|if
+condition|(
+name|resp
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 comment|/* Get a response message with lots of room */
 name|NG_MKRESPONSE
 argument_list|(
@@ -6349,6 +6369,20 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* Check response pointer */
+if|if
+condition|(
+name|resp
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 comment|/* Get a response message with lots of room */
 name|NG_MKRESPONSE
 argument_list|(

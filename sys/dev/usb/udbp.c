@@ -500,7 +500,7 @@ name|ng_type
 name|ng_udbp_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_UDBP_NODE_TYPE
 block|,

@@ -718,7 +718,7 @@ name|ng_type
 name|ng_vjc_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_VJC_NODE_TYPE
 block|,

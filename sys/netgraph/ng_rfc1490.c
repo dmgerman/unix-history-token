@@ -242,7 +242,7 @@ name|ng_type
 name|typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_RFC1490_NODE_TYPE
 block|,

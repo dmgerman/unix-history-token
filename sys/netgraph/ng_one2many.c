@@ -424,7 +424,7 @@ name|ng_type
 name|ng_one2many_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_ONE2MANY_NODE_TYPE
 block|,
