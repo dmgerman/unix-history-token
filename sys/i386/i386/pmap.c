@@ -5108,13 +5108,6 @@ argument_list|,
 name|PG_ZERO
 argument_list|)
 expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|m
-argument_list|,
-name|PG_MAPPED
-argument_list|)
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
