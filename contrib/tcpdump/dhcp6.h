@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/dhcp6.h,v 1.4 2000/12/17 23:07:48 guy Exp $ (LBL) */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 1998 and 1999 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * draft-ietf-dhc-dhcpv6-14  */
+comment|/*  * draft-ietf-dhc-dhcpv6-15  */
 end_comment
 
 begin_ifndef
@@ -337,13 +341,47 @@ define|#
 directive|define
 name|DH6SOL_CLOSE
 value|0x80
-name|u_int8_t
-name|dh6sol_pad
+define|#
+directive|define
+name|DH6SOL_PREFIX
+value|0x40
+comment|/* XXX: solicit-ID is a 9-bit field...ugly! */
+define|#
+directive|define
+name|DH6SOL_SOLICIT_ID_MASK
+value|0x01ff
+define|#
+directive|define
+name|DH6SOL_SOLICIT_ID_SHIFT
+value|0
+define|#
+directive|define
+name|DH6SOL_SOLICIT_ID
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)& DH6SOL_SOLICIT_ID_MASK)>> DH6SOL_SOLICIT_ID_SHIFT)
+define|#
+directive|define
+name|DH6SOL_SOLICIT_PLEN_MASK
+value|0xfe00
+define|#
+directive|define
+name|DH6SOL_SOLICIT_PLEN_SHIFT
+value|9
+define|#
+directive|define
+name|DH6SOL_SOLICIT_PLEN
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)& DH6SOL_SOLICIT_PLEN_MASK)>> DH6SOL_SOLICIT_PLEN_SHIFT)
+name|u_int16_t
+name|dh6sol_plen_id
 decl_stmt|;
-name|u_int8_t
-name|dh6sol_prefixsiz
-decl_stmt|;
-comment|/* prefix-size */
+comment|/* prefix-len and solict-ID */
 name|struct
 name|in6_addr
 name|dh6sol_cliaddr
@@ -358,10 +396,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* NOTE: dhcpv6-12 and dhcpv6-13+n are not compatible at all */
-end_comment
-
 begin_struct
 struct|struct
 name|dhcp6_advert
@@ -371,15 +405,13 @@ name|dh6adv_msgtype
 decl_stmt|;
 comment|/* DH6_ADVERT */
 name|u_int8_t
-name|dh6adv_flags
+name|dh6adv_rsv_id
 decl_stmt|;
-define|#
-directive|define
-name|DH6ADV_SERVPRESENT
-value|0x80
+comment|/* reserved and uppermost bit of ID */
 name|u_int8_t
-name|dh6adv_pad
+name|dh6adv_solcit_id
 decl_stmt|;
+comment|/* lower 8 bits of solicit-ID */
 name|u_int8_t
 name|dh6adv_pref
 decl_stmt|;
@@ -387,7 +419,7 @@ name|struct
 name|in6_addr
 name|dh6adv_cliaddr
 decl_stmt|;
-comment|/* client's lladdr */
+comment|/* client's link-local addr */
 name|struct
 name|in6_addr
 name|dh6adv_relayaddr
@@ -420,12 +452,8 @@ name|DH6REQ_CLOSE
 value|0x80
 define|#
 directive|define
-name|DH6REQ_SERVPRESENT
-value|0x40
-define|#
-directive|define
 name|DH6REQ_REBOOT
-value|0x20
+value|0x40
 name|u_int16_t
 name|dh6req_xid
 decl_stmt|;
@@ -440,7 +468,11 @@ name|in6_addr
 name|dh6req_relayaddr
 decl_stmt|;
 comment|/* relay agent's (non-ll) addr */
-comment|/* struct in6_addr dh6req_serveraddr; optional: server's addr */
+name|struct
+name|in6_addr
+name|dh6req_serveraddr
+decl_stmt|;
+comment|/* server's addr */
 comment|/* extensions */
 block|}
 struct|;
@@ -459,7 +491,7 @@ name|dh6rep_flagandstat
 decl_stmt|;
 define|#
 directive|define
-name|DH6REP_CLIPRESENT
+name|DH6REP_RELAYPRESENT
 value|0x80
 define|#
 directive|define
@@ -469,11 +501,20 @@ name|u_int16_t
 name|dh6rep_xid
 decl_stmt|;
 comment|/* transaction-ID */
-comment|/* struct in6_addr dh6rep_cliaddr;	optional: client's lladdr */
+name|struct
+name|in6_addr
+name|dh6rep_cliaddr
+decl_stmt|;
+comment|/* client's lladdr */
+comment|/* struct in6_addr dh6rep_relayaddr; optional: relay address */
 comment|/* extensions */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* XXX: followings are based on older drafts */
+end_comment
 
 begin_struct
 struct|struct

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/* YIPS @(#)$Id: ipsec_doi.h,v 1.1 1999/10/30 05:11:09 itojun Exp $ */
+comment|/* YIPS @(#)$Id: ipsec_doi.h,v 1.4 2000/10/04 03:00:29 itojun Exp $ */
 end_comment
 
 begin_comment
@@ -117,6 +117,27 @@ name|IPSECDOI_AH_DES
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPSECDOI_AH_SHA2_256
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECDOI_AH_SHA2_384
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECDOI_AH_SHA2_512
+value|7
+end_define
+
 begin_comment
 comment|/* 4.4.1 IPSEC Security Protocol Identifiers */
 end_comment
@@ -209,6 +230,20 @@ name|IPSECDOI_ESP_NULL
 value|11
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPSECDOI_ESP_RIJNDAEL
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECDOI_ESP_AES
+value|12
+end_define
+
 begin_comment
 comment|/* 4.4.1 IPSEC Security Protocol Identifiers */
 end_comment
@@ -243,13 +278,6 @@ define|#
 directive|define
 name|IPSECDOI_IPCOMP_LZS
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPSECDOI_IPCOMP_V42BIS
-value|4
 end_define
 
 begin_comment
@@ -361,6 +389,10 @@ begin_comment
 comment|/* B */
 end_comment
 
+begin_comment
+comment|/* 0 means not to use authentication. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -390,7 +422,11 @@ value|4
 end_define
 
 begin_comment
-comment|/* 	When negotiating ESP without authentication, the Auth 	Algorithm attribute MUST NOT be included in the proposal. 	When negotiating ESP without confidentiality, the Auth 	Algorithm attribute MUST be included in the proposal and 	the ESP transform ID must be ESP_NULL. 	*/
+comment|/*RFC-1826(Key/Pad/Data/Key)*/
+end_comment
+
+begin_comment
+comment|/* 	 * When negotiating ESP without authentication, the Auth 	 * Algorithm attribute MUST NOT be included in the proposal. 	 * When negotiating ESP without confidentiality, the Auth 	 * Algorithm attribute MUST be included in the proposal and 	 * the ESP transform ID must be ESP_NULL. 	*/
 end_comment
 
 begin_define
@@ -609,77 +645,6 @@ directive|define
 name|IPSECDOI_NTYPE_INITIAL_CONTACT
 value|24578
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* ipsec sa structure */
-end_comment
-
-begin_comment
-unit|struct ipsec_sa { 	u_int8_t  proto_id;
-comment|/* Protocol id */
-end_comment
-
-begin_comment
-unit|vchar_t *spi;
-comment|/* spi to receive, network byte order */
-end_comment
-
-begin_comment
-unit|vchar_t *spi_p;
-comment|/* spi to send, network byte order */
-end_comment
-
-begin_comment
-unit|vchar_t *keymat;
-comment|/* KEYMAT */
-end_comment
-
-begin_comment
-unit|u_int8_t  t_id;
-comment|/* transform id */
-end_comment
-
-begin_comment
-unit|u_int8_t  enc_t;
-comment|/* type of cipher */
-end_comment
-
-begin_comment
-unit|u_int8_t  mode_t;
-comment|/* tunnel or transport */
-end_comment
-
-begin_comment
-unit|u_int8_t  hash_t;
-comment|/* type of hash */
-end_comment
-
-begin_comment
-unit|u_int8_t  life_t;
-comment|/* type of duration of lifetime */
-end_comment
-
-begin_comment
-unit|u_int32_t ldur;
-comment|/* life duration */
-end_comment
-
-begin_comment
-unit|u_int8_t  dhgrp;
-comment|/* DH; group */
-end_comment
-
-begin_endif
-unit|struct ipsec_sa *next; };
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lcp.c,v 1.3 1999/12/15 07:55:42 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lcp.c,v 1.9 2000/10/06 04:23:12 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,63 +60,11 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MEMORY_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -847,6 +795,9 @@ name|printf
 argument_list|(
 literal|"%#x"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|ntohl
 argument_list|(
 operator|*
@@ -947,6 +898,9 @@ name|printf
 argument_list|(
 literal|" magic=%#x"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|ntohl
 argument_list|(
 operator|*

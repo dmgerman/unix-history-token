@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf6.h,v 1.3 2000/12/17 23:07:50 guy Exp $ (LBL) */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
 end_comment
 
@@ -419,28 +423,28 @@ value|24
 end_define
 
 begin_comment
-comment|/* asla_tosmetric breakdown	*/
+comment|/* asla_metric */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ASLA_FLAG_EXTERNAL
-value|0x80000000
+value|0x04000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASLA_MASK_TOS
-value|0x7f000000
+name|ASLA_FLAG_FWDADDR
+value|0x02000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASLA_SHIFT_TOS
-value|24
+name|ASLA_FLAG_ROUTETAG
+value|0x01000000
 end_define
 
 begin_define
@@ -634,6 +638,23 @@ decl_stmt|;
 block|}
 name|un_inter_ap
 struct|;
+comment|/* AS external links advertisements */
+struct|struct
+block|{
+name|u_int32_t
+name|asla_metric
+decl_stmt|;
+name|struct
+name|lsa_prefix
+name|asla_prefix
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* some optional fields follow */
+block|}
+name|un_asla
+struct|;
 if|#
 directive|if
 literal|0
@@ -641,10 +662,6 @@ comment|/* Summary links advertisements */
 block|struct { 	    struct in_addr sla_mask; 	    u_int32_t sla_tosmetric[1];
 comment|/* may repeat	*/
 block|} un_sla;
-comment|/* AS external links advertisements */
-block|struct { 	    struct in_addr asla_mask; 	    struct aslametric { 		u_int32_t asla_tosmetric; 		struct in_addr asla_forward; 		struct in_addr asla_tag; 	    } asla_metric[1];
-comment|/* may repeat	*/
-block|} un_asla;
 comment|/* Multicast group membership */
 block|struct mcla { 	    u_int32_t mcla_vtype; 	    struct in_addr mcla_vid; 	} un_mcla[1];
 endif|#

@@ -4,7 +4,7 @@ comment|/*  * Marko Kiiskila carnil@cs.tut.fi   *   * Tampere University of Tech
 end_comment
 
 begin_comment
-comment|/* $Id: lane.h,v 1.2 1999/11/21 16:35:11 assar Exp $ */
+comment|/* $Id: lane.h,v 1.3 2000/10/03 02:54:56 itojun Exp $ */
 end_comment
 
 begin_ifndef
@@ -29,22 +29,22 @@ begin_struct
 struct|struct
 name|lecdatahdr_8023
 block|{
-name|u_short
+name|u_int16_t
 name|le_header
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|h_dest
 index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|h_source
 index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|h_type
 decl_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /tcpdump/master/tcpdump/ntp.h,v 1.3.1.1 1999/10/07 23:47:11 mcr Exp $ */
+comment|/* $Header: /tcpdump/master/tcpdump/ntp.h,v 1.4 2000/10/03 02:54:57 itojun Exp $ */
 end_comment
 
 begin_comment
@@ -44,10 +44,10 @@ begin_struct
 struct|struct
 name|s_fixedpt
 block|{
-name|u_short
+name|u_int16_t
 name|int_part
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|fraction
 decl_stmt|;
 block|}

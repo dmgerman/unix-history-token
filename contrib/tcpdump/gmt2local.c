@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/gmt2local.c,v 1.3 1999/11/21 09:36:47 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/gmt2local.c,v 1.4 2000/07/11 00:49:02 assar Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,12 +76,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
-end_include
 
 begin_ifdef
 ifdef|#

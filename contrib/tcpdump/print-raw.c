@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-raw.c,v 1.25 1999/11/21 09:37:00 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-raw.c,v 1.33 2000/10/06 04:23:13 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,81 +72,10 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -178,28 +107,6 @@ include|#
 directive|include
 file|"interface.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AF_NS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AF_NS
-value|6
-end_define
-
-begin_comment
-comment|/* XEROX NS protocols */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * The DLT_RAW packet has no header. It contains a raw IP packet.  */
@@ -267,7 +174,7 @@ argument_list|(
 literal|"ip: "
 argument_list|)
 expr_stmt|;
-name|ip_print
+name|ipN_print
 argument_list|(
 name|p
 argument_list|,
