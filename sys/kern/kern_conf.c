@@ -81,6 +81,12 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NODEVFS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -92,6 +98,11 @@ name|NUMCDEVSW
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 specifier|static
@@ -309,6 +320,9 @@ modifier|*
 name|newentry
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NODEVFS
 if|if
 condition|(
 name|newentry
@@ -381,6 +395,8 @@ index|]
 operator|=
 name|newentry
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -403,6 +419,9 @@ modifier|*
 name|oldentry
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NODEVFS
 if|if
 condition|(
 name|oldentry
@@ -444,6 +463,8 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
