@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/slattach/slattach.c,v 1.5 1993/04/28 23:13:37 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.2 1993/07/06 16:46:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -678,16 +678,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|fork
-argument_list|()
-operator|>
-literal|0
-condition|)
-name|exit
+name|daemon
 argument_list|(
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
