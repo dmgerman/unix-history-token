@@ -32,6 +32,16 @@ name|_NETINET6_IP6PROTOSW_H_
 end_define
 
 begin_comment
+comment|/*  * For pfil_head structure.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/pfil.h>
+end_include
+
+begin_comment
 comment|/*  * Protocol switch table for IPv6.  * All other definitions should refer to sys/protosw.h  */
 end_comment
 
@@ -289,6 +299,10 @@ modifier|*
 name|pr_usrreqs
 decl_stmt|;
 comment|/* supersedes pr_usrreq() */
+name|struct
+name|pfil_head
+name|pr_pfh
+decl_stmt|;
 block|}
 struct|;
 end_struct
