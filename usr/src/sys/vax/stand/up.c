@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.11	83/03/02	*/
+comment|/*	up.c	4.12	83/03/02	*/
 end_comment
 
 begin_comment
@@ -797,33 +797,6 @@ literal|0
 expr_stmt|;
 name|restart
 label|:
-define|#
-directive|define
-name|rounddown
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x) / (y)) * (y))
-name|upaddr
-operator|->
-name|upwc
-operator|=
-name|rounddown
-argument_list|(
-name|upaddr
-operator|->
-name|upwc
-argument_list|,
-name|sectsiz
-operator|/
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|o
 operator|=
 name|io
@@ -876,7 +849,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"upwc=%d o=%d i_bn=%d bn=%d\n"
+literal|"wc=%d o=%d i_bn=%d bn=%d\n"
 argument_list|,
 name|upaddr
 operator|->
@@ -1024,14 +997,14 @@ operator|->
 name|upda
 operator|&
 literal|0x1f
+operator|)
 operator|-
 literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cs2=%b er1=%b er2=%b wc=%x\n"
+literal|"cs2=%b er1=%b er2=%b wc=%d\n"
 argument_list|,
 name|upaddr
 operator|->
@@ -1051,7 +1024,6 @@ name|uper2
 argument_list|,
 name|UPER2_BITS
 argument_list|,
-operator|-
 name|upaddr
 operator|->
 name|upwc
@@ -1333,17 +1305,7 @@ goto|goto
 name|hard
 goto|;
 block|}
-comment|/* 	 * Retriable error. 	 * If a soft ecc, correct it  	 * Otherwise fall through and retry the transfer 	 */
-if|if
-condition|(
-name|upaddr
-operator|->
-name|uper1
-operator|&
-name|UPER1_DCK
-condition|)
-block|{
-comment|/* 		 * If a write check command is active, all 		 * ecc errors give UPER1_ECH. 		 */
+comment|/* 	 * ECC error. If a soft error, correct it; 	 * otherwise fall through and retry the transfer. 	 */
 if|if
 condition|(
 operator|(
@@ -1351,18 +1313,14 @@ name|upaddr
 operator|->
 name|uper1
 operator|&
+operator|(
+name|UPER1_DCK
+operator||
 name|UPER1_ECH
 operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|upaddr
-operator|->
-name|upcs2
-operator|&
-name|UPCS2_WCE
 operator|)
+operator|==
+name|UPER1_DCK
 condition|)
 block|{
 if|if
@@ -1388,7 +1346,6 @@ expr_stmt|;
 goto|goto
 name|hard
 goto|;
-block|}
 block|}
 comment|/* 	 * Clear drive error and, every eight attempts, 	 * (starting with the fourth) 	 * recalibrate to clear the slate. 	 */
 name|upaddr
@@ -1570,13 +1527,38 @@ name|restart
 goto|;
 name|success
 label|:
+define|#
+directive|define
+name|rounddown
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x) / (y)) * (y))
+name|upaddr
+operator|->
+name|upwc
+operator|=
+name|rounddown
+argument_list|(
+name|upaddr
+operator|->
+name|upwc
+argument_list|,
+name|sectsiz
+operator|/
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|upaddr
 operator|->
 name|upwc
-operator|!=
-literal|0
 condition|)
 block|{
 name|doprintf
@@ -1725,7 +1707,7 @@ name|UPF_ECCDEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"npf=%d mask=0x%x pos=%d wc=0x%x\n"
+literal|"npf=%d mask=0x%x ec1=%d wc=%d\n"
 argument_list|,
 name|npf
 argument_list|,
@@ -1737,7 +1719,6 @@ name|up
 operator|->
 name|upec1
 argument_list|,
-operator|-
 name|twc
 argument_list|)
 expr_stmt|;
@@ -2061,6 +2042,7 @@ operator|)
 return|;
 name|bbn
 operator|=
+operator|(
 name|st
 operator|->
 name|ncyl
@@ -2068,6 +2050,7 @@ operator|*
 name|st
 operator|->
 name|nspc
+operator|)
 operator|-
 name|st
 operator|->
@@ -2120,11 +2103,13 @@ expr_stmt|;
 comment|/* 	 	 * Clear the drive& read the replacement 		 * sector.  If this is in the middle of a 		 * transfer, then set up the controller 		 * registers in a normal fashion.  	 	 * The UNIBUS address need not be changed. 	 	 */
 while|while
 condition|(
+operator|(
 name|up
 operator|->
 name|upcs1
 operator|&
 name|UP_RDY
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2137,8 +2122,6 @@ name|io
 argument_list|,
 name|bbn
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
@@ -2163,28 +2146,34 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
 name|up
 operator|->
 name|upcs1
 operator|&
 name|UP_RDY
+operator|)
 operator|==
 literal|0
 condition|)
 do|;
 if|if
 condition|(
+operator|(
 name|up
 operator|->
 name|upds
 operator|&
 name|UPDS_ERR
+operator|)
 operator|||
+operator|(
 name|up
 operator|->
 name|upcs1
 operator|&
 name|UP_TRE
+operator|)
 condition|)
 block|{
 name|up
