@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)errlst.c	4.4 (Berkeley) 82/04/01 */
+comment|/* @(#)errlst.c	4.5 (Berkeley) 82/05/02 */
 end_comment
 
 begin_decl_stmt
@@ -206,6 +206,12 @@ comment|/* 62 - ELOOP */
 literal|"File name too long"
 block|,
 comment|/* 63 - ENAMETOOLONG */
+literal|"Host is down"
+block|,
+comment|/* 64 - EHOSTDOWN */
+literal|"Host is unreachable"
+block|,
+comment|/* 65 - EHOSTUNREACH */
 block|}
 decl_stmt|;
 end_decl_stmt
