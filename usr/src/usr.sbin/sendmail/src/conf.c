@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -405,7 +405,7 @@ begin_decl_stmt
 name|int
 name|LogLevel
 init|=
-literal|2
+literal|9
 decl_stmt|;
 end_decl_stmt
 
