@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)getcwd.c	4.3	(Berkeley)	%G%	*/
+comment|/*	@(#)getcwd.c	4.4	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,16 @@ define|#
 directive|define
 name|dotdot
 value|".."
+end_define
+
+begin_define
+define|#
+directive|define
+name|prexit
+parameter_list|(
+name|s
+parameter_list|)
+value|{ strcpy(np, s); return (NULL); }
 end_define
 
 begin_decl_stmt
@@ -180,7 +190,7 @@ name|NULL
 condition|)
 name|prexit
 argument_list|(
-literal|"getwd: cannot open ..\n"
+literal|"getwd: cannot open .."
 argument_list|)
 expr_stmt|;
 name|fstat
@@ -204,7 +214,7 @@ literal|0
 condition|)
 name|prexit
 argument_list|(
-literal|"getwd: cannot chdir to ..\n"
+literal|"getwd: cannot chdir to .."
 argument_list|)
 expr_stmt|;
 if|if
@@ -247,7 +257,7 @@ name|NULL
 condition|)
 name|prexit
 argument_list|(
-literal|"getwd: read error in ..\n"
+literal|"getwd: read error in .."
 argument_list|)
 expr_stmt|;
 do|while
@@ -280,7 +290,7 @@ name|NULL
 condition|)
 name|prexit
 argument_list|(
-literal|"getwd: read error in ..\n"
+literal|"getwd: read error in .."
 argument_list|)
 expr_stmt|;
 name|stat
@@ -338,7 +348,7 @@ literal|0
 condition|)
 name|prexit
 argument_list|(
-literal|"getwd: can't change back\n"
+literal|"getwd: can't change back"
 argument_list|)
 expr_stmt|;
 return|return
@@ -474,42 +484,6 @@ name|d_name
 index|[
 name|i
 index|]
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|prexit
-argument_list|(
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|write
-argument_list|(
-literal|2
-argument_list|,
-name|cp
-argument_list|,
-name|strlen
-argument_list|(
-name|cp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 end_block
