@@ -537,19 +537,18 @@ name|sz
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|twiddle
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"  region %d:"
-argument_list|,
-name|seqnr
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 literal|0
 expr_stmt|;
 comment|/* catch case in which mdp->NumberOfPages is 0 */
+name|twiddle
+operator|=
+literal|0
+expr_stmt|;
 name|pgs
 operator|=
 name|mdp
@@ -563,6 +562,18 @@ argument_list|(
 name|mdp
 operator|->
 name|PhysicalStart
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  region %d: %ld pages "
+argument_list|,
+name|seqnr
+argument_list|,
+operator|(
+name|long
+operator|)
+name|pgs
 argument_list|)
 expr_stmt|;
 while|while
@@ -590,9 +601,15 @@ name|EFI_PAGE_SHIFT
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %lld"
+literal|"%c\b"
 argument_list|,
-name|pgs
+literal|"|/-\\"
+index|[
+name|twiddle
+operator|++
+operator|&
+literal|3
+index|]
 argument_list|)
 expr_stmt|;
 name|error
@@ -640,7 +657,15 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\n"
+literal|"... %s\n"
+argument_list|,
+operator|(
+name|error
+operator|)
+condition|?
+literal|"fail"
+else|:
+literal|"ok"
 argument_list|)
 expr_stmt|;
 return|return
