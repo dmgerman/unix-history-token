@@ -255,6 +255,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cninit_finish
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|cnadd
 parameter_list|(

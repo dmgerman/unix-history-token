@@ -510,7 +510,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/*	cninit_finish(); */
+name|cninit_finish
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
