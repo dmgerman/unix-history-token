@@ -2224,9 +2224,9 @@ condition|(
 name|events
 operator|&
 operator|(
-name|POLLOUT
+name|POLLIN
 operator||
-name|POLLWRNORM
+name|POLLRDNORM
 operator|)
 condition|)
 block|{
@@ -2277,9 +2277,9 @@ condition|(
 name|events
 operator|&
 operator|(
-name|POLLIN
+name|POLLOUT
 operator||
-name|POLLRDNORM
+name|POLLWRNORM
 operator|)
 condition|)
 block|{
