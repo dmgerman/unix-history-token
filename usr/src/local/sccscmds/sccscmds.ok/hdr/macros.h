@@ -52,7 +52,7 @@ name|src
 parameter_list|,
 name|dest
 parameter_list|)
-value|cat(dest,src,0)
+value|strcpy(dest,src)
 end_define
 
 begin_define
