@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.42	83/01/13	*/
+comment|/*	uipc_syscalls.c	4.43	83/03/04	*/
 end_comment
 
 begin_include
@@ -1454,9 +1454,7 @@ name|u
 operator|.
 name|u_error
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return;
 name|u
 operator|.
 name|u_error
@@ -1491,8 +1489,6 @@ name|auio
 operator|.
 name|uio_resid
 expr_stmt|;
-name|bad
-label|:
 name|m_freem
 argument_list|(
 name|to
