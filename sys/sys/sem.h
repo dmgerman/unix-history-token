@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.12 1997/02/22 09:45:51 peter Exp $ */
+comment|/* $Id: sem.h,v 1.13 1997/09/07 05:27:21 bde Exp $ */
 end_comment
 
 begin_comment
@@ -746,8 +746,7 @@ name|int
 operator|,
 name|int
 operator|,
-expr|union
-name|semun
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
