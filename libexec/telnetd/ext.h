@@ -1367,7 +1367,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_IM
-value|"\r\n\r\n4.4 BSD UNIX (%h) (%t)\r\n\r\r\n\r"
+value|"\r\n\r\nFreeBSD (%h) (%t)\r\n\r\r\n\r"
 end_define
 
 begin_endif
