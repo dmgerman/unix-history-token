@@ -989,7 +989,7 @@ name|sc_state
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|lprintf
 argument_list|(
 literal|"status %x\n"
 argument_list|,
