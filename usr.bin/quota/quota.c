@@ -534,6 +534,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|ch
+decl_stmt|,
 name|gflag
 init|=
 literal|0
@@ -541,9 +543,6 @@ decl_stmt|,
 name|uflag
 init|=
 literal|0
-decl_stmt|;
-name|char
-name|ch
 decl_stmt|;
 while|while
 condition|(
