@@ -181,19 +181,9 @@ name|STATUS_ERROR
 value|3
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|502000
-end_if
+begin_comment
+comment|/* Check for system-processes which should always be ignored. */
+end_comment
 
 begin_define
 define|#
@@ -204,37 +194,6 @@ name|kp
 parameter_list|)
 value|((kp)->ki_flag& P_KTHREAD)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IS_KERNPROC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IS_KERNPROC
-parameter_list|(
-name|kp
-parameter_list|)
-value|((kp)->ki_flag& P_SYSTEM)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_enum
 enum|enum
