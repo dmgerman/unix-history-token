@@ -758,8 +758,6 @@ function|DRM_SYSCTL_HANDLER_ARGS
 block|{
 name|int
 name|ret
-decl_stmt|,
-name|i
 decl_stmt|;
 name|drm_mem_stats_t
 modifier|*
