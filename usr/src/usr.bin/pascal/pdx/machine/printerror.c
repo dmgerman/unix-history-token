@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printerror.c 1.1 %G%"
+literal|"@(#)printerror.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * print out an execution time error  *  * Have to check if the -r option was specified; if so then  * the object file information hasn't been read in yet.  */
+comment|/*  * Print out an execution time error.  */
 end_comment
 
 begin_include
@@ -33,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|"machine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"main.h"
 end_include
 
 begin_include
@@ -135,18 +129,6 @@ name|pc
 argument_list|,
 name|pc
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|option
-argument_list|(
-literal|'r'
-argument_list|)
-condition|)
-block|{
-name|init
-argument_list|()
 expr_stmt|;
 block|}
 name|curline
