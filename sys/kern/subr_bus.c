@@ -8924,6 +8924,15 @@ block|{
 name|device_t
 name|child
 decl_stmt|;
+comment|/*      * Make sure the class has a valid ops table.      */
+name|kobj_class_compile
+argument_list|(
+operator|(
+name|kobj_class_t
+operator|)
+name|driver
+argument_list|)
+expr_stmt|;
 name|DEVICE_IDENTIFY
 argument_list|(
 name|driver
