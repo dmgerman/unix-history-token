@@ -2,25 +2,43 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|"lsdev.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/devconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
+file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsiconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -44,19 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<scsi/scsiconf.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcireg.h>
+file|"lsdev.h"
 end_include
 
 begin_function_decl
@@ -669,10 +687,6 @@ block|{
 name|printf
 argument_list|(
 literal|" iosiz ?"
-argument_list|,
-name|id
-operator|->
-name|id_msize
 argument_list|)
 expr_stmt|;
 block|}
@@ -736,7 +750,7 @@ name|dc_data
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s%ld\tat eisa0 slot %d # %#x-%#x"
+literal|"%s%d\tat eisa0 slot %d # %#lx-%#lx"
 argument_list|,
 name|dc
 operator|->
@@ -828,7 +842,8 @@ name|dc_data
 decl_stmt|;
 name|u_long
 name|data
-decl_stmt|,
+decl_stmt|;
+name|int
 name|pin
 decl_stmt|,
 name|line
