@@ -538,7 +538,7 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-comment|/* MD_OBJET related fields */
+comment|/* MD_SWAP related fields */
 name|vm_object_t
 name|object
 decl_stmt|;
