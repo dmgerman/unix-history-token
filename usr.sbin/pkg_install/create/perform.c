@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.32.2.5 1997/11/13 11:49:53 jkh Exp $"
+literal|"$Id: perform.c,v 1.32.2.6 1997/11/14 01:55:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -841,9 +841,7 @@ name|plist
 argument_list|)
 expr_stmt|;
 name|leave_playpen
-argument_list|(
-name|home
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 name|TRUE
@@ -1484,11 +1482,25 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|leave_playpen
-argument_list|(
-name|home
-argument_list|)
+name|int
+name|in_cleanup
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|in_cleanup
+condition|)
+block|{
+name|in_cleanup
+operator|=
+literal|1
 expr_stmt|;
+name|leave_playpen
+argument_list|()
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|1

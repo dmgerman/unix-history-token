@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.22 1996/07/30 10:48:19 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.22.2.1 1997/10/09 07:10:05 charnier Exp $ */
 end_comment
 
 begin_comment
@@ -461,8 +461,7 @@ begin_function_decl
 name|void
 name|leave_playpen
 parameter_list|(
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
