@@ -505,6 +505,12 @@ end_include
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -512,32 +518,24 @@ name|lint
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"%W% %G% (C)1995 Darren Reed"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static const char sccsid[] = "%W% %G% (C)1995 Darren Reed"; static const char rcsid[] = "@(#)$Id: iptests.c,v 2.1.4.2 2001/07/15 22:00:14 darrenr Exp $";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
