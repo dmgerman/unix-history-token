@@ -681,6 +681,9 @@ name|print_value
 name|PARAMS
 argument_list|(
 operator|(
+name|bfd
+operator|*
+operator|,
 name|bfd_vma
 operator|)
 argument_list|)
@@ -1232,6 +1235,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD64
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|print_width
+init|=
+literal|16
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|print_width
+init|=
+literal|8
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1588,7 +1625,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"Usage: %s [OPTION]... [FILE]...\n"
+literal|"Usage: %s [option(s)] [file(s)]\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -1600,7 +1637,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"List symbols from FILEs (a.out by default).\n"
+literal|" List symbols in [file(s)] (a.out by default).\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1610,7 +1647,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\n\   -a, --debug-syms       Display debugger-only symbols\n\   -A, --print-file-name  Print name of the input file before every symbol\n\   -B                     Same as --format=bsd\n\   -C, --demangle[=STYLE] Decode low-level symbol names into user-level names\n\                           The STYLE, if specified, can be `auto' (the default),\n\                           `gnu', 'lucid', 'arm', 'hp', 'edg' or 'gnu-new-abi'\n\       --no-demangle      Do not demangle low-level symbol names\n\   -D, --dynamic          Display dynamic symbols instead of normal symbols\n\       --defined-only     Display only defined symbols\n\   -e                     (ignored)\n\   -f, --format=FORMAT    Use the output format FORMAT.  FORMAT can be `bsd',\n\                            `sysv' or `posix'.  The default is `bsd'\n\   -g, --extern-only      Display only external symbols\n\   -h, --help             Display this information\n\   -l, --line-numbers     Use debugging information to find a filename and\n\                            line number for each symbol\n\   -n, --numeric-sort     Sort symbols numerically by address\n\   -o                     Same as -A\n\   -p, --no-sort          Do not sort the symbols\n\   -P, --portability      Same as --format=posix\n\   -r, --reverse-sort     Reverse the sense of the sort\n\   -s, --print-armap      Include index for symbols from archive members\n\       --size-sort        Sort symbols by size\n\   -t, --radix=RADIX      Use RADIX for printing symbol values\n\       --target=BFDNAME   Specify the target object format as BFDNAME\n\   -u, --undefined-only   Display only undefined symbols\n\   -V, --version          Display this program's version number\n\   -X 32_64               (ignored)\n\ \n"
+literal|" The options are:\n\   -a, --debug-syms       Display debugger-only symbols\n\   -A, --print-file-name  Print name of the input file before every symbol\n\   -B                     Same as --format=bsd\n\   -C, --demangle[=STYLE] Decode low-level symbol names into user-level names\n\                           The STYLE, if specified, can be `auto' (the default),\n\                           `gnu', 'lucid', 'arm', 'hp', 'edg' or 'gnu-new-abi'\n\       --no-demangle      Do not demangle low-level symbol names\n\   -D, --dynamic          Display dynamic symbols instead of normal symbols\n\       --defined-only     Display only defined symbols\n\   -e                     (ignored)\n\   -f, --format=FORMAT    Use the output format FORMAT.  FORMAT can be `bsd',\n\                            `sysv' or `posix'.  The default is `bsd'\n\   -g, --extern-only      Display only external symbols\n\   -l, --line-numbers     Use debugging information to find a filename and\n\                            line number for each symbol\n\   -n, --numeric-sort     Sort symbols numerically by address\n\   -o                     Same as -A\n\   -p, --no-sort          Do not sort the symbols\n\   -P, --portability      Same as --format=posix\n\   -r, --reverse-sort     Reverse the sense of the sort\n\   -s, --print-armap      Include index for symbols from archive members\n\       --size-sort        Sort symbols by size\n\   -t, --radix=RADIX      Use RADIX for printing symbol values\n\       --target=BFDNAME   Specify the target object format as BFDNAME\n\   -u, --undefined-only   Display only undefined symbols\n\   -X 32_64               (ignored)\n\   -h, --help             Display this information\n\   -V, --version          Display this program's version number\n\ \n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1835,6 +1872,22 @@ end_function
 begin_escape
 end_escape
 
+begin_decl_stmt
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -1872,6 +1925,21 @@ argument_list|)
 name|setlocale
 argument_list|(
 name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
 argument_list|,
 literal|""
 argument_list|)
@@ -1924,7 +1992,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aABCDef:glnopPrst:uvVX:"
+literal|"aABCDef:gHhlnopPrst:uvVvX:"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2051,6 +2119,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'H'
+case|:
 case|case
 literal|'h'
 case|:
@@ -4030,6 +4101,12 @@ name|size_sym
 modifier|*
 name|symsizes
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|30
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4116,6 +4193,26 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|bfd_sprintf_vma
+argument_list|(
+name|abfd
+argument_list|,
+name|buf
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|print_width
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 comment|/* Discard the symbols we don't want to print.      It's OK to do this in place; we'll free the storage anyway      (after printing).  */
 name|symcount
 operator|=
@@ -6159,8 +6256,14 @@ specifier|static
 name|void
 name|print_value
 parameter_list|(
+name|abfd
+parameter_list|,
 name|val
 parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
 name|bfd_vma
 name|val
 decl_stmt|;
@@ -6190,8 +6293,10 @@ name|print_radix
 operator|==
 literal|16
 condition|)
-name|fprintf_vma
+name|bfd_fprintf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|stdout
 argument_list|,
 name|val
@@ -6312,16 +6417,17 @@ name|type
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BFD64
+if|if
+condition|(
+name|print_width
+operator|==
+literal|16
+condition|)
 name|printf
 argument_list|(
 literal|"        "
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"        "
@@ -6331,6 +6437,8 @@ block|}
 else|else
 name|print_value
 argument_list|(
+name|abfd
+argument_list|,
 name|info
 operator|->
 name|value
@@ -6455,6 +6563,8 @@ comment|/* Value */
 else|else
 name|print_value
 argument_list|(
+name|abfd
+argument_list|,
 name|info
 operator|->
 name|value
@@ -6572,6 +6682,8 @@ expr_stmt|;
 else|else
 name|print_value
 argument_list|(
+name|abfd
+argument_list|,
 name|info
 operator|->
 name|value
