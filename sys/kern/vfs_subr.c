@@ -7389,37 +7389,6 @@ literal|0
 decl_stmt|,
 name|error
 decl_stmt|;
-comment|/* Hack to prevent crashes with old filesystem modules. */
-if|if
-condition|(
-name|rootrefs
-operator|<
-literal|0
-operator|||
-name|rootrefs
-operator|>
-literal|10
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"vflush: %s: bad rootrefs %d\n"
-argument_list|,
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_fstypename
-argument_list|,
-name|rootrefs
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|rootrefs
