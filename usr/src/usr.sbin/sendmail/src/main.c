@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.3 (Berkeley) %G%"
+literal|"@(#)main.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,8 +123,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_comment
 comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables read in from /usr/lib/sendmail.cf **	(read by readcf.c).  Some more static configuration info, **	including some code that you may want to tailor for your **	installation, is in conf.c.  You may also want to touch **	daemon.c (if you have some other IPC mechanism), acct.c **	(to change your accounting), names.c (to adjust the name **	server mechanism). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Author: **		Eric Allman, UCB/INGRES (until 10/81) **			     Britton-Lee, Inc., purveyors of fine **				database computers (from 11/81) **			     Now back at UCB at the Mammoth project. **		The support of the INGRES Project and Britton-Lee is **			gratefully acknowledged.  Britton-Lee in **			particular had absolutely nothing to gain from **			my involvement in this project. */
@@ -2489,7 +2492,7 @@ name|NULL
 argument_list|,
 name|_IOLBF
 argument_list|,
-name|BUFSIZ
+literal|0
 argument_list|)
 expr_stmt|;
 else|#
@@ -3924,7 +3927,7 @@ expr_stmt|;
 comment|/* disconnect from our controlling tty */
 name|disconnect
 argument_list|(
-name|TRUE
+literal|2
 argument_list|,
 name|CurEnv
 argument_list|)
@@ -4246,6 +4249,12 @@ operator|!
 name|GrabTo
 condition|)
 block|{
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_GLOBALERRS
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"Recipient names must be specified"
@@ -4353,6 +4362,13 @@ name|MD_VERIFY
 operator|||
 name|GrabTo
 condition|)
+block|{
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_GLOBALERRS
+expr_stmt|;
 name|collect
 argument_list|(
 name|FALSE
@@ -4362,6 +4378,7 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
 begin_expr_stmt
@@ -5766,21 +5783,21 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DISCONNECT -- remove our connection with any foreground process ** **	Parameters: **		fulldrop -- if set, we should also drop the controlling **			TTY if possible -- this should only be done when **			setting up the daemon since otherwise UUCP can **			leave us trying to open a dialin, and we will **			wait for the carrier. ** **	Returns: **		none ** **	Side Effects: **		Trys to insure that we are immune to vagaries of **		the controlling tty. */
+comment|/* **  DISCONNECT -- remove our connection with any foreground process ** **	Parameters: **		droplev -- how "deeply" we should drop the line. **			0 -- ignore signals, mail back errors, make sure **			     output goes to stdout. **			1 -- also, make stdout go to transcript. **			2 -- also, disconnect from controlling terminal **			     (only for daemon mode). **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		Trys to insure that we are immune to vagaries of **		the controlling tty. */
 end_comment
 
 begin_macro
 name|disconnect
 argument_list|(
-argument|fulldrop
+argument|droplev
 argument_list|,
 argument|e
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|bool
-name|fulldrop
+name|int
+name|droplev
 decl_stmt|;
 end_decl_stmt
 
@@ -5942,6 +5959,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|droplev
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|e
 operator|->
 name|e_xfp
@@ -6004,10 +6028,13 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* drop our controlling TTY completely if possible */
 if|if
 condition|(
-name|fulldrop
+name|droplev
+operator|>
+literal|1
 condition|)
 block|{
 operator|(
