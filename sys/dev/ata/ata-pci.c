@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999,2000,2001 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998,1999,2000,2001,2002 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -288,7 +288,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ata_via686b
+name|ata_via_southbridge_fixup
 parameter_list|(
 name|device_t
 name|dev
@@ -297,8 +297,6 @@ block|{
 name|device_t
 modifier|*
 name|children
-decl_stmt|,
-name|child
 decl_stmt|;
 name|int
 name|nchildren
@@ -336,60 +334,113 @@ name|i
 operator|++
 control|)
 block|{
-name|child
-operator|=
-name|children
-index|[
-name|i
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|pci_get_devid
 argument_list|(
-name|child
+name|children
+index|[
+name|i
+index|]
 argument_list|)
 operator|==
 literal|0x03051106
 operator|||
-comment|/* VIA KT133 */
+comment|/* VIA VT8363 */
 name|pci_get_devid
 argument_list|(
-name|child
+name|children
+index|[
+name|i
+index|]
 argument_list|)
 operator|==
 literal|0x03911106
+operator|||
+comment|/* VIA VT8371 */
+name|pci_get_devid
+argument_list|(
+name|children
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+literal|0x31021106
+operator|||
+comment|/* VIA VT8662 */
+name|pci_get_devid
+argument_list|(
+name|children
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+literal|0x31121106
 condition|)
 block|{
-comment|/* VIA KX133 */
+comment|/* VIA VT8361 */
+name|u_int8_t
+name|reg76
+init|=
+name|pci_read_config
+argument_list|(
+name|children
+index|[
+name|i
+index|]
+argument_list|,
+literal|0x76
+argument_list|,
+literal|1
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|reg76
+operator|&
+literal|0xf0
+operator|)
+operator|!=
+literal|0xd0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Correcting VIA config for southbridge data corruption bug\n"
+argument_list|)
+expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|child
+name|children
+index|[
+name|i
+index|]
 argument_list|,
 literal|0x75
 argument_list|,
-literal|0x83
+literal|0x80
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|child
+name|children
+index|[
+name|i
+index|]
 argument_list|,
 literal|0x76
 argument_list|,
 operator|(
-name|pci_read_config
-argument_list|(
-name|child
-argument_list|,
-literal|0x76
-argument_list|,
-literal|1
-argument_list|)
+name|reg76
 operator|&
-literal|0xdf
+literal|0x0f
 operator|)
 operator||
 literal|0xd0
@@ -397,13 +448,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"VIA '686b southbridge fix applied\n"
-argument_list|)
-expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -1559,7 +1604,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* the '686b might need the data corruption fix */
+comment|/* the southbridge might need the data corruption fix */
 if|if
 condition|(
 name|ata_find_dev
@@ -1570,8 +1615,17 @@ literal|0x06861106
 argument_list|,
 literal|0x40
 argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x82311106
+argument_list|,
+literal|0x10
+argument_list|)
 condition|)
-name|ata_via686b
+name|ata_via_southbridge_fixup
 argument_list|(
 name|dev
 argument_list|)
