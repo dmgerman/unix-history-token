@@ -83,6 +83,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/*  * ASCII internet address interpretation routine.  * The value returned is in network order.  */
 end_comment
@@ -172,8 +178,6 @@ modifier|*
 name|endptr
 decl_stmt|;
 name|int
-name|base
-decl_stmt|,
 name|gotend
 decl_stmt|,
 name|n
