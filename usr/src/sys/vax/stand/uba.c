@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.2	%G%	*/
+comment|/*	uba.c	4.3	81/03/21	*/
 end_comment
 
 begin_include
@@ -51,6 +51,10 @@ directive|include
 file|"savax.h"
 end_include
 
+begin_comment
+comment|/*  * Note... this routine does not  * really allocate; unless bdp == 2  * you always get the same space.  * When bdp == 2 you get some other space.  */
+end_comment
+
 begin_expr_stmt
 name|ubasetup
 argument_list|(
@@ -90,7 +94,33 @@ name|int
 name|o
 decl_stmt|,
 name|temp
+decl_stmt|,
+name|reg
 decl_stmt|;
+if|if
+condition|(
+name|bdp
+operator|==
+literal|2
+condition|)
+block|{
+name|reg
+operator|=
+literal|128
+operator|+
+literal|64
+expr_stmt|;
+comment|/* for stupid ts-11 */
+name|bdp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|reg
+operator|=
+literal|0
+expr_stmt|;
 name|v
 operator|=
 name|btop
@@ -126,6 +156,7 @@ literal|1
 expr_stmt|;
 name|pte
 operator|=
+operator|&
 name|ubauba
 argument_list|(
 name|io
@@ -134,6 +165,9 @@ name|i_unit
 argument_list|)
 operator|->
 name|uba_map
+index|[
+name|reg
+index|]
 expr_stmt|;
 name|temp
 operator|=
@@ -199,7 +233,13 @@ operator|(
 operator|(
 name|bdp
 operator|<<
-name|UBAMR_DPSHIFT
+literal|28
+operator|)
+operator||
+operator|(
+name|reg
+operator|<<
+literal|9
 operator|)
 operator||
 name|o
@@ -298,6 +338,10 @@ name|UBADPR_NXM
 operator||
 name|UBADPR_UCE
 expr_stmt|;
+break|break;
+case|case
+name|VAX_730
+case|:
 break|break;
 block|}
 block|}
