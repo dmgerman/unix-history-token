@@ -458,9 +458,6 @@ operator|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|so
 operator|->
@@ -520,9 +517,6 @@ operator|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|so
 operator|->
@@ -861,9 +855,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|head
 operator|->
@@ -967,9 +958,6 @@ return|return
 operator|(
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sb
 operator|->
@@ -1039,9 +1027,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sb
 operator|->
@@ -1148,9 +1133,6 @@ name|SB_WAIT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sb
 operator|->
@@ -2359,9 +2341,6 @@ name|sa_len
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|asa
 argument_list|,
 name|mtod

@@ -1668,9 +1668,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|so
 operator|->
@@ -5481,9 +5478,6 @@ name|sb
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sb
 argument_list|,
 sizeof|sizeof

@@ -697,7 +697,8 @@ name|filterops
 modifier|*
 name|kn_fop
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|kn_hook
 decl_stmt|;
 define|#

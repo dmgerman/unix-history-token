@@ -1066,16 +1066,10 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|muio
 operator|.
 name|uio_iov
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|miov
 argument_list|,
 name|iovlen

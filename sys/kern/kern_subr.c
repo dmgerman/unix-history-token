@@ -818,9 +818,6 @@ name|UIO_READ
 condition|)
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|cp
 argument_list|,
 name|iov
@@ -837,9 +834,6 @@ name|iov
 operator|->
 name|iov_base
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|cp
 argument_list|,
 name|cnt
@@ -1639,9 +1633,6 @@ name|UIO_READ
 condition|)
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|cp
 argument_list|,
 name|iov
@@ -1658,9 +1649,6 @@ name|iov
 operator|->
 name|iov_base
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|cp
 argument_list|,
 name|cnt

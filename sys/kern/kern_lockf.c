@@ -1143,9 +1143,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|lock
 argument_list|,
 name|priority
@@ -2924,14 +2921,8 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|lock1
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|splitlock
 argument_list|,
 sizeof|sizeof
@@ -3075,9 +3066,6 @@ directive|endif
 comment|/* LOCKF_DEBUG */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|wakelock
 argument_list|)
 expr_stmt|;
