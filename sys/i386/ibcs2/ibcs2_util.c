@@ -81,7 +81,7 @@ name|char
 name|ibcs2_emul_path
 index|[]
 init|=
-literal|"/emul/ibcs2"
+literal|"/compat/ibcs2"
 decl_stmt|;
 end_decl_stmt
 
