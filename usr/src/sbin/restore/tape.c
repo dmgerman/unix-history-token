@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.36 (Berkeley) %G%"
+literal|"@(#)tape.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1974,7 +1974,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|spcl
+name|tmpbuf
 operator|.
 name|c_volume
 operator|!=
