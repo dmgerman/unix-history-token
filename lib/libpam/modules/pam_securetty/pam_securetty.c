@@ -92,7 +92,7 @@ decl_stmt|;
 name|struct
 name|passwd
 modifier|*
-name|user_pwd
+name|pwd
 decl_stmt|;
 name|int
 name|retval
@@ -217,7 +217,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* If the user is not root, secure ttys do not apply */
-name|user_pwd
+name|pwd
 operator|=
 name|getpwnam
 argument_list|(
@@ -226,7 +226,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|user_pwd
+name|pwd
 operator|==
 name|NULL
 condition|)
@@ -238,7 +238,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|user_pwd
+name|pwd
 operator|->
 name|pw_uid
 operator|!=
@@ -291,11 +291,18 @@ name|PAM_SUCCESS
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Not on secure TTY"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_PERM_DENIED
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -321,9 +328,32 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-return|return
+name|struct
+name|options
+name|options
+decl_stmt|;
+name|pam_std_option
+argument_list|(
+operator|&
+name|options
+argument_list|,
+name|NULL
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Options processed"
+argument_list|)
+expr_stmt|;
+name|PAM_RETURN
+argument_list|(
 name|PAM_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
