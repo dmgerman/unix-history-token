@@ -110,6 +110,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|security
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Kernel security policy"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4502,7 +4520,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern
+name|_kern_security
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -5140,6 +5158,36 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|kern_unprivileged_procdebug_permitted
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_security
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unprivileged_procdebug_permitted
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|kern_unprivileged_procdebug_permitted
+argument_list|,
+literal|0
+argument_list|,
+literal|"Unprivileged processes may use process debugging facilities"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|p_candebug
@@ -5236,6 +5284,9 @@ operator|->
 name|p_flag
 operator|&
 name|P_SUGID
+operator|||
+operator|!
+name|kern_unprivileged_procdebug_permitted
 condition|)
 if|if
 condition|(
