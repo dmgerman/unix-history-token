@@ -1,18 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.5 1998/12/28 04:56:24 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.18 1999/01/15 06:00:24 grog Exp grog $  */
 end_comment
-
-begin_comment
-comment|/* XXX gdb can't find our global pointers, so use this kludge to  * point to them locally.  Remove after testing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BROKEN_GDB
-value|struct _vinum_conf *VC =&vinum_conf
-end_define
 
 begin_include
 include|#
@@ -88,6 +77,16 @@ init|=
 literal|4
 block|,
 comment|/* super device. */
+name|VINUM_RAWPLEX_TYPE
+init|=
+literal|5
+block|,
+comment|/* anonymous plex */
+name|VINUM_RAWSD_TYPE
+init|=
+literal|6
+block|,
+comment|/* anonymous subdisk */
 comment|/* Shifts for the individual fields in the device */
 name|VINUM_TYPE_SHIFT
 init|=
@@ -117,6 +116,17 @@ name|VINUM_SD_WIDTH
 init|=
 literal|8
 block|,
+comment|/* Shifts for the second half of raw plex and      * subdisk numbers */
+name|VINUM_RAWPLEX_SHIFT
+init|=
+literal|8
+block|,
+comment|/* shift the second half this much */
+name|VINUM_RAWPLEX_WIDTH
+init|=
+literal|12
+block|,
+comment|/* width of second half */
 name|MAJORDEV_SHIFT
 init|=
 literal|8
@@ -170,6 +180,24 @@ parameter_list|,
 name|t
 parameter_list|)
 value|((BDEV_MAJOR<< MAJORDEV_SHIFT)	\ 			     | (v<< VINUM_VOL_SHIFT)		\ 			     | (p<< VINUM_PLEX_SHIFT)		\ 			     | (s<< VINUM_SD_SHIFT) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
+comment|/* Create a bit mask for x bits */
+define|#
+directive|define
+name|MASK
+parameter_list|(
+name|x
+parameter_list|)
+value|((1<< (x)) - 1)
+comment|/* Create a raw block device number */
+define|#
+directive|define
+name|VINUMRBDEV
+parameter_list|(
+name|d
+parameter_list|,
+name|t
+parameter_list|)
+value|((BDEV_MAJOR<< MAJORDEV_SHIFT)				\ 			     | ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			     | ((d& ~MASK (VINUM_VOL_WIDTH))				\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH)) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
 comment|/* And a character device number */
 define|#
 directive|define
@@ -192,38 +220,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x>> VINUM_TYPE_SHIFT)& 7)
-comment|/* extract volume number */
-define|#
-directive|define
-name|VOLNO
-parameter_list|(
-name|x
-parameter_list|)
-value|(x& ((1<< VINUM_VOL_WIDTH) - 1))
-comment|/* extract plex number */
-define|#
-directive|define
-name|PLEXNO
-parameter_list|(
-name|x
-parameter_list|)
-value|(VOL [VOLNO (x)].plex [(x>> VINUM_PLEX_SHIFT)& ((1<< VINUM_PLEX_WIDTH) - 1)])
-comment|/* extract subdisk number */
-define|#
-directive|define
-name|SDNO
-parameter_list|(
-name|x
-parameter_list|)
-value|(PLEX [PLEXNO (x)].sdnos [(x>> VINUM_SD_SHIFT)& ((1<< VINUM_SD_WIDTH) - 1)])
-comment|/* extract drive number */
-define|#
-directive|define
-name|DRIVENO
-parameter_list|(
-name|x
-parameter_list|)
-value|(SD [SDNO (x)].driveno)
 name|VINUM_SUPERDEV
 init|=
 name|VINUMBDEV
@@ -282,7 +278,7 @@ block|,
 comment|/* number of locks to allocate to a volume */
 name|DEFAULT_REVIVE_BLOCKSIZE
 init|=
-literal|32768
+literal|65536
 block|,
 comment|/* size of block to transfer in one op */
 name|VINUMHOSTNAMELEN
@@ -299,7 +295,7 @@ comment|/* device numbers */
 end_comment
 
 begin_comment
-comment|/*  *  31 30   28  27                  20  19 18    16  15                 8    7                   0  * |-----------------------------------------------------------------------------------------------|  * |X |  Type  |    Subdisk number     | X| Plex   |      Major number     |  volume number        |  * |-----------------------------------------------------------------------------------------------|  *  *    0x2                 03                 1           19                      06  */
+comment|/*  *  31 30   28  27                  20  19 18    16  15                 8    7                   0  * |-----------------------------------------------------------------------------------------------|  * |X |  Type  |    Subdisk number     | X| Plex   |      Major number     |  volume number        |  * |-----------------------------------------------------------------------------------------------|  *  *    0x2                 03                 1           19                      06  *  * The fields in the minor number are interpreted as follows:  *  * Volume:              Only type and volume number are relevant  * Plex in volume:      type, plex number in volume and volume number are relevant  * raw plex:            type, plex number is made of bits 27-16 and 7-0  * raw subdisk:         type, subdisk number is made of bits 27-16 and 7-0  */
 end_comment
 
 begin_struct
@@ -343,7 +339,7 @@ range|:
 literal|3
 decl_stmt|;
 comment|/* type of object */
-comment|/* type field        VINUM_VOLUME = 0,        VINUM_PLEX = 1,        VINUM_SUBDISK = 2,        VINUM_DRIVE = 3,        VINUM_SUPERDEV = 4, */
+comment|/* type field        VINUM_VOLUME = 0,        VINUM_PLEX = 1,        VINUM_SUBDISK = 2,        VINUM_DRIVE = 3,        VINUM_SUPERDEV = 4,        VINUM_RAWPLEX = 5,                                             VINUM_RAWSD = 6 */
 name|unsigned
 name|signbit
 range|:
@@ -458,11 +454,16 @@ init|=
 literal|0x8000
 block|,
 comment|/* we're performing ops from kernel space */
-name|VF_DIRTYCONFIG
+name|VF_NEWBORN
 init|=
 literal|0x10000
 block|,
-comment|/* config needs updating */
+comment|/* for objects: we've just created it */
+name|VF_CONFIGURED
+init|=
+literal|0x20000
+block|,
+comment|/* for drives: we read the config */
 block|}
 enum|;
 end_enum
@@ -760,6 +761,10 @@ name|state
 decl_stmt|;
 comment|/* current state */
 name|int
+name|flags
+decl_stmt|;
+comment|/* flags */
+name|int
 name|subdisks_allocated
 decl_stmt|;
 comment|/* number of entries in sd */
@@ -771,6 +776,10 @@ name|int
 name|blocksize
 decl_stmt|;
 comment|/* size of fs blocks */
+name|int
+name|pid
+decl_stmt|;
+comment|/* of locker */
 name|u_int64_t
 name|sectors_available
 decl_stmt|;
@@ -877,11 +886,19 @@ name|sdstate
 name|state
 decl_stmt|;
 comment|/* state */
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|lasterror
+decl_stmt|;
+comment|/* last error occurred */
 comment|/* offsets in blocks */
 name|int64_t
 name|driveoffset
 decl_stmt|;
 comment|/* offset on drive */
+comment|/* plexoffset is the offset from the beginning of the      * plex to the very first part of the subdisk, in      * sectors.  For striped and RAID-5 plexes, only      * the first stripe is located at this offset */
 name|int64_t
 name|plexoffset
 decl_stmt|;
@@ -903,6 +920,10 @@ name|sdno
 decl_stmt|;
 comment|/* our index in vinum_conf */
 name|int
+name|plexsdno
+decl_stmt|;
+comment|/* and our number in our plex 							    * (undefined if no plex) */
+name|int
 name|pid
 decl_stmt|;
 comment|/* pid of process which opened us */
@@ -922,6 +943,25 @@ name|u_int64_t
 name|bytes_written
 decl_stmt|;
 comment|/* number of bytes written */
+comment|/* revive parameters */
+name|u_int64_t
+name|revived
+decl_stmt|;
+comment|/* block number of current revive request */
+name|int
+name|revive_blocksize
+decl_stmt|;
+comment|/* revive block size (bytes) */
+name|int
+name|revive_interval
+decl_stmt|;
+comment|/* and time to wait between transfers */
+name|struct
+name|request
+modifier|*
+name|waitlist
+decl_stmt|;
+comment|/* list of requests waiting on revive op */
 name|char
 name|name
 index|[
@@ -960,26 +1000,6 @@ block|}
 enum|;
 end_enum
 
-begin_comment
-comment|/* Region in plex (either defective or unmapped) */
-end_comment
-
-begin_struct
-struct|struct
-name|plexregion
-block|{
-name|u_int64_t
-name|offset
-decl_stmt|;
-comment|/* start of region */
-name|u_int64_t
-name|length
-decl_stmt|;
-comment|/* length */
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|plex
@@ -997,7 +1017,7 @@ comment|/* and current state */
 name|u_int64_t
 name|length
 decl_stmt|;
-comment|/* total length of plex (max offset) */
+comment|/* total length of plex (max offset, in blocks) */
 name|int
 name|flags
 decl_stmt|;
@@ -1074,54 +1094,10 @@ name|u_int64_t
 name|multistripe
 decl_stmt|;
 comment|/* requests that needed more than one stripe */
-comment|/* revive parameters */
-name|u_int64_t
-name|revived
-decl_stmt|;
-comment|/* block number of current revive request */
 name|int
-name|revive_blocksize
+name|sddowncount
 decl_stmt|;
-comment|/* revive block size (bytes) */
-name|int
-name|revive_interval
-decl_stmt|;
-comment|/* and time to wait between transfers */
-name|struct
-name|request
-modifier|*
-name|waitlist
-decl_stmt|;
-comment|/* list of requests waiting on revive op */
-comment|/* geometry control */
-name|int
-name|defective_regions
-decl_stmt|;
-comment|/* number of regions which are defective */
-name|int
-name|defective_region_count
-decl_stmt|;
-comment|/* number of entries in defective_region */
-name|struct
-name|plexregion
-modifier|*
-name|defective_region
-decl_stmt|;
-comment|/* list of offset/length pairs: defective sds */
-name|int
-name|unmapped_regions
-decl_stmt|;
-comment|/* number of regions which are missing */
-name|int
-name|unmapped_region_count
-decl_stmt|;
-comment|/* number of entries in unmapped_region */
-name|struct
-name|plexregion
-modifier|*
-name|unmapped_region
-decl_stmt|;
-comment|/* list of offset/length pairs: missing sds */
+comment|/* number of subdisks down */
 name|char
 name|name
 index|[
@@ -1448,20 +1424,6 @@ init|=
 literal|2
 block|,
 comment|/* we're currently configuring, don't save */
-name|setstate_recursing
-init|=
-literal|4
-block|,
-comment|/* we're called from another setstate function */
-name|setstate_norecurse
-init|=
-literal|8
-block|,
-comment|/* don't call other setstate functions */
-name|setstate_noupdate
-init|=
-literal|16
-comment|/* don't update config */
 block|}
 enum|;
 end_enum
@@ -1476,52 +1438,43 @@ begin_comment
 comment|/* Debugging stuff */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+name|debugflags
+block|{
 name|DEBUG_ADDRESSES
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|1
+block|,
+comment|/* show buffer information during requests */
 name|DEBUG_NUMOUTPUT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|2
+block|,
+comment|/* show the value of vp->v_numoutput */
 name|DEBUG_RESID
-value|4
-end_define
-
-begin_comment
+init|=
+literal|4
+block|,
 comment|/* go into debugger in complete_rqe */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DEBUG_LASTREQS
-value|8
-end_define
-
-begin_comment
+init|=
+literal|8
+block|,
 comment|/* keep a circular buffer of last requests */
-end_comment
-
-begin_define
-define|#
-directive|define
+name|DEBUG_REVIVECONFLICT
+init|=
+literal|16
+block|,
+comment|/* print info about revive conflicts */
 name|DEBUG_REMOTEGDB
-value|256
-end_define
-
-begin_comment
+init|=
+literal|256
+block|,
 comment|/* go into remote gdb */
-end_comment
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#
