@@ -2486,12 +2486,6 @@ literal|"286"
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I386_CPU
-argument_list|)
 case|case
 name|CPUCLASS_386
 case|:
@@ -2501,8 +2495,6 @@ literal|"386"
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -3096,12 +3088,6 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|I386_CPU
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|I486_CPU
 argument_list|)
 operator|&&
@@ -3127,34 +3113,6 @@ comment|/* lint */
 endif|#
 directive|endif
 comment|/* lint */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I386_CPU
-argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-operator|)
-error|#
-directive|error
-error|I386_CPU is mutually exclusive with the other cpu types.
-endif|#
-directive|endif
 comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
 switch|switch
 condition|(
@@ -3165,18 +3123,9 @@ case|case
 name|CPUCLASS_286
 case|:
 comment|/* a 286 should not make it this far, anyway */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|I386_CPU
-argument_list|)
 case|case
 name|CPUCLASS_386
 case|:
-endif|#
-directive|endif
 if|#
 directive|if
 operator|!

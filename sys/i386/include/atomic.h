@@ -232,11 +232,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|I386_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_DISABLE_CMPXCHG
 argument_list|)
 end_if
@@ -317,7 +312,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* defined(I386_CPU) */
+comment|/* defined(CPU_DISABLE_CMPXCHG) */
 end_comment
 
 begin_function
@@ -397,7 +392,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(I386_CPU) */
+comment|/* defined(CPU_DISABLE_CMPXCHG) */
 end_comment
 
 begin_endif

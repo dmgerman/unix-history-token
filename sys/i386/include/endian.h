@@ -173,35 +173,6 @@ value|__word_swap_int_var(x)
 endif|#
 directive|endif
 comment|/* __OPTIMIZE__ */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|I386_CPU
-argument_list|)
 define|#
 directive|define
 name|__byte_swap_int_var
@@ -210,18 +181,6 @@ name|x
 parameter_list|)
 define|\
 value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("bswap %0" : "+r" (__X)); \    __X; })
-else|#
-directive|else
-define|#
-directive|define
-name|__byte_swap_int_var
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("xchgb %h0, %b0\n\trorl $16, %0\n\txchgb %h0, %b0" \        : "+q" (__X)); \    __X; })
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__OPTIMIZE__

@@ -72,32 +72,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I386_CPU
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|COMPILING_LINT
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|SMP not supported with I386_CPU
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef

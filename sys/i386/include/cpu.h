@@ -309,11 +309,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|I386_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|I486_CPU
 argument_list|)
 operator|||
