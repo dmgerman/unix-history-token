@@ -3371,6 +3371,13 @@ name|SND_F_NBIO
 expr_stmt|;
 break|break ;
 comment|/*      * Finally, here is the linux-compatible ioctl interface      */
+define|#
+directive|define
+name|THE_REAL_SNDCTL_DSP_GETBLKSIZE
+value|_IOWR('P', 4, int)
+case|case
+name|THE_REAL_SNDCTL_DSP_GETBLKSIZE
+case|:
 case|case
 name|SNDCTL_DSP_GETBLKSIZE
 case|:
