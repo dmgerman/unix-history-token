@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.22 1997/09/12 02:22:21 ache Exp $"
+literal|"$Id: w.c,v 1.23 1997/09/12 02:26:12 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2269,6 +2269,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|mins
+decl_stmt|,
+name|secs
 decl_stmt|;
 name|int
 name|mib
@@ -2424,6 +2426,12 @@ name|uptime
 operator|/
 literal|60
 expr_stmt|;
+name|secs
+operator|=
+name|uptime
+operator|%
+literal|60
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2478,8 +2486,7 @@ argument_list|,
 name|mins
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|hrs
@@ -2504,6 +2511,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|mins
@@ -2528,7 +2536,25 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %d sec%s,"
+argument_list|,
+name|secs
+argument_list|,
+name|secs
+operator|>
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Print number of users logged in to system */
 operator|(
