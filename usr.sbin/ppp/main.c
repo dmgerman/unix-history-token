@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.104 1997/11/18 18:17:25 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.105 1997/11/22 03:37:39 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -221,13 +221,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ccp.h"
+file|"lcp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lcp.h"
+file|"ccp.h"
 end_include
 
 begin_include
@@ -3368,9 +3368,6 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|pid_t
-name|pgroup
-decl_stmt|;
 name|struct
 name|tun_data
 name|tun
@@ -3379,11 +3376,6 @@ define|#
 directive|define
 name|rbuff
 value|tun.data
-name|pgroup
-operator|=
-name|getpgrp
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -4411,37 +4403,17 @@ argument_list|,
 operator|&
 name|rfds
 argument_list|)
-operator|&&
-operator|(
-operator|(
-name|mode
-operator|&
-name|MODE_OUTGOING_DAEMON
-operator|)
-operator|||
-name|pgroup
-operator|==
-name|tcgetpgrp
-argument_list|(
-literal|0
-argument_list|)
-operator|)
 condition|)
-block|{
 comment|/* something to read from tty */
 name|ReadTty
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|modem
 operator|>=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|FD_ISSET
 argument_list|(
 name|modem
@@ -4457,9 +4429,23 @@ argument_list|(
 name|modem
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|modem
+operator|<
+literal|0
+condition|)
+name|dial_up
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
+name|modem
+operator|>=
+literal|0
+operator|&&
 name|FD_ISSET
 argument_list|(
 name|modem
@@ -4535,7 +4521,7 @@ operator|<=
 name|ST_CLOSED
 condition|)
 block|{
-comment|/* 	   * In dedicated mode, we just discard input until LCP is started. 	   */
+comment|/* 	 * In dedicated mode, we just discard input until LCP is started. 	 */
 if|if
 condition|(
 operator|!
@@ -4560,7 +4546,7 @@ condition|(
 name|cp
 condition|)
 block|{
-comment|/* 	       * LCP packet is detected. Turn ourselves into packet mode. 	       */
+comment|/* 	     * LCP packet is detected. Turn ourselves into packet mode. 	     */
 if|if
 condition|(
 name|cp
@@ -4623,7 +4609,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if

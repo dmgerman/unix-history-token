@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.12 1997/11/14 15:39:15 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.13 1997/11/22 03:37:36 brian Exp $  *  *	TODO:  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REJECTED
+parameter_list|(
+name|p
+parameter_list|,
+name|x
+parameter_list|)
+value|(p->his_reject& (1<<x))
+end_define
 
 begin_struct
 struct|struct
@@ -184,24 +196,31 @@ begin_comment
 comment|/* Self-Describing-Padding */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_LCP_OPT_LEN
+value|10
+end_define
+
 begin_struct
 struct|struct
-name|lqrreq
+name|lcp_opt
 block|{
 name|u_char
-name|type
+name|id
 decl_stmt|;
 name|u_char
-name|length
+name|len
 decl_stmt|;
-name|u_short
-name|proto
+name|u_char
+name|data
+index|[
+name|MAX_LCP_OPT_LEN
+operator|-
+literal|2
+index|]
 decl_stmt|;
-comment|/* Quality protocol */
-name|u_long
-name|period
-decl_stmt|;
-comment|/* Reporting interval */
 block|}
 struct|;
 end_struct
@@ -287,25 +306,28 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|PutConfValue
+name|int
+name|LcpPutConf
 parameter_list|(
 name|int
 parameter_list|,
 name|u_char
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|lcp_opt
 modifier|*
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
-name|u_char
-parameter_list|,
-name|int
-parameter_list|,
-name|u_long
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

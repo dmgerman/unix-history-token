@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: server.c,v 1.10 1997/11/11 22:58:13 brian Exp $  */
+comment|/*  * $Id: server.c,v 1.11 1997/11/22 03:37:45 brian Exp $  */
 end_comment
 
 begin_include
@@ -388,11 +388,6 @@ expr_stmt|;
 name|close
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|ID0unlink
-argument_list|(
-name|name
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.34 1997/11/18 14:52:08 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.35 1997/11/22 03:37:54 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_struct
@@ -59,56 +59,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|ConfVjcomp
+name|ConfAcfcomp
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfLqr
+name|ConfChap
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfChap
+name|ConfDeflate
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfPap
+name|ConfLqr
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfAcfcomp
+name|ConfPap
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfProtocomp
+name|ConfPred1
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfPred1
+name|ConfProtocomp
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfProxy
+name|ConfVjcomp
 value|7
 end_define
 
@@ -129,7 +129,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ConfUtmp
+name|ConfProxy
 value|10
 end_define
 
@@ -143,8 +143,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXCONFS
+name|ConfUtmp
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCONFS
+value|13
 end_define
 
 begin_define

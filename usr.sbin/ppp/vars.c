@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP configuration variables  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.c,v 1.36 1997/11/22 03:37:53 brian Exp $  *  */
+comment|/*  *		PPP configuration variables  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.c,v 1.37 1997/11/22 13:47:02 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -107,7 +107,7 @@ name|char
 name|VarLocalVersion
 index|[]
 init|=
-literal|"$Date: 1997/11/22 03:37:53 $"
+literal|"$Date: 1997/11/22 13:47:02 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +187,23 @@ index|[]
 init|=
 block|{
 block|{
-literal|"vjcomp"
+literal|"acfcomp"
+block|,
+name|CONF_ENABLE
+block|,
+name|CONF_ACCEPT
+block|}
+block|,
+block|{
+literal|"chap"
+block|,
+name|CONF_DISABLE
+block|,
+name|CONF_ACCEPT
+block|}
+block|,
+block|{
+literal|"deflate"
 block|,
 name|CONF_ENABLE
 block|,
@@ -203,14 +219,6 @@ name|CONF_ACCEPT
 block|}
 block|,
 block|{
-literal|"chap"
-block|,
-name|CONF_DISABLE
-block|,
-name|CONF_ACCEPT
-block|}
-block|,
-block|{
 literal|"pap"
 block|,
 name|CONF_DISABLE
@@ -219,7 +227,7 @@ name|CONF_ACCEPT
 block|}
 block|,
 block|{
-literal|"acfcomp"
+literal|"pred1"
 block|,
 name|CONF_ENABLE
 block|,
@@ -235,19 +243,11 @@ name|CONF_ACCEPT
 block|}
 block|,
 block|{
-literal|"pred1"
+literal|"vjcomp"
 block|,
 name|CONF_ENABLE
 block|,
 name|CONF_ACCEPT
-block|}
-block|,
-block|{
-literal|"proxy"
-block|,
-name|CONF_DISABLE
-block|,
-name|CONF_NONE
 block|}
 block|,
 block|{
@@ -267,9 +267,9 @@ name|CONF_NONE
 block|}
 block|,
 block|{
-literal|"utmp"
+literal|"proxy"
 block|,
-name|CONF_ENABLE
+name|CONF_DISABLE
 block|,
 name|CONF_NONE
 block|}
@@ -278,6 +278,14 @@ block|{
 literal|"throughput"
 block|,
 name|CONF_DISABLE
+block|,
+name|CONF_NONE
+block|}
+block|,
+block|{
+literal|"utmp"
+block|,
+name|CONF_ENABLE
 block|,
 name|CONF_NONE
 block|}

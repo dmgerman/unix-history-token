@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.12 1997/11/09 06:22:49 brian Exp $  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.13 1997/11/22 03:37:54 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -155,10 +155,10 @@ block|{
 name|int
 name|type
 decl_stmt|;
-name|int
+name|u_short
 name|proto
 decl_stmt|;
-name|int
+name|u_short
 name|cproto
 init|=
 name|IpcpInfo
@@ -593,6 +593,56 @@ return|return
 operator|(
 name|bp
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|vj2asc
+parameter_list|(
+name|u_long
+name|val
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|asc
+index|[
+literal|50
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|asc
+argument_list|,
+literal|"%ld VJ slots %s slot compression"
+argument_list|,
+operator|(
+operator|(
+name|val
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|15
+operator|)
+operator|+
+literal|1
+argument_list|,
+name|val
+operator|&
+literal|1
+condition|?
+literal|"with"
+else|:
+literal|"without"
+argument_list|)
+expr_stmt|;
+return|return
+name|asc
 return|;
 block|}
 end_function
