@@ -19,6 +19,23 @@ directive|include
 file|"diff.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1400,6 +1417,21 @@ name|show_c_function
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Do our initializations.  */
 name|initialize_main
 argument_list|(
