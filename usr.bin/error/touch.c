@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: touch.c,v 1.4 1997/11/03 07:44:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3292,7 +3292,12 @@ end_function
 begin_function
 name|void
 name|onintr
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 switch|switch
 condition|(
