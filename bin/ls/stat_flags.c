@@ -344,7 +344,6 @@ block|}
 block|}
 operator|*
 name|dp
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
