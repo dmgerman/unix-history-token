@@ -2066,6 +2066,13 @@ modifier|*
 name|cpipe
 decl_stmt|;
 block|{
+name|PIPE_LOCK_ASSERT
+argument_list|(
+name|cpipe
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cpipe
