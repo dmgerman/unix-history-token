@@ -999,17 +999,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Offset for bogus_page.  * XXX bogus_offset should be local to bufinit  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|bogus_offset
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Synchronization (sleep/wakeup) variable for active buffer space requests.  * Set when wait starts, cleared prior to wakeup().  * Used in runningbufwakeup() and waitrunningbufspace().  */
 end_comment
 
@@ -1904,6 +1893,9 @@ name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|;
+name|vm_offset_t
+name|bogus_offset
 decl_stmt|;
 name|int
 name|i
