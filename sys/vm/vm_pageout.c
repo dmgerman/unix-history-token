@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.74 1996/05/29 05:15:33 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.75 1996/05/29 06:33:30 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -183,6 +183,20 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_pageout_free_page_calc
+name|__P
+argument_list|(
+operator|(
+name|vm_size_t
+name|count
 operator|)
 argument_list|)
 decl_stmt|;
@@ -485,7 +499,7 @@ name|mc
 index|[
 literal|2
 operator|*
-name|VM_PAGEOUT_PAGE_COUNT
+name|vm_pageout_page_count
 index|]
 decl_stmt|;
 name|int
@@ -526,8 +540,8 @@ operator|(
 name|object
 operator|->
 name|type
-operator|!=
-name|OBJT_SWAP
+operator|==
+name|OBJT_DEFAULT
 operator|)
 operator|&&
 operator|(
@@ -603,7 +617,7 @@ expr_stmt|;
 block|}
 name|mc
 index|[
-name|VM_PAGEOUT_PAGE_COUNT
+name|vm_pageout_page_count
 index|]
 operator|=
 name|m
@@ -614,7 +628,7 @@ literal|1
 expr_stmt|;
 name|page_base
 operator|=
-name|VM_PAGEOUT_PAGE_COUNT
+name|vm_pageout_page_count
 expr_stmt|;
 name|forward_okay
 operator|=
@@ -790,7 +804,7 @@ condition|)
 block|{
 name|mc
 index|[
-name|VM_PAGEOUT_PAGE_COUNT
+name|vm_pageout_page_count
 operator|+
 name|i
 index|]
@@ -948,7 +962,7 @@ condition|)
 block|{
 name|mc
 index|[
-name|VM_PAGEOUT_PAGE_COUNT
+name|vm_pageout_page_count
 operator|-
 name|i
 index|]
@@ -1922,16 +1936,14 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|usagefloor
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 comment|/* 	 * Start scanning the inactive queue for pages we can free. We keep 	 * scanning until we have enough free pages or we have scanned through 	 * the entire queue.  If we encounter dirty pages, we start cleaning 	 * them. 	 */
 name|pages_freed
+operator|=
+literal|0
+expr_stmt|;
+name|addl_page_shortage
 operator|=
 literal|0
 expr_stmt|;
@@ -1953,10 +1965,6 @@ name|v_inactive_target
 expr_stmt|;
 name|rescan0
 label|:
-name|addl_page_shortage
-operator|=
-literal|0
-expr_stmt|;
 name|maxscan
 operator|=
 name|cnt
@@ -2026,9 +2034,11 @@ name|queue
 operator|!=
 name|PQ_INACTIVE
 condition|)
+block|{
 goto|goto
 name|rescan0
 goto|;
+block|}
 name|next
 operator|=
 name|TAILQ_NEXT
@@ -2045,6 +2055,11 @@ operator|->
 name|hold_count
 condition|)
 block|{
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2063,6 +2078,11 @@ argument_list|,
 name|m
 argument_list|,
 name|pageq
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|addl_page_shortage
@@ -2297,6 +2317,11 @@ operator|&
 name|OBJ_DEAD
 condition|)
 block|{
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2315,6 +2340,11 @@ argument_list|,
 name|m
 argument_list|,
 name|pageq
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2386,6 +2416,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2406,6 +2441,11 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2420,6 +2460,7 @@ name|vnodes_skipped
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 				 * The page might have been moved to another queue 				 * during potential blocking in vget() above. 				 */
 if|if
 condition|(
 name|m
@@ -2447,6 +2488,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 				 * The page may have been busied during the blocking in 				 * vput();  We don't move the page back onto the end of 				 * the queue so that statistics are more correct if we don't. 				 */
 if|if
 condition|(
 name|m
@@ -2462,26 +2504,6 @@ name|PG_BUSY
 operator|)
 condition|)
 block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|vm_page_queue_inactive
-argument_list|,
-name|m
-argument_list|,
-name|pageq
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|vm_page_queue_inactive
-argument_list|,
-name|m
-argument_list|,
-name|pageq
-argument_list|)
-expr_stmt|;
 name|vput
 argument_list|(
 name|vp
@@ -2489,6 +2511,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 				 * If the page has become held, then skip it 				 */
 if|if
 condition|(
 name|m
@@ -2496,6 +2519,11 @@ operator|->
 name|hold_count
 condition|)
 block|{
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2514,6 +2542,11 @@ argument_list|,
 name|m
 argument_list|,
 name|pageq
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2646,11 +2679,6 @@ name|cnt
 operator|.
 name|v_active_count
 expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|m
 operator|=
 name|TAILQ_FIRST
@@ -2681,6 +2709,81 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|m
+operator|->
+name|queue
+operator|!=
+name|PQ_ACTIVE
+condition|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+name|printf
+argument_list|(
+literal|"vm_pageout_scan: page not on active queue: %d, pindex: 0x%x, flags: 0x%x, "
+argument_list|,
+name|m
+operator|->
+name|queue
+argument_list|,
+name|m
+operator|->
+name|pindex
+argument_list|,
+name|m
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|object
+operator|==
+name|kmem_object
+condition|)
+name|printf
+argument_list|(
+literal|"kmem object\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|m
+operator|->
+name|object
+operator|==
+name|kernel_object
+condition|)
+name|printf
+argument_list|(
+literal|"kernel object\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"object type: %d\n"
+argument_list|,
+name|m
+operator|->
+name|object
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+block|}
 name|next
 operator|=
 name|TAILQ_NEXT
@@ -2718,6 +2821,11 @@ literal|0
 operator|)
 condition|)
 block|{
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2736,6 +2844,11 @@ argument_list|,
 name|m
 argument_list|,
 name|pageq
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|m
@@ -2829,6 +2942,11 @@ operator|&=
 operator|~
 name|PG_REFERENCED
 expr_stmt|;
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2847,6 +2965,11 @@ argument_list|,
 name|m
 argument_list|,
 name|pageq
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2919,10 +3042,10 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
 name|s
-argument_list|)
+operator|=
+name|splvm
+argument_list|()
 expr_stmt|;
 comment|/* 	 * We try to maintain some *really* free pages, this allows interrupt 	 * code to be guaranteed space. 	 */
 while|while
@@ -2961,6 +3084,11 @@ name|v_dfree
 operator|++
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we didn't get enough free pages, and we have skipped a vnode 	 * in a writeable object, wakeup the sync daemon.  And kick swapout 	 * if we did not get enough free pages. 	 */
 if|if
 condition|(
@@ -3300,9 +3428,13 @@ name|cnt
 operator|.
 name|v_pageout_free_min
 operator|=
+operator|(
 literal|2
-operator|+
-name|VM_PAGEOUT_PAGE_COUNT
+operator|*
+name|MAXBSIZE
+operator|)
+operator|/
+name|PAGE_SIZE
 operator|+
 name|cnt
 operator|.
@@ -3312,7 +3444,7 @@ name|cnt
 operator|.
 name|v_free_reserved
 operator|=
-literal|4
+name|vm_pageout_page_count
 operator|+
 name|cnt
 operator|.
@@ -3337,6 +3469,12 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
 
 begin_function
 name|int
@@ -3364,6 +3502,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *	vm_pageout is the high level pageout daemon.  */
 end_comment
@@ -3386,6 +3529,18 @@ operator|.
 name|v_interrupt_free_min
 operator|=
 literal|2
+expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|.
+name|v_page_count
+operator|<
+literal|2000
+condition|)
+name|vm_pageout_page_count
+operator|=
+literal|8
 expr_stmt|;
 name|vm_pageout_free_page_calc
 argument_list|(
