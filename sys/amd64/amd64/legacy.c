@@ -1276,18 +1276,10 @@ name|pc
 operator|=
 name|pcpu_find
 argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-name|KASSERT
+name|device_get_unit
 argument_list|(
-name|pc
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"pcpu_find failed"
-operator|)
+name|bus
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cd
@@ -1422,7 +1414,7 @@ name|cpdev
 operator|=
 name|device_get_ivars
 argument_list|(
-name|dev
+name|child
 argument_list|)
 expr_stmt|;
 operator|*
