@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_open[] = "@(#)open.c	1.3";  *  * open.c  -  f77 file open routines  */
+comment|/* char id_open[] = "@(#)open.c	1.4";  *  * open.c  -  f77 file open routines  */
 end_comment
 
 begin_include
@@ -617,7 +617,17 @@ condition|(
 name|a
 operator|->
 name|oacc
-operator|&&
+operator|==
+name|NULL
+condition|)
+name|a
+operator|->
+name|oacc
+operator|=
+literal|"seq"
+expr_stmt|;
+if|if
+condition|(
 name|lcase
 argument_list|(
 operator|*
@@ -634,6 +644,7 @@ name|orl
 operator|>
 literal|0
 condition|)
+block|{
 name|fputs
 argument_list|(
 literal|"Warning: open: record length ignored on sequential access\n"
@@ -646,6 +657,13 @@ operator|.
 name|ufd
 argument_list|)
 expr_stmt|;
+name|b
+operator|->
+name|url
+operator|=
+literal|0
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -656,10 +674,6 @@ operator|<
 literal|0
 operator|||
 operator|(
-name|a
-operator|->
-name|oacc
-operator|&&
 name|lcase
 argument_list|(
 operator|*
