@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.16 (Berkeley) 89/05/11"
+literal|"@(#)iostat.c	4.17 (Berkeley) 89/05/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,12 +150,12 @@ directive|define
 name|X_CP_TIME
 value|7
 block|{
-literal|"_dk_mspw"
+literal|"_dk_wpms"
 block|}
 block|,
 define|#
 directive|define
-name|X_DK_MSPW
+name|X_DK_WPMS
 value|8
 block|{
 literal|"_hz"
@@ -238,9 +238,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|float
+name|long
 modifier|*
-name|dk_mspw
+name|dk_wpms
 decl_stmt|;
 end_decl_stmt
 
@@ -639,10 +639,10 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dk_mspw
+name|dk_wpms
 operator|=
 operator|(
-name|float
+name|long
 operator|*
 operator|)
 name|calloc
@@ -651,7 +651,7 @@ name|dk_ndrive
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|float
+name|long
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -823,7 +823,7 @@ name|long
 operator|)
 name|nl
 index|[
-name|X_DK_MSPW
+name|X_DK_WPMS
 index|]
 operator|.
 name|n_value
@@ -835,13 +835,13 @@ name|read
 argument_list|(
 name|mf
 argument_list|,
-name|dk_mspw
+name|dk_wpms
 argument_list|,
 name|dk_ndrive
 operator|*
 sizeof|sizeof
 argument_list|(
-name|dk_mspw
+name|dk_wpms
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -942,12 +942,12 @@ index|[
 name|i
 index|]
 operator|||
-name|dk_mspw
+name|dk_wpms
 index|[
 name|i
 index|]
 operator|==
-literal|0.0
+literal|0
 condition|)
 continue|continue;
 for|for
@@ -1679,12 +1679,12 @@ name|itime
 decl_stmt|;
 if|if
 condition|(
-name|dk_mspw
+name|dk_wpms
 index|[
 name|dn
 index|]
 operator|==
-literal|0.0
+literal|0
 condition|)
 block|{
 name|printf
@@ -1730,12 +1730,12 @@ expr_stmt|;
 comment|/* number of words transferred */
 name|xtime
 operator|=
-name|dk_mspw
+name|words
+operator|/
+name|dk_wpms
 index|[
 name|dn
 index|]
-operator|*
-name|words
 expr_stmt|;
 comment|/* transfer time */
 name|itime

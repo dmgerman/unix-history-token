@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.2 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,16 @@ include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|LOADAV
+end_undef
+
+begin_comment
+comment|/* use getloadavg() by default */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -745,11 +755,57 @@ endif|MAXUSERS
 ifdef|#
 directive|ifdef
 name|MAXLOAD
+ifdef|#
+directive|ifdef
+name|LOADAV
 name|loadav
 argument_list|(
 name|avec
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|getloadavg
+argument_list|(
+name|avec
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|avec
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|avec
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|avec
+index|[
+literal|0
+index|]
+operator|=
+name|avec
+index|[
+literal|1
+index|]
+operator|=
+name|avec
+index|[
+literal|2
+index|]
+operator|=
+literal|0.0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|avec
