@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.13 1994/10/17 22:11:52 sos Exp $  */
+comment|/*-  * Copyright (c) 1991-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.14 1995/01/12 11:42:58 sos Exp $  */
 end_comment
 
 begin_ifndef
@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|CONS_IO
-value|_IO('c', 3, int)
+value|_IO('c', 3)
 end_define
 
 begin_define
@@ -242,6 +242,20 @@ define|#
 directive|define
 name|CONS_BELLTYPE
 value|_IOW('c', 8, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_HISTORY
+value|_IOW('c', 9, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_MOUSECTL
+value|_IOWR('c', 10, mouse_info_t)
 end_define
 
 begin_define
@@ -392,14 +406,6 @@ begin_comment
 comment|/* switching controlled by prog */
 end_comment
 
-begin_comment
-comment|/* compatibility to old pccons& X386 about to go away */
-end_comment
-
-begin_comment
-comment|/* #define CONSOLE_X_MODE_ON	_IO('t', 121) #define CONSOLE_X_MODE_OFF	_IO('t', 122) #define CONSOLE_X_BELL		_IOW('t',123,int[2]) */
-end_comment
-
 begin_struct
 struct|struct
 name|vt_mode
@@ -421,6 +427,58 @@ name|short
 name|frsig
 decl_stmt|;
 comment|/* not implemented yet	SOS	*/
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SHOW
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_HIDE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MOVEABS
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MOVEREL
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_GETPOS
+value|0x05
+end_define
+
+begin_struct
+struct|struct
+name|mouse_info
+block|{
+name|int
+name|operation
+decl_stmt|;
+name|int
+name|x
+decl_stmt|;
+name|int
+name|y
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -919,6 +977,14 @@ typedef|typedef
 name|struct
 name|vt_mode
 name|vtmode_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mouse_info
+name|mouse_info_t
 typedef|;
 end_typedef
 
