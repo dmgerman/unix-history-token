@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -82,7 +82,7 @@ file|<ufs/lfs/lfs_extern.h>
 end_include
 
 begin_comment
-comment|/*  * Bmap converts a the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the array of block pointers described by the dinode.  */
+comment|/*  * Bmap converts a the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the array of block pointers described by the dinode.  *  * LFS has a different version of bmap from FFS because of a naming conflict.  * In FFS, meta blocks are given real disk addresses at allocation time, and  * are linked into the device vnode, using a logical block number which is  * the same as the physical block number.  This can't be done by LFS because  * blocks aren't given disk addresses until they're written, so there's no  * way to distinguish the meta-data blocks for one file from any other file.  * This means that meta-data blocks have to be on the vnode for the file so  * they can be found, and have to have "names" different from the standard  * data blocks.  To do this, we divide the name space into positive and  * negative block numbers, and give the meta-data blocks negative logical  * numbers.  *  * The mapping for meta-data blocks is as follows (assuming a 4K block size):  *  * -1 -- single indirect  * -2 -- double indirect:  *		single indirect blocks -4, -1027  * -3 -- triple indirect:  *		double indirect blocks -1028, -2051  *		single indirect blocks -2052, -(1M + 2052 - 1)  */
 end_comment
 
 begin_function
@@ -134,33 +134,35 @@ name|daddr_t
 name|nb
 decl_stmt|;
 name|struct
-name|vnode
-modifier|*
-name|devvp
-decl_stmt|;
-name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|devvp
 decl_stmt|;
 name|daddr_t
 modifier|*
 name|bap
 decl_stmt|,
 name|daddr
-decl_stmt|;
-name|daddr_t
+decl_stmt|,
 name|lbn_ind
+decl_stmt|,
+name|doing_a_triple
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|j
 decl_stmt|,
 name|off
 decl_stmt|,
 name|sh
-decl_stmt|;
-name|int
-name|error
+decl_stmt|,
+name|sh_ind
 decl_stmt|;
 comment|/* 	 * Check for underlying vnode requests and ensure that logical 	 * to physical mapping is requested. 	 */
 name|ip
@@ -194,6 +196,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
 name|printf
 argument_list|(
 literal|"lfs_bmap: block number %d, inode %d\n"
@@ -205,26 +210,8 @@ operator|->
 name|i_number
 argument_list|)
 expr_stmt|;
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_lfs
-expr_stmt|;
-comment|/* 	 * We access all blocks in the cache, even indirect blocks by means 	 * of a logical address. Indirect blocks (single, double, triple) all 	 * have negative block numbers. The first NDADDR blocks are direct 	 * blocks, the first NIADDR negative blocks are the indirect block 	 * pointers.  The single, double and triple indirect blocks in the 	 * inode * are addressed: -1, -2 and -3 respectively.   	 * 	 * XXX 	 * We don't handle triple indirect at all. 	 * 	 * XXX 	 * This panic shouldn't be here??? 	 */
-if|if
-condition|(
-name|bn
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"lfs_bmap: negative indirect block number %d"
-argument_list|,
-name|bn
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 comment|/* The first NDADDR blocks are direct blocks. */
 if|if
 condition|(
@@ -246,20 +233,14 @@ if|if
 condition|(
 name|nb
 operator|==
-literal|0
+name|LFS_UNUSED_DADDR
 condition|)
-block|{
 operator|*
 name|bnp
 operator|=
 name|UNASSIGNED
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+else|else
 operator|*
 name|bnp
 operator|=
@@ -271,7 +252,13 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Determine the number of levels of indirection. */
+comment|/*  	 * The first NIADDR negative blocks are the indirect block pointers. 	 * Determine the number of levels of indirection.  After this loop 	 * is done, sh indicates the number of data blocks possible at the 	 * given level of indirection, lbn_ind is the logical block number 	 * of the next indirect block to retrieve, and NIADDR - j is the 	 * number of levels of indirection needed to locate the requested 	 * block. 	 */
+name|fs
+operator|=
+name|ip
+operator|->
+name|i_lfs
+expr_stmt|;
 name|sh
 operator|=
 literal|1
@@ -298,8 +285,8 @@ name|j
 operator|--
 control|)
 block|{
-name|lbn_ind
 operator|--
+name|lbn_ind
 expr_stmt|;
 name|sh
 operator|*=
@@ -331,13 +318,16 @@ operator|(
 name|EFBIG
 operator|)
 return|;
-comment|/* Fetch through the indirect blocks. */
-name|vp
+comment|/*  	 * Fetch through the indirect blocks.  At each iteration, off is the 	 * offset into the bap array which is an array of disk addresses at 	 * the current level of indirection. 	 */
+name|bap
 operator|=
-name|ITOV
-argument_list|(
 name|ip
-argument_list|)
+operator|->
+name|i_ib
+expr_stmt|;
+name|bp
+operator|=
+name|NULL
 expr_stmt|;
 name|devvp
 operator|=
@@ -350,19 +340,18 @@ argument_list|)
 operator|->
 name|um_devvp
 expr_stmt|;
-for|for
-control|(
 name|off
 operator|=
 name|NIADDR
 operator|-
 name|j
-operator|,
-name|bap
+expr_stmt|;
+name|doing_a_triple
 operator|=
-name|ip
-operator|->
-name|i_ib
+literal|0
+expr_stmt|;
+for|for
+control|(
 init|;
 name|j
 operator|<=
@@ -372,6 +361,7 @@ name|j
 operator|++
 control|)
 block|{
+comment|/* 		 * In LFS, it's possible to have a block appended to a file 		 * for which the meta-blocks have not yet been allocated. 		 * This is a win if the file never gets written or if the 		 * file's growing. 		 */
 if|if
 condition|(
 operator|(
@@ -392,6 +382,7 @@ name|UNASSIGNED
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Read in the appropriate indirect block.  LFS can't do a 		 * bread because bread knows that FFS will hand it the device 		 * vnode, not the file vnode, so the b_dev and b_blkno would 		 * be wrong. 		 * 		 * XXX 		 * This REALLY needs to be fixed, at the very least it needs 		 * to be rethought when the buffer cache goes away. 		 */
 if|if
 condition|(
 name|bp
@@ -444,31 +435,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|trace
-argument_list|(
-name|TR_BREADMISS
-argument_list|,
-name|pack
-argument_list|(
-name|vp
-argument_list|,
-name|size
-argument_list|)
-argument_list|,
-name|lbn_ind
-argument_list|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_READ
 expr_stmt|;
 name|bp
 operator|->
 name|b_blkno
 operator|=
 name|daddr
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_READ
 expr_stmt|;
 name|bp
 operator|->
@@ -487,6 +464,20 @@ name|vop_strategy
 call|)
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|trace
+argument_list|(
+name|TR_BREADMISS
+argument_list|,
+name|pack
+argument_list|(
+name|vp
+argument_list|,
+name|size
+argument_list|)
+argument_list|,
+name|lbn_ind
 argument_list|)
 expr_stmt|;
 name|curproc
@@ -549,6 +540,67 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Ahem.  Now the disgusting part.  We have to figure out 		 * the logical block number for the next meta-data block. 		 * There are really three equations...  Note the clever 		 * use of the doing_a_triple variable to hold the last 		 * offset into the block of pointers. 		 */
+switch|switch
+condition|(
+name|j
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* The triple indirect block found in the inode. */
+name|doing_a_triple
+operator|=
+name|off
+expr_stmt|;
+name|lbn_ind
+operator|=
+operator|-
+operator|(
+name|NIADDR
+operator|+
+literal|1
+operator|+
+name|off
+operator|+
+name|NINDIR
+argument_list|(
+name|fs
+argument_list|)
+operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+comment|/* 			 * The double indirect block found after indirecting 			 * through a triple indirect block. 			 */
+if|if
+condition|(
+name|doing_a_triple
+condition|)
+name|lbn_ind
+operator|=
+operator|-
+operator|(
+operator|(
+name|doing_a_triple
+operator|+
+literal|2
+operator|)
+operator|*
+name|NINDIR
+argument_list|(
+name|fs
+argument_list|)
+operator|+
+name|NIADDR
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+comment|/* The double indirect block found in the inode. */
+else|else
 name|lbn_ind
 operator|=
 operator|-
@@ -560,6 +612,13 @@ operator|+
 name|off
 operator|)
 expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+comment|/* 			 * A single indirect block; lbn_ind isn't used again, 			 * so don't do anything. 			 */
+break|break;
+block|}
 block|}
 if|if
 condition|(
