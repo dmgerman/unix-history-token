@@ -2489,12 +2489,12 @@ comment|/* fall through */
 end_comment
 
 begin_comment
-unit|case DBREG_DR7_WRONLY: 	case DBREG_DR7_RDWR: 		break; 	default : return (-1); break; 	}
+unit|case DBREG_DR7_WRONLY: 	case DBREG_DR7_RDWR: 		break; 	default : return (-1); 	}
 comment|/* 	 * we can watch a 1, 2, or 4 byte sized location 	 */
 end_comment
 
 begin_comment
-unit|switch (size) { 	case 1	: mask = 0x00; break; 	case 2	: mask = 0x01<< 2; break; 	case 4	: mask = 0x03<< 2; break; 	default : return (-1); break; 	}  	mask |= access;
+unit|switch (size) { 	case 1	: mask = 0x00; break; 	case 2	: mask = 0x01<< 2; break; 	case 4	: mask = 0x03<< 2; break; 	default : return (-1); 	}  	mask |= access;
 comment|/* clear the bits we are about to affect */
 end_comment
 
