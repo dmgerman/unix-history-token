@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	5.1 (Berkeley) %G%"
+literal|"@(#)stab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * stab.c  *  * Symbolic debugging info interface for the f77 compiler.  *  * Here we generate pseudo-ops that cause the assembler to put  * symbolic debugging information into the object file.  *  * University of Utah CS Dept modification history:  *  * $Log:	stab.c,v $  * Revision 1.2  85/02/02  01:30:09  donn  * Don't put the 'program' name into the file; it only confuses dbx, sigh.  *   */
+comment|/*  * stab.c  *  * Symbolic debugging info interface for the f77 compiler.  *  * Here we generate pseudo-ops that cause the assembler to put  * symbolic debugging information into the object file.  *  * University of Utah CS Dept modification history:  *  * $Log:	stab.c,v $  * Revision 5.3  86/01/10  17:12:58  donn  * Add junk to handle PARAMETER variables.  *   * Revision 5.2  86/01/10  13:51:31  donn  * Changes to produce correct stab information for logical and logical*2 types  * (from Jerry Berkman) plus changes for dummy procedures.  *   * Revision 5.1  85/08/10  03:50:06  donn  * 4.3 alpha  *   * Revision 1.2  85/02/02  01:30:09  donn  * Don't put the 'program' name into the file; it only confuses dbx, sigh.  *   */
 end_comment
 
 begin_include
@@ -530,6 +530,15 @@ decl_stmt|,
 modifier|*
 name|classname
 decl_stmt|;
+name|expptr
+name|ep
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
 name|Boolean
 name|ignore
 decl_stmt|;
@@ -582,8 +591,110 @@ case|:
 comment|/* parameter (constant) */
 name|classname
 operator|=
-literal|"c"
+name|buf
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ep
+operator|=
+operator|(
+operator|(
+expr|struct
+name|Paramblock
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|paramval
+operator|)
+operator|&&
+name|ep
+operator|->
+name|tag
+operator|==
+name|TCONST
+condition|)
+block|{
+switch|switch
+condition|(
+name|ep
+operator|->
+name|constblock
+operator|.
+name|vtype
+condition|)
+block|{
+case|case
+name|TYLONG
+case|:
+case|case
+name|TYSHORT
+case|:
+case|case
+name|TYLOGICAL
+case|:
+case|case
+name|TYADDR
+case|:
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"c=i%d"
+argument_list|,
+name|ep
+operator|->
+name|constblock
+operator|.
+expr|const
+operator|.
+name|ci
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TYREAL
+case|:
+case|case
+name|TYDREAL
+case|:
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"c=r%f"
+argument_list|,
+name|ep
+operator|->
+name|constblock
+operator|.
+expr|const
+operator|.
+name|cd
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* punt */
+name|ignore
+operator|=
+name|true
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+name|ignore
+operator|=
+name|true
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|CLVAR
@@ -611,6 +722,26 @@ literal|"V"
 expr_stmt|;
 break|break;
 case|case
+name|CLPROC
+case|:
+comment|/* external or function or subroutine */
+if|if
+condition|(
+name|p
+operator|->
+name|vstg
+operator|==
+name|STGARG
+condition|)
+block|{
+name|classname
+operator|=
+literal|"v"
+expr_stmt|;
+break|break;
+block|}
+comment|/* FALL THROUGH */
+case|case
 name|CLMAIN
 case|:
 comment|/* main program */
@@ -622,10 +753,6 @@ case|case
 name|CLBLOCK
 case|:
 comment|/* block data name*/
-case|case
-name|CLPROC
-case|:
-comment|/* external or function or subroutine */
 name|ignore
 operator|=
 name|true
@@ -705,6 +832,29 @@ case|:
 case|case
 name|STGINIT
 case|:
+if|if
+condition|(
+name|p
+operator|->
+name|vclass
+operator|==
+name|CLPARAM
+condition|)
+block|{
+comment|/* these have zero storage class for some reason */
+name|sprintf
+argument_list|(
+name|asmline
+operator|+
+name|len
+argument_list|,
+literal|"\",0x%x,0,0,0\n"
+argument_list|,
+name|N_LSYM
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|sprintf
 argument_list|(
 name|asmline
@@ -865,6 +1015,8 @@ specifier|static
 name|typenum
 index|[
 name|NTYPES
+operator|+
+literal|1
 index|]
 expr_stmt|;
 end_expr_stmt
@@ -895,6 +1047,8 @@ modifier|*
 name|typename
 index|[
 name|NTYPES
+operator|+
+literal|1
 index|]
 init|=
 block|{
@@ -921,6 +1075,8 @@ block|,
 literal|"void"
 block|,
 literal|"error"
+block|,
+literal|"logical*2"
 block|}
 decl_stmt|;
 specifier|static
@@ -928,12 +1084,14 @@ name|int
 name|typerange
 index|[
 name|NTYPES
+operator|+
+literal|1
 index|]
 init|=
 block|{
 literal|0
 block|,
-literal|3
+literal|1
 block|,
 literal|2
 block|,
@@ -947,13 +1105,15 @@ literal|6
 block|,
 literal|7
 block|,
-literal|3
+literal|8
 block|,
 literal|9
 block|,
 literal|10
 block|,
 literal|11
+block|,
+literal|12
 block|}
 decl_stmt|;
 comment|/* compare with typesize[] in init.c */
@@ -965,6 +1125,8 @@ literal|2
 index|]
 index|[
 name|NTYPES
+operator|+
+literal|1
 index|]
 init|=
 block|{
@@ -984,18 +1146,20 @@ literal|4
 block|,
 literal|8
 block|,
-comment|/* "complex", "double complex", "logical", "char", "void", "error" }; */
+comment|/* "complex", "d-complex", "logical", "char", "void", "error", "logical*2" */
 literal|8
 block|,
 literal|16
 block|,
-literal|0
+literal|4
 block|,
 literal|0
 block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|2
 block|}
 block|,
 comment|/* "unknown", "addr","integer*2", "integer",    "real", "double precision", */
@@ -1013,14 +1177,16 @@ literal|0
 block|,
 literal|0
 block|,
-comment|/* "complex", "double complex", "logical", "char", "void", "error" }; */
+comment|/* "complex", "d-complex", "logical", "char", "void", "error", "logical*2" */
 literal|0
 block|,
 literal|0
 block|,
-literal|1
+literal|0
 block|,
 literal|127
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1044,6 +1210,21 @@ literal|"writestabtype"
 argument_list|,
 name|type
 argument_list|)
+expr_stmt|;
+comment|/* substitute "logical*2" for "logical" when "-i2" compiler flag used */
+if|if
+condition|(
+name|type
+operator|==
+name|TYLOGICAL
+operator|&&
+name|tylogical
+operator|==
+name|TYSHORT
+condition|)
+name|type
+operator|=
+name|NTYPES
 expr_stmt|;
 if|if
 condition|(
@@ -1133,6 +1314,25 @@ block|{
 name|int
 name|t
 decl_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|vclass
+operator|==
+name|CLPROC
+operator|&&
+name|p
+operator|->
+name|vstg
+operator|==
+name|STGARG
+condition|)
+name|t
+operator|=
+name|TYADDR
+expr_stmt|;
+else|else
 name|t
 operator|=
 name|p
@@ -1143,7 +1343,7 @@ if|if
 condition|(
 name|t
 operator|<
-name|TYSHORT
+name|TYADDR
 operator|||
 name|t
 operator|>
@@ -1240,6 +1440,15 @@ operator|->
 name|tag
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|vclass
+operator|==
+name|CLPARAM
+condition|)
+return|return;
 name|tnum
 operator|=
 name|getbasenum
